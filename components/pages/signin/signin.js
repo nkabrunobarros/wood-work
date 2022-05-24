@@ -47,7 +47,7 @@ const theme = createTheme({
   }
 })
 const SignIn = () => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -74,7 +74,7 @@ const SignIn = () => {
             }}
           >
             <div className={styles.logoImg}>
-             <div styles={{width: '300px', height: '300px', position: 'absolute' }}>asd</div>
+             <div styles={{ width: '300px', height: '300px', position: 'absolute' }}></div>
             </div>
           </Box>
         </Grid>
