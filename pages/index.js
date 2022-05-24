@@ -6,9 +6,9 @@ const Home = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true)
-    }, 1000)
+    }, 1500)
   }, [])
 
-  return loaded ? <SignIn /> : <div><Loader center /></div>
+  return loaded ? <SignIn /> : <div> <Loader center /></div>
 }
 export default Home
