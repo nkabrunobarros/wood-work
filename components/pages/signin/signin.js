@@ -28,9 +28,9 @@ function Copyright (props) {
       align="center"
       {...props}
     >
-      {' Developed by NKA - '}
+      {' Desenvolvido por  NKA - '}
       <Link color="inherit" href="https://nka.pt/" target="#">
-     New Knowledge Advice, Lda.
+     New Knowledge Advice Lda.
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -111,7 +111,7 @@ const SignIn = () => {
                 autoComplete="email"
                 autoFocus
               />
-              <InputLabel htmlFor="password">Password</InputLabel>
+              <InputLabel htmlFor="password">Senha</InputLabel>
               <OutlinedInput
                 id="password"
                 margin="normal"
@@ -147,13 +147,13 @@ const SignIn = () => {
                     variant="body2"
                     className="link"
                   >
-                    Forgot password?
+                    Esqueceu-se da sua senha?
                   </Link>
                 </Grid>
                 <Grid item>
                   <FormControlLabel
                     control={<Checkbox name="remember" value={true} color="primary" />}
-                    label="Remember me"
+                    label="Lembrar utilizador"
                   />
                 </Grid>
               </Grid>

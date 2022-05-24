@@ -26,9 +26,9 @@ function Copyright (props) {
       align="center"
       {...props}
     >
-      {' Developed by NKA - '}
+      {' Desenvolvido por  NKA - '}
       <Link color="inherit" href="https://nka.pt/" target="#">
-     New Knowledge Advice, Lda.
+     New Knowledge Advice Lda.
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
