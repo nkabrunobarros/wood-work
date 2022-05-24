@@ -8,10 +8,8 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-
 import styles from '../../../styles/SignIn.module.css'
 import { InputLabel, OutlinedInput } from '@mui/material'
-import Image from 'next/image'
 
 import routes from '../../../navigation/routes'
 import Router from 'next/router'
@@ -56,7 +54,7 @@ const ForgotPassword = () => {
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
-        <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
+        <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
           <Box
             className={styles.logo}
             sx={{
@@ -67,11 +65,9 @@ const ForgotPassword = () => {
               height: '100%'
             }}
           >
-            <Image
-              width={250}
-              height={250}
-              src="/../public/Logotipo_Vetorizado.png"
-            />
+            <div className={styles.logoImg}>
+             <div styles={{ width: '300px', height: '300px', position: 'absolute' }}></div>
+            </div>
           </Box>
         </Grid>
         <Grid
