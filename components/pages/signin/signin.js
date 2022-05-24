@@ -19,6 +19,7 @@ import Image from 'next/image'
 
 import routes from '../../../navigation/routes'
 import Router from 'next/router'
+import styledEngineSc from '@mui/styled-engine-sc'
 
 function Copyright (props) {
   return (
@@ -61,8 +62,7 @@ const SignIn = () => {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
+          <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
           <Box
             className={styles.logo}
             sx={{
@@ -73,11 +73,9 @@ const SignIn = () => {
               height: '100%'
             }}
           >
-            <Image
-              width={250}
-              height={250}
-              src="/../public/Logotipo_Vetorizado.png"
-            />
+            <div className={styles.logoImg}>
+             <div styles={{width: '300px', height: '300px', position: 'absolute' }}>asd</div>
+            </div>
           </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
