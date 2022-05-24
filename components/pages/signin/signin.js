@@ -18,24 +18,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 import routes from '../../../navigation/routes'
 import Router from 'next/router'
-
-function Copyright (props) {
-  return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {' Desenvolvido por  NKA - '}
-      <Link color='inherit' href='https://nka.pt/' target='#'>
-        New Knowledge Advice Lda.
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Footer from '../../layout/footer/footer'
 
 const theme = createTheme({
   palette: {
@@ -87,7 +70,7 @@ const SignIn = () => {
             </div>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square fullHeight >
           <Box
             sx={{
               my: '25%',
@@ -175,10 +158,11 @@ const SignIn = () => {
                 Entrar
               </Button>
 
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
+        <Footer section='client'/>
         </Grid>
+
       </Grid>
     </ThemeProvider>
   )
