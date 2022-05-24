@@ -15,11 +15,9 @@ import InputAdornment from '@mui/material/InputAdornment'
 import styles from '../../../styles/SignIn.module.css'
 import { IconButton, InputLabel, OutlinedInput } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import Image from 'next/image'
 
 import routes from '../../../navigation/routes'
 import Router from 'next/router'
-import styledEngineSc from '@mui/styled-engine-sc'
 
 function Copyright (props) {
   return (
@@ -62,6 +60,7 @@ const SignIn = () => {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
           <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
           <Box
             className={styles.logo}
