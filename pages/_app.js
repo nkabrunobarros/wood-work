@@ -1,7 +1,25 @@
-import '../styles/globals.css'
+//  Nodes
+import React from 'react'
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+//  PropTypes
+import PropTypes from 'prop-types'
+
+//  Styling
+import '../styles/globals.css'
+//  Components
+import Layout from '../components/layout/layout'
+
+const App = ({ Component, pageProps }) => {
+  return (
+    <Layout {...pageProps} >
+      <Component {...pageProps} />
+    </Layout>
+  )
 }
 
-export default MyApp
+App.propTypes = {
+  Component: PropTypes.any,
+  pageProps: PropTypes.any
+}
+
+export default App

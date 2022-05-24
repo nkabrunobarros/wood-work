@@ -1,15 +1,44 @@
+.main {
+
+  display: flex;
+}
 .container {
   padding: 0 2rem;
+  flex: 1;
+  flex-direction: column;
+}
+.imageContainerLogin {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-position: center;
+  background-image: url('../public/Log_In.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
-.main {
-  min-height: 100vh;
-  padding: 4rem 0;
+.formContainer {
+  height: 100vh;
   flex: 1;
+  background: white;
+}
+
+.form {
+  margin: auto;
+  height: 100%;
+  width: 75%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+.sidePanel {
+  background-image: url('../public/Log_In.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .footer {
@@ -103,14 +132,13 @@
   line-height: 1.5;
 }
 
-.logo {
-  height: 1em;
-  margin-left: 0.5rem;
-}
 
 @media (max-width: 600px) {
   .grid {
     width: 100%;
     flex-direction: column;
+  }
+  .logo {
+    display: none
   }
 }
