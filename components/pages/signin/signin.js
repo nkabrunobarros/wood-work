@@ -22,14 +22,14 @@ import Router from 'next/router'
 function Copyright (props) {
   return (
     <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
+      variant='body2'
+      color='text.secondary'
+      align='center'
       {...props}
     >
       {' Desenvolvido por  NKA - '}
-      <Link color="inherit" href="https://nka.pt/" target="#">
-     New Knowledge Advice Lda.
+      <Link color='inherit' href='https://nka.pt/' target='#'>
+        New Knowledge Advice Lda.
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -55,13 +55,17 @@ const SignIn = () => {
       password: data.get('password'),
       remember: data.get('remember')
     })
+
+    if (data.get('email') === 'bruno.barros@nka.pt' && data.get('password') === '123456') {
+      Router.push(routes.private.terms)
+    } else window.alert('wrong data')
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid container component='main' sx={{ height: '100vh' }}>
         <CssBaseline />
-          <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
+        <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
           <Box
             className={styles.logo}
             sx={{
@@ -73,7 +77,13 @@ const SignIn = () => {
             }}
           >
             <div className={styles.logoImg}>
-             <div styles={{ width: '300px', height: '300px', position: 'absolute' }}></div>
+              <div
+                styles={{
+                  width: '300px',
+                  height: '300px',
+                  position: 'absolute'
+                }}
+              ></div>
             </div>
           </Box>
         </Grid>
@@ -88,40 +98,40 @@ const SignIn = () => {
             }}
           >
             <Typography color={'primary'}>Portal Interno WW4.0</Typography>
-            <Typography component="h1" variant="h2">
+            <Typography component='h1' variant='h2'>
               Login
             </Typography>
             <Box
-              component="form"
+              component='form'
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1, width: '100%' }}
             >
-              <InputLabel htmlFor="email">Endereço de Email</InputLabel>
+              <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
 
               <OutlinedInput
-                margin="normal"
+                margin='normal'
                 required
                 fullWidth
-                id="email"
-                name="email"
-                autoComplete="email"
+                id='email'
+                name='email'
+                autoComplete='email'
                 autoFocus
               />
-              <InputLabel htmlFor="password">Senha</InputLabel>
+              <InputLabel htmlFor='password'>Senha</InputLabel>
               <OutlinedInput
-                id="password"
-                margin="normal"
+                id='password'
+                margin='normal'
                 required
                 fullWidth
-                name="password"
+                name='password'
                 type={visible ? 'password' : 'text'}
-                autoComplete="current-password"
+                autoComplete='current-password'
                 endAdornment={
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
-                      aria-label="toggle password visibility"
-                      edge="end"
+                      aria-label='toggle password visibility'
+                      edge='end'
                     >
                       {visible
                         ? (
@@ -141,23 +151,25 @@ const SignIn = () => {
                 <Grid item xs>
                   <Link
                     onClick={() => Router.push(routes.public.forgotPassword)}
-                    variant="body2"
-                    className="link"
+                    variant='body2'
+                    className='link'
                   >
                     Esqueceu-se da sua senha?
                   </Link>
                 </Grid>
                 <Grid item>
                   <FormControlLabel
-                    control={<Checkbox name="remember" value={true} color="primary" />}
-                    label="Lembrar utilizador"
+                    control={
+                      <Checkbox name='remember' value={true} color='primary' />
+                    }
+                    label='Lembrar utilizador'
                   />
                 </Grid>
               </Grid>
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
+                variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
                 Entrar

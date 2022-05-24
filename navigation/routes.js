@@ -1,7 +1,7 @@
 const routes = {
   private: {
     //  Pages shared
-    home: '/home'
+    terms: '/terms'
   },
   public: {
     forgotPassword: '/forgot-password',
