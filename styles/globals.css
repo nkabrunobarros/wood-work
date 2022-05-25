@@ -32,3 +32,8 @@ a {
   cursor: pointer;
   text-decoration: none;
 }
+.pagination {
+  background-color: var(--grayBG);
+  border: 1px solid var(--grayEdges);
+  border-radius: 50px
+}

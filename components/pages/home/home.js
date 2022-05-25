@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import Content from '../../content/content'
 import PrimaryBtn from '../../buttons/primaryBtn'
-import { InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material'
+import { InputLabel, MenuItem, OutlinedInput, Pagination, Select } from '@mui/material'
 
 import styles from '../../../styles/Home.module.css'
 import CustomTable from '../../table/table'
@@ -27,7 +27,7 @@ const HomeScreen = () => {
   const [client, setClient] = useState('')
   const [category, setCategory] = useState('all')
   const [stock, setStock] = useState('all')
-
+  const [page, setPage] = useState(1)
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
@@ -43,6 +43,9 @@ const HomeScreen = () => {
     setStock('all')
   }
 
+  const handleChangePage = (event, value) => {
+    setPage(value)
+  }
   return (
     <Grid component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
@@ -84,7 +87,7 @@ const HomeScreen = () => {
       </div>
       {/* Filters */}
       <Content>
-        <h2>Filtros</h2>
+        <h3>Filtros</h3>
         <div className={styles.filters}>
           <div className={styles.filterContainer}>
             <InputLabel htmlFor='email'>Número</InputLabel>
@@ -159,10 +162,12 @@ const HomeScreen = () => {
       </Content>
       {/* Orders */}
       <Content>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <div>
-            <h1>Encomendas</h1>
+            <h3>Encomendas</h3>
           </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <Pagination count={5} page={page} onChange={handleChangePage} siblingCount={0} color="primary" className={'pagination'} /></div>
         </div>
         <CustomTable
           columns={[

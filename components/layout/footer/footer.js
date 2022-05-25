@@ -1,5 +1,5 @@
 // Node modules
-import { Grid, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -10,7 +10,6 @@ function Copyright (props) {
     <Typography
       variant='body2'
       color='text.secondary'
-      align='center'
       {...props}
     >
       {' Desenvolvido por  NKA - '}
@@ -24,14 +23,14 @@ function Copyright (props) {
 }
 const Footer = ({ section }) => {
   return (
-    <Grid container>
-      <Grid item xs style={{ padding: '1rem' }}>
+    <div style={{ display: 'flex' }}>
+      <div style={{ padding: '1rem' }}>
         {section === 'client' ? 'WW4.0' : <Copyright />}
-      </Grid>
-      <Grid style={{ padding: '1rem' }}>
+      </div>
+      <div style={{ padding: '1rem', marginLeft: 'auto' }}>
         {section === 'client' ? <Copyright /> : 'WW4.0'}
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   )
 }
 Footer.propTypes = {

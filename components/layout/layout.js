@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import routes from '../../navigation/routes'
 import Navbar from './navbar/navbar'
+import Footer from './footer/footer'
 
 // Pages without layout (sidebar + navbar + footer)
 const noLayoutScreens = [
@@ -22,7 +23,9 @@ const Layout = ({ children }) => {
       <div>
         <Navbar />
       </div>
-      <div>{children}</div>
+      <div>{children}
+      <Footer />
+</div>
     </>
   )
 }
