@@ -6,11 +6,11 @@ import Grid from '@mui/material/Grid'
 import CustomBreadcrumbs from '../../breadcrumbs'
 import routes from '../../../navigation/routes'
 
-const HomeScreen = () => {
+const Messages = () => {
   const breadcrumbsPath = [
     {
-      title: 'Encomendas',
-      href: `${routes.private.home}`
+      title: 'Messages',
+      href: `${routes.private.messages}`
     }
   ]
 
@@ -21,4 +21,4 @@ const HomeScreen = () => {
     </Grid>
   )
 }
-export default HomeScreen
+export default Messages

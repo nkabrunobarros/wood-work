@@ -3,7 +3,8 @@ const routes = {
     //  Pages shared
     terms: '/terms',
     home: '/home',
-    profile: '/profile'
+    profile: '/profile',
+    messages: '/messages'
   },
   public: {
     forgotPassword: '/forgot-password',

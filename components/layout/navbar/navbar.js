@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import routes from '../../../navigation/routes'
 
 import styles from '../../../styles/components/navbar.module.css'
+import ActiveLink from './activeLink'
 
 const Navbar = ({ children }) => {
   const navLinks = [
@@ -38,11 +39,7 @@ const Navbar = ({ children }) => {
           src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
         />
         {navLinks.map((item, i) => (
-          <a key={i} className={styles.navItemContainer} href={item.url}>
-            {/* <Icon name="message-circle" color="white" size={48} /> */}
-            {item.icon}
-            {item.title}
-          </a>
+            <ActiveLink key={i} href={item.url}>{item.icon} {item.title}</ActiveLink>
         ))}
         <a className={styles.userDropdown} onClick={handleClick}>
           <User />
