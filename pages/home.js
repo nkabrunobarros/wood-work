@@ -1,6 +1,12 @@
+//  Nodes
 import React, { useEffect, useState } from 'react'
+
+//  Preloader
 import Loader from '../components/loader/loader'
-import SignIn from '../components/pages/signin/signin'
+import HomeScreen from '../components/pages/home/home'
+
+//  Page Component
+
 const Home = () => {
   const [loaded, setLoaded] = useState(false)
   useEffect(() => {
@@ -9,6 +15,6 @@ const Home = () => {
     }, 1500)
   }, [])
 
-  return loaded ? <SignIn /> : <div> <Loader center={true} /></div>
+  return loaded ? <HomeScreen /> : <div> <Loader center={true} /></div>
 }
 export default Home
