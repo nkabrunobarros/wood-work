@@ -1,20 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 :root {
-  
-  --primary: #225EE8;
-  --primary-dark: #0C2254;
+  --primary: #225ee8;
+  --primary-dark: #0c2254;
 
   --white: #fff;
-  --green: #0B9E23;
-  --orange: #E98609;
-  --babyblue: #1B91E7;
+  --green: #0b9e23;
+  --orange: #e98609;
+  --babyblue: #1b91e7;
 }
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Montserrat';
 }
 
 a {
