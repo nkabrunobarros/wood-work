@@ -1,5 +1,4 @@
 .main {
-    cursor: pointer;
     width: fit-content;
     display: flex;
     justify-content: center;
@@ -13,9 +12,6 @@
     padding-right: 1rem;
     padding-left: 1rem;
     transition: ease-in-out 0.3s;
-  }
-  .container {
-  
   }
   .main:hover {
     background-color: var(--primary)!important;

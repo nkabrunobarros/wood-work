@@ -15,7 +15,7 @@ const InfoCard = ({ title, icon, amount, color }) => {
       <CssBaseline />
       <div className={styles.cardIcon}>{icon}</div>
       <div>
-        {title}
+        <a className={styles.cardTitle}>{title}</a>
         <br></br>
         {amount} Encomendas
       </div>

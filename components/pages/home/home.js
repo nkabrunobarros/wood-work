@@ -8,40 +8,47 @@ import routes from '../../../navigation/routes'
 import InfoCard from '../../cards/infoCard'
 import {
   AlertOctagon,
+  Edit,
   Layers,
   LayoutTemplate,
-  PackageCheck
+  PackageCheck,
+  Trash
 } from 'lucide-react'
 import Content from '../../content/content'
 import PrimaryBtn from '../../buttons/primaryBtn'
 import { InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material'
 
 import styles from '../../../styles/Home.module.css'
+import CustomTable from '../../table/table'
 
 const HomeScreen = () => {
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
-  const [category, setCategory] = useState('')
-  const [stock, setStock] = useState('')
+  const [category, setCategory] = useState('all')
+  const [stock, setStock] = useState('all')
 
+  //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
       title: 'Encomendas',
       href: `${routes.private.home}`
     }
   ]
+  //  Clear Filters to default
   const ClearFilters = () => {
     setNumber('')
     setClient('')
-    setCategory('')
-    setStock('')
+    setCategory('all')
+    setStock('all')
   }
 
   return (
     <Grid component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
+      {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
+      {/* Statistics Cards */}
       <div
         style={{
           display: 'flex',
@@ -75,6 +82,7 @@ const HomeScreen = () => {
           title={'Concluidas'}
         />
       </div>
+      {/* Filters */}
       <Content>
         <h2>Filtros</h2>
         <div className={styles.filters}>
@@ -114,7 +122,7 @@ const HomeScreen = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <MenuItem value={''} disabled>
+              <MenuItem value={'all'} disabled>
                 Selecionar uma categoria
               </MenuItem>
               <MenuItem value={'Categoria 1'}>Categoria 1</MenuItem>
@@ -131,7 +139,7 @@ const HomeScreen = () => {
               value={stock}
               onChange={(e) => setStock(e.target.value)}
             >
-              <MenuItem value={''} disabled>
+              <MenuItem value={'all'} disabled>
                 Selecionar uma estado de stock
               </MenuItem>
               <MenuItem value={'Disponivel'}>Disponivel</MenuItem>
@@ -149,13 +157,37 @@ const HomeScreen = () => {
           <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
         </div>
       </Content>
-
+      {/* Orders */}
       <Content>
         <div>
           <div>
             <h1>Encomendas</h1>
           </div>
         </div>
+        <CustomTable
+          columns={[
+            'Número',
+            'Categoria',
+            'Stock',
+            'Produção',
+            'Em Distribuição',
+            'Ações'
+          ]}
+        >
+          <tr key={'i'} className='tdLinks'>
+            <td data-label='Name' className='link'>
+              Número
+            </td>
+            <td data-label='Categoria'>Categoria</td>
+            <td data-label='Stock'>Stock</td>
+            <td data-label='Produção'>Produção</td>
+            <td data-label='Em Distribuição'>Em Distribuição</td>
+            <td data-label='Ações'>
+              <Edit className='link' />
+              <Trash className='link' />
+            </td>
+          </tr>
+        </CustomTable>
       </Content>
     </Grid>
   )
