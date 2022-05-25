@@ -20,17 +20,15 @@ const CustomBreadcrumbs = ({ children, path }) => {
           <Home />
         </Link>
         {path.map((crumb, i) => (
-          <>
-            <Typography style={style}>
-              {router.asPath === crumb.href
-                ? (
-                <a style={{ color: 'var(--primary)' }}>{crumb.title}</a>
-                  )
-                : (
-                <>{crumb.title}</>
-                  )}
-            </Typography>
-          </>
+          <Typography key={i} style={style}>
+            {router.asPath === crumb.href
+              ? (
+              <a style={{ color: 'var(--primary)' }}>{crumb.title}</a>
+                )
+              : (
+              <>{crumb.title}</>
+                )}
+          </Typography>
         ))}
       </Breadcrumbs>
     </Content>

@@ -21,11 +21,12 @@ const Layout = ({ children }) => {
   return (
     <>
       <div>
-        <Navbar />
+        <main>
+          <Navbar />
+          <div style={{ padding: '0rem 2rem 5rem 2rem' }}>{children}</div>
+        </main>
+        <Footer />
       </div>
-      <div>{children}
-      <Footer />
-</div>
     </>
   )
 }

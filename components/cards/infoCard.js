@@ -17,7 +17,7 @@ const InfoCard = ({ title, icon, amount, color }) => {
       <div>
         <a className={styles.cardTitle}>{title}</a>
         <br></br>
-        {amount} Encomendas
+        <a>{amount} Encomendas</a>
       </div>
     </div>
   )

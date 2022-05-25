@@ -47,7 +47,7 @@ const HomeScreen = () => {
     setPage(value)
   }
   return (
-    <Grid component='main' sx={{ height: '100vh' }}>
+    <Grid component='main'>
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />

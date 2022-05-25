@@ -153,7 +153,7 @@ const SignIn = () => {
 
             </Box>
           </Box>
-        <Footer section='client'/>
+          <Footer section='client'/>
         </Grid>
 
       </Grid>

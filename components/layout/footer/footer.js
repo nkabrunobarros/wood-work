@@ -7,14 +7,10 @@ import React from 'react'
 // Pages without layout (sidebar + navbar + footer)
 function Copyright (props) {
   return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      {...props}
-    >
-      {' Desenvolvido por  NKA - '}
+    <Typography variant='body2' color='text.secondary' {...props}>
+      {' Desenvolvido por  '}
       <Link color='inherit' href='https://nka.pt/' target='#'>
-        New Knowledge Advice Lda.
+        NKA
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -23,12 +19,26 @@ function Copyright (props) {
 }
 const Footer = ({ section }) => {
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ padding: '1rem' }}>
-        {section === 'client' ? 'WW4.0' : <Copyright />}
-      </div>
-      <div style={{ padding: '1rem', marginLeft: 'auto' }}>
-        {section === 'client' ? <Copyright /> : 'WW4.0'}
+    <div
+      style={{
+        position: 'fixed',
+        width: '100%',
+        bottom: 0,
+        backgroundColor: 'white',
+        borderTop: '1px solid var(--grayEdges)',
+        color: 'var(--grayTextsLight)',
+        fontSize: '12px'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <div style={{ padding: '1rem' }}>
+          {section === 'client' ? <a>WW4.0</a> : <Copyright />}
+        </div>
+        <div style={{ padding: '1rem', marginLeft: 'auto' }}>
+          {section === 'client'
+            ? 'Termos e Condições | Política de Privacidade'
+            : 'WW4.0'}
+        </div>
       </div>
     </div>
   )
