@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 
+import PropTypes from 'prop-types'
+
 import Grid from '@mui/material/Grid'
 import CustomBreadcrumbs from '../../breadcrumbs'
 import routes from '../../../navigation/routes'
@@ -16,12 +18,19 @@ import {
 } from 'lucide-react'
 import Content from '../../content/content'
 import PrimaryBtn from '../../buttons/primaryBtn'
-import { InputLabel, MenuItem, OutlinedInput, Pagination, Select } from '@mui/material'
+import {
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Pagination,
+  Select
+} from '@mui/material'
 
 import styles from '../../../styles/Home.module.css'
 import CustomTable from '../../table/table'
 
-const HomeScreen = () => {
+const HomeScreen = ({ ...props }) => {
+  const { dummy } = props
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
@@ -46,6 +55,7 @@ const HomeScreen = () => {
   const handleChangePage = (event, value) => {
     setPage(value)
   }
+
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -166,8 +176,25 @@ const HomeScreen = () => {
           <div>
             <h3>Encomendas</h3>
           </div>
-          <div style={{ marginLeft: 'auto' }}>
-            <Pagination count={5} page={page} onChange={handleChangePage} siblingCount={0} color="primary" className={'pagination'} /></div>
+          <div
+            style={{
+              marginLeft: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              color: 'var(--grayTexts)',
+              fontSize: 'small'
+            }}
+          >
+            Mostrar {'11'} a {'30'} de {Object.keys(dummy).length} items
+            <Pagination
+              count={5}
+              page={page}
+              onChange={handleChangePage}
+              siblingCount={0}
+              color='primary'
+              className={'pagination'}
+            />
+          </div>
         </div>
         <CustomTable
           columns={[
@@ -179,22 +206,40 @@ const HomeScreen = () => {
             'Ações'
           ]}
         >
+          {dummy.map((item, i) => (
+            <tr key={item.id} className='tdLinks'>
+              <td data-label='Name' className='link'>
+                {item.id}
+              </td>
+              <td data-label='Categoria'>{item.name}</td>
+              <td data-label='Stock'>{item.email}</td>
+              <td data-label='Produção'>{item.status}</td>
+              <td data-label='Em Distribuição'>{item.gender}</td>
+              <td data-label='Ações'>
+                <Edit className='link' />
+                <Trash className='link' />
+              </td>
+            </tr>
+          ))}
           <tr key={'i'} className='tdLinks'>
-            <td data-label='Name' className='link'>
-              Número
-            </td>
-            <td data-label='Categoria'>Categoria</td>
-            <td data-label='Stock'>Stock</td>
-            <td data-label='Produção'>Produção</td>
-            <td data-label='Em Distribuição'>Em Distribuição</td>
-            <td data-label='Ações'>
-              <Edit className='link' />
-              <Trash className='link' />
-            </td>
-          </tr>
+              <td data-label='Name' className='link'>
+                Número
+              </td>
+              <td data-label='Categoria'>Categoria</td>
+              <td data-label='Stock'>Stock</td>
+              <td data-label='Produção'>Produção</td>
+              <td data-label='Em Distribuição'>Em Distribuição</td>
+              <td data-label='Ações'>
+                <Edit className='link' />
+                <Trash className='link' />
+              </td>
+            </tr>
         </CustomTable>
       </Content>
     </Grid>
   )
+}
+HomeScreen.propTypes = {
+  dummy: PropTypes.any
 }
 export default HomeScreen

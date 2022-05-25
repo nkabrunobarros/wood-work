@@ -4,7 +4,6 @@ import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -123,15 +122,15 @@ const SignIn = () => {
                   </InputAdornment>
                 }
               />
-              <Grid container>
+              <Grid container style={{ alignItems: 'center' }}>
                 <Grid item xs>
-                  <Link
+                  <a
                     onClick={() => Router.push(routes.public.forgotPassword)}
                     variant='body2'
                     className='link'
                   >
                     Esqueceu-se da sua senha?
-                  </Link>
+                  </a>
                 </Grid>
                 <Grid item>
                   <FormControlLabel
