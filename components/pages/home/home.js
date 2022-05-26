@@ -42,8 +42,8 @@ const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
 
 const displayWithStyle = (text) => {
   //  Keywords for styling text
-  const errorKeywords = ['Não', 'Não Iniciada', 'Indisponível', 'false']
-  const successKeywords = ['Entregue', 'Terminada', 'true']
+  const errorKeywords = ['Não', 'Não Iniciada', 'Indisponível', 'Indisponível']
+  const successKeywords = ['Entregue', 'Terminada', 'Disponível']
   const warningKeywords = ['Iniciada', 'Em Curso']
 
   //  Find if the text match's with any of the keywords
@@ -69,8 +69,8 @@ const HomeScreen = ({ ...props }) => {
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
-  const [category, setCategory] = useState('all')
-  const [stock, setStock] = useState('all')
+  const [category, setCategory] = useState('')
+  const [stock, setStock] = useState('')
 
   const [page, setPage] = useState(1)
   const [entries, setEntries] = useState(5)
@@ -90,8 +90,8 @@ const HomeScreen = ({ ...props }) => {
   const ClearFilters = () => {
     setNumber('')
     setClient('')
-    setCategory('all')
-    setStock('all')
+    setCategory('')
+    setStock('')
   }
 
   const handleChangePage = (event, value) => {
@@ -189,12 +189,12 @@ const HomeScreen = ({ ...props }) => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <MenuItem value={'all'} disabled>
+              <MenuItem value={''} disabled>
                 Selecionar uma categoria
               </MenuItem>
-              <MenuItem value={'Categoria 1'}>Categoria 1</MenuItem>
-              <MenuItem value={'Categoria 2'}>Categoria 2</MenuItem>
-              <MenuItem value={'Categoria 3'}>Categoria 3</MenuItem>
+              {categories.map(item => (
+                <MenuItem key={item.id} value={item.id}>{item.title}[{item.id}]</MenuItem>
+              ))}
             </Select>
           </div>
           <div className={styles.filterContainer}>
@@ -206,11 +206,11 @@ const HomeScreen = ({ ...props }) => {
               value={stock}
               onChange={(e) => setStock(e.target.value)}
             >
-              <MenuItem value={'all'} disabled>
+              <MenuItem value={''} disabled>
                 Selecionar uma estado de stock
               </MenuItem>
-              <MenuItem value={'Disponivel'}>Disponivel</MenuItem>
-              <MenuItem value={'Indisponivel'}>Indisponivel</MenuItem>
+              <MenuItem value={'Disponivel'}>Disponível</MenuItem>
+              <MenuItem value={'Indisponivel'}>Indisponível</MenuItem>
             </Select>
           </div>
         </div>
@@ -272,13 +272,14 @@ const HomeScreen = ({ ...props }) => {
             'Ações'
           ]}
         >
-          {itemsPerPage.map((item, i) => (
+          {itemsPerPage
+            .map((item, i) => (
             <tr key={item.id}>
               <td data-label='Nome' className='link'>
                 Nº {item.id}
               </td>
               <td data-label='Categoria'> {getCategory(item.category)} </td>
-              <td data-label='Stock'> {displayWithStyle(item.stock.toString())}</td>
+              <td data-label='Stock'> {displayWithStyle(item.stock)}</td>
               <td data-label='Produção'>{displayWithStyle(item.production)} </td>
               <td data-label='Em Distribuição'>{displayWithStyle(item.distribution)}</td>
               <td data-label='Ações'>
@@ -286,7 +287,7 @@ const HomeScreen = ({ ...props }) => {
                 <Trash className='link' />
               </td>
             </tr>
-          ))}
+            ))}
         </CustomTable>
       </Content>
     </Grid>
