@@ -28,6 +28,7 @@ import {
 
 import styles from '../../../styles/Orders.module.css'
 import CustomTable from '../../table/table'
+import Router from 'next/router'
 
 const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
   const output = Object.keys(array).sort((a, b) => b - a)
@@ -151,6 +152,7 @@ const OrdersScreen = ({ ...props }) => {
       </div>
       {/* Filters */}
       <Content>
+        <div id="pad">
         <h3>Filtros</h3>
         <div className={styles.filters}>
           <div className={styles.filterContainer}>
@@ -223,11 +225,12 @@ const OrdersScreen = ({ ...props }) => {
         >
           <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
         </div>
+        </div>
       </Content>
       {/* Orders */}
       <Content>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div>
+        <div id="pad" style={{ display: 'flex', alignItems: 'center' }}>
+          <div >
             <h3>Encomendas</h3>
           </div>
           <div
@@ -274,7 +277,9 @@ const OrdersScreen = ({ ...props }) => {
         >
           {itemsPerPage
             .map((item, i) => (
-            <tr key={item.id}>
+            <tr key={item.id} onClick={() => Router.push(
+              { pathname: `${routes.private.order}${item.id}` }
+            )}>
               <td data-label='Nome' className='link'>
                 Nº {item.id}
               </td>

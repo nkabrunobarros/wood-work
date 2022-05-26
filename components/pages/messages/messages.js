@@ -54,7 +54,7 @@ const ConversationRow = ({ message }) => {
           <br></br>
           <a className={styles.messageDate}> {message.createdAt}</a>
         </a>
-        <Avatar className={styles.avatar}>N</Avatar>
+        <Avatar className={styles.avatar}>B</Avatar>
       </div>
     )
   } else {
@@ -183,7 +183,7 @@ const Messages = () => {
                 fullWidth
                 id='message'
                 name='message'
-                autoComplete='message'
+                placeholder='Escrever mensagem...'
                 autoFocus
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}

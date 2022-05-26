@@ -1,0 +1,19 @@
+.docsMain {
+    display: flex;
+}
+.tableContainer {
+    flex: 3;
+}
+.infoContainer {
+    flex: 1;
+    border-left: 2px solid var(--grayEdges);
+    padding: 2rem;
+}
+.innerInfoContainer {
+    flex: 1;
+    border: 1px solid var(--grayEdges);
+    border-radius: 8px;
+    background-color: #F9F9F9;
+    padding: 2rem;
+
+}

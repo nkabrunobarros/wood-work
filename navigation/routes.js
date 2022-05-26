@@ -3,6 +3,7 @@ const routes = {
     //  Pages shared
     terms: '/terms',
     orders: '/orders',
+    order: '/orders/',
     profile: '/profile',
     messages: '/messages'
   },

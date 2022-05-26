@@ -78,3 +78,22 @@ a {
   display: inline-block;
   margin-left: 25%;
 }
+.headerTitleXl {
+  font-size: 40px;
+  font-weight: bolder;
+}
+.headerTitle {
+  font-size: 30px;
+  font-weight: bolder;
+}
+.headerTitleSm {
+  font-size: 24px;
+  font-weight: bolder;
+}
+#pad {
+  padding: 24px
+}
+#align {
+  display: flex;
+  align-items: center;
+}
