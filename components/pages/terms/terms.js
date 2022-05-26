@@ -158,7 +158,7 @@ const Terms = () => {
               variant='contained'
               disabled={!acceptedTerms}
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => Router.push(routes.private.home)}
+              onClick={() => Router.push(routes.private.orders)}
             >
               Entrar
             </Button>

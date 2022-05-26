@@ -24,7 +24,7 @@
   font-weight: 500;
 }
 .navItemContainer:hover {
-  border-bottom: 5px solid var(--white);
+  border-bottom: 5px solid var(--white) !important;
   transition: ease-in-out 0.5s;
 }
 .navigationButtons {

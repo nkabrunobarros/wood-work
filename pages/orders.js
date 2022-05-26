@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 //  Preloader
 import Loader from '../components/loader/loader'
-import HomeScreen from '../components/pages/home/home'
+import HomeScreen from '../components/pages/orders/orders'
 
 import PropTypes from 'prop-types'
 

@@ -26,7 +26,7 @@ import {
   Select
 } from '@mui/material'
 
-import styles from '../../../styles/Home.module.css'
+import styles from '../../../styles/Orders.module.css'
 import CustomTable from '../../table/table'
 
 const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
@@ -58,7 +58,7 @@ const displayWithStyle = (text) => {
   return (text)
 }
 
-const HomeScreen = ({ ...props }) => {
+const OrdersScreen = ({ ...props }) => {
   const { orders, categories } = props
 
   const getCategory = (categoryId) => {
@@ -83,7 +83,7 @@ const HomeScreen = ({ ...props }) => {
   const breadcrumbsPath = [
     {
       title: 'Encomendas',
-      href: `${routes.private.home}`
+      href: `${routes.private.orders}`
     }
   ]
   //  Clear Filters to default
@@ -248,7 +248,7 @@ const HomeScreen = ({ ...props }) => {
               <MenuItem value={10}>10</MenuItem>
               <MenuItem value={15}>15</MenuItem>
             </Select>
-            {''} Items
+            {''} Itens
             <div className='spacer'>|</div>
             Mostrar {showingMin} a {showingMax} de {Object.keys(orders).length} items
             <div className='spacer'></div>
@@ -293,8 +293,8 @@ const HomeScreen = ({ ...props }) => {
     </Grid>
   )
 }
-HomeScreen.propTypes = {
+OrdersScreen.propTypes = {
   orders: PropTypes.array,
   categories: PropTypes.array
 }
-export default HomeScreen
+export default OrdersScreen

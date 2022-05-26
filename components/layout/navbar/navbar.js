@@ -13,7 +13,7 @@ const Navbar = ({ children }) => {
   const navLinks = [
     {
       title: 'Encomendas',
-      url: routes.private.home,
+      url: routes.private.orders,
       icon: <Archive color='white' />
     },
     {

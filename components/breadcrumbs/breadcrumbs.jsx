@@ -16,7 +16,7 @@ const CustomBreadcrumbs = ({ children, path }) => {
   return (
     <Content>
       <Breadcrumbs aria-label='breadcrumb' separator={<ChevronRight />}>
-        <Link underline='hover' color='inherit' href={`${routes.private.home}`}>
+        <Link underline='hover' color='inherit' href={`${routes.private.orders}`}>
           <Home />
         </Link>
         {path.map((crumb, i) => (

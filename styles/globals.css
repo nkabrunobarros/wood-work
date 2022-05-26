@@ -2,8 +2,9 @@
 :root {
   --primary: #225ee8;
   --primary-dark: #0c2254;
+  --primary-light-opacity: #F1F7FF;
 
-  --white: #fff;
+  --white: rgb(255, 255, 255);
   --green: #0b9e23;
   --greenLight: #E8FCF1;
   --orange: #e98609;
@@ -68,4 +69,12 @@ a {
   font-weight: bold ;
   padding: 0.5rem;
   border-radius: 50px
+}
+.dot {
+  height: 8px;
+  width: 8px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 25%;
 }

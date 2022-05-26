@@ -13,7 +13,7 @@ const CustomTable = ({ columns, children }) => (
         <th key={i}>
           <a style={{ display: 'flex', alignItems: 'center' }}>
             <a style={{ flex: 1 }}>{col}</a>
-            {col.toLowerCase() === 'ações'
+            {col.toLowerCase() === 'ações' || col.toLowerCase() === ''
               ? null
               : (
               <a style={{ flex: 1, display: 'flex', justifyContent: 'end', maxWidth: '150px' }}>

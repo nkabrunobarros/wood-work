@@ -15,7 +15,8 @@
     cursor: pointer;
   }
   .main:hover {
-    background-color: var(--primary)!important;
+    background-color: var(--babyblue)!important;
+    border-color: var(--babyblue);
     color: var(--white) !important;
   }
   

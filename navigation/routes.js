@@ -2,7 +2,7 @@ const routes = {
   private: {
     //  Pages shared
     terms: '/terms',
-    home: '/home',
+    orders: '/orders',
     profile: '/profile',
     messages: '/messages'
   },
