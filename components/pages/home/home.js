@@ -40,6 +40,24 @@ const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
   return data
 }
 
+const displayWithStyle = (text) => {
+  //  Keywords for styling text
+  const errorKeywords = ['Não', 'Não Iniciada', 'Indisponível', 'false']
+  const successKeywords = ['Entregue', 'Terminada', 'true']
+  const warningKeywords = ['Iniciada', 'Em Curso']
+
+  //  Find if the text match's with any of the keywords
+  const resError = errorKeywords.find((keywork) => keywork === text)
+  const resSuccess = successKeywords.find((keywork) => keywork === text)
+  const resWarning = warningKeywords.find((keywork) => keywork === text)
+
+  //  If match res is something else undefined && case undefined return default text
+  if (resError !== undefined) return (<a className="errorBalloon">{text} </a>)
+  if (resSuccess !== undefined) return (<a className="successBalloon">{text} </a>)
+  if (resWarning !== undefined) return (<a className="warningBalloon">{text} </a>)
+  return (text)
+}
+
 const HomeScreen = ({ ...props }) => {
   const { orders, categories } = props
 
@@ -260,9 +278,9 @@ const HomeScreen = ({ ...props }) => {
                 Nº {item.id}
               </td>
               <td data-label='Categoria'> {getCategory(item.category)} </td>
-              <td data-label='Stock'>{item.stock.toString()}</td>
-              <td data-label='Produção'>{item.production}</td>
-              <td data-label='Em Distribuição'>{item.distribution}</td>
+              <td data-label='Stock'> {displayWithStyle(item.stock.toString())}</td>
+              <td data-label='Produção'>{displayWithStyle(item.production)} </td>
+              <td data-label='Em Distribuição'>{displayWithStyle(item.distribution)}</td>
               <td data-label='Ações'>
                 <Edit className='link' />
                 <Trash className='link' />

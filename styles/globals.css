@@ -5,12 +5,17 @@
 
   --white: #fff;
   --green: #0b9e23;
+  --greenLight: #E8FCF1;
   --orange: #e98609;
   --babyblue: #1b91e7;
   --grayBG: #F9F9F9;
   --grayEdges: #E7E8E9;
   --grayTexts: #5F5F5F;
   --grayTextsLight : #70798E;
+  --red: #990D00;
+  --redLight: #FFE8E5;
+  --yellow: #CC7E00;
+  --yellowLight: #FFF5E5;
 }
 
 html,
@@ -42,4 +47,25 @@ a {
 .spacer {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+.successBalloon {
+  color: var(--green);
+  background: var(--greenLight);
+  font-weight: bold ;
+  padding: 0.5rem;
+  border-radius: 50px
+}
+.warningBalloon {
+  color: var(--yellow);
+  background: var(--yellowLight);
+  font-weight: bold ;
+  padding: 0.5rem;
+  border-radius: 50px
+}
+.errorBalloon {
+  color: var(--red);
+  background: var(--redLight);
+  font-weight: bold ;
+  padding: 0.5rem;
+  border-radius: 50px
 }
