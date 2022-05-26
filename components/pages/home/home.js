@@ -1,5 +1,5 @@
 //  Nodes
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 
 import PropTypes from 'prop-types'
@@ -29,14 +29,38 @@ import {
 import styles from '../../../styles/Home.module.css'
 import CustomTable from '../../table/table'
 
+const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
+  const output = Object.keys(array).sort((a, b) => b - a)
+  const arrayLenght = parseInt(output[0]) + 1
+  const data = {
+    array: array.slice(pageNumber * pageSize, pageNumber * pageSize + pageSize),
+    showingMin: pageNumber * pageSize + 1,
+    showingMax: (pageNumber * pageSize + pageSize) < arrayLenght ? pageNumber * pageSize + pageSize : arrayLenght
+  }
+  return data
+}
+
 const HomeScreen = ({ ...props }) => {
-  const { dummy } = props
+  const { orders, categories } = props
+
+  const getCategory = (categoryId) => {
+    const { find } = require('lodash')
+    const category = find(categories, { id: categoryId })
+    return `${category.title}[${category.id}]`
+  }
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
   const [category, setCategory] = useState('all')
   const [stock, setStock] = useState('all')
+
   const [page, setPage] = useState(1)
+  const [entries, setEntries] = useState(5)
+  const [totalPages, setTotalPages] = useState(0)
+  const [showingMin, setShowingMin] = useState(0)
+  const [showingMax, setShowingMax] = useState(entries)
+
+  const [itemsPerPage, setItemsPerPage] = useState([])
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
@@ -55,6 +79,18 @@ const HomeScreen = ({ ...props }) => {
   const handleChangePage = (event, value) => {
     setPage(value)
   }
+
+  useEffect(() => {
+    const calculatePages = () => {
+      const numPages = Math.ceil(orders.length / entries)
+      setTotalPages(numPages)
+      const res = PaginateItemsPerPage(orders, entries, (page - 1))
+      setItemsPerPage(res.array)
+      setShowingMax(res.showingMax)
+      setShowingMin(res.showingMin)
+    }
+    calculatePages()
+  }, [entries, page])
 
   return (
     <Grid component='main'>
@@ -185,9 +221,21 @@ const HomeScreen = ({ ...props }) => {
               fontSize: 'small'
             }}
           >
-            Mostrar {'11'} a {'30'} de {Object.keys(dummy).length} items
+            Visualizar
+            <Select
+              value={entries}
+              onChange={(e) => setEntries(e.target.value)}
+            >
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={15}>15</MenuItem>
+            </Select>
+            {''} Items
+            <div className='spacer'>|</div>
+            Mostrar {showingMin} a {showingMax} de {Object.keys(orders).length} items
+            <div className='spacer'></div>
             <Pagination
-              count={5}
+              count={totalPages}
               page={page}
               onChange={handleChangePage}
               siblingCount={0}
@@ -206,40 +254,28 @@ const HomeScreen = ({ ...props }) => {
             'Ações'
           ]}
         >
-          {dummy.map((item, i) => (
-            <tr key={item.id} className='tdLinks'>
-              <td data-label='Name' className='link'>
-                {item.id}
+          {itemsPerPage.map((item, i) => (
+            <tr key={item.id}>
+              <td data-label='Nome' className='link'>
+                Nº {item.id}
               </td>
-              <td data-label='Categoria'>{item.name}</td>
-              <td data-label='Stock'>{item.email}</td>
-              <td data-label='Produção'>{item.status}</td>
-              <td data-label='Em Distribuição'>{item.gender}</td>
+              <td data-label='Categoria'> {getCategory(item.category)} </td>
+              <td data-label='Stock'>{item.stock.toString()}</td>
+              <td data-label='Produção'>{item.production}</td>
+              <td data-label='Em Distribuição'>{item.distribution}</td>
               <td data-label='Ações'>
                 <Edit className='link' />
                 <Trash className='link' />
               </td>
             </tr>
           ))}
-          <tr key={'i'} className='tdLinks'>
-              <td data-label='Name' className='link'>
-                Número
-              </td>
-              <td data-label='Categoria'>Categoria</td>
-              <td data-label='Stock'>Stock</td>
-              <td data-label='Produção'>Produção</td>
-              <td data-label='Em Distribuição'>Em Distribuição</td>
-              <td data-label='Ações'>
-                <Edit className='link' />
-                <Trash className='link' />
-              </td>
-            </tr>
         </CustomTable>
       </Content>
     </Grid>
   )
 }
 HomeScreen.propTypes = {
-  dummy: PropTypes.any
+  orders: PropTypes.array,
+  categories: PropTypes.array
 }
 export default HomeScreen
