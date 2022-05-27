@@ -13,6 +13,7 @@
   --grayEdges: #E7E8E9;
   --grayTexts: #5F5F5F;
   --grayTextsLight : #70798E;
+  --grayLight : #8C8C8C;
   --red: #990D00;
   --redLight: #FFE8E5;
   --yellow: #CC7E00;
@@ -79,7 +80,7 @@ a {
   margin-left: 25%;
 }
 .headerTitleXl {
-  font-size: 40px;
+  font-size: 3vw;
   font-weight: bolder;
 }
 .headerTitle {
@@ -97,3 +98,71 @@ a {
   display: flex;
   align-items: center;
 }
+.sidePanelTerms {
+  background-image: url('../public/Consentimento.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.sidePanelTos {
+  background-image: url('../public/tos.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.primaryIcon {
+  color: var(--primary);
+  margin-right: 1rem;
+}
+.lightTextSm {
+  font-size:small;
+  color: var(--grayLight);
+  letter-spacing: 1px;
+  padding: 0.2rem;
+  width: fit-content;
+}
+.bold {
+  font-weight: bold;
+}
+.black {
+  color: black;
+}
+.infoBox {
+width: fit-content;
+justify-content: space-evenly;
+display: flex;
+flex-direction: column;
+}
+.dark {
+  background-color: var(--grayBG);
+}
+.lightText {
+  color: var(--grayLight);
+  letter-spacing: 1px;
+  padding: 0.2rem;
+  width: fit-content;
+}
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+.mobile {
+  display: none
+}
+
+@media screen and (max-width: 40em) {
+  .flex {
+    flex-direction: column;
+  }
+  .mobile {
+    display: block !important;
+  }
+  .pagination {
+    display: none;
+  }
+  .headerTitleXl {
+    font-size: 6vw;
+  }
+}
+

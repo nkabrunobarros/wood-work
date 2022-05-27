@@ -27,10 +27,15 @@ const Terms = ({ ...props }) => {
     })
   }
 
+  let classStyle = ''
+
+  if (readOnly) classStyle = 'sidePanelTos'
+  else classStyle = 'sidePanelTerms'
+
   return (
     <Grid container component='main' sx={{ height: '100%' }}>
       <CssBaseline />
-      <Grid className={styles.sidePanelTerms} item xs={false} sm={4} md={7}>
+      <Grid className={`${classStyle}`} item xs={false} sm={4} md={7}>
         <Box
           className={styles.logo}
           sx={{

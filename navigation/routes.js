@@ -1,5 +1,8 @@
 const routes = {
   private: {
+    client: {
+
+    },
     //  Pages shared
     terms: '/terms',
     tos: '/tos',

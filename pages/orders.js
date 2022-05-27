@@ -97,16 +97,41 @@ const Orders = () => {
     }
   ]
 
-  const props = {
-    categories,
-    orders
+  //  Keywords for styling text
+  const keywords = {
+    errorKeywords: ['Não', 'Não Iniciada', 'Indisponível', 'Indisponível'],
+    successKeywords: ['Entregue', 'Terminada', 'Disponível'],
+    warningKeywords: ['Iniciada', 'Em Curso']
   }
 
-  return loaded ? <OrdersScreen { ...props } /> : <div> <Loader center={true} /></div>
+  const panelsInfo = {
+    budgeting: 2,
+    drawing: 1,
+    production: 3,
+    concluded: 7
+  }
+  const props = {
+    categories,
+    orders,
+    panelsInfo,
+    keywords
+  }
+
+  return loaded
+    ? (
+    <OrdersScreen {...props} />
+      )
+    : (
+    <div>
+      {' '}
+      <Loader center={true} />
+    </div>
+      )
 }
 Orders.propTypes = {
   categories: PropTypes.array,
-  orders: PropTypes.array
+  orders: PropTypes.array,
+  panelsInfo: PropTypes.object
 }
 
 export default Orders

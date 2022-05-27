@@ -41,32 +41,27 @@ const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
   return data
 }
 
-const displayWithStyle = (text) => {
-  //  Keywords for styling text
-  const errorKeywords = ['Não', 'Não Iniciada', 'Indisponível', 'Indisponível']
-  const successKeywords = ['Entregue', 'Terminada', 'Disponível']
-  const warningKeywords = ['Iniciada', 'Em Curso']
-
-  //  Find if the text match's with any of the keywords
-  const resError = errorKeywords.find((keywork) => keywork === text)
-  const resSuccess = successKeywords.find((keywork) => keywork === text)
-  const resWarning = warningKeywords.find((keywork) => keywork === text)
-
-  //  If match res is something else undefined && case undefined return default text
-  if (resError !== undefined) return (<a className="errorBalloon">{text} </a>)
-  if (resSuccess !== undefined) return (<a className="successBalloon">{text} </a>)
-  if (resWarning !== undefined) return (<a className="warningBalloon">{text} </a>)
-  return (text)
-}
-
 const OrdersScreen = ({ ...props }) => {
-  const { orders, categories } = props
+  const { orders, categories, panelsInfo, keywords } = props
 
   const getCategory = (categoryId) => {
     const { find } = require('lodash')
     const category = find(categories, { id: categoryId })
     return `${category.title}[${category.id}]`
   }
+  const displayWithStyle = (text) => {
+    //  Find if the text match's with any of the keywords
+    const resError = keywords.errorKeywords.find((keywork) => keywork === text)
+    const resSuccess = keywords.successKeywords.find((keywork) => keywork === text)
+    const resWarning = keywords.warningKeywords.find((keywork) => keywork === text)
+
+    //  If match res is something else undefined && case undefined return default text
+    if (resError !== undefined) return (<a className="errorBalloon">{text} </a>)
+    if (resSuccess !== undefined) return (<a className="successBalloon">{text} </a>)
+    if (resWarning !== undefined) return (<a className="warningBalloon">{text} </a>)
+    return (text)
+  }
+
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
@@ -126,25 +121,25 @@ const OrdersScreen = ({ ...props }) => {
         }}
       >
         <InfoCard
-          amount={2}
+          amount={panelsInfo.budgeting}
           color={'var(--primary)'}
           icon={<PackageCheck size={40} />}
           title={'Em Orçamentação'}
         />
         <InfoCard
-          amount={1}
+          amount={panelsInfo.drawing}
           color={'var(--green)'}
           icon={<LayoutTemplate size={40} />}
           title={'Em Desenho'}
         />
         <InfoCard
-          amount={3}
+          amount={panelsInfo.production}
           color={'var(--orange)'}
           icon={<Layers size={40} />}
           title={'Em Produção'}
         />
         <InfoCard
-          amount={7}
+          amount={panelsInfo.concluded}
           color={'var(--babyblue)'}
           icon={<AlertOctagon size={40} />}
           title={'Concluidas'}
@@ -229,7 +224,7 @@ const OrdersScreen = ({ ...props }) => {
       </Content>
       {/* Orders */}
       <Content>
-        <div id="pad" style={{ display: 'flex', alignItems: 'center' }}>
+        <div id="pad" className="flex" style={{ display: 'flex', alignItems: 'center' }}>
           <div >
             <a className="headerTitleXl">Encomendas</a>
           </div>
@@ -264,6 +259,14 @@ const OrdersScreen = ({ ...props }) => {
               className={'pagination'}
             />
           </div>
+          <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handleChangePage}
+              siblingCount={0}
+              color='primary'
+              className={'pagination mobile'}
+            />
         </div>
         <CustomTable
           columns={[
@@ -300,6 +303,8 @@ const OrdersScreen = ({ ...props }) => {
 }
 OrdersScreen.propTypes = {
   orders: PropTypes.array,
-  categories: PropTypes.array
+  categories: PropTypes.array,
+  panelsInfo: PropTypes.object,
+  keywords: PropTypes.any
 }
 export default OrdersScreen

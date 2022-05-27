@@ -38,7 +38,7 @@ const Order = () => {
       href: `${routes.private.orders}`
     },
     {
-      title: `Encomenda ${orderId}`,
+      title: `Encomenda Nº${orderId}`,
       href: `${routes.private.profile}`
     }
   ]

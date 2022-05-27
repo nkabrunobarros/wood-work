@@ -81,9 +81,9 @@
   padding: 1rem;
 }
 .avatar {
-  background-color: var(--white);
-  color: var(--primary);
-  border: 1px solid var(--grayTextsLight);
+  background-color: var(--white) !important;;
+  color: var(--primary) !important;
+  border: 1px solid var(--grayTextsLight) !important;;
 }
 .messageRow {
   align-items: center;

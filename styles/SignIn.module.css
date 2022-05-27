@@ -19,12 +19,6 @@
   background-size: cover;
   background-position: center;
 }
-.sidePanelTerms {
-  background-image: url('../public/Consentimento.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
 .logoImg {
   background-position: center;
   background-image: url('../public/Logotipo_Vetorizado.png');

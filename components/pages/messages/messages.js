@@ -1,10 +1,10 @@
+/* eslint-disable react/prop-types */
 //  Nodes
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 
 import Grid from '@mui/material/Grid'
 import CustomBreadcrumbs from '../../breadcrumbs'
-import routes from '../../../navigation/routes'
 import Content from '../../content/content'
 import PrimaryBtn from '../../buttons/primaryBtn'
 import { MessageSquare, Package } from 'lucide-react'
@@ -17,73 +17,23 @@ import { Box } from '@mui/system'
 
 import PropTypes from 'prop-types'
 import moment from 'moment'
+import scrollToBottom from '../../utils/ScrollToBottom'
 
-const dummy = [
-  {
-    id: 1234,
-    sentBy: 'me',
-    content: 'Hi, i would like to know the Eta of my order please? Thank you',
-    createdAt: '03/02/2022'
-  },
-  {
-    id: 123,
-    sentBy: 'other',
-    content: 'Hi, the expected time of arrivel for your order is within 1 week, thank you',
-    createdAt: '03/02/2022'
-  },
-  {
-    id: 12345,
-    sentBy: 'me',
-    content:
-      'Ok thank you',
-    createdAt: '03/02/2022'
-  }
-]
-const ConversationRow = ({ message }) => {
-  ConversationRow.propTypes = {
-    message: PropTypes.object
-  }
-  if (message.sentBy === 'me') {
-    return (
-      <div className={styles.conversation}>
-        <a
-          className={styles.conversationContentMe}
-          style={{ marginLeft: 'auto' }}
-        >
-          {message.content}
-          <br></br>
-          <a className={styles.messageDate}> {message.createdAt}</a>
-        </a>
-        <Avatar className={styles.avatar}>B</Avatar>
-      </div>
-    )
-  } else {
-    return (
-      <div className={styles.conversation}>
-        <Avatar className={styles.avatar}>N</Avatar>
-        <div className={styles.conversationContent}>
-          {message.content}
-          <br></br>
-          <a className={styles.messageDate}> {message.createdAt}</a>
-        </div>
-      </div>
-    )
-  }
-}
-
-const Messages = () => {
+const Messages = ({ ...props }) => {
+  const { dummy, breadcrumbsPath } = props
   const [history, setHistory] = useState(dummy)
   const [newMessage, setNewMessage] = useState('')
   const [activeRow, setActiveRow] = useState(0)
+  const [loadMessage, setLoadMessage] = useState(new Date())
 
-  const breadcrumbsPath = [
-    {
-      title: 'Mensagens',
-      href: `${routes.private.messages}`
+  useEffect(() => {
+    const scroll = () => {
+      scrollToBottom('messagesContainer')
     }
-  ]
-
+    scroll()
+  }, [loadMessage])
   const handleSendMessage = (event) => {
+    setLoadMessage(new Date())
     event.preventDefault()
 
     const allMsg = history
@@ -98,7 +48,6 @@ const Messages = () => {
     setNewMessage('')
   }
 
-  // eslint-disable-next-line react/prop-types
   const MessageRow = ({ num }) => {
     let style = {}
     if (activeRow === num) {
@@ -108,7 +57,11 @@ const Messages = () => {
       }
     }
     return (
-      <tr className={styles.messageRow} style={style} onClick={() => setActiveRow(num)}>
+      <tr
+        className={styles.messageRow}
+        style={style}
+        onClick={() => setActiveRow(num)}
+      >
         <td data-label='Mensagem' className={styles.messageRowContent}>
           <div className={styles.avatarContainer}>
             <Avatar className={styles.avatar}>N</Avatar>
@@ -124,9 +77,41 @@ const Messages = () => {
         <td data-label='Data'>
           <a>11/02/2022</a>
         </td>
-        <td>{activeRow === num ? <div className="dot"></div> : null}</td>
+        <td>{activeRow === num ? <div className='dot'></div> : null}</td>
       </tr>
     )
+  }
+
+  const ConversationRow = ({ message }) => {
+    ConversationRow.propTypes = {
+      message: PropTypes.object
+    }
+    if (message.sentBy === 'me') {
+      return (
+        <div className={styles.conversation}>
+          <a
+            className={styles.conversationContentMe}
+            style={{ marginLeft: 'auto' }}
+          >
+            {message.content}
+            <br></br>
+            <a className={styles.messageDate}> {message.createdAt}</a>
+          </a>
+          <Avatar className={styles.avatar}>B</Avatar>
+        </div>
+      )
+    } else {
+      return (
+        <div className={styles.conversation}>
+          <Avatar className={styles.avatar}>N</Avatar>
+          <div className={styles.conversationContent}>
+            {message.content}
+            <br></br>
+            <a className={styles.messageDate}> {message.createdAt}</a>
+          </div>
+        </div>
+      )
+    }
   }
 
   return (
@@ -134,7 +119,8 @@ const Messages = () => {
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
-        <div id="pad"
+        <div
+          id='pad'
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -142,7 +128,7 @@ const Messages = () => {
           }}
         >
           <div>
-            <a className="headerTitleXl">Mensagens</a>
+            <a className='headerTitleXl'>Mensagens</a>
           </div>
           <div style={{ marginLeft: 'auto' }}>
             <PrimaryBtn icon={<MessageSquare />} text={'Criar Nova'} />
@@ -163,10 +149,15 @@ const Messages = () => {
           </div>
           <div className={styles.chatContainer}>
             <div className={styles.chatTitleContainer}>
-              <span><Package /></span>
+              <span>
+                <Package />
+              </span>
               <a>Order Nº 17212</a>
             </div>
-            <div className={styles.scrollableZone}>
+            <div
+              id='messagesContainer'
+              className={styles.scrollableZone}
+            >
               {history.map((message) => (
                 <ConversationRow key={message.id} message={message} />
               ))}
@@ -175,7 +166,13 @@ const Messages = () => {
               component='form'
               noValidate
               onSubmit={handleSendMessage}
-              sx={{ mt: 1, width: '100%', height: 'fit-content', position: 'relative', bottom: 0 }}
+              sx={{
+                mt: 1,
+                width: '100%',
+                height: 'fit-content',
+                position: 'relative',
+                bottom: 0
+              }}
             >
               <OutlinedInput
                 margin='normal'
