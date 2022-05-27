@@ -1,8 +1,5 @@
 const routes = {
   private: {
-    client: {
-
-    },
     //  Pages shared
     terms: '/terms',
     tos: '/tos',
@@ -13,7 +10,8 @@ const routes = {
   },
   public: {
     forgotPassword: '/forgot-password',
-    signIn: '/'
+    signIn: '/',
+    signInClient: '/signin'
   }
 }
 

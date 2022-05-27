@@ -17,7 +17,8 @@ const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.forgotPassword}`,
   `${routes.private.terms}`,
-  `${routes.private.tos}`
+  `${routes.private.tos}`,
+  `${routes.public.signInClient}`
 ]
 const Layout = ({ children }) => {
   const path = useRouter()

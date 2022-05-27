@@ -15,6 +15,7 @@
     "@capacitor/ios": "^3.5.1",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.1",
     "@mui/styled-engine-sc": "^5.8.0",

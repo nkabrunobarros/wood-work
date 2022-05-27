@@ -16,21 +16,24 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
   const ActiveLink = ({ item }) => {
     const router = useRouter()
     const style = {
-      borderColor: router.asPath === item.url ? '5px solid var(--white)' : '5px solid transparent'
+      borderColor:
+        router.asPath === item.url
+          ? '5px solid var(--white)'
+          : '5px solid transparent'
     }
     return (
-<a
-            key={item.title}
-            className={styles.drawerItem}
-            style={style}
-            onClick={() => {
-              handleDrawerToggle()
-              Router.push(`${item.url}`)
-            }}
-          >
-            <span>{item.icon}</span>
-            {item.title}
-          </a>
+      <a
+        key={item.title}
+        className={styles.drawerItem}
+        style={style}
+        onClick={() => {
+          handleDrawerToggle()
+          Router.push(`${item.url}`)
+        }}
+      >
+        <span>{item.icon}</span>
+        {item.title}
+      </a>
     )
   }
 
@@ -52,7 +55,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           minHeight: '100%'
         }}
       >
-        <IconButton style={{ marginLeft: 'auto', color: 'var(--white)' }} onClick={handleDrawerToggle}>
+        <IconButton
+          style={{ marginLeft: 'auto', color: 'var(--white)' }}
+          onClick={handleDrawerToggle}
+        >
           <X />
         </IconButton>
         {/* Sidebar Items List here */}
@@ -61,9 +67,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
         />
         <div className='scrollableZone'>
-        {navLinks.map((item, i) => (
-          <ActiveLink key={i} item={item} />
-        ))}
+          {navLinks.map((item, i) => (
+            <ActiveLink key={i} item={item} />
+          ))}
         </div>
       </div>
     </Drawer>

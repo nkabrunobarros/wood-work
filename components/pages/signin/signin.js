@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 //  Nodes
 import React, { useState } from 'react'
 import Button from '@mui/material/Button'
@@ -18,9 +19,9 @@ import routes from '../../../navigation/routes'
 import Router from 'next/router'
 import Footer from '../../layout/footer/footer'
 
-const SignIn = () => {
+const SignIn = ({ ...props }) => {
   const [visible, setVisible] = useState(true)
-
+  const { client } = props
   const handleSubmit = (event) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -70,7 +71,7 @@ const SignIn = () => {
               alignItems: 'start'
             }}
           >
-            <Typography color={'primary'}>Portal Interno WW4.0</Typography>
+            <Typography color={'primary'}>{!client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0' }</Typography>
             <Typography component='h1' variant='h2'>
               Login
             </Typography>

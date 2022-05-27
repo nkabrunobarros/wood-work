@@ -2,22 +2,22 @@
 :root {
   --primary: #225ee8;
   --primary-dark: #0c2254;
-  --primary-light-opacity: #F1F7FF;
+  --primary-light-opacity: #f1f7ff;
 
   --white: rgb(255, 255, 255);
   --green: #0b9e23;
-  --greenLight: #E8FCF1;
+  --greenLight: #e8fcf1;
   --orange: #e98609;
   --babyblue: #1b91e7;
-  --grayBG: #F9F9F9;
-  --grayEdges: #E7E8E9;
-  --grayTexts: #5F5F5F;
-  --grayTextsLight : #70798E;
-  --grayLight : #8C8C8C;
-  --red: #990D00;
-  --redLight: #FFE8E5;
-  --yellow: #CC7E00;
-  --yellowLight: #FFF5E5;
+  --grayBG: #f9f9f9;
+  --grayEdges: #e7e8e9;
+  --grayTexts: #5f5f5f;
+  --grayTextsLight: #70798e;
+  --grayLight: #8c8c8c;
+  --red: #990d00;
+  --redLight: #ffe8e5;
+  --yellow: #cc7e00;
+  --yellowLight: #fff5e5;
 }
 
 html,
@@ -43,7 +43,7 @@ a {
 .pagination {
   background-color: var(--grayBG);
   border: 1px solid var(--grayEdges);
-  border-radius: 50px
+  border-radius: 50px;
 }
 
 .spacer {
@@ -53,23 +53,23 @@ a {
 .successBalloon {
   color: var(--green);
   background: var(--greenLight);
-  font-weight: bold ;
+  font-weight: bold;
   padding: 0.5rem;
-  border-radius: 50px
+  border-radius: 50px;
 }
 .warningBalloon {
   color: var(--yellow);
   background: var(--yellowLight);
-  font-weight: bold ;
+  font-weight: bold;
   padding: 0.5rem;
-  border-radius: 50px
+  border-radius: 50px;
 }
 .errorBalloon {
   color: var(--red);
   background: var(--redLight);
-  font-weight: bold ;
+  font-weight: bold;
   padding: 0.5rem;
-  border-radius: 50px
+  border-radius: 50px;
 }
 .dot {
   height: 8px;
@@ -92,7 +92,7 @@ a {
   font-weight: bolder;
 }
 #pad {
-  padding: 24px
+  padding: 24px;
 }
 #align {
   display: flex;
@@ -129,10 +129,10 @@ a {
   color: black;
 }
 .infoBox {
-width: fit-content;
-justify-content: space-evenly;
-display: flex;
-flex-direction: column;
+  width: fit-content;
+  justify-content: space-evenly;
+  display: flex;
+  flex-direction: column;
 }
 .dark {
   background-color: var(--grayBG);
@@ -148,10 +148,7 @@ flex-direction: column;
   flex-direction: row;
 }
 .mobile {
-  display: none
-}
-.mobileView {
-
+  display: none;
 }
 @media screen and (max-width: 40em) {
   .flex {
@@ -170,4 +167,3 @@ flex-direction: column;
     display: none;
   }
 }
-

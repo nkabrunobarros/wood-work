@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 //  Preloader
 import Loader from '../components/loader/loader'
+import getUsers from '../components/mock/Users'
 import ProfileScreen from '../components/pages/profile/profile'
 
 //  Page Component
@@ -15,18 +16,8 @@ const Profile = () => {
     }, 1500)
   }, [])
 
-  const user = {
-    id: Math.random(),
-    name: 'Bruno Barros',
-    email: 'bruno.barros@nka.pt',
-    permission: 'Administrador',
-    status: 'Ativo',
-    cellphone: '939921227',
-    phoneCode: '+351',
-    phone: '258258258',
-    address: 'Rua do quintal, Nº 47',
-    country: 'Portugal'
-  }
+  const users = getUsers()
+  const user = users.find(user => user.id === 1)
   const props = {
     user
   }
