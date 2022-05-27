@@ -38,7 +38,7 @@ const Navbar = ({ openDrawer }) => {
           >
             <MenuOutlinedIcon
               onClick={openDrawer}
-              style={{ fontSize: '4vh' }}
+              style={{ fontSize: '4vh', color: 'var(--white)' }}
             />
           </IconButton>
         </div>
