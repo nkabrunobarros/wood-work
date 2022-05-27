@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import { Drawer, IconButton } from '@mui/material'
 
 import { useTheme } from '@emotion/react'
 import getLinks from '../../mock/navLinks'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 
 import styles from '../../../styles/components/navbar.module.css'
 import { X } from 'lucide-react'
@@ -11,6 +12,27 @@ import { X } from 'lucide-react'
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
   const theme = useTheme()
   const navLinks = getLinks()
+
+  const ActiveLink = ({ item }) => {
+    const router = useRouter()
+    const style = {
+      borderColor: router.asPath === item.url ? '5px solid var(--white)' : '5px solid transparent'
+    }
+    return (
+<a
+            key={item.title}
+            className={styles.drawerItem}
+            style={style}
+            onClick={() => {
+              handleDrawerToggle()
+              Router.push(`${item.url}`)
+            }}
+          >
+            <span>{item.icon}</span>
+            {item.title}
+          </a>
+    )
+  }
 
   return (
     <Drawer
@@ -39,18 +61,8 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
         />
         <div className='scrollableZone'>
-        {navLinks.map((item) => (
-          <a
-            key={item.title}
-            className={styles.drawerItem}
-            onClick={() => {
-              handleDrawerToggle()
-              Router.push(`${item.url}`)
-            }}
-          >
-            <span>{item.icon}</span>
-            {item.title}
-          </a>
+        {navLinks.map((item, i) => (
+          <ActiveLink key={i} item={item} />
         ))}
         </div>
       </div>

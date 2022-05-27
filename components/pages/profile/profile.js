@@ -28,7 +28,7 @@ const Profile = ({ ...props }) => {
           <div style={{ flex: 1 }}>
             <a className='headerTitleXl'>{user.name}</a>
           </div>
-          <div className='flex'>
+          <div className='flex' >
             <div>
               <PrimaryBtn text='Editar' icon={<Edit />} />
             </div>
@@ -45,10 +45,12 @@ const Profile = ({ ...props }) => {
                 <a className="lightTextSm">Nome</a><br></br>
                 <a className="lightTextSm black">{user.name}</a>
               </div>
+              <br></br>
               <div>
                 <a className="lightTextSm">Perfil de Utilizador</a><br></br>
                 <a className="lightTextSm black"> {user.permission} </a>
               </div>
+              <br></br>
               <div>
                 <a className="lightTextSm">Estado</a><br></br>
                 <a className="lightTextSm" style={{ color: 'var(--primary)' }}>{user.status}</a>
@@ -56,11 +58,11 @@ const Profile = ({ ...props }) => {
 
             </div>
             <div id="pad" className='infoBox'>
-              <a id="align" className="lightTextSm"><Mail className='primaryIcon' size={18} /> {user.email} </a>
-              <a id="align" className="lightTextSm"><Smartphone className='primaryIcon' size={18} /> {user.phoneCode} {user.cellphone} </a>
-              <a id="align" className="lightTextSm"><Phone className='primaryIcon' size={18} /> {user.phoneCode} {user.phone}</a>
-              <a id="align" className="lightTextSm"><Map className='primaryIcon' size={18} /> {user.address}</a>
-              <a id="align" className="lightTextSm"><Flag className='primaryIcon' size={18} /> {user.country} </a>
+              <a id="align" className="lightTextSm"><Mail className='primaryIcon' size={22} /> {user.email} </a>
+              <a id="align" className="lightTextSm"><Smartphone className='primaryIcon' size={22} /> {user.phoneCode} {user.cellphone} </a>
+              <a id="align" className="lightTextSm"><Phone className='primaryIcon' size={22} /> {user.phoneCode} {user.phone}</a>
+              <a id="align" className="lightTextSm"><Map className='primaryIcon' size={22} /> {user.address}</a>
+              <a id="align" className="lightTextSm"><Flag className='primaryIcon' size={22} /> {user.country} </a>
             </div>
           </div>
         </div>
