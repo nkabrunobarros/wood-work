@@ -134,7 +134,7 @@ const Messages = () => {
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
-        <div
+        <div id="pad"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -142,7 +142,7 @@ const Messages = () => {
           }}
         >
           <div>
-            <h3>Mensagens</h3>
+            <a className="headerTitleXl">Mensagens</a>
           </div>
           <div style={{ marginLeft: 'auto' }}>
             <PrimaryBtn icon={<MessageSquare />} text={'Criar Nova'} />

@@ -13,10 +13,12 @@ import Footer from '../../layout/footer/footer'
 //  Navigation
 import Router from 'next/router'
 import routes from '../../../navigation/routes'
+import { ChevronLeft } from 'lucide-react'
 
-const Terms = () => {
+const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false)
-
+  // eslint-disable-next-line react/prop-types
+  const { readOnly } = props
   const handleSubmit = (event) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -51,6 +53,22 @@ const Terms = () => {
         </Box>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={24} square>
+        {readOnly
+          ? (
+          <div
+            style={{
+              position: 'absolute',
+              marginTop: '2rem',
+              marginLeft: '2rem'
+            }}
+          >
+            <Button color="default" onClick={() => Router.back()} style={{ textTransform: 'none'}}>
+              <ChevronLeft />
+              <a>Voltar</a>
+            </Button>
+          </div>
+            )
+          : null}
         <Box
           sx={{
             my: '25%',
@@ -135,34 +153,38 @@ const Terms = () => {
             fornecidos sem qualquer custo, não seremos responsáveis por qualquer
             perda ou dano de qualquer natureza.
           </Typography>
-          <Box
-            component='form'
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: '100%' }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name='TOS'
-                  value={acceptedTerms}
-                  color='primary'
-                  onClick={() => setAcceptedTerms(!acceptedTerms)}
-                />
-              }
-              label='Li e aceito os Termos de Utilização'
-            />
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              disabled={!acceptedTerms}
-              sx={{ mt: 3, mb: 2 }}
-              onClick={() => Router.push(routes.private.orders)}
+          {readOnly
+            ? null
+            : (
+            <Box
+              component='form'
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1, width: '100%' }}
             >
-              Entrar
-            </Button>
-          </Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name='TOS'
+                    value={acceptedTerms}
+                    color='primary'
+                    onClick={() => setAcceptedTerms(!acceptedTerms)}
+                  />
+                }
+                label='Li e aceito os Termos de Utilização'
+              />
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                disabled={!acceptedTerms}
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => Router.push(routes.private.orders)}
+              >
+                Entrar
+              </Button>
+            </Box>
+              )}
         </Box>
         <Footer
           section=''

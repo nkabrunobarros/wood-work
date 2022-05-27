@@ -2,8 +2,9 @@ const routes = {
   private: {
     //  Pages shared
     terms: '/terms',
+    tos: '/tos',
     orders: '/orders',
-    order: '/orders/',
+    order: '/order/',
     profile: '/profile',
     messages: '/messages'
   },

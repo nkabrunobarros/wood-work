@@ -1,8 +1,10 @@
 // Node modules
 import { Typography } from '@mui/material'
 import Link from 'next/link'
+import Router from 'next/router'
 import PropTypes from 'prop-types'
 import React from 'react'
+import routes from '../../../navigation/routes'
 
 // Pages without layout (sidebar + navbar + footer)
 function Copyright (props) {
@@ -36,8 +38,14 @@ const Footer = ({ section }) => {
         </div>
         <div style={{ padding: '1rem', marginLeft: 'auto' }}>
           {section === 'client'
-            ? 'Termos e Condições | Política de Privacidade'
-            : 'WW4.0'}
+            ? (
+            <a className="link" style={{ color: 'inherit' }} onClick={() => Router.push(routes.private.tos)}>
+              Termos e Condições | Política de Privacidade
+            </a>
+              )
+            : (
+                'WW4.0'
+              )}
         </div>
       </div>
     </div>

@@ -54,8 +54,8 @@ const Navbar = ({ children }) => {
             'aria-labelledby': 'basic-button'
           }}
         >
-          <MenuItem onClick={() => { handleClose(); Router.push(routes.private.profile) }}> <User /> Perfil</MenuItem>
-          <MenuItem onClick={() => { handleClose(); Router.push(routes.public.signIn) }}> <LogOut /> Logout</MenuItem>
+          <MenuItem onClick={() => { Router.push(routes.private.profile); handleClose() }}> <User /> Perfil</MenuItem>
+          <MenuItem onClick={() => { Router.push(routes.public.signIn); handleClose() }}> <LogOut /> Logout</MenuItem>
         </Menu>
       </div>
     </div>

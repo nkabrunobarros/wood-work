@@ -153,7 +153,7 @@ const OrdersScreen = ({ ...props }) => {
       {/* Filters */}
       <Content>
         <div id="pad">
-        <h3>Filtros</h3>
+        <a className="headerTitleSm" >Filtros</a>
         <div className={styles.filters}>
           <div className={styles.filterContainer}>
             <InputLabel htmlFor='email'>Número</InputLabel>
@@ -231,7 +231,7 @@ const OrdersScreen = ({ ...props }) => {
       <Content>
         <div id="pad" style={{ display: 'flex', alignItems: 'center' }}>
           <div >
-            <h3>Encomendas</h3>
+            <a className="headerTitleXl">Encomendas</a>
           </div>
           <div
             style={{

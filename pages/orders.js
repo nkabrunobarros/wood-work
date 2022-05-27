@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 
 //  Preloader
 import Loader from '../components/loader/loader'
-import HomeScreen from '../components/pages/orders/orders'
+import OrdersScreen from '../components/pages/orders/orders'
 
 import PropTypes from 'prop-types'
 
 //  Page Component
 
-const Home = () => {
+const Orders = () => {
   const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     setTimeout(() => {
@@ -102,11 +102,11 @@ const Home = () => {
     orders
   }
 
-  return loaded ? <HomeScreen { ...props } /> : <div> <Loader center={true} /></div>
+  return loaded ? <OrdersScreen { ...props } /> : <div> <Loader center={true} /></div>
 }
-Home.propTypes = {
+Orders.propTypes = {
   categories: PropTypes.array,
   orders: PropTypes.array
 }
 
-export default Home
+export default Orders

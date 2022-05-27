@@ -93,14 +93,14 @@
   background-color: var(--white);
   cursor: pointer;
 }
+.messageRow:hover {
+  background-color: var(--primary-light-opacity) !important;
+  border-left: 4px solid var(--primary);
+}
 .messageRowContent {
   display: flex;
   align-items: center;
   word-wrap: break-word;
-}
-.messageRow:hover {
-  background-color: var(--primary-light-opacity) !important;
-  border-left: 4px solid var(--primary);
 }
 .sender {
   color: var(--primary);

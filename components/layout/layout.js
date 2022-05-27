@@ -10,7 +10,8 @@ import Footer from './footer/footer'
 const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.forgotPassword}`,
-  `${routes.private.terms}`
+  `${routes.private.terms}`,
+  `${routes.private.tos}`
 ]
 
 const Layout = ({ children }) => {
@@ -25,7 +26,7 @@ const Layout = ({ children }) => {
           <Navbar />
           <div style={{ padding: '0rem 2rem 5rem 2rem' }}>{children}</div>
         </main>
-        <Footer />
+        <Footer section='client' />
       </div>
     </>
   )
