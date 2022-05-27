@@ -62,7 +62,7 @@ const Terms = ({ ...props }) => {
               marginLeft: '2rem'
             }}
           >
-            <Button color="default" onClick={() => Router.back()} style={{ textTransform: 'none'}}>
+            <Button color="default" onClick={() => Router.back()} style={{ textTransform: 'none' }}>
               <ChevronLeft />
               <a>Voltar</a>
             </Button>
