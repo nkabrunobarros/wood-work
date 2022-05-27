@@ -12,7 +12,7 @@
   background-color: var(--grayBG);
   display: flex;
   justify-content: start;
-  align-items: end;
+  align-items: flex-end;
   flex-direction: column;
   padding: 2rem;
   max-height: 100%;
