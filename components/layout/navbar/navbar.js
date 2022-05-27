@@ -1,6 +1,10 @@
 // Node modules
-import { Menu, MenuItem } from '@mui/material'
-import { Archive, ChevronDown, LogOut, MessageCircle, User } from 'lucide-react'
+import { IconButton, Menu, MenuItem } from '@mui/material'
+import {
+  ChevronDown,
+  LogOut,
+  User
+} from 'lucide-react'
 import Router from 'next/router'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
@@ -8,20 +12,11 @@ import routes from '../../../navigation/routes'
 
 import styles from '../../../styles/components/navbar.module.css'
 import ActiveLink from './activeLink'
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
+import getLinks from '../../mock/navLinks'
 
-const Navbar = ({ children }) => {
-  const navLinks = [
-    {
-      title: 'Encomendas',
-      url: routes.private.orders,
-      icon: <Archive color='white' />
-    },
-    {
-      title: 'Mensagens',
-      url: routes.private.messages,
-      icon: <MessageCircle color='white' />
-    }
-  ]
+const Navbar = ({ openDrawer }) => {
+  const navLinks = getLinks()
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -34,13 +29,30 @@ const Navbar = ({ children }) => {
   return (
     <div className={styles.main}>
       <div className={styles.navigationButtons}>
-        <img
-          className={styles.logoImg}
-          src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
-        />
-        {navLinks.map((item, i) => (
-            <ActiveLink key={i} href={item.url}>{item.icon} {item.title}</ActiveLink>
-        ))}
+        <div className='mobile'>
+          <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            edge='start'
+            sx={{ ml: 2, ...(open && { display: 'none' }) }}
+          >
+            <MenuOutlinedIcon
+              onClick={openDrawer}
+              style={{ fontSize: '4vh' }}
+            />
+          </IconButton>
+        </div>
+        <div className='mobileView flex'>
+          <img
+            className={styles.logoImg}
+            src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
+          />
+          {navLinks.map((item, i) => (
+            <ActiveLink key={i} href={item.url}>
+              {item.icon} {item.title}
+            </ActiveLink>
+          ))}
+        </div>
         <a className={styles.userDropdown} onClick={handleClick}>
           <User />
           Bruno Barros
@@ -54,15 +66,29 @@ const Navbar = ({ children }) => {
             'aria-labelledby': 'basic-button'
           }}
         >
-          <MenuItem onClick={() => { Router.push(routes.private.profile); handleClose() }}> <User /> Perfil</MenuItem>
-          <MenuItem onClick={() => { Router.push(routes.public.signIn); handleClose() }}> <LogOut /> Logout</MenuItem>
+          <MenuItem
+            onClick={() => {
+              Router.push(routes.private.profile)
+              handleClose()
+            }}
+          >
+            <User /> Perfil
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              Router.push(routes.public.signIn)
+              handleClose()
+            }}
+          >
+            <LogOut /> Logout
+          </MenuItem>
         </Menu>
       </div>
     </div>
   )
 }
 Navbar.propTypes = {
-  children: PropTypes.any
+  openDrawer: PropTypes.any
 }
 
 export default Navbar

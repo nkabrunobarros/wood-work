@@ -15,6 +15,22 @@ const Profile = () => {
     }, 1500)
   }, [])
 
-  return loaded ? <ProfileScreen /> : <div> <Loader center={true} /></div>
+  const user = {
+    id: Math.random(),
+    name: 'Bruno Barros',
+    email: 'bruno.barros@nka.pt',
+    permission: 'Administrador',
+    status: 'Ativo',
+    cellphone: '939921227',
+    phoneCode: '+351',
+    phone: '258258258',
+    address: 'Rua do quintal, Nº 47',
+    country: 'Portugal'
+  }
+  const props = {
+    user
+  }
+
+  return loaded ? <ProfileScreen {...props} /> : <div> <Loader center={true} /></div>
 }
 export default Profile

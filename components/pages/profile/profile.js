@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 //  Nodes
 import React from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -9,7 +10,8 @@ import Content from '../../content/content'
 import PrimaryBtn from '../../buttons/primaryBtn'
 import { Edit, Flag, Mail, Map, Phone, Smartphone, Trash, User } from 'lucide-react'
 
-const Profile = () => {
+const Profile = ({ ...props }) => {
+  const { user } = props
   const breadcrumbsPath = [
     {
       title: 'Utilizador',
@@ -24,7 +26,7 @@ const Profile = () => {
       <Content >
         <div id='pad' style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
-            <a className='headerTitleXl'>João Magalhães</a>
+            <a className='headerTitleXl'>{user.name}</a>
           </div>
           <div className='flex'>
             <div>
@@ -41,24 +43,24 @@ const Profile = () => {
             <div id="pad" className='infoBox dark'>
               <div>
                 <a className="lightTextSm">Nome</a><br></br>
-                <a className="lightTextSm black">Joao</a>
+                <a className="lightTextSm black">{user.name}</a>
               </div>
               <div>
                 <a className="lightTextSm">Perfil de Utilizador</a><br></br>
-                <a className="lightTextSm black">Administrador</a>
+                <a className="lightTextSm black"> {user.permission} </a>
               </div>
               <div>
                 <a className="lightTextSm">Estado</a><br></br>
-                <a className="lightTextSm" style={{ color: 'var(--primary)' }}>Joao</a>
+                <a className="lightTextSm" style={{ color: 'var(--primary)' }}>{user.status}</a>
               </div>
 
             </div>
             <div id="pad" className='infoBox'>
-              <a id="align" className="lightTextSm"><Mail className='primaryIcon' size={18} /> Informações Gerais</a>
-              <a id="align" className="lightTextSm"><Smartphone className='primaryIcon' size={18} /> Informações Gerais</a>
-              <a id="align" className="lightTextSm"><Phone className='primaryIcon' size={18} /> Informações Gerais</a>
-              <a id="align" className="lightTextSm"><Map className='primaryIcon' size={18} /> Informações Gerais</a>
-              <a id="align" className="lightTextSm"><Flag className='primaryIcon' size={18} /> Informações Gerais</a>
+              <a id="align" className="lightTextSm"><Mail className='primaryIcon' size={18} /> {user.email} </a>
+              <a id="align" className="lightTextSm"><Smartphone className='primaryIcon' size={18} /> {user.phoneCode} {user.cellphone} </a>
+              <a id="align" className="lightTextSm"><Phone className='primaryIcon' size={18} /> {user.phoneCode} {user.phone}</a>
+              <a id="align" className="lightTextSm"><Map className='primaryIcon' size={18} /> {user.address}</a>
+              <a id="align" className="lightTextSm"><Flag className='primaryIcon' size={18} /> {user.country} </a>
             </div>
           </div>
         </div>

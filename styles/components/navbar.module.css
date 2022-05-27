@@ -51,3 +51,26 @@
     border-bottom: 5px solid var(--white);
     transition: ease-in-out 0.5s;
   }
+
+.drawerItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
+  padding: 1rem;
+  cursor: pointer;
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+  width: 100%;
+  border-left: 4px solid transparent;
+
+}
+
+.drawerItem span {
+  padding-right: 1rem;
+}
+.drawerItem:hover {
+  border-color: var(--white);
+}

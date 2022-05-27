@@ -150,10 +150,13 @@ flex-direction: column;
 .mobile {
   display: none
 }
+.mobileView {
 
+}
 @media screen and (max-width: 40em) {
   .flex {
     flex-direction: column;
+    align-items: center;
   }
   .mobile {
     display: block !important;
@@ -163,6 +166,9 @@ flex-direction: column;
   }
   .headerTitleXl {
     font-size: 6vw;
+  }
+  .mobileView {
+    display: none;
   }
 }
 
