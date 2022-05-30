@@ -7,20 +7,25 @@ import OrdersScreen from '../components/pages/orders/orders'
 
 import PropTypes from 'prop-types'
 
-import getCategories from '../components/mock/Categories'
+import { getCategories } from '../components/mock/Categories'
 import getOrders from '../components/mock/Orders'
 import routes from '../navigation/routes'
 
-//  Page Component
+export async function getServerSideProps (context) {
+  const res = await getCategories()
 
-const Orders = () => {
+  return {
+    props: { categories: res } // will be passed to the page component as props
+  }
+}
+
+const Orders = ({ categories }) => {
   const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true)
     }, 1500)
   }, [])
-  const categories = getCategories()
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {

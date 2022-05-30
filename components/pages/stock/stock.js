@@ -13,7 +13,7 @@ import PrimaryBtn from '../../buttons/primaryBtn'
 import PropTypes from 'prop-types'
 import { Edit, PackagePlus, Trash } from 'lucide-react'
 import { Divider } from '@mui/material'
-import getCategory from '../../utils/getCategory'
+import DisplayCategory from '../../utils/DisplayCategory'
 import displayWithStyle from '../../utils/displayTextWithStyle'
 
 const Stock = ({ ...props }) => {
@@ -59,7 +59,7 @@ const Stock = ({ ...props }) => {
               <div>
                 <a className='lightTextSm'>Categoria</a>
                 <br></br>
-                <a className='lightTextSm black'>{getCategory(product.categoria)}</a>
+                <a className='lightTextSm black'>{DisplayCategory(product.categoria)}</a>
               </div>
               <div>
                 <a className='lightTextSm'>Custo Unitario</a>

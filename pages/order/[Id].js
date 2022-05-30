@@ -7,7 +7,6 @@ import routes from '../../navigation/routes'
 const Order = () => {
   const [loaded, setLoaded] = useState(false)
   const router = useRouter()
-  console.log(router)
   const orderId = router.query.Id
 
   const docs = [

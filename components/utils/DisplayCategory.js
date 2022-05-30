@@ -1,4 +1,4 @@
-import getCategories from '../mock/Categories'
+import { getCategories } from '../mock/Categories'
 
 const getCategory = (categoryId) => {
   const { find } = require('lodash')

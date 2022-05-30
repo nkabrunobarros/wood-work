@@ -7,26 +7,29 @@ import OrdersScreen from '../components/pages/orders/orders'
 
 import PropTypes from 'prop-types'
 
-import getCategories from '../components/mock/Categories'
+import { getCategories } from '../components/mock/Categories'
 import { getStock } from '../components/mock/Stock'
 import routes from '../navigation/routes'
 
 //  Page Component
+export async function getServerSideProps (context) {
+  const res = await getStock()
+  const res2 = await getCategories()
 
-const Stock = () => {
+  return {
+    props: { allStock: res, allCategories: res2 } // will be passed to the page component as props
+  }
+}
+
+const Stock = ({ allStock, allCategories }) => {
   const [loaded, setLoaded] = useState(false)
-  const [items, setItems] = useState()
+  const categories = allCategories
+  const items = allStock
   useEffect(() => {
-    const getData = async () => {
-      const res = await getStock()
-      setItems(res)
-    }
-    getData()
     setTimeout(() => {
       setLoaded(true)
     }, 1500)
   }, [])
-  const categories = getCategories()
 
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
@@ -44,7 +47,6 @@ const Stock = () => {
     'ações'
   ]
   const detailPage = routes.private.stockId
-
   const props = {
     categories,
     items,
@@ -65,9 +67,11 @@ const Stock = () => {
 }
 Stock.propTypes = {
   categories: PropTypes.array,
+  allCategories: PropTypes.array,
   orders: PropTypes.array,
   tableCols: PropTypes.array,
-  detailPage: PropTypes.any
+  detailPage: PropTypes.any,
+  allStock: PropTypes.array
 }
 
 export default Stock

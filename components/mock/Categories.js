@@ -19,4 +19,4 @@ function getCategories () {
   ]
   return categories
 }
-export default getCategories
+export { getCategories }

@@ -11,7 +11,7 @@
   flex: 2;
   background-color: var(--grayBG);
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: flex-end;
   flex-direction: column;
   padding: 2rem;

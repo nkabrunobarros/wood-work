@@ -30,7 +30,7 @@ import CustomTable from '../../table/table'
 import Router from 'next/router'
 import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
 import displayWithStyle from '../../utils/displayTextWithStyle'
-import getCategory from '../../utils/getCategory'
+import DisplayCategory from '../../utils/DisplayCategory'
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -47,11 +47,11 @@ const OrdersScreen = ({ ...props }) => {
     if (col === 'em distribuição') {
       return <a>{displayWithStyle(item.distribuição)}</a>
     } else if (index === 0) {
-      return <a className='link'>{displayWithStyle(item[`${col}`])}</a>
+      return <a className='link'>Nº {displayWithStyle(item[`${col}`])}</a>
     }
     switch (col) {
       case 'categoria':
-        return <a>{getCategory(item[`${col}`])}</a>
+        return <a>{DisplayCategory(item[`${col}`])}</a>
       case 'ações':
         return (
           <>

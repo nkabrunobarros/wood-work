@@ -13,7 +13,6 @@ export async function getServerSideProps (context) {
   }
 }
 const Stock = ({ allStock }) => {
-  console.log(allStock)
   const [loaded, setLoaded] = useState(false)
   const router = useRouter()
   const stockId = router.query.Id
