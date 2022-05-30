@@ -253,8 +253,8 @@ const OrdersScreen = ({ ...props }) => {
             </Select>
             Itens
             <div className='spacer'>|</div>
-            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
-            items
+            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length} {' '}
+            itens
             <div className='spacer'></div>
             <Pagination
               count={totalPages}

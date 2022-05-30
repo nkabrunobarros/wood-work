@@ -1,32 +1,32 @@
-function getUsers () {
+async function getUsers () {
   const users = [
     {
       id: 1,
-      name: 'Bruno Barros',
+      nome: 'Bruno Barros',
       password: '123456',
       email: 'bruno.barros@nka.pt',
-      permission: 'Administrador',
+      perfil: 'Administrador',
       status: 'Ativo',
-      cellphone: '939921227',
-      phoneCode: '+351',
-      phone: '258258258',
-      address: 'Rua do quintal, Nº 47',
-      country: 'Portugal'
+      telemovel: '939921227',
+      codigo: '+351',
+      telefone: '258258258',
+      morada: 'Rua do quintal, Nº 47',
+      pais: 'Portugal'
     },
     {
       id: 2,
-      name: 'João Magalhães',
+      nome: 'João Magalhães',
       email: 'joao.magalhaes@nka.pt',
       password: '123456',
-      permission: 'Client',
+      perfil: 'Client',
       status: 'Ativo',
-      cellphone: '939921227',
-      phoneCode: '+351',
+      celltelefone: '939921227',
+      codigo: '+351',
       phone: '258258258',
-      address: 'Rua do quintal, Nº 47',
-      country: 'Portugal'
+      morada: 'Rua do quintal, Nº 47',
+      pais: 'Portugal'
     }
   ]
   return users
 }
-export default getUsers
+export { getUsers }

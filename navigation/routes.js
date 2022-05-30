@@ -8,7 +8,8 @@ const routes = {
     profile: '/profile',
     messages: '/messages',
     stock: '/stock',
-    stockId: '/stock/'
+    stockId: '/stock/',
+    users: '/users'
   },
   public: {
     forgotPassword: '/forgot-password',

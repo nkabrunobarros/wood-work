@@ -67,7 +67,7 @@ const Messages = ({ ...props }) => {
             <Avatar className={styles.avatar}>N</Avatar>
           </div>
           <div style={{ paddingLeft: '1rem' }}>
-            <div className={styles.sender}> Order Nº 17212</div>
+            <div className={styles.sender}> Encomenda Nº 17212</div>
             <div>
               Hey man this is a dummy text just to see how far this goes and how
               it goes and still goes futher than this omg what the hell
@@ -152,7 +152,7 @@ const Messages = ({ ...props }) => {
               <span>
                 <Package />
               </span>
-              <a>Order Nº 17212</a>
+              <a>Encomenda Nº 17212</a>
             </div>
             <div
               id='messagesContainer'

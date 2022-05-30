@@ -26,12 +26,12 @@ function getLinks () {
     },
     {
       title: 'Clientes',
-      url: '#',
+      url: routes.private.users,
       icon: <Users color='white' />
     },
     {
       title: 'Utilizadores',
-      url: '#',
+      url: routes.private.users,
       icon: <Users color='white' />
     }
   ]
