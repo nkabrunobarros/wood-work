@@ -1,4 +1,4 @@
-import { Archive, MessageCircle } from 'lucide-react'
+import { Archive, MessageCircle, Table, Users } from 'lucide-react'
 import routes from '../../navigation/routes'
 import React from 'react'
 
@@ -22,17 +22,17 @@ function getLinks () {
     {
       title: 'Stock',
       url: '#',
-      icon: <MessageCircle color='white' />
+      icon: <Table color='white' />
     },
     {
       title: 'Clientes',
       url: '#',
-      icon: <MessageCircle color='white' />
+      icon: <Users color='white' />
     },
     {
       title: 'Utilizadores',
       url: '#',
-      icon: <MessageCircle color='white' />
+      icon: <Users color='white' />
     }
   ]
   return navLinks

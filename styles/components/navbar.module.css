@@ -74,3 +74,9 @@
 .drawerItem:hover {
   border-color: var(--white);
 }
+
+@media screen and (max-width: 40em) {
+  .userDropdown {
+    display: none;
+  }
+}

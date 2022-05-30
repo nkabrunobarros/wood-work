@@ -1,17 +1,35 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
-import { Drawer, IconButton } from '@mui/material'
+import React, { useState } from 'react'
+import {
+  Collapse,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText
+} from '@mui/material'
 
 import { useTheme } from '@emotion/react'
 import getLinks from '../../mock/navLinks'
 import Router, { useRouter } from 'next/router'
 
 import styles from '../../../styles/components/navbar.module.css'
-import { X } from 'lucide-react'
+import { LogOut, User, X } from 'lucide-react'
+import routes from '../../../navigation/routes'
+import { ExpandLess, ExpandMore } from '@mui/icons-material'
 // eslint-disable-next-line react/prop-types
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
   const theme = useTheme()
   const navLinks = getLinks()
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => {
+    if (anchorEl === null) setAnchorEl(event.currentTarget)
+    else setAnchorEl(null)
+  }
 
   const ActiveLink = ({ item }) => {
     const router = useRouter()
@@ -55,17 +73,64 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           minHeight: '100%'
         }}
       >
-        <IconButton
-          style={{ marginLeft: 'auto', color: 'var(--white)' }}
-          onClick={handleDrawerToggle}
-        >
-          <X />
-        </IconButton>
         {/* Sidebar Items List here */}
-        <img
-          style={{ padding: '1rem' }}
-          src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
-        />
+        <div
+          style={{
+            backgroundColor: 'var(--primary-dark)',
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
+          <IconButton
+            style={{ color: 'var(--white)', position: 'absolute', right: '0%' }}
+            onClick={handleDrawerToggle}
+          >
+            <X />
+          </IconButton>
+          <img
+            style={{
+              maxWidth: '100px',
+              maxHeight: '100px',
+              margin: '1rem'
+            }}
+            src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
+          />
+
+          <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
+            <ListItemText primary='Bruno Barros' secondary={<a style={{ color: '#FFFFFF', fontSize: 'small' }}>Bruno.barros@nka.pt</a>} />
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={open} timeout='auto' unmountOnExit sx={{ color: 'white' }}>
+            <List component='div' disablePadding >
+              <ListItemButton onClick={() => {
+                Router.push(routes.private.profile)
+                handleClick()
+              }}>
+                <ListItemIcon>
+                  <User color='white' />
+                </ListItemIcon>
+                <ListItemText primary='Perfil' />
+              </ListItemButton>
+
+              <ListItemButton onClick={() => {
+                Router.push(routes.public.signIn)
+                handleClick()
+              }}>
+                <ListItemIcon>
+                  <LogOut color='white' />
+                </ListItemIcon>
+                <ListItemText primary='Logout' />
+              </ListItemButton>
+            </List>
+          </Collapse>
+
+          <Divider
+            color='white'
+            width='100%'
+            style={{ marginTop: '1rem', marginBottom: '1rem' }}
+          />
+        </div>
         <div className='scrollableZone'>
           {navLinks.map((item, i) => (
             <ActiveLink key={i} item={item} />
