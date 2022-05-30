@@ -1,1 +1,1 @@
-export { default } from './[orderId]'
+export { default } from './[Id]'
