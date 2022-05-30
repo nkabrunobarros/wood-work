@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 import {
   Collapse,
   Divider,
-  Drawer,
   IconButton,
   List,
   ListItemButton,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  SwipeableDrawer
 } from '@mui/material'
 
 import { useTheme } from '@emotion/react'
@@ -56,7 +56,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
   }
 
   return (
-    <Drawer
+    <SwipeableDrawer
+      disableSwipeToOpen={false}
+      onOpen={handleDrawerToggle}
+      swipeAreaWidth={20}
       variant='temporary'
       anchor={theme.direction === 'rtl' ? 'right' : 'left'}
       open={mobileOpen}
@@ -137,7 +140,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           ))}
         </div>
       </div>
-    </Drawer>
+    </SwipeableDrawer>
   )
 }
 export default DrawerMobile
