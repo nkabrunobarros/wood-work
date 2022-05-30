@@ -9,7 +9,8 @@ const routes = {
     messages: '/messages',
     stock: '/stock',
     stockId: '/stock/',
-    users: '/users'
+    users: '/users',
+    clients: '/clients'
   },
   public: {
     forgotPassword: '/forgot-password',

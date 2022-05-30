@@ -26,7 +26,7 @@ function getLinks () {
     },
     {
       title: 'Clientes',
-      url: routes.private.users,
+      url: routes.private.clients,
       icon: <Users color='white' />
     },
     {

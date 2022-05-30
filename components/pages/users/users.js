@@ -13,9 +13,14 @@ import PrimaryBtn from '../../buttons/primaryBtn'
 import PropTypes from 'prop-types'
 import CustomTable from '../../table/table'
 import { Edit, Trash } from 'lucide-react'
-import { MenuItem, Pagination, Select } from '@mui/material'
+import {
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Pagination,
+  Select
+} from '@mui/material'
 import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
-
 const DisplayCol = (col, item, index) => {
   if (index === 0) return <a className='link'>{item[`${col}`]}</a>
   switch (col) {
@@ -32,19 +37,28 @@ const DisplayCol = (col, item, index) => {
 }
 
 const Users = ({ ...props }) => {
-  const { items, breadcrumbsPath, tableCols } = props
+  const { items, breadcrumbsPath, tableCols, countries } = props
+
   const [page, setPage] = useState(1)
   const [entries, setEntries] = useState(5)
   const [totalPages, setTotalPages] = useState(0)
   const [showingMin, setShowingMin] = useState(0)
   const [showingMax, setShowingMax] = useState(entries)
-
   const [itemsPerPage, setItemsPerPage] = useState([])
+
+  //  States
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
+  const [morada, setMorada] = useState('')
 
   const handleChangePage = (event, value) => {
     setPage(value)
   }
-
+  const ClearFilters = () => {
+    setNome('')
+    setEmail('')
+    setMorada('')
+  }
   useEffect(() => {
     const calculatePages = () => {
       const numPages = Math.ceil(items.length / entries)
@@ -61,6 +75,70 @@ const Users = ({ ...props }) => {
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
+      {/* Filters */}
+      <Content>
+        <div id='pad'>
+          <a className='headerTitleSm'>Filtros</a>
+          <div className='filters'>
+            <div className='filterContainer'>
+              <InputLabel htmlFor='email'>Nome</InputLabel>
+              <OutlinedInput
+                margin='normal'
+                fullWidth
+                id='nome'
+                name='nome'
+                autoComplete='nome'
+                type='nome'
+                placeholder='Escrever um nome'
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+            <div className='filterContainer'>
+              <InputLabel htmlFor='email'>Email</InputLabel>
+              <OutlinedInput
+                margin='normal'
+                fullWidth
+                id='email'
+                name='email'
+                autoComplete='email'
+                placeholder='Escrever um email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className={'filterContainer'}>
+              <InputLabel htmlFor='Categoria'>País</InputLabel>
+              <Select
+                labelId='Pais'
+                id='Pais'
+                fullWidth
+                value={morada}
+                onChange={(e) => setMorada(e.target.value)}
+              >
+                <MenuItem value={''} disabled>
+                  Selecionar uma categoria
+                </MenuItem>
+                  {countries.map((country) => (
+                    <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+                  ))}
+              </Select>
+            </div>
+          </div>
+          <div
+            style={{
+              width: 'fit-content',
+              marginLeft: 'auto',
+              paddingTop: '1rem'
+            }}
+          >
+            <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
+          </div>
+        </div>
+      </Content>
+
       <Content>
         <div
           id='pad'
@@ -96,7 +174,7 @@ const Users = ({ ...props }) => {
               </Select>
               Itens
               <div className='spacer'>|</div>
-              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length} {' '}
+              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}{' '}
               items
               <div className='spacer'></div>
               <Pagination
@@ -119,7 +197,9 @@ const Users = ({ ...props }) => {
           />
         </div>
         <CustomTable columns={tableCols}>
-          {itemsPerPage.map((item, i) => (
+          {itemsPerPage
+            .filter((item) => item.nome.includes(nome) && item.email.includes(email))
+            .map((item, i) => (
             <tr key={item.id}>
               {tableCols.map((element, i) => (
                 <td key={element.id} data-label={tableCols[i].toUpperCase()}>
@@ -127,7 +207,7 @@ const Users = ({ ...props }) => {
                 </td>
               ))}
             </tr>
-          ))}
+            ))}
         </CustomTable>
       </Content>
     </Grid>
@@ -136,6 +216,7 @@ const Users = ({ ...props }) => {
 Users.propTypes = {
   product: PropTypes.any,
   docs: PropTypes.arrayOf(PropTypes.object),
-  itemsPerPage: PropTypes.array
+  itemsPerPage: PropTypes.array,
+  countries: PropTypes.array
 }
 export default Users
