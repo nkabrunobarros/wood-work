@@ -11,6 +11,10 @@ function getCategories () {
     {
       id: 851,
       title: 'Madeira'
+    },
+    {
+      id: 100,
+      title: 'Variados'
     }
   ]
   return categories

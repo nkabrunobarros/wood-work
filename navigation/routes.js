@@ -6,7 +6,9 @@ const routes = {
     orders: '/orders',
     order: '/order/',
     profile: '/profile',
-    messages: '/messages'
+    messages: '/messages',
+    stock: '/stock',
+    stockId: '/stock/'
   },
   public: {
     forgotPassword: '/forgot-password',

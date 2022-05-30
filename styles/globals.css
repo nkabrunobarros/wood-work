@@ -126,8 +126,13 @@ a {
   font-weight: bold;
 }
 .black {
-  color: black;
+  color: black !important;
 }
+
+.light {
+  color: var(--grayLight)
+}
+
 .infoBox {
   width: fit-content;
   justify-content: space-evenly;

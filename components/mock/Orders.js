@@ -2,67 +2,67 @@
 function getOrders () {
   const orders = [
     {
-      id: 1574523,
-      category: 512,
+      numero: 1574523,
+      categoria: 512,
       stock: 'Disponível',
-      production: 'Não Iniciada',
-      distribution: 'Não'
+      produção: 'Não Iniciada',
+      distribuição: 'Não'
     },
     {
-      id: 56598,
-      category: 128,
+      numero: 56598,
+      categoria: 128,
       stock: 'Indisponível',
-      production: 'Iniciada',
-      distribution: 'Em Curso'
+      produção: 'Iniciada',
+      distribuição: 'Em Curso'
     },
     {
-      id: 1274721,
-      category: 851,
+      numero: 1274721,
+      categoria: 851,
       stock: 'Disponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     },
     {
-      id: 12312,
-      category: 512,
+      numero: 12312,
+      categoria: 512,
       stock: 'Disponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     },
     {
-      id: 153434,
-      category: 128,
+      numero: 153434,
+      categoria: 128,
       stock: 'Disponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     },
     {
-      id: 434353,
-      category: 512,
+      numero: 434353,
+      categoria: 512,
       stock: 'Indisponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     },
     {
-      id: 2456245,
-      category: 851,
+      numero: 2456245,
+      categoria: 851,
       stock: 'Disponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     },
     {
-      id: 221441,
-      category: 851,
+      numero: 221441,
+      categoria: 851,
       stock: 'Indisponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     },
     {
-      id: 432535,
-      category: 512,
+      numero: 432535,
+      categoria: 512,
       stock: 'Disponível',
-      production: 'Terminada',
-      distribution: 'Entregue'
+      produção: 'Terminada',
+      distribuição: 'Entregue'
     }
   ]
   return orders

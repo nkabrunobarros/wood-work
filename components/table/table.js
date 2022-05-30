@@ -12,11 +12,11 @@ const CustomTable = ({ columns, children }) => (
       {columns.map((col, i) => (
         <th key={i}>
           <a style={{ display: 'flex', alignItems: 'center' }}>
-            <a style={{ flex: 1 }}>{col}</a>
+            <a style={{ flex: 1 }}>{col.toUpperCase()}</a>
             {col.toLowerCase() === 'ações' || col.toLowerCase() === ''
               ? null
               : (
-              <a style={{ flex: 1, display: 'flex', justifyContent: 'end', maxWidth: '150px' }}>
+              <a id="align" style={{ maxWidth: '150px' }}>
                 <Code style={{ height: '14px', width: '14px', transform: 'rotate(-90deg)' }} />
               </a>
                 )}

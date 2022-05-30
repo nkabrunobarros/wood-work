@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 
 import Grid from '@mui/material/Grid'
 import CustomBreadcrumbs from '../../breadcrumbs'
-import routes from '../../../navigation/routes'
 import InfoCard from '../../cards/infoCard'
 import {
   AlertOctagon,
@@ -29,39 +28,41 @@ import {
 import styles from '../../../styles/Orders.module.css'
 import CustomTable from '../../table/table'
 import Router from 'next/router'
-
-const PaginateItemsPerPage = (array, pageSize, pageNumber) => {
-  const output = Object.keys(array).sort((a, b) => b - a)
-  const arrayLenght = parseInt(output[0]) + 1
-  const data = {
-    array: array.slice(pageNumber * pageSize, pageNumber * pageSize + pageSize),
-    showingMin: pageNumber * pageSize + 1,
-    showingMax: (pageNumber * pageSize + pageSize) < arrayLenght ? pageNumber * pageSize + pageSize : arrayLenght
-  }
-  return data
-}
+import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
+import displayWithStyle from '../../utils/displayTextWithStyle'
+import getCategory from '../../utils/getCategory'
 
 const OrdersScreen = ({ ...props }) => {
-  const { orders, categories, panelsInfo, keywords } = props
+  const {
+    items,
+    categories,
+    panelsInfo,
+    tableCols,
+    breadcrumbsPath,
+    detailPage
+  } = props
 
-  const getCategory = (categoryId) => {
-    const { find } = require('lodash')
-    const category = find(categories, { id: categoryId })
-    return `${category.title}[${category.id}]`
+  // eslint-disable-next-line react/prop-types
+  const DisplayCol = (col, item, index) => {
+    if (col === 'em distribuição') {
+      return <a>{displayWithStyle(item.distribuição)}</a>
+    } else if (index === 0) {
+      return <a className='link'>{displayWithStyle(item[`${col}`])}</a>
+    }
+    switch (col) {
+      case 'categoria':
+        return <a>{getCategory(item[`${col}`])}</a>
+      case 'ações':
+        return (
+          <>
+            <Edit className='link' />
+            <Trash className='link' />
+          </>
+        )
+      default:
+        return <a>{displayWithStyle(item[`${col}`])}</a>
+    }
   }
-  const displayWithStyle = (text) => {
-    //  Find if the text match's with any of the keywords
-    const resError = keywords.errorKeywords.find((keywork) => keywork === text)
-    const resSuccess = keywords.successKeywords.find((keywork) => keywork === text)
-    const resWarning = keywords.warningKeywords.find((keywork) => keywork === text)
-
-    //  If match res is something else undefined && case undefined return default text
-    if (resError !== undefined) return (<a className="errorBalloon">{text} </a>)
-    if (resSuccess !== undefined) return (<a className="successBalloon">{text} </a>)
-    if (resWarning !== undefined) return (<a className="warningBalloon">{text} </a>)
-    return (text)
-  }
-
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
@@ -75,13 +76,6 @@ const OrdersScreen = ({ ...props }) => {
   const [showingMax, setShowingMax] = useState(entries)
 
   const [itemsPerPage, setItemsPerPage] = useState([])
-  //  Breadcrumbs path feed
-  const breadcrumbsPath = [
-    {
-      title: 'Encomendas',
-      href: `${routes.private.orders}`
-    }
-  ]
   //  Clear Filters to default
   const ClearFilters = () => {
     setNumber('')
@@ -96,9 +90,9 @@ const OrdersScreen = ({ ...props }) => {
 
   useEffect(() => {
     const calculatePages = () => {
-      const numPages = Math.ceil(orders.length / entries)
+      const numPages = Math.ceil(items.length / entries)
       setTotalPages(numPages)
-      const res = PaginateItemsPerPage(orders, entries, (page - 1))
+      const res = PaginateItemsPerPage(items, entries, page - 1)
       setItemsPerPage(res.array)
       setShowingMax(res.showingMax)
       setShowingMin(res.showingMin)
@@ -112,121 +106,132 @@ const OrdersScreen = ({ ...props }) => {
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
       {/* Statistics Cards */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          padding: 0
-        }}
-      >
-        <InfoCard
-          amount={panelsInfo.budgeting}
-          color={'var(--primary)'}
-          icon={<PackageCheck size={40} />}
-          title={'Em Orçamentação'}
-        />
-        <InfoCard
-          amount={panelsInfo.drawing}
-          color={'var(--green)'}
-          icon={<LayoutTemplate size={40} />}
-          title={'Em Desenho'}
-        />
-        <InfoCard
-          amount={panelsInfo.production}
-          color={'var(--orange)'}
-          icon={<Layers size={40} />}
-          title={'Em Produção'}
-        />
-        <InfoCard
-          amount={panelsInfo.concluded}
-          color={'var(--babyblue)'}
-          icon={<AlertOctagon size={40} />}
-          title={'Concluidas'}
-        />
-      </div>
-      {/* Filters */}
-      <Content>
-        <div id="pad">
-        <a className="headerTitleSm" >Filtros</a>
-        <div className={styles.filters}>
-          <div className={styles.filterContainer}>
-            <InputLabel htmlFor='email'>Número</InputLabel>
-            <OutlinedInput
-              margin='normal'
-              fullWidth
-              id='number'
-              name='number'
-              autoComplete='number'
-              type='number'
-              placeholder='Escrever um número'
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
-          </div>
-          <div className={styles.filterContainer}>
-            <InputLabel htmlFor='email'>Cliente</InputLabel>
-            <OutlinedInput
-              margin='normal'
-              fullWidth
-              id='client'
-              name='client'
-              autoComplete='client'
-              placeholder='Escrever um nome'
-              value={client}
-              onChange={(e) => setClient(e.target.value)}
-            />
-          </div>
-          <div className={styles.filterContainer}>
-            <InputLabel htmlFor='Categoria'>Categoria</InputLabel>
-            <Select
-              labelId='Categoria'
-              id='Categoria'
-              fullWidth
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <MenuItem value={''} disabled>
-                Selecionar uma categoria
-              </MenuItem>
-              {categories.map(item => (
-                <MenuItem key={item.id} value={item.id}>{item.title}[{item.id}]</MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div className={styles.filterContainer}>
-            <InputLabel htmlFor='Stock'>Stock</InputLabel>
-            <Select
-              labelId='Stock'
-              id='Stock'
-              fullWidth
-              value={stock}
-              onChange={(e) => setStock(e.target.value)}
-            >
-              <MenuItem value={''} disabled>
-                Selecionar uma estado de stock
-              </MenuItem>
-              <MenuItem value={'Disponivel'}>Disponível</MenuItem>
-              <MenuItem value={'Indisponivel'}>Indisponível</MenuItem>
-            </Select>
-          </div>
-        </div>
+      {panelsInfo
+        ? (
         <div
           style={{
-            width: 'fit-content',
-            marginLeft: 'auto',
-            paddingTop: '1rem'
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            padding: 0
           }}
         >
-          <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
+          <InfoCard
+            amount={panelsInfo.budgeting}
+            color={'var(--primary)'}
+            icon={<PackageCheck size={40} />}
+            title={'Em Orçamentação'}
+          />
+          <InfoCard
+            amount={panelsInfo.drawing}
+            color={'var(--green)'}
+            icon={<LayoutTemplate size={40} />}
+            title={'Em Desenho'}
+          />
+          <InfoCard
+            amount={panelsInfo.production}
+            color={'var(--orange)'}
+            icon={<Layers size={40} />}
+            title={'Em Produção'}
+          />
+          <InfoCard
+            amount={panelsInfo.concluded}
+            color={'var(--babyblue)'}
+            icon={<AlertOctagon size={40} />}
+            title={'Concluidas'}
+          />
         </div>
+          )
+        : null}
+
+      {/* Filters */}
+      <Content>
+        <div id='pad'>
+          <a className='headerTitleSm'>Filtros</a>
+          <div className={styles.filters}>
+            <div className={styles.filterContainer}>
+              <InputLabel htmlFor='email'>Número</InputLabel>
+              <OutlinedInput
+                margin='normal'
+                fullWidth
+                id='number'
+                name='number'
+                autoComplete='number'
+                type='number'
+                placeholder='Escrever um número'
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              />
+            </div>
+            <div className={styles.filterContainer}>
+              <InputLabel htmlFor='email'>Cliente</InputLabel>
+              <OutlinedInput
+                margin='normal'
+                fullWidth
+                id='client'
+                name='client'
+                autoComplete='client'
+                placeholder='Escrever um nome'
+                value={client}
+                onChange={(e) => setClient(e.target.value)}
+              />
+            </div>
+            <div className={styles.filterContainer}>
+              <InputLabel htmlFor='Categoria'>Categoria</InputLabel>
+              <Select
+                labelId='Categoria'
+                id='Categoria'
+                fullWidth
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <MenuItem value={''} disabled>
+                  Selecionar uma categoria
+                </MenuItem>
+                {categories.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.title}[{item.id}]
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className={styles.filterContainer}>
+              <InputLabel htmlFor='Stock'>Stock</InputLabel>
+              <Select
+                labelId='Stock'
+                id='Stock'
+                fullWidth
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+              >
+                <MenuItem value={''} disabled>
+                  Selecionar uma estado de stock
+                </MenuItem>
+                <MenuItem value={'Disponivel'}>Disponível</MenuItem>
+                <MenuItem value={'Indisponivel'}>Indisponível</MenuItem>
+              </Select>
+            </div>
+          </div>
+          <div
+            style={{
+              width: 'fit-content',
+              marginLeft: 'auto',
+              paddingTop: '1rem'
+            }}
+          >
+            <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
+          </div>
         </div>
       </Content>
       {/* Orders */}
       <Content>
-        <div id="pad" className="flex" style={{ display: 'flex', alignItems: 'center' }}>
-          <div >
-            <a className="headerTitleXl">Encomendas</a>
+        <div
+          id='pad'
+          className='flex'
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
+          <div>
+            <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
           </div>
           <div
             style={{
@@ -246,9 +251,10 @@ const OrdersScreen = ({ ...props }) => {
               <MenuItem value={10}>10</MenuItem>
               <MenuItem value={15}>15</MenuItem>
             </Select>
-            {''} Itens
+            Itens
             <div className='spacer'>|</div>
-            Mostrar {showingMin} a {showingMax} de {Object.keys(orders).length} items
+            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
+            items
             <div className='spacer'></div>
             <Pagination
               count={totalPages}
@@ -260,51 +266,40 @@ const OrdersScreen = ({ ...props }) => {
             />
           </div>
           <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handleChangePage}
-              siblingCount={0}
-              color='primary'
-              className={'pagination mobile'}
-            />
+            count={totalPages}
+            page={page}
+            onChange={handleChangePage}
+            siblingCount={0}
+            color='primary'
+            className={'pagination mobile'}
+          />
         </div>
-        <CustomTable
-          columns={[
-            'Número',
-            'Categoria',
-            'Stock',
-            'Produção',
-            'Em Distribuição',
-            'Ações'
-          ]}
-        >
-          {itemsPerPage
-            .map((item, i) => (
-            <tr key={item.id} onClick={() => Router.push(
-              { pathname: `${routes.private.order}${item.id}` }
-            )}>
-              <td data-label='Nome' className='link'>
-                Nº {item.id}
-              </td>
-              <td data-label='Categoria'> {getCategory(item.category)} </td>
-              <td data-label='Stock'> {displayWithStyle(item.stock)}</td>
-              <td data-label='Produção'>{displayWithStyle(item.production)} </td>
-              <td data-label='Em Distribuição'>{displayWithStyle(item.distribution)}</td>
-              <td data-label='Ações'>
-                <Edit className='link' />
-                <Trash className='link' />
-              </td>
+        <CustomTable columns={tableCols}>
+          {itemsPerPage.map((item, i) => (
+            <tr
+              key={item.numero}
+              onClick={() =>
+                Router.push({ pathname: `${detailPage}${item.numero}` })
+              }
+            >
+              {tableCols.map((element, i) => (
+                <td key={element.id} data-label={tableCols[i].toUpperCase()}>
+                  {DisplayCol(element, item, i)}
+                </td>
+              ))}
             </tr>
-            ))}
+          ))}
         </CustomTable>
       </Content>
     </Grid>
   )
 }
 OrdersScreen.propTypes = {
-  orders: PropTypes.array,
+  items: PropTypes.array,
   categories: PropTypes.array,
+  tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
-  keywords: PropTypes.any
+  breadcrumbsPath: PropTypes.array,
+  detailPage: PropTypes.string
 }
 export default OrdersScreen

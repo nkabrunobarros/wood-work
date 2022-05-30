@@ -21,7 +21,7 @@ function getLinks () {
     },
     {
       title: 'Stock',
-      url: '#',
+      url: routes.private.stock,
       icon: <Table color='white' />
     },
     {

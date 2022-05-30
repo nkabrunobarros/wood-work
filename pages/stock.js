@@ -8,53 +8,51 @@ import OrdersScreen from '../components/pages/orders/orders'
 import PropTypes from 'prop-types'
 
 import getCategories from '../components/mock/Categories'
-import getOrders from '../components/mock/Orders'
+import { getStock } from '../components/mock/Stock'
 import routes from '../navigation/routes'
 
 //  Page Component
 
-const Orders = () => {
+const Stock = () => {
   const [loaded, setLoaded] = useState(false)
+  const [items, setItems] = useState()
   useEffect(() => {
+    const getData = async () => {
+      const res = await getStock()
+      setItems(res)
+    }
+    getData()
     setTimeout(() => {
       setLoaded(true)
     }, 1500)
   }, [])
   const categories = getCategories()
+
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
-      title: 'Encomendas',
-      href: `${routes.private.orders}`
+      title: 'Stock',
+      href: `${routes.private.stock}`
     }
   ]
-  const items = getOrders()
-
-  const panelsInfo = {
-    budgeting: 2,
-    drawing: 1,
-    production: 3,
-    concluded: 7
-  }
   const tableCols = [
-    'numero',
+    'nome',
+    'codigo',
+    'fornecedor',
     'categoria',
     'stock',
-    'produção',
-    'em distribuição',
     'ações'
   ]
-
-  const detailPage = routes.private.order
+  const detailPage = routes.private.stockId
 
   const props = {
     categories,
     items,
-    panelsInfo,
     tableCols,
     breadcrumbsPath,
     detailPage
   }
+
   return loaded
     ? (
     <OrdersScreen {...props} />
@@ -65,13 +63,11 @@ const Orders = () => {
     </div>
       )
 }
-Orders.propTypes = {
+Stock.propTypes = {
   categories: PropTypes.array,
   orders: PropTypes.array,
-  panelsInfo: PropTypes.object,
   tableCols: PropTypes.array,
-  breadcrumbsPath: PropTypes.array,
   detailPage: PropTypes.any
 }
 
-export default Orders
+export default Stock
