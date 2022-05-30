@@ -1,5 +1,4 @@
 import { Archive, MessageCircle } from 'lucide-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import routes from '../../navigation/routes'
 import React from 'react'
 
@@ -28,7 +27,7 @@ function getLinks () {
     {
       title: 'Clientes',
       url: '#',
-      icon: <FontAwesomeIcon icon="fa-solid fa-cubes-stacked" color='white' />
+      icon: <MessageCircle color='white' />
     },
     {
       title: 'Utilizadores',
