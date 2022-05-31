@@ -1,13 +1,13 @@
 //  Nodes
-import React, { useEffect, useState } from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
+import React, { useEffect, useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Grid'
-import CustomBreadcrumbs from '../../breadcrumbs'
-import { Eye, Filter, X } from 'lucide-react'
-import Content from '../../content/content'
+import Grid from '@mui/material/Grid';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import { Eye, Filter, X } from 'lucide-react';
+import Content from '../../content/content';
 import {
   Autocomplete,
   Button,
@@ -15,134 +15,135 @@ import {
   MenuItem,
   Pagination,
   Select,
-  TextField
-} from '@mui/material'
+  TextField,
+} from '@mui/material';
 
-import CustomTable from '../../table/table'
-import Router from 'next/router'
-import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
-import displayWithStyle from '../../utils/displayTextWithStyle'
-import PrimaryBtn from '../../buttons/primaryBtn'
+import CustomTable from '../../table/table';
+import Router from 'next/router';
+import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
+import displayWithStyle from '../../utils/displayTextWithStyle';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import ItsNumber from '../../utils/ItsNumber';
 
 const OrdersScreen = ({ ...props }) => {
-  const { items, tableCols, breadcrumbsPath, detailPage } = props
+  const { items, tableCols, breadcrumbsPath, detailPage } = props;
 
+  
   // eslint-disable-next-line react/prop-types
   const DisplayCol = (col, item, index) => {
     if (item[`${col}`] < 0 && (col === 'desvio' || col === 'desvio2')) {
       return (
         <a className='successBalloon'>
-          {item[`${col}`]} {Number.isInteger(item[`${col}`]) ? 'horas' : null}
+          {item[`${col}`]} horas
         </a>
-      )
+      );
     } else if (item[`${col}`] > 0 && (col === 'desvio' || col === 'desvio2')) {
       return (
         <a className='errorBalloon'>
-          {item[`${col}`]} {Number.isInteger(item[`${col}`]) ? 'horas' : null}
+          {item[`${col}`]} horas
         </a>
-      )
+      );
     } else if (
-      item[`${col}`] === 0 &&
+      Math.ceil(item[`${col}`] ) === 0 &&
       (col === 'desvio' || col === 'desvio2')
     ) {
       return (
         <a className='warningBalloon'>
-          {item[`${col}`]} {Number.isInteger(item[`${col}`]) ? 'horas' : null}
+          {item[`${col}`]} horas
         </a>
-      )
+      );
     }
 
     if (index === 0) {
       return (
         <a className='link'>
           Nº {displayWithStyle(item[`${col}`])}{' '}
-          {Number.isInteger(item[`${col}`]) ? 'horas' : null}
+          {ItsNumber(item[`${col}`]) ? 'horas' : null}
         </a>
-      )
+      );
     }
     switch (col) {
       case 'ações':
-        return <Eye className='link' />
+        return <Eye className='link' />;
       default:
         return (
           <a>
             {displayWithStyle(item[`${col}`])}{' '}
-            {Number.isInteger(item[`${col}`]) ? 'horas' : null}
+            {ItsNumber(item[`${col}`]) ? 'horas' : null}
           </a>
-        )
+        );
     }
-  }
+  };
   //  States Pagination
-  const [page, setPage] = useState(1)
-  const [entries, setEntries] = useState(5)
-  const [totalPages, setTotalPages] = useState(0)
-  const [showingMin, setShowingMin] = useState(0)
-  const [showingMax, setShowingMax] = useState(entries)
-  const [itemsPerPage, setItemsPerPage] = useState([])
+  const [page, setPage] = useState(1);
+  const [entries, setEntries] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
+  const [showingMin, setShowingMin] = useState(0);
+  const [showingMax, setShowingMax] = useState(entries);
+  const [itemsPerPage, setItemsPerPage] = useState([]);
   //  Modal State
-  const [modal, setModal] = useState(false)
+  const [modal, setModal] = useState(false);
   // Filters States
-  const [client, setClient] = useState('')
-  const [woodType, setWoodType] = useState('')
-  const [totalTime, setTotalTime] = useState('')
-  const [orderId, setOrderId] = useState('')
-  const [product, setProduct] = useState('')
-  const [totalArea, setTotalArea] = useState('')
-  const [cost, setCost] = useState('')
-  const [operation, setOperation] = useState('')
+  const [client, setClient] = useState(null);
+  const [woodType, setWoodType] = useState(null);
+  const [totalTime, setTotalTime] = useState('');
+  const [orderId, setOrderId] = useState('');
+  const [product, setProduct] = useState(null);
+  const [totalArea, setTotalArea] = useState('');
+  const [cost, setCost] = useState('');
+  const [operation, setOperation] = useState(null);
+
+  //  on Datagrid, rows presented here will have side borders
+  const fullBorders = [7];
 
   const handleChangePage = (event, value) => {
-    setPage(value)
-  }
+    setPage(value);
+  };
   const handleClick = (event) => {
-    setModal(!modal)
-  }
+    setModal(!modal);
+  };
   const onClientChange = (value) => {
-    console.log(value)
-    if (value === null) setClient('')
-    else setClient(value)
-  }
+    if (value === null) setClient('');
+    else setClient(value);
+  };
   const onWoodTypeChange = (value) => {
-    console.log(value)
-    if (value === null) setWoodType('')
-    else setWoodType(value)
-  }
+    if (value === null) setWoodType('');
+    else setWoodType(value);
+  };
   const onProductChange = (value) => {
-    console.log(value)
-    if (value === null) setProduct('')
-    else setProduct(value)
-  }
+    if (value === null) setProduct('');
+    else setProduct(value);
+  };
   const onOperationChange = (value) => {
-    console.log(value)
-    if (value === null) setOperation('')
-    else setOperation(value)
-  }
+    if (value === null) setOperation('');
+    else setOperation(value);
+  };
 
   const ApplyFilters = () => {
     // Set Filters
-    setModal(!modal)
-  }
+    setModal(!modal);
+  };
   const ClearFilters = () => {
-    setClient(null)
-    setWoodType(null)
-    setProduct(null)
-    setOperation(null)
-    setTotalTime('')
-    setOrderId('')
-    setTotalArea('')
-    setCost('')
-  }
+    setClient(null);
+    setWoodType(null);
+    setProduct(null);
+    setOperation(null);
+    setTotalTime('');
+    setOrderId('');
+    setTotalArea('');
+    setCost('');
+  };
   useEffect(() => {
     const calculatePages = () => {
-      const numPages = Math.ceil(items.length / entries)
-      setTotalPages(numPages)
-      const res = PaginateItemsPerPage(items, entries, page - 1)
-      setItemsPerPage(res.array)
-      setShowingMax(res.showingMax)
-      setShowingMin(res.showingMin)
-    }
-    calculatePages()
-  }, [entries, page])
+      const numPages = Math.ceil(items.length / entries);
+      setTotalPages(numPages);
+      const res = PaginateItemsPerPage(items, entries, page - 1);
+      setItemsPerPage(res.array);
+      setShowingMax(res.showingMax);
+      setShowingMin(res.showingMin);
+    };
+    calculatePages();
+  }, [entries, page]);
 
   return (
     <Grid component='main'>
@@ -161,11 +162,10 @@ const OrdersScreen = ({ ...props }) => {
               display: 'flex',
               alignItems: 'center',
               color: 'var(--grayTexts)',
-              fontSize: 'small'
+              fontSize: 'small',
             }}
           >
-            {modal
-              ? (
+            {modal ? (
               <div className='filterPopupMain'>
                 <h2 className='black' style={{ marginLeft: '1rem' }}>
                   Filtros
@@ -176,7 +176,7 @@ const OrdersScreen = ({ ...props }) => {
                 <div
                   style={{
                     display: 'flex',
-                    flex: 1
+                    flex: 1,
                   }}
                 >
                   <div className='filterPopupCol'>
@@ -288,8 +288,7 @@ const OrdersScreen = ({ ...props }) => {
                   </ButtonGroup>
                 </div>
               </div>
-                )
-              : null}
+            ) : null}
             <Button onClick={handleClick}>
               <Filter />
             </Button>
@@ -304,7 +303,7 @@ const OrdersScreen = ({ ...props }) => {
             </Select>
             Itens
             <div className='spacer'>|</div>
-            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}{' '}
+            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
             itens
             <div className='spacer'></div>
             <Pagination
@@ -326,7 +325,16 @@ const OrdersScreen = ({ ...props }) => {
           />
         </div>
         <div className='scrollableX'>
-          <CustomTable columns={tableCols}>
+          <CustomTable
+            columns={tableCols}
+            doubleHeader={[
+              'QT. Produzida: 12 un.',
+              'QT. Encomenda: 25 un.',
+              'Por unidade',
+            ]}
+            doubleHeaderSizes={[7, 1, 4]}
+            fullBorders={fullBorders}
+          >
             {itemsPerPage.map((item, i) => (
               <tr
                 key={item.numero}
@@ -335,40 +343,43 @@ const OrdersScreen = ({ ...props }) => {
                 }
               >
                 {tableCols.map((element, i) => (
-                  <td key={element.id} data-label={tableCols[i].toUpperCase()}>
-                    {DisplayCol(element, item, i)}
-                  </td>
+                  <>
+                    {fullBorders.find((element) => element === i) !==
+                    undefined ? (
+                      <td
+                        key={element.id}
+                        data-label={tableCols[i].toUpperCase()}
+                        style={{
+                          borderRight: '2px solid var(--grayEdges)',
+                          borderLeft: '2px solid var(--grayEdges)',
+                        }}
+                      >
+                        {DisplayCol(element, item, i)}
+                      </td>
+                    ) : (
+                      <td
+                        key={element.id}
+                        data-label={tableCols[i].toUpperCase()}
+                      >
+                        {DisplayCol(element, item, i)}
+                      </td>
+                    )}
+                  </>
                 ))}
               </tr>
             ))}
           </CustomTable>
         </div>
       </Content>
-
-      {/* <br></br>
-      {JSON.stringify(client)}
-      <br></br>
-      {JSON.stringify(woodType)}
-      <br></br>
-      {JSON.stringify(totalTime)}
-      <br></br>
-      {JSON.stringify(orderId)}
-      <br></br>
-      {JSON.stringify(product)}
-      <br></br>
-      {JSON.stringify(totalArea)}
-      <br></br>
-      {JSON.stringify(cost)}
-      <br></br>
-      {JSON.stringify(operation)} */}
+      <Content></Content>
     </Grid>
-  )
-}
+  );
+};
 OrdersScreen.propTypes = {
   items: PropTypes.array,
   tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
-  detailPage: PropTypes.string
-}
-export default OrdersScreen
+  detailPage: PropTypes.string,
+};
+export default OrdersScreen;

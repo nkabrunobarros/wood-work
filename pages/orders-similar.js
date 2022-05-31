@@ -52,11 +52,21 @@ const OrdersSimilar = ({ items }) => {
     'desvio2',
     'ações'
   ]
+
+  function formatNum (val1, val2) {
+    console.log(val2)
+    const res = val1 - val2
+
+    if(Number.isInteger(res)) return res
+    else return res.toFixed(2)
+    
+  }
+
   items.map((item, i) => (
-    items[i].desvio = (item.previsto - item.realizado).toFixed(2)
+    items[i].desvio = formatNum(item.previsto, item.realizado)
   ))
   items.map((item, i) => (
-    items[i].desvio2 = (item.previsto2 - item.realizado2).toFixed(2)
+    items[i].desvio2 = formatNum(item.previsto2, item.realizado2)
   ))
 
   const detailPage = routes.private.order

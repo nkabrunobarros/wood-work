@@ -1,19 +1,19 @@
 function getCategories () {
   const categories = [
     {
-      id: 512,
+      id: '512',
       title: 'Armário'
     },
     {
-      id: 128,
+      id: '128',
       title: 'Mesa'
     },
     {
-      id: 851,
+      id: '851',
       title: 'Madeira'
     },
     {
-      id: 100,
+      id: '100',
       title: 'Variados'
     }
   ]

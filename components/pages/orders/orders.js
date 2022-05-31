@@ -44,31 +44,10 @@ const OrdersScreen = ({ ...props }) => {
     detailPage
   } = props
 
-  // eslint-disable-next-line react/prop-types
-  const DisplayCol = (col, item, index) => {
-    if (col === 'em distribuição') {
-      return <a>{displayWithStyle(item.distribuição)}</a>
-    } else if (index === 0) {
-      return <a className='link'>Nº {displayWithStyle(item[`${col}`])}</a>
-    }
-    switch (col) {
-      case 'categoria':
-        return <a>{DisplayCategory(item[`${col}`])}</a>
-      case 'ações':
-        return (
-          <>
-            <Edit className='link' />
-            <Trash className='link' />
-          </>
-        )
-      default:
-        return <a>{displayWithStyle(item[`${col}`])}</a>
-    }
-  }
   //  States
   const [number, setNumber] = useState('')
   const [client, setClient] = useState('')
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState()
   const [stock, setStock] = useState('')
 
   const [page, setPage] = useState(1)
@@ -228,9 +207,28 @@ const OrdersScreen = ({ ...props }) => {
     { label: '3 Idiots', year: 2009 },
     { label: 'Monty Python and the Holy Grail', year: 1975 }
   ]
-
+  // eslint-disable-next-line react/prop-types
+  const DisplayCol = (col, item, index) => {
+    if (col === 'em distribuição') {
+      return <a>{displayWithStyle(item.distribuição)}</a>
+    } else if (index === 0) {
+      return <a className='link'>Nº {displayWithStyle(item[`${col}`])}</a>
+    }
+    switch (col) {
+      case 'categoria':
+        return <a>{DisplayCategory(item[`${col}`])}</a>
+      case 'ações':
+        return (
+          <>
+            <Edit className='link' />
+            <Trash className='link' />
+          </>
+        )
+      default:
+        return <a>{displayWithStyle(item[`${col}`])}</a>
+    }
+  }
   const onClientChange = (value) => {
-    console.log(value)
     if (value === null) setClient('')
     else setClient(value.label)
   }
@@ -298,7 +296,7 @@ const OrdersScreen = ({ ...props }) => {
               />
             </div>
             <div className={styles.filterContainer}>
-              <InputLabel htmlFor='email'>Client</InputLabel>
+              <InputLabel htmlFor='email'>Cliente</InputLabel>
               <Autocomplete
                 disablePortal
                 id='combo-box-demo'
@@ -340,8 +338,8 @@ const OrdersScreen = ({ ...props }) => {
                 <MenuItem value={''} disabled>
                   Selecionar uma estado de stock
                 </MenuItem>
-                <MenuItem value={'Disponivel'}>Disponível</MenuItem>
-                <MenuItem value={'Indisponivel'}>Indisponível</MenuItem>
+                <MenuItem value={'Disponível'}>Disponível</MenuItem>
+                <MenuItem value={'Indisponível'}>Indisponível</MenuItem>
               </Select>
             </div>
           </div>
@@ -408,7 +406,12 @@ const OrdersScreen = ({ ...props }) => {
           />
         </div>
         <CustomTable columns={tableCols}>
-          {itemsPerPage.map((item, i) => (
+          {itemsPerPage
+          .filter(
+            (item) =>
+              item.stock.includes(stock)
+          )
+          .map((item, i) => (
             <tr
               key={item.numero}
               onClick={() =>
