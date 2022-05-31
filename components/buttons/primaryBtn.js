@@ -5,12 +5,14 @@ import PropTypes from 'prop-types'
 
 import styles from '../../styles/components/primaryBtn.module.css'
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder }) => {
   const style = {
     color: light ? 'var(--primary)' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
     opacity: disabled ? '0.5' : '1',
-    backgroundColor: light ? 'var(--white)' : 'var(--primary)'
+    backgroundColor: light ? 'var(--white)' : 'var(--primary)',
+    border: noBorder ? 'none' : null
+
   }
   return (
     <a className={styles.main} onClick={onClick} title={text} style={style}>
@@ -25,6 +27,7 @@ PrimaryBtn.propTypes = {
   light: PropTypes.number,
   color: PropTypes.string,
   onClick: PropTypes.any,
-  disabled: PropTypes.boolean
+  disabled: PropTypes.boolean,
+  noBorder: PropTypes.boolean
 }
 export default PrimaryBtn

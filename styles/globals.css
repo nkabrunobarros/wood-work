@@ -110,7 +110,15 @@ a {
   background-size: cover;
   background-position: center;
 }
-
+.footerImages {
+  background-image: url('../public/Fundos-Europeus.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;  
+  min-height: 35px;
+  width: 100%;
+  min-width: 300px;
+}
 .primaryIcon {
   color: var(--primary);
   margin-right: 1rem;
@@ -155,6 +163,34 @@ a {
 .mobile {
   display: none;
 }
+
+
+/* /////////////////////////////////////////// */
+/* /////////////////////////////////////////// */
+/* /////////////////////////////////////////// */
+
+.filterPopupMain {
+  position: absolute;
+  display: 'flex';
+  flex-direction: column;
+  background-color: var(--white);
+  z-index: 99;
+  right: 2rem;
+  margin-top: 15rem;
+  border-radius: 8px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1) ;
+}
+.filterPopupCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+.filterPopupCol #standard-basic {
+  color: var(--grayLight);
+}
+
+
 @media screen and (max-width: 40em) {
   .flex {
     flex-direction: column;
@@ -171,6 +207,11 @@ a {
   .mobileView {
     display: none;
   }
+  .filterPopupMain {
+    position: absolute;
+    width: 100%;
+    right: 0;
+  }
 }
 
 .filters {
@@ -182,6 +223,9 @@ a {
 .filterContainer {
   width: 100%;
   flex: 0 1 300;
+}
+.scrollableX {
+  overflow-y: hidden;
 }
 @media screen and (min-width: 40em) {
   .filterContainer {

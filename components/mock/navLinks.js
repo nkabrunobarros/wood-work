@@ -16,7 +16,7 @@ function getLinks () {
     },
     {
       title: 'Encomendas Similares',
-      url: '#',
+      url: routes.private.ordersSimilar,
       icon: <Archive color='white' />
     },
     {

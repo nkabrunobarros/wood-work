@@ -4,6 +4,7 @@ const routes = {
     terms: '/terms',
     tos: '/tos',
     orders: '/orders',
+    ordersSimilar: '/orders-similar',
     order: '/order/',
     profile: '/profile',
     messages: '/messages',

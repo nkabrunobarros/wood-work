@@ -14,11 +14,14 @@ import PropTypes from 'prop-types'
 import CustomTable from '../../table/table'
 import { Edit, Trash } from 'lucide-react'
 import {
+  Autocomplete,
+  Box,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Pagination,
-  Select
+  Select,
+  TextField
 } from '@mui/material'
 import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
 const DisplayCol = (col, item, index) => {
@@ -38,7 +41,6 @@ const DisplayCol = (col, item, index) => {
 
 const Users = ({ ...props }) => {
   const { items, breadcrumbsPath, tableCols, countries } = props
-
   const [page, setPage] = useState(1)
   const [entries, setEntries] = useState(5)
   const [totalPages, setTotalPages] = useState(0)
@@ -49,7 +51,7 @@ const Users = ({ ...props }) => {
   //  States
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
-  const [morada, setMorada] = useState('')
+  const [pais, setPais] = useState('')
 
   const handleChangePage = (event, value) => {
     setPage(value)
@@ -57,7 +59,7 @@ const Users = ({ ...props }) => {
   const ClearFilters = () => {
     setNome('')
     setEmail('')
-    setMorada('')
+    setPais('')
   }
   useEffect(() => {
     const calculatePages = () => {
@@ -71,6 +73,15 @@ const Users = ({ ...props }) => {
     calculatePages()
   }, [entries, page])
 
+  const onCountryChange = (value) => {
+    if (value === null) setPais('')
+    else setPais(value.label)
+  }
+  const onNameChange = (value) => {
+    if (value === null) setNome('')
+    else setNome(value.label)
+  }
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -82,16 +93,25 @@ const Users = ({ ...props }) => {
           <div className='filters'>
             <div className='filterContainer'>
               <InputLabel htmlFor='email'>Nome</InputLabel>
-              <OutlinedInput
-                margin='normal'
+              <Autocomplete
+                id='country-select-demo'
                 fullWidth
-                id='nome'
-                name='nome'
-                autoComplete='nome'
-                type='nome'
-                placeholder='Escrever um nome'
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
+                options={items}
+                autoHighlight
+                getOptionLabel={(option) => option.nome}
+                onChange={(event, value) => onNameChange(value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder='Escrever um país'
+                    value={pais}
+                    onChange={(e) => setNome(e.target.value)}
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password' // disable autocomplete and autofill
+                    }}
+                  />
+                )}
               />
             </div>
             <div className='filterContainer'>
@@ -109,22 +129,42 @@ const Users = ({ ...props }) => {
             </div>
             <div className={'filterContainer'}>
               <InputLabel htmlFor='Categoria'>País</InputLabel>
-              <Select
-                labelId='Pais'
-                id='Pais'
+              <Autocomplete
+                id='country-select-demo'
                 fullWidth
-                value={morada}
-                onChange={(e) => setMorada(e.target.value)}
-              >
-                <MenuItem value={''} disabled>
-                  Selecionar uma categoria
-                </MenuItem>
-                  {countries.map((country) => (
-                    <MenuItem key={country.code} value={country.code}>
-                  {country.name}
-                </MenuItem>
-                  ))}
-              </Select>
+                options={countries}
+                autoHighlight
+                getOptionLabel={(option) => option.label}
+                onChange={(event, value) => onCountryChange(value)}
+
+                renderOption={(props, option) => (
+                  <Box
+                    component='li'
+                    sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                    {...props}
+                  >
+                    <img
+                      loading='lazy'
+                      width='20'
+                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                      alt=''
+                    />
+                    {option.label} ({option.code}) +{option.phone}
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder='Escrever um país'
+                    value={pais}
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password' // disable autocomplete and autofill
+                    }}
+                  />
+                )}
+              />
             </div>
           </div>
           <div
@@ -198,15 +238,20 @@ const Users = ({ ...props }) => {
         </div>
         <CustomTable columns={tableCols}>
           {itemsPerPage
-            .filter((item) => item.nome.includes(nome) && item.email.includes(email))
+            .filter(
+              (item) =>
+                item.nome.includes(nome) &&
+                item.email.includes(email) &&
+                item.pais.includes(pais)
+            )
             .map((item, i) => (
-            <tr key={item.id}>
-              {tableCols.map((element, i) => (
-                <td key={element.id} data-label={tableCols[i].toUpperCase()}>
-                  {DisplayCol(element, item, i)}
-                </td>
-              ))}
-            </tr>
+              <tr key={item.id}>
+                {tableCols.map((element, i) => (
+                  <td key={element.id} data-label={tableCols[i].toUpperCase()}>
+                    {DisplayCol(element, item, i)}
+                  </td>
+                ))}
+              </tr>
             ))}
         </CustomTable>
       </Content>

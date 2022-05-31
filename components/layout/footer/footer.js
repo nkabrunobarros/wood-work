@@ -22,32 +22,30 @@ function Copyright (props) {
 const Footer = ({ section }) => {
   return (
     <div
+    className='flex'
       style={{
         position: 'fixed',
+        minHeight: '35px',
         width: '100%',
         bottom: 0,
         backgroundColor: 'white',
         borderTop: '1px solid var(--grayEdges)',
         color: 'var(--grayTextsLight)',
-        fontSize: '12px'
+        fontSize: '12px',
+        alignItems: 'center'
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-        <div style={{ padding: '1rem' }}>
-          {section === 'client' ? <a>WW4.0</a> : <Copyright />}
-        </div>
-        <div style={{ padding: '1rem', marginLeft: 'auto' }}>
-          {section === 'client'
-            ? (
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', marginLeft: '2rem' }}>{section === 'client' ? <a>WW4.0</a> : <Copyright />}</div>
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-center', padding: '0.2rem', width: '100%' }}><div className='footerImages'></div></div>
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', marginRight: '2rem' }}>{section === 'client'
+        ? (
             <a className="link" style={{ color: 'inherit' }} onClick={() => Router.push(routes.private.tos)}>
               Termos e Condições | Política de Privacidade
             </a>
-              )
-            : (
-                'WW4.0'
-              )}
-        </div>
-      </div>
+          )
+        : (
+            'WW4.0'
+          )}</div>
     </div>
   )
 }
