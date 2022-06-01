@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react'
 
 //  Preloader
-import Loader from '../components/loader/loader'
-import OrdersScreen from '../components/pages/ordersSimilar/orders-similar'
+import Loader from '../../components/loader/loader'
+import OrdersScreen from '../../components/pages/ordersSimilar/orders-similar'
 
 import PropTypes from 'prop-types'
 
-import getProducts from '../components/mock/Products'
-import routes from '../navigation/routes'
+import getProducts from '../../components/mock/Products'
+import routes from '../../navigation/routes'
 
 export async function getServerSideProps (context) {
   const res = getProducts()
@@ -29,7 +29,7 @@ const OrdersSimilar = ({ items }) => {
   const breadcrumbsPath = [
     {
       title: 'Encomendas Similares',
-      href: `${routes.private.ordersSimilar}`
+      href: `${routes.private.internal.ordersSimilar}`
     }
   ]
 

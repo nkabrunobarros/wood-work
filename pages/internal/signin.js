@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import Loader from '../components/loader/loader'
-import SignInScreen from '../components/pages/signin/signin'
+import Loader from '../../components/loader/loader'
+import SignInScreen from '../../components/pages/signin/signin'
 const SignIn = () => {
   const [loaded, setLoaded] = useState(false)
   useEffect(() => {

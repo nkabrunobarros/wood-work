@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react'
 
 //  Preloader
-import Loader from '../components/loader/loader'
-import OrdersScreen from '../components/pages/orders/orders'
+import Loader from '../../components/loader/loader'
+import OrdersScreen from '../../components/pages/orders/orders'
 
 import PropTypes from 'prop-types'
 
-import { getCategories } from '../components/mock/Categories'
-import { getStock } from '../components/mock/Stock'
-import routes from '../navigation/routes'
+import { getCategories } from '../../components/mock/Categories'
+import { getStock } from '../../components/mock/Stock'
+import routes from '../../navigation/routes'
 
 //  Page Component
 export async function getServerSideProps (context) {
@@ -35,7 +35,7 @@ const Stock = ({ allStock, allCategories }) => {
   const breadcrumbsPath = [
     {
       title: 'Stock',
-      href: `${routes.private.stock}`
+      href: `${routes.private.internal.stock}`
     }
   ]
   const tableCols = [
@@ -46,7 +46,7 @@ const Stock = ({ allStock, allCategories }) => {
     'stock',
     'ações'
   ]
-  const detailPage = routes.private.stockId
+  const detailPage = routes.private.internal.stockId
   const props = {
     categories,
     items,

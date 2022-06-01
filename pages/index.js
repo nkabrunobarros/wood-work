@@ -8,7 +8,7 @@ const Home = () => {
       setLoaded(true)
     }, 1500)
   }, [])
-
+ 
   return loaded ? <SignIn /> : <div> <Loader center={true} /></div>
 }
 export default Home

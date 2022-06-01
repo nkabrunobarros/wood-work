@@ -7,32 +7,44 @@ function getLinks () {
     {
       title: 'Encomendas',
       url: routes.private.orders,
-      icon: <Archive color='white' />
+      icon: <Archive color='white' />,
+      allowed: 'Client'
+    },
+    {
+      title: 'Encomendas',
+      url: routes.private.internal.orders,
+      icon: <Archive color='white' />,
+      allowed: 'internal'
     },
     {
       title: 'Mensagens',
       url: routes.private.messages,
-      icon: <MessageCircle color='white' />
+      icon: <MessageCircle color='white' />,
+      allowed: 'Client'
     },
     {
       title: 'Encomendas Similares',
-      url: routes.private.ordersSimilar,
-      icon: <Archive color='white' />
+      url: routes.private.internal.ordersSimilar,
+      icon: <Archive color='white' /> ,
+      allowed: 'internal'
     },
     {
       title: 'Stock',
-      url: routes.private.stock,
-      icon: <Table color='white' />
+      url: routes.private.internal.stock,
+      icon: <Table color='white' />,
+      allowed: 'internal'
     },
     {
       title: 'Clientes',
-      url: routes.private.clients,
-      icon: <Users color='white' />
+      url: routes.private.internal.clients,
+      icon: <Users color='white' />,
+      allowed: 'internal'
     },
     {
       title: 'Utilizadores',
-      url: routes.private.users,
-      icon: <Users color='white' />
+      url: routes.private.internal.users,
+      icon: <Users color='white' />,
+      allowed: 'internal'
     }
   ]
   return navLinks

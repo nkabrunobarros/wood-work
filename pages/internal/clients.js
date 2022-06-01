@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Loader from '../components/loader/loader'
-import UsersScreen from '../components/pages/users/users'
-import routes from '../navigation/routes'
-import { getUsers } from '../components/mock/Users'
-import getCountries from '../components/mock/Countries'
+import Loader from '../../components/loader/loader'
+import UsersScreen from '../../components/pages/users/users'
+import routes from '../../navigation/routes'
+import { getUsers } from '../../components/mock/Users'
+import getCountries from '../../components/mock/Countries'
 
 import PropTypes from 'prop-types'
 
@@ -14,7 +14,7 @@ export async function getServerSideProps (context) {
     props: { users: res, countries: res2 } // will be passed to the page component as props
   }
 }
-const Users = ({ users, countries }) => {
+const Clients = ({ users, countries }) => {
   const [loaded, setLoaded] = useState(false)
   const items = users
   useEffect(() => {
@@ -25,13 +25,12 @@ const Users = ({ users, countries }) => {
   const tableCols = [
     'nome',
     'email',
-    'perfil',
     'ações'
   ]
 
   const breadcrumbsPath = [
     {
-      title: 'Utilizadores',
+      title: 'Clientes',
       href: `${routes.private.users}`
     }
   ]
@@ -52,11 +51,11 @@ const Users = ({ users, countries }) => {
       )
 }
 
-Users.propTypes = {
+Clients.propTypes = {
   items: PropTypes.array,
   tableCols: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   users: PropTypes.array,
   countries: PropTypes.array
 }
-export default Users
+export default Clients

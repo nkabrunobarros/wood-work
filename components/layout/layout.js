@@ -9,13 +9,14 @@ import DrawerMobile from './drawer/drawer';
 
 import { CssBaseline, Hidden } from '@mui/material';
 
+
 // Pages without layout (sidebar + navbar + footer)
 const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.forgotPassword}`,
   `${routes.private.terms}`,
   `${routes.private.tos}`,
-  `${routes.public.signInClient}`,
+  `${routes.public.internal.signInClient}`,
 ];
 const Layout = ({ children }) => {
   const path = useRouter();

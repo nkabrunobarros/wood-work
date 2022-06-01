@@ -78,8 +78,9 @@ const Users = ({ ...props }) => {
     else setPais(value.label)
   }
   const onNameChange = (value) => {
+    console.log(value)
     if (value === null) setNome('')
-    else setNome(value.label)
+    else setNome(value.nome)
   }
 
   return (
@@ -103,8 +104,8 @@ const Users = ({ ...props }) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder='Escrever um país'
-                    value={pais}
+                    placeholder='Escrever um mome'
+                    value={nome}
                     onChange={(e) => setNome(e.target.value)}
                     inputProps={{
                       ...params.inputProps,

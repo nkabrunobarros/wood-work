@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import Loader from '../../components/loader/loader'
-import StockScreen from '../../components/pages/stock/stock'
-import routes from '../../navigation/routes'
-import { getStock } from '../../components/mock/Stock'
+import Loader from '../../../components/loader/loader'
+import StockScreen from '../../../components/pages/stock/stock'
+import routes from '../../../navigation/routes'
+import { getStock } from '../../../components/mock/Stock'
 
 export async function getServerSideProps (context) {
   const res = await getStock()
@@ -26,11 +26,11 @@ const Stock = ({ allStock }) => {
   const breadcrumbsPath = [
     {
       title: 'Stock',
-      href: `${routes.private.stock}`
+      href: `${routes.private.internal.stock}`
     },
     {
       title: `${product.nome}`,
-      href: `${routes.private.stockId}`
+      href: `${routes.private.internal.stockId}`
     }
   ]
   const props = {
