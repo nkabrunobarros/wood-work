@@ -19,8 +19,8 @@ import routes from '../../../navigation/routes';
 import Router from 'next/router';
 import Footer from '../../layout/footer/footer';
 
-// import authService from '../../../services/auth-service';
- import { getUser } from '../../mock/Users';
+import authService from '../../../services/auth-service';
+import { getUser } from '../../mock/Users';
 
 const SignIn = ({ ...props }) => {
   const [visible, setVisible] = useState(true);
@@ -49,17 +49,26 @@ const SignIn = ({ ...props }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-     // const token = await loginUser({
-     //   email,
-     //   password,
-     // });
-     // sessionStorage.setItem('token', token);
+    // const token = await loginUser({
+    //   email,
+    //   password,
+    // });
+    // sessionStorage.setItem('token', token);
 
-     const foundUser = await getUser(email);
-     if (foundUser !== undefined && foundUser.password === password) {
-       sessionStorage.setItem('user', email);
-       Router.push(routes.private.terms);
-     }
+    const foundUser = await getUser(email);
+    if (foundUser !== undefined && foundUser.password === password) {
+      localStorage.setItem(
+        'user',
+        JSON.stringify(email).substring(1, email.length + 1)
+      );
+      sessionStorage.setItem(
+       'user',
+        JSON.stringify(email).substring(1, email.length + 1)
+      );
+      Router.push(routes.private.terms);
+      if (foundUser.perfil === 'Client') Router.push(routes.private.terms);
+      else Router.push(routes.private.internal.orders);
+    }
   };
 
   return (
