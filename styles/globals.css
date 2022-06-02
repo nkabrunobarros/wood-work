@@ -234,9 +234,6 @@ a {
   .filterContainer {
     max-width: calc(50% - 1em);
   }
-  .activeFilterBalloon {
-
-  }
 }
 
 @media screen and (min-width: 60em) {

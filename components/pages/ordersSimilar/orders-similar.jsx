@@ -29,59 +29,17 @@ import hasData from '../../utils/hasData';
 import { getClient } from '../../mock/Clients';
 import { getProduct } from '../../mock/Products';
 const OrdersScreen = ({ ...props }) => {
-  const { items, tableCols, breadcrumbsPath, detailPage } = props;
+  const {
+    items,
+    tableCols,
+    breadcrumbsPath,
+    detailPage,
+    woodTypes,
+    products,
+    clients,
+    operations,
+  } = props;
 
-  // eslint-disable-next-line react/prop-types
-  function DisplayCol(col, item, index) {
-    if (item[`${col}`] < 0 && (col === 'desvio' || col === 'desvio2')) {
-      return <a className='successBalloon'>{item[`${col}`]} horas</a>;
-    } else if (item[`${col}`] > 0 && (col === 'desvio' || col === 'desvio2')) {
-      return <a className='errorBalloon'>{item[`${col}`]} horas</a>;
-    } else if (
-      Math.ceil(item[`${col}`]) === 0 &&
-      (col === 'desvio' || col === 'desvio2')
-    ) {
-      return <a className='warningBalloon'>{item[`${col}`]} horas</a>;
-    }
-
-    switch (col) {
-      case 'nome': {
-        const prod = getProduct(item.productId);
-        return <a className='link'>{prod.nome}</a>;
-      }
-      case 'custo': {
-        const prod = getProduct(item.productId);
-        return <a>{prod.custo}€</a>;
-      }
-
-      case 'cliente': {
-        const client = getClient(item[`${col}`]);
-        return <a>{client.name}</a>;
-      }
-      case 'ações':
-        return <Eye className='link' />;
-      default:
-        return (
-          <a>
-            {displayWithStyle(item[`${col}`])}{' '}
-            {ItsNumber(item[`${col}`]) ? 'horas' : null}
-          </a>
-        );
-    }
-  }
-  const DisplayBalloonFilter = (item, onRemove) => {
-    if (hasData(item))
-      return (
-        <div className='activeFilterBalloon'>
-          {typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
-          <X
-            className='activeFilterBalloonIcon'
-            size={'14px'}
-            onClick={onRemove}
-          />
-        </div>
-      );
-  };
   //  States Pagination
   const [page, setPage] = useState(1);
   const [entries, setEntries] = useState(5);
@@ -124,7 +82,7 @@ const OrdersScreen = ({ ...props }) => {
   };
   const onOperationChange = (value) => {
     if (value === null) setOperation('');
-    else setOperation(value);
+    else setOperation(value.value);
   };
   const ApplyFilters = () => {
     // Set Filters
@@ -139,6 +97,63 @@ const OrdersScreen = ({ ...props }) => {
     setOrderId('');
     setTotalArea('');
     setCost('');
+  };
+
+  // eslint-disable-next-line react/prop-types
+  function DisplayCol(col, item, index) {
+    if (item[`${col}`] < 0 && (col === 'desvio' || col === 'desvio2')) {
+      return <a className='successBalloon'>{item[`${col}`]} horas</a>;
+    } else if (item[`${col}`] > 0 && (col === 'desvio' || col === 'desvio2')) {
+      return <a className='errorBalloon'>{item[`${col}`]} horas</a>;
+    } else if (
+      Math.ceil(item[`${col}`]) === 0 &&
+      (col === 'desvio' || col === 'desvio2')
+    ) {
+      return <a className='warningBalloon'>{item[`${col}`]} horas</a>;
+    }
+
+    switch (col) {
+      case 'nome': {
+        const prod = getProduct(item.productId);
+        return <a className='link'>{prod.nome}</a>;
+      }
+      case 'previsto2': {
+        const prod = getProduct(item.productId);
+        const total = prod.hours * 25;
+        return <a>{total} horas</a>;
+      }
+      case 'custo': {
+        const prod = getProduct(item.productId);
+        return <a>{prod.custo}€</a>;
+      }
+
+      case 'cliente': {
+        const client = getClient(item[`${col}`]);
+        return <a>{client.name}</a>;
+      }
+      case 'ações':
+        return <Eye className='link' />;
+      default:
+        return (
+          <a>
+            {displayWithStyle(item[`${col}`])}{' '}
+            {ItsNumber(item[`${col}`]) ? 'horas' : null}
+          </a>
+        );
+    }
+  }
+  const DisplayBalloonFilter = (item, onRemove) => {
+    if (hasData(item))
+      return (
+        <div className='activeFilterBalloon'>
+          {typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
+          <X
+            className='activeFilterBalloonIcon'
+            size={'14px'}
+            onClick={onRemove}
+          />
+        </div>
+      );
   };
   useEffect(() => {
     const calculatePages = () => {
@@ -202,7 +217,7 @@ const OrdersScreen = ({ ...props }) => {
                   <div className='filterPopupCol'>
                     <Autocomplete
                       id='country-select-demo'
-                      options={items}
+                      options={clients}
                       autoHighlight
                       value={client || null}
                       onChange={(event, value) => onClientChange(value)}
@@ -218,7 +233,7 @@ const OrdersScreen = ({ ...props }) => {
                     />
                     <Autocomplete
                       id='country-select-demo'
-                      options={items}
+                      options={woodTypes}
                       autoHighlight
                       value={woodType || null}
                       onChange={(event, value) => onWoodTypeChange(value)}
@@ -250,7 +265,7 @@ const OrdersScreen = ({ ...props }) => {
                   <div className='filterPopupCol'>
                     <Autocomplete
                       id='country-select-demo'
-                      options={items}
+                      options={products}
                       autoHighlight
                       getOptionLabel={(option) => option.nome}
                       value={product || null}
@@ -280,11 +295,11 @@ const OrdersScreen = ({ ...props }) => {
                     />
                     <Autocomplete
                       id='country-select-demo'
-                      options={items}
+                      options={operations}
                       autoHighlight
                       onChange={(event, value) => onOperationChange(value)}
+                      getOptionLabel={(option) => option.label}
                       value={operation || null}
-                      getOptionLabel={(option) => option.nome}
                       renderInput={(params) => (
                         <TextField
                           variant='standard'
@@ -332,9 +347,12 @@ const OrdersScreen = ({ ...props }) => {
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={15}>15</MenuItem>
               </Select>
+              {' '}
               Itens
               <div className='spacer'>|</div>
               Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
+              {/* needed space */}
+              {' '}
               itens
               <div className='spacer'></div>
               <Pagination
@@ -409,10 +427,14 @@ const OrdersScreen = ({ ...props }) => {
   );
 };
 OrdersScreen.propTypes = {
-  items: PropTypes.array,
   tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
-  breadcrumbsPath: PropTypes.array,
   detailPage: PropTypes.string,
+  clients: PropTypes.array,
+  items: PropTypes.arrayOf(PropTypes.Object),
+  products: PropTypes.arrayOf(PropTypes.Object),
+  woodTypes: PropTypes.arrayOf(PropTypes.Object),
+  operations: PropTypes.arrayOf(PropTypes.Object),
+  breadcrumbsPath: PropTypes.arrayOf(PropTypes.Object),
 };
 export default OrdersScreen;

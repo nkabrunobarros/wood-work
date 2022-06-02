@@ -19,8 +19,8 @@ import routes from '../../../navigation/routes';
 import Router from 'next/router';
 import Footer from '../../layout/footer/footer';
 
-import authService from '../../../services/auth-service';
-// import { getUser } from '../../mock/Users';
+// import authService from '../../../services/auth-service';
+ import { getUser } from '../../mock/Users';
 
 const SignIn = ({ ...props }) => {
   const [visible, setVisible] = useState(true);
@@ -28,38 +28,38 @@ const SignIn = ({ ...props }) => {
   const [email, setEmail] = useState('bruno.barros@nka.pt');
   const [password, setPassword] = useState('123456');
 
-  async function loginUser() {
-    await authService.login(email, password).then(
-      (res) => {
-        if (res.status === 200 && res.data.data.perfil === 'Client')
-          Router.push(routes.private.orders);
-        else Router.push(routes.private.internal.orders);
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        console.log(resMessage);
-      }
-    );
-  }
+  // async function loginUser() {
+  //   await authService.login(email, password).then(
+  //     (res) => {
+  //       if (res.status === 200 && res.data.data.perfil === 'Client')
+  //         Router.push(routes.private.orders);
+  //       else Router.push(routes.private.internal.orders);
+  //     },
+  //     (error) => {
+  //       const resMessage =
+  //         (error.response &&
+  //           error.response.data &&
+  //           error.response.data.message) ||
+  //         error.message ||
+  //         error.toString();
+  //       console.log(resMessage);
+  //     }
+  //   );
+  // }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = await loginUser({
-      email,
-      password,
-    });
-    sessionStorage.setItem('token', token);
+     // const token = await loginUser({
+     //   email,
+     //   password,
+     // });
+     // sessionStorage.setItem('token', token);
 
-    // const foundUser = await getUser(email);
-    // if (foundUser !== undefined && foundUser.password === password) {
-    //   sessionStorage.setItem('user', email);
-    //   Router.push(routes.private.terms);
-    // }
+     const foundUser = await getUser(email);
+     if (foundUser !== undefined && foundUser.password === password) {
+       sessionStorage.setItem('user', email);
+       Router.push(routes.private.terms);
+     }
   };
 
   return (

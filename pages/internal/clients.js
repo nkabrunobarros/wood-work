@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../../components/loader/loader'
 import UsersScreen from '../../components/pages/users/users'
 import routes from '../../navigation/routes'
-import { getUsers } from '../../components/mock/Users'
 import getCountries from '../../components/mock/Countries'
+import { getClients } from '../../components/mock/Clients'
 
 import PropTypes from 'prop-types'
 
 export async function getServerSideProps (context) {
-  const res = await getUsers()
+  const res = await getClients()
   const res2 = await getCountries()
   return {
     props: { users: res, countries: res2 } // will be passed to the page component as props

@@ -56,8 +56,6 @@ function getProducts() {
 function getProduct(id) {
   const products = getProducts()
   const foundProduct = products.find(element => element.id.toString() === id.toString())
-  console.log(id)
-
   return foundProduct;
 }
 

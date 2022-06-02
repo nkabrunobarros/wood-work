@@ -396,6 +396,7 @@ const OrdersScreen = ({ ...props }) => {
                 color='primary'
                 className={'pagination'}
               />
+
             </div>
           </div>
 

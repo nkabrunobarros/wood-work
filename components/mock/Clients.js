@@ -2,7 +2,8 @@ function getClients() {
   const clients = [
     {
       id: 1,
-      name: 'Constrea, Lda.',
+      nome: 'Constrea, Lda.',
+      pais: 'Portugal',
       email: 'Constrea@gmail.com',
       contactName: 'Rui Carvalho',
       telemovel: '939921227',
@@ -14,7 +15,8 @@ function getClients() {
     },
     {
       id: 2,
-      name: 'Nka, Lda.',
+      nome: 'Nka, Lda.',
+      pais: 'Portugal',
       email: 'nka@nka.pt',
       contactName: 'João magalhaes',
       telemovel: '939921227',
