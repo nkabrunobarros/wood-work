@@ -19,7 +19,7 @@ import routes from '../../../navigation/routes';
 import Router from 'next/router';
 import Footer from '../../layout/footer/footer';
 
-import authService from '../../../services/auth-service';
+// import authService from '../../../services/auth-service';
 import { getUser } from '../../mock/Users';
 
 const SignIn = ({ ...props }) => {
