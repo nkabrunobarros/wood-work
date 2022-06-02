@@ -31,17 +31,18 @@ const SignIn = ({ ...props }) => {
   async function loginUser() {
     await authService.login(email, password).then(
       (res) => {
-        if (res.status === 200 && res.data.data.perfil === 'Client') Router.push(routes.private.orders)
-        else Router.push(routes.private.internal.orders)
+        if (res.status === 200 && res.data.data.perfil === 'Client')
+          Router.push(routes.private.orders);
+        else Router.push(routes.private.internal.orders);
       },
-      error => {
+      (error) => {
         const resMessage =
           (error.response &&
             error.response.data &&
             error.response.data.message) ||
           error.message ||
           error.toString();
-          console.log(resMessage)
+        console.log(resMessage);
       }
     );
   }

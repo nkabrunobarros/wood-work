@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { getCategories } from '../../components/mock/Categories';
 import getOrders from '../../components/mock/Orders';
 import routes from '../../navigation/routes';
+import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 
 export async function getServerSideProps(context) {
   const res = await getCategories();
@@ -35,13 +36,44 @@ const Orders = ({ categories, orders }) => {
     },
   ];
   const items = orders;
-
+  const internalPOV = true
   const panelsInfo = {
     budgeting: 12,
     drawing: 11,
     production: 13,
     concluded: 17,
   };
+
+  const cards = [
+    {
+      num: 1,
+      title: 'Em Orçamentação',
+      amount: 12,
+      icon: <Layers size={40} />,
+      color: 'var(--primary)'
+    },
+    {
+      num: 2,
+      title: 'Em Desenho',
+      amount: 11,
+      icon: <LayoutTemplate size={40} />,
+      color: 'var(--green)'
+    },
+    {
+      num: 3,
+      title: 'Em Produção',
+      amount: 13,
+      icon: <PackagePlus size={40} />,
+      color: 'var(--orange)'
+    },
+    {
+      num: 4,
+      title: 'Concluidas',
+      amount: 17,
+      icon: <Settings size={40} />,
+      color: 'var(--babyblue)'
+    },
+  ]
   const tableCols = [
     'numero',
     'categoria',
@@ -51,7 +83,7 @@ const Orders = ({ categories, orders }) => {
     'ações',
   ];
 
-  const detailPage = routes.private.order;
+  const detailPage = routes.private.internal.order;
 
   const props = {
     categories,
@@ -60,6 +92,8 @@ const Orders = ({ categories, orders }) => {
     tableCols,
     breadcrumbsPath,
     detailPage,
+    internalPOV,
+    cards
   };
   return loaded ? (
     <OrdersScreen {...props} />
@@ -76,6 +110,8 @@ Orders.propTypes = {
   tableCols: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   detailPage: PropTypes.any,
+  internalPOV: PropTypes.boolean,
+  cards: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default Orders;

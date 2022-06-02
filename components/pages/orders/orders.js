@@ -1,22 +1,15 @@
 //  Nodes
-import React, { useEffect, useState } from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
+import React, { useEffect, useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Grid'
-import CustomBreadcrumbs from '../../breadcrumbs'
-import InfoCard from '../../cards/infoCard'
-import {
-  AlertOctagon,
-  Edit,
-  Layers,
-  LayoutTemplate,
-  PackageCheck,
-  Trash
-} from 'lucide-react'
-import Content from '../../content/content'
-import PrimaryBtn from '../../buttons/primaryBtn'
+import Grid from '@mui/material/Grid';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import InfoCard from '../../cards/infoCard';
+import { Edit, Trash } from 'lucide-react';
+import Content from '../../content/content';
+import PrimaryBtn from '../../buttons/primaryBtn';
 import {
   Autocomplete,
   InputLabel,
@@ -24,15 +17,15 @@ import {
   OutlinedInput,
   Pagination,
   Select,
-  TextField
-} from '@mui/material'
+  TextField,
+} from '@mui/material';
 
-import styles from '../../../styles/Orders.module.css'
-import CustomTable from '../../table/table'
-import Router from 'next/router'
-import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
-import displayWithStyle from '../../utils/displayTextWithStyle'
-import DisplayCategory from '../../utils/DisplayCategory'
+import styles from '../../../styles/Orders.module.css';
+import CustomTable from '../../table/table';
+import Router from 'next/router';
+import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
+import displayWithStyle from '../../utils/displayTextWithStyle';
+import DisplayCategory from '../../utils/DisplayCategory';
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -41,45 +34,47 @@ const OrdersScreen = ({ ...props }) => {
     panelsInfo,
     tableCols,
     breadcrumbsPath,
-    detailPage
-  } = props
+    detailPage,
+    internalPOV,
+    cards,
+  } = props;
 
   //  States
-  const [number, setNumber] = useState('')
-  const [client, setClient] = useState('')
-  const [category, setCategory] = useState()
-  const [stock, setStock] = useState('')
+  const [number, setNumber] = useState('');
+  const [client, setClient] = useState('');
+  const [category, setCategory] = useState();
+  const [stock, setStock] = useState('');
 
-  const [page, setPage] = useState(1)
-  const [entries, setEntries] = useState(5)
-  const [totalPages, setTotalPages] = useState(0)
-  const [showingMin, setShowingMin] = useState(0)
-  const [showingMax, setShowingMax] = useState(entries)
+  const [page, setPage] = useState(1);
+  const [entries, setEntries] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
+  const [showingMin, setShowingMin] = useState(0);
+  const [showingMax, setShowingMax] = useState(entries);
 
-  const [itemsPerPage, setItemsPerPage] = useState([])
+  const [itemsPerPage, setItemsPerPage] = useState([]);
   //  Clear Filters to default
   const ClearFilters = () => {
-    setNumber('')
-    setClient('')
-    setCategory('')
-    setStock('')
-  }
+    setNumber('');
+    setClient('');
+    setCategory('');
+    setStock('');
+  };
 
   const handleChangePage = (event, value) => {
-    setPage(value)
-  }
+    setPage(value);
+  };
 
   useEffect(() => {
     const calculatePages = () => {
-      const numPages = Math.ceil(items.length / entries)
-      setTotalPages(numPages)
-      const res = PaginateItemsPerPage(items, entries, page - 1)
-      setItemsPerPage(res.array)
-      setShowingMax(res.showingMax)
-      setShowingMin(res.showingMin)
-    }
-    calculatePages()
-  }, [entries, page])
+      const numPages = Math.ceil(items.length / entries);
+      setTotalPages(numPages);
+      const res = PaginateItemsPerPage(items, entries, page - 1);
+      setItemsPerPage(res.array);
+      setShowingMax(res.showingMax);
+      setShowingMin(res.showingMin);
+    };
+    calculatePages();
+  }, [entries, page]);
   const top100Films = [
     { label: 'The Shawshank Redemption', year: 1994 },
     { label: 'The Godfather', year: 1972 },
@@ -90,23 +85,23 @@ const OrdersScreen = ({ ...props }) => {
     { label: 'Pulp Fiction', year: 1994 },
     {
       label: 'The Lord of the Rings: The Return of the King',
-      year: 2003
+      year: 2003,
     },
     { label: 'The Good, the Bad and the Ugly', year: 1966 },
     { label: 'Fight Club', year: 1999 },
     {
       label: 'The Lord of the Rings: The Fellowship of the Ring',
-      year: 2001
+      year: 2001,
     },
     {
       label: 'Star Wars: Episode V - The Empire Strikes Back',
-      year: 1980
+      year: 1980,
     },
     { label: 'Forrest Gump', year: 1994 },
     { label: 'Inception', year: 2010 },
     {
       label: 'The Lord of the Rings: The Two Towers',
-      year: 2002
+      year: 2002,
     },
     { label: "One Flew Over the Cuckoo's Nest", year: 1975 },
     { label: 'Goodfellas', year: 1990 },
@@ -114,7 +109,7 @@ const OrdersScreen = ({ ...props }) => {
     { label: 'Seven Samurai', year: 1954 },
     {
       label: 'Star Wars: Episode IV - A New Hope',
-      year: 1977
+      year: 1977,
     },
     { label: 'City of God', year: 2002 },
     { label: 'Se7en', year: 1995 },
@@ -151,7 +146,7 @@ const OrdersScreen = ({ ...props }) => {
     {
       label:
         'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
-      year: 1964
+      year: 1964,
     },
     { label: 'The Great Dictator', year: 1940 },
     { label: 'Cinema Paradiso', year: 1988 },
@@ -174,7 +169,7 @@ const OrdersScreen = ({ ...props }) => {
     { label: 'Vertigo', year: 1958 },
     {
       label: 'Star Wars: Episode VI - Return of the Jedi',
-      year: 1983
+      year: 1983,
     },
     { label: 'Reservoir Dogs', year: 1992 },
     { label: 'Braveheart', year: 1995 },
@@ -188,7 +183,7 @@ const OrdersScreen = ({ ...props }) => {
     { label: 'Double Indemnity', year: 1944 },
     {
       label: 'Eternal Sunshine of the Spotless Mind',
-      year: 2004
+      year: 2004,
     },
     { label: 'Amadeus', year: 1984 },
     { label: 'To Kill a Mockingbird', year: 1962 },
@@ -205,77 +200,60 @@ const OrdersScreen = ({ ...props }) => {
     { label: 'Inglourious Basterds', year: 2009 },
     { label: 'Snatch', year: 2000 },
     { label: '3 Idiots', year: 2009 },
-    { label: 'Monty Python and the Holy Grail', year: 1975 }
-  ]
+    { label: 'Monty Python and the Holy Grail', year: 1975 },
+  ];
   // eslint-disable-next-line react/prop-types
   const DisplayCol = (col, item, index) => {
     if (col === 'em distribuição') {
-      return <a>{displayWithStyle(item.distribuição)}</a>
+      return <a>{displayWithStyle(item.distribuição)}</a>;
     } else if (index === 0) {
-      return <a className='link'>Nº {displayWithStyle(item[`${col}`])}</a>
+      return <a className='link'>Nº {displayWithStyle(item[`${col}`])}</a>;
     }
     switch (col) {
       case 'categoria':
-        return <a>{DisplayCategory(item[`${col}`])}</a>
+        return <a>{DisplayCategory(item[`${col}`])}</a>;
       case 'ações':
         return (
           <>
             <Edit className='link' />
             <Trash className='link' />
           </>
-        )
+        );
       default:
-        return <a>{displayWithStyle(item[`${col}`])}</a>
+        return <a>{displayWithStyle(item[`${col}`])}</a>;
     }
-  }
+  };
   const onClientChange = (value) => {
-    if (value === null) setClient('')
-    else setClient(value.label)
-  }
+    if (value === null) setClient('');
+    else setClient(value.label);
+  };
   return (
     <Grid component='main'>
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
       {/* Statistics Cards */}
-      {panelsInfo
-        ? (
+
+      {panelsInfo ? (
         <div
           style={{
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            padding: 0
+            padding: 0,
           }}
         >
-          <InfoCard
-            amount={panelsInfo.budgeting}
-            color={'var(--primary)'}
-            icon={<PackageCheck size={40} />}
-            title={'Em Orçamentação'}
-          />
-          <InfoCard
-            amount={panelsInfo.drawing}
-            color={'var(--green)'}
-            icon={<LayoutTemplate size={40} />}
-            title={'Em Desenho'}
-          />
-          <InfoCard
-            amount={panelsInfo.production}
-            color={'var(--orange)'}
-            icon={<Layers size={40} />}
-            title={'Em Produção'}
-          />
-          <InfoCard
-            amount={panelsInfo.concluded}
-            color={'var(--babyblue)'}
-            icon={<AlertOctagon size={40} />}
-            title={'Concluidas'}
-          />
+          {cards.map((card) => (
+            <InfoCard
+              key={card.num}
+              amount={card.amount}
+              color={card.color}
+              icon={card.icon}
+              title={card.title}
+            />
+          ))}
         </div>
-          )
-        : null}
-
+      ) : null}
       {/* Filters */}
       <Content>
         <div id='pad'>
@@ -303,7 +281,13 @@ const OrdersScreen = ({ ...props }) => {
                 options={top100Films}
                 onChange={(event, value) => onClientChange(value)}
                 renderInput={(params) => (
-                  <TextField {...params} fullWidth value={client} onChange={(event, value) => setClient(event.target.value)} placeholder='Escrever um nome' />
+                  <TextField
+                    {...params}
+                    fullWidth
+                    value={client}
+                    onChange={(event, value) => setClient(event.target.value)}
+                    placeholder='Escrever um nome'
+                  />
                 )}
               />
             </div>
@@ -347,7 +331,7 @@ const OrdersScreen = ({ ...props }) => {
             style={{
               width: 'fit-content',
               marginLeft: 'auto',
-              paddingTop: '1rem'
+              paddingTop: '1rem',
             }}
           >
             <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
@@ -368,34 +352,53 @@ const OrdersScreen = ({ ...props }) => {
             style={{
               marginLeft: 'auto',
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: 'column',
               color: 'var(--grayTexts)',
-              fontSize: 'small'
+              fontSize: 'small',
             }}
           >
-            Visualizar
-            <Select
-              value={entries}
-              onChange={(e) => setEntries(e.target.value)}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+              }}
             >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-            </Select>
-            Itens
-            <div className='spacer'>|</div>
-            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}{' '}
-            itens
-            <div className='spacer'></div>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handleChangePage}
-              siblingCount={0}
-              color='primary'
-              className={'pagination'}
-            />
+              {internalPOV ? <PrimaryBtn text='Adicionar' /> : null}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                flexDirection: 'row',
+              }}
+            >
+              Visualizar
+              <Select
+                value={entries}
+                onChange={(e) => setEntries(e.target.value)}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+              </Select>
+              Itens
+              <div className='spacer'>|</div>
+              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}{' '}
+              itens
+              <div className='spacer'></div>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handleChangePage}
+                siblingCount={0}
+                color='primary'
+                className={'pagination'}
+              />
+            </div>
           </div>
+
           <Pagination
             count={totalPages}
             page={page}
@@ -407,35 +410,34 @@ const OrdersScreen = ({ ...props }) => {
         </div>
         <CustomTable columns={tableCols}>
           {itemsPerPage
-          .filter(
-            (item) =>
-              item.stock.includes(stock)
-          )
-          .map((item, i) => (
-            <tr
-              key={item.numero}
-              onClick={() =>
-                Router.push({ pathname: `${detailPage}${item.numero}` })
-              }
-            >
-              {tableCols.map((element, i) => (
-                <td key={element.id} data-label={tableCols[i].toUpperCase()}>
-                  {DisplayCol(element, item, i)}
-                </td>
-              ))}
-            </tr>
-          ))}
+            .filter((item) => item.stock.includes(stock))
+            .map((item, i) => (
+              <tr
+                key={item.numero}
+                onClick={() =>
+                  Router.push({ pathname: `${detailPage}${item.numero}` })
+                }
+              >
+                {tableCols.map((element, i) => (
+                  <td key={element.id} data-label={tableCols[i].toUpperCase()}>
+                    {DisplayCol(element, item, i)}
+                  </td>
+                ))}
+              </tr>
+            ))}
         </CustomTable>
       </Content>
     </Grid>
-  )
-}
+  );
+};
 OrdersScreen.propTypes = {
   items: PropTypes.array,
   categories: PropTypes.array,
   tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
-  detailPage: PropTypes.string
-}
-export default OrdersScreen
+  detailPage: PropTypes.string,
+  internalPOV: PropTypes.boolean,
+  cards: PropTypes.arrayOf(PropTypes.object),
+};
+export default OrdersScreen;

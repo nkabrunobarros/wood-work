@@ -11,7 +11,6 @@ import ActiveLink from './activeLink';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import getLinks from '../../mock/navLinks';
 import { getUser } from '../../mock/Users';
-import authService from '../../../services/auth-service';
 
 const Navbar = ({ openDrawer }) => {
   const navLinks = getLinks();
@@ -26,6 +25,11 @@ const Navbar = ({ openDrawer }) => {
   };
   const router = useRouter();
 
+  const logout = () => {
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+
+  };
   useEffect(() => {
     async function getUserPerm(data) {
       const perfil = await getUser(data);
@@ -34,15 +38,12 @@ const Navbar = ({ openDrawer }) => {
     }
     if (typeof window !== 'undefined') {
       // Perform localStorage action
-      console.log(localStorage.getItem('user'))
       if (localStorage.getItem('user') !== null) {
-        const data = localStorage
-          .getItem('user')
-          .substring(1, localStorage.getItem('user').length - 1);
+        const data = localStorage.getItem('user');
         if (data === null) Router.push(routes.public.signIn);
         else {
           getUserPerm(data).then((res) => {
-            console.log(res);
+            //
           });
         }
       } else Router.push(routes.public.signIn);
@@ -98,7 +99,7 @@ const Navbar = ({ openDrawer }) => {
         >
           <MenuItem
             onClick={() => {
-              Router.push(routes.private.profile);
+              Router.push(`${routes.private.profile}${loggedUser.id}`);
               handleClose();
             }}
           >
@@ -110,7 +111,7 @@ const Navbar = ({ openDrawer }) => {
               handleClose();
             }}
           >
-            <LogOut onClick={authService.logout} /> Logout
+            <LogOut onClick={ logout} /> Logout
           </MenuItem>
         </Menu>
       </div>

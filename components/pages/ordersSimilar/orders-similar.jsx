@@ -24,45 +24,40 @@ import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
 import displayWithStyle from '../../utils/displayTextWithStyle';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import ItsNumber from '../../utils/ItsNumber';
+import hasData from '../../utils/hasData';
 
+import { getClient } from '../../mock/Clients';
+import { getProduct } from '../../mock/Products';
 const OrdersScreen = ({ ...props }) => {
   const { items, tableCols, breadcrumbsPath, detailPage } = props;
 
-  
   // eslint-disable-next-line react/prop-types
-  const DisplayCol = (col, item, index) => {
+  function DisplayCol(col, item, index) {
     if (item[`${col}`] < 0 && (col === 'desvio' || col === 'desvio2')) {
-      return (
-        <a className='successBalloon'>
-          {item[`${col}`]} horas
-        </a>
-      );
+      return <a className='successBalloon'>{item[`${col}`]} horas</a>;
     } else if (item[`${col}`] > 0 && (col === 'desvio' || col === 'desvio2')) {
-      return (
-        <a className='errorBalloon'>
-          {item[`${col}`]} horas
-        </a>
-      );
+      return <a className='errorBalloon'>{item[`${col}`]} horas</a>;
     } else if (
-      Math.ceil(item[`${col}`] ) === 0 &&
+      Math.ceil(item[`${col}`]) === 0 &&
       (col === 'desvio' || col === 'desvio2')
     ) {
-      return (
-        <a className='warningBalloon'>
-          {item[`${col}`]} horas
-        </a>
-      );
+      return <a className='warningBalloon'>{item[`${col}`]} horas</a>;
     }
 
-    if (index === 0) {
-      return (
-        <a className='link'>
-          Nº {displayWithStyle(item[`${col}`])}{' '}
-          {ItsNumber(item[`${col}`]) ? 'horas' : null}
-        </a>
-      );
-    }
     switch (col) {
+      case 'nome': {
+        const prod = getProduct(item.productId);
+        return <a className='link'>{prod.nome}</a>;
+      }
+      case 'custo': {
+        const prod = getProduct(item.productId);
+        return <a>{prod.custo}€</a>;
+      }
+
+      case 'cliente': {
+        const client = getClient(item[`${col}`]);
+        return <a>{client.name}</a>;
+      }
       case 'ações':
         return <Eye className='link' />;
       default:
@@ -73,6 +68,19 @@ const OrdersScreen = ({ ...props }) => {
           </a>
         );
     }
+  }
+  const DisplayBalloonFilter = (item, onRemove) => {
+    if (hasData(item))
+      return (
+        <div className='activeFilterBalloon'>
+          {typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
+          <X
+            className='activeFilterBalloonIcon'
+            size={'14px'}
+            onClick={onRemove}
+          />
+        </div>
+      );
   };
   //  States Pagination
   const [page, setPage] = useState(1);
@@ -118,7 +126,6 @@ const OrdersScreen = ({ ...props }) => {
     if (value === null) setOperation('');
     else setOperation(value);
   };
-
   const ApplyFilters = () => {
     // Set Filters
     setModal(!modal);
@@ -153,8 +160,21 @@ const OrdersScreen = ({ ...props }) => {
       {/* Orders */}
       <Content>
         <div id='pad' className='flex' style={{ alignItems: 'center' }}>
-          <div>
-            <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div>
+              <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+            </div>
+            <div className='activeFilterBalloonContainer'>
+              {/* Filter Balloons here */}
+              {DisplayBalloonFilter(client, () => setClient(null))}
+              {DisplayBalloonFilter(woodType, () => setWoodType(null))}
+              {DisplayBalloonFilter(product, () => setProduct(null))}
+              {DisplayBalloonFilter(operation, () => setOperation(null))}
+              {DisplayBalloonFilter(totalTime, () => setTotalTime(''))}
+              {DisplayBalloonFilter(orderId, () => setOrderId(''))}
+              {DisplayBalloonFilter(totalArea, () => setTotalArea(''))}
+              {DisplayBalloonFilter(cost, () => setCost(''))}
+            </div>
           </div>
           <div
             style={{
@@ -184,7 +204,7 @@ const OrdersScreen = ({ ...props }) => {
                       id='country-select-demo'
                       options={items}
                       autoHighlight
-                      value={client}
+                      value={client || null}
                       onChange={(event, value) => onClientChange(value)}
                       getOptionLabel={(option) => option.nome}
                       renderInput={(params) => (
@@ -200,7 +220,7 @@ const OrdersScreen = ({ ...props }) => {
                       id='country-select-demo'
                       options={items}
                       autoHighlight
-                      value={woodType}
+                      value={woodType || null}
                       onChange={(event, value) => onWoodTypeChange(value)}
                       getOptionLabel={(option) => option.nome}
                       renderInput={(params) => (
@@ -233,7 +253,7 @@ const OrdersScreen = ({ ...props }) => {
                       options={items}
                       autoHighlight
                       getOptionLabel={(option) => option.nome}
-                      value={product}
+                      value={product || null}
                       onChange={(event, value) => onProductChange(value)}
                       renderInput={(params) => (
                         <TextField
@@ -263,7 +283,7 @@ const OrdersScreen = ({ ...props }) => {
                       options={items}
                       autoHighlight
                       onChange={(event, value) => onOperationChange(value)}
-                      value={operation}
+                      value={operation || null}
                       getOptionLabel={(option) => option.nome}
                       renderInput={(params) => (
                         <TextField
@@ -289,31 +309,43 @@ const OrdersScreen = ({ ...props }) => {
                 </div>
               </div>
             ) : null}
-            <Button onClick={handleClick}>
-              <Filter />
-            </Button>
-            Visualizar
-            <Select
-              value={entries}
-              onChange={(e) => setEntries(e.target.value)}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ marginLeft: 'auto' }}>
+              <Button onClick={handleClick}>
+                <Filter />
+              </Button>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
             >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-            </Select>
-            Itens
-            <div className='spacer'>|</div>
-            Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
-            itens
-            <div className='spacer'></div>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handleChangePage}
-              siblingCount={0}
-              color='primary'
-              className={'pagination'}
-            />
+              Visualizar
+              <Select
+                value={entries}
+                onChange={(e) => setEntries(e.target.value)}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+              </Select>
+              Itens
+              <div className='spacer'>|</div>
+              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
+              itens
+              <div className='spacer'></div>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handleChangePage}
+                siblingCount={0}
+                color='primary'
+                className={'pagination'}
+              />
+            </div>
           </div>
           <Pagination
             count={totalPages}
@@ -324,6 +356,7 @@ const OrdersScreen = ({ ...props }) => {
             className={'pagination mobile'}
           />
         </div>
+
         <div className='scrollableX'>
           <CustomTable
             columns={tableCols}

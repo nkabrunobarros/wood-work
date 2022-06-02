@@ -1,42 +1,64 @@
-function getProducts () {
+function getProducts() {
   const products = [
     {
-      id: 1,
-      nome: 'produ adw',
-      numEncomenda: '123fa2',
-      cliente: 'Zeca limitada',
-      operacao: 'Corte',
-      previsto: 20,
-      realizado: 18,
-      horasAtuais: 40,
-      previsto2: 1,
-      realizado2: 1.2
+      id: 11,
+      nome: 'kichen table',
+      category: 512,
+      woodType: 11,
+      custo: 199,
+      hours: 1.5
     },
     {
-      id: 2,
-      nome: 'produ adw',
-      numEncomenda: '123fa2',
-      cliente: 'Zeca limitada',
-      operacao: 'Corte',
-      previsto: 40,
-      realizado: 46,
-      horasAtuais: 26,
-      previsto2: 1.2,
-      realizado2: 1.7
+      id: 12,
+      nome: 'Kitchen counterTop',
+      category: 512,
+      woodType: 12,
+      custo: 323,
+      hours: 1
     },
     {
-      id: 3,
-      nome: 'produ adw',
-      numEncomenda: '123fa2',
-      cliente: 'Zeca limitada',
-      operacao: 'Corte',
-      previsto: 20,
-      realizado: 18,
-      horasAtuais: 32,
-      previsto2: 1.2,
-      realizado2: 1.2
-    }
-  ]
-  return products
+      id: 13,
+      nome: 'door',
+      category: 512,
+      woodType: 13,
+      custo: 551,
+      hours: 2
+    },
+    {
+      id: 14,
+      nome: 'wood 500 slab',
+      category: 512,
+      woodType: 14,
+      custo: 23,
+      hours: 0.5
+    },
+    {
+      id: 15,
+      nome: 'product a',
+      category: 512,
+      woodType: 15,
+      custo: 421,
+      hours: 3
+    },
+    {
+      id: 16,
+      nome: 'product b',
+      category: 512,
+      woodType: 16,
+      custo: 77,
+      hours: 4
+    },
+  ];
+  return products;
 }
-export default getProducts
+
+
+function getProduct(id) {
+  const products = getProducts()
+  const foundProduct = products.find(element => element.id.toString() === id.toString())
+  console.log(id)
+
+  return foundProduct;
+}
+
+export { getProducts, getProduct };

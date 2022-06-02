@@ -17,7 +17,7 @@ const routes = {
     tos: '/tos',
     orders: '/orders',
     order: '/order/',
-    profile: '/profile',
+    profile: '/profile/',
     messages: '/messages',
   },
   public: {

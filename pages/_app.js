@@ -23,6 +23,11 @@ const theme = createTheme({
       main: '#000000',
     },
   },
+  typography: {
+    fontFamily: [
+      "Montserrat"
+    ].join(",")
+  }
 });
 
 const App = ({ Component, pageProps }) => {
@@ -36,7 +41,6 @@ const App = ({ Component, pageProps }) => {
     if (typeof window !== 'undefined') {
       // Perform localStorage action
       if (localStorage.getItem('user') !== null) {
-        console.log(localStorage.getItem('user'));
         const data = localStorage
           .getItem('user')
           .substring(1, localStorage.getItem('user').length - 1);

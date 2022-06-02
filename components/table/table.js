@@ -52,7 +52,6 @@ const CustomTable = ({
             <>
               {fullBorders ? (
                 <>
-                  {' '}
                   {fullBorders.find((element) => element === i) !==
                   undefined ? (
                     <th
@@ -109,7 +108,31 @@ const CustomTable = ({
                     </th>
                   )}
                 </>
-              ) : null}
+              ) : 
+              <th key={i} style={style}>
+              <div
+                className='black'
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
+                <a style={{ flex: 1 }}>{col.toUpperCase()}</a>
+                {col.toLowerCase() === 'ações' ||
+                col.toLowerCase() === '' ? null : (
+                  <>
+                    {doubleHeader ? null : (
+                      <a id='align' style={{ maxWidth: '150px' }}>
+                        <Code
+                          style={{
+                            height: '14px',
+                            width: '14px',
+                            transform: 'rotate(-90deg)',
+                          }}
+                        />
+                      </a>
+                    )}
+                  </>
+                )}
+              </div>
+            </th>}
             </>
           ))}
         </thead>

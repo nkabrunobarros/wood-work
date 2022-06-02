@@ -8,8 +8,8 @@ class AuthService {
       })
       .then((response) => {
         if (response.data.data) {
-          localStorage.setItem('user', JSON.stringify(response.data.data.email).substring(1, response.data.data.email.length - 1));
-          sessionStorage.setItem('user', JSON.stringify(response.data.data.email).substring(1, response.data.data.email.length - 1));
+          localStorage.setItem('user', JSON.stringify(response.data.data.email).substring(1, response.data.data.email.length + 1));
+          sessionStorage.setItem('user', JSON.stringify(response.data.data.email).substring(1, response.data.data.email.length + 1));
           return response;
         }
         return response;

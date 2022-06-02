@@ -7,11 +7,11 @@ import OrdersScreen from '../../components/pages/ordersSimilar/orders-similar'
 
 import PropTypes from 'prop-types'
 
-import getProducts from '../../components/mock/Products'
 import routes from '../../navigation/routes'
+import getOrders from '../../components/mock/Orders'
 
 export async function getServerSideProps (context) {
-  const res = getProducts()
+  const res = getOrders()
 
   return {
     props: { items: res } // will be passed to the page component as props
@@ -48,13 +48,13 @@ const OrdersSimilar = ({ items }) => {
     'desvio',
     'horasAtuais',
     'previsto2',
+    'custo',
     'realizado2',
     'desvio2',
     'ações'
   ]
 
   function formatNum (val1, val2) {
-    console.log(val2)
     const res = val1 - val2
 
     if(Number.isInteger(res)) return res

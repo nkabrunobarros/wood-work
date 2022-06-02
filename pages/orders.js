@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { getCategories } from '../components/mock/Categories';
 import getOrders from '../components/mock/Orders';
 import routes from '../navigation/routes';
+import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
 
 export async function getServerSideProps(context) {
   const res = await getCategories();
@@ -52,6 +53,36 @@ const Orders = ({ categories, orders }) => {
   ];
 
   const detailPage = routes.private.order;
+  const cards = [
+    {
+      num: 1,
+      title: 'Em Orçamentação',
+      amount: 2,
+      icon: <PackageCheck size={40} />,
+      color: 'var(--primary)'
+    },
+    {
+      num: 2,
+      title: 'Em Desenho',
+      amount: 1,
+      icon: <LayoutTemplate size={40} />,
+      color: 'var(--green)'
+    },
+    {
+      num: 3,
+      title: 'Em Produção',
+      amount: 3,
+      icon: <Layers size={40} />,
+      color: 'var(--orange)'
+    },
+    {
+      num: 4,
+      title: 'Concluidas',
+      amount: 7,
+      icon: <AlertOctagon size={40} />,
+      color: 'var(--babyblue)'
+    },
+  ]
 
   const props = {
     categories,
@@ -60,6 +91,7 @@ const Orders = ({ categories, orders }) => {
     tableCols,
     breadcrumbsPath,
     detailPage,
+    cards
   };
   return loaded ? (
     <OrdersScreen {...props} />
@@ -75,6 +107,7 @@ Orders.propTypes = {
   panelsInfo: PropTypes.object,
   tableCols: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
+  cards: PropTypes.arrayOf(PropTypes.object),
   detailPage: PropTypes.any,
 };
 

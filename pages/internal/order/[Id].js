@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import Loader from '../../components/loader/loader';
-import OrderScreen from '../../components/pages/order/order';
-import routes from '../../navigation/routes';
+import Loader from '../../../components/loader/loader';
+import OrderScreen from '../../../components/pages/order/order';
+import routes from '../../../navigation/routes';
 
 const Order = () => {
   const [loaded, setLoaded] = useState(false);
@@ -47,11 +47,12 @@ const Order = () => {
       setLoaded(true);
     }, 1500);
   }, []);
-
+  const internalPOV = true
   const props = {
     orderId,
     docs,
     breadcrumbsPath,
+    internalPOV
   };
   return loaded ? (
     <OrderScreen {...props} />
