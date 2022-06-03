@@ -11,17 +11,20 @@ import { getCategories } from '../../components/mock/Categories';
 import getOrders from '../../components/mock/Orders';
 import routes from '../../navigation/routes';
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
+import { getClients } from '../../components/mock/Clients';
 
 export async function getServerSideProps(context) {
   const res = await getCategories();
   const res2 = await getOrders();
+  const res3 = await getClients();
+
 
   return {
-    props: { categories: res, orders: res2 }, // will be passed to the page component as props
+    props: { categories: res, orders: res2, clients: res3 }, // will be passed to the page component as props
   };
 }
 
-const Orders = ({ categories, orders }) => {
+const Orders = ({ categories, orders, clients }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -32,7 +35,7 @@ const Orders = ({ categories, orders }) => {
   const breadcrumbsPath = [
     {
       title: 'Encomendas',
-      href: `${routes.private.orders}`,
+      href: `${routes.private.internal.orders}`,
     },
   ];
   const items = orders;
@@ -93,7 +96,8 @@ const Orders = ({ categories, orders }) => {
     breadcrumbsPath,
     detailPage,
     internalPOV,
-    cards
+    cards,
+    clients
   };
   return loaded ? (
     <OrdersScreen {...props} />
@@ -109,6 +113,7 @@ Orders.propTypes = {
   panelsInfo: PropTypes.object,
   tableCols: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
+  clients: PropTypes.array,
   detailPage: PropTypes.any,
   internalPOV: PropTypes.boolean,
   cards: PropTypes.arrayOf(PropTypes.object)

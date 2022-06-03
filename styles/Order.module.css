@@ -20,7 +20,7 @@
 }
 .docRow {
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   flex-direction: row;
   border-left: 4px solid transparent;
   background-color: var(--white);
@@ -38,7 +38,7 @@
 .docFolderRow {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   flex-direction: row;
   border-left: 4px solid transparent;
   background-color: var(--white);

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Loader from '../../../components/loader/loader';
+import getOrders from '../../../components/mock/Orders';
 import OrderScreen from '../../../components/pages/order/order';
 import routes from '../../../navigation/routes';
 
@@ -8,7 +9,7 @@ const Order = () => {
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
   const orderId = router.query.Id;
-
+  const orders = getOrders();
   const docs = [
     {
       id: Math.random(),
@@ -35,11 +36,11 @@ const Order = () => {
   const breadcrumbsPath = [
     {
       title: 'Encomendas',
-      href: `${routes.private.orders}`,
+      href: `${routes.private.internal.orders}`,
     },
     {
       title: `Encomenda Nº${orderId}`,
-      href: `${routes.private.profile}`,
+      href: `${routes.private.internal.order}`,
     },
   ];
   useEffect(() => {
@@ -52,7 +53,8 @@ const Order = () => {
     orderId,
     docs,
     breadcrumbsPath,
-    internalPOV
+    internalPOV,
+    orders
   };
   return loaded ? (
     <OrderScreen {...props} />

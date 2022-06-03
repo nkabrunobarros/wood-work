@@ -37,7 +37,6 @@ import {
   AccordionSummary,
   Avatar,
   ButtonGroup,
-  Checkbox,
   Collapse,
   IconButton,
   Table,
@@ -53,10 +52,11 @@ import {
 } from '@mui/material';
 import Router from 'next/router';
 import { Box } from '@mui/system';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
 // import Snackbar from '@mui/material/Snackbar';
 
 const Order = ({ ...props }) => {
-  const { orderId, docs, breadcrumbsPath, internalPOV } = props;
+  const { orderId, docs, breadcrumbsPath, internalPOV, orders } = props;
   const [activeRow, setActiveRow] = useState(0);
   const DockFolderRow = ({ doc, num }) => {
     let style = {};
@@ -156,35 +156,36 @@ const Order = ({ ...props }) => {
       </tr>
     );
   };
-  function createData(name, calories, fat, carbs, protein, price) {
-    return {
-      name,
-      calories,
-      fat,
-      carbs,
-      protein,
-      price,
-      history: [
-        {
-          date: '2020-01-05',
-          customerId: '11091700',
-          amount: 3,
-        },
-        {
-          date: '2020-01-02',
-          customerId: 'Anonymous',
-          amount: 1,
-        },
-      ],
-    };
-  }
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-    createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-    createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-  ];
+  // function createData(
+  //   nome,
+  //   orderId,
+  //   clientId,
+  //   eta,
+  //   progress,
+  //   delayed,
+  //   current,
+  //   etaAll,
+  //   cost,
+  //   progressPer,
+  //   delayedPer,
+  //   actions
+  // ) {
+  //   return {
+  //     nome,
+  //     orderId,
+  //     clientId,
+  //     eta,
+  //     progress,
+  //     delayed,
+  //     current,
+  //     etaAll,
+  //     cost,
+  //     progressPer,
+  //     delayedPer,
+  //     actions,
+  //   };
+  // }
+  const rows = orders;
 
   function Row({ row }) {
     const [open, setOpen] = React.useState(false);
@@ -227,21 +228,7 @@ const Order = ({ ...props }) => {
                       <TableCell align='right'>Total price ($)</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {row.history.map((historyRow) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component='th' scope='row'>
-                          {historyRow.date}
-                        </TableCell>
-                        <TableCell>{historyRow.customerId}</TableCell>
-                        <TableCell align='right'>{historyRow.amount}</TableCell>
-                        <TableCell align='right'>
-                          {Math.round(historyRow.amount * row.price * 100) /
-                            100}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
+                  <TableBody></TableBody>
                 </Table>
               </Box>
             </Collapse>
@@ -281,72 +268,158 @@ const Order = ({ ...props }) => {
     return stabilizedThis.map((el) => el[0]);
   }
 
+  const headCellsUpper = [
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: false,
+      borderRight: false,
+      label: 'Quantidade Produzida:12 Un',
+      span: 6,
+    },
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: true,
+      borderRight: true,
+      label: 'Quantidade Encomendada:12 Un',
+      span: 1,
+    },
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: false,
+      borderRight: false,
+      label: 'Por unidade',
+      span: 5,
+    },
+  ];
   const headCells = [
     {
-      id: 'name',
+      id: 'productId',
       numeric: false,
+      disablePadding: false,
+      label: 'Nome',
+    },
+    {
+      id: 'numero',
+      numeric: true,
+      disablePadding: false,
+      label: 'Num. Encomenda',
+    },
+    {
+      id: 'cliente',
+      numeric: true,
       disablePadding: true,
-      label: 'Dessert (100g serving)',
+      label: 'Cliente',
     },
     {
-      id: 'calories',
+      id: 'previsto',
       numeric: true,
       disablePadding: false,
-      label: 'Calories',
+      label: 'Previsto',
     },
     {
-      id: 'fat',
+      id: 'realizado',
       numeric: true,
       disablePadding: false,
-      label: 'Fat (g)',
+      label: 'Realizado',
     },
     {
-      id: 'carbs',
+      id: 'desvio',
       numeric: true,
       disablePadding: false,
-      label: 'Carbs (g)',
+      label: 'Desvio',
     },
     {
-      id: 'protein',
+      id: 'horasAtuais',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: true,
+      borderRight: true,
+      label: 'Horas Atuais',
+    },
+    {
+      id: 'previsto',
       numeric: true,
       disablePadding: false,
-      label: 'Protein (g)',
+      label: 'Previsto',
+    },
+    {
+      id: 'custo',
+      numeric: true,
+      disablePadding: false,
+      label: 'Custo',
+    },
+    {
+      id: 'realizado2',
+      numeric: true,
+      disablePadding: false,
+      label: 'Realizado',
+    },
+    {
+      id: 'desvio2',
+      numeric: true,
+      disablePadding: false,
+      label: 'Desvio',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
     },
   ];
 
   function EnhancedTableHead(props) {
-    const {
-      onSelectAllClick,
-      order,
-      orderBy,
-      numSelected,
-      rowCount,
-      onRequestSort,
-    } = props;
+    const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
 
     return (
       <TableHead>
-        <TableRow>
-          <TableCell padding='checkbox'>
-            <Checkbox
-              color='primary'
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
-              inputProps={{
-                'aria-label': 'select all desserts',
-              }}
-            />
+        {headCellsUpper.map((headCell) => (
+          <TableCell
+            colSpan={headCell.span}
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+            sx={{
+              borderRight: headCell.borderRight
+                ? '1px solid var(--grayTexts)'
+                : null,
+              borderLeft: headCell.borderLeft
+                ? '1px solid var(--grayTexts)'
+                : null,
+              backgroundColor: 'var(--grayEdges)',
+            }}
+          >
+            {headCell.label}
+            {orderBy === headCell.id ? <Box component='span'></Box> : null}
           </TableCell>
+        ))}
+        <TableRow>
           {headCells.map((headCell) => (
             <TableCell
+              colSpan={headCell.span}
               key={headCell.id}
               align={headCell.numeric ? 'right' : 'left'}
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
+              sx={{
+                borderRight: headCell.borderRight
+                  ? '1px solid var(--grayTexts)'
+                  : null,
+                borderLeft: headCell.borderLeft
+                  ? '1px solid var(--grayTexts)'
+                  : null,
+                backgroundColor: 'var(--grayEdges)',
+              }}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -372,33 +445,16 @@ const Order = ({ ...props }) => {
     rowCount: PropTypes.number.isRequired,
   };
 
-  const EnhancedTableToolbar = (props) => {
-    return true;
-  };
-
-  EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-  };
-
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('calories');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleClick = (event, name) => {
@@ -455,19 +511,22 @@ const Order = ({ ...props }) => {
       <CustomBreadcrumbs path={breadcrumbsPath} />
 
       <Content>
+        <AdvancedTable
+          rows={rows}
+          headCells={headCells}
+          headCellsUpper={headCellsUpper}
+        ></AdvancedTable>
+      </Content>
+
+      <Content>
         <Box sx={{ width: '100%' }}>
           <Paper sx={{ width: '100%', mb: 2 }}>
-            <EnhancedTableToolbar numSelected={selected.length} />
             <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby='tableTitle'
-              >
+              <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle'>
                 <EnhancedTableHead
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
                   rowCount={rows.length}
                 />
@@ -477,39 +536,65 @@ const Order = ({ ...props }) => {
                   {stableSort(rows, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const isItemSelected = isSelected(row.name);
+                      const isItemSelected = isSelected(row.numero);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
                         <TableRow
                           hover
-                          onClick={(event) => handleClick(event, row.name)}
+                          onClick={(event) => handleClick(event, row.numero)}
                           role='checkbox'
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           key={row.name}
                           selected={isItemSelected}
                         >
-                          <TableCell padding='checkbox'></TableCell>
                           <TableCell
                             component='th'
                             id={labelId}
                             scope='row'
-                            padding='none'
+                            padding='normal'
                           >
-                            {row.name}
+                            {row.productId}
                           </TableCell>
-                          <TableCell align='right'>{row.calories}</TableCell>
-                          <TableCell align='right'>{row.fat}</TableCell>
-                          <TableCell align='right'>{row.carbs}</TableCell>
-                          <TableCell align='right'>{row.protein}</TableCell>
+                          <TableCell align='right'>{row.numero}</TableCell>
+                          <TableCell align='right'>{row.cliente}</TableCell>
+                          <TableCell align='right'>{row.previsto}</TableCell>
+                          <TableCell align='right'>{row.realizado}</TableCell>
+                          <TableCell align='right'>
+                            {displayWithStyle(
+                              row.previsto - row.realizado,
+                              'desvio'
+                            )}
+                          </TableCell>
+                          <TableCell
+                            align='left'
+                            padding='normal'
+                            style={{
+                              borderLeft: '1px solid var(--grayTexts)',
+                              borderRight: '1px solid var(--grayTexts)',
+                            }}
+                          >
+                            {row.horasAtuais}
+                          </TableCell>
+                          <TableCell align='right'>{row.previsto2}</TableCell>
+                          <TableCell align='right'>{row.custo}</TableCell>
+                          <TableCell align='right'>{row.realizado2}</TableCell>
+                          <TableCell align='right'>
+                            {displayWithStyle(
+                              Math.round(row.previsto2 - row.realizado2),
+                              'desvio2'
+                            )}
+                          </TableCell>
+                          <TableCell align='right'>
+                            <Edit stroke='var(--primary)' />
+                            <Trash stroke='var(--primary)' />
+                          </TableCell>
                         </TableRow>
                       );
                     })}
                   {emptyRows > 0 && (
-                    <TableRow
-
-                    >
+                    <TableRow>
                       <TableCell colSpan={6} />
                     </TableRow>
                   )}
@@ -1008,5 +1093,6 @@ const Order = ({ ...props }) => {
 Order.propTypes = {
   orderId: PropTypes.string,
   docs: PropTypes.arrayOf(PropTypes.object),
+  orders: PropTypes.arrayOf(PropTypes.object),
 };
 export default Order;

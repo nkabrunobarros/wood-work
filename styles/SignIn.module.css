@@ -21,9 +21,9 @@
 }
 .logoImg {
   background-position: center;
-  background-image: url('../public/Logotipo_Vetorizado.png');
-  background-size: 200px 200px;
+  background-image: url('../public/logo_bw_ww40_inv.png');
   background-repeat: no-repeat;
+  background-size: auto;
   margin:0px;
   height: 100%;
   width: 100%;

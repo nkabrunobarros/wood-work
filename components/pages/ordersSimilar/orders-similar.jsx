@@ -1,52 +1,54 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
+import React, { 
+  // useEffect,
+   useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import { Eye, Filter, X } from 'lucide-react';
+import { 
+  // Eye,
+   Filter, X } from 'lucide-react';
 import Content from '../../content/content';
 import {
   Autocomplete,
   Button,
   ButtonGroup,
-  MenuItem,
-  Pagination,
-  Select,
+  // MenuItem,
+  // Pagination,
+  // Select,
   TextField,
 } from '@mui/material';
 
-import CustomTable from '../../table/table';
-import Router from 'next/router';
-import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
-import displayWithStyle from '../../utils/displayTextWithStyle';
+// import CustomTable from '../../table/table';
+// import Router from 'next/router';
+// import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
 import PrimaryBtn from '../../buttons/primaryBtn';
-import ItsNumber from '../../utils/ItsNumber';
 import hasData from '../../utils/hasData';
 
-import { getClient } from '../../mock/Clients';
-import { getProduct } from '../../mock/Products';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
+// import { FilterItem } from '../../utils/FilterItem';
 const OrdersScreen = ({ ...props }) => {
   const {
     items,
-    tableCols,
+    // tableCols,
     breadcrumbsPath,
-    detailPage,
+    // detailPage,
     woodTypes,
     products,
     clients,
     operations,
   } = props;
-
+  const rows = items;
   //  States Pagination
-  const [page, setPage] = useState(1);
-  const [entries, setEntries] = useState(5);
-  const [totalPages, setTotalPages] = useState(0);
-  const [showingMin, setShowingMin] = useState(0);
-  const [showingMax, setShowingMax] = useState(entries);
-  const [itemsPerPage, setItemsPerPage] = useState([]);
+  // const [page, setPage] = useState(1);
+  // const [entries, setEntries] = useState(5);
+  // const [totalPages, setTotalPages] = useState(0);
+  // const [showingMin, setShowingMin] = useState(0);
+  // const [showingMax, setShowingMax] = useState(entries);
+  // const [itemsPerPage, setItemsPerPage] = useState([]);
   //  Modal State
   const [modal, setModal] = useState(false);
   // Filters States
@@ -59,12 +61,115 @@ const OrdersScreen = ({ ...props }) => {
   const [cost, setCost] = useState('');
   const [operation, setOperation] = useState(null);
 
-  //  on Datagrid, rows presented here will have side borders
-  const fullBorders = [7];
+  const headCellsUpper = [
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: false,
+      borderRight: false,
+      label: 'Quantidade Produzida:12 Un',
+      span: 6,
+    },
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: true,
+      borderRight: true,
+      label: 'Quantidade Encomendada:12 Un',
+      span: 1,
+    },
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: false,
+      borderRight: false,
+      label: 'Por unidade',
+      span: 5,
+    },
+  ];
+  const headCells = [
+    {
+      id: 'productId',
+      numeric: false,
+      disablePadding: false,
+      label: 'Nome',
+    },
+    {
+      id: 'cliente',
+      numeric: false,
+      disablePadding: true,
+      label: 'Cliente',
+    },
+    {
+      id: 'numero',
+      numeric: false,
+      disablePadding: false,
+      label: 'Num. Encomenda',
+    },
+    {
+      id: 'previsto',
+      numeric: false,
+      disablePadding: false,
+      label: 'Previsto',
+    },
+    {
+      id: 'realizado',
+      numeric: false,
+      disablePadding: false,
+      label: 'Realizado',
+    },
+    {
+      id: 'desvio',
+      numeric: false,
+      disablePadding: false,
+      label: 'Desvio',
+    },
+    {
+      id: 'horasAtuais',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: true,
+      borderRight: true,
+      label: 'Horas Atuais',
+    },
+    {
+      id: 'previsto2',
+      numeric: false,
+      disablePadding: false,
+      label: 'Previsto',
+    },
+    {
+      id: 'custo',
+      numeric: false,
+      disablePadding: false,
+      label: 'Custo',
+    },
+    {
+      id: 'realizado2',
+      numeric: false,
+      disablePadding: false,
+      label: 'Realizado',
+    },
+    {
+      id: 'desvio2',
+      numeric: false,
+      disablePadding: false,
+      label: 'Desvio',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
+    },
+  ];
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
-  };
+  // const handleChangePage = (event, value) => {
+  //   setPage(value);
+  // };
   const handleClick = (event) => {
     setModal(!modal);
   };
@@ -99,49 +204,6 @@ const OrdersScreen = ({ ...props }) => {
     setCost('');
   };
 
-  // eslint-disable-next-line react/prop-types
-  function DisplayCol(col, item, index) {
-    if (item[`${col}`] < 0 && (col === 'desvio' || col === 'desvio2')) {
-      return <a className='successBalloon'>{item[`${col}`]} horas</a>;
-    } else if (item[`${col}`] > 0 && (col === 'desvio' || col === 'desvio2')) {
-      return <a className='errorBalloon'>{item[`${col}`]} horas</a>;
-    } else if (
-      Math.ceil(item[`${col}`]) === 0 &&
-      (col === 'desvio' || col === 'desvio2')
-    ) {
-      return <a className='warningBalloon'>{item[`${col}`]} horas</a>;
-    }
-
-    switch (col) {
-      case 'nome': {
-        const prod = getProduct(item.productId);
-        return <a className='link'>{prod.nome}</a>;
-      }
-      case 'previsto2': {
-        const prod = getProduct(item.productId);
-        const total = prod.hours * 25;
-        return <a>{total} horas</a>;
-      }
-      case 'custo': {
-        const prod = getProduct(item.productId);
-        return <a>{prod.custo}€</a>;
-      }
-
-      case 'cliente': {
-        const client = getClient(item[`${col}`]);
-        return <a>{client.name}</a>;
-      }
-      case 'ações':
-        return <Eye className='link' />;
-      default:
-        return (
-          <a>
-            {displayWithStyle(item[`${col}`])}{' '}
-            {ItsNumber(item[`${col}`]) ? 'horas' : null}
-          </a>
-        );
-    }
-  }
   const DisplayBalloonFilter = (item, onRemove) => {
     if (hasData(item))
       return (
@@ -155,17 +217,17 @@ const OrdersScreen = ({ ...props }) => {
         </div>
       );
   };
-  useEffect(() => {
-    const calculatePages = () => {
-      const numPages = Math.ceil(items.length / entries);
-      setTotalPages(numPages);
-      const res = PaginateItemsPerPage(items, entries, page - 1);
-      setItemsPerPage(res.array);
-      setShowingMax(res.showingMax);
-      setShowingMin(res.showingMin);
-    };
-    calculatePages();
-  }, [entries, page]);
+  // useEffect(() => {
+  //   const calculatePages = () => {
+  //     const numPages = Math.ceil(items.length / entries);
+  //     setTotalPages(numPages);
+  //     const res = PaginateItemsPerPage(items, entries, page - 1);
+  //     setItemsPerPage(res.array);
+  //     setShowingMax(res.showingMax);
+  //     setShowingMin(res.showingMin);
+  //   };
+  //   calculatePages();
+  // }, [entries, page]);
 
   return (
     <Grid component='main'>
@@ -331,7 +393,7 @@ const OrdersScreen = ({ ...props }) => {
                 <Filter />
               </Button>
             </div>
-            <div
+            {/* <div
               style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -346,13 +408,10 @@ const OrdersScreen = ({ ...props }) => {
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={15}>15</MenuItem>
-              </Select>
-              {' '}
+              </Select>{' '}
               Itens
               <div className='spacer'>|</div>
               Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
-              {/* needed space */}
-              {' '}
               itens
               <div className='spacer'></div>
               <Pagination
@@ -363,66 +422,23 @@ const OrdersScreen = ({ ...props }) => {
                 color='primary'
                 className={'pagination'}
               />
-            </div>
+            </div> */}
           </div>
-          <Pagination
+          {/* <Pagination
             count={totalPages}
             page={page}
             onChange={handleChangePage}
             siblingCount={0}
             color='primary'
             className={'pagination mobile'}
-          />
+          /> */}
         </div>
-
-        <div className='scrollableX'>
-          <CustomTable
-            columns={tableCols}
-            doubleHeader={[
-              'QT. Produzida: 12 un.',
-              'QT. Encomenda: 25 un.',
-              'Por unidade',
-            ]}
-            doubleHeaderSizes={[7, 1, 4]}
-            fullBorders={fullBorders}
-          >
-            {itemsPerPage.map((item, i) => (
-              <tr
-                key={item.numero}
-                onClick={() =>
-                  Router.push({ pathname: `${detailPage}${item.numero}` })
-                }
-              >
-                {tableCols.map((element, i) => (
-                  <>
-                    {fullBorders.find((element) => element === i) !==
-                    undefined ? (
-                      <td
-                        key={element.id}
-                        data-label={tableCols[i].toUpperCase()}
-                        style={{
-                          borderRight: '2px solid var(--grayEdges)',
-                          borderLeft: '2px solid var(--grayEdges)',
-                        }}
-                      >
-                        {DisplayCol(element, item, i)}
-                      </td>
-                    ) : (
-                      <td
-                        key={element.id}
-                        data-label={tableCols[i].toUpperCase()}
-                      >
-                        {DisplayCol(element, item, i)}
-                      </td>
-                    )}
-                  </>
-                ))}
-              </tr>
-            ))}
-          </CustomTable>
-        </div>
+        <AdvancedTable
+          rows={rows}
+          headCells={headCells}
+          headCellsUpper={headCellsUpper}
+        ></AdvancedTable>
       </Content>
-      <Content></Content>
     </Grid>
   );
 };
@@ -431,10 +447,10 @@ OrdersScreen.propTypes = {
   panelsInfo: PropTypes.object,
   detailPage: PropTypes.string,
   clients: PropTypes.array,
-  items: PropTypes.arrayOf(PropTypes.Object),
-  products: PropTypes.arrayOf(PropTypes.Object),
-  woodTypes: PropTypes.arrayOf(PropTypes.Object),
-  operations: PropTypes.arrayOf(PropTypes.Object),
-  breadcrumbsPath: PropTypes.arrayOf(PropTypes.Object),
+  items: PropTypes.arrayOf(PropTypes.object),
+  products: PropTypes.arrayOf(PropTypes.object),
+  woodTypes: PropTypes.arrayOf(PropTypes.object),
+  operations: PropTypes.arrayOf(PropTypes.object),
+  breadcrumbsPath: PropTypes.arrayOf(PropTypes.object),
 };
 export default OrdersScreen;

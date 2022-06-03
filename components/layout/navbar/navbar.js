@@ -66,10 +66,11 @@ const Navbar = ({ openDrawer }) => {
           </IconButton>
         </div>
         <div className='mobileView flex'>
-          <img
+          <div className='logoImg' style={{width: '80px', height: '80px'}}></div>
+          {/* <img
             className={styles.logoImg}
             src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
-          />
+          /> */}
           {navLinks.map((item, i) => (
             <>
               {loggedUser ? (

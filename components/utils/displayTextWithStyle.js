@@ -1,8 +1,10 @@
 import getKeywords from '../mock/Keywords';
 import React from 'react';
 import ItsNumber from './ItsNumber';
+import hasData from './hasData';
 const displayWithStyle = (item, col, index) => {
   const keywords = getKeywords();
+  if (!hasData(item)) return <a>nan {item}</a>
   //  Find if the text match's with any of the keywords
   const resError = keywords.errorKeywords.find((keywork) => keywork === item);
   const resSuccess = keywords.successKeywords.find(
