@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 //  Preloader
 import Loader from '../../components/loader/loader'
-import OrdersScreen from '../../components/pages/orders/orders'
+import OrdersScreen from '../../components/pages/stock/stock'
 
 import PropTypes from 'prop-types'
 

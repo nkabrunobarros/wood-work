@@ -88,6 +88,12 @@ const OrdersScreen = ({ ...props }) => {
   const [category, setCategory] = useState();
   const [stock, setStock] = useState('');
 
+  const ClearFilters = () => {
+    setNumber('');
+    setClient('');
+    setCategory('');
+    setStock('');
+  };
   // const [page, setPage] = useState(1);
   // const [entries, setEntries] = useState(5);
   // const [totalPages, setTotalPages] = useState(0);
@@ -96,12 +102,6 @@ const OrdersScreen = ({ ...props }) => {
 
   // const [itemsPerPage, setItemsPerPage] = useState([]);
   //  Clear Filters to default
-  const ClearFilters = () => {
-    setNumber('');
-    setClient('');
-    setCategory('');
-    setStock('');
-  };
 
   // const handleChangePage = (event, value) => {
   //   setPage(value);
@@ -131,8 +131,8 @@ const OrdersScreen = ({ ...props }) => {
   //     case 'ações':
   //       return (
   //         <>
-  //           <Edit className='link' />
-  //           <Trash className='link' />
+  //           <Edit stroke-width="1" className='link' />
+  //           <Trash stroke-width="1" className='link' />
   //         </>
   //       );
   //     default:

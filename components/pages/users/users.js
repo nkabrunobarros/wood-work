@@ -30,8 +30,8 @@ const DisplayCol = (col, item, index) => {
     case 'ações':
       return (
         <>
-          <Edit className='link' />
-          <Trash className='link' />
+          <Edit stroke-width="1" className='link' />
+          <Trash stroke-width="1" className='link' />
         </>
       )
     default:

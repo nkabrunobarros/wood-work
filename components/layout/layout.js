@@ -6,11 +6,10 @@ import routes from '../../navigation/routes';
 import Navbar from './navbar/navbar';
 import Footer from './footer/footer';
 import DrawerMobile from './drawer/drawer';
-
 import { CssBaseline, Hidden } from '@mui/material';
 
 
-// Pages without layout (sidebar + navbar + footer)
+// Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.forgotPassword}`,
@@ -18,20 +17,28 @@ const noLayoutScreens = [
   `${routes.private.tos}`,
   `${routes.public.internal.signInClient}`,
 ];
+
 const Layout = ({ children }) => {
   const path = useRouter();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
-
+  const clientPages = [
+    `${routes.private.messages}`,
+    `${routes.private.order}`,
+    `${routes.private.orders}`,
+    `${routes.private.profile}`,
+  ]
+  
+  let footer = '';
+  if (clientPages.includes(path.route)) footer = 'client';
   if (noLayoutScreens.includes(path.route)) return <>{children}</>;
+  
   return (
     <div>
       <CssBaseline />
       <Navbar openDrawer={handleDrawerToggle} />
-      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
       <Hidden implementation='css'>
         <DrawerMobile
           mobileOpen={mobileOpen}
@@ -42,7 +49,7 @@ const Layout = ({ children }) => {
         {children}
       </div>
       <div style={{ width: '100%' }}>
-        <Footer section={'client'} />
+        <Footer section={footer} />
       </div>
     </div>
   );

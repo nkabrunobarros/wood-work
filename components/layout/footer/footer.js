@@ -1,28 +1,29 @@
 // Node modules
-import { Typography } from '@mui/material'
-import Link from 'next/link'
-import Router from 'next/router'
-import PropTypes from 'prop-types'
-import React from 'react'
-import routes from '../../../navigation/routes'
-
+import { Typography } from '@mui/material';
+import Router from 'next/router';
+import PropTypes from 'prop-types';
+import React from 'react';
+import routes from '../../../navigation/routes';
+import Tooltip from '@mui/material/Tooltip';
 // Pages without layout (sidebar + navbar + footer)
-function Copyright (props) {
+function Copyright(props) {
   return (
     <Typography variant='body2' color='text.secondary' {...props}>
       {' Desenvolvido por  '}
-      <Link color='inherit' href='https://nka.pt/' target='#'>
-        NKA
-      </Link>{' '}
+      <Tooltip title='Visite New Knowledge Advice Lda.' color='red'>
+        <a href='https://nka.pt/' target='#' className='link'>
+          NKA
+        </a>
+      </Tooltip>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  )
+  );
 }
 const Footer = ({ section }) => {
   return (
     <div
-    className='flex'
+      className='flex'
       style={{
         position: 'fixed',
         minHeight: '35px',
@@ -32,26 +33,56 @@ const Footer = ({ section }) => {
         borderTop: '1px solid var(--grayEdges)',
         color: 'var(--grayTextsLight)',
         fontSize: '12px',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', marginLeft: '2rem' }}>{section === 'client' ? <a>WW4.0</a> : <Copyright />}</div>
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-center', padding: '0.2rem', width: '100%' }}><div className='footerImages'></div></div>
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', marginRight: '2rem' }}>{section === 'client'
-        ? (
-            <a className="link" style={{ color: 'inherit' }} onClick={() => Router.push(routes.private.tos)}>
-              Termos e Condições | Política de Privacidade
-            </a>
-          )
-        : (
-            'WW4.0'
-          )}</div>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'flex-start',
+          marginLeft: '2rem',
+        }}
+      >
+        {section === 'client' ? <a>WW4.0</a> : <Copyright />}
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'flex-center',
+          padding: '0.2rem',
+          width: '100%',
+        }}
+      >
+        <div className='footerImages'></div>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginRight: '2rem',
+        }}
+      >
+        {section === 'client' ? (
+          <a
+            className='link'
+            style={{ color: 'inherit' }}
+            onClick={() => Router.push(routes.private.tos)}
+          >
+            Termos e Condições | Política de Privacidade
+          </a>
+        ) : (
+          'WW4.0'
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 Footer.propTypes = {
   page: PropTypes.string,
-  section: PropTypes.string
-}
+  section: PropTypes.string,
+};
 
-export default Footer
+export default Footer;

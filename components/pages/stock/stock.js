@@ -1,103 +1,189 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import React from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
+import React, { useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import Grid from '@mui/material/Grid'
-import CustomBreadcrumbs from '../../breadcrumbs'
+import Grid from '@mui/material/Grid';
+import CustomBreadcrumbs from '../../breadcrumbs';
 
-import Content from '../../content/content'
-import PrimaryBtn from '../../buttons/primaryBtn'
+import Content from '../../content/content';
+import PrimaryBtn from '../../buttons/primaryBtn';
 
 //  PropTypes
-import PropTypes from 'prop-types'
-import { Edit, PackagePlus, Trash } from 'lucide-react'
-import { Divider } from '@mui/material'
-import DisplayCategory from '../../utils/DisplayCategory'
-import displayWithStyle from '../../utils/displayTextWithStyle'
-
+import PropTypes from 'prop-types';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
+import {
+  Autocomplete,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  // Pagination,
+  Select,
+  TextField,
+} from '@mui/material';
 const Stock = ({ ...props }) => {
-  const { product, breadcrumbsPath } = props
+  const { items, breadcrumbsPath,categories, clients } = props;
+  const rows = items;
+  const headCells = [
+    {
+      id: 'productId',
+      numeric: false,
+      disablePadding: false,
+      label: 'Nome',
+    },
+    {
+      id: 'codigo',
+      numeric: false,
+      disablePadding: false,
+      label: 'Codigo',
+    },
+    {
+      id: 'fornecedor',
+      numeric: false,
+      disablePadding: false,
+      label: 'Fornecedor',
+    },
+    {
+      id: 'categoria',
+      numeric: false,
+      disablePadding: true,
+      label: 'Categoria',
+    },
+    {
+      id: 'stock',
+      numeric: false,
+      disablePadding: false,
+      label: 'Stock',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
+    },
+  ];
+  //  States
+  const [number, setNumber] = useState('');
+  const [client, setClient] = useState('');
+  const [category, setCategory] = useState();
+  const [stock, setStock] = useState('');
 
+  const ClearFilters = () => {
+    setNumber('');
+    setClient('');
+    setCategory('');
+    setStock('');
+  };
+  const onClientChange = (value) => {
+    if (value === null) setClient('');
+    else setClient(value.label);
+  };
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
-        <div id='pad' className='flex'>
-          <div id="align" style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
-            <a style={{ marginLeft: '1rem' }}>{displayWithStyle(product.stock)} </a>
-          </div>
-          <div id='align'>
-            <PrimaryBtn text='Editar' icon={<Edit />} />
-            <PrimaryBtn text='Apagar' icon={<Trash />} light />
-          </div>
-        </div>
-        <div id='pad' className='flex'>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-            <div className='infoBox' style={{ flex: 1 }}>
-              <div>
-                <a className='lightTextSm'>Código</a>
-                <br></br>
-                <a className='lightTextSm black'>{product.codigo}</a>
-              </div>
-              <Divider style={{ marginTop: '1rem', marginBottom: '1rem' }} />
-              <div>
-                <a className='lightTextSm'>Encomendas</a>
-                <br></br>
-                <a className='lightTextSm black'>Lorem Ipsum</a>
-              </div>
-              <Divider style={{ marginTop: '1rem', marginBottom: '1rem' }} />
-              <div>
-                <a className='lightTextSm'>Quantidade Disponivel</a>
-                <br></br>
-                <a className='lightTextSm black'>1232</a>
-              </div>
+        <div id='pad'>
+          <a className='headerTitleSm'>Filtros</a>
+          <div className='filters'>
+            <div className='filterContainer4'>
+              <InputLabel htmlFor='email'>Número</InputLabel>
+              <OutlinedInput
+                margin='normal'
+                fullWidth
+                id='number'
+                name='number'
+                autoComplete='number'
+                type='number'
+                placeholder='Escrever um número'
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              />
             </div>
-            <div className='infoBox' style={{ flex: 1 }}>
-              <div>
-                <a className='lightTextSm'>Categoria</a>
-                <br></br>
-                <a className='lightTextSm black'>{DisplayCategory(product.categoria)}</a>
-              </div>
-              <div>
-                <a className='lightTextSm'>Custo Unitario</a>
-                <br></br>
-                <a className='lightTextSm black'>Lorem Ipsum</a>
-              </div>
+            <div className='filterContainer4'>
+              <InputLabel htmlFor='email'>Cliente</InputLabel>
+              <Autocomplete
+                disablePortal
+                id='combo-box-demo'
+                options={clients}
+                getOptionLabel={(option) => option.nome}
+                onChange={(event, value) => onClientChange(value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    value={client}
+                    onChange={(event, value) => setClient(event.target.value)}
+                    placeholder='Escrever um nome'
+                  />
+                )}
+              />
+            </div>
+            <div className='filterContainer4'>
+              <InputLabel htmlFor='Categoria'>Categoria</InputLabel>
+              <Select
+                labelId='Categoria'
+                id='Categoria'
+                fullWidth
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <MenuItem value={''} disabled>
+                  Selecionar uma categoria
+                </MenuItem>
+                {categories.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.title}[{item.id}]
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className='filterContainer4'>
+              <InputLabel htmlFor='Stock'>Stock</InputLabel>
+              <Select
+                labelId='Stock'
+                id='Stock'
+                fullWidth
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+              >
+                <MenuItem value={''} disabled>
+                  Selecionar uma estado de stock
+                </MenuItem>
+                <MenuItem value={'Disponível'}>Disponível</MenuItem>
+                <MenuItem value={'Indisponível'}>Indisponível</MenuItem>
+              </Select>
             </div>
           </div>
-          <div id='pad' className='infoBox dark' style={{ flex: 1 }}>
-            <a id='align' className='headerTitleSm light'>
-              <PackagePlus /> Fornecedor(es)
-            </a>
-            <div className='flex'>
-              <div style={{ flex: 1 }}>
-                <a className="lightText bold black">Lorem Ipsum</a>
-                <br></br>
-                <br></br>
-                <a className='lightTextSm'>Lorem Ipsum</a>
-                <br></br>
-                <a className='lightTextSm black'>Lorem Ipsum</a>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <br></br>
-                <br></br>
-                <a className='lightTextSm'>Lorem Ipsum</a>
-                <br></br>
-                <a className='lightTextSm black'>Lorem Ipsum</a>
-              </div>
-            </div>
+          <div
+            style={{
+              width: 'fit-content',
+              marginLeft: 'auto',
+              paddingTop: '1rem',
+            }}
+          >
+            <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
           </div>
         </div>
       </Content>
+      <Content>
+      <div
+        id='pad'
+        className='flex'
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
+        <div>
+          <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+        </div>
+      </div>
+
+      <AdvancedTable rows={rows} headCells={headCells}></AdvancedTable>
+      </Content>
     </Grid>
-  )
-}
+  );
+};
 Stock.propTypes = {
   product: PropTypes.any,
-  docs: PropTypes.arrayOf(PropTypes.object)
-}
-export default Stock
+  docs: PropTypes.arrayOf(PropTypes.object),
+};
+export default Stock;

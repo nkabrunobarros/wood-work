@@ -25,7 +25,6 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Montserrat' !important;
-  
 }
 
 a {
@@ -115,7 +114,7 @@ a {
   background-image: url('../public/Fundos-Europeus.png');
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: center;  
+  background-position: center;
   min-height: 35px;
   width: 100%;
   min-width: 300px;
@@ -139,7 +138,7 @@ a {
 }
 
 .light {
-  color: var(--grayLight)
+  color: var(--grayLight);
 }
 
 .infoBox {
@@ -165,7 +164,6 @@ a {
   display: none;
 }
 
-
 /* /////////////////////////////////////////// */
 /* /////////////////////////////////////////// */
 /* /////////////////////////////////////////// */
@@ -179,7 +177,7 @@ a {
   right: 2rem;
   margin-top: 15rem;
   border-radius: 8px;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1) ;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
 .filterPopupCol {
   flex: 1;
@@ -190,7 +188,6 @@ a {
 .filterPopupCol #standard-basic {
   color: var(--grayLight);
 }
-
 
 @media screen and (max-width: 40em) {
   .flex {
@@ -224,6 +221,10 @@ a {
   width: 100%;
   flex: 0 1 300;
 }
+.filterContainer4 {
+  width: 100%;
+  flex: 0 1 300;
+}
 .scrollableX {
   overflow-y: hidden;
 }
@@ -234,11 +235,25 @@ a {
   .filterContainer {
     max-width: calc(50% - 1em);
   }
+  .filterContainer4 {
+    max-width: calc(50% - 1em);
+
+  }
 }
 
+@media screen and (min-width: 50em) {
+  .filterContainer4 {
+    max-width: calc(33% - 1em);
+
+  }
+}
 @media screen and (min-width: 60em) {
   .filterContainer {
     max-width: calc(33% - 1em);
+  }
+  .filterContainer4 {
+    max-width: calc(25% - 1em);
+
   }
 }
 
@@ -246,6 +261,12 @@ a {
   overflow: scroll;
   width: 100%;
   height: 100%;
+}
+.scrollableZone::-webkit-scrollbar {
+  display: none;
+}
+.messagesContainer::-webkit-scrollbar {
+  display: none;
 }
 .activeFilterBalloonContainer {
   display: flex;
@@ -266,7 +287,7 @@ a {
 }
 .activeFilterBalloonIcon {
   color: white;
-  background-color: #A5A5A5;
+  background-color: #a5a5a5;
   border-radius: 50%;
   margin-left: 0.5rem;
   cursor: pointer;
@@ -276,7 +297,7 @@ a {
   background-image: url('../public/logo_bw_ww40_inv.png');
   background-repeat: no-repeat;
   background-size: contain;
-  margin:0px;
+  margin: 0px;
   height: 100%;
   width: 100%;
 }

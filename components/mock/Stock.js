@@ -2,7 +2,7 @@
 async function getStock () {
   const stock = [
     {
-      numero: 11,
+      productId: 11,
       categoria: 512,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
@@ -10,7 +10,7 @@ async function getStock () {
       nome: 'Madeira 500'
     },
     {
-      numero: 12,
+      productId: 12,
       categoria: 100,
       stock: 'Indisponível',
       fornecedor: 'Lorem Ipsum',
@@ -18,7 +18,7 @@ async function getStock () {
       nome: 'Pregos'
     },
     {
-      numero: 13,
+      productId: 13,
       categoria: 100,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
@@ -26,7 +26,7 @@ async function getStock () {
       nome: 'Martelos   '
     },
     {
-      numero: 14,
+      productId: 14,
       categoria: 100,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
@@ -34,7 +34,7 @@ async function getStock () {
       nome: 'Metal 500'
     },
     {
-      numero: 15,
+      productId: 15,
       categoria: 100,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
@@ -42,7 +42,7 @@ async function getStock () {
       nome: 'Metal 300'
     },
     {
-      numero: 16,
+      productId: 16,
       categoria: 100,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
@@ -55,7 +55,7 @@ async function getStock () {
 
 async function getStockById (id) {
   await getStock().then((res) => {
-    const product = res.find((prod) => prod.numero.toString() === id)
+    const product = res.find((prod) => prod.productId.toString() === id)
     return product
   })
 }

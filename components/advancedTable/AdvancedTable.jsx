@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -13,11 +14,18 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
+  Tooltip,
 } from '@mui/material';
 import { Edit, Trash } from 'lucide-react';
 import { FilterItem } from '../utils/FilterItem';
 import Router from 'next/router';
-const AdvancedTable = ({ rows, headCells, headCellsUpper, clickRoute }) => {
+const AdvancedTable = ({
+  rows,
+  headCells,
+  headCellsUpper,
+  clickRoute,
+  noPagination,
+}) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
@@ -93,11 +101,10 @@ const AdvancedTable = ({ rows, headCells, headCellsUpper, clickRoute }) => {
   EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
-    headCellsUpper: PropTypes.array.isRequired,
+    headCellsUpper: PropTypes.array,
   };
 
   const handleRequestSort = (event, property) => {
@@ -167,15 +174,18 @@ const AdvancedTable = ({ rows, headCells, headCellsUpper, clickRoute }) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-      <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component='div'
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {noPagination ? null : (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component='div'
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
+
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle'>
             <EnhancedTableHead
@@ -218,11 +228,25 @@ const AdvancedTable = ({ rows, headCells, headCellsUpper, clickRoute }) => {
                         >
                           {headCell.id === 'actions' ? (
                             <>
-                              <Edit className='link' />
-                              <Trash className='link' />
+                              <Tooltip title='Edit'>
+                                <IconButton>
+                                  <Edit stroke-width="1" className='link' />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title='Delete'>
+                                <IconButton>
+                                  <Trash stroke-width="1" className='link' />
+                                </IconButton>
+                              </Tooltip>
                             </>
                           ) : (
-                            <div onClick={() => clickRoute ? Router.push(`${clickRoute}${row.id}`) : null }>
+                            <div
+                              onClick={() =>
+                                clickRoute
+                                  ? Router.push(`${clickRoute}${row.id}`)
+                                  : null
+                              }
+                            >
                               {FilterItem(row[`${headCell.id}`], headCell.id)}
                             </div>
                           )}
@@ -239,7 +263,6 @@ const AdvancedTable = ({ rows, headCells, headCellsUpper, clickRoute }) => {
             </TableBody>
           </Table>
         </TableContainer>
-       
       </Paper>
     </Box>
   );
@@ -250,6 +273,7 @@ AdvancedTable.propTypes = {
   headCells: PropTypes.array.isRequired,
   children: PropTypes.any,
   clickRoute: PropTypes.any,
+  noPagination: PropTypes.boolean,
 };
 
 export default AdvancedTable;

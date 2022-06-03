@@ -86,7 +86,7 @@ const Navbar = ({ openDrawer }) => {
           ))}
         </div>
         <a className={styles.userDropdown} onClick={handleClick}>
-          <User />
+          <User stroke-width="1"/>
           {loggedUser ? <>{loggedUser.nome}</> : 'User'}
           <ChevronDown />
         </a>
@@ -104,7 +104,7 @@ const Navbar = ({ openDrawer }) => {
               handleClose();
             }}
           >
-            <User /> Perfil
+            <User stroke-width="1"/> Perfil
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -112,7 +112,7 @@ const Navbar = ({ openDrawer }) => {
               handleClose();
             }}
           >
-            <LogOut onClick={ logout} /> Logout
+            <LogOut stroke-width="1" onClick={ logout} /> Logout
           </MenuItem>
         </Menu>
       </div>

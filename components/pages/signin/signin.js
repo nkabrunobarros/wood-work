@@ -25,7 +25,7 @@ import { getUser } from '../../mock/Users';
 const SignIn = ({ ...props }) => {
   const [visible, setVisible] = useState(true);
   const { client } = props;
-  const [email, setEmail] = useState('bruno.barros@nka.pt');
+  const [email, setEmail] = useState('admin@nka.pt');
   const [password, setPassword] = useState('123456');
 
   // async function loginUser() {
@@ -55,15 +55,15 @@ const SignIn = ({ ...props }) => {
     // });
     // sessionStorage.setItem('token', token);
 
-    const foundUser = await getUser(email);
+    const foundUser = await getUser(email.toLocaleLowerCase());
     if (foundUser !== undefined && foundUser.password === password) {
       localStorage.setItem(
         'user',
-        JSON.stringify(email).substring(1, email.length + 1)
+        JSON.stringify(email.toLocaleLowerCase()).substring(1, email.length + 1)
       );
       sessionStorage.setItem(
        'user',
-        JSON.stringify(email).substring(1, email.length + 1)
+        JSON.stringify(email.toLocaleLowerCase()).substring(1, email.length + 1)
       );
       Router.push(routes.private.terms);
       if (foundUser.perfil === 'Client') Router.push(routes.private.terms);
