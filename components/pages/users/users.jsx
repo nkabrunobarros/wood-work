@@ -113,7 +113,7 @@ const Users = ({ ...props }) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder='Escrever um mome'
+                    placeholder='Escrever um nome'
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
                     inputProps={{

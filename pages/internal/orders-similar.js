@@ -8,7 +8,7 @@ import OrdersScreen from '../../components/pages/ordersSimilar/orders-similar';
 import PropTypes from 'prop-types';
 
 import routes from '../../navigation/routes';
-import getOrders from '../../components/mock/Orders';
+import { getOrders } from '../../components/mock/Orders';
 import { getClients } from '../../components/mock/Clients';
 import { getWoodTypes } from '../../components/mock/WoodTypes';
 import { getProducts } from '../../components/mock/Products';
@@ -80,20 +80,20 @@ const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
 
   const detailPage = routes.private.order;
 
-    const operations = [
-      {
-        label: 'Corte',
-        value: 'Corte'
-      },
-      {
-        label: 'Montagem',
-        value: 'Montagem'
-      },
-      {
-        label: 'Colagem',
-        value: 'Colagem'
-      },
-    ]
+  const operations = [
+    {
+      label: 'Corte',
+      value: 'Corte',
+    },
+    {
+      label: 'Montagem',
+      value: 'Montagem',
+    },
+    {
+      label: 'Colagem',
+      value: 'Colagem',
+    },
+  ];
 
   const props = {
     items,
@@ -104,7 +104,7 @@ const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
     clients,
     woodTypes,
     products,
-    operations
+    operations,
   };
   return loaded ? (
     <OrdersScreen {...props} />
@@ -124,7 +124,7 @@ OrdersSimilar.propTypes = {
   clients: PropTypes.array,
   woodTypes: PropTypes.array,
   products: PropTypes.array,
-  operations: PropTypes.array
+  operations: PropTypes.array,
 };
 
 export default OrdersSimilar;
