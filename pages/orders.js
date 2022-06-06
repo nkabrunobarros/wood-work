@@ -8,7 +8,7 @@ import OrdersScreen from '../components/pages/orders/orders';
 import PropTypes from 'prop-types';
 
 import { getCategories } from '../components/mock/Categories';
-import getOrders from '../components/mock/Orders';
+import {getOrders} from '../components/mock/Orders';
 import routes from '../navigation/routes';
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
 

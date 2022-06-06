@@ -34,7 +34,7 @@
   display: flex;
 }
 
-.userDropdown {
+/* .userDropdown {
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -46,11 +46,21 @@
   color: var(--white);
   font-size: 12px;
   font-weight: 500;
+} */
+.userDropdown {
+  background-position: center;
+  background-image: url('../../public/logo_bw_ww40_inv.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100%;
+  width: 100%;
+  margin: 0.2rem;
 }
-.userDropdown:hover {
+
+/* .userDropdown:hover {
     border-bottom: 5px solid var(--white);
     transition: ease-in-out 0.5s;
-  }
+  } */
 
 .drawerItem {
   display: flex;

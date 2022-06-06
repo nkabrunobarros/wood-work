@@ -8,15 +8,18 @@ import Tooltip from '@mui/material/Tooltip';
 // Pages without layout (sidebar + navbar + footer)
 function Copyright(props) {
   return (
-    <Typography variant='body2' color='text.secondary' {...props}>
+    <Typography
+      variant='body2'
+      color='text.secondary'
+      {...props}
+      sx={{ paddingLeft: '1rem', paddingRight: '1rem' }}
+    >
       {' Desenvolvido por  '}
-      <Tooltip title='Visite New Knowledge Advice Lda.' color='red'>
+      <Tooltip title='Visite New Knowledge Advice' color='red'>
         <a href='https://nka.pt/' target='#' className='link'>
-          NKA
+          NKA - New Knowledge Advice, Lda.
         </a>
-      </Tooltip>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      </Tooltip>
     </Typography>
   );
 }
@@ -26,7 +29,7 @@ const Footer = ({ section }) => {
       className='flex'
       style={{
         position: 'fixed',
-        minHeight: '35px',
+        minHeight: '45px',
         width: '100%',
         bottom: 0,
         backgroundColor: 'white',
@@ -36,47 +39,38 @@ const Footer = ({ section }) => {
         alignItems: 'center',
       }}
     >
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          justifyContent: 'flex-start',
-          marginLeft: '2rem',
-        }}
-      >
-        {section === 'client' ? <a>WW4.0</a> : <Copyright />}
-      </div>
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          justifyContent: 'flex-center',
-          padding: '0.2rem',
-          width: '100%',
-        }}
-      >
-        <div className='footerImages'></div>
-      </div>
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginRight: '2rem',
-        }}
-      >
-        {section === 'client' ? (
-          <a
-            className='link'
-            style={{ color: 'inherit' }}
-            onClick={() => Router.push(routes.private.tos)}
+      {section !== 'client' ? (
+        <>
+          <div style={{ flex: 1 }}>
+            <Copyright />
+          </div>
+          <div style={{ paddingRight: '1rem' }}>
+            <div className='footerImages'></div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ paddingLeft: '1rem' }}>
+            <div className='footerImages'></div>
+          </div>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingRight: '1rem',
+            }}
           >
-            Termos e Condições | Política de Privacidade
-          </a>
-        ) : (
-          'WW4.0'
-        )}
-      </div>
+            <a
+              className='link'
+              style={{ color: 'inherit' }}
+              onClick={() => Router.push(routes.private.tos)}
+            >
+              Termos e Condições | Política de Privacidade
+            </a>
+          </div>
+        </>
+      )}
     </div>
   );
 };

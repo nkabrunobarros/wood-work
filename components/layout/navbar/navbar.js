@@ -1,6 +1,8 @@
 // Node modules
-import { IconButton, Menu, MenuItem } from '@mui/material';
-import { ChevronDown, LogOut, User } from 'lucide-react';
+import { IconButton, 
+  // Menu, MenuItem 
+} from '@mui/material';
+// import { ChevronDown, LogOut, User } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -15,21 +17,22 @@ import { getUser } from '../../mock/Users';
 const Navbar = ({ openDrawer }) => {
   const navLinks = getLinks();
   const [loggedUser, setLoggedUser] = useState();
-  const [anchorEl, setAnchorEl] = useState(null);
+   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
+  // const router = useRouter();
+
+  // const logout = () => {
+  //   localStorage.removeItem('user');
+  //   sessionStorage.removeItem('user');
+
+  // };
   const router = useRouter();
-
-  const logout = () => {
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
-
-  };
   useEffect(() => {
     async function getUserPerm(data) {
       const perfil = await getUser(data);
@@ -67,6 +70,17 @@ const Navbar = ({ openDrawer }) => {
         </div>
         <div className='mobileView flex'>
           <div className='logoImg' style={{width: '80px', height: '80px'}}></div>
+        <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            edge='start'
+            sx={{ ml: 2, ...(open && { display: 'none' }) }}
+          >
+            <MenuOutlinedIcon
+              onClick={openDrawer}
+              style={{ fontSize: '3vh', color: 'var(--white)' }}
+            />
+          </IconButton>
           {/* <img
             className={styles.logoImg}
             src='https://media-exp1.licdn.com/dms/image/C4E0BAQG1luLQFqx-kg/company-logo_200_200/0/1595435482155?e=2147483647&v=beta&t=-gV-ZtIZb3EOpic3RkbD_91VgMu2ttGyIREm8xh5KNc'
@@ -85,7 +99,7 @@ const Navbar = ({ openDrawer }) => {
             </>
           ))}
         </div>
-        <a className={styles.userDropdown} onClick={handleClick}>
+        {/* <a className={styles.userDropdown} onClick={handleClick}>
           <User stroke-width="1"/>
           {loggedUser ? <>{loggedUser.nome}</> : 'User'}
           <ChevronDown />
@@ -114,7 +128,9 @@ const Navbar = ({ openDrawer }) => {
           >
             <LogOut stroke-width="1" onClick={ logout} /> Logout
           </MenuItem>
-        </Menu>
+        </Menu> */}
+                  <div className={styles.userDropdown} style={{width: '80px', height: '80px', marginLeft: 'auto'}}></div>
+
       </div>
     </div>
   );

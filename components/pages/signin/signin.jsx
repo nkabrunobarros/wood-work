@@ -12,12 +12,22 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import styles from '../../../styles/SignIn.module.css';
-import { IconButton, InputLabel, OutlinedInput } from '@mui/material';
+import {
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  CircularProgress,
+  Snackbar,
+  Alert,
+} from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Router from 'next/router';
 
 import routes from '../../../navigation/routes';
-import Router from 'next/router';
 import Footer from '../../layout/footer/footer';
+
+import { EmailValidation } from '../../utils/EmailValidation';
+import hasData from '../../utils/hasData';
 
 // import authService from '../../../services/auth-service';
 import { getUser } from '../../mock/Users';
@@ -28,6 +38,12 @@ const SignIn = ({ ...props }) => {
   const [email, setEmail] = useState('admin@nka.pt');
   const [password, setPassword] = useState('123456');
 
+  //  Snackbar Notification
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   // async function loginUser() {
   //   await authService.login(email, password).then(
   //     (res) => {
@@ -46,9 +62,25 @@ const SignIn = ({ ...props }) => {
   //     }
   //   );
   // }
-
+  function Notification(message, type) {
+    setLoading(false);
+    setSnackbarMessage(message);
+    setSnackbarSeverity(type);
+    setSnackbarOpen(true);
+    setTimeout(() => {
+      setSnackbarOpen(false);
+    }, 2000);
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
+    if (email === '') return Notification('Email is required', 'error');
+    if (password === '') return Notification('Password is required', 'error');
+    
+    if (!EmailValidation(email)) {
+      return Notification('Incorret email or password', 'error');
+    }
     // const token = await loginUser({
     //   email,
     //   password,
@@ -56,13 +88,24 @@ const SignIn = ({ ...props }) => {
     // sessionStorage.setItem('token', token);
 
     const foundUser = await getUser(email.toLocaleLowerCase());
+    if (!hasData(foundUser)) {
+      setLoading(false);
+      //  Snackbar notification body
+      setSnackbarMessage('Incorret email or password');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false);
+      }, 2000);
+      return;
+    }
     if (foundUser !== undefined && foundUser.password === password) {
       localStorage.setItem(
         'user',
         JSON.stringify(email.toLocaleLowerCase()).substring(1, email.length + 1)
       );
       sessionStorage.setItem(
-       'user',
+        'user',
         JSON.stringify(email.toLocaleLowerCase()).substring(1, email.length + 1)
       );
       Router.push(routes.private.terms);
@@ -74,6 +117,20 @@ const SignIn = ({ ...props }) => {
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
+      <Snackbar
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        open={snackbarOpen}
+        onRequestClose={() => setSnackbarOpen(false)}
+        autoHideDuration={2000}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
         <Box
           className={styles.logo}
@@ -194,7 +251,11 @@ const SignIn = ({ ...props }) => {
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
-              Entrar
+              {loading ? (
+                <CircularProgress size={25} sx={{ color: 'white' }} />
+              ) : (
+                'Entrar'
+              )}
             </Button>
           </Box>
         </Box>
