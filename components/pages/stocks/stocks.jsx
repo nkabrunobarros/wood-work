@@ -21,8 +21,9 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import routes from '../../../navigation/routes';
 const Stock = ({ ...props }) => {
-  const { items, breadcrumbsPath,categories, clients } = props;
+  const { items, breadcrumbsPath, categories, clients } = props;
   const rows = items;
   const headCells = [
     {
@@ -62,6 +63,7 @@ const Stock = ({ ...props }) => {
       label: 'Ações',
     },
   ];
+  console.log(items);
   //  States
   const [number, setNumber] = useState('');
   const [client, setClient] = useState('');
@@ -93,7 +95,6 @@ const Stock = ({ ...props }) => {
                 fullWidth
                 id='number'
                 name='number'
-                autoComplete='number'
                 type='number'
                 placeholder='Escrever um número'
                 value={number}
@@ -167,17 +168,20 @@ const Stock = ({ ...props }) => {
         </div>
       </Content>
       <Content>
-      <div
-        id='pad'
-        className='flex'
-        style={{ display: 'flex', alignItems: 'center' }}
-      >
-        <div>
-          <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+        <div
+          id='pad'
+          className='flex'
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
+          <div>
+            <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+          </div>
         </div>
-      </div>
-
-      <AdvancedTable rows={rows} headCells={headCells}></AdvancedTable>
+        <AdvancedTable
+          rows={rows}
+          headCells={headCells}
+          clickRoute={routes.private.internal.stockId}
+        ></AdvancedTable>
       </Content>
     </Grid>
   );

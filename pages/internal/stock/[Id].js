@@ -5,6 +5,7 @@ import Loader from '../../../components/loader/loader'
 import StockScreen from '../../../components/pages/stock/stock'
 import routes from '../../../navigation/routes'
 import { getStock } from '../../../components/mock/Stock'
+import { getProduct } from '../../../components/mock/Products'
 
 export async function getServerSideProps (context) {
   const res = await getStock()
@@ -16,7 +17,9 @@ const Stock = ({ allStock }) => {
   const [loaded, setLoaded] = useState(false)
   const router = useRouter()
   const stockId = router.query.Id
-  const product = allStock.find((prod) => prod.numero.toString() === stockId.toString())
+  const stock = allStock.find((prod) => prod.id.toString() === stockId.toString())
+  const product = getProduct(stock.productId)
+  
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true)
@@ -35,7 +38,8 @@ const Stock = ({ allStock }) => {
   ]
   const props = {
     product,
-    breadcrumbsPath
+    breadcrumbsPath,
+    stock
   }
   return loaded
     ? (

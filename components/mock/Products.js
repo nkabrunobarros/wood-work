@@ -3,7 +3,7 @@ function getProducts() {
     {
       id: 11,
       nome: 'kichen table',
-      category: 512,
+      category: 851,
       woodType: 11,
       custo: 199,
       hours: 1.5
@@ -27,7 +27,7 @@ function getProducts() {
     {
       id: 14,
       nome: 'wood 500 slab',
-      category: 512,
+      category: 100,
       woodType: 14,
       custo: 23,
       hours: 0.5
@@ -43,7 +43,7 @@ function getProducts() {
     {
       id: 16,
       nome: 'product b',
-      category: 512,
+      category: 851,
       woodType: 16,
       custo: 77,
       hours: 4

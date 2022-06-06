@@ -19,6 +19,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import routes from '../../../navigation/routes';
 
 import styles from '../../../styles/Orders.module.css';
 // import CustomTable from '../../table/table';
@@ -27,6 +28,7 @@ import styles from '../../../styles/Orders.module.css';
 // import displayWithStyle from '../../utils/displayTextWithStyle';
 // import DisplayCategory from '../../utils/DisplayCategory';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import Router from 'next/router';
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -281,7 +283,7 @@ const OrdersScreen = ({ ...props }) => {
                 justifyContent: 'flex-end',
               }}
             >
-              {internalPOV ? <PrimaryBtn text='Adicionar' /> : null}
+              {internalPOV ? <PrimaryBtn text='Adicionar' onClick={() => Router.push(routes.private.internal.newOrder)} /> : null}
             </div>
             {/* <div
               style={{

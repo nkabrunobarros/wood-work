@@ -4,6 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import styles from '../../styles/components/primaryBtn.module.css'
+import { Button } from '@mui/material'
 
 const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder }) => {
   const style = {
@@ -11,14 +12,15 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder }) => {
     pointerEvents: disabled ? 'none' : 'all',
     opacity: disabled ? '0.5' : '1',
     backgroundColor: light ? 'var(--white)' : 'var(--primary)',
-    border: noBorder ? 'none' : null
+    border: noBorder ? 'none' : null,
+    maxHeight: '20px'
 
   }
   return (
-    <a className={styles.main} onClick={onClick} title={text} style={style}>
+    <Button className={styles.main} onClick={onClick} title={text} style={style}>
         {icon}
         {text}
-    </a>
+    </Button>
   )
 }
 PrimaryBtn.propTypes = {

@@ -9,6 +9,7 @@ const routes = {
       ordersSimilar: '/internal/orders-similar',
       orders: '/internal/orders',
       order: '/internal/order/',
+      newOrder: '/internal/new-order',
       messages: '/internal/messages',
 
     },
