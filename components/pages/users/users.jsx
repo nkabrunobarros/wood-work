@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 //  Nodes
 import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,34 +10,15 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 
 //  PropTypes
 import PropTypes from 'prop-types';
-// import CustomTable from '../../table/table';
-// import { Edit, Trash } from 'lucide-react';
 import {
   Autocomplete,
   Box,
   InputLabel,
-  // MenuItem,
   OutlinedInput,
-  // Pagination,
-  // Select,
   TextField,
 } from '@mui/material';
-// import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
-// const DisplayCol = (col, item, index) => {
-//   if (index === 0) return <a className='link'>{item[`${col}`]}</a>;
-//   switch (col) {
-//     case 'ações':
-//       return (
-//         <>
-//           <Edit stroke-width='1' className='link' />
-//           <Trash stroke-width='1' className='link' />
-//         </>
-//       );
-//     default:
-//       return <a>{item[`${col}`]}</a>;
-//   }
-// };
+import Router from 'next/router';
 
 const Users = ({ ...props }) => {
   const {
@@ -49,39 +29,19 @@ const Users = ({ ...props }) => {
     headCells,
     editRoute,
     detailRoute,
+    newRoute,
   } = props;
-  console.log(props)
-  // const [page, setPage] = useState(1);
-  // const [entries, setEntries] = useState(5);
-  // const [totalPages, setTotalPages] = useState(0);
-  // const [showingMin, setShowingMin] = useState(0);
-  // const [showingMax, setShowingMax] = useState(entries);
-  // const [itemsPerPage, setItemsPerPage] = useState([]);
 
   //  States
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pais, setPais] = useState('');
 
-  // const handleChangePage = (event, value) => {
-  //   setPage(value);
-  // };
   const ClearFilters = () => {
     setNome('');
     setEmail('');
     setPais('');
   };
-  // useEffect(() => {
-  //   const calculatePages = () => {
-  //     const numPages = Math.ceil(items.length / entries);
-  //     setTotalPages(numPages);
-  //     const res = PaginateItemsPerPage(items, entries, page - 1);
-  //     setItemsPerPage(res.array);
-  //     setShowingMax(res.showingMax);
-  //     setShowingMin(res.showingMin);
-  //   };
-  //   calculatePages();
-  // }, [entries, page]);
 
   const onCountryChange = (value) => {
     if (value === null) setPais('');
@@ -208,42 +168,12 @@ const Users = ({ ...props }) => {
             }}
           >
             <div>
-              <PrimaryBtn text='Adicionar' />
-            </div>
-
-            {/* <div id='align' className='flex'>
-              Visualizar
-              <Select
-                value={entries}
-                onChange={(e) => setEntries(e.target.value)}
-              >
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-              </Select>
-              Itens
-              <div className='spacer'>|</div>
-              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}{' '}
-              items
-              <div className='spacer'></div>
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={handleChangePage}
-                siblingCount={0}
-                color='primary'
-                className={'pagination'}
+              <PrimaryBtn
+                text='Adicionar'
+                onClick={() => Router.push(`${newRoute}`)}
               />
-            </div> */}
+            </div>
           </div>
-          {/* <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handleChangePage}
-            siblingCount={0}
-            color='primary'
-            className={'pagination mobile'}
-          /> */}
         </div>
         <AdvancedTable
           rows={items}
@@ -256,12 +186,12 @@ const Users = ({ ...props }) => {
   );
 };
 Users.propTypes = {
-  product: PropTypes.any,
-  docs: PropTypes.arrayOf(PropTypes.object),
-  itemsPerPage: PropTypes.array,
+  breadcrumbsPath: PropTypes.array,
+  items: PropTypes.array,
   countries: PropTypes.array,
   headCells: PropTypes.array,
   editRoute: PropTypes.string,
   detailRoute: PropTypes.string,
+  newRoute: PropTypes.string,
 };
 export default Users;

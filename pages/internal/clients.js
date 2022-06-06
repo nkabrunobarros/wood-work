@@ -44,7 +44,7 @@ const Clients = ({ users, countries }) => {
   ];
   const editRoute = routes.private.internal.editClient;
   const detailRoute = routes.private.internal.client;
-
+  const newRoute = routes.private.internal.newClient
   const breadcrumbsPath = [
     {
       title: 'Clientes',
@@ -58,6 +58,7 @@ const Clients = ({ users, countries }) => {
     editRoute,
     detailRoute,
     headCells,
+    newRoute
   };
   return loaded ? <UsersScreen {...props} /> : <Loader center={true} />;
 };
@@ -70,5 +71,6 @@ Clients.propTypes = {
   countries: PropTypes.array,
   editRoute: PropTypes.string,
   detailRoute: PropTypes.string,
+  newRoute: PropTypes.string,
 };
 export default Clients;

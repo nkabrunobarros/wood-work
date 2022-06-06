@@ -6,6 +6,7 @@ const routes = {
       clients: '/internal/clients',
       client: '/internal/client/',
       editClient: '/internal/edit-client/',
+      newClient: '/internal/new-client/',
 
       users: '/internal/users',
 
