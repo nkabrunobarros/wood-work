@@ -8,7 +8,7 @@ import OrdersScreen from '../../components/pages/orders/orders';
 import PropTypes from 'prop-types';
 
 import { getCategories } from '../../components/mock/Categories';
-import getOrders from '../../components/mock/Orders';
+import { getOrders } from '../../components/mock/Orders';
 import routes from '../../navigation/routes';
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 import { getClients } from '../../components/mock/Clients';
@@ -17,7 +17,6 @@ export async function getServerSideProps(context) {
   const res = await getCategories();
   const res2 = await getOrders();
   const res3 = await getClients();
-
 
   return {
     props: { categories: res, orders: res2, clients: res3 }, // will be passed to the page component as props
@@ -39,7 +38,7 @@ const Orders = ({ categories, orders, clients }) => {
     },
   ];
   const items = orders;
-  const internalPOV = true
+  const internalPOV = true;
   const panelsInfo = {
     budgeting: 12,
     drawing: 11,
@@ -53,30 +52,30 @@ const Orders = ({ categories, orders, clients }) => {
       title: 'Em Orçamentação',
       amount: 12,
       icon: <Layers size={40} />,
-      color: 'var(--primary)'
+      color: 'var(--primary)',
     },
     {
       num: 2,
       title: 'Em Desenho',
       amount: 11,
       icon: <LayoutTemplate size={40} />,
-      color: 'var(--green)'
+      color: 'var(--green)',
     },
     {
       num: 3,
       title: 'Em Produção',
       amount: 13,
       icon: <PackagePlus size={40} />,
-      color: 'var(--orange)'
+      color: 'var(--orange)',
     },
     {
       num: 4,
       title: 'Concluidas',
       amount: 17,
       icon: <Settings size={40} />,
-      color: 'var(--babyblue)'
+      color: 'var(--babyblue)',
     },
-  ]
+  ];
   const tableCols = [
     'numero',
     'categoria',
@@ -87,6 +86,7 @@ const Orders = ({ categories, orders, clients }) => {
   ];
 
   const detailPage = routes.private.internal.order;
+  const editPage = routes.private.internal.editOrder;
 
   const props = {
     categories,
@@ -97,7 +97,8 @@ const Orders = ({ categories, orders, clients }) => {
     detailPage,
     internalPOV,
     cards,
-    clients
+    clients,
+    editPage,
   };
   return loaded ? (
     <OrdersScreen {...props} />
@@ -114,9 +115,10 @@ Orders.propTypes = {
   tableCols: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   clients: PropTypes.array,
-  detailPage: PropTypes.any,
+  detailPage: PropTypes.string,
+  editPage: PropTypes.string,
   internalPOV: PropTypes.boolean,
-  cards: PropTypes.arrayOf(PropTypes.object)
+  cards: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Orders;

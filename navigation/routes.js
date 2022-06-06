@@ -2,14 +2,22 @@ const routes = {
   private: {
     internal: {
       signIn: '/internal/signin',
+
       clients: '/internal/clients',
+      client: '/internal/client/',
+      editClient: '/internal/edit-client/',
+
       users: '/internal/users',
+
       stock: '/internal/stock',
       stockId: '/internal/stock/',
+
       ordersSimilar: '/internal/orders-similar',
       orders: '/internal/orders',
       order: '/internal/order/',
       newOrder: '/internal/new-order',
+      editOrder: '/internal/edit-order/',
+      
       messages: '/internal/messages',
 
     },

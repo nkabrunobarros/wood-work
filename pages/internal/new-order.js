@@ -14,6 +14,10 @@ const NewOrder = () => {
       title: 'Encomendas',
       href: `${routes.private.internal.orders}`,
     },
+    {
+      title: 'Nova Encomenda',
+      href: `${routes.private.internal.orders}`,
+    },
   ];
   const props = {
     breadcrumbsPath

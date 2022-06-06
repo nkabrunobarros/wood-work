@@ -1,87 +1,96 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import React, { useEffect, useState } from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
+import React, { useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import Grid from '@mui/material/Grid'
-import CustomBreadcrumbs from '../../breadcrumbs'
+import Grid from '@mui/material/Grid';
+import CustomBreadcrumbs from '../../breadcrumbs';
 
-import Content from '../../content/content'
-import PrimaryBtn from '../../buttons/primaryBtn'
+import Content from '../../content/content';
+import PrimaryBtn from '../../buttons/primaryBtn';
 
 //  PropTypes
-import PropTypes from 'prop-types'
-import CustomTable from '../../table/table'
-import { Edit, Trash } from 'lucide-react'
+import PropTypes from 'prop-types';
+// import CustomTable from '../../table/table';
+// import { Edit, Trash } from 'lucide-react';
 import {
   Autocomplete,
   Box,
   InputLabel,
-  MenuItem,
+  // MenuItem,
   OutlinedInput,
-  Pagination,
-  Select,
-  TextField
-} from '@mui/material'
-import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage'
-const DisplayCol = (col, item, index) => {
-  if (index === 0) return <a className='link'>{item[`${col}`]}</a>
-  switch (col) {
-    case 'ações':
-      return (
-        <>
-          <Edit stroke-width="1" className='link' />
-          <Trash stroke-width="1" className='link' />
-        </>
-      )
-    default:
-      return <a>{item[`${col}`]}</a>
-  }
-}
+  // Pagination,
+  // Select,
+  TextField,
+} from '@mui/material';
+// import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
+// const DisplayCol = (col, item, index) => {
+//   if (index === 0) return <a className='link'>{item[`${col}`]}</a>;
+//   switch (col) {
+//     case 'ações':
+//       return (
+//         <>
+//           <Edit stroke-width='1' className='link' />
+//           <Trash stroke-width='1' className='link' />
+//         </>
+//       );
+//     default:
+//       return <a>{item[`${col}`]}</a>;
+//   }
+// };
 
 const Users = ({ ...props }) => {
-  const { items, breadcrumbsPath, tableCols, countries } = props
-  const [page, setPage] = useState(1)
-  const [entries, setEntries] = useState(5)
-  const [totalPages, setTotalPages] = useState(0)
-  const [showingMin, setShowingMin] = useState(0)
-  const [showingMax, setShowingMax] = useState(entries)
-  const [itemsPerPage, setItemsPerPage] = useState([])
+  const {
+    items,
+    breadcrumbsPath,
+    // tableCols,
+    countries,
+    headCells,
+    editRoute,
+    detailRoute,
+  } = props;
+  console.log(props)
+  // const [page, setPage] = useState(1);
+  // const [entries, setEntries] = useState(5);
+  // const [totalPages, setTotalPages] = useState(0);
+  // const [showingMin, setShowingMin] = useState(0);
+  // const [showingMax, setShowingMax] = useState(entries);
+  // const [itemsPerPage, setItemsPerPage] = useState([]);
 
   //  States
-  const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
-  const [pais, setPais] = useState('')
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [pais, setPais] = useState('');
 
-  const handleChangePage = (event, value) => {
-    setPage(value)
-  }
+  // const handleChangePage = (event, value) => {
+  //   setPage(value);
+  // };
   const ClearFilters = () => {
-    setNome('')
-    setEmail('')
-    setPais('')
-  }
-  useEffect(() => {
-    const calculatePages = () => {
-      const numPages = Math.ceil(items.length / entries)
-      setTotalPages(numPages)
-      const res = PaginateItemsPerPage(items, entries, page - 1)
-      setItemsPerPage(res.array)
-      setShowingMax(res.showingMax)
-      setShowingMin(res.showingMin)
-    }
-    calculatePages()
-  }, [entries, page])
+    setNome('');
+    setEmail('');
+    setPais('');
+  };
+  // useEffect(() => {
+  //   const calculatePages = () => {
+  //     const numPages = Math.ceil(items.length / entries);
+  //     setTotalPages(numPages);
+  //     const res = PaginateItemsPerPage(items, entries, page - 1);
+  //     setItemsPerPage(res.array);
+  //     setShowingMax(res.showingMax);
+  //     setShowingMin(res.showingMin);
+  //   };
+  //   calculatePages();
+  // }, [entries, page]);
 
   const onCountryChange = (value) => {
-    if (value === null) setPais('')
-    else setPais(value.label)
-  }
+    if (value === null) setPais('');
+    else setPais(value.label);
+  };
   const onNameChange = (value) => {
-    console.log(value)
-    if (value === null) setNome('')
-    else setNome(value.nome)
-  }
+    if (value === null) setNome('');
+    else setNome(value.nome);
+  };
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>
@@ -109,7 +118,7 @@ const Users = ({ ...props }) => {
                     onChange={(e) => setNome(e.target.value)}
                     inputProps={{
                       ...params.inputProps,
-                      autoComplete: 'new-password' // disable autocomplete and autofill
+                      autoComplete: 'new-password', // disable autocomplete and autofill
                     }}
                   />
                 )}
@@ -137,7 +146,6 @@ const Users = ({ ...props }) => {
                 autoHighlight
                 getOptionLabel={(option) => option.label}
                 onChange={(event, value) => onCountryChange(value)}
-
                 renderOption={(props, option) => (
                   <Box
                     component='li'
@@ -161,7 +169,7 @@ const Users = ({ ...props }) => {
                     value={pais}
                     inputProps={{
                       ...params.inputProps,
-                      autoComplete: 'new-password' // disable autocomplete and autofill
+                      autoComplete: 'new-password', // disable autocomplete and autofill
                     }}
                   />
                 )}
@@ -172,7 +180,7 @@ const Users = ({ ...props }) => {
             style={{
               width: 'fit-content',
               marginLeft: 'auto',
-              paddingTop: '1rem'
+              paddingTop: '1rem',
             }}
           >
             <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
@@ -196,14 +204,14 @@ const Users = ({ ...props }) => {
               alignItems: 'end',
               flexDirection: 'column',
               color: 'var(--grayTexts)',
-              fontSize: 'small'
+              fontSize: 'small',
             }}
           >
             <div>
               <PrimaryBtn text='Adicionar' />
             </div>
 
-            <div id='align' className='flex'>
+            {/* <div id='align' className='flex'>
               Visualizar
               <Select
                 value={entries}
@@ -226,43 +234,34 @@ const Users = ({ ...props }) => {
                 color='primary'
                 className={'pagination'}
               />
-            </div>
+            </div> */}
           </div>
-          <Pagination
+          {/* <Pagination
             count={totalPages}
             page={page}
             onChange={handleChangePage}
             siblingCount={0}
             color='primary'
             className={'pagination mobile'}
-          />
+          /> */}
         </div>
-        <CustomTable columns={tableCols}>
-          {itemsPerPage
-            .filter(
-              (item) =>
-                item.nome.includes(nome) &&
-                item.email.includes(email) &&
-                item.pais.includes(pais)
-            )
-            .map((item, i) => (
-              <tr key={item.id}>
-                {tableCols.map((element, i) => (
-                  <td key={element.id} data-label={tableCols[i].toUpperCase()}>
-                    {DisplayCol(element, item, i)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-        </CustomTable>
+        <AdvancedTable
+          rows={items}
+          headCells={headCells}
+          clickRoute={detailRoute}
+          editRoute={editRoute}
+        />
       </Content>
     </Grid>
-  )
-}
+  );
+};
 Users.propTypes = {
   product: PropTypes.any,
   docs: PropTypes.arrayOf(PropTypes.object),
   itemsPerPage: PropTypes.array,
-  countries: PropTypes.array
-}
-export default Users
+  countries: PropTypes.array,
+  headCells: PropTypes.array,
+  editRoute: PropTypes.string,
+  detailRoute: PropTypes.string,
+};
+export default Users;

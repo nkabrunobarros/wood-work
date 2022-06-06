@@ -25,6 +25,7 @@ const AdvancedTable = ({
   headCellsUpper,
   clickRoute,
   noPagination,
+  editRoute
 }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -229,7 +230,11 @@ const AdvancedTable = ({
                           {headCell.id === 'actions' ? (
                             <>
                               <Tooltip title='Edit'>
-                                <IconButton>
+                                <IconButton  onClick={() =>
+                                clickRoute
+                                  ? Router.push(`${editRoute}${row.id}`)
+                                  : null
+                              }>
                                   <Edit stroke-width="1" className='link' />
                                 </IconButton>
                               </Tooltip>
@@ -273,6 +278,7 @@ AdvancedTable.propTypes = {
   headCells: PropTypes.array.isRequired,
   children: PropTypes.any,
   clickRoute: PropTypes.any,
+  editRoute: PropTypes.string,
   noPagination: PropTypes.boolean,
 };
 

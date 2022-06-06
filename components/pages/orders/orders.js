@@ -41,6 +41,7 @@ const OrdersScreen = ({ ...props }) => {
     internalPOV,
     cards,
     clients,
+    editPage
   } = props;
 
   const rows = items;
@@ -345,7 +346,7 @@ const OrdersScreen = ({ ...props }) => {
               </tr>
             ))}
         </CustomTable> */}
-        <AdvancedTable rows={rows} headCells={headCells} clickRoute={detailPage}></AdvancedTable>
+        <AdvancedTable rows={rows} headCells={headCells} clickRoute={detailPage} editRoute={editPage}></AdvancedTable>
       </Content>
     </Grid>
   );
@@ -358,6 +359,7 @@ OrdersScreen.propTypes = {
   breadcrumbsPath: PropTypes.array,
   clients: PropTypes.array,
   detailPage: PropTypes.string,
+  editPage: PropTypes.string,
   internalPOV: PropTypes.boolean,
   cards: PropTypes.arrayOf(PropTypes.object),
 };

@@ -24,10 +24,32 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [
-      "Montserrat"
-    ].join(",")
-  }
+    fontFamily: ['Montserrat'].join(','),
+  },
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+         maxHeight: '45px',
+         backgroundColor: 'white',
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+         backgroundColor: 'white'
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        },
+      },
+    }
+  },
 });
 
 const App = ({ Component, pageProps }) => {
@@ -49,7 +71,7 @@ const App = ({ Component, pageProps }) => {
     <ThemeProvider theme={theme}>
       <Head>
         <title>Wood Work 4.0</title>
-        <link rel="icon" href="/logo_bw_ww40_inv.png" />
+        <link rel='icon' href='/logo_bw_ww40_inv.png' />
       </Head>
       <Layout {...pageProps}>
         <Component {...pageProps} />

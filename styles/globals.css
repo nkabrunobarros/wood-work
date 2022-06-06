@@ -225,6 +225,10 @@ a {
   width: 100%;
   flex: 0 1 300;
 }
+.filterContainer2 {
+  width: 100%;
+  flex: 0 1 300;
+}
 .scrollableX {
   overflow-y: hidden;
 }
@@ -237,23 +241,23 @@ a {
   }
   .filterContainer4 {
     max-width: calc(50% - 1em);
-
   }
 }
 
 @media screen and (min-width: 50em) {
   .filterContainer4 {
     max-width: calc(33% - 1em);
-
   }
 }
 @media screen and (min-width: 60em) {
+  .filterContainer2 {
+    max-width: calc(50% - 1em);
+  }
   .filterContainer {
     max-width: calc(33% - 1em);
   }
   .filterContainer4 {
     max-width: calc(25% - 1em);
-
   }
 }
 

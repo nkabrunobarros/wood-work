@@ -1,21 +1,25 @@
 //  Nodes
-import React, { 
+import React, {
   // useEffect,
-   useState } from 'react';
+  useState,
+} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import { 
+import {
   // Eye,
-   Filter, X } from 'lucide-react';
+  Filter,
+  X,
+} from 'lucide-react';
 import Content from '../../content/content';
 import {
   Autocomplete,
   Button,
   ButtonGroup,
+  Chip,
   // MenuItem,
   // Pagination,
   // Select,
@@ -207,14 +211,11 @@ const OrdersScreen = ({ ...props }) => {
   const DisplayBalloonFilter = (item, onRemove) => {
     if (hasData(item))
       return (
-        <div className='activeFilterBalloon'>
-          {typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
-          <X
-            className='activeFilterBalloonIcon'
-            size={'14px'}
-            onClick={onRemove}
-          />
-        </div>
+<Chip
+         label= {typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
+         deleteIcon={<X />}
+         onDelete={onRemove}
+       />
       );
   };
   // useEffect(() => {

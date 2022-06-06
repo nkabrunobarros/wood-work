@@ -16,7 +16,7 @@ import { Divider } from '@mui/material';
 const Profile = ({ ...props }) => {
   const { product, stock, breadcrumbsPath } = props;
   return (
-    <Grid component='main' sx={{ height: '100vh' }}>
+    <Grid component='main' >
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>

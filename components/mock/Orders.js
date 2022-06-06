@@ -1,5 +1,4 @@
-
-function getOrders () {
+function getOrders() {
   const orders = [
     {
       id: 1574523,
@@ -18,7 +17,7 @@ function getOrders () {
       previsto2: 1,
       realizado2: 1.3,
       productId: 11,
-      custo: 213.32
+      custo: 213.32,
     },
     {
       id: 56598,
@@ -37,7 +36,7 @@ function getOrders () {
       previsto2: 1,
       realizado2: 1.2,
       productId: 12,
-      custo: 2242.32
+      custo: 2242.32,
     },
     {
       id: 1274721,
@@ -56,7 +55,7 @@ function getOrders () {
       previsto2: 1,
       realizado2: 1,
       productId: 13,
-      custo: 5433.32
+      custo: 5433.32,
     },
     {
       id: 12312,
@@ -75,7 +74,7 @@ function getOrders () {
       previsto2: 1,
       realizado2: 1.2,
       productId: 14,
-      custo: 343.32
+      custo: 343.32,
     },
     {
       id: 153434,
@@ -94,7 +93,7 @@ function getOrders () {
       previsto2: 1,
       realizado2: 1.2,
       productId: 15,
-      custo: 543.32
+      custo: 543.32,
     },
     {
       id: 434353,
@@ -113,10 +112,9 @@ function getOrders () {
       previsto2: 1,
       realizado2: 1.2,
       productId: 16,
-      custo: 6346.32
+      custo: 6346.32,
     },
-
-  ]
-  return orders
+  ];
+  return orders;
 }
-export default getOrders
+export { getOrders };

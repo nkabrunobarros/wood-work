@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 //  Nodes
 import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,6 +6,9 @@ import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+
+//  PropTypes
+import PropTypes from 'prop-types';
 
 import styles from '../../../styles/NewOrder.module.css';
 import { Save, User, X } from 'lucide-react';
@@ -19,10 +21,10 @@ import {
 } from '@mui/material';
 import Router from 'next/router';
 
-const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath } = props;
+const EditOrder = ({ ...props }) => {
+  const { breadcrumbsPath, order } = props;
   return (
-    <Grid component='main' >
+    <Grid component='main'>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
@@ -32,7 +34,7 @@ const NewOrder = ({ ...props }) => {
           style={{ display: 'flex', alignItems: 'center' }}
         >
           <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
+            <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
           </div>
           <div style={{ display: 'flex' }}>
             <PrimaryBtn text='Guardar' icon={<Save stroke-width='1' />} />
@@ -143,4 +145,9 @@ const NewOrder = ({ ...props }) => {
     </Grid>
   );
 };
-export default NewOrder;
+EditOrder.propTypes = {
+  breadcrumbsPath: PropTypes.array.isRequired,
+  order: PropTypes.object,
+};
+
+export default EditOrder;
