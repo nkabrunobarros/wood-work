@@ -1,59 +1,75 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Collapse,
   Divider,
   IconButton,
-  List,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   SwipeableDrawer,
 } from '@mui/material';
+import hasData from '../../utils/hasData';
 
 import { useTheme } from '@emotion/react';
 import getLinks from '../../mock/navLinks';
 import Router, { useRouter } from 'next/router';
-
-import styles from '../../../styles/components/navbar.module.css';
 import { LogOut, User, X } from 'lucide-react';
 import routes from '../../../navigation/routes';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { getUser } from '../../mock/Users';
+import ActiveLink from './activeLink';
+import styles from '../../../styles/components/navbar.module.css'
+
 // eslint-disable-next-line react/prop-types
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
   const theme = useTheme();
   const navLinks = getLinks();
-
+  const [loggedUser, setLoggedUser] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const router = useRouter();
   const handleClick = (event) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   };
-
-  const ActiveLink = ({ item }) => {
-    const router = useRouter();
-    const style = {
-      borderColor:
-        router.asPath === item.url
-          ? '5px solid var(--white)'
-          : '5px solid transparent',
-    };
-    return (
-      <a
-        key={item.title}
-        className={styles.drawerItem}
-        style={style}
-        onClick={() => {
-          handleDrawerToggle();
-          Router.push(`${item.url}`);
-        }}
-      >
-        <span>{item.icon}</span>
-        {item.title}
-      </a>
-    );
-  };
+  useEffect(() => {
+    async function getUserPerm(data) {
+      const perfil = await getUser(data);
+      setLoggedUser(perfil);
+      return perfil.perfil;
+    }
+    if (typeof window !== 'undefined') {
+      // Perform localStorage action
+      if (localStorage.getItem('user') !== null) {
+        const data = localStorage.getItem('user');
+        if (data === null) Router.push(routes.public.signIn);
+        else {
+          getUserPerm(data).then((res) => {
+            //
+          });
+        }
+      } else Router.push(routes.public.signIn);
+    }
+  }, [router.asPath]);
+  // const ActiveLink = ({ item, children }) => {
+  //   const router = useRouter();
+  //   const style = {
+  //     borderColor:
+  //       router.asPath === item
+  //         ? '5px solid var(--white)'
+  //         : '5px solid transparent',
+  //   };
+  //   return (
+  //     <a
+  //       key={item}
+  //       className={styles.drawerItem}
+  //       style={style}
+  //       onClick={() => {
+  //         handleDrawerToggle();
+  //         Router.push(`${item.url}`);
+  //       }}
+  //     >
+  //      {children}
+  //     </a>
+  //   );
+  // };
 
   return (
     <SwipeableDrawer
@@ -105,9 +121,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
                 </a>
               }
             />
-            {open ? <ExpandLess /> : <ExpandMore />}
+            {/* {open ? <ExpandLess /> : <ExpandMore />} */}
           </ListItemButton>
-          <Collapse
+          {/* <Collapse
             in={open}
             timeout='auto'
             unmountOnExit
@@ -138,7 +154,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
                 <ListItemText primary='Logout' />
               </ListItemButton>
             </List>
-          </Collapse>
+          </Collapse> */}
 
           <Divider
             color='white'
@@ -148,8 +164,49 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
         </div>
         <div className='scrollableZone'>
           {navLinks.map((item, i) => (
-            <ActiveLink key={i} item={item} />
+            <>
+              {loggedUser ? (
+                <>
+                  {loggedUser.perfil === item.allowed ? (
+                    <ActiveLink key={i} href={item.url}
+                    handleDrawerToggle={handleDrawerToggle}
+
+                    >
+                      {item.icon} {item.title}
+                    </ActiveLink>
+                  ) : null}
+                </>
+              ) : null}
+            </>
           ))}
+          <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
+            {loggedUser ? (
+              <>
+              
+          <Divider
+            color='white'
+            width='100%'
+            style={{ marginTop: '1rem', marginBottom: '1rem' }}
+          />
+                <ActiveLink
+                 handleDrawerToggle={handleDrawerToggle}
+                  href={`${routes.private.profile}${loggedUser.id}`}
+                >
+                  <User strokeWidth='1' color='white' /> Profile
+                </ActiveLink>
+                <a className={styles.navItemContainer}
+                  onClick={() => {
+                    sessionStorage.removeItem('user');
+                    localStorage.removeItem('user');
+                    if(!hasData(localStorage.getItem('user')) && !hasData(sessionStorage.getItem('user'))) Router.push(routes.public.signIn)
+
+                  }}
+                >
+                  <LogOut strokeWidth='1' color='white' /> LogOut
+                </a>
+              </>
+            ) : null}
+          </div>
         </div>
       </div>
     </SwipeableDrawer>

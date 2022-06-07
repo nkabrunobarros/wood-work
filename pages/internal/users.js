@@ -22,12 +22,6 @@ const Users = ({ users, countries }) => {
       setLoaded(true)
     }, 1500)
   }, [])
-  const tableCols = [
-    'nome',
-    'email',
-    'perfil',
-    'ações'
-  ]
 
   const breadcrumbsPath = [
     {
@@ -35,11 +29,38 @@ const Users = ({ users, countries }) => {
       href: `${routes.private.users}`
     }
   ]
+
+  const headCells = [
+    {
+      id: 'nome',
+      numeric: false,
+      disablePadding: false,
+      label: 'Nome',
+    },
+    {
+      id: 'email',
+      numeric: false,
+      disablePadding: true,
+      label: 'Email',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
+    },
+  ];
+  const editRoute = routes.private.internal.editClient;
+  const detailRoute = routes.private.internal.client;
+  const newRoute = routes.private.internal.newClient
   const props = {
     items,
     breadcrumbsPath,
-    tableCols,
-    countries
+    countries,
+    editRoute,
+    detailRoute,
+    headCells,
+    newRoute    
   }
   return loaded
     ? (
@@ -54,9 +75,12 @@ const Users = ({ users, countries }) => {
 
 Users.propTypes = {
   items: PropTypes.array,
-  tableCols: PropTypes.array,
+  headCells: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   users: PropTypes.array,
-  countries: PropTypes.array
+  countries: PropTypes.array,
+  editRoute: PropTypes.string,
+  detailRoute: PropTypes.string,
+  newRoute: PropTypes.string,
 }
 export default Users
