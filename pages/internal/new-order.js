@@ -26,9 +26,7 @@ const NewOrder = () => {
   return loaded ? (
     <NewOrderScreen {...props} />
   ) : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
   );
 };
 export default NewOrder;

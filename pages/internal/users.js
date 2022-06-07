@@ -74,9 +74,7 @@ const Users = ({ users, countries }) => {
     <UsersScreen {...props} />
       )
     : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
       )
 }
 

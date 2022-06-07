@@ -140,6 +140,7 @@ const NewUser = ({ ...props }) => {
   return (
     <Grid component='main'>
       {/* Situational Panels */}
+      <CssBaseline />
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
@@ -166,7 +167,6 @@ const NewUser = ({ ...props }) => {
       >
         <Loader />
       </Backdrop>
-      <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
         <div

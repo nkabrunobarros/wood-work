@@ -103,9 +103,7 @@ const Orders = ({ categories, orders, clients }) => {
   return loaded ? (
     <OrdersScreen {...props} />
   ) : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
   );
 };
 Orders.propTypes = {

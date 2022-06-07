@@ -58,9 +58,7 @@ const Stock = ({ allStock, allCategories }) => {
     <StockScreen {...props} />
       )
     : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
       )
 }
 Stock.propTypes = {

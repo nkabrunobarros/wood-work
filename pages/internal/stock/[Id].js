@@ -46,9 +46,7 @@ const Stock = ({ allStock }) => {
     <StockScreen {...props} />
       )
     : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
       )
 }
 export default Stock

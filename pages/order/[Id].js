@@ -56,9 +56,7 @@ const Order = () => {
   return loaded ? (
     <OrderScreen {...props} />
   ) : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
   );
 };
 export default Order;

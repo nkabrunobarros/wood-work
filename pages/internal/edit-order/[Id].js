@@ -43,9 +43,7 @@ const EditOrder = ({ orders }) => {
   return loaded ? (
     <EditOrderScreen {...props} />
   ) : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
   );
 };
 export default EditOrder;

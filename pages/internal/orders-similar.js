@@ -109,9 +109,7 @@ const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
   return loaded ? (
     <OrdersScreen {...props} />
   ) : (
-    <div>
-      <Loader center={true} />
-    </div>
+    <Loader center={true} />
   );
 };
 OrdersSimilar.propTypes = {
