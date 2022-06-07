@@ -12,11 +12,14 @@ import PropTypes from 'prop-types';
 
 import styles from '../../../styles/NewOrder.module.css';
 import { Edit2, Save, User, X } from 'lucide-react';
-import { InputLabel, OutlinedInput, TextareaAutosize } from '@mui/material';
+import { Alert, Backdrop, InputLabel, OutlinedInput, Snackbar, TextareaAutosize } from '@mui/material';
 import Router from 'next/router';
 
+import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Loader from '../../loader/loader';
+
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, client } = props;
+  const { breadcrumbsPath, client, detailPage } = props;
   const [name, setName] = useState(client.nome);
   const [email, setEmail] = useState(client.email);
   const [contactName, setContactName] = useState(client.contactName);
@@ -27,9 +30,66 @@ const EditClient = ({ ...props }) => {
   const [nif, setNif] = useState(client.nif);
   const [obs, setObs] = useState(client.obs);
   const [otherData, setOtherData] = useState(client.otherData);
+
+  //  Dialog
+  const [dialogOpen, setDialogOpen] = useState(false);
+  //  Snackbar Notification
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const [backdrop, setBackdrop] = useState(false);
+  
+  function handleSave() {
+    setDialogOpen(!dialogOpen);
+  }
+  function onConfirm() {
+    setBackdrop(true);
+
+    //  Snackbar notification body
+    setSnackbarMessage('Dados alterados com sucesso!');
+    setSnackbarSeverity('success');
+    setSnackbarOpen(true);
+
+    //  Dialog Modal State
+    setDialogOpen(false);
+
+    setTimeout(() => {
+      setSnackbarOpen(false);
+      setBackdrop(false);
+      Router.push(`${detailPage}${client.id}`);
+    }, 2000);
+  }
+
   return (
     <Grid component='main'>
       <CssBaseline />
+      <ConfirmDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        onConfirm={() => onConfirm()}
+        message={'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'}
+      />
+        <Snackbar
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        open={snackbarOpen}
+        onRequestClose={() => setSnackbarOpen(false)}
+        autoHideDuration={2000}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <Loader />
+      </Backdrop>
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
         <div
@@ -41,7 +101,11 @@ const EditClient = ({ ...props }) => {
             <a className='headerTitleXl'>{client.nome}</a>
           </div>
           <div style={{ display: 'flex' }}>
-            <PrimaryBtn text='Guardar' icon={<Save stroke-width='1' />} />
+            <PrimaryBtn
+              text='Guardar'
+              icon={<Save stroke-width='1' />}
+              onClick={handleSave}
+            />
             <PrimaryBtn
               text='Cancelar'
               icon={<X stroke-width='1' />}
@@ -193,7 +257,8 @@ const EditClient = ({ ...props }) => {
 };
 EditClient.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
-  client: PropTypes.object,
+  client: PropTypes.object.isRequired,
+  detailPage: PropTypes.string.isRequired,
 };
 
 export default EditClient;

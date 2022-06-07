@@ -9,6 +9,9 @@ const routes = {
       newClient: '/internal/new-client/',
 
       users: '/internal/users',
+      user: '/internal/user/',
+      newUser: '/internal/new-user',
+      editUser: '/internal/edit-user/',
 
       stock: '/internal/stock',
       stockId: '/internal/stock/',

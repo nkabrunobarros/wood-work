@@ -1,9 +1,7 @@
 // Node modules
 import {
   IconButton,
-  // Menu, MenuItem
 } from '@mui/material';
-// import { ChevronDown, LogOut, User } from 'lucide-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,7 +16,7 @@ const Navbar = ({ openDrawer }) => {
         <div className='flexRow'>
           <div
             className='logoImg'
-            style={{ width: '80px', height: '80px' }}
+            style={{marginLeft:'2rem', width: '80px', height: '80px' }}
           ></div>
           <IconButton
             color='inherit'
@@ -34,7 +32,7 @@ const Navbar = ({ openDrawer }) => {
         </div>
         <div
           className={styles.userDropdown}
-          style={{ width: '80px', height: '80px', marginLeft: 'auto' }}
+          style={{marginRight: '2rem', width: '80px', height: '80px', marginLeft: 'auto' }}
         ></div>
       </div>
     </div>

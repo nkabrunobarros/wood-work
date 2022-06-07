@@ -44,15 +44,22 @@ const Users = ({ users, countries }) => {
       label: 'Email',
     },
     {
+      id: 'perfil',
+      numeric: true,
+      disablePadding: false,
+      label: 'Perfil',
+    },
+    {
       id: 'actions',
       numeric: true,
       disablePadding: false,
       label: 'Ações',
     },
+
   ];
-  const editRoute = routes.private.internal.editClient;
-  const detailRoute = routes.private.internal.client;
-  const newRoute = routes.private.internal.newClient
+  const editRoute = routes.private.internal.editUser;
+  const detailRoute = routes.private.internal.user;
+  const newRoute = routes.private.internal.newUser
   const props = {
     items,
     breadcrumbsPath,
