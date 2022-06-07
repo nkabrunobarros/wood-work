@@ -30,25 +30,25 @@ const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-         maxHeight: '45px',
-         backgroundColor: 'white',
+          //  maxHeight: '45px',
+          backgroundColor: 'white',
         },
       },
     },
     MuiSelect: {
       styleOverrides: {
         root: {
-         backgroundColor: 'white'
+          backgroundColor: 'white',
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none'
+          textTransform: 'none',
         },
       },
-    }
+    },
   },
 });
 
