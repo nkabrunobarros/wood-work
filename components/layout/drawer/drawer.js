@@ -18,6 +18,9 @@ import { getUser } from '../../mock/Users';
 import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import Image from 'next/image';
+
 // eslint-disable-next-line react/prop-types
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
   const theme = useTheme();
@@ -37,7 +40,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
     }
     if (typeof window !== 'undefined') {
       // Perform localStorage action
-      if (localStorage.getItem('user') !== null && sessionStorage.getItem('user')) {
+      if (
+        localStorage.getItem('user') !== null &&
+        sessionStorage.getItem('user')
+      ) {
         const data = localStorage.getItem('user');
         if (data === null) Router.push(routes.public.signIn);
         else {
@@ -85,11 +91,15 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           >
             <X />
           </IconButton>
-          <div
-            className='logoImg'
-            style={{ width: '100px', height: '100px', margin: '1rem' }}
-          ></div>
-
+          <div style={{ width: '100px', height: '100px', margin: '1rem' }}>
+            <Image
+              src={companyLogo}
+              style={{ margin: '1rem' }}
+              width={100}
+              height={100}
+              layout='fixed'
+            />
+          </div>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
             <ListItemText
               primary='Bruno Barros'
