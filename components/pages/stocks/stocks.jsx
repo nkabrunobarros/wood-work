@@ -1,6 +1,5 @@
-/* eslint-disable react/prop-types */
 //  Nodes
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import Grid from '@mui/material/Grid';
@@ -16,70 +15,46 @@ import {
   Autocomplete,
   InputLabel,
   MenuItem,
-  OutlinedInput,
-  // Pagination,
   Select,
   TextField,
 } from '@mui/material';
 import routes from '../../../navigation/routes';
 const Stock = ({ ...props }) => {
-  const { items, breadcrumbsPath, categories, clients } = props;
+  const { items, breadcrumbsPath, categories, headCells, products } = props;
   const rows = items;
-  const headCells = [
-    {
-      id: 'productId',
-      numeric: false,
-      disablePadding: false,
-      label: 'Nome',
-    },
-    {
-      id: 'codigo',
-      numeric: false,
-      disablePadding: false,
-      label: 'Codigo',
-    },
-    {
-      id: 'fornecedor',
-      numeric: false,
-      disablePadding: false,
-      label: 'Fornecedor',
-    },
-    {
-      id: 'categoria',
-      numeric: false,
-      disablePadding: true,
-      label: 'Categoria',
-    },
-    {
-      id: 'stock',
-      numeric: false,
-      disablePadding: false,
-      label: 'Stock',
-    },
-    {
-      id: 'actions',
-      numeric: true,
-      disablePadding: false,
-      label: 'Ações',
-    },
-  ];
-  console.log(items);
+
   //  States
-  const [number, setNumber] = useState('');
-  const [client, setClient] = useState('');
-  const [category, setCategory] = useState();
+  const [name, setName] = useState('');
+  const [codigo, setCodigo] = useState('');
+  const [category, setCategory] = useState('');
   const [stock, setStock] = useState('');
+  const [filters, setFilters] = useState({});
+
+  const onProductChange = (value) => {
+    if (value === null) setName('');
+    else setName(value.id);
+  };
 
   const ClearFilters = () => {
-    setNumber('');
-    setClient('');
+    setName('');
+    setCodigo('');
     setCategory('');
     setStock('');
+    setFilters({});
   };
-  const onClientChange = (value) => {
-    if (value === null) setClient('');
-    else setClient(value.label);
+
+  const ApplyFilters = () => {
+    // Set Filters
+    setFilters({
+      name,
+      categoria: category,
+      codigo,
+      stock,
+    });
   };
+  useEffect(() => {
+    ApplyFilters();
+  }, [name, category, codigo, stock]);
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -89,39 +64,45 @@ const Stock = ({ ...props }) => {
           <a className='headerTitleSm'>Filtros</a>
           <div className='filters'>
             <div className='filterContainer4'>
-              <InputLabel htmlFor='email'>Número</InputLabel>
-              <OutlinedInput
-                margin='normal'
-                fullWidth
-                id='number'
-                name='number'
-                type='number'
-                placeholder='Escrever um número'
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-              />
-            </div>
-            <div className='filterContainer4'>
-              <InputLabel htmlFor='email'>Cliente</InputLabel>
+              <InputLabel htmlFor='name'>Nome {name}</InputLabel>
               <Autocomplete
                 disablePortal
                 id='combo-box-demo'
-                options={clients}
+                options={products}
                 getOptionLabel={(option) => option.nome}
-                onChange={(event, value) => onClientChange(value)}
+                onChange={(event, value) => onProductChange(value)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     fullWidth
-                    value={client}
-                    onChange={(event, value) => setClient(event.target.value)}
-                    placeholder='Escrever um nome'
+                    value={name}
+                    onChange={(event, value) => setName(event.target.value)}
+                    placeholder='Produto'
                   />
                 )}
               />
             </div>
             <div className='filterContainer4'>
-              <InputLabel htmlFor='Categoria'>Categoria</InputLabel>
+              <InputLabel htmlFor='codigo'>Codigo</InputLabel>
+              <Select
+                labelId='codigo'
+                id='codigo'
+                fullWidth
+                value={codigo}
+                onChange={(e) => setCodigo(e.target.value)}
+              >
+                <MenuItem value={''} disabled>
+                  Selecionar um codigo
+                </MenuItem>
+                {items.map((item) => (
+                  <MenuItem key={item.codigo} value={item.codigo}>
+                    {item.codigo}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className='filterContainer4'>
+              <InputLabel htmlFor='Categoria'>Categoria {category}</InputLabel>
               <Select
                 labelId='Categoria'
                 id='Categoria'
@@ -181,6 +162,7 @@ const Stock = ({ ...props }) => {
           rows={rows}
           headCells={headCells}
           clickRoute={routes.private.internal.stockId}
+          filters={filters}
         ></AdvancedTable>
       </Content>
     </Grid>
@@ -188,6 +170,12 @@ const Stock = ({ ...props }) => {
 };
 Stock.propTypes = {
   product: PropTypes.any,
+  categories: PropTypes.array,
+  items: PropTypes.array,
+  clients: PropTypes.array,
+  headCells: PropTypes.array,
+  products: PropTypes.array,
+  breadcrumbsPath: PropTypes.array,
   docs: PropTypes.arrayOf(PropTypes.object),
 };
 export default Stock;

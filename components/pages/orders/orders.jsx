@@ -65,7 +65,7 @@ const OrdersScreen = ({ ...props }) => {
     setFilters({
       numero: number,
       categoria: category,
-      stock: stock,
+      stock,
       cliente: client
     })
   },[number, client, category, stock])

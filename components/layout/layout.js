@@ -23,6 +23,16 @@ const Layout = ({ children }) => {
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
+
+  const allRoutes = routes.private
+  const test = Object.keys(allRoutes).reduce((object, key) => {
+    if (key !== 'internal') {
+      object[key] = allRoutes[key]
+    }
+    return object
+  }, {})
+
+  console.log(test)
   const clientPages = [
     `${routes.private.messages}`,
     `${routes.private.order}`,

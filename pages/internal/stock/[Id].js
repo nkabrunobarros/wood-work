@@ -29,7 +29,7 @@ const Stock = ({ allStock }) => {
   const breadcrumbsPath = [
     {
       title: 'Stock',
-      href: `${routes.private.internal.stock}`
+      href: `${routes.private.internal.stocks}`
     },
     {
       title: `${product.nome}`,

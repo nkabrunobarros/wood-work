@@ -88,3 +88,10 @@
 @media screen and (max-width: 40em) {
 
 }
+
+.breadcrumb {
+  color: var(--grayLight);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}

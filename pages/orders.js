@@ -16,17 +16,19 @@ import {
   LayoutTemplate,
   PackageCheck,
 } from 'lucide-react';
+import { getClients } from '../components/mock/Clients';
 
 export async function getServerSideProps(context) {
-  const res = await getCategories();
-  const res2 = await getOrders();
+  const res = getCategories();
+  const res2 = getOrders();
+  const res3 = getClients();
 
   return {
-    props: { categories: res, orders: res2 }, // will be passed to the page component as props
+    props: { categories: res, orders: res2, clients: res3 }, // will be passed to the page component as props
   };
 }
 
-const Orders = ({ categories, orders }) => {
+const Orders = ({ categories, orders, clients }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -127,7 +129,7 @@ const Orders = ({ categories, orders }) => {
     breadcrumbsPath,
     detailPage,
     cards,
-
+    clients
   };
   return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />;
 };
@@ -139,6 +141,7 @@ Orders.propTypes = {
   breadcrumbsPath: PropTypes.array,
   cards: PropTypes.arrayOf(PropTypes.object),
   detailPage: PropTypes.any,
+  clients: PropTypes.array,
 };
 
 export default Orders;

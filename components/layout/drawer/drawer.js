@@ -16,7 +16,7 @@ import { LogOut, User, X } from 'lucide-react';
 import routes from '../../../navigation/routes';
 import { getUser } from '../../mock/Users';
 import ActiveLink from './activeLink';
-import styles from '../../../styles/components/navbar.module.css'
+import styles from '../../../styles/components/navbar.module.css';
 
 // eslint-disable-next-line react/prop-types
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
@@ -37,7 +37,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
     }
     if (typeof window !== 'undefined') {
       // Perform localStorage action
-      if (localStorage.getItem('user') !== null) {
+      if (localStorage.getItem('user') !== null && sessionStorage.getItem('user')) {
         const data = localStorage.getItem('user');
         if (data === null) Router.push(routes.public.signIn);
         else {
@@ -48,28 +48,6 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
       } else Router.push(routes.public.signIn);
     }
   }, [router.asPath]);
-  // const ActiveLink = ({ item, children }) => {
-  //   const router = useRouter();
-  //   const style = {
-  //     borderColor:
-  //       router.asPath === item
-  //         ? '5px solid var(--white)'
-  //         : '5px solid transparent',
-  //   };
-  //   return (
-  //     <a
-  //       key={item}
-  //       className={styles.drawerItem}
-  //       style={style}
-  //       onClick={() => {
-  //         handleDrawerToggle();
-  //         Router.push(`${item.url}`);
-  //       }}
-  //     >
-  //      {children}
-  //     </a>
-  //   );
-  // };
 
   return (
     <SwipeableDrawer
@@ -121,40 +99,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
                 </a>
               }
             />
-            {/* {open ? <ExpandLess /> : <ExpandMore />} */}
           </ListItemButton>
-          {/* <Collapse
-            in={open}
-            timeout='auto'
-            unmountOnExit
-            sx={{ color: 'white' }}
-          >
-            <List component='div' disablePadding>
-              <ListItemButton
-                onClick={() => {
-                  Router.push(routes.private.profile);
-                  handleClick();
-                }}
-              >
-                <ListItemIcon>
-                  <User color='white' />
-                </ListItemIcon>
-                <ListItemText primary='Perfil' />
-              </ListItemButton>
-
-              <ListItemButton
-                onClick={() => {
-                  Router.push(routes.public.signIn);
-                  handleClick();
-                }}
-              >
-                <ListItemIcon>
-                  <LogOut color='white' />
-                </ListItemIcon>
-                <ListItemText primary='Logout' />
-              </ListItemButton>
-            </List>
-          </Collapse> */}
 
           <Divider
             color='white'
@@ -168,9 +113,11 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
               {loggedUser ? (
                 <>
                   {loggedUser.perfil === item.allowed ? (
-                    <ActiveLink key={i} href={item.url}
-                    handleDrawerToggle={handleDrawerToggle}
-
+                    <ActiveLink
+                      key={i}
+                      href={item.url}
+                      handleDrawerToggle={handleDrawerToggle}
+                      page={item.title}
                     >
                       {item.icon} {item.title}
                     </ActiveLink>
@@ -182,24 +129,28 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             {loggedUser ? (
               <>
-              
-          <Divider
-            color='white'
-            width='100%'
-            style={{ marginTop: '1rem', marginBottom: '1rem' }}
-          />
+                <Divider
+                  color='white'
+                  width='100%'
+                  style={{ marginTop: '1rem', marginBottom: '1rem' }}
+                />
                 <ActiveLink
-                 handleDrawerToggle={handleDrawerToggle}
+                  handleDrawerToggle={handleDrawerToggle}
                   href={`${routes.private.profile}${loggedUser.id}`}
+                  page={'Perfil'}
                 >
                   <User strokeWidth='1' color='white' /> Perfil
                 </ActiveLink>
-                <a className={styles.navItemContainer}
+                <a
+                  className={styles.navItemContainer}
                   onClick={() => {
                     sessionStorage.removeItem('user');
                     localStorage.removeItem('user');
-                    if(!hasData(localStorage.getItem('user')) && !hasData(sessionStorage.getItem('user'))) Router.push(routes.public.signIn)
-
+                    if (
+                      !hasData(localStorage.getItem('user')) &&
+                      !hasData(sessionStorage.getItem('user'))
+                    )
+                      Router.push(routes.public.signIn);
                   }}
                 >
                   <LogOut strokeWidth='1' color='white' /> LogOut

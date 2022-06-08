@@ -5,7 +5,7 @@ async function getStock() {
       productId: 11,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
-      codigo: 'PR 15723',
+
       quantidade: 20,
     },
     {
@@ -13,7 +13,7 @@ async function getStock() {
       productId: 12,
       stock: 'Indisponível',
       fornecedor: 'Lorem Ipsum',
-      codigo: 'PR 15723',
+
       quantidade: 20,
     },
     {
@@ -21,7 +21,7 @@ async function getStock() {
       productId: 13,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
-      codigo: 'PR 15723',
+
       quantidade: 20,
     },
     {
@@ -29,7 +29,7 @@ async function getStock() {
       productId: 14,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
-      codigo: 'PR 15723',
+
       quantidade: 20,
     },
     {
@@ -37,7 +37,7 @@ async function getStock() {
       productId: 15,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
-      codigo: 'PR 15723',
+
       quantidade: 20,
     },
     {
@@ -45,7 +45,7 @@ async function getStock() {
       productId: 16,
       stock: 'Disponível',
       fornecedor: 'Lorem Ipsum',
-      codigo: 'PR 15723',
+
       quantidade: 20,
     },
   ];

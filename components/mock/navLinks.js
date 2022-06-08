@@ -30,7 +30,7 @@ function getLinks() {
     },
     {
       title: 'Stock',
-      url: routes.private.internal.stock,
+      url: routes.private.internal.stocks,
       icon: <Table color='white' stroke-width='1' />,
       allowed: 'internal',
     },

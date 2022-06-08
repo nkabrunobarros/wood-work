@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import Loader from '../../components/loader/loader'
-import UsersScreen from '../../components/pages/users/users'
-import routes from '../../navigation/routes'
-import { getUsers } from '../../components/mock/Users'
-import getCountries from '../../components/mock/Countries'
+import React, { useEffect, useState } from 'react';
+import Loader from '../../components/loader/loader';
+import UsersScreen from '../../components/pages/users/users';
+import routes from '../../navigation/routes';
+import { getUsers } from '../../components/mock/Users';
+import getCountries from '../../components/mock/Countries';
 
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-export async function getServerSideProps (context) {
-  const res = await getUsers()
-  const res2 = await getCountries()
+export async function getServerSideProps(context) {
+  const res = await getUsers();
+  const res2 = await getCountries();
   return {
-    props: { users: res, countries: res2 } // will be passed to the page component as props
-  }
+    props: { users: res, countries: res2 }, // will be passed to the page component as props
+  };
 }
 const Users = ({ users, countries }) => {
-  const [loaded, setLoaded] = useState(false)
-  const items = users
+  const [loaded, setLoaded] = useState(false);
+  const items = users;
   useEffect(() => {
     setTimeout(() => {
-      setLoaded(true)
-    }, 1500)
-  }, [])
+      setLoaded(true);
+    }, 1500);
+  }, []);
 
   const breadcrumbsPath = [
     {
       title: 'Utilizadores',
-      href: `${routes.private.users}`
-    }
-  ]
+      href: `${routes.private.users}`,
+    },
+  ];
 
   const headCells = [
     {
@@ -55,11 +55,10 @@ const Users = ({ users, countries }) => {
       disablePadding: false,
       label: 'Ações',
     },
-
   ];
   const editRoute = routes.private.internal.editUser;
   const detailRoute = routes.private.internal.user;
-  const newRoute = routes.private.internal.newUser
+  const newRoute = routes.private.internal.newUser;
   const props = {
     items,
     breadcrumbsPath,
@@ -67,16 +66,10 @@ const Users = ({ users, countries }) => {
     editRoute,
     detailRoute,
     headCells,
-    newRoute    
-  }
-  return loaded
-    ? (
-    <UsersScreen {...props} />
-      )
-    : (
-    <Loader center={true} />
-      )
-}
+    newRoute,
+  };
+  return loaded ? <UsersScreen {...props} /> : <Loader center={true} />;
+};
 
 Users.propTypes = {
   items: PropTypes.array,
@@ -87,5 +80,5 @@ Users.propTypes = {
   editRoute: PropTypes.string,
   detailRoute: PropTypes.string,
   newRoute: PropTypes.string,
-}
-export default Users
+};
+export default Users;

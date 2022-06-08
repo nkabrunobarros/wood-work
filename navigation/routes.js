@@ -13,7 +13,7 @@ const routes = {
       newUser: '/internal/new-user',
       editUser: '/internal/edit-user/',
 
-      stock: '/internal/stock',
+      stocks: '/internal/stocks',
       stockId: '/internal/stock/',
 
       ordersSimilar: '/internal/orders-similar',

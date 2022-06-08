@@ -20,13 +20,9 @@ const NewOrder = () => {
     },
   ];
   const props = {
-    breadcrumbsPath
+    breadcrumbsPath,
   };
 
-  return loaded ? (
-    <NewOrderScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  return loaded ? <NewOrderScreen {...props} /> : <Loader center={true} />;
 };
 export default NewOrder;

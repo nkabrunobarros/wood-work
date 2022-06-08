@@ -1,5 +1,5 @@
 //  Nodes
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import Grid from '@mui/material/Grid';
@@ -24,7 +24,6 @@ const Users = ({ ...props }) => {
   const {
     items,
     breadcrumbsPath,
-    // tableCols,
     countries,
     headCells,
     editRoute,
@@ -36,7 +35,15 @@ const Users = ({ ...props }) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pais, setPais] = useState('');
+  const [filters, setFilters] = useState({});
 
+  useEffect(() => {
+    setFilters({
+      nome,
+      email,
+      pais,
+    })
+  },[nome, email, pais])
   const ClearFilters = () => {
     setNome('');
     setEmail('');
@@ -180,6 +187,7 @@ const Users = ({ ...props }) => {
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}
+          filters={filters}
         />
       </Content>
     </Grid>
