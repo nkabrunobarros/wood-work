@@ -8,7 +8,7 @@ function getOrders() {
       produção: 'Não Iniciada',
       distribuição: 'Não',
       nome: 'produ adw',
-      numEncomenda: '1574523',
+      numEncomfenda: '1574523',
       cliente: '1',
       operacao: 'Corte',
       previsto: 22,

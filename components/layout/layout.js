@@ -1,13 +1,12 @@
 // Node modules
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import routes from '../../navigation/routes';
 import Navbar from './navbar/navbar';
 import Footer from './footer/footer';
 import DrawerMobile from './drawer/drawer';
 import { CssBaseline, Hidden } from '@mui/material';
-
 
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
@@ -20,7 +19,7 @@ const noLayoutScreens = [
 
 const Layout = ({ children }) => {
   const path = useRouter();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
@@ -29,12 +28,12 @@ const Layout = ({ children }) => {
     `${routes.private.order}`,
     `${routes.private.orders}`,
     `${routes.private.profile}`,
-  ]
-  
+  ];
+
   let footer = '';
   if (clientPages.includes(path.route)) footer = 'client';
   if (noLayoutScreens.includes(path.route)) return <>{children}</>;
-  
+
   return (
     <div>
       <CssBaseline />

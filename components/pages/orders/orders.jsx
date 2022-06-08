@@ -1,5 +1,5 @@
 //  Nodes
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import PropTypes from 'prop-types';
@@ -35,116 +35,44 @@ const OrdersScreen = ({ ...props }) => {
     items,
     categories,
     panelsInfo,
-    // tableCols,
     breadcrumbsPath,
     detailPage,
     internalPOV,
     cards,
     clients,
-    editPage
+    editPage,
+    headCells,
   } = props;
 
   const rows = items;
 
-  const headCells = [
-    {
-      id: 'numero',
-      numeric: false,
-      disablePadding: false,
-      label: 'Numero',
-    },
-    {
-      id: 'categoria',
-      numeric: false,
-      disablePadding: true,
-      label: 'Categoria',
-    },
-    {
-      id: 'stock',
-      numeric: false,
-      disablePadding: false,
-      label: 'Stock',
-    },
-    {
-      id: 'produção',
-      numeric: false,
-      disablePadding: false,
-      label: 'Produção',
-    },
-    {
-      id: 'distribuição',
-      numeric: false,
-      disablePadding: false,
-      label: 'Em distribuição',
-    },
-    {
-      id: 'actions',
-      numeric: true,
-      disablePadding: false,
-      label: 'Ações',
-    },
-  ];
-
   //  States
   const [number, setNumber] = useState('');
   const [client, setClient] = useState('');
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState('');
   const [stock, setStock] = useState('');
+  const [filters, setFilters] = useState({});
 
   const ClearFilters = () => {
     setNumber('');
     setClient('');
     setCategory('');
     setStock('');
+    setFilters({})
   };
-  // const [page, setPage] = useState(1);
-  // const [entries, setEntries] = useState(5);
-  // const [totalPages, setTotalPages] = useState(0);
-  // const [showingMin, setShowingMin] = useState(0);
-  // const [showingMax, setShowingMax] = useState(entries);
 
-  // const [itemsPerPage, setItemsPerPage] = useState([]);
-  //  Clear Filters to default
-
-  // const handleChangePage = (event, value) => {
-  //   setPage(value);
-  // };
-
-  // useEffect(() => {
-  //   const calculatePages = () => {
-  //     const numPages = Math.ceil(items.length / entries);
-  //     setTotalPages(numPages);
-  //     const res = PaginateItemsPerPage(items, entries, page - 1);
-  //     setItemsPerPage(res.array);
-  //     setShowingMax(res.showingMax);
-  //     setShowingMin(res.showingMin);
-  //   };
-  //   calculatePages();
-  // }, [entries, page]);
-  // eslint-disable-next-line react/prop-types
-  // const DisplayCol = (col, item, index) => {
-  //   if (col === 'em distribuição') {
-  //     return <a>{displayWithStyle(item.distribuição)}</a>;
-  //   } else if (index === 0) {
-  //     return <a className='link'>Nº {displayWithStyle(item[`${col}`])}</a>;
-  //   }
-  //   switch (col) {
-  //     case 'categoria':
-  //       return <a>{DisplayCategory(item[`${col}`])}</a>;
-  //     case 'ações':
-  //       return (
-  //         <>
-  //           <Edit stroke-width="1" className='link' />
-  //           <Trash stroke-width="1" className='link' />
-  //         </>
-  //       );
-  //     default:
-  //       return <a>{displayWithStyle(item[`${col}`])}</a>;
-  //   }
-  // };
+  useEffect(() => {
+    setFilters({
+      numero: number,
+      categoria: category,
+      stock: stock,
+      cliente: client
+    })
+  },[number, client, category, stock])
+  
   const onClientChange = (value) => {
     if (value === null) setClient('');
-    else setClient(value.label);
+    else setClient(value.id);
   };
   return (
     <Grid component='main'>
@@ -284,69 +212,23 @@ const OrdersScreen = ({ ...props }) => {
                 justifyContent: 'flex-end',
               }}
             >
-              {internalPOV ? <PrimaryBtn text='Adicionar' onClick={() => Router.push(routes.private.internal.newOrder)} /> : null}
+              {internalPOV ? (
+                <PrimaryBtn
+                  text='Adicionar'
+                  onClick={() => Router.push(routes.private.internal.newOrder)}
+                />
+              ) : null}
             </div>
-            {/* <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                flexDirection: 'row',
-              }}
-            >
-              Visualizar
-              <Select
-                value={entries}
-                onChange={(e) => setEntries(e.target.value)}
-              >
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-              </Select>
-              Itens
-              <div className='spacer'>|</div>
-              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}{' '}
-              itens
-              <div className='spacer'></div>
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={handleChangePage}
-                siblingCount={0}
-                color='primary'
-                className={'pagination'}
-              />
-            </div> */}
           </div>
-
-          {/* <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handleChangePage}
-            siblingCount={0}
-            color='primary'
-            className={'pagination mobile'}
-          /> */}
         </div>
-        {/* <CustomTable columns={tableCols}>
-          {itemsPerPage
-            .filter((item) => item.stock.includes(stock))
-            .map((item, i) => (
-              <tr
-                key={item.numero}
-                onClick={() =>
-                  Router.push({ pathname: `${detailPage}${item.numero}` })
-                }
-              >
-                {tableCols.map((element, i) => (
-                  <td key={element.id} data-label={tableCols[i].toUpperCase()}>
-                    {DisplayCol(element, item, i)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-        </CustomTable> */}
-        <AdvancedTable rows={rows} headCells={headCells} clickRoute={detailPage} editRoute={editPage}></AdvancedTable>
+
+        <AdvancedTable
+          rows={rows}
+          headCells={headCells}
+          filters={filters}
+          clickRoute={detailPage}
+          editRoute={editPage}
+        />
       </Content>
     </Grid>
   );
@@ -354,7 +236,6 @@ const OrdersScreen = ({ ...props }) => {
 OrdersScreen.propTypes = {
   items: PropTypes.array,
   categories: PropTypes.array,
-  tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
   clients: PropTypes.array,
@@ -362,5 +243,6 @@ OrdersScreen.propTypes = {
   editPage: PropTypes.string,
   internalPOV: PropTypes.boolean,
   cards: PropTypes.arrayOf(PropTypes.object),
+  headCells: PropTypes.array,
 };
 export default OrdersScreen;

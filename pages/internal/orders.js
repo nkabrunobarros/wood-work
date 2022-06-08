@@ -76,13 +76,49 @@ const Orders = ({ categories, orders, clients }) => {
       color: 'var(--babyblue)',
     },
   ];
-  const tableCols = [
-    'numero',
-    'categoria',
-    'stock',
-    'produção',
-    'em distribuição',
-    'ações',
+  const headCells = [
+    {
+      id: 'numero',
+      numeric: false,
+      disablePadding: false,
+      label: 'Numero',
+    },
+    {
+      id: 'cliente',
+      numeric: false,
+      disablePadding: true,
+      label: 'Cliente',
+    },
+    {
+      id: 'categoria',
+      numeric: false,
+      disablePadding: true,
+      label: 'Categoria',
+    },
+    {
+      id: 'stock',
+      numeric: false,
+      disablePadding: false,
+      label: 'Stock',
+    },
+    {
+      id: 'produção',
+      numeric: false,
+      disablePadding: false,
+      label: 'Produção',
+    },
+    {
+      id: 'distribuição',
+      numeric: false,
+      disablePadding: false,
+      label: 'Em distribuição',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
+    },
   ];
 
   const detailPage = routes.private.internal.order;
@@ -92,7 +128,7 @@ const Orders = ({ categories, orders, clients }) => {
     categories,
     items,
     panelsInfo,
-    tableCols,
+    headCells,
     breadcrumbsPath,
     detailPage,
     internalPOV,
@@ -100,17 +136,13 @@ const Orders = ({ categories, orders, clients }) => {
     clients,
     editPage,
   };
-  return loaded ? (
-    <OrdersScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />;
 };
 Orders.propTypes = {
   categories: PropTypes.array,
   orders: PropTypes.array,
   panelsInfo: PropTypes.object,
-  tableCols: PropTypes.array,
+  headCells: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   clients: PropTypes.array,
   detailPage: PropTypes.string,

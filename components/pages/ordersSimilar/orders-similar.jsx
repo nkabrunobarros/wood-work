@@ -1,185 +1,58 @@
 //  Nodes
-import React, {
-  // useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import {
-  // Eye,
-  Filter,
-  X,
-} from 'lucide-react';
+import { Filter, X } from 'lucide-react';
 import Content from '../../content/content';
 import {
   Autocomplete,
   Button,
   ButtonGroup,
   Chip,
-  // MenuItem,
-  // Pagination,
-  // Select,
   TextField,
 } from '@mui/material';
 
-// import CustomTable from '../../table/table';
-// import Router from 'next/router';
-// import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import hasData from '../../utils/hasData';
 
 import AdvancedTable from '../../advancedTable/AdvancedTable';
-// import { FilterItem } from '../../utils/FilterItem';
+
 const OrdersScreen = ({ ...props }) => {
   const {
     items,
-    // tableCols,
     breadcrumbsPath,
-    // detailPage,
     woodTypes,
     products,
     clients,
     operations,
+    headCells,
+    headCellsUpper,
   } = props;
   const rows = items;
-  //  States Pagination
-  // const [page, setPage] = useState(1);
-  // const [entries, setEntries] = useState(5);
-  // const [totalPages, setTotalPages] = useState(0);
-  // const [showingMin, setShowingMin] = useState(0);
-  // const [showingMax, setShowingMax] = useState(entries);
-  // const [itemsPerPage, setItemsPerPage] = useState([]);
+
   //  Modal State
   const [modal, setModal] = useState(false);
   // Filters States
-  const [client, setClient] = useState(null);
+  const [client, setClient] = useState('');
   const [woodType, setWoodType] = useState(null);
   const [totalTime, setTotalTime] = useState('');
   const [orderId, setOrderId] = useState('');
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState('');
   const [totalArea, setTotalArea] = useState('');
   const [cost, setCost] = useState('');
   const [operation, setOperation] = useState(null);
+  const [filters, setFilters] = useState({});
 
-  const headCellsUpper = [
-    {
-      id: 'orderAmount',
-      numeric: false,
-      disablePadding: false,
-      borderLeft: false,
-      borderRight: false,
-      label: 'Quantidade Produzida:12 Un',
-      span: 6,
-    },
-    {
-      id: 'orderAmount',
-      numeric: false,
-      disablePadding: false,
-      borderLeft: true,
-      borderRight: true,
-      label: 'Quantidade Encomendada:12 Un',
-      span: 1,
-    },
-    {
-      id: 'orderAmount',
-      numeric: false,
-      disablePadding: false,
-      borderLeft: false,
-      borderRight: false,
-      label: 'Por unidade',
-      span: 5,
-    },
-  ];
-  const headCells = [
-    {
-      id: 'productId',
-      numeric: false,
-      disablePadding: false,
-      label: 'Nome',
-    },
-    {
-      id: 'cliente',
-      numeric: false,
-      disablePadding: true,
-      label: 'Cliente',
-    },
-    {
-      id: 'numero',
-      numeric: false,
-      disablePadding: false,
-      label: 'Num. Encomenda',
-    },
-    {
-      id: 'previsto',
-      numeric: false,
-      disablePadding: false,
-      label: 'Previsto',
-    },
-    {
-      id: 'realizado',
-      numeric: false,
-      disablePadding: false,
-      label: 'Realizado',
-    },
-    {
-      id: 'desvio',
-      numeric: false,
-      disablePadding: false,
-      label: 'Desvio',
-    },
-    {
-      id: 'horasAtuais',
-      numeric: false,
-      disablePadding: false,
-      borderLeft: true,
-      borderRight: true,
-      label: 'Horas Atuais',
-    },
-    {
-      id: 'previsto2',
-      numeric: false,
-      disablePadding: false,
-      label: 'Previsto',
-    },
-    {
-      id: 'custo',
-      numeric: false,
-      disablePadding: false,
-      label: 'Custo',
-    },
-    {
-      id: 'realizado2',
-      numeric: false,
-      disablePadding: false,
-      label: 'Realizado',
-    },
-    {
-      id: 'desvio2',
-      numeric: false,
-      disablePadding: false,
-      label: 'Desvio',
-    },
-    {
-      id: 'actions',
-      numeric: true,
-      disablePadding: false,
-      label: 'Ações',
-    },
-  ];
-
-  // const handleChangePage = (event, value) => {
-  //   setPage(value);
-  // };
   const handleClick = (event) => {
     setModal(!modal);
   };
   const onClientChange = (value) => {
     if (value === null) setClient('');
-    else setClient(value);
+    else setClient(value.id);
   };
   const onWoodTypeChange = (value) => {
     if (value === null) setWoodType('');
@@ -187,7 +60,7 @@ const OrdersScreen = ({ ...props }) => {
   };
   const onProductChange = (value) => {
     if (value === null) setProduct('');
-    else setProduct(value);
+    else setProduct(value.id);
   };
   const onOperationChange = (value) => {
     if (value === null) setOperation('');
@@ -195,40 +68,48 @@ const OrdersScreen = ({ ...props }) => {
   };
   const ApplyFilters = () => {
     // Set Filters
-    setModal(!modal);
+    setFilters({
+      cliente: client,
+      productId: product,
+      numEncomenda: orderId,
+    });
   };
+
   const ClearFilters = () => {
-    setClient(null);
+    setClient('');
     setWoodType(null);
-    setProduct(null);
+    setProduct('');
     setOperation(null);
     setTotalTime('');
     setOrderId('');
     setTotalArea('');
     setCost('');
+    setFilters({
+      cliente: '',
+      productId: '',
+      setOrderId: '',
+    });
   };
 
-  const DisplayBalloonFilter = (item, onRemove) => {
-    if (hasData(item))
+  const DisplayBalloonFilter = (item, property, onRemove) => {
+    if (hasData(item)) {
+      if (property === 'client')
+        item = clients.find((element) => element.id === item);
+      if (property === 'product')
+        item = products.find((element) => element.id === item);
       return (
-<Chip
-         label= {typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
-         deleteIcon={<X />}
-         onDelete={onRemove}
-       />
+        <Chip
+          label={typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
+          deleteIcon={<X />}
+          onDelete={onRemove}
+        />
       );
+    }
   };
-  // useEffect(() => {
-  //   const calculatePages = () => {
-  //     const numPages = Math.ceil(items.length / entries);
-  //     setTotalPages(numPages);
-  //     const res = PaginateItemsPerPage(items, entries, page - 1);
-  //     setItemsPerPage(res.array);
-  //     setShowingMax(res.showingMax);
-  //     setShowingMin(res.showingMin);
-  //   };
-  //   calculatePages();
-  // }, [entries, page]);
+
+  useEffect(() => {
+    ApplyFilters();
+  }, [client, product, operation, orderId]);
 
   return (
     <Grid component='main'>
@@ -244,14 +125,28 @@ const OrdersScreen = ({ ...props }) => {
             </div>
             <div className='activeFilterBalloonContainer'>
               {/* Filter Balloons here */}
-              {DisplayBalloonFilter(client, () => setClient(null))}
-              {DisplayBalloonFilter(woodType, () => setWoodType(null))}
-              {DisplayBalloonFilter(product, () => setProduct(null))}
-              {DisplayBalloonFilter(operation, () => setOperation(null))}
-              {DisplayBalloonFilter(totalTime, () => setTotalTime(''))}
-              {DisplayBalloonFilter(orderId, () => setOrderId(''))}
-              {DisplayBalloonFilter(totalArea, () => setTotalArea(''))}
-              {DisplayBalloonFilter(cost, () => setCost(''))}
+              {DisplayBalloonFilter(filters.cliente, 'client', () =>
+                setClient('')
+              )}
+              {DisplayBalloonFilter(filters.woodType, 'woodType', () =>
+                setWoodType(null)
+              )}
+              {DisplayBalloonFilter(filters.productId, 'product', () =>
+                setProduct('')
+              )}
+              {DisplayBalloonFilter(filters.operacao, 'operacao', () =>
+                setOperation(null)
+              )}
+              {DisplayBalloonFilter(filters.totalTime, 'totalTime', () =>
+                setTotalTime('')
+              )}
+              {DisplayBalloonFilter(filters.orderId, 'orderId', () =>
+                setOrderId('')
+              )}
+              {DisplayBalloonFilter(filters.totalArea, 'totalArea', () =>
+                setTotalArea('')
+              )}
+              {DisplayBalloonFilter(filters.cost, 'cost', () => setCost(''))}
             </div>
           </div>
           <div
@@ -279,18 +174,21 @@ const OrdersScreen = ({ ...props }) => {
                 >
                   <div className='filterPopupCol'>
                     <Autocomplete
-                      id='country-select-demo'
+                      disablePortal
+                      id='combo-box-demo'
                       options={clients}
-                      autoHighlight
-                      value={client || null}
-                      onChange={(event, value) => onClientChange(value)}
                       getOptionLabel={(option) => option.nome}
+                      onChange={(event, value) => onClientChange(value)}
                       renderInput={(params) => (
                         <TextField
-                          variant='standard'
                           {...params}
+                          fullWidth
+                          variant='standard'
                           value={client}
-                          label='Cliente'
+                          onChange={(event, value) =>
+                            setClient(event.target.value)
+                          }
+                          placeholder='Cliente'
                         />
                       )}
                     />
@@ -327,18 +225,21 @@ const OrdersScreen = ({ ...props }) => {
                   </div>
                   <div className='filterPopupCol'>
                     <Autocomplete
-                      id='country-select-demo'
+                      disablePortal
+                      id='combo-box-demo'
                       options={products}
-                      autoHighlight
                       getOptionLabel={(option) => option.nome}
-                      value={product || null}
                       onChange={(event, value) => onProductChange(value)}
                       renderInput={(params) => (
                         <TextField
-                          variant='standard'
                           {...params}
-                          label='Produto'
+                          fullWidth
+                          variant='standard'
                           value={product}
+                          onChange={(event, value) =>
+                            setClient(event.target.value)
+                          }
+                          placeholder='Produto'
                         />
                       )}
                     />
@@ -361,7 +262,6 @@ const OrdersScreen = ({ ...props }) => {
                       options={operations}
                       autoHighlight
                       onChange={(event, value) => onOperationChange(value)}
-                      getOptionLabel={(option) => option.label}
                       value={operation || null}
                       renderInput={(params) => (
                         <TextField
@@ -394,51 +294,14 @@ const OrdersScreen = ({ ...props }) => {
                 <Filter />
               </Button>
             </div>
-            {/* <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              Visualizar
-              <Select
-                value={entries}
-                onChange={(e) => setEntries(e.target.value)}
-              >
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-              </Select>{' '}
-              Itens
-              <div className='spacer'>|</div>
-              Mostrar {showingMin} a {showingMax} de {Object.keys(items).length}
-              itens
-              <div className='spacer'></div>
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={handleChangePage}
-                siblingCount={0}
-                color='primary'
-                className={'pagination'}
-              />
-            </div> */}
           </div>
-          {/* <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handleChangePage}
-            siblingCount={0}
-            color='primary'
-            className={'pagination mobile'}
-          /> */}
         </div>
         <AdvancedTable
           rows={rows}
           headCells={headCells}
           headCellsUpper={headCellsUpper}
-        ></AdvancedTable>
+          filters={filters}
+        />
       </Content>
     </Grid>
   );
@@ -448,6 +311,8 @@ OrdersScreen.propTypes = {
   panelsInfo: PropTypes.object,
   detailPage: PropTypes.string,
   clients: PropTypes.array,
+  headCells: PropTypes.array,
+  headCellsUpper: PropTypes.array,
   items: PropTypes.arrayOf(PropTypes.object),
   products: PropTypes.arrayOf(PropTypes.object),
   woodTypes: PropTypes.arrayOf(PropTypes.object),

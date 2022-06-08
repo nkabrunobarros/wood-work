@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import styles from '../../styles/components/primaryBtn.module.css'
 import { Button } from '@mui/material'
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children }) => {
   const style = {
     color: light ? 'var(--primary)' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
@@ -17,9 +17,10 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder }) => {
 
   }
   return (
-    <Button className={styles.main} onClick={onClick} title={text} style={style}>
+    <Button className={styles.main} onClick={onClick} title={text} style={style} component='label'>
         {icon}
         {text}
+        {children}
     </Button>
   )
 }
@@ -29,7 +30,9 @@ PrimaryBtn.propTypes = {
   light: PropTypes.number,
   color: PropTypes.string,
   onClick: PropTypes.any,
+  children: PropTypes.any,
   disabled: PropTypes.boolean,
-  noBorder: PropTypes.boolean
+  noBorder: PropTypes.boolean,
+
 }
 export default PrimaryBtn

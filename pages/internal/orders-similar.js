@@ -43,6 +43,112 @@ const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
     },
   ];
 
+  const headCellsUpper = [
+    {
+      id: 'amountProduced',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: false,
+      borderRight: false,
+      label: 'Quantidade Produzida:12 Un',
+      span: 6,
+    },
+    {
+      id: 'orderAmount',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: true,
+      borderRight: true,
+      label: 'Quantidade Encomendada:25 Un',
+      span: 1,
+    },
+    {
+      id: 'perUnit',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: false,
+      borderRight: false,
+      label: 'Por unidade',
+      span: 5,
+    },
+  ];
+  const headCells = [
+    {
+      id: 'productId',
+      numeric: false,
+      disablePadding: false,
+      label: 'Nome',
+    },
+    {
+      id: 'cliente',
+      numeric: false,
+      disablePadding: true,
+      label: 'Cliente',
+    },
+    {
+      id: 'numero',
+      numeric: false,
+      disablePadding: false,
+      label: 'Num. Encomenda',
+    },
+    {
+      id: 'previsto',
+      numeric: false,
+      disablePadding: false,
+      label: 'Previsto',
+    },
+    {
+      id: 'realizado',
+      numeric: false,
+      disablePadding: false,
+      label: 'Realizado',
+    },
+    {
+      id: 'desvio',
+      numeric: false,
+      disablePadding: false,
+      label: 'Desvio',
+    },
+    {
+      id: 'horasAtuais',
+      numeric: false,
+      disablePadding: false,
+      borderLeft: true,
+      borderRight: true,
+      label: 'Horas Atuais',
+    },
+    {
+      id: 'previsto2',
+      numeric: false,
+      disablePadding: false,
+      label: 'Previsto',
+    },
+    {
+      id: 'custo',
+      numeric: false,
+      disablePadding: false,
+      label: 'Custo',
+    },
+    {
+      id: 'realizado2',
+      numeric: false,
+      disablePadding: false,
+      label: 'Realizado',
+    },
+    {
+      id: 'desvio2',
+      numeric: false,
+      disablePadding: false,
+      label: 'Desvio',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
+    },
+  ];
+
   const panelsInfo = {
     budgeting: 2,
     drawing: 1,
@@ -105,12 +211,10 @@ const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
     woodTypes,
     products,
     operations,
+    headCellsUpper,
+    headCells,
   };
-  return loaded ? (
-    <OrdersScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />;
 };
 OrdersSimilar.propTypes = {
   items: PropTypes.array,
@@ -123,6 +227,8 @@ OrdersSimilar.propTypes = {
   woodTypes: PropTypes.array,
   products: PropTypes.array,
   operations: PropTypes.array,
+  headCellsUpper: PropTypes.array,
+  headCells: PropTypes.array,
 };
 
 export default OrdersSimilar;

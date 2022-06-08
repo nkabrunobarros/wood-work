@@ -11,27 +11,73 @@ const Order = () => {
 
   const docs = [
     {
-      id: Math.random(),
+      id: 1,
       name: 'Desenho 1',
       data: '11/03/2022',
+      fileSize: ' 150 Mb',
+      createdAt: '11 de Fevereiro 2022',
+      updatedAt: '02 de Março de 2022',
     },
     {
-      id: Math.random(),
+      id: 2,
       name: 'Maquete 1',
-      data: '11/03/2022',
+      data: '12/03/2022',
+      fileSize: ' 170 Mb',
+      createdAt: '11 de Janeiro 2022',
+      updatedAt: '04 de Março de 2022',
     },
     {
-      id: Math.random(),
+      id: 3,
       name: 'Desenho 2',
-      data: '11/03/2022',
+      data: '13/03/2022',
+      fileSize: ' 22 Mb',
+      createdAt: '14 de Fevereiro 2022',
+      updatedAt: '01 de Março de 2022',
     },
     {
-      id: Math.random(),
-      name: 'Maquete 1',
-      data: '11/03/2022',
+      id: 4,
+      name: 'Maquete 2',
+      data: '14/03/2022',
+      fileSize: ' 1 Gb',
+      createdAt: '23 de Fevereiro 2022',
+      updatedAt: '22 de Março de 2022',
     },
   ];
-
+  const headCellsDocs = [
+    {
+      id: 'nome',
+      label: 'Nome',
+      width: '80%',
+    },
+    {
+      id: 'date',
+      label: 'Data',
+      width: '10%',
+    },
+    {
+      id: 'actions',
+      label: 'Ações',
+      width: '10%',
+    },
+    {},
+  ];
+  const headCellsMessages = [
+    {
+      id: 'mensagem',
+      label: 'Mensagem',
+      width: '80%',
+    },
+    {
+      id: 'date',
+      label: 'Data',
+      width: '10%',
+    },
+    {
+      id: 'actions',
+      label: 'Ações',
+      width: '10%',
+    },
+  ];
   const breadcrumbsPath = [
     {
       title: 'Encomendas',
@@ -52,11 +98,9 @@ const Order = () => {
     orderId,
     docs,
     breadcrumbsPath,
+    headCellsMessages,
+    headCellsDocs,
   };
-  return loaded ? (
-    <OrderScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  return loaded ? <OrderScreen {...props} /> : <Loader center={true} />;
 };
 export default Order;

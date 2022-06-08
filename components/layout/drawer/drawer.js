@@ -192,7 +192,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
                  handleDrawerToggle={handleDrawerToggle}
                   href={`${routes.private.profile}${loggedUser.id}`}
                 >
-                  <User strokeWidth='1' color='white' /> Profile
+                  <User strokeWidth='1' color='white' /> Perfil
                 </ActiveLink>
                 <a className={styles.navItemContainer}
                   onClick={() => {

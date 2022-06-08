@@ -34,7 +34,7 @@ const Profile = ({ users }) => {
 
   const breadcrumbsPath = [
     {
-      title: `${user.nome}`,
+      title: `Perfil`,
       href: `${routes.private.internal.user}`,
     },
   ];

@@ -8,9 +8,14 @@ import OrdersScreen from '../components/pages/orders/orders';
 import PropTypes from 'prop-types';
 
 import { getCategories } from '../components/mock/Categories';
-import {getOrders} from '../components/mock/Orders';
+import { getOrders } from '../components/mock/Orders';
 import routes from '../navigation/routes';
-import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
+import {
+  AlertOctagon,
+  Layers,
+  LayoutTemplate,
+  PackageCheck,
+} from 'lucide-react';
 
 export async function getServerSideProps(context) {
   const res = await getCategories();
@@ -36,74 +41,101 @@ const Orders = ({ categories, orders }) => {
     },
   ];
   const items = orders;
-
+  const headCells = [
+    {
+      id: 'numero',
+      numeric: false,
+      disablePadding: false,
+      label: 'Numero',
+    },
+    {
+      id: 'categoria',
+      numeric: false,
+      disablePadding: true,
+      label: 'Categoria',
+    },
+    {
+      id: 'stock',
+      numeric: false,
+      disablePadding: false,
+      label: 'Stock',
+    },
+    {
+      id: 'produção',
+      numeric: false,
+      disablePadding: false,
+      label: 'Produção',
+    },
+    {
+      id: 'distribuição',
+      numeric: false,
+      disablePadding: false,
+      label: 'Em distribuição',
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      disablePadding: false,
+      label: 'Ações',
+    },
+  ];
   const panelsInfo = {
     budgeting: 2,
     drawing: 1,
     production: 3,
     concluded: 7,
   };
-  const tableCols = [
-    'numero',
-    'categoria',
-    'stock',
-    'produção',
-    'em distribuição',
-    'ações',
-  ];
 
   const detailPage = routes.private.order;
+
   const cards = [
     {
       num: 1,
       title: 'Em Orçamentação',
       amount: 2,
       icon: <PackageCheck size={40} />,
-      color: 'var(--primary)'
+      color: 'var(--primary)',
     },
     {
       num: 2,
       title: 'Em Desenho',
       amount: 1,
       icon: <LayoutTemplate size={40} />,
-      color: 'var(--green)'
+      color: 'var(--green)',
     },
     {
       num: 3,
       title: 'Em Produção',
       amount: 3,
       icon: <Layers size={40} />,
-      color: 'var(--orange)'
+      color: 'var(--orange)',
     },
     {
       num: 4,
       title: 'Concluidas',
       amount: 7,
       icon: <AlertOctagon size={40} />,
-      color: 'var(--babyblue)'
+      color: 'var(--babyblue)',
     },
-  ]
+  ];
 
   const props = {
     categories,
     items,
     panelsInfo,
-    tableCols,
+    headCells,
     breadcrumbsPath,
     detailPage,
-    cards
+    cards,
+
   };
-  return loaded ? (
-    <OrdersScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />;
 };
 Orders.propTypes = {
   categories: PropTypes.array,
   orders: PropTypes.array,
   panelsInfo: PropTypes.object,
-  tableCols: PropTypes.array,
+  headCells: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   cards: PropTypes.arrayOf(PropTypes.object),
   detailPage: PropTypes.any,
