@@ -1,41 +1,47 @@
 //  Nodes
-import React, { useState } from 'react'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import styles from '../../../styles/SignIn.module.css'
-import { Checkbox, FormControlLabel } from '@mui/material'
-import Footer from '../../layout/footer/footer'
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import styles from '../../../styles/SignIn.module.css';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import Footer from '../../layout/footer/footer';
 
 //  Navigation
-import Router from 'next/router'
-import routes from '../../../navigation/routes'
-import { ChevronLeft } from 'lucide-react'
+import Router from 'next/router';
+import routes from '../../../navigation/routes';
+import { ChevronLeft } from 'lucide-react';
+import Image from 'next/image';
+import backgroundImgTos from '../../../public/tos.png';
+import backgroundImgTerms from '../../../public/Consentimento.png';
 
 const Terms = ({ ...props }) => {
-  const [acceptedTerms, setAcceptedTerms] = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   // eslint-disable-next-line react/prop-types
-  const { readOnly } = props
+  const { readOnly } = props;
   const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email')
-    })
-  }
-
-  let classStyle = ''
-
-  if (readOnly) classStyle = 'sidePanelTos'
-  else classStyle = 'sidePanelTerms'
+    event.preventDefault();
+    // const data = new FormData(event.currentTarget);
+  };
 
   return (
-    <Grid container component='main' sx={{ height: '100%' }}>
+    <Grid container component='main' sx={{ height: '100%', width: '100%' }}>
       <CssBaseline />
-      <Grid className={`${classStyle}`} item xs={false} sm={4} md={7}>
+      <Grid item xs={false} sm={4} md={7}>
+      <div
+          style={{
+            position: 'absolute',
+            zIndex: -1,
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          <Image src={readOnly ? backgroundImgTerms: backgroundImgTos} layout='fill' />
+        </div>
         <Box
           className={styles.logo}
           sx={{
@@ -43,7 +49,7 @@ const Terms = ({ ...props }) => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100vh'
+            height: '100vh',
           }}
         >
           <div className={styles.logoImg}>
@@ -51,36 +57,38 @@ const Terms = ({ ...props }) => {
               styles={{
                 width: '300px',
                 height: '300px',
-                position: 'absolute'
+                position: 'absolute',
               }}
             ></div>
           </div>
         </Box>
       </Grid>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={24} square>
-        {readOnly
-          ? (
+      <Grid item xs={12} sm={6} md={5} component={Paper} elevation={24} square>
+        {readOnly ? (
           <div
             style={{
               position: 'absolute',
               marginTop: '2rem',
-              marginLeft: '2rem'
+              marginLeft: '2rem',
             }}
           >
-            <Button color="default" onClick={() => Router.back()} style={{ textTransform: 'none' }}>
+            <Button
+              color='default'
+              onClick={() => Router.back()}
+              style={{ textTransform: 'none' }}
+            >
               <ChevronLeft />
               <a>Voltar</a>
             </Button>
           </div>
-            )
-          : null}
+        ) : null}
         <Box
           sx={{
-            my: '25%',
+            my: '10%',
             mx: '15%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'start'
+            alignItems: 'start',
           }}
         >
           <Typography color={'primary'}>Portal Interno WW4.0</Typography>
@@ -90,8 +98,9 @@ const Terms = ({ ...props }) => {
           <Typography
             variant='h7'
             style={{
-              maxHeight: '60vh',
-              overflow: 'scroll'
+              maxHeight: '68vh',
+              overflow: 'scroll',
+              overflowX: 'hidden',
             }}
           >
             Bem-vindo ao Portal de Cliente WW4.0. Estes termos e condições
@@ -158,9 +167,7 @@ const Terms = ({ ...props }) => {
             fornecidos sem qualquer custo, não seremos responsáveis por qualquer
             perda ou dano de qualquer natureza.
           </Typography>
-          {readOnly
-            ? null
-            : (
+          {readOnly ? null : (
             <Box
               component='form'
               noValidate
@@ -189,7 +196,7 @@ const Terms = ({ ...props }) => {
                 Entrar
               </Button>
             </Box>
-              )}
+          )}
         </Box>
         <Footer
           section=''
@@ -197,6 +204,6 @@ const Terms = ({ ...props }) => {
         />
       </Grid>
     </Grid>
-  )
-}
-export default Terms
+  );
+};
+export default Terms;
