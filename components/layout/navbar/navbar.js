@@ -20,6 +20,8 @@ const Navbar = ({ openDrawer }) => {
               width={80}
               height={80}
               layout='responsive'
+              placeholder='blur'
+              priority
             />
           </div>
           <IconButton

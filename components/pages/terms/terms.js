@@ -31,16 +31,21 @@ const Terms = ({ ...props }) => {
     <Grid container component='main' sx={{ height: '100%', width: '100%' }}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7}>
-      <div
+        <div
           style={{
             position: 'absolute',
             zIndex: -1,
             overflow: 'hidden',
             width: '100%',
-            height: '100%'
+            height: '100%',
           }}
         >
-          <Image src={readOnly ? backgroundImgTerms: backgroundImgTos} layout='fill' />
+          <Image
+            src={readOnly ? backgroundImgTerms : backgroundImgTos}
+            layout='fill'
+            placeholder="blur"
+            priority
+          />
         </div>
         <Box
           className={styles.logo}
@@ -98,7 +103,7 @@ const Terms = ({ ...props }) => {
           <Typography
             variant='h7'
             style={{
-              maxHeight: '68vh',
+              maxHeight: readOnly ? '68vh' : '50vh',
               overflow: 'scroll',
               overflowX: 'hidden',
             }}
@@ -198,10 +203,7 @@ const Terms = ({ ...props }) => {
             </Box>
           )}
         </Box>
-        <Footer
-          section=''
-          page={'Termos e Condições | Politica de Privacidade'}
-        />
+        <Footer />
       </Grid>
     </Grid>
   );

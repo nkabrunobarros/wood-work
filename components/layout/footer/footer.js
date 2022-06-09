@@ -6,7 +6,7 @@ import React from 'react';
 import routes from '../../../navigation/routes';
 import Tooltip from '@mui/material/Tooltip';
 import Image from 'next/image';
-import logosFooter from '../../../public/Fundos-Europeus.png'
+import logosFooter from '../../../public/Fundos-Europeus.png';
 // Pages without layout (sidebar + navbar + footer)
 function Copyright(props) {
   return (
@@ -47,14 +47,24 @@ const Footer = ({ section }) => {
             <Copyright />
           </div>
           <div style={{ paddingRight: '1rem' }}>
-            <Image src={logosFooter} layout='intrinsic' />
+            <Image
+              placeholder='blur'
+              priority
+              src={logosFooter}
+              layout='intrinsic'
+            />
           </div>
         </>
       ) : (
         <>
           <div style={{ paddingLeft: '1rem' }}>
-            <div >
-            <Image src={logosFooter} layout='intrinsic' />
+            <div>
+              <Image
+                placeholder='blur'
+                priority
+                src={logosFooter}
+                layout='intrinsic'
+              />
             </div>
           </div>
           <div
