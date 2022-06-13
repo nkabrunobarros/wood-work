@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getOrders } from '../../../components/mock/Orders';
+import { getOrders } from "../../../components/mock/Orders";
 
 export default async function getAllOrders(req, res) {
   await getOrders().then((data) => {

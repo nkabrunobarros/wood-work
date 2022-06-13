@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import InfoCard from '../../cards/infoCard';
-// import { Edit, Trash } from 'lucide-react';
 import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import {
@@ -15,18 +14,12 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
-  // Pagination,
   Select,
   TextField,
 } from '@mui/material';
 import routes from '../../../navigation/routes';
 
 import styles from '../../../styles/Orders.module.css';
-// import CustomTable from '../../table/table';
-// import Router from 'next/router';
-// import PaginateItemsPerPage from '../../utils/PaginateItemsPerPage';
-// import displayWithStyle from '../../utils/displayTextWithStyle';
-// import DisplayCategory from '../../utils/DisplayCategory';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Router from 'next/router';
 
@@ -68,8 +61,8 @@ const OrdersScreen = ({ ...props }) => {
       stock,
       cliente: client
     })
-  },[number, client, category, stock])
-  
+  }, [number, client, category, stock])
+
   const onClientChange = (value) => {
     if (value === null) setClient('');
     else setClient(value.id);
@@ -109,7 +102,7 @@ const OrdersScreen = ({ ...props }) => {
             <div className={styles.filterContainer}>
               <InputLabel htmlFor='email'>Número</InputLabel>
               <OutlinedInput
-                
+
                 fullWidth
                 id='number'
                 name='number'

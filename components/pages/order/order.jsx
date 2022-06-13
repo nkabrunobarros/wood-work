@@ -46,7 +46,7 @@ import AdvancedTable from '../../advancedTable/AdvancedTable';
 
 const Order = ({ ...props }) => {
   const {
-    orderId,
+    order,
     docs,
     breadcrumbsPath,
     internalPOV,
@@ -231,7 +231,7 @@ const Order = ({ ...props }) => {
       <Content>
         <div id='pad'>
           <div style={{ display: 'flex', marginBottom: '1rem' }}>
-            <a className='headerTitleXl'>Encomenda Nº {orderId}</a>
+            <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
             <div style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
                 icon={<Tag strokeWidth='1' />}
@@ -290,7 +290,7 @@ const Order = ({ ...props }) => {
           )}
         </div>
       </Content>
-      
+
       {/* Produção section */}
       {internalPOV ? (
         <Content>
@@ -521,7 +521,7 @@ const Order = ({ ...props }) => {
                 </div>
               </div>
             </div>
-           
+
             <AdvancedTable headCells={headCellsDocs} rows={docs} noPagination>
               {docs.map((doc, i) => (
                 <TableRow
@@ -650,17 +650,17 @@ const Order = ({ ...props }) => {
   );
 };
 Order.propTypes = {
-  orderId: PropTypes.string,
+  order: PropTypes.string,
   docs: PropTypes.arrayOf(PropTypes.object),
   orders: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.array,
-  internalPOV: PropTypes.boolean ,
-  productionDetail: PropTypes.array ,
-  headCellsUpperProductionDetail: PropTypes.array ,
-  headCellsProductionDetail: PropTypes.array ,
-  headCellsOrderDetail: PropTypes.array ,
-  headCellsUpperOrderDetail: PropTypes.array ,
-  headCellsMessages: PropTypes.array ,
-  headCellsDocs: PropTypes.array ,
+  internalPOV: PropTypes.boolean,
+  productionDetail: PropTypes.array,
+  headCellsUpperProductionDetail: PropTypes.array,
+  headCellsProductionDetail: PropTypes.array,
+  headCellsOrderDetail: PropTypes.array,
+  headCellsUpperOrderDetail: PropTypes.array,
+  headCellsMessages: PropTypes.array,
+  headCellsDocs: PropTypes.array,
 };
 export default Order;

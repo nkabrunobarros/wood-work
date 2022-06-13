@@ -1,47 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import Loader from '../../components/loader/loader';
-import UsersScreen from '../../components/pages/users/users';
-import routes from '../../navigation/routes';
-import getCountries from '../../components/mock/Countries';
-import { getClients } from '../../components/mock/Clients';
+import React, { useEffect, useState } from "react";
+import Loader from "../../components/loader/loader";
+import UsersScreen from "../../components/pages/users/users";
+import routes from "../../navigation/routes";
+import getCountries from "../../components/mock/Countries";
 
-import PropTypes from 'prop-types';
-import hasData from '../../components/utils/hasData';
-// import useAuthValidation from '../../hooks/useAuthValidation/useAuthValidation';
+import PropTypes from "prop-types";
+import hasData from "../../components/utils/hasData";
+import clientService from "../../services/clients/client-service";
 
 export async function getServerSideProps(context) {
-  const res = await getClients();
   const res2 = await getCountries();
   return {
-    props: { users: res, countries: res2 }, // will be passed to the page component as props
+    props: { countries: res2 }, // will be passed to the page component as props
   };
 }
-const Clients = ({ hasFullyLoaded, users, countries, ...pageProps }) => {
+const Clients = ({ hasFullyLoaded, countries, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const items = users;
+  const [clients, setClients] = useState();
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
     }, 500);
   }, []);
+  useEffect(() => {
+    const getData = async () => {
+      await clientService
+        .getAllClients()
+        .then((res) => setClients(res.data.data));
+    };
+    getData();
+  }, []);
   const headCells = [
     {
-      id: 'nome',
+      id: "nome",
       numeric: false,
       disablePadding: false,
-      label: 'Nome',
+      label: "Nome",
     },
     {
-      id: 'email',
+      id: "email",
       numeric: false,
       disablePadding: true,
-      label: 'Email',
+      label: "Email",
     },
     {
-      id: 'actions',
+      id: "actions",
       numeric: true,
       disablePadding: false,
-      label: 'Ações',
+      label: "Ações",
     },
   ];
   const editRoute = routes.private.internal.editClient;
@@ -49,10 +55,11 @@ const Clients = ({ hasFullyLoaded, users, countries, ...pageProps }) => {
   const newRoute = routes.private.internal.newClient;
   const breadcrumbsPath = [
     {
-      title: 'Clientes',
+      title: "Clientes",
       href: `${routes.private.internal.clients}`,
     },
   ];
+  const items = clients;
   const props = {
     items,
     breadcrumbsPath,
@@ -64,8 +71,7 @@ const Clients = ({ hasFullyLoaded, users, countries, ...pageProps }) => {
   };
 
   // hasFullyLoaded = useAuthValidation(hasFullyLoaded, pageProps.loggedUser , routes.public.signIn);
-  if (hasData(items) && hasData(users) && hasData(countries))
-    pageProps.hasFullyLoaded = true;
+  if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
   return pageProps.hasFullyLoaded && loaded ? (
     <UsersScreen {...props} />
   ) : (

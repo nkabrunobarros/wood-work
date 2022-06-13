@@ -1,53 +1,55 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+
+//  Navigation
+import routes from "../../navigation/routes";
 
 //  Preloader
-import Loader from '../../components/loader/loader';
-import OrdersScreen from '../../components/pages/orders/orders';
+import Loader from "../../components/loader/loader";
 
-import PropTypes from 'prop-types';
+//  Page Component
+import OrdersScreen from "../../components/pages/orders/orders";
 
-import { getCategories } from '../../components/mock/Categories';
-import { getOrders } from '../../components/mock/Orders';
-import routes from '../../navigation/routes';
-import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
-import { getClients } from '../../components/mock/Clients';
-import orderService from '../../services/orders/order-service';
-import hasData from '../../components/utils/hasData';
+//  Proptypes
+import PropTypes from "prop-types";
+
+//  Data services
+import { getCategories } from "../../components/mock/Categories";
+import { getClients } from "../../components/mock/Clients";
+import orderService from "../../services/orders/order-service";
+
+//  Icons
+import { Layers, LayoutTemplate, PackagePlus, Settings } from "lucide-react";
+
+//  Utlis
+import hasData from "../../components/utils/hasData";
 
 export async function getServerSideProps(context) {
   const res = await getCategories();
-  const res2 = await getOrders();
   const res3 = await getClients();
 
   return {
-    props: { categories: res, orders: res2, clients: res3 }, // will be passed to the page component as props
+    props: { categories: res, clients: res3 }, // will be passed to the page component as props
   };
 }
 
-const Orders = ({
-  hasFullyLoaded,
-  categories,
-  orders,
-  clients,
-  ...pageProps
-}) => {
-  const [queryOrders, setQueryOrders] = useState();
+const Orders = ({ hasFullyLoaded, categories, clients, ...pageProps }) => {
+  const [orders, setOrders] = useState();
   useEffect(() => {
     const getAllOrders = async () => {
       const res = await orderService.getAllOrders();
-      setQueryOrders(res.data.data);
+      setOrders(res.data.data);
     };
     getAllOrders();
   }, []);
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
-      title: 'Encomendas',
+      title: "Encomendas",
       href: `${routes.private.internal.orders}`,
     },
   ];
-  const items = queryOrders;
+  const items = orders;
   const internalPOV = true;
   const panelsInfo = {
     budgeting: 12,
@@ -59,75 +61,75 @@ const Orders = ({
   const cards = [
     {
       num: 1,
-      title: 'Em Orçamentação',
+      title: "Em Orçamentação",
       amount: 12,
       icon: <Layers size={40} />,
-      color: 'var(--primary)',
+      color: "var(--primary)",
     },
     {
       num: 2,
-      title: 'Em Desenho',
+      title: "Em Desenho",
       amount: 11,
       icon: <LayoutTemplate size={40} />,
-      color: 'var(--green)',
+      color: "var(--green)",
     },
     {
       num: 3,
-      title: 'Em Produção',
+      title: "Em Produção",
       amount: 13,
       icon: <PackagePlus size={40} />,
-      color: 'var(--orange)',
+      color: "var(--orange)",
     },
     {
       num: 4,
-      title: 'Concluidas',
+      title: "Concluidas",
       amount: 17,
       icon: <Settings size={40} />,
-      color: 'var(--babyblue)',
+      color: "var(--babyblue)",
     },
   ];
   const headCells = [
     {
-      id: 'numero',
+      id: "numero",
       numeric: false,
       disablePadding: false,
-      label: 'Numero',
+      label: "Numero",
     },
     {
-      id: 'cliente',
+      id: "cliente",
       numeric: false,
       disablePadding: true,
-      label: 'Cliente',
+      label: "Cliente",
     },
     {
-      id: 'categoria',
+      id: "categoria",
       numeric: false,
       disablePadding: true,
-      label: 'Categoria',
+      label: "Categoria",
     },
     {
-      id: 'stock',
+      id: "stock",
       numeric: false,
       disablePadding: false,
-      label: 'Stock',
+      label: "Stock",
     },
     {
-      id: 'produção',
+      id: "produção",
       numeric: false,
       disablePadding: false,
-      label: 'Produção',
+      label: "Produção",
     },
     {
-      id: 'distribuição',
+      id: "distribuição",
       numeric: false,
       disablePadding: false,
-      label: 'Em distribuição',
+      label: "Em distribuição",
     },
     {
-      id: 'actions',
+      id: "actions",
       numeric: true,
       disablePadding: false,
-      label: 'Ações',
+      label: "Ações",
     },
   ];
 
@@ -146,11 +148,7 @@ const Orders = ({
     clients,
     editPage,
   };
-  if (
-    hasData(items) &&
-    hasData(clients) &&
-    hasData(categories)
-  )
+  if (hasData(items) && hasData(clients) && hasData(categories))
     hasFullyLoaded = true;
 
   return hasFullyLoaded ? (
