@@ -8,8 +8,20 @@ class AuthService {
       })
       .then((response) => {
         if (response.data.data) {
-          localStorage.setItem('user', JSON.stringify(response.data.data.email).substring(1, response.data.data.email.length + 1));
-          sessionStorage.setItem('user', JSON.stringify(response.data.data.email).substring(1, response.data.data.email.length + 1));
+          localStorage.setItem(
+            'user',
+            JSON.stringify(response.data.data.email).substring(
+              1,
+              response.data.data.email.length + 1
+            )
+          );
+          sessionStorage.setItem(
+            'user',
+            JSON.stringify(response.data.data.email).substring(
+              1,
+              response.data.data.email.length + 1
+            )
+          );
           return response;
         }
         return response;
@@ -18,7 +30,7 @@ class AuthService {
 
   logout() {
     localStorage.setItem('user', null);
-    sessionStorage.setItem('user',null);
+    sessionStorage.setItem('user', null);
   }
 
   register(email, password) {
@@ -28,8 +40,13 @@ class AuthService {
     });
   }
 
-  getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'));
+  // getCurrentUser() {
+  //   return JSON.parse(localStorage.getItem('user'));
+  // }
+
+  async getCurrentUser() {
+    const email = localStorage.user
+    return await axios.post(API_URL + 'login', {email})
   }
 }
 export default new AuthService();

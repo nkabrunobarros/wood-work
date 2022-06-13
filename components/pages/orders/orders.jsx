@@ -109,7 +109,7 @@ const OrdersScreen = ({ ...props }) => {
             <div className={styles.filterContainer}>
               <InputLabel htmlFor='email'>Número</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 fullWidth
                 id='number'
                 name='number'
@@ -241,7 +241,7 @@ OrdersScreen.propTypes = {
   clients: PropTypes.array,
   detailPage: PropTypes.string,
   editPage: PropTypes.string,
-  internalPOV: PropTypes.boolean,
+  internalPOV: PropTypes.any,
   cards: PropTypes.arrayOf(PropTypes.object),
   headCells: PropTypes.array,
 };

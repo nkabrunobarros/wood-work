@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 //  Nodes
 import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -77,13 +76,13 @@ const Order = ({ ...props }) => {
   //       onClick={() => setActiveRow(doc.id - 1)}
   //     >
   //       <td id='align' data-label='Nome' className='link'>
-  //         <FileText stroke-width='1' style={{ marginRight: '1rem' }} />
+  //         <FileText strokeWidth='1' style={{ marginRight: '1rem' }} />
   //         {doc.name}
   //       </td>
   //       <td data-label='Data'> {doc.data} </td>
   //       <td data-label='Ações'>
-  //         <Edit stroke-width='1' className='link' />
-  //         <Trash stroke-width='1' className='link' />
+  //         <Edit strokeWidth='1' className='link' />
+  //         <Trash strokeWidth='1' className='link' />
   //       </td>
   //       <td>{activeRow === num ? <div className='dot'></div> : null}</td>
   //     </tr>
@@ -112,14 +111,18 @@ const Order = ({ ...props }) => {
   //         <a>11/02/2022</a>
   //       </td>
   //       <td data-label='Ações'>
-  //         <Edit stroke-width='1' className='link' />
-  //         <Trash stroke-width='1' className='link' />
+  //         <Edit strokeWidth='1' className='link' />
+  //         <Trash strokeWidth='1' className='link' />
   //       </td>
   //     </tr>
   //   );
   // };
 
   function Row({ row, index }) {
+    Row.propTypes = {
+      row: PropTypes.any,
+      index: PropTypes.number,
+    }
     const [open, setOpen] = useState(false);
     let style = {};
     if (open)
@@ -139,9 +142,9 @@ const Order = ({ ...props }) => {
           <TableCell>
             <div id='align' style={{ color: 'var(--primary)' }}>
               {open ? (
-                <FolderOpen stroke-width='1' style={{ marginRight: '1rem' }} />
+                <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
               ) : (
-                <Folder stroke-width='1' style={{ marginRight: '1rem' }} />
+                <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
               )}
               Orçamentação {index}
             </div>
@@ -151,12 +154,12 @@ const Order = ({ ...props }) => {
             <ButtonGroup>
               <Tooltip title='Edit'>
                 <IconButton>
-                  <Edit stroke-width='1' className='link' />
+                  <Edit strokeWidth='1' className='link' />
                 </IconButton>
               </Tooltip>
               <Tooltip title='Delete'>
                 <IconButton>
-                  <Trash stroke-width='1' className='link' />
+                  <Trash strokeWidth='1' className='link' />
                 </IconButton>
               </Tooltip>
             </ButtonGroup>
@@ -179,7 +182,7 @@ const Order = ({ ...props }) => {
                   <TableCell width='70%'>
                     <div id='align' style={{ color: 'var(--primary)' }}>
                       <FileText
-                        stroke-width='1'
+                        strokeWidth='1'
                         style={{ marginRight: '1rem' }}
                       />
                       Documento 1
@@ -190,12 +193,12 @@ const Order = ({ ...props }) => {
                     <ButtonGroup>
                       <Tooltip title='Edit'>
                         <IconButton>
-                          <Edit stroke-width='1' className='link' />
+                          <Edit strokeWidth='1' className='link' />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title='Delete'>
                         <IconButton>
-                          <Trash stroke-width='1' className='link' />
+                          <Trash strokeWidth='1' className='link' />
                         </IconButton>
                       </Tooltip>
                     </ButtonGroup>
@@ -231,7 +234,7 @@ const Order = ({ ...props }) => {
             <a className='headerTitleXl'>Encomenda Nº {orderId}</a>
             <div style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
-                icon={<Tag stroke-width='1' />}
+                icon={<Tag strokeWidth='1' />}
                 text='Gerar Etiquetas'
               />
             </div>
@@ -296,7 +299,7 @@ const Order = ({ ...props }) => {
               <a className='headerTitle'>Produção</a>
               <div style={{ marginLeft: 'auto' }}>
                 <PrimaryBtn
-                  icon={<Eye stroke-width='1' />}
+                  icon={<Eye strokeWidth='1' />}
                   text='Ver detalhes'
                 />
               </div>
@@ -323,14 +326,14 @@ const Order = ({ ...props }) => {
                   <div>
                     <PrimaryBtn
                       text='Carregar'
-                      icon={<FilePlus stroke-width='1' />}
+                      icon={<FilePlus strokeWidth='1' />}
                     />
                   </div>
                   <div>
                     <PrimaryBtn
                       light
                       text='Criar Pasta'
-                      icon={<FolderPlus stroke-width='1' />}
+                      icon={<FolderPlus strokeWidth='1' />}
                     />
                   </div>
                 </div>
@@ -370,7 +373,7 @@ const Order = ({ ...props }) => {
                   }}
                 >
                   <Folder
-                    stroke-width='0.5'
+                    strokeWidth='0.5'
                     size={54}
                     stroke='#8793AB'
                     fill='#E7E8E9'
@@ -379,7 +382,7 @@ const Order = ({ ...props }) => {
                 </div>
                 <a id='align'>
                   <FileText
-                    stroke-width='1'
+                    strokeWidth='1'
                     style={{ marginRight: '1rem' }}
                     size={20}
                   />
@@ -397,7 +400,7 @@ const Order = ({ ...props }) => {
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div id='align'>
                       <FileText
-                        stroke-width='1'
+                        strokeWidth='1'
                         style={{ marginRight: '1rem' }}
                         size={20}
                         stroke='transparent'
@@ -407,7 +410,7 @@ const Order = ({ ...props }) => {
                     <div id='align'>
                       <a>
                         <FileText
-                          stroke-width='1'
+                          strokeWidth='1'
                           style={{ marginRight: '1rem' }}
                           size={20}
                           stroke='transparent'
@@ -419,7 +422,7 @@ const Order = ({ ...props }) => {
                   <div>
                     <div id='align'>
                       <FileText
-                        stroke-width='1'
+                        strokeWidth='1'
                         style={{ marginRight: '1rem' }}
                         size={20}
                         stroke='transparent'
@@ -429,7 +432,7 @@ const Order = ({ ...props }) => {
                     <div id='align'>
                       <a>
                         <FileText
-                          stroke-width='1'
+                          strokeWidth='1'
                           style={{ marginRight: '1rem' }}
                           size={20}
                           stroke='transparent'
@@ -462,14 +465,6 @@ const Order = ({ ...props }) => {
           </div>
         </div>
         <div>
-          {/* <CustomTable
-            columns={['Mensagem', 'Data', 'Ações']}
-            style={{ overflow: 'scroll' }}
-          >
-            {[...Array(2)].map((x, i) => (
-              <MessageRow key={i} num={i} />
-            ))}
-          </CustomTable> */}
           <AdvancedTable
             rows={Array(2)}
             headCells={headCellsMessages}
@@ -493,12 +488,12 @@ const Order = ({ ...props }) => {
                 <TableCell>
                   <Tooltip title='Edit'>
                     <IconButton>
-                      <Edit stroke-width='1' className='link' />
+                      <Edit strokeWidth='1' className='link' />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title='Delete'>
                     <IconButton>
-                      <Trash stroke-width='1' className='link' />
+                      <Trash strokeWidth='1' className='link' />
                     </IconButton>
                   </Tooltip>
                 </TableCell>
@@ -519,18 +514,14 @@ const Order = ({ ...props }) => {
                 <div>
                   <PrimaryBtn
                     text='Carregar'
-                    icon={<FilePlus stroke-width='1' />}
+                    icon={<FilePlus strokeWidth='1' />}
                   >
                     <input type='file' hidden />
                   </PrimaryBtn>
                 </div>
               </div>
             </div>
-            {/* <CustomTable columns={['Nome', 'Data', 'Ações', '']}>
-              {docs.map((doc, i) => (
-                <DocRow key={doc.id} doc={doc} num={i} />
-              ))}
-            </CustomTable> */}
+           
             <AdvancedTable headCells={headCellsDocs} rows={docs} noPagination>
               {docs.map((doc, i) => (
                 <TableRow
@@ -551,12 +542,12 @@ const Order = ({ ...props }) => {
                   <TableCell>
                     <Tooltip title='Edit'>
                       <IconButton>
-                        <Edit stroke-width='1' className='link' />
+                        <Edit strokeWidth='1' className='link' />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title='Delete'>
                       <IconButton>
-                        <Trash stroke-width='1' className='link' />
+                        <Trash strokeWidth='1' className='link' />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -586,12 +577,12 @@ const Order = ({ ...props }) => {
                   fontWeight: 'bold',
                 }}
               >
-                <FileText stroke-width='0.5' size={54} stroke='#8793AB' />
+                <FileText strokeWidth='0.5' size={54} stroke='#8793AB' />
                 {docs[activeRow].fileSize}
               </div>
               <a id='align'>
                 <FileText
-                  stroke-width='1'
+                  strokeWidth='1'
                   style={{ marginRight: '1rem' }}
                   size={20}
                 />
@@ -609,7 +600,7 @@ const Order = ({ ...props }) => {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div id='align'>
                     <FileText
-                      stroke-width='1'
+                      strokeWidth='1'
                       style={{ marginRight: '1rem' }}
                       size={20}
                       stroke='transparent'
@@ -619,7 +610,7 @@ const Order = ({ ...props }) => {
                   <div id='align'>
                     <a>
                       <FileText
-                        stroke-width='1'
+                        strokeWidth='1'
                         style={{ marginRight: '1rem' }}
                         size={20}
                         stroke='transparent'
@@ -631,7 +622,7 @@ const Order = ({ ...props }) => {
                 <div>
                   <div id='align'>
                     <FileText
-                      stroke-width='1'
+                      strokeWidth='1'
                       style={{ marginRight: '1rem' }}
                       size={20}
                       stroke='transparent'
@@ -641,7 +632,7 @@ const Order = ({ ...props }) => {
                   <div id='align'>
                     <a>
                       <FileText
-                        stroke-width='1'
+                        strokeWidth='1'
                         style={{ marginRight: '1rem' }}
                         size={20}
                         stroke='transparent'
@@ -662,5 +653,14 @@ Order.propTypes = {
   orderId: PropTypes.string,
   docs: PropTypes.arrayOf(PropTypes.object),
   orders: PropTypes.arrayOf(PropTypes.object),
+  breadcrumbsPath: PropTypes.array,
+  internalPOV: PropTypes.boolean ,
+  productionDetail: PropTypes.array ,
+  headCellsUpperProductionDetail: PropTypes.array ,
+  headCellsProductionDetail: PropTypes.array ,
+  headCellsOrderDetail: PropTypes.array ,
+  headCellsUpperOrderDetail: PropTypes.array ,
+  headCellsMessages: PropTypes.array ,
+  headCellsDocs: PropTypes.array ,
 };
 export default Order;

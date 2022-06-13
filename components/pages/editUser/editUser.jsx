@@ -180,12 +180,12 @@ const EditUser = ({ ...props }) => {
           <div style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save stroke-width='1' />}
+              icon={<Save strokeWidth='1' />}
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X stroke-width='1' />}
+              icon={<X strokeWidth='1' />}
               light
               onClick={() => Router.back()}
             />
@@ -197,7 +197,7 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Nome</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='nome'
@@ -218,7 +218,7 @@ const EditUser = ({ ...props }) => {
               <InputLabel htmlFor='email'>Email</InputLabel>
               <OutlinedInput
                 type='email'
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'
@@ -238,7 +238,7 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='contact'>Telefone</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='contact'
@@ -259,7 +259,7 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='telemovel'
@@ -298,7 +298,7 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='Cidade'>Cidade</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='Cidade'
@@ -375,7 +375,7 @@ const EditUser = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Senha Antiga</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='nome'
@@ -388,7 +388,7 @@ const EditUser = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Senha Nova</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='nome'
@@ -401,7 +401,7 @@ const EditUser = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Confirmar Senha Nova</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='nome'

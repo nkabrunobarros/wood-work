@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 import getCountries from '../../components/mock/Countries';
 import NewUserScreen from '../../components/pages/newUser/newUser';
+import hasData from '../../components/utils/hasData';
 import routes from '../../navigation/routes';
 export async function getServerSideProps(context) {
   const res2 = await getCountries();
@@ -10,12 +11,12 @@ export async function getServerSideProps(context) {
   };
 }
 // eslint-disable-next-line react/prop-types
-const NewOrder = ({ countries }) => {
+const NewOrder = ({ countries, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
   const breadcrumbsPath = [
     {
@@ -29,9 +30,13 @@ const NewOrder = ({ countries }) => {
   ];
   const props = {
     breadcrumbsPath,
-    countries
+    countries,
   };
-
-  return loaded ? <NewUserScreen {...props} /> : <Loader center={true} />;
+  if (hasData(countries)) pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? (
+    <NewUserScreen {...props} />
+  ) : (
+    <Loader center={true} />
+  );
 };
 export default NewOrder;

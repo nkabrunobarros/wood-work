@@ -31,8 +31,8 @@ const Profile = ({ ...props }) => {
             <a>{FilterItem(stock.stock)}</a>
           </div>
           <div style={{ display: 'flex' }}>
-            <PrimaryBtn text='Editar' icon={<Edit stroke-width='1' />} />
-            <PrimaryBtn text='Apagar' icon={<Trash stroke-width='1' />} light />
+            <PrimaryBtn text='Editar' icon={<Edit strokeWidth='1' />} />
+            <PrimaryBtn text='Apagar' icon={<Trash strokeWidth='1' />} light />
           </div>
         </div>
         <div id='pad' className='flex'>

@@ -14,18 +14,18 @@ import getLinks from '../../mock/navLinks';
 import Router, { useRouter } from 'next/router';
 import { LogOut, User, X } from 'lucide-react';
 import routes from '../../../navigation/routes';
-import { getUser } from '../../mock/Users';
 import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import Image from 'next/image';
+import authService from '../../../services/auth-service';
 
 // eslint-disable-next-line react/prop-types
-const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
+const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
   const theme = useTheme();
   const navLinks = getLinks();
-  const [loggedUser, setLoggedUser] = useState();
+  const [loggedUser, setLoggedUser] = useState(pageProps.loggedUser);
   const [anchorEl, setAnchorEl] = useState(null);
   const router = useRouter();
   const handleClick = (event) => {
@@ -33,28 +33,18 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
     else setAnchorEl(null);
   };
   useEffect(() => {
-    async function getUserPerm(data) {
-      const perfil = await getUser(data);
-      setLoggedUser(perfil);
-      return perfil.perfil;
-    }
-    if (typeof window !== 'undefined') {
-      // Perform localStorage action
-      if (
-        localStorage.getItem('user') !== null &&
-        sessionStorage.getItem('user')
-      ) {
-        const data = localStorage.getItem('user');
-        if (data === null) Router.push(routes.public.signIn);
-        else {
-          getUserPerm(data).then((res) => {
-            //
-          });
-        }
-      } else Router.push(routes.public.signIn);
-    }
+    const load = async () => {
+      if (typeof window !== 'undefined') {
+        // Perform localStorage action
+        const res = await authService.getCurrentUser();
+        if (hasData(res.data.data)) {
+          if (res.data.data === null) Router.push(routes.public.signIn);
+          else setLoggedUser(res.data.data);
+        } else Router.push(routes.public.signIn);
+      }
+    };
+    load();
   }, [router.asPath]);
-
   return (
     <SwipeableDrawer
       disableSwipeToOpen={false}
@@ -102,10 +92,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle }) => {
           </div>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
             <ListItemText
-              primary='Bruno Barros'
+              primary={loggedUser ? loggedUser.nome : 'user'}
               secondary={
                 <a style={{ color: '#FFFFFF', fontSize: 'small' }}>
-                  Bruno.barros@nka.pt
+                  {loggedUser ? loggedUser.email : 'email'}
                 </a>
               }
             />

@@ -101,7 +101,7 @@ const NewUser = ({ ...props }) => {
     setBackdrop(true);
 
     //  Snackbar notification body
-    setSnackbarMessage('message text');
+    setSnackbarMessage('Novo utilizador criado com sucesso');
     setSnackbarSeverity('success');
     setSnackbarOpen(true);
 
@@ -180,12 +180,12 @@ const NewUser = ({ ...props }) => {
           <div style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save stroke-width='1' />}
+              icon={<Save strokeWidth='1' />}
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X stroke-width='1' />}
+              icon={<X strokeWidth='1' />}
               light
               onClick={() => Router.back()}
             />
@@ -194,13 +194,13 @@ const NewUser = ({ ...props }) => {
         <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
-              <User size={20} stroke-width='1' /> Dados de Utilizador
+              <User size={20} strokeWidth='1' /> Dados de Utilizador
             </a>
             <div id='pad' className='filters'>
               <div className='filterContainer4'>
                 <InputLabel htmlFor='email'>Nome</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='nome'
@@ -221,7 +221,7 @@ const NewUser = ({ ...props }) => {
                 <InputLabel htmlFor='email'>Email</InputLabel>
                 <OutlinedInput
                   type='email'
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='email'
@@ -241,7 +241,7 @@ const NewUser = ({ ...props }) => {
               <div className='filterContainer4'>
                 <InputLabel htmlFor='contact'>Telefone</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='contact'
@@ -262,7 +262,7 @@ const NewUser = ({ ...props }) => {
               <div className='filterContainer4'>
                 <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='telemovel'
@@ -301,7 +301,7 @@ const NewUser = ({ ...props }) => {
               <div className='filterContainer4'>
                 <InputLabel htmlFor='Cidade'>Cidade</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='Cidade'

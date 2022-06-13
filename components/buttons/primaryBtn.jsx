@@ -31,8 +31,8 @@ PrimaryBtn.propTypes = {
   color: PropTypes.string,
   onClick: PropTypes.any,
   children: PropTypes.any,
-  disabled: PropTypes.boolean,
-  noBorder: PropTypes.boolean,
+  disabled: PropTypes.any,
+  noBorder: PropTypes.any,
 
 }
 export default PrimaryBtn

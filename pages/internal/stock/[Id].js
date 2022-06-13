@@ -6,6 +6,7 @@ import StockScreen from '../../../components/pages/stock/stock'
 import routes from '../../../navigation/routes'
 import { getStock } from '../../../components/mock/Stock'
 import { getProduct } from '../../../components/mock/Products'
+import hasData from '../../../components/utils/hasData'
 
 export async function getServerSideProps (context) {
   const res = await getStock()
@@ -13,7 +14,7 @@ export async function getServerSideProps (context) {
     props: { allStock: res } // will be passed to the page component as props
   }
 }
-const Stock = ({ allStock }) => {
+const Stock = ({ allStock, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false)
   const router = useRouter()
   const stockId = router.query.Id
@@ -23,7 +24,7 @@ const Stock = ({ allStock }) => {
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true)
-    }, 1500)
+    }, 500)
   }, [])
 
   const breadcrumbsPath = [
@@ -41,7 +42,13 @@ const Stock = ({ allStock }) => {
     breadcrumbsPath,
     stock
   }
-  return loaded
+  if (
+    hasData(allStock) &&
+    hasData(product) &&
+    hasData(stock) 
+  )
+    pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded
     ? (
     <StockScreen {...props} />
       )

@@ -192,7 +192,7 @@ const AdvancedTable = ({
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component='div'
-            count={filteredItems.length}
+            count={filteredItems ? filteredItems.length : rows.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -202,7 +202,7 @@ const AdvancedTable = ({
         )}
 
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle'>
+          <Table aria-labelledby='tableTitle'>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -257,12 +257,12 @@ const AdvancedTable = ({
                                         : null
                                     }
                                   >
-                                    <Edit stroke-width='1' className='link' />
+                                    <Edit strokeWidth='1' className='link' />
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title='Delete'>
                                   <IconButton>
-                                    <Trash stroke-width='1' className='link' />
+                                    <Trash strokeWidth='1' className='link' />
                                   </IconButton>
                                 </Tooltip>
                               </>
@@ -302,7 +302,7 @@ AdvancedTable.propTypes = {
   children: PropTypes.any,
   clickRoute: PropTypes.any,
   editRoute: PropTypes.string,
-  noPagination: PropTypes.boolean,
+  noPagination: PropTypes.any,
   filters: PropTypes.any,
 };
 

@@ -40,12 +40,12 @@ function FilterItem(item, col, index) {
     case 'categoria':
       return <a>{DisplayCategory(item)}</a>;
     case 'ações':
-      return <Eye stroke-width="1" className='link' />;
+      return <Eye strokeWidth="1" className='link' />;
     case 'actions':
       return (
         <>
-          <Edit stroke-width="1" stroke='var(--primary)' />
-          <Trash stroke-width="1" stroke='var(--primary)' />
+          <Edit strokeWidth="1" stroke='var(--primary)' />
+          <Trash strokeWidth="1" stroke='var(--primary)' />
         </>
       );
     default:

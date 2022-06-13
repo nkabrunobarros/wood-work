@@ -12,7 +12,14 @@ import PropTypes from 'prop-types';
 
 import styles from '../../../styles/NewOrder.module.css';
 import { Edit2, Save, User, X } from 'lucide-react';
-import { Alert, Backdrop, InputLabel, OutlinedInput, Snackbar, TextareaAutosize } from '@mui/material';
+import {
+  Alert,
+  Backdrop,
+  InputLabel,
+  OutlinedInput,
+  Snackbar,
+  TextareaAutosize,
+} from '@mui/material';
 import Router from 'next/router';
 
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
@@ -39,7 +46,7 @@ const EditClient = ({ ...props }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const [backdrop, setBackdrop] = useState(false);
-  
+
   function handleSave() {
     setDialogOpen(!dialogOpen);
   }
@@ -68,9 +75,11 @@ const EditClient = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onConfirm()}
-        message={'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'}
+        message={
+          'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'
+        }
       />
-        <Snackbar
+      <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         open={snackbarOpen}
         onRequestClose={() => setSnackbarOpen(false)}
@@ -103,12 +112,12 @@ const EditClient = ({ ...props }) => {
           <div style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save stroke-width='1' />}
+              icon={<Save strokeWidth='1' />}
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X stroke-width='1' />}
+              icon={<X strokeWidth='1' />}
               light
               onClick={() => Router.back()}
             />
@@ -117,13 +126,12 @@ const EditClient = ({ ...props }) => {
         <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
-              <User size={20} stroke-width='1' /> Dados Gerais
+              <User size={20} strokeWidth='1' /> Dados Gerais
             </a>
             <div id='pad' className='filters'>
               <div className='filterContainer2'>
                 <InputLabel htmlFor='email'>Nome</InputLabel>
                 <OutlinedInput
-                  margin='normal'
                   required
                   fullWidth
                   id='nome'
@@ -137,7 +145,6 @@ const EditClient = ({ ...props }) => {
               <div className='filterContainer2'>
                 <InputLabel htmlFor='email'>Email</InputLabel>
                 <OutlinedInput
-                  margin='normal'
                   required
                   fullWidth
                   id='email'
@@ -151,7 +158,6 @@ const EditClient = ({ ...props }) => {
               <div className='filterContainer2'>
                 <InputLabel htmlFor='contact'>Pessoa de Contacto</InputLabel>
                 <OutlinedInput
-                  margin='normal'
                   required
                   fullWidth
                   id='contact'
@@ -165,7 +171,6 @@ const EditClient = ({ ...props }) => {
               <div className='filterContainer2'>
                 <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
                 <OutlinedInput
-                  margin='normal'
                   required
                   fullWidth
                   id='telemovel'
@@ -188,13 +193,12 @@ const EditClient = ({ ...props }) => {
           </div>
           <div id='pad' className={styles.clientContainer}>
             <a className='lightTextSm'>
-              <Edit2 strokeWidth={1} size={20} stroke-width='1' /> Dados de
-              Faturação
+              <Edit2 size={20} strokeWidth='1' />
+              Dados de Faturação
             </a>
             <div>
               <InputLabel htmlFor='email'>Morada Fiscal</InputLabel>
               <OutlinedInput
-                margin='normal'
                 required
                 fullWidth
                 id='address'
@@ -208,7 +212,6 @@ const EditClient = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Codigo Postal</InputLabel>
               <OutlinedInput
-                margin='normal'
                 required
                 fullWidth
                 id='postalCode'
@@ -224,7 +227,6 @@ const EditClient = ({ ...props }) => {
                 Número de Indentificação Fiscal (Nif)
               </InputLabel>
               <OutlinedInput
-                margin='normal'
                 required
                 fullWidth
                 id='nif'
@@ -238,7 +240,6 @@ const EditClient = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Outros Dados</InputLabel>
               <OutlinedInput
-                margin='normal'
                 required
                 fullWidth
                 id='otherData'

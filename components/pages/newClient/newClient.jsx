@@ -93,7 +93,7 @@ const NewClient = ({ ...props }) => {
     setBackdrop(true);
 
     //  Snackbar notification body
-    setSnackbarMessage('message text');
+    setSnackbarMessage('Novo cliente criado com sucesso');
     setSnackbarSeverity('success');
     setSnackbarOpen(true);
 
@@ -171,12 +171,12 @@ const NewClient = ({ ...props }) => {
           <div style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save stroke-width='1' />}
+              icon={<Save strokeWidth='1' />}
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X stroke-width='1' />}
+              icon={<X strokeWidth='1' />}
               light
               onClick={() => Router.back()}
             />
@@ -185,13 +185,13 @@ const NewClient = ({ ...props }) => {
         <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
-              <User size={20} stroke-width='1' /> Dados Gerais
+              <User size={20} strokeWidth='1' /> Dados Gerais
             </a>
             <div id='pad' className='filters'>
               <div className='filterContainer2'>
                 <InputLabel htmlFor='email'>Nome</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='nome'
@@ -212,7 +212,7 @@ const NewClient = ({ ...props }) => {
                 <InputLabel htmlFor='email'>Email</InputLabel>
                 <OutlinedInput
                   type='email'
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='email'
@@ -232,7 +232,7 @@ const NewClient = ({ ...props }) => {
               <div className='filterContainer2'>
                 <InputLabel htmlFor='contact'>Pessoa de Contacto</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='contact'
@@ -252,7 +252,7 @@ const NewClient = ({ ...props }) => {
               <div className='filterContainer2'>
                 <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
                 <OutlinedInput
-                  margin='normal'
+                  
                   required
                   fullWidth
                   id='telemovel'
@@ -281,13 +281,13 @@ const NewClient = ({ ...props }) => {
           </div>
           <div id='pad' className={styles.clientContainer}>
             <a className='lightTextSm'>
-              <Edit2 strokeWidth={1} size={20} stroke-width='1' /> Dados de
+              <Edit2 strokeWidth={1} size={20}  /> Dados de
               Faturação
             </a>
             <div>
               <InputLabel htmlFor='email'>Morada Fiscal</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='address'
@@ -307,7 +307,7 @@ const NewClient = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Codigo Postal</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='postalCode'
@@ -329,7 +329,7 @@ const NewClient = ({ ...props }) => {
                 Número de Indentificação Fiscal (Nif)
               </InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='nif'
@@ -349,7 +349,7 @@ const NewClient = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Outros Dados</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='otherData'

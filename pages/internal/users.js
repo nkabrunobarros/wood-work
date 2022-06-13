@@ -6,6 +6,7 @@ import { getUsers } from '../../components/mock/Users';
 import getCountries from '../../components/mock/Countries';
 
 import PropTypes from 'prop-types';
+import hasData from '../../components/utils/hasData';
 
 export async function getServerSideProps(context) {
   const res = await getUsers();
@@ -14,13 +15,13 @@ export async function getServerSideProps(context) {
     props: { users: res, countries: res2 }, // will be passed to the page component as props
   };
 }
-const Users = ({ users, countries }) => {
+const Users = ({ users, countries, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const items = users;
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
 
   const breadcrumbsPath = [
@@ -68,7 +69,12 @@ const Users = ({ users, countries }) => {
     headCells,
     newRoute,
   };
-  return loaded ? <UsersScreen {...props} /> : <Loader center={true} />;
+  if (
+    hasData(items) &&
+    hasData(countries)
+  )
+    pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? <UsersScreen {...props} /> : <Loader center={true} />;
 };
 
 Users.propTypes = {

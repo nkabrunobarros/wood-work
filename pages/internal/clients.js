@@ -6,6 +6,8 @@ import getCountries from '../../components/mock/Countries';
 import { getClients } from '../../components/mock/Clients';
 
 import PropTypes from 'prop-types';
+import hasData from '../../components/utils/hasData';
+// import useAuthValidation from '../../hooks/useAuthValidation/useAuthValidation';
 
 export async function getServerSideProps(context) {
   const res = await getClients();
@@ -14,13 +16,13 @@ export async function getServerSideProps(context) {
     props: { users: res, countries: res2 }, // will be passed to the page component as props
   };
 }
-const Clients = ({ users, countries }) => {
+const Clients = ({ hasFullyLoaded, users, countries, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const items = users;
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
   const headCells = [
     {
@@ -44,7 +46,7 @@ const Clients = ({ users, countries }) => {
   ];
   const editRoute = routes.private.internal.editClient;
   const detailRoute = routes.private.internal.client;
-  const newRoute = routes.private.internal.newClient
+  const newRoute = routes.private.internal.newClient;
   const breadcrumbsPath = [
     {
       title: 'Clientes',
@@ -58,9 +60,17 @@ const Clients = ({ users, countries }) => {
     editRoute,
     detailRoute,
     headCells,
-    newRoute
+    newRoute,
   };
-  return loaded ? <UsersScreen {...props} /> : <Loader center={true} />;
+
+  // hasFullyLoaded = useAuthValidation(hasFullyLoaded, pageProps.loggedUser , routes.public.signIn);
+  if (hasData(items) && hasData(users) && hasData(countries))
+    pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? (
+    <UsersScreen {...props} />
+  ) : (
+    <Loader center={true} />
+  );
 };
 
 Clients.propTypes = {
@@ -72,5 +82,6 @@ Clients.propTypes = {
   editRoute: PropTypes.string,
   detailRoute: PropTypes.string,
   newRoute: PropTypes.string,
+  hasFullyLoaded: PropTypes.any,
 };
 export default Clients;

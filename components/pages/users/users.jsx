@@ -58,7 +58,6 @@ const Users = ({ ...props }) => {
     if (value === null) setNome('');
     else setNome(value.nome);
   };
-
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -94,7 +93,7 @@ const Users = ({ ...props }) => {
             <div className='filterContainer'>
               <InputLabel htmlFor='email'>Email</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 fullWidth
                 id='email'
                 name='email'

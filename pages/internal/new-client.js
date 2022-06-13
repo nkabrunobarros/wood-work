@@ -7,7 +7,7 @@ const NewOrder = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
   const breadcrumbsPath = [
     {

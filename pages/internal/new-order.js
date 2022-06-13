@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 import NewOrderScreen from '../../components/pages/newOrder/newOrder';
 import routes from '../../navigation/routes';
-const NewOrder = () => {
+const NewOrder = (...pageProps) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
   const breadcrumbsPath = [
     {

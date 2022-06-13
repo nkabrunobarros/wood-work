@@ -37,10 +37,10 @@ const EditOrder = ({ ...props }) => {
             <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
           </div>
           <div style={{ display: 'flex' }}>
-            <PrimaryBtn text='Guardar' icon={<Save stroke-width='1' />} />
+            <PrimaryBtn text='Guardar' icon={<Save strokeWidth='1' />} />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X stroke-width='1' />}
+              icon={<X strokeWidth='1' />}
               light
               onClick={() => Router.back()}
             />
@@ -51,7 +51,7 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'
@@ -63,7 +63,7 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'
@@ -75,7 +75,7 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'
@@ -87,7 +87,7 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'
@@ -118,7 +118,7 @@ const EditOrder = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'
@@ -130,7 +130,7 @@ const EditOrder = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                margin='normal'
+                
                 required
                 fullWidth
                 id='email'

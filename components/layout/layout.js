@@ -17,22 +17,15 @@ const noLayoutScreens = [
   `${routes.public.internal.signInClient}`,
 ];
 
-const Layout = ({ children }) => {
+const Layout = ({ children, ...pageProps }) => {
+  // console.log(pageProps)
   const path = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
 
-  const allRoutes = routes.private
-  const test = Object.keys(allRoutes).reduce((object, key) => {
-    if (key !== 'internal') {
-      object[key] = allRoutes[key]
-    }
-    return object
-  }, {})
 
-  console.log(test)
   const clientPages = [
     `${routes.private.messages}`,
     `${routes.private.order}`,
@@ -47,11 +40,12 @@ const Layout = ({ children }) => {
   return (
     <div>
       <CssBaseline />
-      <Navbar openDrawer={handleDrawerToggle} />
+      <Navbar openDrawer={handleDrawerToggle} {...pageProps} />
       <Hidden implementation='css'>
         <DrawerMobile
           mobileOpen={mobileOpen}
           handleDrawerToggle={handleDrawerToggle}
+          {...pageProps}
         />
       </Hidden>
       <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>

@@ -72,7 +72,7 @@ const ForgotPassword = () => {
             <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
 
             <OutlinedInput
-              margin='normal'
+              
               required
               fullWidth
               id='email'

@@ -7,7 +7,7 @@ import routes from '../../../navigation/routes';
 import { getOrders } from '../../../components/mock/Orders';
 
 export async function getServerSideProps(context) {
-  const res = getOrders();
+  const res = await getOrders();
   return {
     props: { orders: res }, // will be passed to the page component as props
   };

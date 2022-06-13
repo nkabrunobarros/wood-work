@@ -25,9 +25,9 @@ const CustomTable = ({
   return (
     <>
       <table className={styles.table}>
-        <thead style={style}>
+        <thead>
           {doubleHeader ? (
-            <tr >
+            <tr style={style} >
               {doubleHeader.map((col, i) => (
                 <>
                   {doubleHeaderSizes[i] === 1 ? (

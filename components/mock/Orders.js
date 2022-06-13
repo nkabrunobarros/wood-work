@@ -1,4 +1,4 @@
-function getOrders() {
+async function getOrders() {
   const orders = [
     {
       id: 1574523,

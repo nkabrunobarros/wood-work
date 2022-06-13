@@ -12,9 +12,10 @@ import { getOrders } from '../../components/mock/Orders';
 import { getClients } from '../../components/mock/Clients';
 import { getWoodTypes } from '../../components/mock/WoodTypes';
 import { getProducts } from '../../components/mock/Products';
+import hasData from '../../components/utils/hasData';
 
 export async function getServerSideProps(context) {
-  const res = getOrders();
+  const res = await getOrders();
   const clientsRes = getClients();
   const woods = getWoodTypes();
   const prods = getProducts();
@@ -28,12 +29,18 @@ export async function getServerSideProps(context) {
   };
 }
 
-const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
+const OrdersSimilar = ({
+  items,
+  clients,
+  woodTypes,
+  products,
+  ...pageProps
+}) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
@@ -214,7 +221,18 @@ const OrdersSimilar = ({ items, clients, woodTypes, products }) => {
     headCellsUpper,
     headCells,
   };
-  return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />;
+  if (
+    hasData(items) &&
+    hasData(clients) &&
+    hasData(woodTypes) &&
+    hasData(products)
+  )
+    pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? (
+    <OrdersScreen {...props} />
+  ) : (
+    <Loader center={true} />
+  );
 };
 OrdersSimilar.propTypes = {
   items: PropTypes.array,

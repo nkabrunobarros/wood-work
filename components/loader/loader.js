@@ -32,7 +32,7 @@ const Loader = ({ center }) => {
 }
 
 Loader.propTypes = {
-  center: PropTypes.boolean
+  center: PropTypes.any
 }
 
 export default Loader

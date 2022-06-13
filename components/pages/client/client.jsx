@@ -94,7 +94,7 @@ const EditClient = ({ ...props }) => {
           </div>
           <div id='pad' className={styles.clientContainer}>
             <a id='align' className='lightTextSm'>
-              <PackagePlus strokeWidth={1} size={20} stroke-width='1' />
+              <PackagePlus strokeWidth={1} size={20}/>
               Dados de Faturação
             </a>
             <br></br>

@@ -11,6 +11,7 @@ import { getCategories } from '../../components/mock/Categories';
 import { getStock } from '../../components/mock/Stock';
 import routes from '../../navigation/routes';
 import { getProduct, getProducts } from '../../components/mock/Products';
+import hasData from '../../components/utils/hasData';
 
 //  Page Component
 export async function getServerSideProps(context) {
@@ -23,14 +24,14 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Stock = ({ allStock, allCategories, products }) => {
+const Stock = ({ allStock, allCategories, products, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const categories = allCategories;
   const items = allStock;
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
 
   items.forEach((item, i) => {
@@ -89,8 +90,13 @@ const Stock = ({ allStock, allCategories, products }) => {
     headCells,
     products,
   };
-
-  return loaded ? <StockScreen {...props} /> : <Loader center={true} />;
+  if (
+    hasData(items) &&
+    hasData(categories) &&
+    hasData(products)
+  )
+    pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? <StockScreen {...props} /> : <Loader center={true} />;
 };
 Stock.propTypes = {
   categories: PropTypes.array,

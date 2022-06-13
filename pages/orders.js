@@ -20,7 +20,7 @@ import { getClients } from '../components/mock/Clients';
 
 export async function getServerSideProps(context) {
   const res = getCategories();
-  const res2 = getOrders();
+  const res2 = await getOrders();
   const res3 = getClients();
 
   return {

@@ -58,7 +58,6 @@ const SignIn = ({ ...props }) => {
   //           error.response.data.message) ||
   //         error.message ||
   //         error.toString();
-  //       console.log(resMessage);
   //     }
   //   );
   // }
@@ -187,7 +186,7 @@ const SignIn = ({ ...props }) => {
             <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
 
             <OutlinedInput
-              margin='normal'
+              
               required
               fullWidth
               id='email'
@@ -200,7 +199,7 @@ const SignIn = ({ ...props }) => {
             <InputLabel htmlFor='password'>Senha</InputLabel>
             <OutlinedInput
               id='password'
-              margin='normal'
+              
               required
               fullWidth
               name='password'

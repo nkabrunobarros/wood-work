@@ -12,6 +12,8 @@ import { getOrders } from '../../components/mock/Orders';
 import routes from '../../navigation/routes';
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 import { getClients } from '../../components/mock/Clients';
+import orderService from '../../services/orders/order-service';
+import hasData from '../../components/utils/hasData';
 
 export async function getServerSideProps(context) {
   const res = await getCategories();
@@ -23,12 +25,20 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Orders = ({ categories, orders, clients }) => {
-  const [loaded, setLoaded] = useState(false);
+const Orders = ({
+  hasFullyLoaded,
+  categories,
+  orders,
+  clients,
+  ...pageProps
+}) => {
+  const [queryOrders, setQueryOrders] = useState();
   useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 1500);
+    const getAllOrders = async () => {
+      const res = await orderService.getAllOrders();
+      setQueryOrders(res.data.data);
+    };
+    getAllOrders();
   }, []);
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
@@ -37,7 +47,7 @@ const Orders = ({ categories, orders, clients }) => {
       href: `${routes.private.internal.orders}`,
     },
   ];
-  const items = orders;
+  const items = queryOrders;
   const internalPOV = true;
   const panelsInfo = {
     budgeting: 12,
@@ -136,7 +146,18 @@ const Orders = ({ categories, orders, clients }) => {
     clients,
     editPage,
   };
-  return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />;
+  if (
+    hasData(items) &&
+    hasData(clients) &&
+    hasData(categories)
+  )
+    hasFullyLoaded = true;
+
+  return hasFullyLoaded ? (
+    <OrdersScreen {...props} />
+  ) : (
+    <Loader center={true} />
+  );
 };
 Orders.propTypes = {
   categories: PropTypes.array,
@@ -149,6 +170,7 @@ Orders.propTypes = {
   editPage: PropTypes.string,
   internalPOV: PropTypes.boolean,
   cards: PropTypes.arrayOf(PropTypes.object),
+  hasFullyLoaded: PropTypes.bool,
 };
 
 export default Orders;
