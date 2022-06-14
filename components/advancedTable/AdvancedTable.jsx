@@ -20,7 +20,7 @@ import { Edit, Trash } from 'lucide-react';
 import { FilterItem } from '../utils/FilterItem';
 import Router from 'next/router';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
-const AdvancedTable = ({
+const AdvancedTable = async ({
   children,
   rows,
   headCells,

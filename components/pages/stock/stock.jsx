@@ -13,7 +13,7 @@ import { FilterItem } from '../../utils/FilterItem';
 import styles from '../../../styles/StockDetail.module.css';
 import { Divider } from '@mui/material';
 
-const Profile = ({ ...props }) => {
+const Stock = async ({ ...props }) => {
   const { product, stock, breadcrumbsPath } = props;
   return (
     <Grid component='main'>
@@ -140,4 +140,4 @@ const Profile = ({ ...props }) => {
     </Grid>
   );
 };
-export default Profile;
+export default Stock;

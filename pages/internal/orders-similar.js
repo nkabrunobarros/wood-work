@@ -15,9 +15,9 @@ import hasData from "../../components/utils/hasData";
 import orderService from "../../services/orders/order-service";
 
 export async function getServerSideProps(context) {
-  const clientsRes = getClients();
+  const clientsRes = await getClients();
   const woods = getWoodTypes();
-  const prods = getProducts();
+  const prods = await getProducts();
   return {
     props: {
       clients: clientsRes,

@@ -44,7 +44,7 @@ import {
 import Router from 'next/router';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 
-const Order = ({ ...props }) => {
+const Order = async ({ ...props }) => {
   const {
     order,
     docs,
