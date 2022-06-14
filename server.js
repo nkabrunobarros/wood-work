@@ -1,11 +1,10 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 const app = express();
 
 app.use(cors());
 
 app.use('/login', (request, res) => {
-  console.log(request)
   res.send({
     token: 'test123',
   });

@@ -24,19 +24,19 @@ const Stock = ({ ...props }) => {
   const rows = items;
 
   //  States
-  const [name, setName] = useState('');
+  const [productId, setProductId] = useState('');
   const [codigo, setCodigo] = useState('');
   const [category, setCategory] = useState('');
   const [stock, setStock] = useState('');
   const [filters, setFilters] = useState({});
 
   const onProductChange = (value) => {
-    if (value === null) setName('');
-    else setName(value.id);
+    if (value === null) setProductId('');
+    else setProductId(value.id);
   };
 
   const ClearFilters = () => {
-    setName('');
+    setProductId('');
     setCodigo('');
     setCategory('');
     setStock('');
@@ -46,7 +46,7 @@ const Stock = ({ ...props }) => {
   const ApplyFilters = () => {
     // Set Filters
     setFilters({
-      name,
+      productId,
       categoria: category,
       codigo,
       stock,
@@ -54,7 +54,8 @@ const Stock = ({ ...props }) => {
   };
   useEffect(() => {
     ApplyFilters();
-  }, [name, category, codigo, stock]);
+  }, [productId, category, codigo, stock]);
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -64,7 +65,7 @@ const Stock = ({ ...props }) => {
           <a className='headerTitleSm'>Filtros</a>
           <div className='filters'>
             <div className='filterContainer4'>
-              <InputLabel htmlFor='name'>Nome {name}</InputLabel>
+              <InputLabel htmlFor='name'>Nome</InputLabel>
               <Autocomplete
                 disablePortal
                 id='combo-box-demo'
@@ -75,8 +76,6 @@ const Stock = ({ ...props }) => {
                   <TextField
                     {...params}
                     fullWidth
-                    value={name}
-                    onChange={(event, value) => setName(event.target.value)}
                     placeholder='Produto'
                   />
                 )}

@@ -20,6 +20,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children }
     <Button className={styles.main} onClick={onClick} title={text} style={style} component='label'>
         {icon}
         {text}
+        {/* Children is for file Inputs */}
         {children}
     </Button>
   )

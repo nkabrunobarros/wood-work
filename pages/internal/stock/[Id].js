@@ -7,6 +7,7 @@ import routes from '../../../navigation/routes'
 import { getStock } from '../../../components/mock/Stock'
 import { getProduct } from '../../../components/mock/Products'
 import hasData from '../../../components/utils/hasData'
+import categoryService from '../../../services/categories/category-service'
 
 export async function getServerSideProps (context) {
   const res = await getStock()
@@ -16,17 +17,27 @@ export async function getServerSideProps (context) {
 }
 const Stock = ({ allStock, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false)
+  const [product, setProduct] = useState({})
+  const [categories, setCategories] = useState()
   const router = useRouter()
   const stockId = router.query.Id
   const stock = allStock.find((prod) => prod.id.toString() === stockId.toString())
-  const product = getProduct(stock.productId)
   
   useEffect(() => {
+    const getProd = async () => {
+      const productRes = await getProduct(stock.productId)
+      const categoriesRes = await categoryService.getAllCategories()
+      setProduct(productRes)
+      setCategories(categoriesRes.data.data)
+    }
+    getProd();
     setTimeout(() => {
       setLoaded(true)
     }, 500)
   }, [])
-
+  const data = {
+    categories
+  }
   const breadcrumbsPath = [
     {
       title: 'Stock',
@@ -40,20 +51,23 @@ const Stock = ({ allStock, ...pageProps }) => {
   const props = {
     product,
     breadcrumbsPath,
-    stock
+    stock,
+    data
   }
   if (
     hasData(allStock) &&
     hasData(product) &&
+    hasData(data) &&
     hasData(stock) 
   )
     pageProps.hasFullyLoaded = true;
-  return pageProps.hasFullyLoaded && loaded
-    ? (
-    <StockScreen {...props} />
-      )
-    : (
-    <Loader center={true} />
-      )
+    // return true
+    return pageProps.hasFullyLoaded && loaded
+      ? (
+      <StockScreen {...props} />
+        )
+      : (
+      <Loader center={true} />
+        )
 }
 export default Stock

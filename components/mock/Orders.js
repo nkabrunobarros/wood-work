@@ -121,7 +121,6 @@ async function getOrder(id) {
   const orders = await getOrders();
   // eslint-disable-next-line no-return-assign
   const order = orders.find((order) => (order.id = id));
-  console.log(order);
   return order;
 }
 export { getOrders, getOrder };

@@ -1066,7 +1066,7 @@ clsx@^1.1.1:
 
 cocoapods@^0.0.0:
   version "0.0.0"
-  resolved "https://registry.yarnpkg.com/cocoapods/-/cocoapods-0.0.0.tgz#394adb14507abe6cc238736980e1152a4107b7b3"
+  resolved "https://registry.npmjs.org/cocoapods/-/cocoapods-0.0.0.tgz"
   integrity sha512-nsdKucT3oTSvS5s+W3/uxSn57+0e2LxMo2XcTsHwDCdYHB+T21haL11AkioVBACloAMQr00EDBZ//2DnynD9SQ==
 
 color-convert@^1.9.0:
@@ -1278,6 +1278,11 @@ dom-helpers@^5.0.1:
   dependencies:
     "@babel/runtime" "^7.8.7"
     csstype "^3.0.2"
+
+dotenv@^16.0.1:
+  version "16.0.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.1.tgz#8f8f9d94876c35dac989876a5d3a82a267fdce1d"
+  integrity sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==
 
 ee-first@1.1.1:
   version "1.1.1"

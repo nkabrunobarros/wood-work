@@ -28,7 +28,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Orders = ({ categories, orders, clients }) => {
+const Orders = ({ categories, orders, clients, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {

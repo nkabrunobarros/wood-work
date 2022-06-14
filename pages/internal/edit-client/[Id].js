@@ -1,46 +1,61 @@
-/* eslint-disable react/prop-types */
+//  Nodes
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import Loader from '../../../components/loader/loader';
-import EditClientScreen from '../../../components/pages/editClient/editClient';
-import routes from '../../../navigation/routes';
-import { getClients } from '../../../components/mock/Clients';
 
-export async function getServerSideProps(context) {
-  const res = getClients();
-  return {
-    props: { clients: res }, // will be passed to the page component as props
-  };
-}
-const EditClient = ({ clients }) => {
+//  PreLoader
+import Loader from '../../../components/loader/loader';
+
+//  Page Component
+import EditClientScreen from '../../../components/pages/editClient/editClient';
+import hasData from '../../../components/utils/hasData';
+
+//  Navigation
+import routes from '../../../navigation/routes';
+
+//  Services
+import clientService from '../../../services/clients/client-service';
+
+const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
+  const [client, setClient] = useState();
+
   const router = useRouter();
   const clientId = router.query.Id;
-  const client = clients.find(
-    (client) => client.id.toString() === clientId.toString()
-  );
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 1500);
+    const getAll = async () => {
+      await clientService
+        .getClientById(clientId)
+        .then((res) => setClient(res.data.data));
+    };
+    Promise.all([getAll()]).then(setLoaded(true));
   }, []);
-  const detailPage = routes.private.internal.client
-  const breadcrumbsPath = [
-    {
-      title: 'Clientes',
-      href: `${routes.private.internal.clients}`,
-    },
-    {
-      title: `Editar Cliente`,
-      href: `${routes.private.internal.clients}`,
-    },
-  ];
-  const props = {
-    client,
-    breadcrumbsPath,
-    detailPage,
-  };
-  return loaded ? <EditClientScreen {...props} /> : <Loader center={true} />;
+  if (loaded) {
+    const detailPage = routes.private.internal.client;
+    const breadcrumbsPath = [
+      {
+        title: 'Clientes',
+        href: `${routes.private.internal.clients}`,
+      },
+      {
+        title: `Editar Cliente`,
+        href: `${routes.private.internal.clients}`,
+      },
+    ];
+    const props = {
+      client,
+      breadcrumbsPath,
+      detailPage,
+      pageProps,
+    };
+    if (hasData(client)) pageProps.hasFullyLoaded = true;
+
+    return loaded && pageProps.hasFullyLoaded ? (
+      <EditClientScreen {...props} />
+    ) : (
+      <Loader center={true} />
+    );
+  }
+  return <Loader center={true} />;
 };
 export default EditClient;

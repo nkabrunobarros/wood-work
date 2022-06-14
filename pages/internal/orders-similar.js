@@ -1,46 +1,56 @@
 //  Nodes
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 //  Preloader
-import Loader from "../../components/loader/loader";
-import OrdersScreen from "../../components/pages/ordersSimilar/orders-similar";
+import Loader from '../../components/loader/loader';
 
-import PropTypes from "prop-types";
+//  Page Component
+import OrdersScreen from '../../components/pages/ordersSimilar/orders-similar';
 
-import routes from "../../navigation/routes";
-import { getClients } from "../../components/mock/Clients";
-import { getWoodTypes } from "../../components/mock/WoodTypes";
-import { getProducts } from "../../components/mock/Products";
-import hasData from "../../components/utils/hasData";
-import orderService from "../../services/orders/order-service";
+//  PropTypes
+import PropTypes from 'prop-types';
 
-export async function getServerSideProps(context) {
-  const clientsRes = await getClients();
-  const woods = getWoodTypes();
-  const prods = await getProducts();
-  return {
-    props: {
-      clients: clientsRes,
-      woodTypes: woods,
-      products: prods,
-    }, // will be passed to the page component as props
-  };
+//  Navigation
+import routes from '../../navigation/routes';
+
+//  Services
+import orderService from '../../services/orders/order-service';
+import clientService from '../../services/clients/client-service';
+import productService from '../../services/products/product-service';
+import woodTypeService from '../../services/woodtype/woodtype-service';
+
+//  Util
+import hasData from '../../components/utils/hasData';
+
+function formatNum(val1, val2) {
+  const res = val1 - val2;
+
+  if (Number.isInteger(res)) return res;
+  else return res.toFixed(2);
 }
 
-const OrdersSimilar = ({
-  clients,
-  woodTypes,
-  products,
-  hasFullyLoaded,
-  ...pageProps
-}) => {
+const OrdersSimilar = ({ hasFullyLoaded, ...pageProps }) => {
+  //  Data States
   const [orders, setOrders] = useState();
+  const [clients, setClients] = useState();
+  const [products, setProducts] = useState();
+  const [woodTypes, setWoodTypes] = useState();
 
   useEffect(() => {
-    const getAllOrders = async () => {
+    const getAll = async () => {
+      await productService
+        .getAllProducts()
+        .then((res) => setProducts(res.data.data));
+      await clientService
+        .getAllClients()
+        .then((res) => setClients(res.data.data));
+      await woodTypeService
+        .getAllWoodTypes()
+        .then((res) => setWoodTypes(res.data.data));
+
       await orderService.getAllOrders().then((res) => {
-        console.log(res.data.data);
         const data = res.data.data;
+        //  Calc desvios
         data.map(
           (item, i) =>
             (data[i].desvio = formatNum(item.previsto, item.realizado))
@@ -52,155 +62,147 @@ const OrdersSimilar = ({
         setOrders(data);
       });
     };
-    getAllOrders();
+    Promise.all([getAll()]).then((pageProps.hasFullyLoaded = true));
   }, []);
+
   //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
-      title: "Encomendas Similares",
+      title: 'Encomendas Similares',
       href: `${routes.private.internal.ordersSimilar}`,
     },
   ];
+  //  Table upper cols
   const headCellsUpper = [
     {
-      id: "amountProduced",
+      id: 'amountProduced',
       numeric: false,
       disablePadding: false,
       borderLeft: false,
       borderRight: false,
-      label: "Quantidade Produzida:12 Un",
+      label: 'Quantidade Produzida:12 Un',
       span: 6,
     },
     {
-      id: "orderAmount",
+      id: 'orderAmount',
       numeric: false,
       disablePadding: false,
       borderLeft: true,
       borderRight: true,
-      label: "Quantidade Encomendada:25 Un",
+      label: 'Quantidade Encomendada:25 Un',
       span: 1,
     },
     {
-      id: "perUnit",
+      id: 'perUnit',
       numeric: false,
       disablePadding: false,
       borderLeft: false,
       borderRight: false,
-      label: "Por unidade",
+      label: 'Por unidade',
       span: 5,
     },
   ];
+  //  Table lower cols
   const headCells = [
     {
-      id: "productId",
+      id: 'productId',
       numeric: false,
       disablePadding: false,
-      label: "Nome",
+      label: 'Nome',
     },
     {
-      id: "cliente",
+      id: 'cliente',
       numeric: false,
       disablePadding: true,
-      label: "Cliente",
+      label: 'Cliente',
     },
     {
-      id: "numero",
+      id: 'numero',
       numeric: false,
       disablePadding: false,
-      label: "Num. Encomenda",
+      label: 'Num. Encomenda',
     },
     {
-      id: "previsto",
+      id: 'previsto',
       numeric: false,
       disablePadding: false,
-      label: "Previsto",
+      label: 'Previsto',
     },
     {
-      id: "realizado",
+      id: 'realizado',
       numeric: false,
       disablePadding: false,
-      label: "Realizado",
+      label: 'Realizado',
     },
     {
-      id: "desvio",
+      id: 'desvio',
       numeric: false,
       disablePadding: false,
-      label: "Desvio",
+      label: 'Desvio',
     },
     {
-      id: "horasAtuais",
+      id: 'horasAtuais',
       numeric: false,
       disablePadding: false,
       borderLeft: true,
       borderRight: true,
-      label: "Horas Atuais",
+      label: 'Horas Atuais',
     },
     {
-      id: "previsto2",
+      id: 'previsto2',
       numeric: false,
       disablePadding: false,
-      label: "Previsto",
+      label: 'Previsto',
     },
     {
-      id: "custo",
+      id: 'custo',
       numeric: false,
       disablePadding: false,
-      label: "Custo",
+      label: 'Custo',
     },
     {
-      id: "realizado2",
+      id: 'realizado2',
       numeric: false,
       disablePadding: false,
-      label: "Realizado",
+      label: 'Realizado',
     },
     {
-      id: "desvio2",
+      id: 'desvio2',
       numeric: false,
       disablePadding: false,
-      label: "Desvio",
+      label: 'Desvio',
     },
     {
-      id: "actions",
+      id: 'actions',
       numeric: true,
       disablePadding: false,
-      label: "Ações",
+      label: 'Ações',
     },
   ];
-
-  const panelsInfo = {
-    budgeting: 2,
-    drawing: 1,
-    production: 3,
-    concluded: 7,
-  };
-
-  function formatNum(val1, val2) {
-    const res = val1 - val2;
-
-    if (Number.isInteger(res)) return res;
-    else return res.toFixed(2);
-  }
-
   const detailPage = routes.private.order;
 
+  //  Dummy Operation types
   const operations = [
     {
-      label: "Corte",
-      value: "Corte",
+      label: 'Corte',
+      value: 'Corte',
     },
     {
-      label: "Montagem",
-      value: "Montagem",
+      label: 'Montagem',
+      value: 'Montagem',
     },
     {
-      label: "Colagem",
-      value: "Colagem",
+      label: 'Colagem',
+      value: 'Colagem',
     },
   ];
+
+  //  Convert main listing items to items var for coherence amongst pages
   const items = orders;
+
+  //  Page Props
   const props = {
     items,
-    panelsInfo,
     breadcrumbsPath,
     detailPage,
     clients,
@@ -210,6 +212,8 @@ const OrdersSimilar = ({
     headCellsUpper,
     headCells,
   };
+
+  //  Verifies if all data as been loaded and set page to fully Loaded
   if (
     hasData(items) &&
     hasData(clients) &&
@@ -226,7 +230,6 @@ const OrdersSimilar = ({
 OrdersSimilar.propTypes = {
   items: PropTypes.array,
   orders: PropTypes.array,
-  panelsInfo: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
   detailPage: PropTypes.string,
   clients: PropTypes.array,

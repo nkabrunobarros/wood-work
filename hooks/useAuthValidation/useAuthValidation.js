@@ -5,7 +5,6 @@ import hasData from '../../components/utils/hasData';
 
 export default function useAuthValidation(hasFullyLoaded, loggedUser, route) {
   const user = loggedUser;
-  console.log(user);
   useEffect(() => {
     // Trigger client side update on loginData
     if (!user && !hasFullyLoaded) {

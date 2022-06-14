@@ -22,7 +22,7 @@ import {
 import Router from 'next/router';
 
 const EditOrder = ({ ...props }) => {
-  const { breadcrumbsPath, order } = props;
+  const { breadcrumbsPath, order, pageProps, clients } = props;
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -37,10 +37,23 @@ const EditOrder = ({ ...props }) => {
             <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
           </div>
           <div style={{ display: 'flex' }}>
-            <PrimaryBtn text='Guardar' icon={<Save strokeWidth='1' />} />
+            <PrimaryBtn
+              text='Guardar'
+              icon={
+                <Save
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
+            />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X strokeWidth='1' />}
+              icon={
+                <X
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               light
               onClick={() => Router.back()}
             />
@@ -51,7 +64,6 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='email'
@@ -63,7 +75,6 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='email'
@@ -75,7 +86,6 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='email'
@@ -87,7 +97,6 @@ const EditOrder = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='email'
@@ -105,7 +114,11 @@ const EditOrder = ({ ...props }) => {
           </div>
           <div id='pad' className={styles.clientContainer}>
             <a id='align' className='headerTitleSm'>
-              <User strokeWidth={1} /> Dados do Cliente
+              <User
+                strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                size={pageProps.globalVars.iconSize}
+              />
+              Dados do Cliente
             </a>
             <div>
               <InputLabel htmlFor='email'>Cliente</InputLabel>
@@ -113,12 +126,16 @@ const EditOrder = ({ ...props }) => {
                 <MenuItem value={'Selecionar uma categoria'}>
                   Selecionar uma categoria
                 </MenuItem>
+                {clients.map((client, i) => (
+                  <MenuItem key={i} value={client.id}>
+                    {client.nome}
+                  </MenuItem>
+                ))}
               </Select>
             </div>
             <div>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='email'
@@ -130,7 +147,6 @@ const EditOrder = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='email'
@@ -148,6 +164,8 @@ const EditOrder = ({ ...props }) => {
 EditOrder.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   order: PropTypes.object,
+  pageProps: PropTypes.any,
+  clients: PropTypes.array,
 };
 
 export default EditOrder;

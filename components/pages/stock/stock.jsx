@@ -13,8 +13,8 @@ import { FilterItem } from '../../utils/FilterItem';
 import styles from '../../../styles/StockDetail.module.css';
 import { Divider } from '@mui/material';
 
-const Stock = async ({ ...props }) => {
-  const { product, stock, breadcrumbsPath } = props;
+const Stock = ({ ...props }) => {
+  const { product, stock, breadcrumbsPath, data } = props;
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -28,7 +28,7 @@ const Stock = async ({ ...props }) => {
           <div id='align' style={{ flex: 1 }}>
             <a className='headerTitleXl'>{product.nome}</a>
             <div className='spacer' />
-            <a>{FilterItem(stock.stock)}</a>
+            <a>{FilterItem({},stock.stock)}</a>
           </div>
           <div style={{ display: 'flex' }}>
             <PrimaryBtn text='Editar' icon={<Edit strokeWidth='1' />} />
@@ -42,7 +42,7 @@ const Stock = async ({ ...props }) => {
               <div>
                 <a className='lightTextSm'>Código</a>
                 <br></br>
-                <a className='lightTextSm black'>{stock.codigo}</a>
+                <a className='lightTextSm black'>{product.codigo}</a>
                 <br></br>
               </div>
               <br></br>
@@ -67,7 +67,9 @@ const Stock = async ({ ...props }) => {
                 <a className='lightTextSm'>Categoria</a>
                 <br></br>
                 <a className='lightTextSm black'>
-                  {FilterItem(product.category, 'categoria')}
+                  {FilterItem(data ,product.category, 'categoria')}
+                  {/* {DisplayCategory(product.category)} */}
+                  
                 </a>
                 <br></br>
               </div>

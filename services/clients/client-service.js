@@ -1,5 +1,8 @@
 import axios from "axios";
+// import abstractManager from "../../src/core/managers/abstract-manager";
 const API_URL = "http://localhost:3000/api/";
+
+
 
 class ClientService {
   async getAllClients() {
@@ -8,12 +11,12 @@ class ClientService {
     });
   }
 
-  //   async getOrderById(id) {
-  //     return await axios
-  //       .post(API_URL + "order/SingleOrder/", { id })
-  //       .then((data) => {
-  //         return data;
-  //       });
-  //   }
+ async getClientById(id) {
+   return await axios
+     .post(API_URL + "client/SingleClient/", { id })
+     .then((data) => {
+       return data;
+     });
+ }
 }
 export default new ClientService();

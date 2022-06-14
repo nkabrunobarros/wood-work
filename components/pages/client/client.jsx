@@ -1,8 +1,13 @@
 //  Nodes
 import React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
+import Router from 'next/router';
 
+//  Material UI
+import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+import { InputLabel } from '@mui/material';
+
+//  Custom Components
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
@@ -10,13 +15,14 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 //  PropTypes
 import PropTypes from 'prop-types';
 
+//  Styles
 import styles from '../../../styles/NewOrder.module.css';
+
+//  Icons
 import { Edit, PackagePlus, Trash, User } from 'lucide-react';
-import { InputLabel } from '@mui/material';
-import Router from 'next/router';
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, client, editRoute } = props;
+  const { breadcrumbsPath, client, editRoute, pageProps } = props;
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -31,10 +37,24 @@ const EditClient = ({ ...props }) => {
             <a className='headerTitleXl'>{client.nome}</a>
           </div>
           <div style={{ display: 'flex' }}>
-            <PrimaryBtn text='Editar' icon={<Edit stroke-width='1' />} onClick={() => Router.push(`${editRoute}${client.id}`)} />
+            <PrimaryBtn
+              text='Editar'
+              icon={
+                <Edit
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
+              onClick={() => Router.push(`${editRoute}${client.id}`)}
+            />
             <PrimaryBtn
               text='Apagar'
-              icon={<Trash stroke-width='1' />}
+              icon={
+                <Trash
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               light
             />
           </div>
@@ -42,7 +62,11 @@ const EditClient = ({ ...props }) => {
         <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
-              <User size={20} stroke-width='1' /> Dados Gerais
+              <User
+                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                size={pageProps.globalVars.iconSize}
+              />
+              Dados Gerais
             </a>
             <div id='pad' style={{ display: 'flex', height: '100%' }}>
               <div
@@ -94,7 +118,10 @@ const EditClient = ({ ...props }) => {
           </div>
           <div id='pad' className={styles.clientContainer}>
             <a id='align' className='lightTextSm'>
-              <PackagePlus strokeWidth={1} size={20}/>
+              <PackagePlus
+                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                size={pageProps.globalVars.iconSize}
+              />
               Dados de Faturação
             </a>
             <br></br>
@@ -146,7 +173,8 @@ const EditClient = ({ ...props }) => {
 EditClient.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,
-  editRoute: PropTypes.string
+  editRoute: PropTypes.string,
+  pageProps: PropTypes.any,
 };
 
 export default EditClient;

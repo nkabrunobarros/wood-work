@@ -60,7 +60,6 @@ async function getProducts() {
 
 async function getProduct(id) {
   const products = await getProducts();
-  console.log(products);
   const foundProduct = products.find(
     (element) => element.id.toString() === id.toString()
   );

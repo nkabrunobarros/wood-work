@@ -1,207 +1,233 @@
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import Loader from "../../../components/loader/loader";
-import OrderScreen from "../../../components/pages/order/order";
-import routes from "../../../navigation/routes";
-import orderService from "../../../services/orders/order-service";
+//  Nodes
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
-const Order = () => {
+//  Preloader
+import Loader from '../../../components/loader/loader';
+
+//  Page Component
+import OrderScreen from '../../../components/pages/order/order';
+
+//  Utils
+import hasData from '../../../components/utils/hasData';
+
+//  Navigation
+import routes from '../../../navigation/routes';
+
+//  Services
+import orderService from '../../../services/orders/order-service';
+
+const Order = ({ ...pageProps }) => {
+  const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
-  const router = useRouter();
   const orderId = router.query.Id;
+
+  useEffect(() => {
+    const getOrder = async () => {
+      await orderService
+        .getOrderById(orderId)
+        .then((res) => setOrder(res.data.data));
+    };
+
+    getOrder();
+    setTimeout(() => {
+      setLoaded(true);
+    }, 500);
+  }, []);
+
   const docs = [
     {
       id: 1,
-      name: "Desenho 1",
-      data: "11/03/2022",
-      fileSize: " 150 Mb",
-      createdAt: "11 de Fevereiro 2022",
-      updatedAt: "02 de Março de 2022",
+      name: 'Desenho 1',
+      data: '11/03/2022',
+      fileSize: ' 150 Mb',
+      createdAt: '11 de Fevereiro 2022',
+      updatedAt: '02 de Março de 2022',
     },
     {
       id: 2,
-      name: "Maquete 1",
-      data: "12/03/2022",
-      fileSize: " 170 Mb",
-      createdAt: "11 de Janeiro 2022",
-      updatedAt: "04 de Março de 2022",
+      name: 'Maquete 1',
+      data: '12/03/2022',
+      fileSize: ' 170 Mb',
+      createdAt: '11 de Janeiro 2022',
+      updatedAt: '04 de Março de 2022',
     },
     {
       id: 3,
-      name: "Desenho 2",
-      data: "13/03/2022",
-      fileSize: " 22 Mb",
-      createdAt: "14 de Fevereiro 2022",
-      updatedAt: "01 de Março de 2022",
+      name: 'Desenho 2',
+      data: '13/03/2022',
+      fileSize: ' 22 Mb',
+      createdAt: '14 de Fevereiro 2022',
+      updatedAt: '01 de Março de 2022',
     },
     {
       id: 4,
-      name: "Maquete 2",
-      data: "14/03/2022",
-      fileSize: " 1 Gb",
-      createdAt: "23 de Fevereiro 2022",
-      updatedAt: "22 de Março de 2022",
+      name: 'Maquete 2',
+      data: '14/03/2022',
+      fileSize: ' 1 Gb',
+      createdAt: '23 de Fevereiro 2022',
+      updatedAt: '22 de Março de 2022',
     },
   ];
   const headCellsUpperOrderDetail = [
     {
-      id: "deadline",
+      id: 'deadline',
       numeric: false,
       disablePadding: false,
       borderLeft: false,
       borderRight: false,
-      label: "Data de Entrega",
+      label: 'Data de Entrega',
       span: 2,
     },
     {
-      id: "production",
+      id: 'production',
       numeric: false,
       disablePadding: false,
       borderLeft: true,
       borderRight: true,
-      label: "Produção",
+      label: 'Produção',
       span: 2,
     },
     {
-      id: "amount",
+      id: 'amount',
       numeric: false,
       disablePadding: false,
       borderLeft: false,
       borderRight: false,
-      label: "Quantidade Encomendada: 25 Un",
+      label: 'Quantidade Encomendada: 25 Un',
       span: 1,
     },
   ];
   const headCellsOrderDetail = [
     {
-      id: "clienteTime",
-      label: "Cliente",
+      id: 'clienteTime',
+      label: 'Cliente',
     },
     {
-      id: "real",
-      label: "Real",
+      id: 'real',
+      label: 'Real',
     },
     {
-      id: "start",
-      label: "Inicio",
+      id: 'start',
+      label: 'Inicio',
       borderLeft: true,
     },
     {
-      id: "end",
-      label: "Fim",
+      id: 'end',
+      label: 'Fim',
       borderRight: true,
     },
     {
-      id: "time",
+      id: 'time',
       disablePadding: false,
-      label: "Tempo",
+      label: 'Tempo',
     },
   ];
   const headCellsProductionDetail = [
     {
-      id: "operacao",
-      label: "Operação",
+      id: 'operacao',
+      label: 'Operação',
     },
     {
-      id: "previsto1",
-      label: "Previsto",
+      id: 'previsto1',
+      label: 'Previsto',
     },
     {
-      id: "realizado",
-      label: "Realizado",
+      id: 'realizado',
+      label: 'Realizado',
     },
     {
-      id: "desvio",
-      label: "Desvio",
+      id: 'desvio',
+      label: 'Desvio',
     },
     {
-      id: "previstoAtual",
-      label: "Previsto (Atual)",
+      id: 'previstoAtual',
+      label: 'Previsto (Atual)',
       borderLeft: true,
       borderRight: true,
     },
     {
-      id: "previsto2",
-      label: "Previsto",
+      id: 'previsto2',
+      label: 'Previsto',
     },
     {
-      id: "realizado2",
-      label: "Realizado",
+      id: 'realizado2',
+      label: 'Realizado',
     },
     {
-      id: "desvio2",
-      label: "Desvio",
+      id: 'desvio2',
+      label: 'Desvio',
     },
   ];
   const headCellsUpperProductionDetail = [
     {
-      id: "amountDone",
+      id: 'amountDone',
       numeric: false,
       disablePadding: false,
       borderLeft: false,
       borderRight: false,
-      label: "Quantidade Produzida: 12 Un",
+      label: 'Quantidade Produzida: 12 Un',
       span: 4,
     },
     {
-      id: "orderedAmount",
+      id: 'orderedAmount',
       numeric: false,
       disablePadding: false,
       borderLeft: true,
       borderRight: true,
-      label: "Quantidade Encomendada: 25 Un",
+      label: 'Quantidade Encomendada: 25 Un',
       span: 1,
     },
     {
-      id: "perUnit",
+      id: 'perUnit',
       numeric: false,
       disablePadding: false,
       borderLeft: false,
       borderRight: false,
-      label: "Por Unidade",
+      label: 'Por Unidade',
       span: 3,
     },
   ];
   const headCellsMessages = [
     {
-      id: "mensagem",
-      label: "Mensagem",
-      width: "80%",
+      id: 'mensagem',
+      label: 'Mensagem',
+      width: '80%',
     },
     {
-      id: "date",
-      label: "Data",
-      width: "10%",
+      id: 'date',
+      label: 'Data',
+      width: '10%',
     },
     {
-      id: "actions",
-      label: "Ações",
-      width: "10%",
+      id: 'actions',
+      label: 'Ações',
+      width: '10%',
     },
   ];
   const headCellsDocs = [
     {
-      id: "nome",
-      label: "Nome",
-      width: "80%",
+      id: 'nome',
+      label: 'Nome',
+      width: '80%',
     },
     {
-      id: "date",
-      label: "Data",
-      width: "10%",
+      id: 'date',
+      label: 'Data',
+      width: '10%',
     },
     {
-      id: "actions",
-      label: "Ações",
-      width: "10%",
+      id: 'actions',
+      label: 'Ações',
+      width: '10%',
     },
     {},
   ];
   const productionDetail = [
     {
       id: Math.random(),
-      operacao: "Corte",
+      operacao: 'Corte',
       previsto1: 18,
       realizado: 17,
       desvio: -1,
@@ -211,10 +237,9 @@ const Order = () => {
       desvio2: 0,
     },
   ];
-
   const breadcrumbsPath = [
     {
-      title: "Encomendas",
+      title: 'Encomendas',
       href: `${routes.private.internal.orders}`,
     },
     {
@@ -222,20 +247,19 @@ const Order = () => {
       href: `${routes.private.internal.order}`,
     },
   ];
-  useEffect(() => {
-    const getOrder = async () => {
-      await orderService.getOrderById(orderId).then((res) => {
-        setOrder(res.data.data);
-      });
-    };
-    getOrder();
-  }, []);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 1500);
-  }, []);
+  const orderDetail = [
+    {
+      id: Math.random(),
+      clienteTime: '04 abril 2022',
+      real: '06 abril 2022',
+      start: '17 março 2022',
+      end: '06 abril 2022',
+      time: 37,
+    },
+  ];
+  //  Filters what can the user see depending of profile
   const internalPOV = true;
+
   const props = {
     order,
     docs,
@@ -248,7 +272,14 @@ const Order = () => {
     headCellsUpperOrderDetail,
     headCellsMessages,
     headCellsDocs,
+    pageProps,
+    orderDetail,
   };
-  return loaded ? <OrderScreen {...props} /> : <Loader center={true} />;
+  if (hasData(order)) pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? (
+    <OrderScreen {...props} />
+  ) : (
+    <Loader center={true} />
+  );
 };
 export default Order;

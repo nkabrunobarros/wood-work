@@ -1,4 +1,4 @@
-function getCategories () {
+async function getCategories () {
   const categories = [
     {
       id: '512',
@@ -19,4 +19,12 @@ function getCategories () {
   ]
   return categories
 }
-export { getCategories }
+async function getCategory(id) {
+  const categories = await getCategories();
+  const foundCategory = categories.find(
+    (element) => element.id.toString() === id.toString()
+  );
+
+  return foundCategory;
+}
+export { getCategories, getCategory }

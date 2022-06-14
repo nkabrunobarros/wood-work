@@ -18,7 +18,6 @@ const noLayoutScreens = [
 ];
 
 const Layout = ({ children, ...pageProps }) => {
-  // console.log(pageProps)
   const path = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   function handleDrawerToggle() {

@@ -1,82 +1,89 @@
-import React, { useEffect, useState } from "react";
-import Loader from "../../components/loader/loader";
-import UsersScreen from "../../components/pages/users/users";
-import routes from "../../navigation/routes";
-import getCountries from "../../components/mock/Countries";
+//  Nodes
+import React, { useEffect, useState } from 'react';
 
-import PropTypes from "prop-types";
-import hasData from "../../components/utils/hasData";
-import clientService from "../../services/clients/client-service";
+//  Custom Components
+import Loader from '../../components/loader/loader';
+import UsersScreen from '../../components/pages/users/users';
 
-export async function getServerSideProps(context) {
-  const res2 = await getCountries();
-  return {
-    props: { countries: res2 }, // will be passed to the page component as props
-  };
-}
-const Clients = ({ hasFullyLoaded, countries, ...pageProps }) => {
+//  Navigation
+import routes from '../../navigation/routes';
+
+//  Proptypes
+import PropTypes from 'prop-types';
+
+//  Utils
+import hasData from '../../components/utils/hasData';
+
+//  Services
+import countryService from '../../services/countries/country-service';
+import clientService from '../../services/clients/client-service';
+
+const Clients = ({ hasFullyLoaded, ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 500);
-  }, []);
+  const [countries, setCountries] = useState();
+
   useEffect(() => {
     const getData = async () => {
       await clientService
         .getAllClients()
         .then((res) => setClients(res.data.data));
+      await countryService
+        .getAllCountries()
+        .then((res) => setCountries(res.data.data));
     };
-    getData();
+    Promise.all([getData()]).then(setLoaded(true));
   }, []);
-  const headCells = [
-    {
-      id: "nome",
-      numeric: false,
-      disablePadding: false,
-      label: "Nome",
-    },
-    {
-      id: "email",
-      numeric: false,
-      disablePadding: true,
-      label: "Email",
-    },
-    {
-      id: "actions",
-      numeric: true,
-      disablePadding: false,
-      label: "Ações",
-    },
-  ];
-  const editRoute = routes.private.internal.editClient;
-  const detailRoute = routes.private.internal.client;
-  const newRoute = routes.private.internal.newClient;
-  const breadcrumbsPath = [
-    {
-      title: "Clientes",
-      href: `${routes.private.internal.clients}`,
-    },
-  ];
-  const items = clients;
-  const props = {
-    items,
-    breadcrumbsPath,
-    countries,
-    editRoute,
-    detailRoute,
-    headCells,
-    newRoute,
-  };
+  if (loaded) {
+    const headCells = [
+      {
+        id: 'nome',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nome',
+      },
+      {
+        id: 'email',
+        numeric: false,
+        disablePadding: true,
+        label: 'Email',
+      },
+      {
+        id: 'actions',
+        numeric: true,
+        disablePadding: false,
+        label: 'Ações',
+      },
+    ];
+    const editRoute = routes.private.internal.editClient;
+    const detailRoute = routes.private.internal.client;
+    const newRoute = routes.private.internal.newClient;
+    const breadcrumbsPath = [
+      {
+        title: 'Clientes',
+        href: `${routes.private.internal.clients}`,
+      },
+    ];
+    const items = clients;
+    const props = {
+      items,
+      breadcrumbsPath,
+      countries,
+      editRoute,
+      detailRoute,
+      headCells,
+      newRoute,
+    };
 
-  // hasFullyLoaded = useAuthValidation(hasFullyLoaded, pageProps.loggedUser , routes.public.signIn);
-  if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
-  return pageProps.hasFullyLoaded && loaded ? (
-    <UsersScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+    // hasFullyLoaded = useAuthValidation(hasFullyLoaded, pageProps.loggedUser , routes.public.signIn);
+    if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
+    return pageProps.hasFullyLoaded && loaded ? (
+      <UsersScreen {...props} />
+    ) : (
+      <Loader center={true} />
+    );
+  }
+  return <Loader center={true} />;
 };
 
 Clients.propTypes = {

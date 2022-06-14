@@ -1,4 +1,4 @@
-function getWoodTypes() {
+async function getWoodTypes() {
   const woodTypes = [
     {
       id: 11,
@@ -39,4 +39,11 @@ function getWoodTypes() {
   ];
   return woodTypes;
 }
-export { getWoodTypes };
+async function getWoodType(id) {
+  const woodTypes = await getWoodTypes();
+  const foundWoodType= woodTypes.find(
+    (element) => element.id.toString() === id.toString()
+  );
+  return foundWoodType;
+}
+export { getWoodTypes, getWoodType };

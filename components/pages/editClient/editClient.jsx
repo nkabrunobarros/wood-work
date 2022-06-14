@@ -26,7 +26,7 @@ import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Loader from '../../loader/loader';
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, client, detailPage } = props;
+  const { breadcrumbsPath, client, detailPage, pageProps } = props;
   const [name, setName] = useState(client.nome);
   const [email, setEmail] = useState(client.email);
   const [contactName, setContactName] = useState(client.contactName);
@@ -112,12 +112,22 @@ const EditClient = ({ ...props }) => {
           <div style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save strokeWidth='1' />}
+              icon={
+                <Save
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X strokeWidth='1' />}
+              icon={
+                <X
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               light
               onClick={() => Router.back()}
             />
@@ -126,7 +136,11 @@ const EditClient = ({ ...props }) => {
         <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
-              <User size={20} strokeWidth='1' /> Dados Gerais
+              <User
+                strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                size={pageProps.globalVars.iconSize}
+              />
+              Dados Gerais
             </a>
             <div id='pad' className='filters'>
               <div className='filterContainer2'>
@@ -192,8 +206,11 @@ const EditClient = ({ ...props }) => {
             </div>
           </div>
           <div id='pad' className={styles.clientContainer}>
-            <a className='lightTextSm'>
-              <Edit2 size={20} strokeWidth='1' />
+            <a id='align' className='lightTextSm'>
+              <Edit2
+                strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                size={pageProps.globalVars.iconSize}
+              />
               Dados de Faturação
             </a>
             <div>
@@ -260,6 +277,7 @@ EditClient.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,
   detailPage: PropTypes.string.isRequired,
+  pageProps: PropTypes.any,
 };
 
 export default EditClient;

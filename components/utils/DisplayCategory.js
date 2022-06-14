@@ -1,7 +1,7 @@
 import { getCategories } from '../mock/Categories'
 
+import { find } from 'lodash'
 const getCategory = (categoryId) => {
-  const { find } = require('lodash')
   const categories = getCategories()
   const category = find(categories, { id: categoryId.toString() })
   return `${category.title}[${category.id}]`

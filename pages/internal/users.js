@@ -1,24 +1,37 @@
+//  Nodes
 import React, { useEffect, useState } from 'react';
+
+//  Custom Components
 import Loader from '../../components/loader/loader';
 import UsersScreen from '../../components/pages/users/users';
-import routes from '../../navigation/routes';
-import { getUsers } from '../../components/mock/Users';
-import getCountries from '../../components/mock/Countries';
 
+//  Navigation
+import routes from '../../navigation/routes';
+
+//  Proptypes
 import PropTypes from 'prop-types';
+
+//  Utils
 import hasData from '../../components/utils/hasData';
 
-export async function getServerSideProps(context) {
-  const res = await getUsers();
-  const res2 = await getCountries();
-  return {
-    props: { users: res, countries: res2 }, // will be passed to the page component as props
-  };
-}
-const Users = ({ users, countries, ...pageProps }) => {
+//  Services
+import countryService from '../../services/countries/country-service';
+import userService from '../../services/user/user-service';
+
+const Users = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
+  const [users, setUsers] = useState();
+  const [countries, setCountries] = useState();
   const items = users;
+
   useEffect(() => {
+    const getData = async () => {
+      await userService.getAllUsers().then((res) => setUsers(res.data.data));
+      await countryService
+        .getAllCountries()
+        .then((res) => setCountries(res.data.data));
+    };
+    Promise.all([getData()]).then(setLoaded(true));
     setTimeout(() => {
       setLoaded(true);
     }, 500);
@@ -69,12 +82,12 @@ const Users = ({ users, countries, ...pageProps }) => {
     headCells,
     newRoute,
   };
-  if (
-    hasData(items) &&
-    hasData(countries)
-  )
-    pageProps.hasFullyLoaded = true;
-  return pageProps.hasFullyLoaded && loaded ? <UsersScreen {...props} /> : <Loader center={true} />;
+  if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
+  return pageProps.hasFullyLoaded && loaded ? (
+    <UsersScreen {...props} />
+  ) : (
+    <Loader center={true} />
+  );
 };
 
 Users.propTypes = {

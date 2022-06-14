@@ -10,7 +10,6 @@ import Content from '../../content/content';
 import styles from '../../../styles/Order.module.css';
 import stylesMessage from '../../../styles/Messages.module.css';
 import Paper from '@mui/material/Paper';
-import { FilterItem } from '../../utils/FilterItem';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -44,7 +43,7 @@ import {
 import Router from 'next/router';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 
-const Order = async ({ ...props }) => {
+const Order = ({ ...props }) => {
   const {
     order,
     docs,
@@ -57,6 +56,8 @@ const Order = async ({ ...props }) => {
     headCellsUpperOrderDetail,
     headCellsMessages,
     headCellsDocs,
+    pageProps,
+    orderDetail,
   } = props;
   const [activeRow, setActiveRow] = useState(0);
 
@@ -122,7 +123,7 @@ const Order = async ({ ...props }) => {
     Row.propTypes = {
       row: PropTypes.any,
       index: PropTypes.number,
-    }
+    };
     const [open, setOpen] = useState(false);
     let style = {};
     if (open)
@@ -154,12 +155,20 @@ const Order = async ({ ...props }) => {
             <ButtonGroup>
               <Tooltip title='Edit'>
                 <IconButton>
-                  <Edit strokeWidth='1' className='link' />
+                  <Edit
+                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                    className='link'
+                  />
                 </IconButton>
               </Tooltip>
               <Tooltip title='Delete'>
                 <IconButton>
-                  <Trash strokeWidth='1' className='link' />
+                  <Trash
+                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                    className='link'
+                  />
                 </IconButton>
               </Tooltip>
             </ButtonGroup>
@@ -193,12 +202,20 @@ const Order = async ({ ...props }) => {
                     <ButtonGroup>
                       <Tooltip title='Edit'>
                         <IconButton>
-                          <Edit strokeWidth='1' className='link' />
+                          <Edit
+                            className='link'
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title='Delete'>
                         <IconButton>
-                          <Trash strokeWidth='1' className='link' />
+                          <Trash
+                            className='link'
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
                         </IconButton>
                       </Tooltip>
                     </ButtonGroup>
@@ -211,18 +228,6 @@ const Order = async ({ ...props }) => {
       </React.Fragment>
     );
   }
-
-  const orderDetail = [
-    {
-      id: Math.random(),
-      clienteTime: '04 abril 2022',
-      real: '06 abril 2022',
-      start: '17 março 2022',
-      end: '06 abril 2022',
-      time: 37,
-    },
-  ];
-
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -234,7 +239,12 @@ const Order = async ({ ...props }) => {
             <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
             <div style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
-                icon={<Tag strokeWidth='1' />}
+                icon={
+                  <Tag
+                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
+                }
                 text='Gerar Etiquetas'
               />
             </div>
@@ -299,7 +309,12 @@ const Order = async ({ ...props }) => {
               <a className='headerTitle'>Produção</a>
               <div style={{ marginLeft: 'auto' }}>
                 <PrimaryBtn
-                  icon={<Eye strokeWidth='1' />}
+                  icon={
+                    <Eye
+                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
+                    />
+                  }
                   text='Ver detalhes'
                 />
               </div>
@@ -326,14 +341,24 @@ const Order = async ({ ...props }) => {
                   <div>
                     <PrimaryBtn
                       text='Carregar'
-                      icon={<FilePlus strokeWidth='1' />}
+                      icon={
+                        <FilePlus
+                          strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                          size={pageProps.globalVars.iconSize}
+                        />
+                      }
                     />
                   </div>
                   <div>
                     <PrimaryBtn
                       light
                       text='Criar Pasta'
-                      icon={<FolderPlus strokeWidth='1' />}
+                      icon={
+                        <FolderPlus
+                          strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                          size={pageProps.globalVars.iconSize}
+                        />
+                      }
                     />
                   </div>
                 </div>
@@ -359,7 +384,11 @@ const Order = async ({ ...props }) => {
               <a className='headerTitleSm'>Desenho 1</a>
               <div className={styles.innerInfoContainer}>
                 <a id='align'>
-                  <Info style={{ marginRight: '1rem' }} size={20} />
+                  <Info
+                    style={{ marginRight: '1rem' }}
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
                   <b>Informações</b>
                 </a>
                 <div
@@ -373,8 +402,8 @@ const Order = async ({ ...props }) => {
                   }}
                 >
                   <Folder
-                    strokeWidth='0.5'
-                    size={54}
+                    strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
+                    size={pageProps.globalVars.iconSizeXxl}
                     stroke='#8793AB'
                     fill='#E7E8E9'
                   />
@@ -382,9 +411,9 @@ const Order = async ({ ...props }) => {
                 </div>
                 <a id='align'>
                   <FileText
-                    strokeWidth='1'
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
                     style={{ marginRight: '1rem' }}
-                    size={20}
                   />
                   <b>Propriedades</b>
                 </a>
@@ -400,9 +429,9 @@ const Order = async ({ ...props }) => {
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div id='align'>
                       <FileText
-                        strokeWidth='1'
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
                         style={{ marginRight: '1rem' }}
-                        size={20}
                         stroke='transparent'
                       />
                       <a>Salvo em</a>
@@ -410,9 +439,9 @@ const Order = async ({ ...props }) => {
                     <div id='align'>
                       <a>
                         <FileText
-                          strokeWidth='1'
+                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                          size={pageProps.globalVars.iconSize}
                           style={{ marginRight: '1rem' }}
-                          size={20}
                           stroke='transparent'
                         />
                         Alterado em
@@ -422,9 +451,9 @@ const Order = async ({ ...props }) => {
                   <div>
                     <div id='align'>
                       <FileText
-                        strokeWidth='1'
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
                         style={{ marginRight: '1rem' }}
-                        size={20}
                         stroke='transparent'
                       />
                       <a>11 de Fevereiro 2022</a>
@@ -432,9 +461,9 @@ const Order = async ({ ...props }) => {
                     <div id='align'>
                       <a>
                         <FileText
-                          strokeWidth='1'
+                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                          size={pageProps.globalVars.iconSize}
                           style={{ marginRight: '1rem' }}
-                          size={20}
                           stroke='transparent'
                         />
                         <a>02 de Março 2022</a>
@@ -461,7 +490,15 @@ const Order = async ({ ...props }) => {
             <a className='headerTitle'>Mensagens</a>
           </div>
           <div style={{ marginLeft: 'auto' }}>
-            <PrimaryBtn icon={<MessageSquare />} text={'Criar Nova'} />
+            <PrimaryBtn
+              icon={
+                <MessageSquare
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
+              text={'Criar Nova'}
+            />
           </div>
         </div>
         <div>
@@ -488,12 +525,20 @@ const Order = async ({ ...props }) => {
                 <TableCell>
                   <Tooltip title='Edit'>
                     <IconButton>
-                      <Edit strokeWidth='1' className='link' />
+                      <Edit
+                        className='link'
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title='Delete'>
                     <IconButton>
-                      <Trash strokeWidth='1' className='link' />
+                      <Trash
+                        className='link'
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
                     </IconButton>
                   </Tooltip>
                 </TableCell>
@@ -514,7 +559,12 @@ const Order = async ({ ...props }) => {
                 <div>
                   <PrimaryBtn
                     text='Carregar'
-                    icon={<FilePlus strokeWidth='1' />}
+                    icon={
+                      <FilePlus
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
+                    }
                   >
                     <input type='file' hidden />
                   </PrimaryBtn>
@@ -537,17 +587,25 @@ const Order = async ({ ...props }) => {
                   className={styles.docRow}
                   onClick={() => setActiveRow(doc.id - 1)}
                 >
-                  <TableCell className='link'>{FilterItem(doc.name)}</TableCell>
-                  <TableCell>{FilterItem(doc.data)}</TableCell>
+                  <TableCell className='link'>{doc.name}</TableCell>
+                  <TableCell>{doc.data}</TableCell>
                   <TableCell>
                     <Tooltip title='Edit'>
                       <IconButton>
-                        <Edit strokeWidth='1' className='link' />
+                        <Edit
+                          className='link'
+                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                          size={pageProps.globalVars.iconSize}
+                        />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title='Delete'>
                       <IconButton>
-                        <Trash strokeWidth='1' className='link' />
+                        <Trash
+                          className='link'
+                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                          size={pageProps.globalVars.iconSize}
+                        />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -564,7 +622,11 @@ const Order = async ({ ...props }) => {
             <a className='headerTitleSm'>{docs[activeRow].name}</a>
             <div className={styles.innerInfoContainer}>
               <a id='align'>
-                <Info style={{ marginRight: '1rem' }} size={20} />
+                <Info
+                  style={{ marginRight: '1rem' }}
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
                 <b>Informações</b>
               </a>
               <div
@@ -577,14 +639,18 @@ const Order = async ({ ...props }) => {
                   fontWeight: 'bold',
                 }}
               >
-                <FileText strokeWidth='0.5' size={54} stroke='#8793AB' />
+                <FileText
+                  strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
+                  size={pageProps.globalVars.iconSizeXxl}
+                  stroke='#8793AB'
+                />
                 {docs[activeRow].fileSize}
               </div>
               <a id='align'>
                 <FileText
-                  strokeWidth='1'
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
                   style={{ marginRight: '1rem' }}
-                  size={20}
                 />
                 <b>Propriedades</b>
               </a>
@@ -600,9 +666,9 @@ const Order = async ({ ...props }) => {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div id='align'>
                     <FileText
-                      strokeWidth='1'
+                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
                       style={{ marginRight: '1rem' }}
-                      size={20}
                       stroke='transparent'
                     />
                     <a>Salvo em</a>
@@ -610,9 +676,9 @@ const Order = async ({ ...props }) => {
                   <div id='align'>
                     <a>
                       <FileText
-                        strokeWidth='1'
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
                         style={{ marginRight: '1rem' }}
-                        size={20}
                         stroke='transparent'
                       />
                       Alterado em
@@ -622,9 +688,9 @@ const Order = async ({ ...props }) => {
                 <div>
                   <div id='align'>
                     <FileText
-                      strokeWidth='1'
+                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
                       style={{ marginRight: '1rem' }}
-                      size={20}
                       stroke='transparent'
                     />
                     <a>{docs[activeRow].createdAt}</a>
@@ -632,9 +698,9 @@ const Order = async ({ ...props }) => {
                   <div id='align'>
                     <a>
                       <FileText
-                        strokeWidth='1'
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
                         style={{ marginRight: '1rem' }}
-                        size={20}
                         stroke='transparent'
                       />
                       <a>{docs[activeRow].updatedAt}</a>
@@ -662,5 +728,7 @@ Order.propTypes = {
   headCellsUpperOrderDetail: PropTypes.array,
   headCellsMessages: PropTypes.array,
   headCellsDocs: PropTypes.array,
+  pageProps: PropTypes.object,
+  orderDetail: PropTypes.array,
 };
 export default Order;

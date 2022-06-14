@@ -11,7 +11,7 @@ async function getUsers () {
       codigo: '+351',
       telefone: '258258258',
       morada: 'Rua do quintal, Nº 47',
-      pais: 'Portugal'
+      pais: 'Portugal',
     },
     {
       id: 2,
@@ -24,7 +24,7 @@ async function getUsers () {
       codigo: '+351',
       phone: '258258258',
       morada: 'Rua do quintal, Nº 47',
-      pais: 'Portugal'
+      pais: 'Portugal',
     },
     {
       id: 3,
@@ -37,15 +37,24 @@ async function getUsers () {
       codigo: '+351',
       phone: '258258258',
       morada: 'Rua do quintal, Nº 47',
-      pais: 'Portugal'
-    }
-  ]
-  return users
+      pais: 'Portugal',
+    },
+  ];
+  return users;
 }
 
-async function getUser (email) {
-  const users = await getUsers()
-  const foundUser = users.find(element => element.email === email)
-  return foundUser
+async function getUser(email) {
+  const users = await getUsers();
+  const foundUser = users.find((element) => element.email === email);
+  return foundUser;
 }
-export { getUsers, getUser }
+
+async function getUserById(id) {
+  console.log(id)
+  const users = await getUsers();
+  const foundUser = users.find(
+    (element) => element.id.toString() === id.toString()
+  );
+  return foundUser;
+}
+export { getUsers, getUser, getUserById };

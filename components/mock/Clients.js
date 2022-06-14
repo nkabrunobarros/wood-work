@@ -30,12 +30,12 @@ async function getClients() {
   return clients;
 }
 
-async function getClient(id) {
-  const clients = getClients();
+async function getClientById(id) {
+  const clients = await getClients();
   const foundClient = clients.find(
     (element) => element.id.toString() === id.toString()
   );
 
   return foundClient;
 }
-export { getClients, getClient };
+export { getClients, getClientById };

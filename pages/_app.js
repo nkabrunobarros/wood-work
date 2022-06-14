@@ -54,12 +54,10 @@ export const initializeClientSideProps = async ({ Component, router }) => {
   let hasFullyLoaded = false;
   const accessToken = localStorage.getItem('user');
 
-  document.title = 'The Ops Hub';
-
   // It has no token saved.
   if (!accessToken) hasFullyLoaded = true;
 
-  console.log(accessToken)
+  // console.log(accessToken);
 
   // Validate user token when having a token in local storage and no login data at our redux store.
   if (accessToken === null) {
@@ -73,7 +71,7 @@ export const initializeClientSideProps = async ({ Component, router }) => {
 
   // Redirect users to the login page when trying to access a private page without being authed.
   // if (isPrivatePage && hasFullyLoaded) Router.push(routes.public.signIn);
-  
+
   const pageProps = {
     ...(Component.getInitialProps
       ? await Component.getInitialProps(router, hasFullyLoaded)
@@ -99,7 +97,19 @@ const App = ({ Component, pageProps }) => {
     };
     getLoggedUser();
   }, []);
+
+  const globalVars = {
+    iconSize: 20,
+    iconSizeXl: 40,
+    iconSizeXxl: 54,
+    iconStrokeWidth: 1,
+    iconXlStrokeWidth: 0.5,
+    iconSmStrokeWidth: 1.5,
+  };
+
   pageProps.loggedUser = loggedUser;
+  pageProps.globalVars = globalVars;
+
   return (
     <ThemeProvider theme={theme}>
       <Head>

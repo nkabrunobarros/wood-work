@@ -1,17 +1,26 @@
 //  Nodes
 import React, { useState } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
+import Router from 'next/router';
 
-import Grid from '@mui/material/Grid';
+//  Custom Components
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Loader from '../../loader/loader';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 
+//  Styles
 import styles from '../../../styles/NewOrder.module.css';
+
+//  Icons
 import { Box, Lock, Save, User, X } from 'lucide-react';
+
+//  Material UI
+import Grid from '@mui/material/Grid';
+import CssBaseline from '@mui/material/CssBaseline';
 import {
   Alert,
   Autocomplete,
@@ -26,16 +35,16 @@ import {
   TextareaAutosize,
   TextField,
 } from '@mui/material';
-import Router from 'next/router';
+
+//  Utlis
 import hasData from '../../utils/hasData';
 import { EmailValidation } from '../../utils/EmailValidation';
-import ConfirmDialog from '../../dialogs/ConfirmDialog';
-import Loader from '../../loader/loader';
+
+//  Navigation
 import routes from '../../../navigation/routes';
 
 const EditUser = ({ ...props }) => {
-  const { breadcrumbsPath, user, countries } = props;
-
+  const { breadcrumbsPath, user, countries, pageProps } = props;
   const [name, setName] = useState(user.nome);
   const [email, setEmail] = useState(user.email);
   const [telefone, setTelefone] = useState(user.telefone);
@@ -180,24 +189,35 @@ const EditUser = ({ ...props }) => {
           <div style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save strokeWidth='1' />}
+              icon={
+                <Save
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X strokeWidth='1' />}
+              icon={
+                <X
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               light
               onClick={() => Router.back()}
             />
           </div>
         </div>
-          <a id='align' className='lightTextSm' style={{paddingLeft: '24px'}}><User size={20} /> Dados de Utilizador</a>
+        <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
+          <User size={20} /> Dados de Utilizador
+        </a>
         <div className='flex'>
           <div id='pad' style={{ flex: 2 }} className='filters'>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Nome</InputLabel>
+              <InputLabel htmlFor='nome'>Nome</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='nome'
@@ -218,7 +238,6 @@ const EditUser = ({ ...props }) => {
               <InputLabel htmlFor='email'>Email</InputLabel>
               <OutlinedInput
                 type='email'
-                
                 required
                 fullWidth
                 id='email'
@@ -238,7 +257,6 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='contact'>Telefone</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='contact'
@@ -259,7 +277,6 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='telemovel'
@@ -298,7 +315,6 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <InputLabel htmlFor='Cidade'>Cidade</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='Cidade'
@@ -375,7 +391,6 @@ const EditUser = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Senha Antiga</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='nome'
@@ -388,7 +403,6 @@ const EditUser = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Senha Nova</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='nome'
@@ -401,7 +415,6 @@ const EditUser = ({ ...props }) => {
             <div>
               <InputLabel htmlFor='email'>Confirmar Senha Nova</InputLabel>
               <OutlinedInput
-                
                 required
                 fullWidth
                 id='nome'
@@ -426,6 +439,7 @@ EditUser.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   countries: PropTypes.array.isRequired,
   user: PropTypes.object,
+  pageProps: PropTypes.any,
 };
 
 export default EditUser;
