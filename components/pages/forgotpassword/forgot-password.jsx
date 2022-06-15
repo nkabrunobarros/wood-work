@@ -1,32 +1,50 @@
 //  Nodes
-import React from 'react'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import styles from '../../../styles/SignIn.module.css'
-import { InputLabel, OutlinedInput } from '@mui/material'
+import React from 'react';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import styles from '../../../styles/SignIn.module.css';
+import { OutlinedInput } from '@mui/material';
 
-import routes from '../../../navigation/routes'
-import Router from 'next/router'
+import emailjs from '@emailjs/browser';
+import routes from '../../../navigation/routes';
+import Router from 'next/router';
 
-import { ChevronLeft } from 'lucide-react'
-import Footer from '../../layout/footer/footer'
+import { ChevronLeft } from 'lucide-react';
+import Footer from '../../layout/footer/footer';
+import Notification from '../../dialogs/Notification';
+import { toast } from 'react-toastify';
 
-const ForgotPassword = () => {
+const ForgotPassword = (e) => {
   const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
+    event.preventDefault();
+    const USER_ID = `service_kqtxrtc`;
+    const TEMPLATE_ID = `template_6nvzzrx`;
+    const data = new FormData(event.currentTarget);
+    console.log(event.currentTarget);
     console.log({
-      email: data.get('email')
-    })
-  }
+      email: data.get('email'),
+    });
+    emailjs
+      .sendForm(USER_ID, TEMPLATE_ID, event.currentTarget, 'HtyN6X3l4PFTtFQSI')
+      .then(
+        (result) => {
+          console.log(result);
+          toast.success('Sent');
+        },
+        (error) => {
+          toast.error('An error occurred, Please try again', error);
+        }
+      );
+  };
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
+      <Notification />
       <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
         <Box
           className={styles.logo}
@@ -35,7 +53,7 @@ const ForgotPassword = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100%'
+            height: '100%',
           }}
         >
           <div className={styles.logoImg}>
@@ -52,7 +70,7 @@ const ForgotPassword = () => {
             mx: '15%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'start'
+            alignItems: 'start',
           }}
         >
           <Typography color={'primary'}>Portal Interno WW4.0</Typography>
@@ -69,15 +87,21 @@ const ForgotPassword = () => {
             onSubmit={handleSubmit}
             sx={{ mt: 1, width: '100%' }}
           >
-            <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
-
             <OutlinedInput
-              
+              type='hidden'
+              id='name'
+              name='name'
+              autoComplete='name'
+              value={'Bruno Barros'}
+              autoFocus
+            />
+            <OutlinedInput
               required
               fullWidth
               id='email'
               name='email'
               autoComplete='email'
+              placeholder='email'
               autoFocus
             />
             <Button
@@ -86,13 +110,13 @@ const ForgotPassword = () => {
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
-              Entrar
+              Submeter
             </Button>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
               <a
@@ -107,6 +131,6 @@ const ForgotPassword = () => {
         <Footer />
       </Grid>
     </Grid>
-  )
-}
-export default ForgotPassword
+  );
+};
+export default ForgotPassword;

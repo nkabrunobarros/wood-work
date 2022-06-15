@@ -74,12 +74,20 @@ const SignIn = ({ ...props }) => {
       setLoading(false);
       return ToastSet(loadingNotification, 'Senha é obrigatória', 'error');
     }
+    if (password.length < 6) {
+      setLoading(false);
+      return ToastSet(
+        loadingNotification,
+        'Senha tem que ter minimo 6 caracteres',
+        'error'
+      );
+    }
 
     if (!EmailValidation(email)) {
       setLoading(false);
       return ToastSet(
         loadingNotification,
-        'Endereço de Email ou Senha incorreta',
+        'Endereço de Email mal estruturado',
         'error'
       );
     }

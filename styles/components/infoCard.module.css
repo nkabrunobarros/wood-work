@@ -19,13 +19,18 @@
   .cardIcon {
       margin-right: 2rem;
   }
-@media screen and (min-width: 40em) {
+@media screen and (min-width: 45em) {
     .card {
       max-width: calc(50% - 1em);
     }
   }
   
   @media screen and (min-width: 60em) {
+    .card {
+      max-width: calc(33% - 1em);
+    }
+  }
+  @media screen and (min-width: 80em) {
     .card {
       max-width: calc(25% - 1em);
     }

@@ -13,6 +13,7 @@
     "@capacitor/cli": "^3.5.1",
     "@capacitor/core": "^3.5.1",
     "@capacitor/ios": "^3.5.1",
+    "@emailjs/browser": "^3.6.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
