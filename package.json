@@ -30,9 +30,9 @@
     "next-auth": "^4.3.4",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-toastify": "^9.0.4",
     "styled-components": "^5.3.5"
   },
-  
   "devDependencies": {
     "cors": "^2.8.5",
     "eslint": "^8.0.1",

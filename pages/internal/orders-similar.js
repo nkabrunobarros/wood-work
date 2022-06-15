@@ -179,8 +179,8 @@ const OrdersSimilar = ({ hasFullyLoaded, ...pageProps }) => {
       label: 'Ações',
     },
   ];
-  const detailPage = routes.private.order;
-
+  const detailPage = routes.private.internal.order;
+  const editPage = routes.private.internal.editOrder;
   //  Dummy Operation types
   const operations = [
     {
@@ -205,6 +205,7 @@ const OrdersSimilar = ({ hasFullyLoaded, ...pageProps }) => {
     items,
     breadcrumbsPath,
     detailPage,
+    editPage,
     clients,
     woodTypes,
     products,

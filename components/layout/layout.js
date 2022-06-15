@@ -1,11 +1,19 @@
 // Node modules
 import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+
+//  PropTypes
+import PropTypes from 'prop-types';
+
+//  Navigation
 import routes from '../../navigation/routes';
+
+//  Custom Components
 import Navbar from './navbar/navbar';
 import Footer from './footer/footer';
 import DrawerMobile from './drawer/drawer';
+
+//  Material UI
 import { CssBaseline, Hidden } from '@mui/material';
 
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
@@ -23,7 +31,6 @@ const Layout = ({ children, ...pageProps }) => {
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
-
 
   const clientPages = [
     `${routes.private.messages}`,

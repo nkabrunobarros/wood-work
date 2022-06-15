@@ -3,12 +3,6 @@ import React from 'react'
 import TermsScreen from '../components/pages/terms/terms'
 import PropTypes from 'prop-types'
 
-//  Navigation
-
-//  PropTypes
-
-//  Styling
-
 const Terms = () => {
   const readOnly = true
   const props = {

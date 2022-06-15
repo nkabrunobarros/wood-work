@@ -1,5 +1,11 @@
 /* eslint-disable react/prop-types */
+//  Nodes
 import React, { useEffect, useState } from 'react';
+import Router, { useRouter } from 'next/router';
+import { useTheme } from '@emotion/react';
+import Image from 'next/image';
+
+//  Material UI
 import {
   Divider,
   IconButton,
@@ -7,21 +13,30 @@ import {
   ListItemText,
   SwipeableDrawer,
 } from '@mui/material';
+
+//  Utlis
 import hasData from '../../utils/hasData';
 
-import { useTheme } from '@emotion/react';
+//  Services
+import authService from '../../../services/auth-service';
 import getLinks from '../../mock/navLinks';
-import Router, { useRouter } from 'next/router';
+
+//  Icons
 import { LogOut, User, X } from 'lucide-react';
+
+//  Navigation
 import routes from '../../../navigation/routes';
+
+//  "Page" Component
 import ActiveLink from './activeLink';
+
+//  Styles
 import styles from '../../../styles/components/navbar.module.css';
 
+//  Image
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-import Image from 'next/image';
-import authService from '../../../services/auth-service';
 
-const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
+const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
   const theme = useTheme();
   const navLinks = getLinks();
   const [loggedUser, setLoggedUser] = useState(pageProps.loggedUser);
@@ -118,7 +133,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
                       handleDrawerToggle={handleDrawerToggle}
                       page={item.title}
                     >
-                      {item.icon} {item.title}
+                      {item.icon}
+                      <div className='spacerBox' />
+                      {item.title}
                     </ActiveLink>
                   ) : null}
                 </React.Fragment>
@@ -138,7 +155,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
                   href={`${routes.private.profile}${loggedUser.id}`}
                   page={'Perfil'}
                 >
-                  <User strokeWidth='1' color='white' /> Perfil
+                  <User strokeWidth='1' size={20} color='white' />{' '}
+                  <div className='spacerBox' />
+                  Perfil
                 </ActiveLink>
                 <a
                   className={styles.navItemContainer}
@@ -152,7 +171,8 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
                       Router.push(routes.public.signIn);
                   }}
                 >
-                  <LogOut strokeWidth='1' color='white' /> LogOut
+                  <LogOut strokeWidth='1' size={20} />
+                  <div className='spacerBox' /> LogOut
                 </a>
               </>
             ) : null}

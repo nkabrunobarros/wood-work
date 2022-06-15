@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 //  Nodes
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
@@ -10,6 +9,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
+import PropTypes from 'prop-types';
 
 import styles from '../../../styles/SignIn.module.css';
 import {
@@ -17,119 +17,102 @@ import {
   InputLabel,
   OutlinedInput,
   CircularProgress,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import Router from 'next/router';
 
 import routes from '../../../navigation/routes';
 import Footer from '../../layout/footer/footer';
+import Notification from '../../dialogs/Notification';
 
 import { EmailValidation } from '../../utils/EmailValidation';
-import hasData from '../../utils/hasData';
 
-// import authService from '../../../services/auth-service';
-import { getUser } from '../../mock/Users';
+import { toast } from 'react-toastify';
+import ToastSet from '../../utils/ToastSet';
+import authService from '../../../services/auth-service';
+import Router from 'next/router';
 
 const SignIn = ({ ...props }) => {
   const [visible, setVisible] = useState(true);
+  // eslint-disable-next-line react/prop-types
   const { client } = props;
   const [email, setEmail] = useState('admin@nka.pt');
   const [password, setPassword] = useState('123456');
 
-  //  Snackbar Notification
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
   const [loading, setLoading] = useState(false);
-  // async function loginUser() {
-  //   await authService.login(email, password).then(
-  //     (res) => {
-  //       if (res.status === 200 && res.data.data.perfil === 'Client')
-  //         Router.push(routes.private.orders);
-  //       else Router.push(routes.private.internal.orders);
-  //     },
-  //     (error) => {
-  //       const resMessage =
-  //         (error.response &&
-  //           error.response.data &&
-  //           error.response.data.message) ||
-  //         error.message ||
-  //         error.toString();
-  //     }
-  //   );
-  // }
-  function Notification(message, type) {
-    setLoading(false);
-    setSnackbarMessage(message);
-    setSnackbarSeverity(type);
-    setSnackbarOpen(true);
-    setTimeout(() => {
-      setSnackbarOpen(false);
-    }, 2000);
+  async function loginUser() {
+    const res = await authService.login(email, password).then(
+      (res) => {
+        return res.data.data;
+      },
+      (error) => {
+        // const resMessage =
+        //   (error.response &&
+        //     error.response.data &&
+        //     error.response.data.message) ||
+        //   error.message ||
+        //   error.toString();
+        return error.response.status;
+      }
+    );
+    return res;
   }
+
   const handleSubmit = async (event) => {
+    const loadingNotification = toast.loading('');
     event.preventDefault();
     setLoading(true);
 
-    if (email === '') return Notification('Email is required', 'error');
-    if (password === '') return Notification('Password is required', 'error');
-    
-    if (!EmailValidation(email)) {
-      return Notification('Incorret email or password', 'error');
-    }
-    // const token = await loginUser({
-    //   email,
-    //   password,
-    // });
-    // sessionStorage.setItem('token', token);
-
-    const foundUser = await getUser(email.toLocaleLowerCase());
-    if (!hasData(foundUser)) {
+    if (email === '') {
       setLoading(false);
-      //  Snackbar notification body
-      setSnackbarMessage('Incorret email or password');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      setTimeout(() => {
-        setSnackbarOpen(false);
-      }, 2000);
-      return;
-    }
-    if (foundUser !== undefined && foundUser.password === password) {
-      localStorage.setItem(
-        'user',
-        JSON.stringify(email.toLocaleLowerCase()).substring(1, email.length + 1)
+      return ToastSet(
+        loadingNotification,
+        'Endereço de Email é obrigatório',
+        'error'
       );
-      sessionStorage.setItem(
-        'user',
-        JSON.stringify(email.toLocaleLowerCase()).substring(1, email.length + 1)
-      );
-      Router.push(routes.private.terms);
-      if (foundUser.perfil === 'Client') Router.push(routes.private.terms);
-      else Router.push(routes.private.internal.orders);
     }
+    if (password === '') {
+      setLoading(false);
+      return ToastSet(loadingNotification, 'Senha é obrigatória', 'error');
+    }
+
+    if (!EmailValidation(email)) {
+      setLoading(false);
+      return ToastSet(
+        loadingNotification,
+        'Endereço de Email ou Senha incorreta',
+        'error'
+      );
+    }
+    await loginUser({
+      email,
+      password,
+    }).then((res) => {
+      if (typeof res === 'object') {
+        ToastSet(loadingNotification, 'Sucesso! A entrar', 'success');
+        switch (res.perfil) {
+          case 'internal':
+            Router.push(routes.private.internal.orders);
+            break;
+
+          default:
+            Router.push(routes.private.orders);
+            break;
+        }
+      } else {
+        ToastSet(
+          loadingNotification,
+          'Endereço de Email ou Senha incorreta',
+          'error'
+        );
+        setLoading(false);
+      }
+    });
   };
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
-      <Snackbar
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        open={snackbarOpen}
-        onRequestClose={() => setSnackbarOpen(false)}
-        autoHideDuration={2000}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <Notification />
       <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
         <Box
           className={styles.logo}
@@ -186,7 +169,6 @@ const SignIn = ({ ...props }) => {
             <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
 
             <OutlinedInput
-              
               required
               fullWidth
               id='email'
@@ -199,7 +181,6 @@ const SignIn = ({ ...props }) => {
             <InputLabel htmlFor='password'>Senha</InputLabel>
             <OutlinedInput
               id='password'
-              
               required
               fullWidth
               name='password'
@@ -262,5 +243,8 @@ const SignIn = ({ ...props }) => {
       </Grid>
     </Grid>
   );
+};
+SignIn.PropTypes = {
+  client: PropTypes.any,
 };
 export default SignIn;

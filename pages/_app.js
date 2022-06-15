@@ -16,8 +16,6 @@ import Layout from '../components/layout/layout';
 import authService from '../services/auth-service';
 
 //  Material UI
-import { ThemeProvider } from 'styled-components';
-import { createTheme } from '@mui/material';
 
 //  Navigation
 import routes from '../navigation/routes';
@@ -25,6 +23,7 @@ import routes from '../navigation/routes';
 //  Utils
 import hasData from '../components/utils/hasData';
 import Loader from '../components/loader/loader';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({
   palette: {
@@ -36,7 +35,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ['Montserrat'].join(','),
+    fontFamily: 'Montserrat'
   },
   components: {
     MuiOutlinedInput: {

@@ -50,6 +50,9 @@ a {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+.spacerBox {
+    width:1rem;
+}
 .successBalloon {
   color: var(--green);
   background: var(--greenLight);

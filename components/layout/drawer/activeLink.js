@@ -9,6 +9,9 @@ import routes from '../../../navigation/routes';
 function ActiveLink({ children, href, handleDrawerToggle, page }) {
   const path = useRouter();
 
+  const orderSimilarPages = [`${routes.private.internal.ordersSimilar}`];
+  const messagesPages = [`${routes.private.messages}`];
+
   const ordersPages = [
     `${routes.private.orders}`,
     `${routes.private.order}[Id]`,
@@ -18,12 +21,9 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.editOrder}[Id]`,
   ];
 
-  const orderSimilarPages = [`${routes.private.internal.ordersSimilar}`];
-  const messagesPages = [`${routes.private.messages}`];
-
   const stockPages = [
     `${routes.private.internal.stocks}`,
-    `${routes.private.internal.stock}[Id]`,
+    `${routes.private.internal.stockId}[Id]`,
   ];
 
   const clientsPages = [
@@ -49,10 +49,10 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   if (usersPages.includes(path.route)) currentSection = 'Utilizadores';
   if (profilePages.includes(path.route)) currentSection = 'Perfil';
   if (messagesPages.includes(path.route)) currentSection = 'Mensagens';
-
+  
   const style = {
     borderLeft:
-      page === currentSection
+    page === currentSection
         ? '5px solid var(--white)'
         : '5px solid transparent',
   };

@@ -9,4 +9,6 @@ function EmailValidation(email) {
   return true;
 }
 
-export { EmailValidation };
+export {
+  EmailValidation
+};

@@ -31,6 +31,8 @@ const OrdersScreen = ({ ...props }) => {
     operations,
     headCells,
     headCellsUpper,
+    editPage,
+    detailPage
   } = props;
   const rows = items;
 
@@ -301,6 +303,8 @@ const OrdersScreen = ({ ...props }) => {
           headCells={headCells}
           headCellsUpper={headCellsUpper}
           filters={filters}
+          editRoute={editPage}
+          clickRoute={detailPage}
         />
       </Content>
     </Grid>
@@ -310,6 +314,7 @@ OrdersScreen.propTypes = {
   tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
   detailPage: PropTypes.string,
+  editPage: PropTypes.string,
   clients: PropTypes.array,
   headCells: PropTypes.array,
   headCellsUpper: PropTypes.array,
