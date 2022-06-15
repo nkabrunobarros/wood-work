@@ -99,11 +99,24 @@ const SignIn = ({ ...props }) => {
             break;
         }
       } else {
-        ToastSet(
-          loadingNotification,
-          'Endereço de Email ou Senha incorreta',
-          'error'
-        );
+        switch (res) {
+          case 400:
+            ToastSet(
+              loadingNotification,
+              'Endereço de Email ou Senha incorreta',
+              'error'
+            );
+            break;
+
+          default:
+            ToastSet(
+              loadingNotification,
+              'Something has happend, if the problem persists, please contact the mangament',
+              'error'
+            );
+            break;
+        }
+
         setLoading(false);
       }
     });
