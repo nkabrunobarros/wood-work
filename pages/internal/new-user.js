@@ -1,19 +1,33 @@
+//  Nodes
 import React, { useEffect, useState } from 'react';
+
+//  Custom Components
 import Loader from '../../components/loader/loader';
-import getCountries from '../../components/mock/Countries';
+
+//  Page Component
 import NewUserScreen from '../../components/pages/newUser/newUser';
+
+//  Utils
 import hasData from '../../components/utils/hasData';
+
+//  Navigation
 import routes from '../../navigation/routes';
-export async function getServerSideProps(context) {
-  const res2 = await getCountries();
-  return {
-    props: { countries: res2 }, // will be passed to the page component as props
-  };
-}
-// eslint-disable-next-line react/prop-types
-const NewOrder = ({ countries, ...pageProps }) => {
+
+//  Services
+import countryService from '../../services/countries/country-service';
+
+const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
+  const [countries, setCountries] = useState();
+
   useEffect(() => {
+    const getData = async () => {
+      await countryService
+      .getAllCountries()
+      .then((res) => setCountries(res.data.data));
+    }
+    Promise.all([getData()]).then(setLoaded(true));
+
     setTimeout(() => {
       setLoaded(true);
     }, 500);

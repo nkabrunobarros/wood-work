@@ -63,6 +63,7 @@ async function getProduct(id) {
   const foundProduct = products.find(
     (element) => element.id.toString() === id.toString()
   );
+  console.log(foundProduct)
   return foundProduct;
 }
 

@@ -8,12 +8,12 @@ class StockService {
     });
   }
 
-  //   async getOrderById(id) {
-  //     return await axios
-  //       .post(API_URL + "order/SingleOrder/", { id })
-  //       .then((data) => {
-  //         return data;
-  //       });
-  //   }
+  async getStockById(id) {
+    return await axios
+      .post(API_URL + "stock/SingleStock/", { id })
+      .then((data) => {
+        return data;
+      });
+  }
 }
 export default new StockService();

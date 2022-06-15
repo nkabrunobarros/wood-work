@@ -28,7 +28,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children }
 PrimaryBtn.propTypes = {
   text: PropTypes.string,
   icon: PropTypes.any,
-  light: PropTypes.number,
+  light: PropTypes.bool,
   color: PropTypes.string,
   onClick: PropTypes.any,
   children: PropTypes.any,

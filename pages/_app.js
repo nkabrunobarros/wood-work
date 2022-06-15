@@ -1,18 +1,31 @@
-// Node modules
-import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
-// Styles
-import '../styles/globals.css';
-// Store
-// App Layout
-import Layout from '../components/layout/layout';
+//  Node modules
 import React, { useEffect, useState } from 'react';
-import authService from '../services/auth-service';
-import { ThemeProvider } from 'styled-components';
+import Router, { useRouter } from 'next/router';
 import Head from 'next/head';
+
+//  Proptypes
+import PropTypes from 'prop-types';
+
+//  Styles
+import '../styles/globals.css';
+
+//  App Layout
+import Layout from '../components/layout/layout';
+
+//  Services
+import authService from '../services/auth-service';
+
+//  Material UI
+import { ThemeProvider } from 'styled-components';
 import { createTheme } from '@mui/material';
 
-// Here is where we handle all the pages needs in terms of initial data to have and auth validation.
+//  Navigation
+import routes from '../navigation/routes';
+
+//  Utils
+import hasData from '../components/utils/hasData';
+import Loader from '../components/loader/loader';
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -55,22 +68,26 @@ export const initializeClientSideProps = async ({ Component, router }) => {
   const accessToken = localStorage.getItem('user');
 
   // It has no token saved.
-  if (!accessToken) hasFullyLoaded = true;
-
-  // console.log(accessToken);
-
-  // Validate user token when having a token in local storage and no login data at our redux store.
-  if (accessToken === null) {
+  if (!accessToken || accessToken === null) {
     hasFullyLoaded = true;
   }
-  // const isPrivatePage = Object.values(routes.private).some((item) => {
-  //   const regex = new RegExp(item);
-  //   if (hasData(router.pathname)) return regex.test(router.pathname);
-  //   else return false
-  // });
+
+  // Validate user token when having a token in local storage and no login data at our redux store.
+  const isPrivatePage = Object.values(routes.private).some((item) => {
+    const regex = new RegExp(item);
+    if (regex.test(router.pathname)) return true;
+    else return false;
+  });
+
 
   // Redirect users to the login page when trying to access a private page without being authed.
-  // if (isPrivatePage && hasFullyLoaded) Router.push(routes.public.signIn);
+  if (isPrivatePage && !hasData(accessToken)) {
+    hasFullyLoaded = true;
+    console.log('should redicting to login');
+    // Router.push(routes.public.signIn);
+  }
+
+  // if (!accessToken) Router.push(routes.public.signIn);
 
   const pageProps = {
     ...(Component.getInitialProps
@@ -82,22 +99,81 @@ export const initializeClientSideProps = async ({ Component, router }) => {
 
   return { pageProps };
 };
-
 const App = ({ Component, pageProps }) => {
   const [loggedUser, setLoggedUser] = useState();
-
+  const [loaded, setLoaded] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
-    const getLoggedUser = async () => {
+    const accessToken = localStorage.getItem('user');
+
+    function PrivatePage() {
+      const isPrivatePage = Object.values(routes.private).some((item) => {
+        const regex = new RegExp(item);
+        if (regex.test(router.pathname)) return true;
+        else return false;
+      });
+      return isPrivatePage;
+    }
+
+    const getData = async () => {
+      // if (typeof window !== 'undefined') {
+      //   const res = await authService.getCurrentUser();
+      //   if (res) setLoggedUser(res.data.data);
+      //   return initializeClientSideProps({ Component, router });
+      // }
       if (typeof window !== 'undefined') {
-        const res = await authService.getCurrentUser();
-        setLoggedUser(res.data.data);
-        return initializeClientSideProps({ Component, router });
+        if (
+          (!accessToken || accessToken === null) &&
+          PrivatePage() &&
+          !accessToken
+        ) {
+          pageProps.hasFullyLoaded = true;
+          localStorage.removeItem('user');
+          sessionStorage.removeItem('user');
+          Router.push(routes.public.signIn);
+        }
+        if (accessToken) {
+          const res = await authService.getCurrentUser();
+          if (res) setLoggedUser(res.data.data);
+          if (!PrivatePage()) {
+            switch (res.data.data.perfil) {
+              case 'internal':
+                pageProps.hasFullyLoaded = true;
+                Router.push(routes.private.internal.orders);
+                break;
+            
+              default:
+                pageProps.hasFullyLoaded = true;
+                Router.push(routes.private.orders);
+                break;
+            }
+          }
+        }
       }
     };
-    getLoggedUser();
+    Promise.all([getData()]).then(setLoaded(true));
   }, []);
+  if (loaded) {
+    pageProps.loggedUser = loggedUser;
+    return !pageProps.hasFullyLoaded ? (
+      <ThemeProvider theme={theme}>
+        <Head>
+          <title>Wood Work 4.0</title>
+          <link rel='icon' href='/logo_bw_ww40_inv.png' />
+        </Head>
+        <Layout {...pageProps}>
+          <Component {...pageProps} />
+        </Layout>
+      </ThemeProvider>
+    ) : (
+      <Loader center={true} />
+    );
+  }
+};
 
+App.getInitialProps = async ({ Component, ctx }) => {
+  const hasFullyLoaded = false;
   const globalVars = {
     iconSize: 20,
     iconSizeXl: 40,
@@ -107,40 +183,17 @@ const App = ({ Component, pageProps }) => {
     iconSmStrokeWidth: 1.5,
   };
 
-  pageProps.loggedUser = loggedUser;
+  // Ignore server side initialization for now
+  const pageProps = {
+    ...(Component.getInitialProps
+      ? await Component.getInitialProps(ctx, hasFullyLoaded)
+      : {}),
+  };
   pageProps.globalVars = globalVars;
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Head>
-        <title>Wood Work 4.0</title>
-        <link rel='icon' href='/logo_bw_ww40_inv.png' />
-      </Head>
-      <Layout {...pageProps}>
-        <Component {...pageProps} />
-      </Layout>
-    </ThemeProvider>
-  );
-};
+  pageProps.hasFullyLoaded = hasFullyLoaded;
 
-App.getInitialProps = async ({ Component, ctx }) => {
-  const hasFullyLoaded = false;
-
-  // Client-side-only code
-  if (typeof window !== 'undefined') {
-    return initializeClientSideProps({ Component, ctx });
-  } else {
-    // Ignore server side initialization for now
-    const pageProps = {
-      ...(Component.getInitialProps
-        ? await Component.getInitialProps(ctx, hasFullyLoaded)
-        : {}),
-    };
-
-    pageProps.hasFullyLoaded = hasFullyLoaded;
-
-    return { pageProps };
-  }
+  return { pageProps };
 };
 
 App.propTypes = {

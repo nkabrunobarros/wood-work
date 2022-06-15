@@ -1,73 +1,78 @@
-/* eslint-disable react/prop-types */
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import Loader from '../../../components/loader/loader'
-import StockScreen from '../../../components/pages/stock/stock'
-import routes from '../../../navigation/routes'
-import { getStock } from '../../../components/mock/Stock'
-import { getProduct } from '../../../components/mock/Products'
-import hasData from '../../../components/utils/hasData'
-import categoryService from '../../../services/categories/category-service'
+//  Nodes
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
-export async function getServerSideProps (context) {
-  const res = await getStock()
-  return {
-    props: { allStock: res } // will be passed to the page component as props
-  }
-}
-const Stock = ({ allStock, ...pageProps }) => {
-  const [loaded, setLoaded] = useState(false)
-  const [product, setProduct] = useState({})
-  const [categories, setCategories] = useState()
-  const router = useRouter()
-  const stockId = router.query.Id
-  const stock = allStock.find((prod) => prod.id.toString() === stockId.toString())
-  
+//  Custom Components
+import Loader from '../../../components/loader/loader';
+
+//  Page Component
+import StockScreen from '../../../components/pages/stock/stock';
+
+//  Navigation
+import routes from '../../../navigation/routes';
+
+//  Utils
+import hasData from '../../../components/utils/hasData';
+
+//  Services
+import categoryService from '../../../services/categories/category-service';
+import productService from '../../../services/products/product-service';
+import stockService from '../../../services/stocks/stock-service';
+
+const Stock = ({ ...pageProps }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [product, setProduct] = useState({});
+  const [categories, setCategories] = useState();
+  const [stock, setStock] = useState();
+  const router = useRouter();
+  const stockId = router.query.Id;
+
   useEffect(() => {
-    const getProd = async () => {
-      const productRes = await getProduct(stock.productId)
-      const categoriesRes = await categoryService.getAllCategories()
-      setProduct(productRes)
-      setCategories(categoriesRes.data.data)
-    }
-    getProd();
-    setTimeout(() => {
-      setLoaded(true)
-    }, 500)
-  }, [])
-  const data = {
-    categories
-  }
-  const breadcrumbsPath = [
-    {
-      title: 'Stock',
-      href: `${routes.private.internal.stocks}`
-    },
-    {
-      title: `${product.nome}`,
-      href: `${routes.private.internal.stockId}`
-    }
-  ]
-  const props = {
-    product,
-    breadcrumbsPath,
-    stock,
-    data
-  }
-  if (
-    hasData(allStock) &&
-    hasData(product) &&
-    hasData(data) &&
-    hasData(stock) 
-  )
-    pageProps.hasFullyLoaded = true;
-    // return true
-    return pageProps.hasFullyLoaded && loaded
-      ? (
+    const getProduct = async (prodId) => {
+      await productService
+        .getProductById(prodId)
+        .then((res) => setProduct(res.data.data));
+    };
+    const getAll = async () => {
+      await stockService.getStockById(stockId).then((res) => {
+        setStock(res.data.data);
+        getProduct(res.data.data.productId);
+      });
+      await categoryService
+        .getAllCategories()
+        .then((res) => setCategories(res.data.data));
+    };
+    Promise.all([getAll()]).then(setLoaded(true));
+    setTimeout(() => {}, 500);
+  }, []);
+  if (loaded) {
+    const data = {
+      categories,
+    };
+    const breadcrumbsPath = [
+      {
+        title: 'Stock',
+        href: `${routes.private.internal.stocks}`,
+      },
+      {
+        title: `${product.nome}`,
+        href: `${routes.private.internal.stockId}`,
+      },
+    ];
+    const props = {
+      product,
+      breadcrumbsPath,
+      stock,
+      data,
+    };
+    if (hasData(product) && hasData(data) && hasData(stock))
+      pageProps.hasFullyLoaded = true;
+    return pageProps.hasFullyLoaded && loaded ? (
       <StockScreen {...props} />
-        )
-      : (
+    ) : (
       <Loader center={true} />
-        )
-}
-export default Stock
+    );
+  }
+  return <Loader center={true} />;
+};
+export default Stock;

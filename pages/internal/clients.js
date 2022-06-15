@@ -55,9 +55,11 @@ const Clients = ({ hasFullyLoaded, ...pageProps }) => {
         label: 'Ações',
       },
     ];
+    
     const editRoute = routes.private.internal.editClient;
     const detailRoute = routes.private.internal.client;
     const newRoute = routes.private.internal.newClient;
+
     const breadcrumbsPath = [
       {
         title: 'Clientes',

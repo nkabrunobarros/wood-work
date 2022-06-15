@@ -50,11 +50,10 @@ async function getUser(email) {
 }
 
 async function getUserById(id) {
-  console.log(id)
   const users = await getUsers();
   const foundUser = users.find(
     (element) => element.id.toString() === id.toString()
-  );
+    );
   return foundUser;
 }
 export { getUsers, getUser, getUserById };

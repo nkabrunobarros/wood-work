@@ -1,4 +1,5 @@
 import axios from 'axios';
+import hasData from '../components/utils/hasData';
 const API_URL = 'http://localhost:3000/api/';
 class AuthService {
   async login(email, password) {
@@ -46,6 +47,7 @@ class AuthService {
 
   async getCurrentUser() {
     const email = localStorage.user
+    if(!hasData(email)) return false
     return await axios.post(API_URL + 'login', {email})
   }
 }

@@ -1,62 +1,68 @@
 //  Nodes
 import React, { useEffect, useState } from 'react';
-
-//  Preloader
-import Loader from '../../../components/loader/loader';
-import { getUsers } from '../../../components/mock/Users';
-import UserScreen from '../../../components/pages/profile/profile';
-import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import routes from '../../../navigation/routes';
-import hasData from '../../../components/utils/hasData';
+
+//  Custom Components
+import Loader from '../../../components/loader/loader';
 
 //  Page Component
-export async function getServerSideProps(context) {
-  const res = await getUsers();
-  return {
-    props: { users: res }, // will be passed to the page component as props
-  };
-}
+import UserScreen from '../../../components/pages/profile/profile';
 
-// eslint-disable-next-line react/prop-types
-const User = ({ users, ...pageProps }) => {
+//  PropTypes
+import PropTypes from 'prop-types';
+
+//  Navigation
+import routes from '../../../navigation/routes';
+
+//  Utlis
+import hasData from '../../../components/utils/hasData';
+
+//  Services
+import userService from '../../../services/user/user-service';
+
+const User = ({ ...pageProps }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [user, setUser] = useState();
   const router = useRouter();
   const id = router.query.Id;
-  const [loaded, setLoaded] = useState(false);
-  // eslint-disable-next-line react/prop-types
-  const user = users.find((user) => user.id.toString() === id.toString());
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 500);
+    const getAll = async () => {
+      await userService.getUserById(id).then((res) => {
+        setUser(res.data.data);
+      });
+    };
+    Promise.all([getAll()]).then(setLoaded(true));
   }, []);
+  
+  if (hasData(user)) {
+    const breadcrumbsPath = [
+      {
+        title: 'Utilizadores',
+        href: `${routes.private.internal.users}`,
+      },
+      {
+        title: `${user.nome}`,
+        href: `${routes.private.internal.user}`,
+      },
+    ];
 
-  const breadcrumbsPath = [
-    {
-      title: 'Utilizadores',
-      href: `${routes.private.internal.users}`,
-    },
-    {
-      title: `${user.nome}`,
-      href: `${routes.private.internal.user}`,
-    },
-  ];
+    const props = {
+      user,
+      breadcrumbsPath,
+    };
 
-  const props = {
-    user,
-    breadcrumbsPath,
-  };
-
-  UserScreen.propTypes = {
-    users: PropTypes.array,
-    breadcrumbsPath: PropTypes.array,
-  };
-  if (hasData(users) && hasData(user)) pageProps.hasFullyLoaded = true;
-  return pageProps.hasFullyLoaded && loaded ? (
-    <UserScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+    UserScreen.propTypes = {
+      users: PropTypes.array,
+      breadcrumbsPath: PropTypes.array,
+    };
+    if (hasData(user)) pageProps.hasFullyLoaded = true;
+    return pageProps.hasFullyLoaded && loaded ? (
+      <UserScreen {...props} />
+    ) : (
+      <Loader center={true} />
+    );
+  }
+  return <Loader center={true} />;
 };
 export default User;

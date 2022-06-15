@@ -1,14 +1,22 @@
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
-//  Preloader
+//  Custom Components
 import Loader from '../../components/loader/loader';
+
+//  Page Component
 import StockScreen from '../../components/pages/stocks/stocks';
 
+//  PropTypes
 import PropTypes from 'prop-types';
 
+//  Navigation
 import routes from '../../navigation/routes';
+
+//  Utils
 import hasData from '../../components/utils/hasData';
+
+//  Services
 import stockService from '../../services/stocks/stock-service';
 import productService from '../../services/products/product-service';
 import categoryService from '../../services/categories/category-service';

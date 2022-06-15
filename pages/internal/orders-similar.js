@@ -19,7 +19,7 @@ import clientService from '../../services/clients/client-service';
 import productService from '../../services/products/product-service';
 import woodTypeService from '../../services/woodtype/woodtype-service';
 
-//  Util
+//  Utils
 import hasData from '../../components/utils/hasData';
 
 function formatNum(val1, val2) {

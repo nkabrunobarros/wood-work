@@ -365,7 +365,7 @@ const Order = ({ ...props }) => {
               </div>
               <TableContainer component={Paper}>
                 <Table aria-label='collapsible table'>
-                  <TableHead stickyHeader aria-label='sticky table'>
+                  <TableHead aria-label='sticky table'>
                     <TableRow style={{ backgroundColor: 'var(--grayBG)' }}>
                       <TableCell width='70%'>Nome</TableCell>
                       <TableCell width='30%'>Data</TableCell>
@@ -720,7 +720,7 @@ Order.propTypes = {
   docs: PropTypes.arrayOf(PropTypes.object),
   orders: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.array,
-  internalPOV: PropTypes.boolean,
+  internalPOV: PropTypes.bool,
   productionDetail: PropTypes.array,
   headCellsUpperProductionDetail: PropTypes.array,
   headCellsProductionDetail: PropTypes.array,

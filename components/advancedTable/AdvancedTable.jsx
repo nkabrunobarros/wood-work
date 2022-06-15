@@ -1,7 +1,11 @@
 // Node modules
 import React, { useEffect, useState } from 'react';
+import Router from 'next/router';
+
 //  PropTypes
 import PropTypes from 'prop-types';
+
+//  Material Ui
 import {
   Box,
   IconButton,
@@ -16,13 +20,18 @@ import {
   TableSortLabel,
   Tooltip,
 } from '@mui/material';
+
+//  Icons
 import { Edit, Trash } from 'lucide-react';
+
+//  Utlis
 import { FilterItem } from '../utils/FilterItem';
-import Router from 'next/router';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
-import { getCategories } from "../mock/Categories";
-import { getClients } from "../../components/mock/Clients";
-import { getProducts } from "../../components/mock/Products";
+
+//  Services
+import clientService from '../../services/clients/client-service';
+import categoryService from '../../services/categories/category-service';
+import productService from '../../services/products/product-service';
 
 const AdvancedTable = ({
   children,
@@ -40,23 +49,24 @@ const AdvancedTable = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredItems, setFilteredItems] = useState(rows);
-  const [data, setData] = useState({})
-  
+  const [data, setData] = useState({});
+
   useEffect(() => {
     const getData = async () => {
-      const categories = await getCategories();
-      const clients = await getClients();
-      const products = await getProducts();
+      const categories = await categoryService.getAllCategories();
+      const clients = await clientService.getAllClients();
+      const products = await productService.getAllProducts();
+
       const allData = {
-        categories,
-        clients,
-        products,
-      }
-      setData(allData)
-    }
+        categories: categories.data.data,
+        clients: clients.data.data,
+        products: products.data.data,
+      };
+      setData(allData);
+    };
     getData();
-  },[]) 
-  
+  }, []);
+
   function EnhancedTableHead(props) {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -277,12 +287,20 @@ const AdvancedTable = ({
                                         : null
                                     }
                                   >
-                                    <Edit strokeWidth='1' className='link'  size={20} />
+                                    <Edit
+                                      strokeWidth='1'
+                                      className='link'
+                                      size={20}
+                                    />
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title='Delete'>
                                   <IconButton>
-                                    <Trash strokeWidth='1' className='link'  size={20} />
+                                    <Trash
+                                      strokeWidth='1'
+                                      className='link'
+                                      size={20}
+                                    />
                                   </IconButton>
                                 </Tooltip>
                               </>
@@ -294,7 +312,11 @@ const AdvancedTable = ({
                                     : null
                                 }
                               >
-                                {FilterItem(data ,row[`${headCell.id}`], headCell.id)}
+                                {FilterItem(
+                                  data,
+                                  row[`${headCell.id}`],
+                                  headCell.id
+                                )}
                               </div>
                             )}
                           </TableCell>

@@ -24,7 +24,7 @@ import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 //  Utlis
 import hasData from '../../components/utils/hasData';
 
-const Orders = ({ hasFullyLoaded, globalVars, ...pageProps }) => {
+const Orders = ({ hasFullyLoaded, globalVars }) => {
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [categories, setCategories] = useState();
@@ -168,7 +168,15 @@ const Orders = ({ hasFullyLoaded, globalVars, ...pageProps }) => {
       clients,
       editPage,
     };
-    if (hasData(items) && hasData(clients) && hasData(categories))
+    if (hasData(items) &&
+     hasData(clients) &&
+      hasData(categories) &&
+      hasData(panelsInfo) &&
+      hasData(headCells) &&
+      hasData(breadcrumbsPath) &&
+      hasData(detailPage) &&
+      hasData(editPage) &&
+      hasData(cards))
       hasFullyLoaded = true;
 
     return hasFullyLoaded ? (
@@ -180,16 +188,15 @@ const Orders = ({ hasFullyLoaded, globalVars, ...pageProps }) => {
   return <Loader center={true} />;
 };
 Orders.propTypes = {
-  categories: PropTypes.array,
-  orders: PropTypes.array,
-  panelsInfo: PropTypes.object,
-  headCells: PropTypes.array,
-  breadcrumbsPath: PropTypes.array,
-  clients: PropTypes.array,
-  detailPage: PropTypes.string,
-  editPage: PropTypes.string,
+  categories: PropTypes.array.isRequired,
+  panelsInfo: PropTypes.object.isRequired,
+  headCells: PropTypes.array.isRequired,
+  breadcrumbsPath: PropTypes.array.isRequired,
+  clients: PropTypes.array.isRequired,
+  detailPage: PropTypes.string.isRequired,
+  editPage: PropTypes.string.isRequired,
   internalPOV: PropTypes.boolean,
-  cards: PropTypes.arrayOf(PropTypes.object),
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasFullyLoaded: PropTypes.bool,
   globalVars: PropTypes.object,
 };

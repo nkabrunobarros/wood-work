@@ -21,7 +21,6 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import Image from 'next/image';
 import authService from '../../../services/auth-service';
 
-// eslint-disable-next-line react/prop-types
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
   const theme = useTheme();
   const navLinks = getLinks();
@@ -109,9 +108,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
         </div>
         <div className='scrollableZone'>
           {navLinks.map((item, i) => (
-            <>
+            <React.Fragment key={i}>
               {loggedUser ? (
-                <>
+                <React.Fragment key={i * 100}>
                   {loggedUser.perfil === item.allowed ? (
                     <ActiveLink
                       key={i}
@@ -122,9 +121,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps}) => {
                       {item.icon} {item.title}
                     </ActiveLink>
                   ) : null}
-                </>
+                </React.Fragment>
               ) : null}
-            </>
+            </React.Fragment>
           ))}
           <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             {loggedUser ? (

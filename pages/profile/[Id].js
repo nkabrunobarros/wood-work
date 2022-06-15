@@ -1,54 +1,61 @@
 //  Nodes
 import React, { useEffect, useState } from 'react'
-
-//  Preloader
-import Loader from '../../components/loader/loader'
-import { getUsers } from '../../components/mock/Users'
-import ProfileScreen from '../../components/pages/profile/profile'
-import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
-import routes from '../../navigation/routes'
+
+//  Custom Components
+import Loader from '../../components/loader/loader'
 
 //  Page Component
-export async function getServerSideProps (context) {
-  const res = await getUsers()
-  return {
-    props: { users: res } // will be passed to the page component as props
-  }
-}
+import ProfileScreen from '../../components/pages/profile/profile'
 
-const Profile = ({ users }) => {
+//  Proptypes
+import PropTypes from 'prop-types'
+
+//  Navigation
+import routes from '../../navigation/routes'
+
+//  Services
+import userService from '../../services/user/user-service';
+
+//  Utils
+import hasData from '../../components/utils/hasData'
+
+
+const Profile = ({ ...pageProps }) => {
+  const [loaded, setLoaded] = useState(false)
+  const [user, setUser] = useState()
   const router = useRouter()
   const id = router.query.Id
-  const [loaded, setLoaded] = useState(false)
-  // eslint-disable-next-line react/prop-types
-  const user = users.find(
-    (user) => user.id.toString() === id.toString()
-  );
 
   useEffect(() => {
-    setTimeout(() => {
-        setLoaded(true);
-    }, 1500)
-  }, [])
-
-  const breadcrumbsPath = [
-    {
-      title: `Perfil`,
-      href: `${routes.private.internal.user}`,
-    },
-  ];
-
-  const props = {
-    user,
-    breadcrumbsPath
+    const getData = async () => {
+      await userService
+        .getUserById(id)
+        .then((res) => setUser(res.data.data));
+    };
+    Promise.all([getData()]).then(setLoaded(true));
+  }, []);
+  if (loaded) {
+    const breadcrumbsPath = [
+      {
+        title: `Perfil`,
+        href: `${routes.private.internal.user}`,
+      },
+    ];
+  
+    const props = {
+      user,
+      breadcrumbsPath
+    }
+  
+    Profile.propTypes = {
+      users: PropTypes.array,
+      breadcrumbsPath: PropTypes.array,
+    }
+    if (hasData(user)) pageProps.hasFullyLoaded = true;
+     return pageProps.hasFullyLoaded ? <ProfileScreen {...props} /> : <div> <Loader center={true} /></div>
   }
 
-  Profile.propTypes = {
-    users: PropTypes.array,
-    breadcrumbsPath: PropTypes.array,
-  }
-
-   return loaded ? <ProfileScreen {...props} /> : <div> <Loader center={true} /></div>
+  
 }
 export default Profile

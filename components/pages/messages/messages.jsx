@@ -1,14 +1,9 @@
 //  Nodes
 import React, { useEffect, useState } from 'react';
+
+//  Material Ui
 import CssBaseline from '@mui/material/CssBaseline';
-
 import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
-import PrimaryBtn from '../../buttons/primaryBtn';
-import { MessageSquare, Package } from 'lucide-react';
-
-import styles from '../../../styles/Messages.module.css';
 import {
   Avatar,
   Button,
@@ -18,21 +13,37 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import scrollToBottom from '../../utils/ScrollToBottom';
+//  Custom Components
+import CustomBreadcrumbs from '../../breadcrumbs';
+import Content from '../../content/content';
+import PrimaryBtn from '../../buttons/primaryBtn';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
-import authService from '../../../services/auth-service';
+
+//  Icons
+import { MessageSquare, Package } from 'lucide-react';
+
+//  Styles
+import styles from '../../../styles/Messages.module.css';
+
+//  PropTypes
+import PropTypes from 'prop-types';
+
+//  Moment (time package)
+import moment from 'moment';
+
+//  Utils
+import scrollToBottom from '../../utils/ScrollToBottom';
 import hasData from '../../utils/hasData';
 
 const Messages = ({ ...props }) => {
-  const { breadcrumbsPath, headCellsMessages } = props;
+  const { breadcrumbsPath, headCellsMessages, pageProps } = props;
   const [conversations, setConversations] = useState(props.conversations);
   const [newMessage, setNewMessage] = useState('');
   const [activeRow, setActiveRow] = useState();
   const [loadMessage, setLoadMessage] = useState(new Date());
   const [conversationDisplayed, setConversationDisplayed] = useState();
-  const [loggedUser, setLoggedUser] = useState();
+  const loggedUser = pageProps.loggedUser;
+
   useEffect(() => {
     const scroll = () => {
       scrollToBottom('messagesContainer');
@@ -40,14 +51,6 @@ const Messages = ({ ...props }) => {
     if (hasData(conversationDisplayed)) scroll();
   }, [loadMessage]);
 
-  useEffect(() => {
-    const loggedUser = async () => {
-      const res = await authService.getCurrentUser();
-      setLoggedUser(res.data.data);
-    };
-    loggedUser();
-  }, []);
-  
   const handleSendMessage = (event) => {
     setLoadMessage(new Date());
     event.preventDefault();
@@ -156,7 +159,15 @@ const Messages = ({ ...props }) => {
             <a className='headerTitleXl'>Mensagens</a>
           </div>
           <div style={{ marginLeft: 'auto' }}>
-            <PrimaryBtn icon={<MessageSquare />} text={'Criar Nova'} />
+            <PrimaryBtn
+              icon={
+                <MessageSquare
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
+              text={'Criar Nova'}
+            />
           </div>
         </div>
         <div className={styles.main}>
@@ -169,7 +180,7 @@ const Messages = ({ ...props }) => {
               {loggedUser ? (
                 <>
                   {conversations.map((conversation, i) => (
-                    <>
+                    <React.Fragment key={i * 100}>
                       {/* eslint-disable-next-line react/prop-types */}
                       {conversation.users.find(
                         (user) => user.toString() === loggedUser.id.toString()
@@ -180,7 +191,7 @@ const Messages = ({ ...props }) => {
                           conversation={conversation}
                         />
                       ) : null}
-                    </>
+                    </React.Fragment>
                   ))}
                 </>
               ) : null}
@@ -190,17 +201,18 @@ const Messages = ({ ...props }) => {
           <div className={styles.chatContainer}>
             {hasData(conversationDisplayed) ? (
               <>
-                {' '}
                 <div className={styles.chatTitleContainer}>
                   <span>
-                    <Package />
+                    <Package
+                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
+                    />
                   </span>
                   <a>Encomenda Nº {conversationDisplayed.orderId}</a>
                 </div>
                 <div id='messagesContainer' className={styles.scrollableZone}>
-                  {conversationDisplayed.messagesContent.map((message) => (
-                    // eslint-disable-next-line react/prop-types
-                    <ConversationRow key={message.id} message={message} />
+                  {conversationDisplayed.messagesContent.map((message,i) => (
+                    <ConversationRow key={i} message={message} />
                   ))}
                 </div>
                 <Box
@@ -216,7 +228,6 @@ const Messages = ({ ...props }) => {
                   }}
                 >
                   <OutlinedInput
-                    
                     required
                     fullWidth
                     id='message'
@@ -246,5 +257,6 @@ Messages.propTypes = {
   breadcrumbsPath: PropTypes.array,
   headCellsMessages: PropTypes.array,
   conversations: PropTypes.array,
+  pageProps: PropTypes.any,
 };
 export default Messages;

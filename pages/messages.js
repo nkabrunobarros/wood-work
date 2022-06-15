@@ -10,7 +10,7 @@ import routes from '../navigation/routes';
 
 //  Page Component
 
-const Messages = () => {
+const Messages = ({ ...pageProps}) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -96,6 +96,7 @@ const Messages = () => {
     breadcrumbsPath,
     headCellsMessages,
     conversations,
+    pageProps
   };
   return loaded ? <MessagesScreen {...props} /> : <Loader center={true} />;
 };
@@ -104,5 +105,6 @@ Messages.propTypes = {
   breadcrumbsPath: PropTypes.array,
   headCellsMessages: PropTypes.array,
   conversations: PropTypes.array,
+  pageProps: PropTypes.any
 };
 export default Messages;

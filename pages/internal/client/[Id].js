@@ -1,19 +1,30 @@
-import { useRouter } from 'next/router';
+//  Nodes
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+//  Custom Components
 import Loader from '../../../components/loader/loader';
+
+//  Page Component
 import ClientScreen from '../../../components/pages/client/client';
+
+//  Navigation
 import routes from '../../../navigation/routes';
+
+//  Proptypes
 import PropTypes from 'prop-types';
+
+//  Services
 import clientService from '../../../services/clients/client-service';
+
+//  Utils
 import hasData from '../../../components/utils/hasData';
 
-// eslint-disable-next-line react/prop-types
 const EditClient = ({ ...pageProps}) => {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState();
   const router = useRouter();
   const clientId = router.query.Id;
-  // eslint-disable-next-line react/prop-types
 
   useEffect(() => {
     const getAll = async () => {

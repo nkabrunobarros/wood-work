@@ -1,9 +1,19 @@
+//  Nodes
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+//  Custom Components
 import Loader from '../../../components/loader/loader';
+
+//  Page Component
 import EditUserScreen from '../../../components/pages/editUser/editUser';
+
+//  Utils
 import hasData from '../../../components/utils/hasData';
+
+//  Navigation
 import routes from '../../../navigation/routes';
+
+//  Services
 import countryService from '../../../services/countries/country-service';
 import userService from '../../../services/user/user-service';
 

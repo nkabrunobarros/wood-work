@@ -6,7 +6,7 @@ const Home = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true)
-    }, 1500)
+    }, 500)
   }, [])
  
   return loaded ? <SignIn /> : <div> <Loader center={true} /></div>

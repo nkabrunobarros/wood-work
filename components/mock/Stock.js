@@ -1,4 +1,4 @@
-async function getStock() {
+async function getAllStock() {
   const stock = [
     {
       id: 11,
@@ -52,10 +52,9 @@ async function getStock() {
   return stock;
 }
 
-async function getStockById(id) {
-  await getStock().then((res) => {
-    const product = res.find((prod) => prod.productId.toString() === id);
-    return product;
-  });
+async function getStock(id) {
+  const allStock = await getAllStock();
+  const stock = allStock.find((stock) => stock.id.toString() === id.toString());
+  return stock;
 }
-export { getStock, getStockById };
+export { getAllStock, getStock };
