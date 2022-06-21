@@ -8,7 +8,7 @@ async function getOrders() {
       produção: "Não Iniciada",
       distribuição: "Não",
       nome: "produ adw",
-      numEncomfenda: "1574523",
+      numEncomenda: "1574523",
       cliente: "1",
       operacao: "Corte",
       previsto: 22,

@@ -28,7 +28,7 @@ async function getUsers () {
     },
     {
       id: 3,
-      nome: 'João Magalhães',
+      nome: 'Im the captain now',
       email: 'admin@nka.pt',
       password: '123456',
       perfil: 'internal',
@@ -50,6 +50,7 @@ async function getUser(email) {
 }
 
 async function getUserById(id) {
+  console.log('Tried getting user ' + id)
   const users = await getUsers();
   const foundUser = users.find(
     (element) => element.id.toString() === id.toString()

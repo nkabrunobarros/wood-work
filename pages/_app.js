@@ -16,6 +16,7 @@ import Layout from '../components/layout/layout';
 import authService from '../services/auth-service';
 
 //  Material UI
+import { createTheme, ThemeProvider } from '@mui/material';
 
 //  Navigation
 import routes from '../navigation/routes';
@@ -23,7 +24,10 @@ import routes from '../navigation/routes';
 //  Utils
 import hasData from '../components/utils/hasData';
 import Loader from '../components/loader/loader';
-import { createTheme, ThemeProvider } from '@mui/material';
+import Decode from '../components/utils/Decode';
+
+//  Momment
+import moment from 'moment';
 
 const theme = createTheme({
   palette: {
@@ -35,7 +39,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Montserrat'
+    fontFamily: 'Montserrat',
   },
   components: {
     MuiOutlinedInput: {
@@ -64,7 +68,7 @@ const theme = createTheme({
 });
 export const initializeClientSideProps = async ({ Component, router }) => {
   let hasFullyLoaded = false;
-  const accessToken = localStorage.getItem('user');
+  const accessToken = localStorage.getItem('token');
 
   // It has no token saved.
   if (!accessToken || accessToken === null) {
@@ -77,7 +81,6 @@ export const initializeClientSideProps = async ({ Component, router }) => {
     if (regex.test(router.pathname)) return true;
     else return false;
   });
-
 
   // Redirect users to the login page when trying to access a private page without being authed.
   if (isPrivatePage && !hasData(accessToken)) {
@@ -104,7 +107,7 @@ const App = ({ Component, pageProps }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('token');
 
     function PrivatePage() {
       const isPrivatePage = Object.values(routes.private).some((item) => {
@@ -122,14 +125,16 @@ const App = ({ Component, pageProps }) => {
       //   return initializeClientSideProps({ Component, router });
       // }
       if (typeof window !== 'undefined') {
+        const decodedToken = Decode(accessToken);
         if (
           (!accessToken || accessToken === null) &&
           PrivatePage() &&
-          !accessToken
+          !accessToken &&
+          moment.now() < decodedToken.payload.exp * 1000
         ) {
           pageProps.hasFullyLoaded = true;
-          localStorage.removeItem('user');
-          sessionStorage.removeItem('user');
+          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
           Router.push(routes.public.signIn);
         }
         if (accessToken) {
@@ -141,14 +146,14 @@ const App = ({ Component, pageProps }) => {
                 pageProps.hasFullyLoaded = true;
                 Router.push(routes.private.internal.orders);
                 break;
-            
+
               default:
                 pageProps.hasFullyLoaded = true;
                 Router.push(routes.private.orders);
                 break;
             }
           }
-        }
+        } else console.log('not valid');
       }
     };
     Promise.all([getData()]).then(setLoaded(true));
@@ -188,8 +193,8 @@ App.getInitialProps = async ({ Component, ctx }) => {
       ? await Component.getInitialProps(ctx, hasFullyLoaded)
       : {}),
   };
-  pageProps.globalVars = globalVars;
 
+  pageProps.globalVars = globalVars;
   pageProps.hasFullyLoaded = hasFullyLoaded;
 
   return { pageProps };

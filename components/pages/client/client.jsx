@@ -136,10 +136,10 @@ const EditClient = ({ ...props }) => {
                 <br></br>
                 <div>
                   <InputLabel className='lightTextSm' htmlFor='email'>
-                    Número de Indentificação Fiscal (Nif){' '}
+                    Número de Indentificação Fiscal (Nif)
                   </InputLabel>
                   <InputLabel className='lightTextSm black' htmlFor='email'>
-                    {client.nif}{' '}
+                    {client.nif}
                   </InputLabel>
                 </div>
               </div>

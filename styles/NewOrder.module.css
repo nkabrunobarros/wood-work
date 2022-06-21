@@ -21,3 +21,7 @@
     border-radius: 4px;
     margin: 24px;
 }
+.clientContainer > div {
+  display: inline-block;
+
+}

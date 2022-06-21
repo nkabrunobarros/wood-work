@@ -1,14 +1,10 @@
 //  Nodes
 import React, { useEffect, useState } from 'react';
+import Router from 'next/router';
+
+//  Material UI
 import CssBaseline from '@mui/material/CssBaseline';
-
-import PropTypes from 'prop-types';
-
 import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import InfoCard from '../../cards/infoCard';
-import Content from '../../content/content';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import {
   Autocomplete,
   InputLabel,
@@ -17,11 +13,22 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+
+//  PropTypes
+import PropTypes from 'prop-types';
+
+//  Custom Components
+import CustomBreadcrumbs from '../../breadcrumbs';
+import InfoCard from '../../cards/infoCard';
+import Content from '../../content/content';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
+
+//  Navigation
 import routes from '../../../navigation/routes';
 
+//  Styles
 import styles from '../../../styles/Orders.module.css';
-import AdvancedTable from '../../advancedTable/AdvancedTable';
-import Router from 'next/router';
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -37,43 +44,47 @@ const OrdersScreen = ({ ...props }) => {
     headCells,
   } = props;
 
-  const rows = items;
-
   //  States
+  const [rows, setRows] = useState(items);
   const [number, setNumber] = useState('');
   const [client, setClient] = useState('');
   const [category, setCategory] = useState('');
   const [stock, setStock] = useState('');
   const [filters, setFilters] = useState({});
 
+  console.log(rows);
   const ClearFilters = () => {
     setNumber('');
     setClient('');
     setCategory('');
     setStock('');
-    setFilters({})
+    setFilters({});
   };
-
+  //  Triggers when a filter input changes
   useEffect(() => {
     setFilters({
       numero: number,
       categoria: category,
       stock,
-      cliente: client
-    })
-  }, [number, client, category, stock])
+      cliente: client,
+    });
+  }, [number, client, category, stock]);
 
   const onClientChange = (value) => {
     if (value === null) setClient('');
     else setClient(value.id);
+  };
+
+  const onDeleteOrder = (orderId) => {
+    console.log('deleting order nº ' + orderId);
   };
   return (
     <Grid component='main'>
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
-      {/* Statistics Cards */}
 
+      {/* Statistics Cards */}
       {panelsInfo ? (
         <div
           style={{
@@ -102,7 +113,6 @@ const OrdersScreen = ({ ...props }) => {
             <div className={styles.filterContainer}>
               <InputLabel htmlFor='email'>Número</InputLabel>
               <OutlinedInput
-
                 fullWidth
                 id='number'
                 name='number'
@@ -221,6 +231,8 @@ const OrdersScreen = ({ ...props }) => {
           filters={filters}
           clickRoute={detailPage}
           editRoute={editPage}
+          onDeleteClickFunc={onDeleteOrder}
+          setRows={() => setRows}
         />
       </Content>
     </Grid>

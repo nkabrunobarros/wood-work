@@ -24,7 +24,6 @@ const ForgotPassword = (e) => {
     const USER_ID = `service_kqtxrtc`;
     const TEMPLATE_ID = `template_6nvzzrx`;
     const data = new FormData(event.currentTarget);
-    console.log(event.currentTarget);
     console.log({
       email: data.get('email'),
     });

@@ -162,11 +162,11 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
                 <a
                   className={styles.navItemContainer}
                   onClick={() => {
-                    sessionStorage.removeItem('user');
-                    localStorage.removeItem('user');
+                    sessionStorage.removeItem('token');
+                    localStorage.removeItem('token');
                     if (
-                      !hasData(localStorage.getItem('user')) &&
-                      !hasData(sessionStorage.getItem('user'))
+                      !hasData(localStorage.getItem('token')) &&
+                      !hasData(sessionStorage.getItem('token'))
                     )
                       Router.push(routes.public.signIn);
                   }}

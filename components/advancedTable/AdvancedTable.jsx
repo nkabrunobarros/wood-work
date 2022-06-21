@@ -33,6 +33,12 @@ import clientService from '../../services/clients/client-service';
 import categoryService from '../../services/categories/category-service';
 import productService from '../../services/products/product-service';
 
+//  Dialogs
+import ConfirmDialog from '../dialogs/ConfirmDialog';
+import Notification from '../dialogs/Notification';
+
+import { toast } from 'react-toastify';
+
 const AdvancedTable = ({
   children,
   rows,
@@ -42,7 +48,9 @@ const AdvancedTable = ({
   noPagination,
   editRoute,
   filters,
+  setRows //  SetItem from main wrapper component
 }) => {
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
@@ -51,6 +59,10 @@ const AdvancedTable = ({
   const [filteredItems, setFilteredItems] = useState(rows);
   const [data, setData] = useState({});
 
+  const [deleteItemId, setDeleteItemId] = useState();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
   useEffect(() => {
     const getData = async () => {
       const categories = await categoryService.getAllCategories();
@@ -65,7 +77,43 @@ const AdvancedTable = ({
       setData(allData);
     };
     getData();
+    const BuildDeleteMessage = () => {
+      if (Router.asPath.includes('/orders'))
+        setDialogMessage(
+          'Está prestes a apagar uma encomenda o que é irreversivel, tem certeza que quer continuar?'
+        );
+      if (Router.asPath.includes('/users'))
+        setDialogMessage(
+          'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?'
+        );
+      if (Router.asPath.includes('/clients'))
+        setDialogMessage(
+          'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'
+        );
+    };
+    BuildDeleteMessage();
   }, []);
+
+  function onDeleteClick(row) {
+    setDialogOpen(true);
+    if (Router.asPath.includes('orders')) setDeleteItemId(row.numEncomenda);
+    else setDeleteItemId(row.id);
+  }
+
+  function onDeleteItem() {
+    const oldRows = filteredItems;
+    if (Router.asPath.includes('/orders')) {
+      const newRows = oldRows.filter(
+        (row) => !(row.numEncomenda === deleteItemId)
+      );
+      setFilteredItems(newRows);
+    } else {
+      const newRows = oldRows.filter((row) => !(row.id === deleteItemId))
+      setFilteredItems(newRows);
+    }
+    setDialogOpen(false);
+    toast.success('Removido com sucesso!');
+  }
 
   function EnhancedTableHead(props) {
     const { order, orderBy, onRequestSort } = props;
@@ -214,9 +262,15 @@ const AdvancedTable = ({
       setFilteredItems(filtered);
     }
   }, [filters]);
-
   return (
     <Box sx={{ width: '100%' }}>
+      <ConfirmDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        onConfirm={() => onDeleteItem()}
+        message={dialogMessage}
+      />
+      <Notification />
       <Paper sx={{ width: '100%', mb: 2 }}>
         {noPagination ? null : (
           <TablePagination
@@ -295,7 +349,9 @@ const AdvancedTable = ({
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title='Delete'>
-                                  <IconButton>
+                                  <IconButton
+                                    onClick={() => onDeleteClick(row)}
+                                  >
                                     <Trash
                                       strokeWidth='1'
                                       className='link'
@@ -346,6 +402,7 @@ AdvancedTable.propTypes = {
   editRoute: PropTypes.string,
   noPagination: PropTypes.any,
   filters: PropTypes.any,
+  setRows: PropTypes.any,
 };
 
 export default AdvancedTable;
