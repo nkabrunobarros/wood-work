@@ -51,7 +51,7 @@ const SignIn = ({ ...props }) => {
         //     error.response.data.message) ||
         //   error.message ||
         //   error.toString();
-        return error.response.status;
+        return error;
       }
     );
     return res;
@@ -95,35 +95,43 @@ const SignIn = ({ ...props }) => {
       email,
       password,
     }).then((res) => {
-      if (typeof res === 'object') {
+      console.log(res);
+      if (res.id) {
         ToastSet(loadingNotification, 'Sucesso! A entrar', 'success');
         switch (res.perfil) {
           case 'internal':
             Router.push(routes.private.internal.orders);
             break;
-
-          default:
+          case 'client':
             Router.push(routes.private.orders);
+            break;
+          default:
+            console.log('inside switch');
             break;
         }
       } else {
-        switch (res) {
-          case 400:
-            ToastSet(
-              loadingNotification,
-              'Endereço de Email ou Senha incorreta',
-              'error'
-            );
-            break;
-
-          default:
-            ToastSet(
-              loadingNotification,
-              'Something has happend, if the problem persists, please contact the mangament',
-              'error'
-            );
-            break;
-        }
+        ToastSet(
+          loadingNotification,
+          'Erro, endereço email ou senha incorretos',
+          'error'
+        );
+        // console.log(res)
+        // switch (res) {
+        //   case 400:
+        //     ToastSet(
+        //       loadingNotification,
+        //       'Endereço de Email ou Senha incorreta',
+        //       'error'
+        //     );
+        //     break;
+        //   default:
+        //     ToastSet(
+        //       loadingNotification,
+        //       'Something has happend, if the problem persists, please contact the mangament',
+        //       'error'
+        //     );
+        //     break;
+        // }
 
         setLoading(false);
       }

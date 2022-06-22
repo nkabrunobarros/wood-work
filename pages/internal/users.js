@@ -27,7 +27,7 @@ const Users = ({ ...pageProps }) => {
   useEffect(() => {
     const getData = async () => {
       await userService.getAllUsers().then((res) => {
-        setUsers(res);
+        setUsers(res.data.data);
       });
       await countryService
         .getAllCountries()
@@ -84,9 +84,8 @@ const Users = ({ ...pageProps }) => {
     headCells,
     newRoute,
   };
-  console.log(typeof items)
   if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
-  return !pageProps.hasFullyLoaded && loaded ? (
+  return pageProps.hasFullyLoaded && loaded ? (
     <UsersScreen {...props} />
   ) : (
     <Loader center={true} />

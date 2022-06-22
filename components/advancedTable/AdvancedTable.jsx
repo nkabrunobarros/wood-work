@@ -368,6 +368,7 @@ const AdvancedTable = ({
                                     : null
                                 }
                               >
+                                
                                 {FilterItem(
                                   data,
                                   row[`${headCell.id}`],

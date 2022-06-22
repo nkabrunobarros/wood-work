@@ -52,7 +52,6 @@ const OrdersScreen = ({ ...props }) => {
   const [stock, setStock] = useState('');
   const [filters, setFilters] = useState({});
 
-  console.log(rows);
   const ClearFilters = () => {
     setNumber('');
     setClient('');
@@ -78,11 +77,14 @@ const OrdersScreen = ({ ...props }) => {
   const onDeleteOrder = (orderId) => {
     console.log('deleting order nº ' + orderId);
   };
+   
+
   return (
     <Grid component='main'>
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
+
 
       {/* Statistics Cards */}
       {panelsInfo ? (

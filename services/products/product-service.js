@@ -1,19 +1,21 @@
-import axios from "axios";
-const API_URL = "http://localhost:3000/api/";
+import useAxios from '../../hooks/useAxios/useAxios';
 
 class ProductService {
   async getAllProducts() {
-    return await axios.get(API_URL + "product").then((response) => {
-      return response;
+    return await useAxios({
+      method: 'get',
+      url: '/product',
     });
   }
 
   async getProductById(id) {
-    return await axios
-      .post(API_URL + "product/SingleProduct/", { id })
-      .then((data) => {
-        return data;
-      });
+    return await useAxios({
+      method: 'post',
+      url: `/product/SingleProduct/`,
+      body: JSON.stringify({
+        id,
+      }),
+    });
   }
 }
 export default new ProductService();

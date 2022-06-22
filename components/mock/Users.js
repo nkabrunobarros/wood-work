@@ -1,4 +1,6 @@
-async function getUsers () {
+import hasData from '../utils/hasData';
+
+async function getUsers() {
   const users = [
     {
       id: 1,
@@ -7,9 +9,9 @@ async function getUsers () {
       email: 'bruno.barros@nka.pt',
       perfil: 'internal',
       status: 'Ativo',
-      telemovel: '939921227',
       codigo: '+351',
       telefone: '258258258',
+      phone: '258258258',
       morada: 'Rua do quintal, Nº 47',
       pais: 'Portugal',
     },
@@ -48,13 +50,20 @@ async function getUser(email) {
   const foundUser = users.find((element) => element.email === email);
   return foundUser;
 }
-
-async function getUserById(id) {
-  console.log('Tried getting user ' + id)
+async function signIn(email, password) {
   const users = await getUsers();
   const foundUser = users.find(
-    (element) => element.id.toString() === id.toString()
-    );
+    (element) => (element.email === email && element.password === password)
+  );
   return foundUser;
 }
-export { getUsers, getUser, getUserById };
+async function getUserById(id) {
+  const users = await getUsers();
+  if (hasData(id)) {
+    const foundUser = users.find(
+      (element) => element.id.toString() === id.toString()
+    );
+    return foundUser;
+  }
+}
+export { getUsers, getUser, signIn, getUserById };

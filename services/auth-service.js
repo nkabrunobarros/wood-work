@@ -2,16 +2,24 @@ import axios from 'axios';
 import hasData from '../components/utils/hasData';
 import jwt from 'jsonwebtoken';
 import Decode from '../components/utils/Decode';
+import useAxios from '../hooks/useAxios/useAxios';
 
 const API_URL = 'http://localhost:3000/api/';
 
 class AuthService {
   async login(email, password) {
-    return await axios
-      .post(API_URL + 'login', {
-        email,
+      return await useAxios({
+        method: 'post',
+        url: `login`,
+        body: JSON.stringify({
+          email,
+          password
+        }),
       })
       .then((response) => {
+        console.log(response);
+        if (response.data.data === 'Email exists') return response
+        if (!response.data.data === 404 ) return response
         if (response.data.data) {
           const user = {
             id: response.data.data.id,
@@ -19,7 +27,6 @@ class AuthService {
           const token = jwt.sign(user, '123456', {
             expiresIn: 60 * 3, // expires in 3 hours
           });
-          console.log(token);
           localStorage.setItem('token', JSON.stringify(token));
           sessionStorage.setItem('token', JSON.stringify(token));
           return response;

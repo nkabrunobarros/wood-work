@@ -8,7 +8,7 @@ export default async function useAxios({
   url,
   method,
   body = null,
-  headers = null
+  headers = null,
 }) {
   let response = null;
   let error = '';
@@ -19,11 +19,11 @@ export default async function useAxios({
   const fetchData = async () => {
     await axios[method](
       url,
-      JSON.parse(headers) || JSON.stringify({ Authorization: 'Bearer ' + token }),
-      JSON.parse(body)
+      JSON.parse(body),
+      JSON.stringify({ Authorization: 'Bearer ' + token })
     )
       .then((res) => {
-        response = res.data.data;
+        response = res;
       })
       .catch((err) => {
         error = err;
@@ -34,5 +34,5 @@ export default async function useAxios({
   };
 
   await Promise.all([fetchData()]);
-  return !loading ? response || error : null
+  return !loading ? response || error : null;
 }

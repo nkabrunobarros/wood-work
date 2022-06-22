@@ -1,19 +1,22 @@
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios/useAxios';
 import AbstractManager from '../../src/core/managers/abstract-manager';
-const API_URL = 'http://localhost:3000/api/';
+
 class CategoryService extends AbstractManager {
   async getAllCategories() {
-    return await axios.get(API_URL + 'category').then((response) => {
-      return response;
+    return await useAxios({
+      method: 'get',
+      url: '/category',
     });
   }
 
   async getCategoryById(id) {
-    return await axios
-      .post(API_URL + 'order/SingleCategory/', { id })
-      .then((data) => {
-        return data;
-      });
+    return await useAxios({
+      method: 'post',
+      url: `category/SingleCategory/`,
+      body: JSON.stringify({
+        id,
+      }),
+    });
   }
 }
 export default new CategoryService();

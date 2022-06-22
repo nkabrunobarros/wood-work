@@ -1,19 +1,21 @@
-import axios from 'axios';
-const API_URL = 'http://localhost:3000/api/';
+import useAxios from '../../hooks/useAxios/useAxios';
 
 class CountryService {
   async getAllCountries() {
-    return await axios.get(API_URL + 'country').then((response) => {
-      return response;
+    return await useAxios({
+      method: 'get',
+      url: '/country',
     });
   }
 
   async getCountryById(id) {
-    return await axios
-      .post(API_URL + 'country/SingleCountry/', { id })
-      .then((data) => {
-        return data;
-      });
+    return await useAxios({
+      method: 'post',
+      url: `country/SingleCountry/`,
+      body: JSON.stringify({
+        id,
+      }),
+    });
   }
 }
 export default new CountryService();

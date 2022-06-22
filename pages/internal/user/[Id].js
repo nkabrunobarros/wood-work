@@ -29,7 +29,8 @@ const User = ({ ...pageProps }) => {
   useEffect(() => {
     const getAll = async () => {
       await userService.getUserById(id).then((res) => {
-        setUser(res.data.data);
+        if (res.status === 200) setUser(res.data.data);
+        else setUser({})
       });
     };
     Promise.all([getAll()]).then(setLoaded(true));

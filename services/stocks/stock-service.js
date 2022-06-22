@@ -1,19 +1,21 @@
-import axios from "axios";
-const API_URL = "http://localhost:3000/api/";
+import useAxios from '../../hooks/useAxios/useAxios';
 
 class StockService {
   async getAllStocks() {
-    return await axios.get(API_URL + "stock").then((response) => {
-      return response;
+    return await useAxios({
+      method: 'get',
+      url: '/stock',
     });
   }
 
   async getStockById(id) {
-    return await axios
-      .post(API_URL + "stock/SingleStock/", { id })
-      .then((data) => {
-        return data;
-      });
+    return await useAxios({
+      method: 'post',
+      url: `/stock/SingleStock/`,
+      body: JSON.stringify({
+        id,
+      }),
+    });
   }
 }
 export default new StockService();
