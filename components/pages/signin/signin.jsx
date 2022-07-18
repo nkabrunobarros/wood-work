@@ -144,7 +144,6 @@ const SignIn = ({ ...props }) => {
       <Notification />
       <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
         <Box
-          className={styles.logo}
           sx={{
             display: 'flex',
             flexDirection: 'column',

@@ -42,7 +42,7 @@ const Layout = ({ children, ...pageProps }) => {
   let footer = '';
   if (clientPages.includes(path.route)) footer = 'client';
   if (noLayoutScreens.includes(path.route)) return <>{children}</>;
-
+  
   return (
     <div>
       <CssBaseline />
