@@ -34,9 +34,6 @@ const routes = {
     messages: '/messages',
   },
   public: {
-    internal: {
-      signInClient: '/signin'
-    },
     forgotPassword: '/forgot-password',
     signIn: '/',
   }

@@ -29,7 +29,7 @@ import orderService from '../services/orders/order-service';
 import clientService from '../services/clients/client-service';
 import categoryService from '../services/categories/category-service';
 
-const Orders = ({ hasFullyLoaded, globalVars}) => {
+const Orders = ({ hasFullyLoaded, globalVars }) => {
   const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
@@ -163,16 +163,11 @@ const Orders = ({ hasFullyLoaded, globalVars}) => {
       cards,
       clients,
     };
-    if (hasData(items) && hasData(clients) && hasData(categories))
-      hasFullyLoaded = true;
+    let loaded = false;
+    if (hasData(items) && hasData(clients) && hasData(categories)) loaded = true;
 
-    return hasFullyLoaded ? (
-      <OrdersScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
+    return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />
   }
-  return <Loader center={true} />;
 };
 
 Orders.propTypes = {

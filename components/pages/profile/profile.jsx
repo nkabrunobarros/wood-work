@@ -23,7 +23,7 @@ import { useRouter } from 'next/router';
 const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath } = props;
 
-
+  console.log(user)
   const router = useRouter();
   return (
     <Grid component='main'>
@@ -64,14 +64,15 @@ const Profile = ({ ...props }) => {
               <div>
                 <a className='lightTextSm'>Perfil de Utilizador</a>
                 <br></br>
-                <a className='lightTextSm black'> {user.perfil} </a>
+                <a className='lightTextSm black'> {user.perfil.descricao} </a>
               </div>
               <br></br>
               <div>
                 <a className='lightTextSm'>Estado</a>
                 <br></br>
                 <a className='lightTextSm' style={{ color: 'var(--primary)' }}>
-                  {user.status}
+                  {console.log(user)}
+                  {user.ativo ? 'Ativo' : 'Desativado'}
                 </a>
               </div>
             </div>

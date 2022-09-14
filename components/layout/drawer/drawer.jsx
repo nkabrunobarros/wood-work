@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import React, { useEffect, useState } from 'react';
-import Router, { useRouter } from 'next/router';
 import { useTheme } from '@emotion/react';
 import Image from 'next/image';
+import React, { useState } from 'react';
 
 //  Material UI
 import {
@@ -11,14 +10,12 @@ import {
   IconButton,
   ListItemButton,
   ListItemText,
-  SwipeableDrawer,
+  SwipeableDrawer
 } from '@mui/material';
 
 //  Utlis
-import hasData from '../../utils/hasData';
 
 //  Services
-import authService from '../../../services/auth-service';
 import getLinks from '../../mock/navLinks';
 
 //  Icons
@@ -35,31 +32,23 @@ import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import * as authActions from '../../../src/actions/auth';
 
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
+  console.log(pageProps)
   const theme = useTheme();
   const navLinks = getLinks();
-  const [loggedUser, setLoggedUser] = useState(pageProps.loggedUser);
+  const { loggedUser } = pageProps;
   const [anchorEl, setAnchorEl] = useState(null);
-  const router = useRouter();
   const handleClick = (event) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   };
-  useEffect(() => {
-    const load = async () => {
-      if (typeof window !== 'undefined') {
-        // Perform localStorage action
-        const res = await authService.getCurrentUser();
-        if (hasData(res.data.data)) {
-          if (res.data.data === null) Router.push(routes.public.signIn);
-          else setLoggedUser(res.data.data);
-        } else Router.push(routes.public.signIn);
-      }
-    };
-    load();
-  }, [router.asPath]);
-  return (
+  const internalProfiles = ['Administrador'];
+  let allowedPages;
+  if (internalProfiles.find((element) => element === loggedUser?.perfil.descricao)) allowedPages = 'internal';
+  else allowedPages = 'Client'
+  return loggedUser && (
     <SwipeableDrawer
       disableSwipeToOpen={false}
       onOpen={handleDrawerToggle}
@@ -126,7 +115,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
             <React.Fragment key={i}>
               {loggedUser ? (
                 <React.Fragment key={i * 100}>
-                  {loggedUser.perfil === item.allowed ? (
+                  {allowedPages === item.allowed && (
                     <ActiveLink
                       key={i}
                       href={item.url}
@@ -137,7 +126,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
                       <div className='spacerBox' />
                       {item.title}
                     </ActiveLink>
-                  ) : null}
+                  )}
                 </React.Fragment>
               ) : null}
             </React.Fragment>
@@ -162,13 +151,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
                 <a
                   className={styles.navItemContainer}
                   onClick={() => {
-                    sessionStorage.removeItem('token');
-                    localStorage.removeItem('token');
-                    if (
-                      !hasData(localStorage.getItem('token')) &&
-                      !hasData(sessionStorage.getItem('token'))
-                    )
-                      Router.push(routes.public.signIn);
+                    authActions.logout()
                   }}
                 >
                   <LogOut strokeWidth='1' size={20} />

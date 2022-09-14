@@ -4,9 +4,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import styles from '../../styles/components/primaryBtn.module.css'
-import { Button } from '@mui/material'
+import { Button, Tooltip } from '@mui/material'
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title }) => {
   const style = {
     color: light ? 'var(--primary)' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
@@ -14,15 +14,16 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children }
     backgroundColor: light ? 'var(--white)' : 'var(--primary)',
     border: noBorder ? 'none' : null,
     maxHeight: '20px'
-
   }
   return (
-    <Button className={styles.main} onClick={onClick} title={text} style={style} component='label'>
+    <Tooltip title={title || ''}>
+      <Button className={styles.main} onClick={onClick} style={style} component='label'>
         {icon}
         {text}
         {/* Children is for file Inputs */}
         {children}
-    </Button>
+      </Button>
+    </Tooltip>
   )
 }
 PrimaryBtn.propTypes = {
@@ -34,6 +35,6 @@ PrimaryBtn.propTypes = {
   children: PropTypes.any,
   disabled: PropTypes.any,
   noBorder: PropTypes.any,
-
+  title: PropTypes.string,
 }
 export default PrimaryBtn

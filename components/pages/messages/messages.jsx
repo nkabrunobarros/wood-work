@@ -177,6 +177,7 @@ const Messages = ({ ...props }) => {
               rows={conversations}
               noPagination
             >
+              {console.log(conversations)}
               {loggedUser ? (
                 <>
                   {conversations.map((conversation, i) => (

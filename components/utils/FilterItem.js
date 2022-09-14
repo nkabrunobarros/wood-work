@@ -3,21 +3,17 @@ import React from "react";
 import { Edit, Eye, Trash } from "lucide-react";
 import hasData from "./hasData";
 
-const FilterItem = (data, item, col, index) =>  {
-  if (Object.keys(data).length !== 0)
-  {
+const FilterItem = (data, item, col, index) => {
+  if (Object.keys(data).length !== 0) {
     if (!hasData(item)) return <a>Nan</a>;
-    if (item[`${col}`] < 0 && (col === "desvio" || col === "desvio2")) {
-      return <a className="successBalloon">{item[`${col}`]} horas</a>;
-    } else if (item[`${col}`] > 0 && (col === "desvio" || col === "desvio2")) {
-      return <a className="errorBalloon">{item[`${col}`]} horas</a>;
-    } else if (
+    if (item[`${col}`] < 0 && (col === "desvio" || col === "desvio2")) return <a className="successBalloon">{item[`${col}`]} horas</a>;
+    else if (item[`${col}`] > 0 && (col === "desvio" || col === "desvio2")) return <a className="errorBalloon">{item[`${col}`]} horas</a>;
+    else if (
       Math.ceil(item[`${col}`]) === 0 &&
       (col === "desvio" || col === "desvio2")
-    ) {
-      return <a className="warningBalloon">{item[`${col}`]} horas</a>;
-    }
-  
+    ) return <a className="warningBalloon">{item[`${col}`]} horas</a>;
+
+
     switch (col) {
       case "productId": {
         const prod = data.products.find(prod => prod.id.toString() === item.toString())
@@ -51,9 +47,9 @@ const FilterItem = (data, item, col, index) =>  {
         return <a>{displayWithStyle(item, col)}</a>;
     }
   }
-  else if(col === undefined) {
+  else if (col === undefined) {
     return <a>{displayWithStyle(item, col)}</a>;
   }
- 
+
 }
 export { FilterItem };

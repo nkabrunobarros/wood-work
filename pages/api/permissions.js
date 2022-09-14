@@ -1,29 +1,33 @@
 import axios from 'axios';
+import { parseCookies } from 'nookies';
 
 const handler = async (req, res) => {
-  const { method, body, headers } = req;
-
+  const { method, headers, body } = req;
+  const { auth_token: token } = parseCookies();
+  console.log(body)
   if (method !== 'POST') {
     return res.status(400).json({ success: false, message: 'Only POST requests are allowed' })
   }
   const data = JSON.stringify({
-    query: `query login ($input: LoginInput!) {
-      login (input: $input) {
-          token
+    query: `query perfil($id: String!) {
+      perfil (id: $id) {
+         id
+        descricao
+        permissoes {sujeito accao}
       }
-  }`,
+    }`,
     variables: {
-      input: { ...body }
+      ...body
     }
   });
-
   const config = {
     method,
     url: process.env.NEXT_PUBLIC_API_URL,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': headers['content-type'] , authorization: headers.authorization ? headers.authorization : token },
     data,
     timeout: process.env.NEXT_PUBLIC_REQUEST_TIMEOUT,
   };
+  console.log(config)
   try {
     await axios(config).then((result) => {
       if (!result.data.errors) {
@@ -31,7 +35,7 @@ const handler = async (req, res) => {
           {
             success: true,
             errors: false,
-            payload: result.data.data.login
+            payload: result.data.data.perfil
           }
         )
 
@@ -42,3 +46,4 @@ const handler = async (req, res) => {
   } catch (error) { return res.status(error.response.status || 500).json({ success: false, message: error.message }); }
 }
 export default handler;
+

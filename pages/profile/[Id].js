@@ -22,19 +22,20 @@ import hasData from '../../components/utils/hasData'
 
 
 const Profile = ({ ...pageProps }) => {
-  const [loaded, setLoaded] = useState(false)
-  const [user, setUser] = useState()
+  let loaded = false;
+  const [user, setUser] = useState(pageProps.loggedUser)
   const router = useRouter()
   const id = router.query.Id
 
-  useEffect(() => {
-    const getData = async () => {
-      await userService
-        .getUserById(id)
-        .then((res) => setUser(res.data.data));
-    };
-    Promise.all([getData()]).then(setLoaded(true));
-  }, []);
+  if (user) loaded = true
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     await userService
+  //       .getUserById(id)
+  //       .then((res) => setUser(res.data.data));
+  //   };
+  //   Promise.all([getData()]).then(setLoaded(true));
+  // }, []);
   if (loaded) {
     const breadcrumbsPath = [
       {
@@ -47,9 +48,9 @@ const Profile = ({ ...pageProps }) => {
       user,
       breadcrumbsPath
     }
-  
+    console.log(user)
     Profile.propTypes = {
-      users: PropTypes.array,
+      users: PropTypes.object,
       breadcrumbsPath: PropTypes.array,
     }
     if (hasData(user)) pageProps.hasFullyLoaded = true;

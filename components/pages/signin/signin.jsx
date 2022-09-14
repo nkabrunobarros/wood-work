@@ -1,61 +1,44 @@
 //  Nodes
-import React, { useState } from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-import styles from '../../../styles/SignIn.module.css';
+import { ConnectWithoutContact, Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  IconButton,
+  CircularProgress, IconButton,
   InputLabel,
-  OutlinedInput,
-  CircularProgress,
+  OutlinedInput
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import styles from '../../../styles/SignIn.module.css';
 
 import routes from '../../../navigation/routes';
-import Footer from '../../layout/footer/footer';
 import Notification from '../../dialogs/Notification';
+import Footer from '../../layout/footer/footer';
 
-import { EmailValidation } from '../../utils/EmailValidation';
-
+import Router, { useRouter } from 'next/router';
+import { setCookie } from 'nookies';
 import { toast } from 'react-toastify';
+import * as authActions from '../../../src/actions/auth';
+import * as permissionActions from '../../../src/actions/permission';
 import ToastSet from '../../utils/ToastSet';
-import authService from '../../../services/auth-service';
-import Router from 'next/router';
 
-const SignIn = ({ ...props }) => {
+const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
-  // eslint-disable-next-line react/prop-types
   const { client } = props;
-  const [email, setEmail] = useState('admin@nka.pt');
+  console.log(props)
+  const [email, setEmail] = useState('geral@nka.pt');
   const [password, setPassword] = useState('123456');
-
   const [loading, setLoading] = useState(false);
-  async function loginUser() {
-    const res = await authService.login(email, password).then(
-      (res) => {
-        return res.data.data;
-      },
-      (error) => {
-        // const resMessage =
-        //   (error.response &&
-        //     error.response.data &&
-        //     error.response.data.message) ||
-        //   error.message ||
-        //   error.toString();
-        return error;
-      }
-    );
-    return res;
-  }
+  const router = useRouter();
+
 
   const handleSubmit = async (event) => {
     const loadingNotification = toast.loading('');
@@ -82,60 +65,38 @@ const SignIn = ({ ...props }) => {
         'error'
       );
     }
+    try {
 
-    if (!EmailValidation(email)) {
-      setLoading(false);
-      return ToastSet(
-        loadingNotification,
-        'Endereço de Email mal estruturado',
-        'error'
-      );
-    }
-    await loginUser({
-      email,
-      password,
-    }).then((res) => {
-      console.log(res);
-      if (res.id) {
-        ToastSet(loadingNotification, 'Sucesso! A entrar', 'success');
-        switch (res.perfil) {
-          case 'internal':
-            Router.push(routes.private.internal.orders);
-            break;
-          case 'client':
-            Router.push(routes.private.orders);
-            break;
-          default:
-            console.log('inside switch');
-            break;
-        }
-      } else {
-        ToastSet(
-          loadingNotification,
-          'Erro, endereço email ou senha incorretos',
-          'error'
-        );
-        // console.log(res)
-        // switch (res) {
-        //   case 400:
-        //     ToastSet(
-        //       loadingNotification,
-        //       'Endereço de Email ou Senha incorreta',
-        //       'error'
-        //     );
-        //     break;
-        //   default:
-        //     ToastSet(
-        //       loadingNotification,
-        //       'Something has happend, if the problem persists, please contact the mangament',
-        //       'error'
-        //     );
-        //     break;
-        // }
-
-        setLoading(false);
+      const result = await authActions.login({ email, password })
+      if (!result.data.success && result.data.message === 'credenciais-invalidas') { 
+        
+        ToastSet(loadingNotification, 'Credenciais invalidas', 'error')
+        setLoading(false)
+     }
+      setCookie(undefined, 'auth_token', result.data.payload.token);
+      const resUser = await authActions.me({ token: result.data.payload.token })
+      const user = resUser.data.payload;
+      const permission = await permissionActions.permission({ id: user.idPerfil })
+      const builtUser = {
+        id: user.id,
+        email: user.email,
+        nome: user.nome,
+        morada: user.morada,
+        telefone: user.telefone,
+        telemovel: user.telemovel,
+        ativo: user.ativo,
+        pais: user.paisCodigo,
+        perfil: permission.data.payload
       }
-    });
+      localStorage.setItem("user", JSON.stringify(builtUser));
+      ToastSet(loadingNotification, 'A entrar', 'success')
+      if (builtUser.perfil.descricao === 'Administrador') router.push(routes.private.internal.orders)
+      else router.push(routes.private.orders)
+      setLoading(false)
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -272,7 +233,7 @@ const SignIn = ({ ...props }) => {
     </Grid>
   );
 };
-SignIn.PropTypes = {
+SignIn.propTypes = {
   client: PropTypes.any,
 };
 export default SignIn;

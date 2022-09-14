@@ -1,0 +1,207 @@
+-- Already set Tables 
+CREATE TABLE Organization (
+    id int NOT NULL,
+    legalName varchar(255),
+    taxid int NOT NULL,
+    ssnid int NOT NULL,
+    caeid int NOT NULL,
+    address varchar(255),
+    email varchar(255),
+    telephone int,
+    location varchar(255),
+  PRIMARY KEY (id));
+
+CREATE TABLE Project (
+    id int NOT NULL,
+    name varchar(255),
+    category varchar(255),
+    status varchar(255),
+    nestingTag varchar(255),
+    FK    producedBy varchar(255),
+    FK    orderBy varchar(255),
+        acessories varchar(255),
+    FK    part varchar(255),
+    FK    assemblyBy varchar(255),
+    FK    expedition varchar(255),
+        caeid int NOT NULL,
+    
+    
+    
+    PRIMARY KEY (id),
+    FOREIGN KEY (producedBy) REFERENCES Worker(id),
+    FOREIGN KEY (orderBy) REFERENCES Client(id),
+    FOREIGN KEY (part) REFERENCES Part(id),
+    FOREIGN KEY (assemblyBy) REFERENCES Worker(id),
+    FOREIGN KEY (expedition) REFERENCES X(id));
+
+CREATE TABLE Part (
+    id int NOT NULL,
+    partName varchar(255),
+    sort varchar(255),
+    material varchar(255),
+    amount int,
+    lenght int,
+    width int,
+    thickness int,
+    tag int,
+    nestingFlag varchar(255),
+    f2 int,
+    f3 int,
+    f4 int,
+    f5 int,
+    veio varchar(255),
+    opcnc varchar(255),
+    observation varchar(255),
+    fk    belongsTo varchar(255),
+        location varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (belongsTo) REFERENCES Action(id));
+
+CREATE TABLE Worker (
+    id int NOT NULL,
+    giveName varchar(255),
+    familyName varchar(255),
+    taxid int NOT NULL,
+    ssnid int NOT NULL,
+    functionPerformed varchar(255),
+    workerShift varchar(255),
+    FK    hasOrganization varchar(255),
+    FK    assemblyFor varchar(255),
+        location varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (hasOrganization) REFERENCES Organization(id),
+    FOREIGN KEY (assemblyFor) REFERENCES Assembly(id));
+
+CREATE TABLE Action (
+    id int NOT NULL,
+    startTime DateTime,
+    endTime DateTime,
+    machineStatus varchar(255),
+    machineType varchar(255),
+    FK    excutedBy varchar(255),
+    FK    excutedIn varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (excutedBy) REFERENCES X(id),
+    FOREIGN KEY (excutedIn) REFERENCES X(id));
+
+CREATE TABLE Client (
+    id int NOT NULL,
+    clientTypeInstitution varchar(255),
+    giveName varchar(255),
+    legalName varchar(255),
+    taxid int NOT NULL,
+    address varchar(255),
+    email varchar(255),
+    telephone int,
+    FK    buysTo varchar(255),
+    -- ///
+    otherData varchar(255),
+    obs varchar(255),
+
+    -- ///
+    PRIMARY KEY (id),
+    FOREIGN KEY (buysTo) REFERENCES X(id));
+
+CREATE TABLE Budget (
+    id int NOT NULL,
+    name varchar(255),
+    amount int,
+    aprovedData DateTime,
+    FK    madeFor varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (madeFor) REFERENCES X(id));
+
+CREATE TABLE Consumable (
+    id int NOT NULL,
+    name varchar(255),
+    amount int,
+    status varchar(255),
+    FK    belongsTo varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (belongsTo) REFERENCES X(id));
+
+CREATE TABLE Expedition (
+    id int NOT NULL,
+    expeditionTime** DateTime,
+    deliveryFlag varchar(255),
+    FK    belongsTo varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (belongsTo) REFERENCES X(id));
+
+CREATE TABLE Assembly (
+    id int NOT NULL,
+    startTime DateTime,
+    endTime DateTime,
+    status varchar(255),
+    FK    belongsTo varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (belongsTo) REFERENCES X(id));
+-- New Tables 
+
+
+CREATE TABLE User (
+    id int NOT NULL,
+    email varchar(255),
+    password varchar(255),
+    profile varchar(255), (**permission),
+    status varchar(255), (**active or not),
+    telephone int,(** ?)
+    cellphone int, (** ?)
+    address varchar(255),
+    FK - country varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (country) REFERENCES Country(id || alpha2) (** ?));
+
+
+
+CREATE TABLE Countries (
+    id int NOT NULL,
+    alpha2 varchar(2) NOT NULL,
+    alpha3  varchar(3) NOT NULL,
+    name  varchar(255) NOT NULL,
+    phoneCode  varchar(255) NOT NULL,
+    PRIMARY KEY (id),
+  );
+
+CREATE TABLE Category (
+    id int NOT NULL,
+    name varchar(2),
+    PRIMARY KEY (id));
+
+
+CREATE TABLE Product (
+    id int NOT NULL,
+    code varchar (255), (** necessario?? )
+    name varchar(255),
+    cost float,
+    craftTime float,
+    FK - categoryId varchar(255) NOT NULL,
+    FK - woodTypeId varchar(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (categoryId) REFERENCES Category(id)
+    FOREIGN KEY (woodTypeId) REFERENCES WoodType(id));
+
+CREATE TABLE Order (
+    id int NOT NULL,
+    FK - productId varchar(255) NOT NULL,
+    status varchar(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (productId) REFERENCES Product(id));
+
+
+CREATE TABLE Stock (
+    id int NOT NULL,
+    FK - productId varchar(255) NOT NULL,
+    amount int,
+    supplier varchar(255), (?)
+    PRIMARY KEY (id),
+    FOREIGN KEY (productId) REFERENCES Product(id));
+
+CREATE TABLE WoodType (
+    id int NOT NULL,
+    name varchar(255),
+    num int,
+    supplier varchar(255), (?)
+    PRIMARY KEY (id),
+    FOREIGN KEY (productId) REFERENCES Product(id));
+

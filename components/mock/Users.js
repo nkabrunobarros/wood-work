@@ -7,7 +7,7 @@ async function getUsers() {
       nome: 'Bruno Barros',
       password: '123456',
       email: 'bruno.barros@nka.pt',
-      perfil: 'internal',
+      perfil: 'Client',
       status: 'Ativo',
       codigo: '+351',
       telefone: '258258258',

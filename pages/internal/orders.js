@@ -179,13 +179,8 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
       hasData(cards))
       hasFullyLoaded = true;
 
-    return hasFullyLoaded ? (
-      <OrdersScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
+    return hasFullyLoaded ? <OrdersScreen {...props} />: <Loader center={true} />
   }
-  return <Loader center={true} />;
 };
 Orders.propTypes = {
   categories: PropTypes.array.isRequired,

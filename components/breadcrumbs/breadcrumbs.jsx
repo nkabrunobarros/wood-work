@@ -34,9 +34,7 @@ const CustomBreadcrumbs = ({ children, path }) => {
           color='inherit'
           href={`${routes.private.orders}`}
         >
-          <a>
             <Home size={18} />
-          </a>
         </Link>
         {path.map((crumb, i) => (
           <a

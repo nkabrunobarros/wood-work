@@ -1,7 +1,7 @@
 //  Node modules
-import React, { useEffect, useState } from 'react';
-import Router, { useRouter } from 'next/router';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 //  Proptypes
 import PropTypes from 'prop-types';
@@ -13,7 +13,6 @@ import '../styles/globals.css';
 import Layout from '../components/layout/layout';
 
 //  Services
-import authService from '../services/auth-service';
 
 //  Material UI
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -22,12 +21,12 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import routes from '../navigation/routes';
 
 //  Utils
-import hasData from '../components/utils/hasData';
-import Loader from '../components/loader/loader';
-import Decode from '../components/utils/Decode';
 
 //  Momment
+import jwt from 'jsonwebtoken';
 import moment from 'moment';
+import { destroyCookie, parseCookies } from 'nookies';
+import AppContext from './AppContenxt';
 
 const theme = createTheme({
   palette: {
@@ -66,102 +65,40 @@ const theme = createTheme({
     },
   },
 });
-export const initializeClientSideProps = async ({ Component, router }) => {
-  let hasFullyLoaded = false;
-  const accessToken = localStorage.getItem('token');
 
-  // It has no token saved.
-  if (!accessToken || accessToken === null) {
-    hasFullyLoaded = true;
-  }
-
-  // Validate user token when having a token in local storage and no login data at our redux store.
-  const isPrivatePage = Object.values(routes.private).some((item) => {
-    const regex = new RegExp(item);
-    if (regex.test(router.pathname)) return true;
-    else return false;
-  });
-
-  // Redirect users to the login page when trying to access a private page without being authed.
-  if (isPrivatePage && !hasData(accessToken)) {
-    hasFullyLoaded = true;
-    console.log('should redicting to login');
-    // Router.push(routes.public.signIn);
-  }
-
-  // if (!accessToken) Router.push(routes.public.signIn);
-
-  const pageProps = {
-    ...(Component.getInitialProps
-      ? await Component.getInitialProps(router, hasFullyLoaded)
-      : {}),
-  };
-
-  pageProps.hasFullyLoaded = hasFullyLoaded;
-
-  return { pageProps };
-};
 const App = ({ Component, pageProps }) => {
-  const [loggedUser, setLoggedUser] = useState();
-  const [loaded, setLoaded] = useState(false);
+  const { auth_token: token } = parseCookies();
+  const [loaded, setLoaded] = useState(false)
   const router = useRouter();
-
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
+    const load = () => {
+      if (token) {
+        const decodedToken = jwt.decode(token);
+        if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment()) {
+          pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
+          const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
 
-    function PrivatePage() {
-      const isPrivatePage = Object.values(routes.private).some((item) => {
-        const regex = new RegExp(item);
-        if (regex.test(router.pathname)) return true;
-        else return false;
-      });
-      return isPrivatePage;
-    }
-
-    const getData = async () => {
-      // if (typeof window !== 'undefined') {
-      //   const res = await authService.getCurrentUser();
-      //   if (res) setLoggedUser(res.data.data);
-      //   return initializeClientSideProps({ Component, router });
-      // }
-      if (typeof window !== 'undefined') {
-        const decodedToken = Decode(accessToken);
-        if (
-          (!accessToken || accessToken === null) &&
-          PrivatePage() &&
-          !accessToken &&
-          moment.now() < decodedToken.payload.exp * 1000
-        ) {
-          pageProps.hasFullyLoaded = true;
-          localStorage.removeItem('token');
-          sessionStorage.removeItem('token');
-          Router.push(routes.public.signIn);
-        }
-        if (accessToken) {
-          const res = await authService.getCurrentUser();
-          if (res) setLoggedUser(res.data.data);
-          if (!PrivatePage()) {
-            switch (res.data.data.perfil) {
-              case 'internal':
-                pageProps.hasFullyLoaded = true;
-                Router.push(routes.private.internal.orders);
-                break;
-
-              default:
-                pageProps.hasFullyLoaded = true;
-                Router.push(routes.private.orders);
-                break;
-            }
+          if (isPublicPage && !!token) {
+            if (pageProps.loggedUser.perfil.descricao === 'Administrador') router.push(routes.private.internal.orders)
+            else { router.push(routes.private.orders);setLoaded(true); }
           }
-        } else console.log('not valid');
+          setLoaded(true);
+        }
+        else {
+          destroyCookie('auth-token');
+          router.push(routes.public.signIn)
+          setLoaded(true);
+        }
       }
-    };
-    Promise.all([getData()]).then(setLoaded(true));
-  }, []);
-  if (loaded) {
-    pageProps.loggedUser = loggedUser;
-    return !pageProps.hasFullyLoaded ? (
-      <ThemeProvider theme={theme}>
+    }
+    load();
+  }, [])
+
+
+
+  return (
+    <ThemeProvider theme={theme}>
+      <AppContext.Provider>
         <Head>
           <title>Wood Work 4.0</title>
           <link rel='icon' href='/logo_bw_ww40_inv.png' />
@@ -169,11 +106,9 @@ const App = ({ Component, pageProps }) => {
         <Layout {...pageProps}>
           <Component {...pageProps} />
         </Layout>
-      </ThemeProvider>
-    ) : (
-      <Loader center={true} />
-    );
-  }
+      </AppContext.Provider>
+    </ThemeProvider>
+  )
 };
 
 App.getInitialProps = async ({ Component, ctx }) => {
@@ -187,7 +122,6 @@ App.getInitialProps = async ({ Component, ctx }) => {
     iconSmStrokeWidth: 1.5,
   };
 
-  // Ignore server side initialization for now
   const pageProps = {
     ...(Component.getInitialProps
       ? await Component.getInitialProps(ctx, hasFullyLoaded)
