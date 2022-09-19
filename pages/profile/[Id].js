@@ -1,6 +1,5 @@
 //  Nodes
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import React from 'react'
 
 //  Custom Components
 import Loader from '../../components/loader/loader'
@@ -15,8 +14,6 @@ import PropTypes from 'prop-types'
 import routes from '../../navigation/routes'
 
 //  Services
-import userService from '../../services/user/user-service';
-
 //  Utils
 import hasData from '../../components/utils/hasData'
 
