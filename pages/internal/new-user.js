@@ -26,12 +26,14 @@ const NewOrder = ({ ...pageProps }) => {
       .getAllCountries()
       .then((res) => setCountries(res.data.data));
     }
+
     Promise.all([getData()]).then(setLoaded(true));
 
     setTimeout(() => {
       setLoaded(true);
     }, 500);
   }, []);
+
   const breadcrumbsPath = [
     {
       title: 'Utilizadores',
@@ -42,15 +44,19 @@ const NewOrder = ({ ...pageProps }) => {
       href: `${routes.private.internal.newUser}`,
     },
   ];
+
   const props = {
     breadcrumbsPath,
     countries,
   };
+
   if (hasData(countries)) pageProps.hasFullyLoaded = true;
+
   return pageProps.hasFullyLoaded && loaded ? (
     <NewUserScreen {...props} />
   ) : (
     <Loader center={true} />
   );
 };
+
 export default NewOrder;

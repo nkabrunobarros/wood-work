@@ -1,6 +1,6 @@
 // Node modules
 import Router, { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -14,13 +14,15 @@ import Footer from './footer/footer';
 import Navbar from './navbar/navbar';
 import Loader from '../loader/loader';
 import jwt from 'jsonwebtoken';
-import * as authActions from '../../src/actions/auth';
-import * as permissionActions from '../../src/actions/permission';
+import * as authActions from '../../pages/api/actions/auth';
+import * as permissionActions from '../../pages/api/actions/permission';
+import styles from '../../styles/404.module.css'
 
 //  Material UI
-import { CssBaseline, Hidden } from '@mui/material';
+import { CssBaseline, Hidden, Tooltip } from '@mui/material';
 import { parseCookies } from 'nookies';
 import moment from 'moment';
+
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
   `${routes.public.signIn}`,
@@ -36,6 +38,7 @@ async function Test(pageProps) {
   // Case token is valid
   if (token) {
     const decodedToken = jwt.decode(token);
+
     if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment()) {
       //  case token is valid still
       if (pageProps.loggedUser) {
@@ -44,19 +47,26 @@ async function Test(pageProps) {
       }
       else {
         console.log('dont have user Logged in, but have token')
+
         const resUser = await authActions.me({ token })
         const user = resUser.data.payload;
         const permission = await permissionActions.permission({ id: user.idPerfil })
+
         const builtUser = {
           id: user.id,
           email: user.email,
           nome: user.nome,
+          morada: user.morada,
+          telefone: user.telefone,
+          telemovel: user.telemovel,
           ativo: user.ativo,
+          pais: user.paisCodigo,
           perfil: permission.data.payload
         }
+
         localStorage.setItem("user", JSON.stringify(builtUser));
-        console.log(resUser)
         pageProps.loggedUser = builtUser;
+
         return true;
       }
     } else {
@@ -80,19 +90,11 @@ const Layout = ({ children, ...pageProps }) => {
     async function load() {
       // check cookie 
       const isLoaded = await Test(pageProps);
-      setLoaded(isLoaded);
-      console.log(isLoaded)
-
-      // validate cookie
-
-      //  set pageProps
-
-      // loade = true
-
-
 
       pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
+      setLoaded(isLoaded);
     }
+
     Promise.all([load()]).then(() => setLoaded(true))
     console.log(Router.asPath)
 
@@ -110,6 +112,7 @@ const Layout = ({ children, ...pageProps }) => {
   ];
 
   let footer = '';
+
   if (clientPages.includes(path.route)) footer = 'client';
 
   if (noLayoutScreens.includes(path.route)) return children;
@@ -126,7 +129,50 @@ const Layout = ({ children, ...pageProps }) => {
         />
       </Hidden>
       <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>
-        {children}
+        {Router.asPath.includes('internal') || Router.asPath.includes('profile')  ? children : <>
+          <div className={styles.main} target="_blank" rel="noreferrer">
+            <header className={styles.topheader}></header>
+
+            <div>
+              <div className={styles.starsec}></div>
+              <div className={styles.starthird}></div>
+              <div className={styles.starfourth}></div>
+              <div className={styles.starfifth}></div>
+            </div>
+            {/* Lamp section */}
+            {/* <div className={styles.lamp__wrap}>
+      <div className={styles.lamp}>
+        <div className={styles.cable}></div>
+        <div className={styles.cover}></div>
+        <div className={styles.in}>
+          <div className={styles.bulb}></div>
+        </div>
+        <div className={styles.light}></div>
+      </div>
+    </div> */}
+            <section className={styles.error}>
+              <div className={styles.error__content}>
+                <div className={styles.error__message}>
+                  <h1 className={styles.message__title}>Você não tem acesso a esta página</h1>
+                  <p className={styles.message__text}>
+
+                    Se é suposto ter acesso a esta página, por favor entre em
+                    <Tooltip title='Enviar email'>
+                      <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
+                    </Tooltip>
+                    com o responsavel
+                  </p>
+                </div>
+                <div className={styles.error__nav}>
+                  <a className={styles.enav__link} onClick={() => Router.back()}>
+                  {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
+                    VOLTAR
+                  </a>
+                </div>
+              </div>
+            </section>
+          </div></>}
+
       </div>
       <div style={{ width: '100%' }}>
         <Footer section={footer} />
@@ -134,6 +180,7 @@ const Layout = ({ children, ...pageProps }) => {
     </React.Fragment>
   ) : <Loader center={true} />
 };
+
 Layout.propTypes = {
   children: PropTypes.any,
 };

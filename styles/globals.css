@@ -25,6 +25,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Montserrat' !important;
+  transition: all .2s ease-in-out;
 }
 
 a {
@@ -37,7 +38,7 @@ a {
 }
 .link {
   color: var(--primary);
-  cursor: pointer;
+  cursor: pointer !important;
   text-decoration: none;
 }
 .pagination {

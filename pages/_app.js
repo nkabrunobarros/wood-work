@@ -40,6 +40,9 @@ const theme = createTheme({
   typography: {
     fontFamily: 'Montserrat',
   },
+  TextareaAutosize: {
+    fontFamily: 'Montserrat',
+  },
   components: {
     MuiOutlinedInput: {
       styleOverrides: {

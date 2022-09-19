@@ -15,6 +15,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
     border: noBorder ? 'none' : null,
     maxHeight: '20px'
   }
+
   return (
     <Tooltip title={title || ''}>
       <Button className={styles.main} onClick={onClick} style={style} component='label'>
@@ -26,6 +27,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
     </Tooltip>
   )
 }
+
 PrimaryBtn.propTypes = {
   text: PropTypes.string,
   icon: PropTypes.any,
@@ -37,4 +39,5 @@ PrimaryBtn.propTypes = {
   noBorder: PropTypes.any,
   title: PropTypes.string,
 }
+
 export default PrimaryBtn

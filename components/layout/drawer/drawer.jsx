@@ -32,22 +32,26 @@ import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-import * as authActions from '../../../src/actions/auth';
+import * as authActions from '../../../pages/api/actions/auth';
+// import * as authActions from '../../../pages/api/actions/auth';
 
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
-  console.log(pageProps)
   const theme = useTheme();
   const navLinks = getLinks();
   const { loggedUser } = pageProps;
   const [anchorEl, setAnchorEl] = useState(null);
+
   const handleClick = (event) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   };
+
   const internalProfiles = ['Administrador'];
   let allowedPages;
+
   if (internalProfiles.find((element) => element === loggedUser?.perfil.descricao)) allowedPages = 'internal';
   else allowedPages = 'Client'
+
   return loggedUser && (
     <SwipeableDrawer
       disableSwipeToOpen={false}
@@ -165,4 +169,5 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
     </SwipeableDrawer>
   );
 };
+
 export default DrawerMobile;

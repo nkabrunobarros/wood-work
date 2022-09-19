@@ -19,12 +19,12 @@ import {
   User,
 } from 'lucide-react';
 import { useRouter } from 'next/router';
+import DisplayCountryName from '../../utils/DisplayCountryName'
 
 const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath } = props;
-
-  console.log(user)
   const router = useRouter();
+
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -71,7 +71,6 @@ const Profile = ({ ...props }) => {
                 <a className='lightTextSm'>Estado</a>
                 <br></br>
                 <a className='lightTextSm' style={{ color: 'var(--primary)' }}>
-                  {console.log(user)}
                   {user.ativo ? 'Ativo' : 'Desativado'}
                 </a>
               </div>
@@ -101,4 +100,5 @@ const Profile = ({ ...props }) => {
     </Grid>
   );
 };
+
 export default Profile;

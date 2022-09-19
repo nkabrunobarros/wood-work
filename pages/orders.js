@@ -34,18 +34,23 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [categories, setCategories] = useState();
+
   useEffect(() => {
     const getAll = async () => {
       await orderService.getAllOrders().then((res) => setOrders(res.data.data));
+
       await clientService
         .getAllClients()
         .then((res) => setClients(res.data.data));
+
       await categoryService
         .getAllCategories()
         .then((res) => setCategories(res.data.data));
     };
+
     Promise.all([getAll()]).then(setLoaded(true));
   }, []);
+
   if (loaded) {
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
@@ -54,7 +59,9 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
         href: `${routes.private.orders}`,
       },
     ];
+
     const items = orders;
+
     const headCells = [
       {
         id: 'numero',
@@ -93,6 +100,7 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
         label: 'Ações',
       },
     ];
+
     const panelsInfo = {
       budgeting: 2,
       drawing: 1,
@@ -163,7 +171,9 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
       cards,
       clients,
     };
+
     let loaded = false;
+
     if (hasData(items) && hasData(clients) && hasData(categories)) loaded = true;
 
     return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />

@@ -1,3 +1,0 @@
-export {
-  handler
-} from './login';

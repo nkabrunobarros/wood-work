@@ -1,6 +1,6 @@
 // Node modules
-import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -18,7 +18,7 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Tooltip,
+  Tooltip
 } from '@mui/material';
 
 //  Icons
@@ -29,15 +29,14 @@ import { FilterItem } from '../utils/FilterItem';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
 
 //  Services
-import clientService from '../../services/clients/client-service';
-import categoryService from '../../services/categories/category-service';
-import productService from '../../services/products/product-service';
 
 //  Dialogs
 import ConfirmDialog from '../dialogs/ConfirmDialog';
 import Notification from '../dialogs/Notification';
 
 import { toast } from 'react-toastify';
+import * as CategoriesActions from '../../pages/api/actions/category';
+import * as ClientsActions from '../../pages/api/actions/client';
 
 const AdvancedTable = ({
   children,
@@ -47,9 +46,7 @@ const AdvancedTable = ({
   clickRoute,
   noPagination,
   editRoute,
-  filters,
-  setRows //  SetItem from main wrapper component
-}) => {
+  filters }) => {
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -58,65 +55,74 @@ const AdvancedTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredItems, setFilteredItems] = useState(rows);
   const [data, setData] = useState({});
-
   const [deleteItemId, setDeleteItemId] = useState();
-
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
+
   useEffect(() => {
     const getData = async () => {
-      const categories = await categoryService.getAllCategories();
-      const clients = await clientService.getAllClients();
-      const products = await productService.getAllProducts();
-
+      const categories = await CategoriesActions.categories()
+      const clients = await ClientsActions.clients()
+      
       const allData = {
-        categories: categories.data.data,
-        clients: clients.data.data,
-        products: products.data.data,
+        categories: categories.data.payload.data,
+        clients: clients.data.payload.data,
       };
+
       setData(allData);
     };
+
     getData();
+
     const BuildDeleteMessage = () => {
       if (Router.asPath.includes('/orders'))
         setDialogMessage(
           'Está prestes a apagar uma encomenda o que é irreversivel, tem certeza que quer continuar?'
         );
+
       if (Router.asPath.includes('/users'))
         setDialogMessage(
           'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?'
         );
+
       if (Router.asPath.includes('/clients'))
         setDialogMessage(
           'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'
         );
     };
+
     BuildDeleteMessage();
   }, []);
 
   function onDeleteClick(row) {
     setDialogOpen(true);
+
     if (Router.asPath.includes('orders')) setDeleteItemId(row.numEncomenda);
     else setDeleteItemId(row.id);
   }
 
   function onDeleteItem() {
     const oldRows = filteredItems;
+
     if (Router.asPath.includes('/orders')) {
       const newRows = oldRows.filter(
         (row) => !(row.numEncomenda === deleteItemId)
       );
+
       setFilteredItems(newRows);
     } else {
       const newRows = oldRows.filter((row) => !(row.id === deleteItemId))
+
       setFilteredItems(newRows);
     }
+
     setDialogOpen(false);
     toast.success('Removido com sucesso!');
   }
 
   function EnhancedTableHead(props) {
     const { order, orderBy, onRequestSort } = props;
+
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
@@ -182,6 +188,7 @@ const AdvancedTable = ({
       </TableHead>
     );
   }
+
   EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
@@ -193,6 +200,7 @@ const AdvancedTable = ({
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
+
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
@@ -230,38 +238,49 @@ const AdvancedTable = ({
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems.length) : 0;
+
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
     }
+
     if (b[orderBy] > a[orderBy]) {
       return 1;
     }
+
     return 0;
   }
+
   function getComparator(order, orderBy) {
     return order === 'desc'
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
+
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
+
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
+
       if (order !== 0) {
         return order;
       }
+
       return a[1] - b[1];
     });
+
     return stabilizedThis.map((el) => el[0]);
   }
 
   useEffect(() => {
     if (filters) {
       const filtered = MultiFilterArray(rows, filters);
+
       setFilteredItems(filtered);
     }
   }, [filters]);
+
   return (
     <Box sx={{ width: '100%' }}>
       <ConfirmDialog
@@ -368,10 +387,10 @@ const AdvancedTable = ({
                                     : null
                                 }
                               >
-                                
+
                                 {FilterItem(
                                   data,
-                                  row[`${headCell.id}`],
+                                  row,
                                   headCell.id
                                 )}
                               </div>
@@ -394,6 +413,7 @@ const AdvancedTable = ({
     </Box>
   );
 };
+
 AdvancedTable.propTypes = {
   rows: PropTypes.array.isRequired,
   headCellsUpper: PropTypes.array,

@@ -9,6 +9,7 @@ const handler = async (req, res) => {
   if (method !== 'POST') {
     return res.status(400).json({ success: false, message: 'Only POST requests are allowed' })
   }
+
   const data = JSON.stringify({
     query: `query utilizador($id: String!) {
       utilizador (id: $id){
@@ -17,10 +18,14 @@ const handler = async (req, res) => {
         email
         ativo
         idPerfil
+        telemovel
+        telefone
+        telefone
+        morada
+        paisCodigo
       }
     }`,
     variables: {
-      // id:"cl16o9cag0000x3tqp8lbslcr"
       ...body
     }
   });
@@ -28,7 +33,7 @@ const handler = async (req, res) => {
   const config = {
     method,
     url: process.env.NEXT_PUBLIC_API_URL,
-    headers: { 'Content-Type': 'application/json', authorization: headers.authorization ? headers.authorization : token },
+    headers: { 'Content-Type': headers['content-type'] || 'application/json' , authorization: headers.authorization ? headers.authorization : token },
     data,
     timeout: process.env.NEXT_PUBLIC_REQUEST_TIMEOUT,
   };
@@ -50,4 +55,5 @@ const handler = async (req, res) => {
 
   } catch (error) { return res.status(error.response.status || 500).json({ success: false, message: error.message }); }
 }
+
 export default handler;

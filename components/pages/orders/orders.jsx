@@ -44,6 +44,8 @@ const OrdersScreen = ({ ...props }) => {
     headCells,
   } = props;
 
+  console.log(props)
+
   //  States
   const [rows, setRows] = useState(items);
   const [number, setNumber] = useState('');
@@ -59,6 +61,7 @@ const OrdersScreen = ({ ...props }) => {
     setStock('');
     setFilters({});
   };
+
   //  Triggers when a filter input changes
   useEffect(() => {
     setFilters({
@@ -124,21 +127,21 @@ const OrdersScreen = ({ ...props }) => {
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
               />
-            </div>
+            </div>{console.log(clients)}
             <div className={styles.filterContainer}>
               <InputLabel htmlFor='email'>Cliente</InputLabel>
               <Autocomplete
                 disablePortal
                 id='combo-box-demo'
                 options={clients}
-                getOptionLabel={(option) => option.nome}
+                getOptionLabel={(option) => option.giveName}
                 onChange={(event, value) => onClientChange(value)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     fullWidth
                     value={client}
-                    onChange={(event, value) => setClient(event.target.value)}
+                    onChange={(event) => setClient(event.target.value)}
                     placeholder='Escrever um nome'
                   />
                 )}
@@ -158,7 +161,8 @@ const OrdersScreen = ({ ...props }) => {
                 </MenuItem>
                 {categories.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
-                    {item.title}[{item.id}]
+                    {item.name}
+                    {/* [{item.id}] */}
                   </MenuItem>
                 ))}
               </Select>
@@ -240,6 +244,7 @@ const OrdersScreen = ({ ...props }) => {
     </Grid>
   );
 };
+
 OrdersScreen.propTypes = {
   items: PropTypes.array,
   categories: PropTypes.array,
@@ -252,4 +257,5 @@ OrdersScreen.propTypes = {
   cards: PropTypes.arrayOf(PropTypes.object),
   headCells: PropTypes.array,
 };
+
 export default OrdersScreen;

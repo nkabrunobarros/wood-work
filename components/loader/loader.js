@@ -4,9 +4,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import styles from '../../styles/components/loader.module.css'
+import { Backdrop } from '@mui/material'
 
-const Loader = ({ center }) => {
+const Loader = ({ center, backdrop }) => {
   let style = {}
+
   if (center) {
     style = {
       display: 'block',
@@ -18,7 +20,26 @@ const Loader = ({ center }) => {
       margin: '-25px 0 0 -25px'
     }
   }
-  return (
+
+  return backdrop ? (
+    <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}
+      >
+        <div style={style}>
+          <div className={styles.bars5}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+      </Backdrop>
+    </>
+  ) : (
     <div style={style}>
       <div className={styles.bars5}>
         <span></span>
@@ -32,7 +53,8 @@ const Loader = ({ center }) => {
 }
 
 Loader.propTypes = {
-  center: PropTypes.any
+  center: PropTypes.any,
+  backdrop: PropTypes.bool
 }
 
 export default Loader

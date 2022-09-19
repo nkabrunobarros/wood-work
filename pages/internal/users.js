@@ -29,11 +29,14 @@ const Users = ({ ...pageProps }) => {
       await userService.getAllUsers().then((res) => {
         setUsers(res.data.data);
       });
+
       await countryService
         .getAllCountries()
         .then((res) => setCountries(res.data.data));
     };
+
     Promise.all([getData()]).then(setLoaded(true));
+
     setTimeout(() => {
       setLoaded(true);
     }, 500);
@@ -72,9 +75,11 @@ const Users = ({ ...pageProps }) => {
       label: 'Ações',
     },
   ];
+
   const editRoute = routes.private.internal.editUser;
   const detailRoute = routes.private.internal.user;
   const newRoute = routes.private.internal.newUser;
+
   const props = {
     items,
     breadcrumbsPath,
@@ -84,7 +89,9 @@ const Users = ({ ...pageProps }) => {
     headCells,
     newRoute,
   };
+
   if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
+
   return pageProps.hasFullyLoaded && loaded ? (
     <UsersScreen {...props} />
   ) : (
@@ -102,4 +109,5 @@ Users.propTypes = {
   detailRoute: PropTypes.string,
   newRoute: PropTypes.string,
 };
+
 export default Users;

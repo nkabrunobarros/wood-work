@@ -23,11 +23,12 @@ import hasData from '../../components/utils/hasData'
 
 const Profile = ({ ...pageProps }) => {
   let loaded = false;
-  const [user, setUser] = useState(pageProps.loggedUser)
-  const router = useRouter()
-  const id = router.query.Id
+  const user = pageProps.loggedUser;
+  // const router = useRouter()
+  // const id = router.query.Id
 
   if (user) loaded = true
+
   // useEffect(() => {
   //   const getData = async () => {
   //     await userService
@@ -43,20 +44,21 @@ const Profile = ({ ...pageProps }) => {
         href: `${routes.private.internal.user}`,
       },
     ];
-  
+
     const props = {
       user,
       breadcrumbsPath
     }
-    console.log(user)
-    Profile.propTypes = {
-      users: PropTypes.object,
-      breadcrumbsPath: PropTypes.array,
-    }
+
     if (hasData(user)) pageProps.hasFullyLoaded = true;
-     return pageProps.hasFullyLoaded ? <ProfileScreen {...props} /> : <div> <Loader center={true} /></div>
+
+    return pageProps.hasFullyLoaded ? <ProfileScreen {...props} /> : <div> <Loader center={true} /></div>
   }
 
-  
+  Profile.propTypes = {
+    users: PropTypes.object,
+    breadcrumbsPath: PropTypes.array,
+  }
 }
+
 export default Profile

@@ -55,7 +55,6 @@ const Stock = ({ ...props }) => {
   useEffect(() => {
     ApplyFilters();
   }, [productId, category, codigo, stock]);
-
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -70,7 +69,7 @@ const Stock = ({ ...props }) => {
                 disablePortal
                 id='combo-box-demo'
                 options={products}
-                getOptionLabel={(option) => option.nome}
+                getOptionLabel={(option) => option.name}
                 onChange={(event, value) => onProductChange(value)}
                 renderInput={(params) => (
                   <TextField
@@ -94,8 +93,8 @@ const Stock = ({ ...props }) => {
                   Selecionar um codigo
                 </MenuItem>
                 {items.map((item) => (
-                  <MenuItem key={item.codigo} value={item.codigo}>
-                    {item.codigo}
+                  <MenuItem key={item.codigo} value={item.product.code}>
+                    {item.product.code}
                   </MenuItem>
                 ))}
               </Select>
@@ -114,7 +113,8 @@ const Stock = ({ ...props }) => {
                 </MenuItem>
                 {categories.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
-                    {item.title}[{item.id}]
+                    {item.name}
+                    {/* [{item.id}] */}
                   </MenuItem>
                 ))}
               </Select>
@@ -158,6 +158,7 @@ const Stock = ({ ...props }) => {
           </div>
         </div>
         <AdvancedTable
+          
           rows={rows}
           headCells={headCells}
           clickRoute={routes.private.internal.stockId}

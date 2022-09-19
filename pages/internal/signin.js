@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import Loader from '../../components/loader/loader'
+import React from 'react'
 import SignInScreen from '../../components/pages/signin/signin'
-const SignIn = () => {
-  const [loaded, setLoaded] = useState(false)
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true)
-    }, 1500)
-  }, [])
 
+const SignIn = () => {
   const client = true
 
   const props = {
     client
   }
 
-  return loaded ? <SignInScreen { ...props } /> : <div> <Loader center={true} /></div>
+  return <SignInScreen { ...props } />
 }
+
 export default SignIn

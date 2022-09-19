@@ -4,10 +4,11 @@ import { parseCookies } from 'nookies';
 const handler = async (req, res) => {
   const { method, headers, body } = req;
   const { auth_token: token } = parseCookies();
-  console.log(body)
+
   if (method !== 'POST') {
     return res.status(400).json({ success: false, message: 'Only POST requests are allowed' })
   }
+
   const data = JSON.stringify({
     query: `query perfil($id: String!) {
       perfil (id: $id) {
@@ -20,14 +21,15 @@ const handler = async (req, res) => {
       ...body
     }
   });
+
   const config = {
     method,
     url: process.env.NEXT_PUBLIC_API_URL,
-    headers: { 'Content-Type': headers['content-type'] , authorization: headers.authorization ? headers.authorization : token },
+    headers: { 'Content-Type': headers['content-type'] || 'application/json' , authorization: headers.authorization ? headers.authorization : token },
     data,
     timeout: process.env.NEXT_PUBLIC_REQUEST_TIMEOUT,
   };
-  console.log(config)
+
   try {
     await axios(config).then((result) => {
       if (!result.data.errors) {
@@ -45,5 +47,6 @@ const handler = async (req, res) => {
 
   } catch (error) { return res.status(error.response.status || 500).json({ success: false, message: error.message }); }
 }
+
 export default handler;
 

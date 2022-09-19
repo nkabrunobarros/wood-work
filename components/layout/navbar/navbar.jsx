@@ -10,6 +10,7 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const Navbar = ({ openDrawer }) => {
   const open = Boolean();
+
   return (
     <div className={styles.main}>
       <div className={styles.navigationButtons}>
@@ -49,6 +50,7 @@ const Navbar = ({ openDrawer }) => {
     </div>
   );
 };
+
 Navbar.propTypes = {
   openDrawer: PropTypes.any,
 };

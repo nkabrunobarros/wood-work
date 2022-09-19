@@ -7,8 +7,10 @@
   outline: none !important;
   min-height: 100px !important;
   max-height: 200px !important;
+  font-family: 'Montserrat' !important;
+
 }
-.textarea:focus {
+.textarea:focus-within {
   border-color: var(--primary);
 }
 .clientContainer {

@@ -11,11 +11,9 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-import { ConnectWithoutContact, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  CircularProgress, IconButton,
-  InputLabel,
-  OutlinedInput
+  CircularProgress, IconButton, InputLabel, TextField
 } from '@mui/material';
 import styles from '../../../styles/SignIn.module.css';
 
@@ -26,57 +24,66 @@ import Footer from '../../layout/footer/footer';
 import Router, { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 import { toast } from 'react-toastify';
-import * as authActions from '../../../src/actions/auth';
-import * as permissionActions from '../../../src/actions/permission';
+import * as authActions from '../../../pages/api/actions/auth';
+import * as permissionActions from '../../../pages/api/actions/permission';
 import ToastSet from '../../utils/ToastSet';
+import EmailValidation from '../../utils/EmailValidation';
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
   const { client } = props;
-  console.log(props)
   const [email, setEmail] = useState('geral@nka.pt');
   const [password, setPassword] = useState('123456');
   const [loading, setLoading] = useState(false);
+  const [emailErrors, setEmailErrors] = useState()
+  const [senhaErrors, setSenhaErrors] = useState()
   const router = useRouter();
 
 
+
   const handleSubmit = async (event) => {
-    const loadingNotification = toast.loading('');
     event.preventDefault();
+
+    const errors = {
+      email: '',
+      password: ''
+    }
+
+    if (email === '') errors.email = 'Email é obrigatório'
+    else if (!EmailValidation(email)) errors.email = 'Email mal estruturado'
+    
+
+    if (password === '')  errors.password = 'Senha é obrigatório'
+    else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres'
+    
+
+    if (errors.password || errors.email) {
+      setSenhaErrors(errors.password)
+      setEmailErrors(errors.email)
+
+      return;
+    }
+
     setLoading(true);
 
-    if (email === '') {
-      setLoading(false);
-      return ToastSet(
-        loadingNotification,
-        'Endereço de Email é obrigatório',
-        'error'
-      );
-    }
-    if (password === '') {
-      setLoading(false);
-      return ToastSet(loadingNotification, 'Senha é obrigatória', 'error');
-    }
-    if (password.length < 6) {
-      setLoading(false);
-      return ToastSet(
-        loadingNotification,
-        'Senha tem que ter minimo 6 caracteres',
-        'error'
-      );
-    }
+    const loadingNotification = toast.loading('');
+
     try {
 
       const result = await authActions.login({ email, password })
-      if (!result.data.success && result.data.message === 'credenciais-invalidas') { 
-        
+
+      if (!result.data.success && result.data.message === 'credenciais-invalidas') {
+
         ToastSet(loadingNotification, 'Credenciais invalidas', 'error')
         setLoading(false)
-     }
+      }
+
       setCookie(undefined, 'auth_token', result.data.payload.token);
+
       const resUser = await authActions.me({ token: result.data.payload.token })
       const user = resUser.data.payload;
       const permission = await permissionActions.permission({ id: user.idPerfil })
+
       const builtUser = {
         id: user.id,
         email: user.email,
@@ -88,16 +95,20 @@ const SignIn = (props) => {
         pais: user.paisCodigo,
         perfil: permission.data.payload
       }
+
       localStorage.setItem("user", JSON.stringify(builtUser));
       ToastSet(loadingNotification, 'A entrar', 'success')
+
       if (builtUser.perfil.descricao === 'Administrador') router.push(routes.private.internal.orders)
       else router.push(routes.private.orders)
+
       setLoading(false)
 
     } catch (error) {
       console.log(error)
     }
   };
+
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
@@ -157,26 +168,59 @@ const SignIn = (props) => {
           >
             <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
 
-            <OutlinedInput
+            <TextField
               required
               fullWidth
               id='email'
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                if (emailErrors) setEmailErrors('')
+
+                setEmail(e.target.value)
+              }
+              }
+              type='email'
               name='email'
               autoComplete='email'
               autoFocus
+              error={!!emailErrors}
+              label={emailErrors || ''}
             />
             <InputLabel htmlFor='password'>Senha</InputLabel>
-            <OutlinedInput
+            <TextField
+              variant='outlined'
               id='password'
               required
               fullWidth
+              error={!!senhaErrors}
+              label={senhaErrors || ''}
               name='password'
               type={visible ? 'password' : 'text'}
               autoComplete='current-password'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                if (senhaErrors) setSenhaErrors('')
+
+                setPassword(e.target.value)
+              }}
+              InputProps={{
+                endAdornment:
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label='toggle password visibility'
+                      edge='end'
+                    >
+                      {visible ? (
+                        <Visibility
+                          color={'primary'}
+                          onClick={() => setVisible(false)}
+                        />
+                      ) : (
+                        <VisibilityOff onClick={() => setVisible(true)} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+              }}
               endAdornment={
                 <InputAdornment position='end'>
                   <IconButton
@@ -233,7 +277,9 @@ const SignIn = (props) => {
     </Grid>
   );
 };
+
 SignIn.propTypes = {
   client: PropTypes.any,
 };
+
 export default SignIn;
