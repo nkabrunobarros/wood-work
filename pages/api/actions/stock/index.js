@@ -1,6 +1,6 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
-import querys from "../../../pages/api/querys";
+import querys from "../../querys";
 
 export async function stocks(data) {
     const { auth_token: token } = parseCookies();

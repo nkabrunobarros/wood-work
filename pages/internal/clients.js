@@ -15,25 +15,29 @@ import PropTypes from 'prop-types';
 import hasData from '../../components/utils/hasData';
 
 //  Services
-import countryService from '../../services/countries/country-service';
-import clientService from '../../services/clients/client-service';
+// import countryService from '../../services/countries/country-service';
+import * as CountryActions from '../../pages/api/actions/country';
+import * as ClientsActions from '../../pages/api/actions/client';
 
-const Clients = ({ hasFullyLoaded, ...pageProps }) => {
+const Clients = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
   const [countries, setCountries] = useState();
 
   useEffect(() => {
     const getData = async () => {
-      await clientService
-        .getAllClients()
-        .then((res) => setClients(res.data.data));
-      await countryService
-        .getAllCountries()
-        .then((res) => setCountries(res.data.data));
+      await ClientsActions
+        .clients()
+        .then((res) => setClients(res.data.payload.data));
+
+      await CountryActions
+        .countries()
+        .then((res) => setCountries(res.data.payload.data));
     };
-    Promise.all([getData()]).then(setLoaded(true));
+
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
+
   if (loaded) {
     const headCells = [
       {
@@ -66,7 +70,9 @@ const Clients = ({ hasFullyLoaded, ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
     ];
+
     const items = clients;
+
     const props = {
       items,
       breadcrumbsPath,
@@ -77,15 +83,10 @@ const Clients = ({ hasFullyLoaded, ...pageProps }) => {
       newRoute,
     };
 
-    // hasFullyLoaded = useAuthValidation(hasFullyLoaded, pageProps.loggedUser , routes.public.signIn);
-    if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
-    return pageProps.hasFullyLoaded && loaded ? (
-      <UsersScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
-  }
-  return <Loader center={true} />;
+
+    return <UsersScreen {...props} />
+  } else return <Loader center={true} />;
+
 };
 
 Clients.propTypes = {
@@ -99,4 +100,5 @@ Clients.propTypes = {
   newRoute: PropTypes.string,
   hasFullyLoaded: PropTypes.any,
 };
+
 export default Clients;

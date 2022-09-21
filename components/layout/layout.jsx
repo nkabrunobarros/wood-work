@@ -48,6 +48,10 @@ async function Test(pageProps) {
       else {
         console.log('dont have user Logged in, but have token')
 
+        const u = JSON.parse(localStorage.getItem('user'))
+
+        pageProps.loggedUser = u;
+
         const resUser = await authActions.me({ token })
         const user = resUser.data.payload;
         const permission = await permissionActions.permission({ id: user.idPerfil })
@@ -129,7 +133,7 @@ const Layout = ({ children, ...pageProps }) => {
         />
       </Hidden>
       <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>
-        {Router.asPath.includes('internal') || Router.asPath.includes('profile')  ? children : <>
+        {Router.asPath.includes('internal') || Router.asPath.includes('profile') ? children : <>
           <div className={styles.main} target="_blank" rel="noreferrer">
             <header className={styles.topheader}></header>
 
@@ -141,15 +145,15 @@ const Layout = ({ children, ...pageProps }) => {
             </div>
             {/* Lamp section */}
             {/* <div className={styles.lamp__wrap}>
-      <div className={styles.lamp}>
-        <div className={styles.cable}></div>
-        <div className={styles.cover}></div>
-        <div className={styles.in}>
-          <div className={styles.bulb}></div>
-        </div>
-        <div className={styles.light}></div>
-      </div>
-    </div> */}
+  <div className={styles.lamp}>
+    <div className={styles.cable}></div>
+    <div className={styles.cover}></div>
+    <div className={styles.in}>
+      <div className={styles.bulb}></div>
+    </div>
+    <div className={styles.light}></div>
+  </div>
+</div> */}
             <section className={styles.error}>
               <div className={styles.error__content}>
                 <div className={styles.error__message}>
@@ -165,7 +169,7 @@ const Layout = ({ children, ...pageProps }) => {
                 </div>
                 <div className={styles.error__nav}>
                   <a className={styles.enav__link} onClick={() => Router.back()}>
-                  {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
+                    {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
                     VOLTAR
                   </a>
                 </div>

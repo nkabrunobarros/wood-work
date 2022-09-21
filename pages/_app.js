@@ -15,7 +15,7 @@ import Layout from '../components/layout/layout';
 //  Services
 
 //  Material UI
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material';
 
 //  Navigation
 import routes from '../navigation/routes';
@@ -73,18 +73,22 @@ const App = ({ Component, pageProps }) => {
   const { auth_token: token } = parseCookies();
   const [loaded, setLoaded] = useState(false)
   const router = useRouter();
+
   useEffect(() => {
     const load = () => {
       if (token) {
         const decodedToken = jwt.decode(token);
+
         if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment()) {
           pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
+
           const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
 
           if (isPublicPage && !!token) {
             if (pageProps.loggedUser.perfil.descricao === 'Administrador') router.push(routes.private.internal.orders)
             else { router.push(routes.private.orders);setLoaded(true); }
           }
+
           setLoaded(true);
         }
         else {
@@ -94,6 +98,7 @@ const App = ({ Component, pageProps }) => {
         }
       }
     }
+
     load();
   }, [])
 
@@ -116,6 +121,7 @@ const App = ({ Component, pageProps }) => {
 
 App.getInitialProps = async ({ Component, ctx }) => {
   const hasFullyLoaded = false;
+
   const globalVars = {
     iconSize: 20,
     iconSizeXl: 40,

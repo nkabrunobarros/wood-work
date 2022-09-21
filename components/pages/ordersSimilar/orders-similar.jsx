@@ -20,6 +20,10 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import hasData from '../../utils/hasData';
 
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import dynamic from 'next/dynamic';
+
+// const MyDataGrid = dynamic(() => import('../../datagrid/DataGrid'), { ssr: false })
+
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -34,8 +38,8 @@ const OrdersScreen = ({ ...props }) => {
     editPage,
     detailPage
   } = props;
-  const rows = items;
 
+  const rows = items;
   //  Modal State
   const [modal, setModal] = useState(false);
   // Filters States
@@ -52,22 +56,27 @@ const OrdersScreen = ({ ...props }) => {
   const handleClick = (event) => {
     setModal(!modal);
   };
+
   const onClientChange = (value) => {
     if (value === null) setClient('');
     else setClient(value.id);
   };
+
   const onWoodTypeChange = (value) => {
     if (value === null) setWoodType('');
     else setWoodType(value);
   };
+
   const onProductChange = (value) => {
     if (value === null) setProduct('');
     else setProduct(value.id);
   };
+
   const onOperationChange = (value) => {
     if (value === null) setOperation('');
     else setOperation(value.value);
   };
+
   const ApplyFilters = () => {
     // Set Filters
     setFilters({
@@ -86,6 +95,7 @@ const OrdersScreen = ({ ...props }) => {
     setOrderId('');
     setTotalArea('');
     setCost('');
+
     setFilters({
       cliente: '',
       productId: '',
@@ -97,8 +107,10 @@ const OrdersScreen = ({ ...props }) => {
     if (hasData(item)) {
       if (property === 'client')
         item = clients.find((element) => element.id === item);
+
       if (property === 'product')
         item = products.find((element) => element.id === item);
+
       return (
         <Chip
           label={typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
@@ -306,10 +318,19 @@ const OrdersScreen = ({ ...props }) => {
           editRoute={editPage}
           clickRoute={detailPage}
         />
+
+{/* 
+        <MyDataGrid title={t('tipos-operacao')} entity='tipoOperacao' entityPlural="tiposOperacao"
+          columns={[{ name: 'descricao', label: t('descricao'), options: { filter: true, filterType: 'textField' } },
+          { name: 'precoCusto', label: t('preco-custo'), type: 'number', options: { filter: true, filterType: 'textField' } },
+          { name: 'precoVenda', label: t('preco-venda'), type: 'number', options: { filter: true, filterType: 'textField' } },
+          { name: 'margem', label: t('margem'), type: 'number', options: { filter: true, filterType: 'textField' } },
+          ]} editAction='/definicoes/tipos-operacao' deleteAction={true} /> */}
       </Content>
     </Grid>
   );
 };
+
 OrdersScreen.propTypes = {
   tableCols: PropTypes.array,
   panelsInfo: PropTypes.object,
@@ -324,4 +345,5 @@ OrdersScreen.propTypes = {
   operations: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object),
 };
+
 export default OrdersScreen;

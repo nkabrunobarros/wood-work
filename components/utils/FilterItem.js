@@ -15,6 +15,14 @@ const FilterItem = (data, item, col) => {
         return <a>{item[col2[0]][col2[1]]}</a>;
       }
 
+      case "product.cost": {
+        return <a>{item[col2[0]][col2[1]]}</a>;
+      }
+
+      case "product.craftTime": {
+        return <a>{item[col2[0]][col2[1]]}</a>;
+      }
+
       case "product.category": {
         return <a>{item[col2[0]][col2[1]].name}</a>;
       }

@@ -160,6 +160,30 @@ const querys = {
             }
           }`
     },
+    COUNTRIES: {
+        return: 'paises',
+        query: `query paises {
+          paises {
+            count
+            data {
+              codigo
+              descricao
+            }
+          }
+        }`
+    },
+    WOODTYPES: {
+        return: 'woodTypes',
+        query: `query woodtypes {
+          woodTypes {
+            count
+            data {
+              id
+              description
+            }
+          }
+        }`
+    },
 }
 
 export default querys;

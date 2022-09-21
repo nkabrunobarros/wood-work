@@ -8,8 +8,12 @@ import PropTypes from 'prop-types';
 //  Material Ui
 import {
   Box,
+  Checkbox,
+  FormControlLabel,
   IconButton,
+  Modal,
   Paper,
+  Popover,
   Table,
   TableBody,
   TableCell,
@@ -22,7 +26,7 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { Edit, Trash } from 'lucide-react';
+import { Edit, MoreVertical, Trash } from 'lucide-react';
 
 //  Utlis
 import { FilterItem } from '../utils/FilterItem';
@@ -49,7 +53,7 @@ const AdvancedTable = ({
   filters }) => {
 
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('calories');
+  const [orderBy, setOrderBy] = useState();
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -63,7 +67,7 @@ const AdvancedTable = ({
     const getData = async () => {
       const categories = await CategoriesActions.categories()
       const clients = await ClientsActions.clients()
-      
+
       const allData = {
         categories: categories.data.payload.data,
         clients: clients.data.payload.data,
@@ -127,11 +131,14 @@ const AdvancedTable = ({
       onRequestSort(event, property);
     };
 
+    const [anchorEl, setAnchorEl] = useState(null);
+
+
     return (
       <TableHead>
         {headCellsUpper ? (
           <>
-            {headCellsUpper.map((headCell) => (
+            {headCellsUpper.map((headCell, i) => (
               <TableCell
                 colSpan={headCell.span}
                 key={headCell.id}
@@ -148,10 +155,51 @@ const AdvancedTable = ({
                   backgroundColor: 'var(--grayBG)',
                 }}
               >
-                {headCell.label}
-                {orderBy === headCell.id ? <Box component='span'></Box> : null}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+
+                  {headCell.label}
+                  {orderBy === headCell.id ? <Box component='span'></Box> : null}
+                  {Number(Object.keys(headCellsUpper).at(-1)) === i &&
+                    <Tooltip title='Filtrar'>
+
+                      <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
+                        <MoreVertical size={20} strokeWidth={1.5} />
+                      </IconButton>
+                    </Tooltip>
+
+                  }
+                  <Popover
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                  >
+                    <Box p={1}>
+                      
+
+                     {headCells.map((headCell, i) => {
+                       
+                      return <>
+                      <FormControlLabel 
+                      sx={{ border: '1px solid', width: 'fit-content'}}
+                      label={headCell.label} 
+                      control={
+                        <Checkbox key={headCell.id} checked />
+                      }>
+
+                      </FormControlLabel>
+                      {i % 3 === 0  && i !== 0 ? <br></br> : null}
+                      </>
+                     })}
+                     </Box>
+                  </Popover>
+                </div>
               </TableCell>
-            ))}
+            )
+            )}
           </>
         ) : null}
 
@@ -352,7 +400,7 @@ const AdvancedTable = ({
                           >
                             {headCell.id === 'actions' ? (
                               <>
-                                <Tooltip title='Edit'>
+                                <Tooltip title='Editar'>
                                   <IconButton
                                     onClick={() =>
                                       clickRoute
@@ -367,7 +415,7 @@ const AdvancedTable = ({
                                     />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title='Delete'>
+                                <Tooltip title='Remover'>
                                   <IconButton
                                     onClick={() => onDeleteClick(row)}
                                   >

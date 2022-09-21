@@ -44,6 +44,7 @@ const Users = ({ ...props }) => {
       pais,
     })
   },[nome, email, pais])
+
   const ClearFilters = () => {
     setNome('');
     setEmail('');
@@ -51,13 +52,18 @@ const Users = ({ ...props }) => {
   };
 
   const onCountryChange = (value) => {
+    console.log(value)
+
     if (value === null) setPais('');
-    else setPais(value.label);
+    else setPais(value.descricao);
   };
+
   const onNameChange = (value) => {
+    console.log(value)
     if (value === null) setNome('');
-    else setNome(value.nome);
+    else setNome(value.legalName);
   };
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -68,13 +74,16 @@ const Users = ({ ...props }) => {
           <a className='headerTitleSm'>Filtros</a>
           <div className='filters'>
             <div className='filterContainer'>
+
               <InputLabel htmlFor='email'>Nome</InputLabel>
+              {JSON.stringify(nome)}
               <Autocomplete
                 id='country-select-demo'
                 fullWidth
                 options={items}
                 autoHighlight
-                getOptionLabel={(option) => option.nome}
+                value={nome}
+                getOptionLabel={(option) => option.legalName}
                 onChange={(event, value) => onNameChange(value)}
                 renderInput={(params) => (
                   <TextField
@@ -103,6 +112,7 @@ const Users = ({ ...props }) => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {JSON.stringify(pais)}
             <div className={'filterContainer'}>
               <InputLabel htmlFor='Categoria'>País</InputLabel>
               <Autocomplete
@@ -110,7 +120,8 @@ const Users = ({ ...props }) => {
                 fullWidth
                 options={countries}
                 autoHighlight
-                getOptionLabel={(option) => option.label}
+                value={pais}
+                getOptionLabel={(option) => option.descricao}
                 onChange={(event, value) => onCountryChange(value)}
                 renderOption={(props, option) => (
                   <Box
@@ -121,17 +132,19 @@ const Users = ({ ...props }) => {
                     <img
                       loading='lazy'
                       width='20'
-                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                      src={`https://flagcdn.com/w20/${option.codigo.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${option.codigo.toLowerCase()}.png 2x`}
                       alt=''
                     />
-                    {option.label} ({option.code}) +{option.phone}
+                    {option.descricao} [{option.codigo}]
                   </Box>
                 )}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     placeholder='Escrever um país'
+                    onChange={(event, value) => onCountryChange(value)}
+
                     value={pais}
                     inputProps={{
                       ...params.inputProps,
@@ -192,6 +205,7 @@ const Users = ({ ...props }) => {
     </Grid>
   );
 };
+
 Users.propTypes = {
   breadcrumbsPath: PropTypes.array,
   items: PropTypes.array,
@@ -201,4 +215,5 @@ Users.propTypes = {
   detailRoute: PropTypes.string,
   newRoute: PropTypes.string,
 };
+
 export default Users;

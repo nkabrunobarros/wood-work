@@ -2,7 +2,7 @@
 //  Nodes
 import { useTheme } from '@emotion/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 //  Material UI
 import {
@@ -38,7 +38,7 @@ import * as authActions from '../../../pages/api/actions/auth';
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
   const theme = useTheme();
   const navLinks = getLinks();
-  const { loggedUser } = pageProps;
+  const loggedUser = JSON.parse(localStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -46,6 +46,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
     else setAnchorEl(null);
   };
 
+  
+
+
+  
   const internalProfiles = ['Administrador'];
   let allowedPages;
 
