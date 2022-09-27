@@ -1,10 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
 import { Breadcrumbs, IconButton, Tooltip } from '@mui/material';
 import { ChevronRight, Home } from 'lucide-react';
-import routes from '../../navigation/routes';
 import Router from 'next/router';
+import PropTypes from 'prop-types';
+import React from 'react';
+import routes from '../../navigation/routes';
 
 import styles from '../../styles/components/navbar.module.css';
 
@@ -18,7 +17,6 @@ const CustomBreadcrumbs = ({ path }) => {
   const output = Object.keys(path).sort((a, b) => b - a);
   const arrayLenght = parseInt(output[0]);
 
-
   return (
     <div
       style={{
@@ -30,11 +28,13 @@ const CustomBreadcrumbs = ({ path }) => {
       }}
     >
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
+        <a>
           <IconButton onClick={() => Router.push(Router.asPath.includes('internal') ? routes.private.internal.orders : routes.private.orders)}>
             <Tooltip title='Voltar para Encomendas'>
               <Home color='var(--primary)' strokeWidth={1} />
             </Tooltip>
           </IconButton>
+        </a>
         {path.map((crumb, i) => (
           <a
             href={crumb.href}

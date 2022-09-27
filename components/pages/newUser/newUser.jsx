@@ -1,41 +1,40 @@
 //  Nodes
-import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 
-import styles from '../../../styles/NewOrder.module.css';
-import { Box, Save, User, X } from 'lucide-react';
 import {
-  Alert,
-  Autocomplete,
-  Backdrop,
   Button,
+  Checkbox,
   CircularProgress,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Snackbar,
-  TextareaAutosize,
-  TextField,
+  FormControlLabel,
+  InputLabel, TextareaAutosize, Tooltip
 } from '@mui/material';
+import { Save, User, X } from 'lucide-react';
 import Router from 'next/router';
+import styles from '../../../styles/NewOrder.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import MyInput from '../../inputs/myInput';
+import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
+import EmailValidation from '../../utils/EmailValidation';
 import hasData from '../../utils/hasData';
-import { EmailValidation } from '../../utils/EmailValidation';
+
+import * as UserActions from '../../../pages/api/actions/user';
+import { toast } from 'react-toastify';
+import Notification from '../../dialogs/Notification';
 import routes from '../../../navigation/routes';
 
-const NewUser = ({ ...props }) => {
-  const { breadcrumbsPath, countries } = props;
 
+const NewUser = ({ ...props }) => {
+  const { breadcrumbsPath, countries, profiles } = props;
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [telefone, setTelefone] = useState();
@@ -43,8 +42,8 @@ const NewUser = ({ ...props }) => {
   const [pais, setPais] = useState();
   const [cidade, setCidade] = useState();
   const [perfil, setPerfil] = useState();
-  const [obs, setObs] = useState();
-
+  const [password, setPassword] = useState();
+  const [obs, setObs] = useState('');
   //  Errors states
   const [errorMessageName, setErrorMessageName] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
@@ -53,41 +52,43 @@ const NewUser = ({ ...props }) => {
   const [errorMessagePais, setErrorMessagePais] = useState('');
   const [errorMessageCidade, setErrorMessageCidade] = useState('');
   const [errorMessagePerfil, setErrorMessagePerfil] = useState('');
-
+  const [errorMessagePassword, setErrorMessagePassword] = useState('');
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
-  //  Snackbar Notification
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const [backdrop, setBackdrop] = useState(false);
-
+  const [successOpen, setSuccessOpen] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [generatePassword, setGeneratePassword] = useState(true);
+  const [newestUser, setNewestUser] = useState();
 
-  const onCountryChange = (value) => {
-    if (value === null) setPais('');
-    else setPais(value.label);
-  };
   function handleSave() {
-    if (!hasData(name)) setErrorMessageName('This field is required *');
-    if (!hasData(email)) setErrorMessageEmail('This field is required *');
-    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido *');
-    if (!hasData(telefone)) setErrorMessageTelefone('This field is required *');
+    if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
+
+    if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
+    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido');
+
+    if (!hasData(telefone)) setErrorMessageTelefone('Campo Obrigatório');
     else if (telefone < 100000000)
-      setErrorMessageTelefone('Number has to have 9 digits');
+      setErrorMessageTelefone('Numero tem que ter 9 digitos');
+
     if (!hasData(telemovel))
-      setErrorMessageTelemovel('This field is required *');
+      setErrorMessageTelemovel('Campo Obrigatório');
     else if (telemovel < 100000000)
-      setErrorMessageTelemovel('Number has to have 9 digits');
-    if (!hasData(cidade)) setErrorMessageCidade('This field is required *');
-    if (!hasData(pais)) setErrorMessagePais('This field is required *');
-    if (!hasData(perfil)) setErrorMessagePerfil('This field is required *');
+      setErrorMessageTelemovel('Numero tem que ter 9 digitos');
+
+    if (!hasData(cidade)) setErrorMessageCidade('Campo Obrigatório');
+
+    if (!hasData(pais) || pais === ' ') setErrorMessagePais('Campo Obrigatório');
+
+    if (!hasData(perfil) || perfil === ' ') setErrorMessagePerfil('Campo Obrigatório');
+
+    if (!hasData(password)) setErrorMessagePassword('Campo Obrigatório');
+    else if (password.lenght < 6)
+      setErrorMessagePassword('Senha tem que ter 6 caracteres');
 
     if (
       hasData(name) &&
-      hasData(email) &&
-      EmailValidation(email) &&
+      !!EmailValidation(email) &&
       hasData(telefone) &&
       hasData(telemovel) &&
       hasData(cidade) &&
@@ -97,23 +98,45 @@ const NewUser = ({ ...props }) => {
       setDialogOpen(!dialogOpen);
   }
 
-  function onConfirm() {
-    setBackdrop(true);
+  async function CreateUser() {
+    setDialogOpen(false)
+    //  open success modal && success toast
+    setProcessing(true)
 
-    //  Snackbar notification body
-    setSnackbarMessage('Novo utilizador criado com sucesso');
-    setSnackbarSeverity('success');
-    setSnackbarOpen(true);
+    const newUser = {
+      email,
+      ativo: true,
+      nome: name,
+      telemovel,
+      telefone,
+      morada: cidade,
+      paisCodigo: pais,
+      idPerfil: perfil,
+      password: generatePassword ? 'changeMe' : password,
+      obs,
+    }
 
-    //  Dialog Modal State
-    setDialogOpen(false);
+    try {
+      await UserActions.saveUser(newUser).then((response) => {
+        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um utilizador ja existe com este Email')
+        else if (!response.data.success) toast.error('Algo aconteceu')
+        else {
+          // success here
+          setNewestUser(response.data.payload)
+          setProcessing(false)
+          setSuccessOpen(true)
 
-    setTimeout(() => {
-      setSnackbarOpen(false);
-      setBackdrop(false);
-      Router.push(routes.private.internal.users);
-    }, 2000);
+        }
+
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    setProcessing(false)
+
   }
+
   const ClearFields = () => {
     setCleaningInputs(true);
     setName('');
@@ -122,9 +145,9 @@ const NewUser = ({ ...props }) => {
     setTelemovel('');
     setPerfil('');
     setCidade('');
-    setPais(null);
+    setPais(" ");
+    setPerfil(" ");
     setObs('');
-
     setErrorMessageName('');
     setErrorMessageEmail('');
     setErrorMessageTelefone('');
@@ -132,41 +155,39 @@ const NewUser = ({ ...props }) => {
     setErrorMessagePerfil('');
     setErrorMessageCidade('');
     setErrorMessagePais('');
+    setErrorMessagePassword('');
 
     setTimeout(() => {
       setCleaningInputs(false);
+      setSuccessOpen(false);
     }, 500);
   };
+
   return (
     <Grid component='main'>
-      {/* Situational Panels */}
       <CssBaseline />
+      <Notification />
+      {/* Situational Panels */}
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
-        onConfirm={() => onConfirm()}
+        onConfirm={() => CreateUser()}
         message='Está prestes a criar um novo utilizador, tem certeza que quer continuar?'
+        icon='AlertOctagon'
       />
-      <Snackbar
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        open={snackbarOpen}
-        onRequestClose={() => setSnackbarOpen(false)}
-        autoHideDuration={2000}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={backdrop}
-      >
-        <Loader />
-      </Backdrop>
+      {processing && <Loader center={true} backdrop />}
+      {/* What to do after Create Modal */}
+      <ConfirmDialog
+        open={successOpen}
+        handleClose={() => ClearFields()}
+        onConfirm={() => Router.push(`${routes.private.internal.user}${newestUser.id}`)}
+        message={`Utilizador Criado com sucesso, que deseja fazer a agora?`}
+        icon='Verified'
+        iconType='success'
+        okTxt='Ver Utilizador'
+        cancelTxt='Criar novo Utilizador'
+      />
+
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
         <div
@@ -198,171 +219,128 @@ const NewUser = ({ ...props }) => {
             </a>
             <div id='pad' className='filters'>
               <div className='filterContainer4'>
-                <InputLabel htmlFor='email'>Nome</InputLabel>
-                <OutlinedInput
-                  
+                <MyInput
                   required
-                  fullWidth
-                  id='nome'
-                  name='nome'
+                  label='Nome'
                   value={name}
+                  error={errorMessageName}
+                  placeholder='Escrever Nome'
                   onChange={(e) => {
                     setName(e.target.value);
                     setErrorMessageName('');
                   }}
-                  autoComplete='nome'
-                  placeholder='Escrever nome* '
                 />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageName ? `${errorMessageName}` : null}
-                </a>
               </div>
               <div className='filterContainer4'>
-                <InputLabel htmlFor='email'>Email</InputLabel>
-                <OutlinedInput
-                  type='email'
-                  
+                <MyInput
                   required
-                  fullWidth
-                  id='email'
-                  name='email'
+                  label='Email'
                   value={email}
+                  error={errorMessageEmail}
+                  placeholder='Escrever Email'
+                  type='email'
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setErrorMessageEmail('');
                   }}
-                  autoComplete='email'
-                  placeholder='Escrever Email*'
                 />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageEmail ? `${errorMessageEmail}` : null}
-                </a>
               </div>
               <div className='filterContainer4'>
-                <InputLabel htmlFor='contact'>Telefone</InputLabel>
-                <OutlinedInput
-                  
+                <MyInput
                   required
-                  fullWidth
-                  id='contact'
-                  name='contact'
-                  autoComplete='contact'
+                  label='Telemovel'
                   value={telefone}
+                  error={errorMessageTelefone}
+                  placeholder='Escrever numero de telefone'
                   type='number'
                   onChange={(e) => {
                     setTelefone(e.target.value);
                     setErrorMessageTelefone('');
                   }}
-                  placeholder='Escrever numero de telefone*'
                 />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageTelefone ? `${errorMessageTelefone}` : null}
-                </a>
               </div>
               <div className='filterContainer4'>
-                <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
-                <OutlinedInput
-                  
+                <MyInput
                   required
-                  fullWidth
-                  id='telemovel'
-                  name='telemovel'
-                  value={telemovel}
+                  label='Telemovel'
                   onChange={(e) => {
                     setTelemovel(e.target.value);
                     setErrorMessageTelemovel('');
-                  }}
-                  autoComplete='telemovel'
-                  placeholder='Escrever numero de telemovel*'
+                  }} value={telemovel}
+                  error={errorMessageTelemovel}
+                  placeholder='Escrever numero de telemovel'
+                  type='number'
                 />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageTelemovel ? `${errorMessageTelemovel}` : null}
-                </a>
+
               </div>
               <div className='filterContainer4'>
-                <InputLabel htmlFor='Perfil'>Perfil de Utilizador</InputLabel>
+
                 <Select
-                  labelId='Perfil'
-                  id='Perfil'
-                  fullWidth
-                  value={perfil}
-                  onChange={(e) => setPerfil(e.target.value)}
-                >
-                  <MenuItem value={'Selecionar uma categoria'} disabled>
-                    Selecionar uma categoria
-                  </MenuItem>
-                  <MenuItem value={'Interno'}>Interno</MenuItem>
-                  <MenuItem value={'Cliente'}>Cliente</MenuItem>
-                </Select>
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessagePerfil ? `${errorMessagePerfil}` : null}
-                </a>
-              </div>
-              <div className='filterContainer4'>
-                <InputLabel htmlFor='Cidade'>Cidade</InputLabel>
-                <OutlinedInput
-                  
+                  error={errorMessagePerfil}
+                  label={'Perfil'}
                   required
                   fullWidth
-                  id='Cidade'
-                  name='Cidade'
+                  options={profiles}
+                  value={perfil}
+                  optionLabel='descricao'
+                  optionValue='id'
+                  onChange={(e) => {
+                    setErrorMessagePerfil()
+                    setPerfil(e.target.value)
+                  }}
+                />
+              </div>
+              <div className='filterContainer4'>
+                <MyInput
+                  label='Cidade'
+                  required
                   value={cidade}
+                  error={errorMessageCidade}
+                  placeholder='Escrever Cidade'
                   onChange={(e) => {
                     setCidade(e.target.value);
                     setErrorMessageCidade('');
                   }}
-                  autoComplete='Cidade'
-                  placeholder='Escrever Cidade*'
                 />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageCidade ? `${errorMessageCidade}` : null}
-                </a>
               </div>
               <div className='filterContainer4'>
-                <InputLabel htmlFor='Pais'>País</InputLabel>
-                <Autocomplete
-                  id='country-select-demo'
+                <Select
+                  error={errorMessagePais}
+                  label={'País'}
+                  required
                   fullWidth
                   options={countries}
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  onChange={(event, value) => onCountryChange(value)}
-                  renderOption={(props, option) => (
-                    <Box
-                      component='li'
-                      sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                      {...props}
-                    >
-                      <img
-                        loading='lazy'
-                        width='20'
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        alt=''
-                      />
-                      {option.label} ({option.code}) +{option.phone}
-                    </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder='Escrever um país'
-                      value={pais}
-                      inputProps={{
-                        ...params.inputProps,
-                        autoComplete: 'new-password', // disable autocomplete and autofill
-                      }}
-                    />
-                  )}
+                  optionValue={'codigo'}
+                  optionLabel="descricao"
+                  value={perfil}
+                  onChange={(e) => {
+                    setErrorMessagePais()
+                    setPais(e.target.value)
+                  }}
                 />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessagePais ? `${errorMessagePais}` : null}
-                </a>
+              </div>
+              <div className='filterContainer4'>
+                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
+                  :
+                  <MyInput
+                    label={<Tooltip title='Trocar para senha autogerada'>
+                      <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
+                    </Tooltip>}
+                    required
+                    value={password}
+                    error={errorMessagePassword}
+                    placeholder='Escrever Senha'
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrorMessagePassword('');
+                    }}
+                  />
+                }
+
               </div>
 
               <div className='filterContainer4'>
                 <InputLabel htmlFor='email'>Observações</InputLabel>
-
                 <TextareaAutosize
                   placeholder='Escrever observações'
                   className={styles.textarea}
@@ -382,9 +360,11 @@ const NewUser = ({ ...props }) => {
     </Grid>
   );
 };
+
 NewUser.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
-  countries: PropTypes.array,
+  countries: PropTypes.arrayOf(PropTypes.object),
+  profiles: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default NewUser;

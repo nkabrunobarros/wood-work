@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as OrdersActions from '../../pages/api/actions/order';
+import * as StockActions from '../../pages/api/actions/stock';
+
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 
@@ -41,9 +43,8 @@ const Orders = ({ globalVars }) => {
       }
 
       await OrdersActions.orders().then(async (response) => {
-        setOrders(response.data.payload.data);
 
-        response.data.payload.data.map((ord) => {
+        response.data.payload.data.map(async (ord, i) => {
           switch (ord.status) {
             case 'Em orçamentação':
               counts.budgeting++;
@@ -67,8 +68,14 @@ const Orders = ({ globalVars }) => {
             default:
               break;
           }
+
+          await StockActions.stock({ id: ord.product.id }).then((res) => {
+            response.data.payload.data[i].stock = res.data.payload.amount
+          })
+
         })
 
+        setOrders(response.data.payload.data);
         setPanelsInfo(counts)
       });
 
@@ -204,11 +211,11 @@ const Orders = ({ globalVars }) => {
       clients,
       editPage,
     };
-
+    
     return <OrdersScreen {...props} />
-  } else return  <Loader center={true} />
+  } else return <Loader center={true} />
 };
- 
+
 Orders.propTypes = {
   categories: PropTypes.array.isRequired,
   panelsInfo: PropTypes.object.isRequired,

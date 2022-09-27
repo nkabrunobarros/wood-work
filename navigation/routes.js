@@ -1,7 +1,7 @@
 const routes = {
   private: {
     internal: {
-      signIn: '/internal/signin',
+      signIn: '/internal/signin/',
 
       clients: '/internal/clients',
       client: '/internal/client/',
@@ -22,8 +22,8 @@ const routes = {
       newOrder: '/internal/new-order',
       editOrder: '/internal/edit-order/',
       
-      messages: '/internal/messages',
-
+      messages: '/internal/messages/',
+      profile: '/profile/',
     },
     //  Pages shared
     terms: '/terms',

@@ -1,43 +1,56 @@
 const querys = {
-    LOGIN: {
-        return: 'login',
-        query: `query login ($input: LoginInput!) {
+  LOGIN: {
+    return: 'login',
+    query: `query login ($input: LoginInput!) {
             login (input: $input) {
                 token
             }
         }
         `
-    },
-    ME: {
-        return: 'utilizador',
-        query: `query utilizador($id: String!) {
-            utilizador (id: $id){
-              id
-              nome
-              email
-              telemovel
-              telefone
-              morada
-              ativo
-              paisCodigo
-              idPerfil
+  },
+  ME: {
+    return: 'utilizador',
+    query: `query utilizador($id: String!) {
+          utilizador (id: $id){
+            id
+            nome
+            email
+            ativo
+            idPerfil
+            telemovel
+            telefone
+            telefone
+            morada
+            paisCodigo
+            pais {
+              codigo
+              descricao
             }
-          }`
-    },
-    PERMISSIONS: 
-    {
-        return: 'perfil',
-        query: `query perfil($id: String!) {
+            perfil {
+              id
+              descricao
+              permissoes {
+                sujeito
+                accao
+              }
+            }
+          }
+        }`
+  },
+  PERMISSIONS:
+  {
+    return: 'perfil',
+    query: `query perfil($id: String!) {
             perfil (id: $id) {
                id
               descricao
               permissoes {sujeito accao}
             }
           }`
-    },
-    ORDERS: {
-        return: 'orders',
-        query: `query Orders {
+  },
+  ORDERS: {
+    return: 'orders',
+    query: `query Orders {
             orders {
               count
               data {
@@ -59,14 +72,39 @@ const querys = {
                 }
                 status
                 orderedBy
-                categoryId
               }
             }
           }`
-        },
-    CATEGORIES: {
-        return: 'categories',
-        query: `query Categories {
+  },
+  ORDER: {
+    return: 'order',
+    query: `query order ($id: String!) {
+          order (id: $id) {
+            id
+            product {
+              id
+              code
+              name
+              cost
+              craftTime
+              woodtype {
+                id
+                description
+              }
+              category {
+                id
+                name
+              }
+              
+            }
+            status
+            orderedBy
+          }
+        }`
+  },
+  CATEGORIES: {
+    return: 'categories',
+    query: `query Categories {
             categories {
               count
               data {
@@ -76,10 +114,10 @@ const querys = {
             }
           }
         `
-    },
-    CLIENTS: {
-        return: 'clients',
-        query: `
+  },
+  CLIENTS: {
+    return: 'clients',
+    query: `
         query Clients {
             clients {
               count
@@ -90,13 +128,15 @@ const querys = {
                 legalName
                 address
                 status
-                taxid
+                contact
+                postalCode
+                taxId
                 telephone
                 organization {
                   id
                   legalName
-                  taxid
-                  ssnid
+                  taxId
+                  ssnId
                   address
                   email
                   telephone
@@ -107,10 +147,97 @@ const querys = {
             }
           }
         `
-    },
-    STOCKS: {
-        return: 'stocks',
-        query: `query Stocks {
+  },
+  CLIENT: {
+    return: 'client',
+    query: `
+        query Client($id: String!) {
+          client (id: $id){
+            id
+            email
+            giveName
+            legalName
+            address
+            status
+            taxId
+            postalCode
+            telephone
+            contact
+            organization {
+              id
+              legalName
+              taxId
+              ssnId
+              address
+              email
+              telephone
+            }
+            otherData
+            buysTo
+            obs
+          }
+        }
+        `
+  },
+  SAVE_CLIENT: {
+    return: 'saveClient',
+    query: `mutation saveClient ($input: ClientInput!) {
+        saveClient (saveClientData: $input) {
+           id
+            email
+            giveName
+            legalName
+            address
+            status
+            obs
+            postalCode
+            buysTo
+            otherData
+            contact
+            organization {
+              id
+              legalName
+              taxId
+              ssnId
+              address
+              email
+              telephone
+            }
+            telephone
+            taxId
+          }
+    }`
+  },
+  STOCK: {
+    return: 'stock',
+    query: `query stock($id: String!) {
+          stock (id: $id) {
+            id
+            supplier
+            amount
+            productId
+            product {
+              id
+              code
+              name
+              cost
+              craftTime
+              woodtype {
+                id
+                description
+              }
+              category {
+                id
+                name
+              }
+              
+            }
+          }
+        }`
+  },
+  STOCKS: {
+    return: 'stocks',
+    query: `query Stocks {
             stocks {
               count
               data {
@@ -136,10 +263,10 @@ const querys = {
               }
             }
           }`
-    },
-    PRODUCTS: {
-        return: 'products',
-        query: `query Products {
+  },
+  PRODUCTS: {
+    return: 'products',
+    query: `query Products {
             products {
               count
               data {
@@ -159,10 +286,10 @@ const querys = {
               }
             }
           }`
-    },
-    COUNTRIES: {
-        return: 'paises',
-        query: `query paises {
+  },
+  COUNTRIES: {
+    return: 'paises',
+    query: `query paises {
           paises {
             count
             data {
@@ -171,10 +298,10 @@ const querys = {
             }
           }
         }`
-    },
-    WOODTYPES: {
-        return: 'woodTypes',
-        query: `query woodtypes {
+  },
+  WOODTYPES: {
+    return: 'woodTypes',
+    query: `query woodtypes {
           woodTypes {
             count
             data {
@@ -183,7 +310,124 @@ const querys = {
             }
           }
         }`
-    },
+  },
+  USERS: {
+    return: 'utilizadores',
+    query: `query utilizadores {
+          utilizadores {
+           count
+            data {
+                 id
+                nome
+                email
+                ativo
+                idPerfil
+                telemovel
+                telefone
+                telefone
+                morada
+                obs
+                paisCodigo
+                pais {
+                  codigo
+                  descricao
+                }
+                perfil {
+                  descricao
+                  id
+                  permissoes {
+                    sujeito
+                    accao
+                  }
+                }
+            }
+          }
+        }`
+  },
+  SAVE_USER: {
+    return: 'saveUtilizador',
+    query: `mutation saveUtilizador ($input: UtilizadorInput!) {
+        saveUtilizador (saveUtilizadorData: $input) {
+            id		
+            email
+            ativo
+            nome
+            obs
+            telemovel
+            telefone
+            morada
+            paisCodigo
+            idPerfil
+        }
+    }`
+  },
+  PERFIS: {
+    return: 'perfis',
+    query: `query perfis{
+        perfis {
+           count
+          data {
+            id
+            descricao
+          }
+        }
+      }`
+  },
+  USER: {
+    return: 'utilizador',
+    query: `query utilizador($id: String!) {
+        utilizador (id: $id){
+          id
+          nome
+          email
+          ativo
+          idPerfil
+          telemovel
+          telefone
+          telefone
+          morada
+          paisCodigo
+          obs
+          pais {
+            codigo
+            descricao
+          }
+          perfil {
+            id
+            descricao
+            permissoes {
+              sujeito
+              accao
+            }
+          }
+        }
+      }`
+  },
+  SAVE_ORDER: {
+    return: 'saveOrder',
+    query: `mutation saveOrder ($input: OrderInput!) {
+        saveOrder (saveOrderData: $input) {
+          id
+          product {
+            id
+            code
+            name
+            cost
+            craftTime
+            woodtype {
+              id
+              description
+            }
+            category {
+              id
+              name
+            }
+          }
+          status
+          orderedBy
+      } 
+    }`
+  }
 }
 
 export default querys;

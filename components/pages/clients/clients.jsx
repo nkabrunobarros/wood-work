@@ -11,15 +11,16 @@ import Select from '../../inputs/select';
 
 //  PropTypes
 import {
-  InputLabel,
-  OutlinedInput
+  Autocomplete, InputLabel,
+  OutlinedInput,
+  TextField
 } from '@mui/material';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import routes from '../../../navigation/routes';
 
-const Users = ({ ...props }) => {
+const Clients = ({ ...props }) => {
   const {
     items,
     breadcrumbsPath,
@@ -34,26 +35,22 @@ const Users = ({ ...props }) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [profilesFilter, setProfilesFilter] = useState('');
-
-  const [filters, setFilters] = useState({
-    nome,
-    email,
-    idPerfil: profilesFilter,
-  });
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
     setFilters({
-      nome,
+      legalName: nome,
       email,
-      idPerfil: profilesFilter,
     })
-  }, [nome, email, profilesFilter])
+  }, [nome, email, profiles])
 
   const ClearFilters = () => {
     setNome('');
     setEmail('');
     setProfilesFilter('');
   };
+
+  console.log(nome)
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>
@@ -65,16 +62,13 @@ const Users = ({ ...props }) => {
           <a className='headerTitleSm'>Filtros</a>
           <div className='filters'>
             <div className='filterContainer'>
-
-
               <Select
                 label={'Nome'}
-                options={items.filter((item) => item.ativo && item)}
-                optionValue={'nome'}
-                optionLabel={'nome'}
+                options={items}
+                optionValue={'legalName'}
+                optionLabel={'legalName'}
                 onChange={(event) => setNome(event.target.value)}
               />
-
             </div>
             <div className='filterContainer'>
               <InputLabel htmlFor='email'>Email</InputLabel>
@@ -90,16 +84,7 @@ const Users = ({ ...props }) => {
               />
             </div>
             <div className={'filterContainer'}>
-              {Router.route !== routes.private.internal.clients &&
-                <Select
-                  label='Perfil'
-                  options={profiles}
-                  value={profilesFilter}
-                  optionLabel='descricao'
-                  optionValue='id'
-                  onChange={(e) => setProfilesFilter(e.target.value)}
-                />
-              }
+
             </div>
 
           </div>
@@ -142,10 +127,9 @@ const Users = ({ ...props }) => {
             </div>
           </div>
         </div>
-        {console.log(items)}
-        {console.log(profilesFilter)}
+
         <AdvancedTable
-          rows={items.filter((item) => item.ativo && item)}
+          rows={items.filter((item) => item.status && item)}
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}
@@ -156,7 +140,7 @@ const Users = ({ ...props }) => {
   );
 };
 
-Users.propTypes = {
+Clients.propTypes = {
   breadcrumbsPath: PropTypes.array,
   items: PropTypes.array,
   profiles: PropTypes.array,
@@ -166,4 +150,4 @@ Users.propTypes = {
   newRoute: PropTypes.string,
 };
 
-export default Users;
+export default Clients;

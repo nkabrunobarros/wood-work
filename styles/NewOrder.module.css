@@ -14,16 +14,8 @@
   border-color: var(--primary);
 }
 .clientContainer {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     background-color: var(--grayBG);
-    justify-content: space-between;
     border: 1px solid var(--grayEdges);
     border-radius: 4px;
-    margin: 24px;
-}
-.clientContainer > div {
-  display: inline-block;
-
+    padding-bottom: 24px;
 }

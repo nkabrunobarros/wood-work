@@ -1,26 +1,25 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import { Filter, X } from 'lucide-react';
-import Content from '../../content/content';
 import {
   Autocomplete,
   Button,
   ButtonGroup,
   Chip,
-  TextField,
+  TextField
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { Filter, X } from 'lucide-react';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import Content from '../../content/content';
 
 import PrimaryBtn from '../../buttons/primaryBtn';
 import hasData from '../../utils/hasData';
 
 import AdvancedTable from '../../advancedTable/AdvancedTable';
-import dynamic from 'next/dynamic';
 
 // const MyDataGrid = dynamic(() => import('../../datagrid/DataGrid'), { ssr: false })
 
@@ -199,7 +198,7 @@ const OrdersScreen = ({ ...props }) => {
                           fullWidth
                           variant='standard'
                           value={client}
-                          onChange={(event, value) =>
+                          onChange={(event) =>
                             setClient(event.target.value)
                           }
                           placeholder='Cliente'
@@ -250,7 +249,7 @@ const OrdersScreen = ({ ...props }) => {
                           fullWidth
                           variant='standard'
                           value={product}
-                          onChange={(event, value) =>
+                          onChange={(event) =>
                             setClient(event.target.value)
                           }
                           placeholder='Produto'

@@ -2,7 +2,7 @@ import axios from "axios";
 import { parseCookies } from "nookies";
 import querys from "../../querys";
 
-export async function clients(data) {
+export async function users(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -11,14 +11,14 @@ export async function clients(data) {
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
     {
-      query: querys.CLIENTS,
+      query: querys.USERS,
       data
     },
     config
   )
 }
 
-export async function client(data) {
+export async function userById(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -27,14 +27,14 @@ export async function client(data) {
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
     {
-      query: querys.CLIENT,
+      query: querys.USER,
       data
     },
     config
   )
 }
 
-export async function saveClient(data) {
+export async function saveUser(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -43,8 +43,8 @@ export async function saveClient(data) {
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
     {
-      query: querys.SAVE_CLIENT,
-      data: { input: { ...data} }
+      query: querys.SAVE_USER,
+      data: { input: data }
     },
     config
   )

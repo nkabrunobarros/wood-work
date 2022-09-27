@@ -1,13 +1,10 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React from 'react';
 
+import { Tooltip } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import routes from '../../../navigation/routes';
-import Content from '../../content/content';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import {
   Edit,
   Flag,
@@ -16,13 +13,16 @@ import {
   Phone,
   Smartphone,
   Trash,
-  User,
+  User
 } from 'lucide-react';
-import { useRouter } from 'next/router';
-import DisplayCountryName from '../../utils/DisplayCountryName'
+import Router, { useRouter } from 'next/router';
+import routes from '../../../navigation/routes';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 const Profile = ({ ...props }) => {
-  const { user, breadcrumbsPath } = props;
+  const { user, breadcrumbsPath, pageProps } = props;
   const router = useRouter();
 
   return (
@@ -37,10 +37,23 @@ const Profile = ({ ...props }) => {
           {router.pathname === `${routes.private.profile}[Id]` ? null : (
             <div className='flex'>
               <div>
-                <PrimaryBtn text='Editar' icon={<Edit />} />
+                <PrimaryBtn text='Editar'
+                  onClick={() => Router.push(`${routes.private.internal.editUser}${user.id}`)}
+                  icon={
+                    <Edit
+                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
+                    />
+                  } />
               </div>
               <div>
-                <PrimaryBtn text='Apagar' icon={<Trash />} light />
+                <PrimaryBtn text='Apagar' icon={
+                  <Trash
+                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                    size={pageProps.globalVars.iconSize} />
+                }
+                  light
+                />
               </div>
             </div>
           )}
@@ -77,21 +90,50 @@ const Profile = ({ ...props }) => {
             </div>
             <div id='pad' className='infoBox'>
               <a id='align' className='lightTextSm'>
-                <Mail className='primaryIcon' size={22} /> {user.email}{' '}
+                <Tooltip title='Email'>
+                  <Mail className='primaryIcon' size={22} />
+                </Tooltip>
+                <span>
+                  {user.email}
+                </span>
+
               </a>
               <a id='align' className='lightTextSm'>
-                <Smartphone className='primaryIcon' size={22} /> {user.codigo}{' '}
-                {user.telemovel}{' '}
+              <Tooltip title='Telemovel'>
+                <a href={`tel:${user.telemovel}`}>
+                  <Smartphone className='primaryIcon' size={22} />
+                </a>
+              </Tooltip>
+                <span>
+                  {user.telemovel}
+                </span>
               </a>
               <a id='align' className='lightTextSm'>
-                <Phone className='primaryIcon' size={22} /> {user.codigo}{' '}
-                {user.telefone}
+                <Tooltip title='Telefone'>
+                  <a href={`tel:${user.telefone}`}>
+                    <Phone className='primaryIcon' size={22} />
+                  </a>
+                </Tooltip>
+                <span>
+                  {user.telefone}
+                </span>
               </a>
               <a id='align' className='lightTextSm'>
-                <Map className='primaryIcon' size={22} /> {user.morada}
+                <Tooltip title='Morada'>
+                  <Map className='primaryIcon' size={22} />
+                </Tooltip>
+                <span>
+                  {user.morada}
+                </span>
+
               </a>
               <a id='align' className='lightTextSm'>
-                <Flag className='primaryIcon' size={22} /> {user.pais}{' '}
+                <Tooltip title='Pais'>
+                  <Flag className='primaryIcon' size={22} />
+                </Tooltip>
+                <span>
+                  {user.pais.descricao}
+                </span>
               </a>
             </div>
           </div>

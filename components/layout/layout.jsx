@@ -9,19 +9,19 @@ import PropTypes from 'prop-types';
 import routes from '../../navigation/routes';
 
 //  Custom Components
+import jwt from 'jsonwebtoken';
+import * as authActions from '../../pages/api/actions/auth';
+import styles from '../../styles/404.module.css';
+import Loader from '../loader/loader';
 import DrawerMobile from './drawer/drawer';
 import Footer from './footer/footer';
 import Navbar from './navbar/navbar';
-import Loader from '../loader/loader';
-import jwt from 'jsonwebtoken';
-import * as authActions from '../../pages/api/actions/auth';
-import * as permissionActions from '../../pages/api/actions/permission';
-import styles from '../../styles/404.module.css'
+import IsInternal from '../utils/IsInternal';
 
 //  Material UI
 import { CssBaseline, Hidden, Tooltip } from '@mui/material';
-import { parseCookies } from 'nookies';
 import moment from 'moment';
+import { parseCookies } from 'nookies';
 
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
@@ -46,30 +46,15 @@ async function Test(pageProps) {
         return true;
       }
       else {
-        console.log('dont have user Logged in, but have token')
 
         const u = JSON.parse(localStorage.getItem('user'))
 
         pageProps.loggedUser = u;
 
         const resUser = await authActions.me({ token })
-        const user = resUser.data.payload;
-        const permission = await permissionActions.permission({ id: user.idPerfil })
 
-        const builtUser = {
-          id: user.id,
-          email: user.email,
-          nome: user.nome,
-          morada: user.morada,
-          telefone: user.telefone,
-          telemovel: user.telemovel,
-          ativo: user.ativo,
-          pais: user.paisCodigo,
-          perfil: permission.data.payload
-        }
-
-        localStorage.setItem("user", JSON.stringify(builtUser));
-        pageProps.loggedUser = builtUser;
+        localStorage.setItem("user", JSON.stringify(resUser.data.payload));
+        pageProps.loggedUser = resUser.data.payload;
 
         return true;
       }
@@ -89,6 +74,10 @@ const Layout = ({ children, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouter();
   const [loaded, setLoaded] = useState(false);
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('/[Id]', ''))
+
+
+  if (typeof window !== "undefined") pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     async function load() {
@@ -100,8 +89,6 @@ const Layout = ({ children, ...pageProps }) => {
     }
 
     Promise.all([load()]).then(() => setLoaded(true))
-    console.log(Router.asPath)
-
   }, [])
 
   function handleDrawerToggle() {
@@ -133,7 +120,8 @@ const Layout = ({ children, ...pageProps }) => {
         />
       </Hidden>
       <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>
-        {Router.asPath.includes('internal') || Router.asPath.includes('profile') ? children : <>
+        {IsInternal(pageProps.loggedUser.perfil.descricao) 
+        === isInternalPage ? children : <>
           <div className={styles.main} target="_blank" rel="noreferrer">
             <header className={styles.topheader}></header>
 

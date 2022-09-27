@@ -39,6 +39,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Montserrat',
+    wordWrap: "break-word",
   },
   TextareaAutosize: {
     fontFamily: 'Montserrat',

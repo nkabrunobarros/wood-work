@@ -1,32 +1,18 @@
 //  Nodes
-import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
 import routes from '../../../navigation/routes';
+import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 
-import styles from '../../../styles/Order.module.css';
-import stylesMessage from '../../../styles/Messages.module.css';
 import Paper from '@mui/material/Paper';
+import stylesMessage from '../../../styles/Messages.module.css';
+import styles from '../../../styles/Order.module.css';
+import IsInternal from '../../utils/IsInternal';
 
 //  PropTypes
-import PropTypes from 'prop-types';
-import {
-  Edit,
-  Eye,
-  FilePlus,
-  FileText,
-  FolderPlus,
-  Info,
-  MessageSquare,
-  Tag,
-  Trash,
-  Folder,
-  FolderOpen,
-} from 'lucide-react';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import {
   Avatar,
   ButtonGroup,
@@ -38,17 +24,31 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip,
+  Tooltip
 } from '@mui/material';
+import {
+  Edit,
+  Eye,
+  FilePlus,
+  FileText,
+  Folder,
+  FolderOpen,
+  FolderPlus,
+  Info,
+  MessageSquare,
+  Tag,
+  Trash
+} from 'lucide-react';
 import Router from 'next/router';
+import PropTypes from 'prop-types';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import PrimaryBtn from '../../buttons/primaryBtn';
 
 const Order = ({ ...props }) => {
   const {
     order,
     docs,
     breadcrumbsPath,
-    internalPOV,
     productionDetail,
     headCellsUpperProductionDetail,
     headCellsProductionDetail,
@@ -59,73 +59,19 @@ const Order = ({ ...props }) => {
     pageProps,
     orderDetail,
   } = props;
+
   const [activeRow, setActiveRow] = useState(0);
+  const internalPOV = IsInternal(pageProps.loggedUser.perfil.descricao)
 
-  // const DocRow = ({ doc, num }) => {
-  //   let style = {};
-  //   if (activeRow === num) {
-  //     style = {
-  //       backgroundColor: 'var(--primary-light-opacity)',
-  //       borderColor: 'var(--primary)',
-  //     };
-  //   }
-  //   return (
-  //     <tr
-  //       key={doc.id}
-  //       className={styles.docRow}
-  //       style={style}
-  //       onClick={() => setActiveRow(doc.id - 1)}
-  //     >
-  //       <td id='align' data-label='Nome' className='link'>
-  //         <FileText strokeWidth='1' style={{ marginRight: '1rem' }} />
-  //         {doc.name}
-  //       </td>
-  //       <td data-label='Data'> {doc.data} </td>
-  //       <td data-label='Ações'>
-  //         <Edit strokeWidth='1' className='link' />
-  //         <Trash strokeWidth='1' className='link' />
-  //       </td>
-  //       <td>{activeRow === num ? <div className='dot'></div> : null}</td>
-  //     </tr>
-  //   );
-  // };
-  // eslint-disable-next-line react/prop-types
-  // const MessageRow = ({ num }) => {
-  //   return (
-  //     <tr
-  //       className={stylesMessage.messageRow}
-  //       onClick={() => Router.push(routes.private.messages)}
-  //     >
-  //       <td data-label='Mensagem' className={stylesMessage.messageRowContent}>
-  //         <div className={stylesMessage.avatarContainer}>
-  //           <Avatar className={stylesMessage.avatar}>N</Avatar>
-  //         </div>
-  //         <div style={{ paddingLeft: '1rem' }}>
-  //           <div className={stylesMessage.sender}> Order Nº 17212</div>
-  //           <div>
-  //             Hey man this is a dummy text just to see how far this goes and how
-  //             it goes and still goes futher than this omg what the hell
-  //           </div>
-  //         </div>
-  //       </td>
-  //       <td data-label='Data'>
-  //         <a>11/02/2022</a>
-  //       </td>
-  //       <td data-label='Ações'>
-  //         <Edit strokeWidth='1' className='link' />
-  //         <Trash strokeWidth='1' className='link' />
-  //       </td>
-  //     </tr>
-  //   );
-  // };
-
-  function Row({ row, index }) {
+  function Row({ index }) {
     Row.propTypes = {
       row: PropTypes.any,
       index: PropTypes.number,
     };
+
     const [open, setOpen] = useState(false);
     let style = {};
+
     if (open)
       style = {
         borderColor: 'var(--primary)',
@@ -228,6 +174,7 @@ const Order = ({ ...props }) => {
       </React.Fragment>
     );
   }
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -715,6 +662,7 @@ const Order = ({ ...props }) => {
     </Grid>
   );
 };
+
 Order.propTypes = {
   order: PropTypes.string,
   docs: PropTypes.arrayOf(PropTypes.object),
@@ -731,4 +679,5 @@ Order.propTypes = {
   pageProps: PropTypes.object,
   orderDetail: PropTypes.array,
 };
+
 export default Order;

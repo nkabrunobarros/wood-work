@@ -1,3 +1,4 @@
+import { ButtonGroup } from "@mui/material";
 import { Edit, Eye, Trash } from "lucide-react";
 import React from "react";
 import displayWithStyle from "./displayTextWithStyle";
@@ -22,13 +23,28 @@ const FilterItem = (data, item, col) => {
       case "product.craftTime": {
         return <a>{item[col2[0]][col2[1]]}</a>;
       }
+      
+      case "perfil.descricao": {
+        return <a>{item[col2[0]][col2[1]]}</a>;
+      }
 
       case "product.category": {
         return <a>{item[col2[0]][col2[1]].name}</a>;
       }
 
+      case "giveName": {
+        return <a className="link">{item[col2[0]]}</a>;
+      }
+
+      case "id": {
+        return <a className="link">{item[col2[0]]}</a>;
+      }
 
       case "numero": {
+        return <a className="link">{item[col2[0]]}</a>;
+      }
+
+      case "nome": {
         return <a className="link">{item[col2[0]]}</a>;
       }
 
@@ -54,11 +70,9 @@ const FilterItem = (data, item, col) => {
         switch (item.status) {
           case 'Concluida':
             return <a className="successBalloon">Entregue</a>;
-
           default:
-            return <a className="errorBalloon">Nao</a>;
+            return <a className="errorBalloon">Não</a>;
         }
-
       }
 
       case "cliente": {
@@ -70,24 +84,27 @@ const FilterItem = (data, item, col) => {
       case "amount": {
         if (item[col2[0]] > 0) return <a className="successBalloon">Disponivel</a>
         else return <a className="errorBalloon">Indisponivel</a>
+      }
 
+      case "stock": {
+        if (item[col2[0]] > 0) return <a className="successBalloon">Disponivel</a>
+        else return <a className="errorBalloon">Indisponivel</a>
       }
 
 
       case "category.name":
-        {
-          return item.product.categoryId
-          // return <a>{item[col2[0]][col2[1]]}</a>;
-        }
+      {
+        return item.product.name
+      }
 
       case "ações":
         return <Eye strokeWidth="1" className="link" />;
       case "actions":
         return (
-          <>
+          <ButtonGroup>
             <Edit strokeWidth="1" stroke="var(--primary)" />
             <Trash strokeWidth="1" stroke="var(--primary)" />
-          </>
+          </ButtonGroup>
         );
 
       case "desvio" || "desvio2": {

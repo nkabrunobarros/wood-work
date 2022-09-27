@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // Node modules
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material';
 import React from 'react';
 
 const Select2 = ({
@@ -24,7 +24,10 @@ const Select2 = ({
       {variant !== 'standard' && (
         <InputLabel htmlFor={label}>
           {label}
-          {required && <span style={{ color: 'var(--red)' }}> *</span>}
+          {required &&
+            <Tooltip title='Obrigatório' >
+              <span style={{ color: 'var(--red)' }}> *</span>
+            </Tooltip>}
         </InputLabel>
       )}
       <FormControl fullWidth>
@@ -49,7 +52,20 @@ const Select2 = ({
           {options
             .map((opt, i) => (
               <MenuItem key={i} value={opt[optionValue] || opt.id}>
-                {opt[optionLabel]}
+                <Box
+                  sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                >
+                  {!!opt.codigo &&
+                    <img
+                      loading='lazy'
+                      width='20'
+                      src={`https://flagcdn.com/w20/${opt.codigo.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
+                      alt=''
+                    />}
+
+                  {opt[optionLabel] || opt.label || 'Empty'}
+                </Box>
               </MenuItem>
             ))}
         </Select>

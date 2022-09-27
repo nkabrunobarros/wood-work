@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 //  Custom Components
 import Loader from '../../components/loader/loader';
-import UsersScreen from '../../components/pages/users/users';
+import ClientsScreen from '../../components/pages/clients/clients';
 
 //  Navigation
 import routes from '../../navigation/routes';
@@ -12,17 +12,16 @@ import routes from '../../navigation/routes';
 import PropTypes from 'prop-types';
 
 //  Utils
-import hasData from '../../components/utils/hasData';
 
 //  Services
 // import countryService from '../../services/countries/country-service';
-import * as CountryActions from '../../pages/api/actions/country';
 import * as ClientsActions from '../../pages/api/actions/client';
+import * as ProfileActions from '../../pages/api/actions/perfil';
 
 const Clients = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
-  const [countries, setCountries] = useState();
+  const [profiles, setProfiles] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -30,9 +29,9 @@ const Clients = ({ ...pageProps }) => {
         .clients()
         .then((res) => setClients(res.data.payload.data));
 
-      await CountryActions
-        .countries()
-        .then((res) => setCountries(res.data.payload.data));
+      await ProfileActions
+        .perfis()
+        .then((res) => setProfiles(res.data.payload.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -41,7 +40,7 @@ const Clients = ({ ...pageProps }) => {
   if (loaded) {
     const headCells = [
       {
-        id: 'nome',
+        id: 'giveName',
         numeric: false,
         disablePadding: false,
         label: 'Nome',
@@ -59,7 +58,7 @@ const Clients = ({ ...pageProps }) => {
         label: 'Ações',
       },
     ];
-    
+
     const editRoute = routes.private.internal.editClient;
     const detailRoute = routes.private.internal.client;
     const newRoute = routes.private.internal.newClient;
@@ -76,15 +75,16 @@ const Clients = ({ ...pageProps }) => {
     const props = {
       items,
       breadcrumbsPath,
-      countries,
+      profiles,
       editRoute,
       detailRoute,
       headCells,
       newRoute,
+      pageProps
     };
 
 
-    return <UsersScreen {...props} />
+    return <ClientsScreen {...props} />
   } else return <Loader center={true} />;
 
 };
@@ -94,11 +94,10 @@ Clients.propTypes = {
   headCells: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
   users: PropTypes.array,
-  countries: PropTypes.array,
+  profiles: PropTypes.array,
   editRoute: PropTypes.string,
   detailRoute: PropTypes.string,
   newRoute: PropTypes.string,
-  hasFullyLoaded: PropTypes.any,
 };
 
 export default Clients;

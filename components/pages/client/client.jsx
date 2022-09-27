@@ -1,16 +1,16 @@
 //  Nodes
-import React from 'react';
 import Router from 'next/router';
+import React from 'react';
 
 //  Material UI
+import { Box, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import { InputLabel } from '@mui/material';
 
 //  Custom Components
 import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -23,20 +23,15 @@ import { Edit, PackagePlus, Trash, User } from 'lucide-react';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, client, editRoute, pageProps } = props;
+
   return (
     <Grid component='main'>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{client.nome}</a>
-          </div>
-          <div style={{ display: 'flex' }}>
+        <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+          <Typography item className='headerTitleXl'>{client.legalName}</Typography>
+          <Box sx={{ marginLeft: 'auto' }}>
             <PrimaryBtn
               text='Editar'
               icon={
@@ -57,119 +52,88 @@ const EditClient = ({ ...props }) => {
               }
               light
             />
-          </div>
-        </div>
-        <div className='flex'>
-          <div style={{ flex: 1 }}>
-            <a id='pad' className='lightTextSm'>
-              <User
-                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                size={pageProps.globalVars.iconSize}
-              />
-              Dados Gerais
-            </a>
-            <div id='pad' style={{ display: 'flex', height: '100%' }}>
-              <div
-                style={{
-                  flex: 1,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around  ',
-                }}
-              >
-                <div>
-                  <a className='lightTextSm'>Email</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{client.email}</a>
-                </div>
-                <div>
-                  <a className='lightTextSm'>Pessoa de Contacto</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{client.contactName}</a>
-                </div>
-                <div>
-                  <a className='lightTextSm'>Observações</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{client.obs}</a>
-                </div>
-              </div>
-              <div
-                style={{
-                  flex: 1,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around  ',
-                }}
-              >
-                <div>
-                  <a className='lightTextSm'>Telefone</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{client.telemovel}</a>
-                </div>
-                <div>
-                  <a className='lightTextSm'>Contacto</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{client.telemovel}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id='pad' className={styles.clientContainer}>
-            <a id='align' className='lightTextSm'>
-              <PackagePlus
-                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                size={pageProps.globalVars.iconSize}
-              />
-              Dados de Faturação
-            </a>
-            <br></br>
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <div style={{ flex: 1 }}>
-                <div>
-                  <InputLabel className='lightTextSm'>Morada Fiscal</InputLabel>
-                  <InputLabel className='lightTextSm black'>
-                    {client.address}
-                  </InputLabel>
-                </div>
-                <br></br>
-                <div>
-                  <InputLabel className='lightTextSm' htmlFor='email'>
-                    Número de Indentificação Fiscal (Nif)
-                  </InputLabel>
-                  <InputLabel className='lightTextSm black' htmlFor='email'>
-                    {client.nif}
-                  </InputLabel>
-                </div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>
-                  <InputLabel className='lightTextSm' htmlFor='email'>
-                    Codigo Postal
-                  </InputLabel>
-                  <InputLabel className='lightTextSm black' htmlFor='email'>
-                    {client.email}
-                  </InputLabel>
-                </div>
-                <br></br>
+          </Box>
+        </Box>
+        <Grid id='clientPanel' container sx={{ padding: '24px' }}>
+          <Grid item xs={12} md={6}>
+            <Grid container spacing={3} >
+              <Grid container item>
+                <Typography id='align' item className='lightTextSm'><User
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />  Dados Gerais</Typography>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12} md={6} sx={{ overflow: 'hidden' }}>
+                  <Typography item className='lightTextSm'>Email</Typography>
+                  <Typography item className='lightTextSm black' >{client.email}</Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'>Telefone </Typography>
+                  <Typography item className='lightTextSm black' >{client.telephone}</Typography>
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'>Pessoa de Contacto </Typography>
+                  <Typography item className='lightTextSm black' >{client.contact}</Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'>Contacto </Typography>
+                  <Typography item className='lightTextSm black' >{client.telephone}</Typography>
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12}>
+                  <Typography item className='lightTextSm'>Observações </Typography>
+                  <Typography item className='lightTextSm black' >{client.obs}</Typography>
+                </Grid>
 
-                <div>
-                  <InputLabel className='lightTextSm' htmlFor='email'>
-                    Outros Dados
-                  </InputLabel>
-                  <InputLabel className='lightTextSm black' htmlFor='email'>
-                    {client.obs}
-                  </InputLabel>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Grid container spacing={3} className={styles.clientContainer}>
+              <Grid container item>
+                <Grid item xs={12}>
+                  <Typography id='align' item className='lightTextSm'>
+                    <PackagePlus
+                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
+                    />
+                    Dados de Faturação
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container item>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'>Morada Fiscal</Typography>
+                  <Typography item className='lightTextSm black' >{client.address}</Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'>Codigo Postal</Typography>
+                  <Typography item className='lightTextSm black' >{client.postalCode}</Typography>
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'> Número de Indentificação Fiscal (Nif)</Typography>
+                  <Typography item className='lightTextSm black' >{client.taxId}</Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography item className='lightTextSm'>Outros Dados</Typography>
+                  <Typography item className='lightTextSm black' >{client.otherData}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Content>
     </Grid>
   );
 };
+
 EditClient.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   client: PropTypes.object.isRequired,

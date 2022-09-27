@@ -11,7 +11,12 @@ export async function login(data) {
     return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
         {
             query: querys.LOGIN,
-            data: { input: { username: data.email, password: data.password} }
+            data: { 
+                input : { 
+                    username: data.email,
+                    password: data.password
+                }
+            }
         }
     )
 }
@@ -36,6 +41,7 @@ export async function me(data) {
 
 export async function logout() {
     destroyCookie(null, 'auth_token');
+    localStorage.removeItem('user');
     Router.push(routes.public.signIn)
 }
 

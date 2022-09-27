@@ -39,15 +39,18 @@ const Messages = ({ ...props }) => {
   const { breadcrumbsPath, headCellsMessages, pageProps } = props;
   const [conversations, setConversations] = useState(props.conversations);
   const [newMessage, setNewMessage] = useState('');
-  const [activeRow, setActiveRow] = useState();
+  const [activeRow, setActiveRow] = useState(0);
   const [loadMessage, setLoadMessage] = useState(new Date());
-  const [conversationDisplayed, setConversationDisplayed] = useState();
+  const [conversationDisplayed, setConversationDisplayed] = useState(conversations[0]);
   const loggedUser = pageProps.loggedUser;
+
+  console.log(conversations)
 
   useEffect(() => {
     const scroll = () => {
       scrollToBottom('messagesContainer');
     };
+
     if (hasData(conversationDisplayed)) scroll();
   }, [loadMessage]);
 
@@ -56,12 +59,14 @@ const Messages = ({ ...props }) => {
     event.preventDefault();
 
     const allConversations = conversations;
+
     const newMessageStucture = {
       id: Math.random(),
       sentBy: loggedUser.id,
       content: newMessage,
       createdAt: moment().format('DD/MM/YYYY H:mm'),
     };
+
     allConversations[activeRow].messagesContent.push(newMessageStucture);
     setConversations(allConversations);
     setNewMessage('');
@@ -72,13 +77,16 @@ const Messages = ({ ...props }) => {
       num: PropTypes.any,
       conversation: PropTypes.object,
     };
+
     let style = {};
+
     if (activeRow === num) {
       style = {
         backgroundColor: 'var(--primary-light-opacity)',
         borderColor: 'var(--primary)',
       };
     }
+
     return (
       <TableRow
         key={num}
@@ -113,8 +121,8 @@ const Messages = ({ ...props }) => {
     ConversationRow.propTypes = {
       message: PropTypes.object,
     };
-    if (loggedUser)
-      if (message.sentBy.toString() === loggedUser.id.toString()) {
+
+      if (message.sentBy.toString() === loggedUser?.id.toString()) {
         return (
           <div className={styles.conversation}>
             <a
@@ -125,7 +133,7 @@ const Messages = ({ ...props }) => {
               <br></br>
               <a className={styles.messageDate}> {message.createdAt}</a>
             </a>
-            <Avatar className={styles.avatar}>B</Avatar>
+            <Avatar className={styles.avatar}>{loggedUser.nome.charAt(0).toUpperCase()}</Avatar>
           </div>
         );
       } else {
@@ -177,25 +185,22 @@ const Messages = ({ ...props }) => {
               rows={conversations}
               noPagination
             >
-              {console.log(conversations)}
-              {loggedUser ? (
                 <>
                   {conversations.map((conversation, i) => (
                     <React.Fragment key={i * 100}>
                       {/* eslint-disable-next-line react/prop-types */}
-                      {conversation.users.find(
+                      {/* {conversation.users.find(
                         (user) => user.toString() === loggedUser.id.toString()
-                      ) ? (
+                      ) ? ( */}
                         <MessageRow
                           key={i}
                           num={i}
                           conversation={conversation}
                         />
-                      ) : null}
+                      {/* ) : null} */}
                     </React.Fragment>
                   ))}
                 </>
-              ) : null}
             </AdvancedTable>
             <div className={styles.scrollableZone}></div>
           </div>
@@ -253,6 +258,7 @@ const Messages = ({ ...props }) => {
     </Grid>
   );
 };
+
 Messages.propTypes = {
   dummy: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
@@ -260,4 +266,5 @@ Messages.propTypes = {
   conversations: PropTypes.array,
   pageProps: PropTypes.any,
 };
+
 export default Messages;

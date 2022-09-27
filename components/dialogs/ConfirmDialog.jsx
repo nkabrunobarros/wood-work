@@ -14,10 +14,14 @@ import * as icons from 'lucide-react';
 import { Box } from '@mui/system';
 
 const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, iconType, okTxt, cancelTxt }) => {
-  const Icon= icons[icon];
+  const Icon= icons[icon || 'XCircle'];
   const style = {};
 
   switch (iconType) {
+    case icon: 
+    style.color = 'var(--red)'
+
+    break
 
     case 'success':
       style.color = 'var(--green)'
@@ -42,9 +46,9 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
       </DialogTitle>
       <Divider />
       <DialogContent>
-        {icon && <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
           <Icon size={80} strokeWidth={1} style={style} />
-        </Box>}
+        </Box>
 
         <DialogContentText id='alert-dialog-description'>
           {message

@@ -7,37 +7,42 @@ import Loader from '../../../components/loader/loader';
 //  Page Component
 import EditUserScreen from '../../../components/pages/editUser/editUser';
 
-//  Utils
-import hasData from '../../../components/utils/hasData';
-
 //  Navigation
 import routes from '../../../navigation/routes';
 
 //  Services
-import countryService from '../../../services/countries/country-service';
-import userService from '../../../services/user/user-service';
+import * as CountryActions from '../../../pages/api/actions/country';
+import * as UserActions from '../../../pages/api/actions/user';
+import * as ProfileActions from '../../../pages/api/actions/perfil';
 
 const EditUser = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [countries, setCountries] = useState();
   const [user, setUser] = useState();
+  const [profiles, setProfiles] = useState();
   const router = useRouter();
-  const userId = router.query.Id;
 
   useEffect(() => {
     const getAll = async () => {
-      await userService.getAllUsers().then((res) => {
-        const user = res.data.data.find(
-          (user) => user.id.toString() === userId.toString()
-        );
-        setUser(user);
-      });
-      await countryService
-        .getAllCountries()
-        .then((res) => setCountries(res.data.data));
+      try {
+        await UserActions
+          .userById({ id: router.query.Id })
+          .then((res) => setUser(res.data.payload));
+  
+        await CountryActions
+          .countries()
+          .then((res) => setCountries(res.data.payload.data));
+  
+        await ProfileActions
+          .perfis()
+          .then((res) => setProfiles(res.data.payload.data));
+      } catch (error) {}
+
     };
-    Promise.all([getAll()]).then(setLoaded(true));
+
+    Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
+
   if (loaded) {
     const breadcrumbsPath = [
       {
@@ -45,23 +50,27 @@ const EditUser = ({ ...pageProps }) => {
         href: `${routes.private.internal.users}`,
       },
       {
+        title: `${user.nome}`,
+        href: `${routes.private.internal.user}${user.id}`,
+      },
+      {
         title: 'Editar Utilizador',
         href: `${routes.private.internal.editUser}`,
       },
     ];
+
     const props = {
       breadcrumbsPath,
       user,
       pageProps,
       countries,
+      profiles,
     };
-    if (hasData(user) && hasData(countries)) pageProps.hasFullyLoaded = true;
-    return loaded && pageProps.hasFullyLoaded ? (
-      <EditUserScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
-  }
-  return <Loader center={true} />;
+
+
+
+    return loaded && <EditUserScreen {...props} />
+  } else return <Loader center={true} />
 };
+
 export default EditUser;

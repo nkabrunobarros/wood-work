@@ -7,31 +7,32 @@ import Loader from '../../../components/loader/loader';
 
 //  Page Component
 import EditClientScreen from '../../../components/pages/editClient/editClient';
-import hasData from '../../../components/utils/hasData';
 
 //  Navigation
 import routes from '../../../navigation/routes';
 
 //  Services
-import clientService from '../../../services/clients/client-service';
+import * as ClientActions from '../../../pages/api/actions/client';
 
 const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState();
-
   const router = useRouter();
   const clientId = router.query.Id;
 
   useEffect(() => {
     const getAll = async () => {
-      await clientService
-        .getClientById(clientId)
-        .then((res) => setClient(res.data.data));
+      await ClientActions
+        .client({id: clientId})
+        .then((res) => setClient(res.data.payload));
     };
-    Promise.all([getAll()]).then(setLoaded(true));
+
+    Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
+
   if (loaded) {
     const detailPage = routes.private.internal.client;
+
     const breadcrumbsPath = [
       {
         title: 'Clientes',
@@ -42,20 +43,19 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
     ];
+
     const props = {
       client,
       breadcrumbsPath,
       detailPage,
       pageProps,
     };
-    if (hasData(client)) pageProps.hasFullyLoaded = true;
 
-    return loaded && pageProps.hasFullyLoaded ? (
-      <EditClientScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
+
+    return loaded && <EditClientScreen {...props} />
   }
+
   return <Loader center={true} />;
 };
+
 export default EditClient;

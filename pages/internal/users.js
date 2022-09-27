@@ -12,91 +12,88 @@ import routes from '../../navigation/routes';
 import PropTypes from 'prop-types';
 
 //  Utils
-import hasData from '../../components/utils/hasData';
 
 //  Services
-import countryService from '../../services/countries/country-service';
-import userService from '../../services/user/user-service';
+import * as ProfileActions from '../../pages/api/actions/perfil';
+import * as UserActions from '../../pages/api/actions/user';
 
 const Users = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [users, setUsers] = useState();
-  const [countries, setCountries] = useState();
+  const [profiles, setProfiles] = useState();
   const items = users;
 
   useEffect(() => {
     const getData = async () => {
-      await userService.getAllUsers().then((res) => {
-        setUsers(res.data.data);
-      });
+      await UserActions
+        .users()
+        .then((res) => {  console.log(res.data.payload.data); setUsers(res.data.payload.data )}
+       
+      );
 
-      await countryService
-        .getAllCountries()
-        .then((res) => setCountries(res.data.data));
+      await ProfileActions
+        .perfis()
+        .then((res) => setProfiles(res.data.payload.data));
     };
 
-    Promise.all([getData()]).then(setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
 
-    setTimeout(() => {
-      setLoaded(true);
-    }, 500);
   }, []);
 
-  const breadcrumbsPath = [
-    {
-      title: 'Utilizadores',
-      href: `${routes.private.users}`,
-    },
-  ];
+  if (loaded) {
+    const breadcrumbsPath = [
+      {
+        title: 'Utilizadores',
+        href: `${routes.private.users}`,
+      },
+    ];
+  
+  
+    const headCells = [
+      {
+        id: 'nome',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nome',
+      },
+      {
+        id: 'email',
+        numeric: false,
+        disablePadding: true,
+        label: 'Email',
+      },
+      {
+        id: 'perfil.descricao',
+        numeric: true,
+        disablePadding: false,
+        label: 'Perfil',
+      },
+      {
+        id: 'actions',
+        numeric: true,
+        disablePadding: false,
+        label: 'Ações',
+      },
+    ];
+  
+    const editRoute = routes.private.internal.editUser;
+    const detailRoute = routes.private.internal.user;
+    const newRoute = routes.private.internal.newUser;
+  
+    const props = {
+      items,
+      breadcrumbsPath,
+      profiles,
+      editRoute,
+      detailRoute,
+      headCells,
+      newRoute,
+    };
+  
+  
+    return loaded && <UsersScreen {...props} />
 
-  const headCells = [
-    {
-      id: 'nome',
-      numeric: false,
-      disablePadding: false,
-      label: 'Nome',
-    },
-    {
-      id: 'email',
-      numeric: false,
-      disablePadding: true,
-      label: 'Email',
-    },
-    {
-      id: 'perfil',
-      numeric: true,
-      disablePadding: false,
-      label: 'Perfil',
-    },
-    {
-      id: 'actions',
-      numeric: true,
-      disablePadding: false,
-      label: 'Ações',
-    },
-  ];
-
-  const editRoute = routes.private.internal.editUser;
-  const detailRoute = routes.private.internal.user;
-  const newRoute = routes.private.internal.newUser;
-
-  const props = {
-    items,
-    breadcrumbsPath,
-    countries,
-    editRoute,
-    detailRoute,
-    headCells,
-    newRoute,
-  };
-
-  if (hasData(items) && hasData(countries)) pageProps.hasFullyLoaded = true;
-
-  return pageProps.hasFullyLoaded && loaded ? (
-    <UsersScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  } else return  <Loader center={true} />
 };
 
 Users.propTypes = {

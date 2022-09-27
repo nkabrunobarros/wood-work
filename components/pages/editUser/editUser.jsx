@@ -1,13 +1,14 @@
 //  Nodes
-import React, { useState } from 'react';
 import Router from 'next/router';
+import React, { useState } from 'react';
 
 //  Custom Components
 import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Loader from '../../loader/loader';
+import MyInput from '../../inputs/myInput';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -16,82 +17,77 @@ import PropTypes from 'prop-types';
 import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
-import { Box, Lock, Save, User, X } from 'lucide-react';
+import { Lock, Save, User, X } from 'lucide-react';
 
 //  Material UI
-import Grid from '@mui/material/Grid';
-import CssBaseline from '@mui/material/CssBaseline';
 import {
-  Alert,
-  Autocomplete,
   Backdrop,
   Button,
   CircularProgress,
   InputLabel,
   MenuItem,
-  OutlinedInput,
-  Select,
-  Snackbar,
-  TextareaAutosize,
-  TextField,
+  OutlinedInput, TextareaAutosize
 } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
 
 //  Utlis
+import EmailValidation from '../../utils/EmailValidation';
 import hasData from '../../utils/hasData';
-import { EmailValidation } from '../../utils/EmailValidation';
 
 //  Navigation
-import routes from '../../../navigation/routes';
+import * as UserActions from '../../../pages/api/actions/user';
+import Select from '../../inputs/select';
+import { toast } from 'react-toastify';
+import Notification from '../../dialogs/Notification';
 
 const EditUser = ({ ...props }) => {
-  const { breadcrumbsPath, user, countries, pageProps } = props;
+  const { breadcrumbsPath, user, countries, profiles, pageProps } = props;
   const [name, setName] = useState(user.nome);
   const [email, setEmail] = useState(user.email);
   const [telefone, setTelefone] = useState(user.telefone);
   const [telemovel, setTelemovel] = useState(user.telemovel);
-  const [pais, setPais] = useState(user.pais);
-  const [cidade, setCidade] = useState(user.cidade);
-  const [perfil, setPerfil] = useState(user.perfil);
+  const [pais, setPais] = useState(user.paisCodigo);
+  const [morada, setMorada] = useState(user.morada);
   const [obs, setObs] = useState(user.obs);
-
+  const [active, setActive] = useState(user.ativo);
+  const [perfil, setPerfil] = useState(user.perfil.id);
   //  Errors states
   const [errorMessageName, setErrorMessageName] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [errorMessageTelefone, setErrorMessageTelefone] = useState('');
   const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
   const [errorMessagePais, setErrorMessagePais] = useState('');
-  const [errorMessageCidade, setErrorMessageCidade] = useState('');
+  const [errorMessageMorada, setErrorMessageMorada] = useState('');
   const [errorMessagePerfil, setErrorMessagePerfil] = useState('');
-
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   //  Snackbar Notification
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
   const [backdrop, setBackdrop] = useState(false);
-
   const [cleaningInputs, setCleaningInputs] = useState(false);
 
-  const onCountryChange = (value) => {
-    if (value === null) setPais('');
-    else setPais(value.label);
-  };
+  console.log(user)
+
   function handleSave() {
-    if (!hasData(name)) setErrorMessageName('This field is required *');
-    if (!hasData(email)) setErrorMessageEmail('This field is required *');
-    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido *');
-    if (!hasData(telefone)) setErrorMessageTelefone('This field is required *');
+    if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
+
+    if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
+    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido');
+
+    if (!hasData(telefone)) setErrorMessageTelefone('Campo Obrigatório');
     else if (telefone < 100000000)
-      setErrorMessageTelefone('Number has to have 9 digits');
+      setErrorMessageTelefone('Numero tem que ter 9 digitos');
+
     if (!hasData(telemovel))
-      setErrorMessageTelemovel('This field is required *');
+      setErrorMessageTelemovel('Campo Obrigatório');
     else if (telemovel < 100000000)
-      setErrorMessageTelemovel('Number has to have 9 digits');
-    if (!hasData(cidade)) setErrorMessageCidade('This field is required *');
-    if (!hasData(pais)) setErrorMessagePais('This field is required *');
-    if (!hasData(perfil)) setErrorMessagePerfil('This field is required *');
+      setErrorMessageTelemovel('Numero tem que ter 9 digitos');
+
+    if (!hasData(morada)) setErrorMessageMorada('Campo Obrigatório');
+
+    if (!hasData(pais)) setErrorMessagePais('Campo Obrigatório');
+
+    if (!hasData(perfil)) setErrorMessagePerfil('Campo Obrigatório');
 
     if (
       hasData(name) &&
@@ -99,47 +95,65 @@ const EditUser = ({ ...props }) => {
       EmailValidation(email) &&
       hasData(telefone) &&
       hasData(telemovel) &&
-      hasData(cidade) &&
+      hasData(morada) &&
       hasData(pais) &&
       hasData(perfil)
     )
       setDialogOpen(!dialogOpen);
   }
 
-  function onConfirm() {
+  async function onConfirm() {
     setBackdrop(true);
-
-    //  Snackbar notification body
-    setSnackbarMessage('Utilizador alterado com sucesso');
-    setSnackbarSeverity('success');
-    setSnackbarOpen(true);
-
-    //  Dialog Modal State
     setDialogOpen(false);
 
-    setTimeout(() => {
-      setSnackbarOpen(false);
-      setBackdrop(false);
-      Router.push(routes.private.internal.users);
-    }, 2000);
-  }
-  const ClearFields = () => {
-    setCleaningInputs(true);
-    setName('');
-    setEmail('');
-    setTelefone('');
-    setTelemovel('');
-    setPerfil('');
-    setCidade('');
-    setPais(null);
-    setObs('');
+    const newUser = {
+      id: user.id,
+      email,
+      ativo: true,
+      nome: name,
+      telemovel,
+      telefone,
+      morada,
+      paisCodigo: pais,
+      idPerfil: perfil,
+      obs,
+    }
 
+    try {
+      await UserActions.saveUser(newUser).then((res) => {
+        setName(res.data.payload.nome)
+        setActive(res.data.payload.ativo)
+        setEmail(res.data.payload.email)
+        setTelefone(res.data.payload.telefone)
+        setTelemovel(res.data.payload.telemovel)
+        setPerfil(res.data.payload.idPerfil)
+        setMorada(res.data.payload.morada)
+        setPais(res.data.payload.paisCodigo)
+        setObs(res.data.payload.obs)
+        setBackdrop(false);
+        toast.success('Utilizador Atualizado.')
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const ClearFields = () => {
+    setName(user.nome)
+    setActive(user.ativo)
+    setEmail(user.email)
+    setTelefone(user.telefone)
+    setTelemovel(user.telemovel)
+    setPerfil(user.idPerfil)
+    setMorada(user.morada)
+    setPais(user.paisCodigo)
+    setObs('');
     setErrorMessageName('');
     setErrorMessageEmail('');
     setErrorMessageTelefone('');
     setErrorMessageTelemovel('');
     setErrorMessagePerfil('');
-    setErrorMessageCidade('');
+    setErrorMessageMorada('');
     setErrorMessagePais('');
 
     setTimeout(() => {
@@ -150,33 +164,21 @@ const EditUser = ({ ...props }) => {
   return (
     <Grid component='main'>
       <CssBaseline />
+      <CustomBreadcrumbs path={breadcrumbsPath} />
+      <Notification />
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onConfirm()}
         message={`Está prestes a editar utilizador ${user.nome}, tem certeza que quer continuar?`}
       />
-      <Snackbar
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        open={snackbarOpen}
-        onRequestClose={() => setSnackbarOpen(false)}
-        autoHideDuration={2000}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backdrop}
       >
         <Loader />
       </Backdrop>
-      <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
         <div
           id='pad'
@@ -211,93 +213,74 @@ const EditUser = ({ ...props }) => {
           </div>
         </div>
         <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
-          <User size={20} /> Dados de Utilizador
+          <User
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSize} />
+          <span>Dados de Utilizador</span>
         </a>
         <div className='flex'>
           <div id='pad' style={{ flex: 2 }} className='filters'>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='nome'>Nome</InputLabel>
-              <OutlinedInput
+              <MyInput
                 required
-                fullWidth
-                id='nome'
-                name='nome'
+                label={'Nome'}
+                error={errorMessageName}
+                placeholder='Escrever nome'
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
                   setErrorMessageName('');
                 }}
-                autoComplete='nome'
-                placeholder='Escrever nome* '
               />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageName ? `${errorMessageName}` : null}
-              </a>
             </div>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Email</InputLabel>
-              <OutlinedInput
-                type='email'
+              <MyInput
+                disabled
                 required
-                fullWidth
-                id='email'
-                name='email'
+                label={'Email'}
+                error={errorMessageEmail}
+                placeholder='Escrever Email'
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrorMessageEmail('');
                 }}
-                autoComplete='email'
-                placeholder='Escrever Email*'
+                type='email'
               />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageEmail ? `${errorMessageEmail}` : null}
-              </a>
             </div>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='contact'>Telefone</InputLabel>
-              <OutlinedInput
+              <MyInput
                 required
-                fullWidth
-                id='contact'
-                name='contact'
-                autoComplete='contact'
+                label={'Telefone'}
+                error={errorMessageTelefone}
+                placeholder='Escrever numero de telefone'
                 value={telefone}
-                type='number'
                 onChange={(e) => {
                   setTelefone(e.target.value);
                   setErrorMessageTelefone('');
                 }}
-                placeholder='Escrever numero de telefone*'
+                type='number'
               />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageTelefone ? `${errorMessageTelefone}` : null}
-              </a>
             </div>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
-              <OutlinedInput
+              <MyInput
                 required
-                fullWidth
-                id='telemovel'
-                name='telemovel'
+                label={'Telemovel'}
+                error={errorMessageTelemovel}
+                placeholder='Escrever numero de telemovel'
                 value={telemovel}
                 onChange={(e) => {
                   setTelemovel(e.target.value);
                   setErrorMessageTelemovel('');
                 }}
-                autoComplete='telemovel'
-                placeholder='Escrever numero de telemovel*'
+                type='number'
               />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageTelemovel ? `${errorMessageTelemovel}` : null}
-              </a>
             </div>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='Perfil'>Perfil de Utilizador</InputLabel>
               <Select
-                labelId='Perfil'
-                id='Perfil'
+                label='Perfil'
+                options={profiles}
+                optionLabel='descricao'
                 fullWidth
                 value={perfil}
                 onChange={(e) => setPerfil(e.target.value)}
@@ -313,66 +296,36 @@ const EditUser = ({ ...props }) => {
               </a>
             </div>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='Cidade'>Cidade</InputLabel>
-              <OutlinedInput
+
+              <MyInput
                 required
-                fullWidth
-                id='Cidade'
-                name='Cidade'
-                value={cidade}
+                label={'Morada'}
+                error={errorMessageMorada}
+                placeholder='Escrever morada'
+                value={morada}
                 onChange={(e) => {
-                  setCidade(e.target.value);
-                  setErrorMessageCidade('');
+                  setMorada(e.target.value);
+                  setErrorMessageMorada('');
                 }}
-                autoComplete='Cidade'
-                placeholder='Escrever Cidade*'
               />
               <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageCidade ? `${errorMessageCidade}` : null}
+                {errorMessageMorada ? `${errorMessageMorada}` : null}
               </a>
             </div>
             <div className='filterContainer2'>
-              <InputLabel htmlFor='Pais'>País</InputLabel>
-              <Autocomplete
-                id='country-select-demo'
-                fullWidth
+              <Select
+                label='País'
                 options={countries}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                onChange={(event, value) => onCountryChange(value)}
-                renderOption={(props, option) => (
-                  <Box
-                    component='li'
-                    sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                    {...props}
-                  >
-                    <img
-                      loading='lazy'
-                      width='20'
-                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      alt=''
-                    />
-                    {option.label} ({option.code}) +{option.phone}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder='Escrever um país'
-                    value={pais}
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
+                value={pais}
+                optionLabel='descricao'
+                optionValue='codigo'
+                onChange={(e) => setPais(e.target.value)}
               />
+
               <a style={{ color: 'var(--red)', fontSize: 'small' }}>
                 {errorMessagePais ? `${errorMessagePais}` : null}
               </a>
             </div>
-
             <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Observações</InputLabel>
 
@@ -386,7 +339,11 @@ const EditUser = ({ ...props }) => {
           </div>
           <div id='pad' style={{ flex: 1 }} className={styles.clientContainer}>
             <a id='align' className='headerTitleSm'>
-              <Lock strokeWidth={1} /> Alterar Senha
+              <Lock
+                strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                size={pageProps.globalVars.iconSize}
+              />
+              <span> Alterar Senha</span>
             </a>
             <div>
               <InputLabel htmlFor='email'>Senha Antiga</InputLabel>
@@ -428,18 +385,20 @@ const EditUser = ({ ...props }) => {
         </div>
         <div style={{ display: 'flex' }}>
           <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-            {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
+            {cleaningInputs ? <CircularProgress size={26} /> : 'Restaurar'}
           </Button>
         </div>
       </Content>
     </Grid>
   );
 };
+
 EditUser.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   countries: PropTypes.array.isRequired,
   user: PropTypes.object,
   pageProps: PropTypes.any,
+  profiles: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default EditUser;

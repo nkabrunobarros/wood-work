@@ -84,16 +84,16 @@ a {
   margin-left: 25%;
 }
 .headerTitleXl {
-  font-size: 3vw;
-  font-weight: bolder;
+  font-size: 3vw !important;
+  font-weight: bolder !important;
 }
 .headerTitle {
   font-size: 30px;
   font-weight: bolder;
 }
 .headerTitleSm {
-  font-size: 24px;
-  font-weight: bolder;
+  font-size: 24px !important;
+  font-weight: bolder !important;
 }
 #pad {
   padding: 24px;
@@ -207,7 +207,7 @@ a {
     display: none;
   }
   .headerTitleXl {
-    font-size: 6vw;
+    font-size: 6vw !important;
   }
   .mobileView {
     display: none;
@@ -242,7 +242,14 @@ a {
 .scrollableY {
   overflow-x: hidden;
 }
+
 @media screen and (min-width: 40em) {
+  .tableChips {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+  }
   .filterContainer {
     max-width: calc(50% - 1em);
   }

@@ -3,6 +3,7 @@
 import { useTheme } from '@emotion/react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import IsInternal from '../../utils/IsInternal';
 
 //  Material UI
 import {
@@ -45,17 +46,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   };
-
   
-
-
-  
-  const internalProfiles = ['Administrador'];
-  let allowedPages;
-
-  if (internalProfiles.find((element) => element === loggedUser?.perfil.descricao)) allowedPages = 'internal';
-  else allowedPages = 'Client'
-
   return loggedUser && (
     <SwipeableDrawer
       disableSwipeToOpen={false}
@@ -88,8 +79,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
         >
           <IconButton
             style={{ color: 'var(--white)', position: 'absolute', right: '0%' }}
-            onClick={handleDrawerToggle}
-          >
+            onClick={handleDrawerToggle}>
             <X />
           </IconButton>
           <div style={{ width: '100px', height: '100px', margin: '1rem' }}>
@@ -123,7 +113,11 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
             <React.Fragment key={i}>
               {loggedUser ? (
                 <React.Fragment key={i * 100}>
-                  {allowedPages === item.allowed && (
+                  {/* {console.log(item.url)} */}
+                  {loggedUser.perfil.permissoes.find(ele => ele.sujeito === item.allowed && ele.accao === 'READ') 
+                  &&  
+                  IsInternal(pageProps.loggedUser.perfil.descricao) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
+                  ? (
                     <ActiveLink
                       key={i}
                       href={item.url}
@@ -134,7 +128,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
                       <div className='spacerBox' />
                       {item.title}
                     </ActiveLink>
-                  )}
+                  ) : null}
                 </React.Fragment>
               ) : null}
             </React.Fragment>

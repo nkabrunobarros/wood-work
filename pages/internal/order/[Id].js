@@ -1,6 +1,6 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 //  Preloader
 import Loader from '../../../components/loader/loader';
@@ -8,14 +8,11 @@ import Loader from '../../../components/loader/loader';
 //  Page Component
 import OrderScreen from '../../../components/pages/order/order';
 
-//  Utils
-import hasData from '../../../components/utils/hasData';
-
 //  Navigation
 import routes from '../../../navigation/routes';
 
 //  Services
-import orderService from '../../../services/orders/order-service';
+import * as OrdersActions from '../../../pages/api/actions/order';
 
 const Order = ({ ...pageProps }) => {
   const router = useRouter();
@@ -25,11 +22,15 @@ const Order = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      await orderService
-        .getOrderById(orderId)
-        .then((res) => setOrder(res.data.data));
+      await OrdersActions
+        .order({id: orderId})
+        .then((res) => {
+          console.log(res)
+          setOrder(res.data.payload)
+        });
     };
-    Promise.all([getData()]).then(setLoaded(true));
+
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
@@ -67,6 +68,7 @@ const Order = ({ ...pageProps }) => {
         updatedAt: '22 de Março de 2022',
       },
     ];
+
     const headCellsUpperOrderDetail = [
       {
         id: 'deadline',
@@ -96,6 +98,7 @@ const Order = ({ ...pageProps }) => {
         span: 1,
       },
     ];
+
     const headCellsOrderDetail = [
       {
         id: 'clienteTime',
@@ -121,6 +124,7 @@ const Order = ({ ...pageProps }) => {
         label: 'Tempo',
       },
     ];
+
     const headCellsProductionDetail = [
       {
         id: 'operacao',
@@ -157,6 +161,7 @@ const Order = ({ ...pageProps }) => {
         label: 'Desvio',
       },
     ];
+
     const headCellsUpperProductionDetail = [
       {
         id: 'amountDone',
@@ -186,6 +191,7 @@ const Order = ({ ...pageProps }) => {
         span: 3,
       },
     ];
+
     const headCellsMessages = [
       {
         id: 'mensagem',
@@ -203,6 +209,7 @@ const Order = ({ ...pageProps }) => {
         width: '10%',
       },
     ];
+
     const headCellsDocs = [
       {
         id: 'nome',
@@ -221,6 +228,7 @@ const Order = ({ ...pageProps }) => {
       },
       {},
     ];
+
     const productionDetail = [
       {
         id: Math.random(),
@@ -234,6 +242,7 @@ const Order = ({ ...pageProps }) => {
         desvio2: 0,
       },
     ];
+
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
@@ -244,6 +253,7 @@ const Order = ({ ...pageProps }) => {
         href: `${routes.private.internal.order}`,
       },
     ];
+
     const orderDetail = [
       {
         id: Math.random(),
@@ -254,6 +264,7 @@ const Order = ({ ...pageProps }) => {
         time: 37,
       },
     ];
+
     //  Filters what can the user see depending of profile
     const internalPOV = true;
 
@@ -272,13 +283,12 @@ const Order = ({ ...pageProps }) => {
       pageProps,
       orderDetail,
     };
-    if (hasData(order)) pageProps.hasFullyLoaded = true;
-    return pageProps.hasFullyLoaded && loaded ? (
-      <OrderScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
+
+
+    return loaded && <OrderScreen {...props} />
   }
+
   return <Loader center={true} />;
 };
+
 export default Order;

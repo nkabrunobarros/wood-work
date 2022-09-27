@@ -19,10 +19,10 @@ import {
   TextField,
 } from '@mui/material';
 import routes from '../../../navigation/routes';
+
 const Stock = ({ ...props }) => {
   const { items, breadcrumbsPath, categories, headCells, products } = props;
   const rows = items;
-
   //  States
   const [productId, setProductId] = useState('');
   const [codigo, setCodigo] = useState('');
@@ -52,9 +52,11 @@ const Stock = ({ ...props }) => {
       stock,
     });
   };
+
   useEffect(() => {
     ApplyFilters();
   }, [productId, category, codigo, stock]);
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -168,6 +170,7 @@ const Stock = ({ ...props }) => {
     </Grid>
   );
 };
+
 Stock.propTypes = {
   product: PropTypes.any,
   categories: PropTypes.array,
@@ -178,4 +181,5 @@ Stock.propTypes = {
   breadcrumbsPath: PropTypes.array,
   docs: PropTypes.arrayOf(PropTypes.object),
 };
+
 export default Stock;

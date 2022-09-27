@@ -14,11 +14,8 @@ import PropTypes from 'prop-types';
 //  Navigation
 import routes from '../../../navigation/routes';
 
-//  Utlis
-import hasData from '../../../components/utils/hasData';
-
 //  Services
-import userService from '../../../services/user/user-service';
+import * as UserActions from '../../../pages/api/actions/user';
 
 const User = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -28,15 +25,19 @@ const User = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getAll = async () => {
-      await userService.getUserById(id).then((res) => {
-        if (res.status === 200) setUser(res.data.data);
-        else setUser({})
-      });
+      await UserActions
+      .userById({id})
+      .then((res) => {
+        console.log(res)
+        setUser(res.data.payload)
+      }
+    )
     };
-    Promise.all([getAll()]).then(setLoaded(true));
+
+    Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
-  
-  if (hasData(user)) {
+
+  if (loaded) {
     const breadcrumbsPath = [
       {
         title: 'Utilizadores',
@@ -51,19 +52,18 @@ const User = ({ ...pageProps }) => {
     const props = {
       user,
       breadcrumbsPath,
+      pageProps,
     };
 
     UserScreen.propTypes = {
       users: PropTypes.array,
       breadcrumbsPath: PropTypes.array,
     };
-    if (hasData(user)) pageProps.hasFullyLoaded = true;
-    return pageProps.hasFullyLoaded && loaded ? (
-      <UserScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
-  }
-  return <Loader center={true} />;
+
+    return <UserScreen {...props} />
+     
+  } else return  <Loader center={true} />
+
 };
+
 export default User;

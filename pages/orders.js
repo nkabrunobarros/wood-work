@@ -1,7 +1,11 @@
+/* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
-//  Custom Components
+//  Navigation
+import routes from '../navigation/routes';
+
+//  Preloader
 import Loader from '../components/loader/loader';
 
 //  Page Component
@@ -10,67 +14,150 @@ import OrdersScreen from '../components/pages/orders/orders';
 //  Proptypes
 import PropTypes from 'prop-types';
 
-//  Navigation
-import routes from '../navigation/routes';
+//  Data services
+
+import * as CategoriesActions from '../pages/api/actions/category';
+import * as ClientsActions from '../pages/api/actions/client';
+import * as OrdersActions from '../pages/api/actions/order';
+import * as StockActions from '../pages/api/actions/stock';
 
 //  Icons
-import {
-  AlertOctagon,
-  Layers,
-  LayoutTemplate,
-  PackageCheck,
-} from 'lucide-react';
+import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
 
 //  Utlis
-import hasData from '../components/utils/hasData';
 
-//  Data services
-import orderService from '../services/orders/order-service';
-import clientService from '../services/clients/client-service';
-import categoryService from '../services/categories/category-service';
-
-const Orders = ({ hasFullyLoaded, globalVars }) => {
-  const [loaded, setLoaded] = useState(false);
+const Orders = ({ globalVars }) => {
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [categories, setCategories] = useState();
+  const [loaded, setLoaded] = useState(false);
+  const [panelsInfo, setPanelsInfo] = useState();
 
   useEffect(() => {
-    const getAll = async () => {
-      await orderService.getAllOrders().then((res) => setOrders(res.data.data));
+    const getData = async () => {
+      const counts = {
+        budgeting: 0,
+        drawing: 0,
+        production: 0,
+        concluded: 0,
+      }
 
-      await clientService
-        .getAllClients()
-        .then((res) => setClients(res.data.data));
+      await OrdersActions.orders().then(async (response) => {
 
-      await categoryService
-        .getAllCategories()
-        .then((res) => setCategories(res.data.data));
-    };
+        response.data.payload.data.map(async (ord, i) => {
+          switch (ord.status) {
+            case 'Em orçamentação':
+              counts.budgeting++;
 
-    Promise.all([getAll()]).then(setLoaded(true));
-  }, []);
+              break;
+
+            case 'Em desenho':
+              counts.drawing++;
+
+              break;
+
+            case 'Em produçao':
+              counts.production++;
+
+              break;
+            case 'Concluida':
+              counts.concluded++;
+
+              break;
+
+            default:
+              break;
+          }
+
+          await StockActions.stock({ id: ord.product.id }).then((res) => {
+            response.data.payload.data[i].stock = res.data.payload.amount
+          })
+
+        })
+
+        setOrders(response.data.payload.data);
+        setPanelsInfo(counts)
+      });
+
+      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
+      await ClientsActions.clients().then((response) => setClients(response.data.payload.data))
+    }
+
+    Promise.all([getData()]).then(() => setLoaded(true));
+  }, [])
 
   if (loaded) {
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
-        href: `${routes.private.orders}`,
+        href: `${routes.private.internal.orders}`,
       },
     ];
 
     const items = orders;
+    const internalPOV = true;
+
+    const cards = [
+      {
+        num: 1,
+        title: 'Em Orçamentação',
+        amount: panelsInfo.budgeting,
+        icon: (
+          <PackageCheck
+            size={globalVars.iconSizeXl}
+            strokeWidth={globalVars.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--primary)',
+      },
+      {
+        num: 2,
+        title: 'Em Desenho',
+        amount: panelsInfo.drawing,
+        icon: (
+          <LayoutTemplate
+            size={globalVars.iconSizeXl}
+            strokeWidth={globalVars.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--green)',
+      },
+      {
+        num: 3,
+        title: 'Em Produção',
+        amount: panelsInfo.production,
+        icon: (
+          <Layers
+            size={globalVars.iconSizeXl}
+            strokeWidth={globalVars.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--orange)',
+      },
+      {
+        num: 4,
+        title: 'Em Montagem e Testes',
+        amount: panelsInfo.concluded,
+        icon: (
+          <AlertOctagon
+            size={globalVars.iconSizeXl}
+            strokeWidth={globalVars.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--babyblue)',
+      },
+    ];
 
     const headCells = [
       {
-        id: 'numero',
+        id: 'id',
         numeric: false,
         disablePadding: false,
         label: 'Numero',
       },
       {
-        id: 'categoria',
+        id: 'product.category',
         numeric: false,
         disablePadding: true,
         label: 'Categoria',
@@ -82,13 +169,13 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
         label: 'Stock',
       },
       {
-        id: 'produção',
+        id: 'order_prod',
         numeric: false,
         disablePadding: false,
         label: 'Produção',
       },
       {
-        id: 'distribuição',
+        id: 'order_dispatch',
         numeric: false,
         disablePadding: false,
         label: 'Em distribuição',
@@ -101,65 +188,7 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
       },
     ];
 
-    const panelsInfo = {
-      budgeting: 2,
-      drawing: 1,
-      production: 3,
-      concluded: 7,
-    };
-
     const detailPage = routes.private.order;
-
-    const cards = [
-      {
-        num: 1,
-        title: 'Em Orçamentação',
-        amount: 2,
-        icon: (
-          <PackageCheck
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
-          />
-        ),
-        color: 'var(--primary)',
-      },
-      {
-        num: 2,
-        title: 'Em Desenho',
-        amount: 1,
-        icon: (
-          <LayoutTemplate
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
-          />
-        ),
-        color: 'var(--green)',
-      },
-      {
-        num: 3,
-        title: 'Em Produção',
-        amount: 3,
-        icon: (
-          <Layers
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
-          />
-        ),
-        color: 'var(--orange)',
-      },
-      {
-        num: 4,
-        title: 'Concluídas',
-        amount: 7,
-        icon: (
-          <AlertOctagon
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
-          />
-        ),
-        color: 'var(--babyblue)',
-      },
-    ];
 
     const props = {
       categories,
@@ -168,29 +197,27 @@ const Orders = ({ hasFullyLoaded, globalVars }) => {
       headCells,
       breadcrumbsPath,
       detailPage,
+      internalPOV,
       cards,
       clients,
     };
-
-    let loaded = false;
-
-    if (hasData(items) && hasData(clients) && hasData(categories)) loaded = true;
-
-    return loaded ? <OrdersScreen {...props} /> : <Loader center={true} />
-  }
+    
+    return <OrdersScreen {...props} />
+  } else return <Loader center={true} />
 };
 
 Orders.propTypes = {
   categories: PropTypes.array.isRequired,
-  orders: PropTypes.array.isRequired,
   panelsInfo: PropTypes.object.isRequired,
   headCells: PropTypes.array.isRequired,
   breadcrumbsPath: PropTypes.array.isRequired,
-  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
-  detailPage: PropTypes.any.isRequired,
   clients: PropTypes.array.isRequired,
+  detailPage: PropTypes.string.isRequired,
+  editPage: PropTypes.string.isRequired,
+  internalPOV: PropTypes.boolean,
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasFullyLoaded: PropTypes.bool,
-  globalVars: PropTypes.any,
+  globalVars: PropTypes.object,
 };
 
 export default Orders;

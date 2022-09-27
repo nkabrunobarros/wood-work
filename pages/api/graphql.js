@@ -11,15 +11,15 @@ const handler = async (req, res) => {
 
     const data = JSON.stringify({
         query: body.query.query,
-        variables: {
-            ...body.data
-        }
+        variables: { ...body.data }
+         
     });
+
 
     const config = {
         method,
         url: process.env.NEXT_PUBLIC_API_URL,
-        headers: { 'Content-Type': headers['content-type'] || 'application/json' , authorization: headers.authorization ? headers.authorization : token },
+        headers: { 'Content-Type': headers['content-type'] || 'application/json', authorization: headers.authorization ? headers.authorization : token || null },
         data,
         timeout: process.env.NEXT_PUBLIC_REQUEST_TIMEOUT,
     };
@@ -34,12 +34,11 @@ const handler = async (req, res) => {
                         payload: result.data.data[body.query.return]
                     }
                 )
-
             }
             else return res.status(200).json({ success: false, message: result.data.errors[0].message });
         })
 
-    } catch (error) { return res.status(error.response.status || 500).json({ success: false, message: error.message }); }
+    } catch (error) { return res.status(error.response?.status || 500).json({ success: false, message: error.message }); }
 }
 
 export default handler;

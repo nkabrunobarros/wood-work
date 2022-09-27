@@ -12,36 +12,29 @@ import routes from '../navigation/routes';
 
 const Messages = ({ ...pageProps}) => {
   const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 500);
   }, []);
 
   const conversations = [
     {
       id: 1,
-      users: ['3', '2'],
+      users: ['cl16o9cag0000x3tqp8lbslcr', '2'],
       orderId: 12312,
       messages: [1234, 123, 12345],
       messagesContent: [],
       message: '',
       createdAt: '',
     },
-    {
-      id: 2,
-      users: ['3', '2'],
-      orderId: 2324,
-      messages: [12345],
-      messagesContent: [],
-      message: '',
-      createdAt: '',
-    },
   ];
+
   const messagsContents = [
     {
       id: 1234,
-      sentBy: '3',
+      sentBy: 'cl16o9cag0000x3tqp8lbslcr',
       content: 'Hi, i would like to know the Eta of my order please? Thank you',
       createdAt: '03/02/2022',
     },
@@ -54,25 +47,30 @@ const Messages = ({ ...pageProps}) => {
     },
     {
       id: 12345,
-      sentBy: '3',
+      sentBy: 'cl16o9cag0000x3tqp8lbslcr',
       content: 'Ok thank you',
       createdAt: '03/02/2022',
     },
   ];
+
   conversations.forEach((conversation, i) => {
     conversation.messages.forEach((message) => {
       const messageContent = messagsContents.find((element) => element.id === message);
+
       conversations[i].messagesContent.push(messageContent);
     });
+
     conversation.message =
       conversation.messagesContent[
         conversation.messagesContent.length - 1
       ].content;
+
     conversation.createdAt =
       conversation.messagesContent[
         conversation.messagesContent.length - 1
       ].createdAt;
   });
+
   const headCellsMessages = [
     {
       id: 'message',
@@ -98,8 +96,10 @@ const Messages = ({ ...pageProps}) => {
     conversations,
     pageProps
   };
+
   return loaded ? <MessagesScreen {...props} /> : <Loader center={true} />;
 };
+
 Messages.propTypes = {
   dummy: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
@@ -107,4 +107,5 @@ Messages.propTypes = {
   conversations: PropTypes.array,
   pageProps: PropTypes.any
 };
+
 export default Messages;

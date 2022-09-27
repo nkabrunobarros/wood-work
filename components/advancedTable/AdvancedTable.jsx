@@ -1,3 +1,6 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-case-declarations */
 // Node modules
 import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -7,13 +10,11 @@ import PropTypes from 'prop-types';
 
 //  Material Ui
 import {
-  Box,
-  Checkbox,
-  FormControlLabel,
+  Box, ButtonGroup, Chip, Grid,
   IconButton,
-  Modal,
   Paper,
   Popover,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -26,7 +27,7 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { Edit, MoreVertical, Trash } from 'lucide-react';
+import { Edit, Filter, MoreVertical, Trash } from 'lucide-react';
 
 //  Utlis
 import { FilterItem } from '../utils/FilterItem';
@@ -41,6 +42,9 @@ import Notification from '../dialogs/Notification';
 import { toast } from 'react-toastify';
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
+import * as UserActions from '../../pages/api/actions/user';
+
+import routes from '../../navigation/routes';
 
 const AdvancedTable = ({
   children,
@@ -51,7 +55,6 @@ const AdvancedTable = ({
   noPagination,
   editRoute,
   filters }) => {
-
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
   const [selected, setSelected] = useState([]);
@@ -62,6 +65,9 @@ const AdvancedTable = ({
   const [deleteItemId, setDeleteItemId] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [cellsFilter, setCellsFilter] = useState(headCells)
+  const [refresh, setRefresh] = useState(new Date())
 
   useEffect(() => {
     const getData = async () => {
@@ -96,6 +102,20 @@ const AdvancedTable = ({
     };
 
     BuildDeleteMessage();
+
+    function Test() {
+
+      cellsFilter.map((cell, i) => {
+        const oldState = cellsFilter;
+        const newState = cellsFilter[i]
+
+        newState.show = true;
+        oldState[i] = newState;
+        setCellsFilter(oldState)
+      })
+    }
+
+    Test();
   }, []);
 
   function onDeleteClick(row) {
@@ -105,7 +125,82 @@ const AdvancedTable = ({
     else setDeleteItemId(row.id);
   }
 
-  function onDeleteItem() {
+
+
+  function OnFilterChange(i) {
+    const oldState = cellsFilter;
+    const newState = cellsFilter[i]
+
+    newState.show = !newState.show;
+    oldState[i] = newState;
+    setCellsFilter(oldState)
+    setRefresh(new Date())
+  }
+
+  function showAllHeaders() {
+    cellsFilter.map((cell, i) => {
+      const oldState = cellsFilter;
+      const newState = cellsFilter[i]
+
+      newState.show = true;
+      oldState[i] = newState;
+      setCellsFilter(oldState)
+      setRefresh(new Date())
+    })
+  }
+
+  async function onDeleteItem() {
+    const thisRow = rows.find(r => r.id === deleteItemId)
+
+    switch (Router.route) {
+      case routes.private.internal.users:
+        const builtUser = {
+          id: thisRow.id,
+          nome: thisRow.nome,
+          ativo: false,
+          email: thisRow.email,
+          telemovel: thisRow.telemovel,
+          telefone: thisRow.telefone,
+          paisCodigo: thisRow.paisCodigo,
+          idPerfil: thisRow.perfil.id,
+          morada: thisRow.morada,
+          obs: thisRow.obs,
+          otherData: thisRow.otherData,
+        }
+
+        try {
+          await UserActions.saveUser(builtUser)
+        } catch (err) { }
+
+        break;
+
+      case routes.private.internal.clients:
+        const builtClient = {
+          id: thisRow.id,
+          email: thisRow.email,
+          giveName: thisRow.giveName,
+          legalName: thisRow.legalName,
+          address: thisRow.address,
+          status: false,
+          telephone: thisRow.telephone,
+          buysTo: thisRow.organization.id,
+          otherData: thisRow.otherData,
+          obs: thisRow.obs,
+          contact: thisRow.contact,
+          taxId: thisRow.taxId,
+          postalCode: thisRow.postalCode,
+
+        }
+
+        try {
+          await ClientsActions.saveClient(builtClient);
+        } catch (err) { }
+
+        break;
+      default:
+        break;
+    }
+
     const oldRows = filteredItems;
 
     if (Router.asPath.includes('/orders')) {
@@ -131,14 +226,13 @@ const AdvancedTable = ({
       onRequestSort(event, property);
     };
 
-    const [anchorEl, setAnchorEl] = useState(null);
 
 
     return (
       <TableHead>
         {headCellsUpper ? (
           <>
-            {headCellsUpper.map((headCell, i) => (
+            {headCellsUpper.map((headCell) => (
               <TableCell
                 colSpan={headCell.span}
                 key={headCell.id}
@@ -159,43 +253,7 @@ const AdvancedTable = ({
 
                   {headCell.label}
                   {orderBy === headCell.id ? <Box component='span'></Box> : null}
-                  {Number(Object.keys(headCellsUpper).at(-1)) === i &&
-                    <Tooltip title='Filtrar'>
 
-                      <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
-                        <MoreVertical size={20} strokeWidth={1.5} />
-                      </IconButton>
-                    </Tooltip>
-
-                  }
-                  <Popover
-                    open={Boolean(anchorEl)}
-                    anchorEl={anchorEl}
-                    onClose={() => setAnchorEl(null)}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
-                  >
-                    <Box p={1}>
-                      
-
-                     {headCells.map((headCell, i) => {
-                       
-                      return <>
-                      <FormControlLabel 
-                      sx={{ border: '1px solid', width: 'fit-content'}}
-                      label={headCell.label} 
-                      control={
-                        <Checkbox key={headCell.id} checked />
-                      }>
-
-                      </FormControlLabel>
-                      {i % 3 === 0  && i !== 0 ? <br></br> : null}
-                      </>
-                     })}
-                     </Box>
-                  </Popover>
                 </div>
               </TableCell>
             )
@@ -203,9 +261,9 @@ const AdvancedTable = ({
           </>
         ) : null}
 
-        <TableRow>
-          {headCells.map((headCell) => (
-            <TableCell
+        <TableRow id={refresh}>
+          {cellsFilter.map((headCell) => {
+            return headCell.show && <TableCell
               colSpan={headCell.span}
               key={headCell.id}
               align={headCell.numeric ? 'right' : 'left'}
@@ -229,9 +287,12 @@ const AdvancedTable = ({
               >
                 {headCell.label}
                 {orderBy === headCell.id ? <Box component='span'></Box> : null}
+
               </TableSortLabel>
             </TableCell>
-          ))}
+          }
+
+          )}
         </TableRow>
       </TableHead>
     );
@@ -330,7 +391,7 @@ const AdvancedTable = ({
   }, [filters]);
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box id={refresh} sx={{ width: '100%' }}>
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
@@ -339,18 +400,62 @@ const AdvancedTable = ({
       />
       <Notification />
       <Paper sx={{ width: '100%', mb: 2 }}>
-        {noPagination ? null : (
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component='div'
-            count={filteredItems ? filteredItems.length : rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage={'Visualizar '}
-          />
-        )}
+        <Box className='tableChips'>
+          <Box>
+            {Object.keys(filters || {}).map((x, i) => {
+              if (filters[x]) return <Chip key={i} label={x} onDelete={() => console.log('deleted')} />
+            })}
+
+          </Box>
+          {noPagination ? null : (
+            <TablePagination
+              showFirstButton
+              showLastButton
+              component='div'
+              sx={{ marginLeft: 'auto' }}
+              rowsPerPageOptions={[5, 10, 25]}
+              count={filteredItems ? filteredItems.length : rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelRowsPerPage={'Mostrar'}
+            />
+          )}
+          <Box>
+
+            <Tooltip title='Filtrar tabela'>
+              <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
+                <Filter size={20} strokeWidth={1.5} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          <Popover
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={() => setAnchorEl(null)}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          >
+            <Box p={1}>
+              <Grid container>
+                <Grid id={refresh}>
+                  <Grid id='align' container Item sx={{ borderBottom: '1px solid'}}>
+                    <Switch checked={!cellsFilter.find(item => item.show === false)} onClick={() => showAllHeaders()} />Mostrar todas
+                  </Grid>
+                  {cellsFilter.map((headCell, i) => {
+                    return <Grid id='align' container item key={i} >
+                      <Switch checked={headCell.show} onClick={() => OnFilterChange(i)} />{headCell.label}
+                    </Grid>
+                  })}
+                </Grid>
+              </Grid>
+            </Box>
+          </Popover>
+        </Box>
+
 
         <TableContainer>
           <Table aria-labelledby='tableTitle'>
@@ -381,8 +486,8 @@ const AdvancedTable = ({
                         key={row.name}
                         selected={isItemSelected}
                       >
-                        {headCells.map((headCell) => (
-                          <TableCell
+                        {cellsFilter.map((headCell) => {
+                          return headCell.show && <TableCell
                             id={labelId}
                             key={headCell.id}
                             align={headCell.numeric ? 'right' : 'left'}
@@ -399,7 +504,7 @@ const AdvancedTable = ({
                             }}
                           >
                             {headCell.id === 'actions' ? (
-                              <>
+                              <ButtonGroup>
                                 <Tooltip title='Editar'>
                                   <IconButton
                                     onClick={() =>
@@ -426,7 +531,7 @@ const AdvancedTable = ({
                                     />
                                   </IconButton>
                                 </Tooltip>
-                              </>
+                              </ButtonGroup>
                             ) : (
                               <div
                                 onClick={() =>
@@ -444,7 +549,7 @@ const AdvancedTable = ({
                               </div>
                             )}
                           </TableCell>
-                        ))}
+                        })}
                       </TableRow>
                     );
                   })}

@@ -1,126 +1,166 @@
 //  Nodes
-import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 
-import styles from '../../../styles/NewOrder.module.css';
-import { Edit2, Save, User, X } from 'lucide-react';
 import {
-  Alert,
-  Backdrop,
+  Box,
   Button,
   CircularProgress,
   InputLabel,
   OutlinedInput,
-  Snackbar,
-  TextareaAutosize,
+  Paper,
+  Popover, TextareaAutosize,
+  Tooltip,
+  Typography
 } from '@mui/material';
+import axios from 'axios';
+import { Edit2, Info, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import routes from '../../../navigation/routes';
+import * as ClientService from '../../../pages/api/actions/client';
+import styles from '../../../styles/NewOrder.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Notification from '../../dialogs/Notification';
+import MyInput from '../../inputs/myInput';
 import Loader from '../../loader/loader';
+import EmailValidation from '../../utils/EmailValidation';
 import hasData from '../../utils/hasData';
-import { EmailValidation } from '../../utils/EmailValidation';
 
 const NewClient = ({ ...props }) => {
-  const { breadcrumbsPath } = props;
-
+  const { breadcrumbsPath, pageProps } = props;
   const [name, setName] = useState();
+  const [legalName, setLegalName] = useState();
   const [email, setEmail] = useState();
   const [contactName, setContactName] = useState();
-  const [telemovel, setTelemovel] = useState();
+  const [telefone, setTelefone] = useState();
   const [address, setAddress] = useState();
   const [postalCode, setPostalCode] = useState();
   const [nif, setNif] = useState();
-  const [obs, setObs] = useState();
-  const [otherData, setOtherData] = useState();
-
+  const [obs, setObs] = useState('');
+  const [otherData, setOtherData] = useState('');
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
-  //  Snackbar Notification
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const [backdrop, setBackdrop] = useState(false);
-
   //  Errors states
   const [errorMessageName, setErrorMessageName] = useState('');
+  const [errorMessageLegalName, setErrorMessageLegalName] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [errorMessageContact, setErrorMessageContact] = useState('');
-  const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
+  const [errorMessageTelefone, setErrorMessageTelefone] = useState('');
   const [errorMessageAddress, setErrorMessageAddress] = useState('');
   const [errorMessagePostalCode, setErrorMessagePostalCode] = useState('');
   const [errorMessageNif, setErrorMessageNif] = useState('');
-
   const [cleaningInputs, setCleaningInputs] = useState(false);
+  const [postalCodeInfo, setPostalCodeInfo] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [newestUser, setNewestUser] = useState();
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   function handleSave() {
-    if (!hasData(name)) setErrorMessageName('This field is required *');
-    if (!hasData(email)) setErrorMessageEmail('This field is required *');
+    if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
+
+    if (!hasData(legalName)) setErrorMessageLegalName('Campo Obrigatório');
+
+    if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
     else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido *');
+
     if (!hasData(contactName))
-      setErrorMessageContact('This field is required *');
-    if (!hasData(telemovel))
-      setErrorMessageTelemovel('This field is required *');
-    else if (telemovel < 100000000)
-      setErrorMessageTelemovel('Number has to have 9 digits');
-    if (!hasData(address)) setErrorMessageAddress('This field is required *');
-    if (!hasData(postalCode))
-      setErrorMessagePostalCode('This field is required *');
-    if (!hasData(nif)) setErrorMessageNif('This field is required *');
+      setErrorMessageContact('Campo Obrigatório');
+
+    if (!hasData(telefone))
+      setErrorMessageTelefone('Campo Obrigatório');
+    else if (telefone < 100000000)
+      setErrorMessageTelefone('Number has to have 9 digits');
+
+    if (!hasData(address)) setErrorMessageAddress('Campo Obrigatório');
+
+    if (!hasData(postalCode)) setErrorMessagePostalCode('Campo Obrigatório');
+    else if (!hasData(postalCodeInfo)) setErrorMessagePostalCode('Codigo Postal Invalido');
+
+    if (!hasData(nif)) setErrorMessageNif('Campo Obrigatório');
 
     if (
       hasData(name) &&
+      hasData(legalName) &&
       hasData(email) &&
       EmailValidation(email) &&
       hasData(contactName) &&
-      hasData(telemovel) &&
+      hasData(telefone) &&
       hasData(address) &&
-      hasData(postalCode) &&
+      hasData(postalCodeInfo) &&
       hasData(nif)
     )
       setDialogOpen(!dialogOpen);
   }
 
-  function onConfirm() {
-    setBackdrop(true);
+  async function onConfirm() {   
+    setDialogOpen(false)
+    setProcessing(true)
 
-    //  Snackbar notification body
-    setSnackbarMessage('Novo cliente criado com sucesso');
-    setSnackbarSeverity('success');
-    setSnackbarOpen(true);
+    const builtClient = {
+      giveName: name,
+      email,
+      legalName,
+      address,
+      status: true,
+      taxId: Number(nif),
+      telephone: Number(telefone),
+      buysTo: '1123',
+      otherData,
+      contact: contactName,
+      postalCode,
+      obs
+    }
 
-    //  Dialog Modal State
-    setDialogOpen(false);
+    try {
+      await ClientService.saveClient(builtClient).then((response) => {
+        console.log(response)
 
-    setTimeout(() => {
-      setSnackbarOpen(false);
-      setBackdrop(false);
-    }, 2000);
+        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um Cliente ja existe com este email')
+        else if (!response.data.success) toast.error('Algo aconteceu')
+        else {
+          // success here
+          setProcessing(false)
+          setNewestUser(response.data.payload)
+          setSuccessOpen(true)
+
+        }
+      })
+    } catch (e) { 
+      console.log(e)
+    }
+
+    setProcessing(false)
   }
+
   const ClearFields = () => {
+    setSuccessOpen(false)
     setCleaningInputs(true);
     setName('');
+    setLegalName('');
     setEmail('');
     setContactName('');
-    setTelemovel('');
+    setTelefone('');
     setAddress('');
     setPostalCode('');
     setNif('');
     setObs('');
     setOtherData('');
-    
     setErrorMessageName();
+    setErrorMessageLegalName();
     setErrorMessageEmail();
     setErrorMessageContact();
-    setErrorMessageTelemovel();
+    setErrorMessageTelefone();
     setErrorMessageAddress();
     setErrorMessagePostalCode();
     setErrorMessageNif();
@@ -129,250 +169,301 @@ const NewClient = ({ ...props }) => {
       setCleaningInputs(false);
     }, 500);
   };
+
+  useEffect(() => {
+    async function PostalCodeInfo() {
+      try {
+        const res = await axios.get(`https://geoapi.pt/cp/${postalCode}?json=1`)
+
+        if (res.data) setPostalCodeInfo(res.data)
+
+      } catch (error) {
+        setPostalCodeInfo()
+      }
+    }
+
+    PostalCodeInfo();
+
+  }, [postalCode])
+
+  const Item = styled(Paper)(() => ({
+    padding: '.5rem',
+  }));
+
   return (
     <Grid component='main'>
+      <CssBaseline /> 
+      <Notification />
+
+      <Popover
+        id={anchorEl ? 'simple-popover' : undefined}
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Box sx={{ flexGrow: 1, p: 1}}>
+          <Grid container spacing={1}>
+            <Grid container item spacing={3}>
+              <Grid item xs={6}>
+                <Item>Distrito</Item>
+              </Grid>
+              <Grid item xs={6}>
+              <Item>{postalCodeInfo?.Distrito}</Item>
+              </Grid>
+            </Grid>
+            <Grid container item spacing={3}>
+              <Grid item xs={6}>
+                <Item>Concelho</Item>
+              </Grid>
+              <Grid item xs={6}>
+              <Item>{postalCodeInfo?.Concelho}</Item>
+              </Grid>
+            </Grid>
+            <Grid container item spacing={3}>
+              <Grid item xs={6}>
+                <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Item> {typeof postalCodeInfo?.Localidade === 'object' ?
+                <>
+                  {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
+                </> : postalCodeInfo?.Localidade}</Item>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </Popover>
       {/* Situational Panels */}
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onConfirm()}
+        message='Está prestes a criar um novo cliente, tem certeza que quer continuar?'
+        icon='AlertOctagon'
       />
-      <Snackbar
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        open={snackbarOpen}
-        onRequestClose={() => setSnackbarOpen(false)}
-        autoHideDuration={2000}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={backdrop}
-      >
-        <Loader />
-      </Backdrop>
-      <CssBaseline />
+      <ConfirmDialog
+        open={successOpen}
+        handleClose={() => ClearFields()}
+        onConfirm={() => Router.push(`${routes.private.internal.client}${newestUser.id}`)}
+        message={`Cliente criado com sucesso, que deseja fazer a agora?`}
+        icon='Verified'
+        iconType='success'
+        okTxt='Ver Cliente'
+        cancelTxt='Criar novo Cliente'
+      />
+      {processing && <Loader center={true} backdrop />}
+
       <CustomBreadcrumbs path={breadcrumbsPath} />
+
       <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
-          </div>
-          <div style={{ display: 'flex' }}>
+        <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+          <Typography item className='headerTitleXl'>Novo Cliente</Typography>
+          <Box sx={{ marginLeft: 'auto' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={<Save strokeWidth='1' />}
+              icon={
+                <Save
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               onClick={handleSave}
             />
             <PrimaryBtn
               text='Cancelar'
-              icon={<X strokeWidth='1' />}
+              icon={
+                <X
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+              }
               light
               onClick={() => Router.back()}
             />
-          </div>
-        </div>
-        <div className='flex'>
-          <div style={{ flex: 1 }}>
-            <a id='pad' className='lightTextSm'>
-              <User size={20} strokeWidth='1' /> Dados Gerais
-            </a>
-            <div id='pad' className='filters'>
-              <div className='filterContainer2'>
-                <InputLabel htmlFor='email'>Nome</InputLabel>
-                <OutlinedInput
-                  
-                  required
-                  fullWidth
-                  id='nome'
-                  name='nome'
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    setErrorMessageName('');
-                  }}
-                  autoComplete='nome'
-                  placeholder='Escrever nome* '
-                />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageName ? `${errorMessageName}` : null}
-                </a>
-              </div>
-              <div className='filterContainer2'>
-                <InputLabel htmlFor='email'>Email</InputLabel>
-                <OutlinedInput
-                  type='email'
-                  
-                  required
-                  fullWidth
-                  id='email'
-                  name='email'
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setErrorMessageEmail('');
-                  }}
-                  autoComplete='email'
-                  placeholder='Escrever Email*'
-                />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageEmail ? `${errorMessageEmail}` : null}
-                </a>
-              </div>
-              <div className='filterContainer2'>
-                <InputLabel htmlFor='contact'>Pessoa de Contacto</InputLabel>
-                <OutlinedInput
-                  
-                  required
-                  fullWidth
-                  id='contact'
-                  name='contact'
-                  autoComplete='contact'
-                  value={contactName}
-                  onChange={(e) => {
-                    setContactName(e.target.value);
-                    setErrorMessageContact('');
-                  }}
-                  placeholder='Escrever pessoa de contacto*'
-                />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageContact ? `${errorMessageContact}` : null}
-                </a>
-              </div>
-              <div className='filterContainer2'>
-                <InputLabel htmlFor='telemovel'>Telemovel</InputLabel>
-                <OutlinedInput
-                  
-                  required
-                  fullWidth
-                  id='telemovel'
-                  name='telemovel'
-                  value={telemovel}
-                  onChange={(e) => {
-                    setTelemovel(e.target.value);
-                    setErrorMessageTelemovel('');
-                  }}
-                  autoComplete='telemovel'
-                  placeholder='Escrever telemovel*'
-                />
-                <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                  {errorMessageTelemovel ? `${errorMessageTelemovel}` : null}
-                </a>
-              </div>
-              <InputLabel htmlFor='email'>Observações</InputLabel>
+          </Box>
+        </Box>
+        <Grid container sx={{ padding: '24px' }}>
+          <Grid item xs={12} md={8}>
+            <Grid container >
+              <Grid container item>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <Typography id='align' item className='lightTextSm'><User
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />  Dados Gerais</Typography>
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    required
+                    label={'Nome'}
+                    error={errorMessageName}
+                    placeholder='Escrever nome'
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setErrorMessageName('');
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    required
+                    label={'Nome Legal'}
+                    error={errorMessageLegalName}
+                    placeholder='Escrever Nome Legal'
+                    value={legalName}
+                    onChange={(e) => {
+                      setLegalName(e.target.value);
+                      setErrorMessageLegalName('');
+                    }}
+                  />
 
-              <TextareaAutosize
-                placeholder='Escrever observações'
-                className={styles.textarea}
-                value={obs}
-                onChange={(e) => setObs(e.target.value)}
-              />
-            </div>
-          </div>
-          <div id='pad' className={styles.clientContainer}>
-            <a className='lightTextSm'>
-              <Edit2 strokeWidth={1} size={20}  /> Dados de
-              Faturação
-            </a>
-            <div>
-              <InputLabel htmlFor='email'>Morada Fiscal</InputLabel>
-              <OutlinedInput
-                
-                required
-                fullWidth
-                id='address'
-                name='address'
-                autoComplete='address'
-                value={address}
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                  setErrorMessageAddress('');
-                }}
-                placeholder='Escrever morada*'
-              />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageAddress ? `${errorMessageAddress}` : null}
-              </a>
-            </div>
-            <div>
-              <InputLabel htmlFor='email'>Codigo Postal</InputLabel>
-              <OutlinedInput
-                
-                required
-                fullWidth
-                id='postalCode'
-                name='postalCode'
-                autoComplete='postalCode'
-                value={postalCode}
-                onChange={(e) => {
-                  setPostalCode(e.target.value);
-                  setErrorMessagePostalCode('');
-                }}
-                placeholder='Escrever Codigo Postal*'
-              />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessagePostalCode ? `${errorMessagePostalCode}` : null}
-              </a>
-            </div>
-            <div>
-              <InputLabel htmlFor='email'>
-                Número de Indentificação Fiscal (Nif)
-              </InputLabel>
-              <OutlinedInput
-                
-                required
-                fullWidth
-                id='nif'
-                name='nif'
-                value={nif}
-                autoComplete='nif'
-                onChange={(e) => {
-                  setNif(e.target.value);
-                  setErrorMessageNif('');
-                }}
-                placeholder='Escrever Numero de identificação fiscal*'
-              />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageNif ? `${errorMessageNif}` : null}
-              </a>
-            </div>
-            <div>
-              <InputLabel htmlFor='email'>Outros Dados</InputLabel>
-              <OutlinedInput
-                
-                required
-                fullWidth
-                id='otherData'
-                name='otherData'
-                autoComplete='otherData'
-                value={otherData}
-                onChange={(e) => setOtherData(e.target.value)}
-                placeholder='Escrever outros dados'
-              />
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex' }}>
-          <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-            {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
-          </Button>
-        </div>
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    required
+                    label={'Email'}
+                    error={errorMessageEmail}
+                    placeholder='Escrever email'
+                    value={email}
+                    type='email'
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setErrorMessageEmail('');
+                    }}
+                  />
+
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    required
+                    label={'Pessoa de Contacto'}
+                    error={errorMessageContact}
+                    placeholder='Escrever pessoa de contacto'
+                    value={contactName}
+                    onChange={(e) => {
+                      setContactName(e.target.value);
+                      setErrorMessageContact('');
+                    }}
+                  />
+
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    required
+                    label={'Telefone'}
+                    error={errorMessageTelefone}
+                    placeholder='Escrever numero de telefone'
+                    value={telefone}
+                    type='number'
+                    onChange={(e) => {
+                      setTelefone(e.target.value);
+                      setErrorMessageTelefone('');
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <InputLabel htmlFor='email'>Observações</InputLabel>
+
+                  <TextareaAutosize
+                    placeholder='Escrever observações'
+                    className={styles.textarea}
+                    value={obs}
+                    onChange={(e) => setObs(e.target.value)}
+                  />
+                </Grid>
+
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={4} className={styles.clientContainer}>
+            <Grid container>
+              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <Typography id='align' item className='lightTextSm'>
+                  <Edit2
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
+                  Dados de Faturação
+                </Typography>
+              </Grid>
+              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
+                  required
+                  label={'Morada Fiscal'}
+                  error={errorMessageAddress}
+                  placeholder='Escrever Morada Fiscal'
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    setErrorMessageAddress('');
+                  }}
+                />
+              </Grid>
+              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
+                  required
+                  label={'Codigo Postal'}
+                  error={errorMessagePostalCode}
+                  placeholder='Escrever Codigo Postal'
+                  value={postalCode}
+                  onChange={(e) => {
+                    setPostalCode(e.target.value);
+                    setErrorMessagePostalCode('');
+                  }}
+                  adornmentIcon={!!postalCodeInfo &&
+                    <Tooltip title='Detalhes Codigo Postal' >
+                      <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
+                    </Tooltip>
+                  }
+                />
+              </Grid>
+              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
+                  required
+                  label={'Número de Indentificação Fiscal (Nif)'}
+                  error={errorMessageNif}
+                  placeholder='Escrever Número de Indentificação Fiscal'
+                  value={nif}
+                  onChange={(e) => {
+                    setNif(e.target.value);
+                    setErrorMessageNif('');
+                  }}
+                />
+              </Grid>
+              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
+                  required
+                  label={'Outros Dados'}
+                  placeholder='Escrever outros dados'
+                  value={otherData}
+                  onChange={(e) => {
+                    setOtherData(e.target.value);
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Content>
     </Grid>
   );
 };
+
 NewClient.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
+  pageProps: PropTypes.any,
+
 };
 
 export default NewClient;

@@ -14,26 +14,16 @@ import PropTypes from 'prop-types'
 import routes from '../../navigation/routes'
 
 //  Services
-//  Utils
-import hasData from '../../components/utils/hasData'
 
 
 const Profile = ({ ...pageProps }) => {
   let loaded = false;
-  const user = pageProps.loggedUser;
+  const user = JSON.parse(localStorage.getItem('user'));
   // const router = useRouter()
   // const id = router.query.Id
 
   if (user) loaded = true
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     await userService
-  //       .getUserById(id)
-  //       .then((res) => setUser(res.data.data));
-  //   };
-  //   Promise.all([getData()]).then(setLoaded(true));
-  // }, []);
   if (loaded) {
     const breadcrumbsPath = [
       {
@@ -47,15 +37,14 @@ const Profile = ({ ...pageProps }) => {
       breadcrumbsPath
     }
 
-    if (hasData(user)) pageProps.hasFullyLoaded = true;
+    return loaded && <ProfileScreen {...props} />
+  } else return <Loader center={true} />
 
-    return pageProps.hasFullyLoaded ? <ProfileScreen {...props} /> : <div> <Loader center={true} /></div>
-  }
+};
 
-  Profile.propTypes = {
-    users: PropTypes.object,
-    breadcrumbsPath: PropTypes.array,
-  }
+Profile.propTypes = {
+  users: PropTypes.object,
+  breadcrumbsPath: PropTypes.array,
 }
 
 export default Profile

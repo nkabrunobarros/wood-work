@@ -9,9 +9,11 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
 import {
-  InputLabel, OutlinedInput, TextareaAutosize
+  Box,
+  Button,
+  InputLabel, OutlinedInput, TextareaAutosize, Typography
 } from '@mui/material';
-import { Save, User, X } from 'lucide-react';
+import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
 import styles from '../../../styles/NewOrder.module.css';
 import Select from '../../inputs/select';
@@ -19,6 +21,9 @@ import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import Loader from '../../loader/loader';
 import { toast } from 'react-toastify';
+import * as OrdersActions from '../../../pages/api/actions/order';
+import routes from '../../../navigation/routes';
+
 
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients, products } = props;
@@ -30,6 +35,7 @@ const NewOrder = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [newestOrder, setNewestOrder] = useState();
 
   function ValidateData() {
     if (!client || client === ' ') setErrorClient('Campo Obrigatório');
@@ -40,16 +46,30 @@ const NewOrder = ({ ...props }) => {
     else setDialogOpen(true)
   }
 
-  function CreateOrder() {
+  async function CreateOrder() {
+    const builtOrder= {
+      productId: product,
+      status: 'Em orçamentação',
+      orderedBy: client
+    }
 
-    //  Creates order
-
-    //  closes dialog modal
-    setDialogOpen(false)
-    //  open success modal && success toast
     setProcessing(true)
-    setProcessing(false)
-    setSuccessOpen(true)
+
+    try {
+      await OrdersActions.saveOrder(builtOrder).then((response) =>
+      {
+        setNewestOrder(response.data.payload)
+        setDialogOpen(false)
+        setProcessing(false)
+        setSuccessOpen(true)
+
+      })
+    } catch (err) { 
+      toast.error('Algo Aconteceu')
+      setProcessing(false)
+      setDialogOpen(false)
+
+    }
   }
 
   function ClearAll() {
@@ -57,6 +77,8 @@ const NewOrder = ({ ...props }) => {
     setClient()
     setProduct()
     setObs("")
+    setErrorClient()
+    setErrorProd()
   }
 
   return (
@@ -77,25 +99,17 @@ const NewOrder = ({ ...props }) => {
       <ConfirmDialog
         open={successOpen}
         handleClose={() => ClearAll()}
-        onConfirm={() => window.warning('going to order detail')}
-        message={`Encomenda Criada com sucesso, que deseja fazer a agora?`}
+        onConfirm={() => Router.push(`${routes.private.internal.order}${newestOrder.id}`)}
+        message={`Encomenda Criada com sucesso, que deseja fazer agora?`}
         icon='Verified'
         iconType='success'
         okTxt='Ver Encomenda'
         cancelTxt='Criar nova Encomenda'
       />
-
-
       <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
-          </div>
-          <div style={{ display: 'flex' }}>
+        <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+          <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title}</Typography>
+          <Box sx={{ marginLeft: 'auto' }}>
             <PrimaryBtn
               onClick={() => ValidateData()}
               text='Guardar'
@@ -106,72 +120,82 @@ const NewOrder = ({ ...props }) => {
               light
               onClick={() => Router.back()}
             />
-          </div>
-        </div>
-        <div className='flex'>
-          <div id='pad' className='filters' style={{ flex: 1 }}>
-            <div className='filterContainer2'>
-              <Select
-                error={errorProd}
-                label={'Produto'}
-                optionLabel="name"
-                required
-                fullWidth
-                options={products}
-                value={product}
-                onChange={(e) => {
-                  setErrorProd()
-                  setProduct(e.target.value)
-                }}
-              />
-            </div>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
+          </Box>
+        </Box>
+        <Grid container sx={{ p: 2 }}>
+          <Grid container md={8} sm={12} p={2}>
+            <Box fullWidth sx={{ width: '100%' }}>
+              <Grid container spacing={1} sm={12} xs={12}>
+                <Grid container item md={12} sm={12} xs={12}>
+                  <Typography id='align' className='headerTitleSm'>
+                    <Package size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Produto
+                  </Typography>
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+                  <Select
+                    error={errorProd}
+                    label={'Produto'}
+                    optionLabel="name"
+                    required
+                    fullWidth
+                    options={products}
+                    value={product}
+                    onChange={(e) => {
+                      setErrorProd()
+                      setProduct(e.target.value)
+                    }}
+                  />
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+                  <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
+                  <OutlinedInput
 
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <InputLabel htmlFor='email'>Observações</InputLabel>
-            <TextareaAutosize
-              placeholder='Escrever Texto'
-              className={styles.textarea}
-              value={obs}
-              onChange={(e) => setObs(e.target.value)}
-            />
-          </div>
-          <div id='pad' className={styles.clientContainer}>
-            <a id='align' className='headerTitleSm'>
-              <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Cliente
-            </a>
-            <div>
+                    required
+                    fullWidth
+                    id='email'
+                    name='email'
+                    autoComplete='email'
+                    placeholder='Lorem Ipsum dolor sit'
+                  />
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+
+                  <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
+                  <OutlinedInput
+
+                    required
+                    fullWidth
+                    id='email'
+                    name='email'
+                    autoComplete='email'
+                    placeholder='Lorem Ipsum dolor sit'
+                  />
+
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+
+                  <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
+                  <OutlinedInput
+
+                    required
+                    fullWidth
+                    id='email'
+                    name='email'
+                    autoComplete='email'
+                    placeholder='Lorem Ipsum dolor sit'
+                  />
+
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid container md={4}  spacing={1} sm={12} p={2} className={styles.clientContainer}>
+            <Grid container item sm={12} xs={12} >
+              <Typography id='align' className='headerTitleSm'>
+                <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Cliente
+              </Typography>
+            </Grid>
+            <Grid container item sm={12} xs={12} >
               <Select
                 error={errorClient}
                 label={'Cliente'}
@@ -186,8 +210,8 @@ const NewOrder = ({ ...props }) => {
                   setClient(e.target.value)
                 }}
               />
-            </div>
-            <div>
+            </Grid>
+            <Grid container item sm={12} xs={12} >
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
                 required
@@ -197,8 +221,8 @@ const NewOrder = ({ ...props }) => {
                 autoComplete='email'
                 placeholder='Lorem Ipsum dolor sit'
               />
-            </div>
-            <div>
+            </Grid>
+            <Grid container item sm={12} xs={12} >
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
                 required
@@ -208,9 +232,12 @@ const NewOrder = ({ ...props }) => {
                 autoComplete='email'
                 placeholder='Lorem Ipsum dolor sit'
               />
-            </div>
-          </div>
-        </div>
+            </Grid>
+          </Grid>
+          <Button onClick={ClearAll} style={{ marginLeft: 'auto' }}>
+            Limpar
+          </Button>
+        </Grid>
       </Content>
     </Grid>
   );

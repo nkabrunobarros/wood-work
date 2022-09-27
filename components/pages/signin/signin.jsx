@@ -28,6 +28,7 @@ import * as authActions from '../../../pages/api/actions/auth';
 import * as permissionActions from '../../../pages/api/actions/permission';
 import ToastSet from '../../utils/ToastSet';
 import EmailValidation from '../../utils/EmailValidation';
+import IsInternal from '../../utils/IsInternal';
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
@@ -82,24 +83,22 @@ const SignIn = (props) => {
 
       const resUser = await authActions.me({ token: result.data.payload.token })
       const user = resUser.data.payload;
-      const permission = await permissionActions.permission({ id: user.idPerfil })
 
-      const builtUser = {
-        id: user.id,
-        email: user.email,
-        nome: user.nome,
-        morada: user.morada,
-        telefone: user.telefone,
-        telemovel: user.telemovel,
-        ativo: user.ativo,
-        pais: user.paisCodigo,
-        perfil: permission.data.payload
-      }
-
-      localStorage.setItem("user", JSON.stringify(builtUser));
+      // const builtUser = {
+      //   id: user.id,
+      //   email: user.email,
+      //   nome: user.nome,
+      //   morada: user.morada,
+      //   telefone: user.telefone,
+      //   telemovel: user.telemovel,
+      //   ativo: user.ativo,
+      //   pais: user.paisCodigo,
+      //   perfil: permission.data.payload,
+      // }
+      localStorage.setItem("user", JSON.stringify(user));
       ToastSet(loadingNotification, 'A entrar', 'success')
 
-      if (builtUser.perfil.descricao === 'Administrador') router.push(routes.private.internal.orders)
+      if (IsInternal(user.perfil.descricao)) router.push(routes.private.internal.orders)
       else router.push(routes.private.orders)
 
       setLoading(false)
