@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 //  Nodes
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
@@ -17,14 +18,39 @@ import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import backgroundImgTos from '../../../public/tos.png';
 import backgroundImgTerms from '../../../public/Consentimento.png';
+import * as UserActions from '../../../pages/api/actions/user';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   // eslint-disable-next-line react/prop-types
   const { readOnly } = props;
-  const handleSubmit = (event) => {
+  let user = props.loggedUser;
+
+  if (!user && typeof window !== 'undefined') user = JSON.parse(localStorage.getItem('user'));
+
+  const handleSubmit = async () => {
     event.preventDefault();
     // const data = new FormData(event.currentTarget);
+
+    const newUser = {
+      id: user.id,
+      email: user.email,
+      ativo: true,
+      nome: name,
+      telemovel: user.telemovel,
+      telefone: user.telefone,
+      morada: user.morada,
+      paisCodigo: user.paisCodigo,
+      idPerfil: user.perfil.id,
+      obs: user.obs || '',
+      tos: true,
+    }
+
+    try {
+      await UserActions.saveUser(newUser).then((response) => {
+        if (response.data.payload.tos) Router.push(routes.private.orders)
+      })
+    } catch (err) { console.log(err); } 
   };
 
   return (
@@ -95,7 +121,7 @@ const Terms = ({ ...props }) => {
             alignItems: 'start',
           }}
         >
-          <Typography color={'primary'}>Portal Interno WW4.0</Typography>
+          <Typography color={'primary'}>Portal Cliente WW4.0</Typography>
           <Typography component='h2' variant='h3'>
             Consentimento de Utilização
           </Typography>
@@ -195,7 +221,6 @@ const Terms = ({ ...props }) => {
                 variant='contained'
                 disabled={!acceptedTerms}
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => Router.push(routes.private.orders)}
               >
                 Entrar
               </Button>
@@ -207,4 +232,5 @@ const Terms = ({ ...props }) => {
     </Grid>
   );
 };
+
 export default Terms;

@@ -19,6 +19,7 @@ const querys = {
             idPerfil
             telemovel
             telefone
+            tos
             telefone
             morada
             paisCodigo
@@ -51,56 +52,99 @@ const querys = {
   ORDERS: {
     return: 'orders',
     query: `query Orders {
-            orders {
-              count
-              data {
-                id
-                product {
-                  id
-                  code
-                  name
-                  cost
-                  craftTime
-                  category {
-                    id
-                    name
-                  }
-                  woodtype {
-                    id
-                    description
-                  }
-                }
-                status
-                orderedBy
-              }
+      orders {
+        count
+        data {
+          id
+          client {
+            id
+            email
+            giveName
+            legalName
+            address
+            status
+            taxId
+            telephone
+            organization {
+              id
+              legalName
             }
-          }`
+            otherData
+            buysTo
+            obs
+            postalCode
+            contact
+          }
+          product {
+            id
+            code
+            name
+            cost
+            craftTime
+            #categoryId
+            #woodTypeId
+            category {
+               id
+              name
+            }
+            woodtype {
+              id
+              description
+            }
+          }
+          createdAt
+          status
+          clientId
+        }
+      }
+    }`
   },
   ORDER: {
     return: 'order',
     query: `query order ($id: String!) {
           order (id: $id) {
             id
-            product {
-              id
-              code
-              name
-              cost
-              craftTime
-              woodtype {
-                id
-                description
-              }
-              category {
-                id
-                name
-              }
-              
-            }
+          client {
+            id
+            email
+            giveName
+            legalName
+            address
             status
-            orderedBy
+            taxId
+            telephone
+            organization {
+              id
+              legalName
+            }
+            otherData
+            buysTo
+            obs
+            postalCode
+            contact
           }
-        }`
+          product {
+            id
+            code
+            name
+            cost
+            craftTime
+            #categoryId
+            #woodTypeId
+            category {
+               id
+              name
+            }
+            woodtype {
+              id
+              description
+            }
+          }
+          createdAt
+          status
+          clientId
+        }
+      }`
   },
   CATEGORIES: {
     return: 'categories',
@@ -327,6 +371,7 @@ const querys = {
                 telefone
                 morada
                 obs
+                tos
                 paisCodigo
                 pais {
                   codigo
@@ -353,6 +398,7 @@ const querys = {
             ativo
             nome
             obs
+            tos
             telemovel
             telefone
             morada
@@ -385,6 +431,7 @@ const querys = {
           telemovel
           telefone
           telefone
+          tos
           morada
           paisCodigo
           obs
@@ -424,10 +471,54 @@ const querys = {
             }
           }
           status
-          orderedBy
+          clientId
       } 
     }`
-  }
+  },
+  SAVE_FILE: {
+    return: 'saveFicheiro',
+    query: `mutation saveFicheiro ($input: FicheiroInput!) {
+      saveFicheiro(saveFicheiroData: $input ) {
+          id
+          descricao
+          url
+          data
+          filesize
+          filename
+          dataCriacao
+      }
+    }`
+  },
+  REMOVE_FILE: {
+    return: 'removeFicheiro',
+    query: `mutation removeFile ($id: String!) {
+      removeFicheiro (id: $id ) {
+        id
+        descricao
+        url
+        filename
+        filesize
+        dataCriacao
+      }
+    }`
+  },
+  FILES: {
+    return: 'ficheiros',
+    query: `query ficheiros {
+      ficheiros {
+        count
+        data {
+          id
+          descricao
+          url
+          data
+          filename
+          filesize
+          dataCriacao
+        }
+      }
+    }`
+  },
 }
 
 export default querys;

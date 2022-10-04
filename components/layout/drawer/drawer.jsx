@@ -2,11 +2,12 @@
 //  Nodes
 import { useTheme } from '@emotion/react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import IsInternal from '../../utils/IsInternal';
 
 //  Material UI
 import {
+  Box,
   Divider,
   IconButton,
   ListItemButton,
@@ -17,7 +18,7 @@ import {
 //  Utlis
 
 //  Services
-import getLinks from '../../mock/navLinks';
+import getLinks from '../../utils/navLinks';
 
 //  Icons
 import { LogOut, User, X } from 'lucide-react';
@@ -32,8 +33,8 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
-import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import * as authActions from '../../../pages/api/actions/auth';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
 
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
@@ -60,7 +61,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
         keepMounted: true, // Better open performance on mobile.
       }}
     >
-      <div
+      <Box
         style={{
           backgroundColor: 'var(--primary-dark)',
           display: 'flex',
@@ -69,7 +70,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
         }}
       >
         {/* Sidebar Items List here */}
-        <div
+        <Box
           style={{
             backgroundColor: 'var(--primary-dark)',
             alignItems: 'center',
@@ -82,7 +83,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
             onClick={handleDrawerToggle}>
             <X />
           </IconButton>
-          <div style={{ width: '100px', height: '100px', margin: '1rem' }}>
+          <Box style={{ width: '100px', height: '100px', margin: '1rem' }}>
             <Image
               src={companyLogo}
               style={{ margin: '1rem' }}
@@ -90,7 +91,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
               height={100}
               layout='fixed'
             />
-          </div>
+          </Box>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
             <ListItemText
               primary={loggedUser ? loggedUser.nome : 'user'}
@@ -107,8 +108,8 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
             width='100%'
             style={{ marginTop: '1rem', marginBottom: '1rem' }}
           />
-        </div>
-        <div className='scrollableZone'>
+        </Box>
+        <Box className='scrollableZone'>
           {navLinks.map((item, i) => (
             <React.Fragment key={i}>
               {loggedUser ? (
@@ -162,8 +163,8 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
               </>
             ) : null}
           </div>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </SwipeableDrawer>
   );
 };

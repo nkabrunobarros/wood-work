@@ -14,7 +14,8 @@ import styles from '../../../styles/StockDetail.module.css';
 import { Divider } from '@mui/material';
 
 const Stock = ({ ...props }) => {
-  const { product, stock, breadcrumbsPath, data } = props;
+  const { stock, breadcrumbsPath } = props;
+
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -26,9 +27,10 @@ const Stock = ({ ...props }) => {
           style={{ display: 'flex', alignItems: 'center' }}
         >
           <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{product.nome}</a>
+            <a className='headerTitleXl'>{stock.product.name}</a>
             <div className='spacer' />
-            <a>{FilterItem({},stock.stock)}</a>
+            { stock.amount > 0 ? <a className="successBalloon">Disponivel</a>
+       : <a className="errorBalloon">Indisponivel</a>}
           </div>
           <div style={{ display: 'flex' }}>
             <PrimaryBtn text='Editar' icon={<Edit strokeWidth='1' />} />
@@ -42,7 +44,7 @@ const Stock = ({ ...props }) => {
               <div>
                 <a className='lightTextSm'>Código</a>
                 <br></br>
-                <a className='lightTextSm black'>{product.codigo}</a>
+                <a className='lightTextSm black'>{stock.product.code}</a>
                 <br></br>
               </div>
               <br></br>
@@ -58,7 +60,7 @@ const Stock = ({ ...props }) => {
               <div>
                 <a className='lightTextSm'>Quantidade disponivel</a>
                 <br></br>
-                <a className='lightTextSm black'>{stock.quantidade}</a>
+                <a className='lightTextSm black'>{stock.amount}</a>
                 <br></br>
               </div>
             </div>
@@ -67,9 +69,7 @@ const Stock = ({ ...props }) => {
                 <a className='lightTextSm'>Categoria</a>
                 <br></br>
                 <a className='lightTextSm black'>
-                  {FilterItem(data ,product.category, 'categoria')}
-                  {/* {DisplayCategory(product.category)} */}
-                  
+                  <a className='lightTextSm black'>{stock.product.category.name}</a>
                 </a>
                 <br></br>
               </div>
@@ -142,4 +142,5 @@ const Stock = ({ ...props }) => {
     </Grid>
   );
 };
+
 export default Stock;

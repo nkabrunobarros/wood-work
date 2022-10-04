@@ -1,0 +1,14 @@
+Entidade que cria encomendas
+Entidade que cria Produtos
+Entidade que gera encomendas
+Estrurura de uma encomenda ( 1 encomenda 1 prod, 1 enc multiplo prods com multiplas stock)
+Entidade que gera o stock de produtos
+Tipos de Operação (Corte montagem, colagem... )
+Numero de Encomenda
+
+Organization, quem gere
+
+Tipos de Madeira, quem gere?
+Categorias de produtos, quem gere?
+
+Painel de controlo, preciso? Dashboard

@@ -27,6 +27,7 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
 import AppContext from './AppContenxt';
+import IsInternal from '../components/utils/IsInternal';
 
 const theme = createTheme({
   palette: {
@@ -67,12 +68,18 @@ const theme = createTheme({
         },
       },
     },
+    MuiGrid: {
+      styleOverrides: {
+        root: {
+          width: '100%'
+        }
+      }
+    }
   },
 });
 
 const App = ({ Component, pageProps }) => {
   const { auth_token: token } = parseCookies();
-  const [loaded, setLoaded] = useState(false)
   const router = useRouter();
 
   useEffect(() => {
@@ -86,16 +93,17 @@ const App = ({ Component, pageProps }) => {
           const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
 
           if (isPublicPage && !!token) {
-            if (pageProps.loggedUser.perfil.descricao === 'Administrador') router.push(routes.private.internal.orders)
-            else { router.push(routes.private.orders);setLoaded(true); }
+            if ( IsInternal(pageProps.loggedUser.perfil.descricao)) router.push(routes.private.internal.orders)
+            else { 
+              if (pageProps.loggedUser.tos)router.push(routes.private.orders);
+               else router.push(routes.private.terms);
+            }
           }
 
-          setLoaded(true);
         }
         else {
           destroyCookie('auth-token');
           router.push(routes.public.signIn)
-          setLoaded(true);
         }
       }
     }
@@ -125,6 +133,7 @@ App.getInitialProps = async ({ Component, ctx }) => {
 
   const globalVars = {
     iconSize: 20,
+    iconSizeMd: 30,
     iconSizeXl: 40,
     iconSizeXxl: 54,
     iconStrokeWidth: 1,

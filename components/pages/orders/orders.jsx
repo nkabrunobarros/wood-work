@@ -44,7 +44,6 @@ const OrdersScreen = ({ ...props }) => {
     headCells,
   } = props;
 
-  console.log(props)
 
   //  States
   const [rows, setRows] = useState(items);
@@ -162,7 +161,6 @@ const OrdersScreen = ({ ...props }) => {
                 {categories.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.name}
-                    {/* [{item.id}] */}
                   </MenuItem>
                 ))}
               </Select>

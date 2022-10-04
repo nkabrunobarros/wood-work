@@ -10,6 +10,7 @@ const InfoCard = ({ title, icon, amount, color }) => {
   const style = {
     color: `${color}`
   }
+
   return (
     <div className={styles.card} style={style}>
       <CssBaseline />
@@ -22,10 +23,12 @@ const InfoCard = ({ title, icon, amount, color }) => {
     </div>
   )
 }
+
 InfoCard.propTypes = {
   title: PropTypes.string,
   icon: PropTypes.any,
   amount: PropTypes.number,
   color: PropTypes.string
 }
+
 export default InfoCard

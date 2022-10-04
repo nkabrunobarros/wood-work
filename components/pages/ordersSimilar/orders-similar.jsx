@@ -6,10 +6,12 @@ import PropTypes from 'prop-types';
 
 import {
   Autocomplete,
+  Box,
   Button,
   ButtonGroup,
   Chip,
-  TextField
+  IconButton,
+  MenuItem, TextField
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Filter, X } from 'lucide-react';
@@ -51,8 +53,9 @@ const OrdersScreen = ({ ...props }) => {
   const [cost, setCost] = useState('');
   const [operation, setOperation] = useState(null);
   const [filters, setFilters] = useState({});
+  const [costDenominator, setCostDenominator] = useState('equal');
 
-  const handleClick = (event) => {
+  const handleClick = () => {
     setModal(!modal);
   };
 
@@ -63,7 +66,7 @@ const OrdersScreen = ({ ...props }) => {
 
   const onWoodTypeChange = (value) => {
     if (value === null) setWoodType('');
-    else setWoodType(value);
+    else setWoodType(value.id);
   };
 
   const onProductChange = (value) => {
@@ -82,6 +85,11 @@ const OrdersScreen = ({ ...props }) => {
       cliente: client,
       productId: product,
       numEncomenda: orderId,
+      operation,
+      cost,
+      totalArea,
+      totalTime,
+      woodType
     });
   };
 
@@ -121,7 +129,7 @@ const OrdersScreen = ({ ...props }) => {
   };
 
   useEffect(() => {
-    ApplyFilters();
+    // ApplyFilters();
   }, [client, product, operation, orderId]);
 
   return (
@@ -190,7 +198,7 @@ const OrdersScreen = ({ ...props }) => {
                       disablePortal
                       id='combo-box-demo'
                       options={clients}
-                      getOptionLabel={(option) => option.nome}
+                      getOptionLabel={(option) => option.legalName}
                       onChange={(event, value) => onClientChange(value)}
                       renderInput={(params) => (
                         <TextField
@@ -211,7 +219,7 @@ const OrdersScreen = ({ ...props }) => {
                       autoHighlight
                       value={woodType || null}
                       onChange={(event, value) => onWoodTypeChange(value)}
-                      getOptionLabel={(option) => option.nome}
+                      getOptionLabel={(option) => option.description}
                       renderInput={(params) => (
                         <TextField
                           variant='standard'
@@ -241,7 +249,7 @@ const OrdersScreen = ({ ...props }) => {
                       disablePortal
                       id='combo-box-demo'
                       options={products}
-                      getOptionLabel={(option) => option.nome}
+                      getOptionLabel={(option) => option.name}
                       onChange={(event, value) => onProductChange(value)}
                       renderInput={(params) => (
                         <TextField
@@ -263,13 +271,32 @@ const OrdersScreen = ({ ...props }) => {
                       value={totalArea}
                       onChange={(e) => setTotalArea(e.target.value)}
                     />
-                    <TextField
-                      id='standard-basic'
-                      label='Custo'
-                      variant='standard'
-                      value={cost}
-                      onChange={(e) => setCost(e.target.value)}
-                    />
+                    <Box sx={{ display: 'flex' }}>
+                   
+                      <Box>
+                        <TextField
+                          label='Custo'
+                          variant='standard'
+                          value={cost}
+                          onChange={(e) => setCost(e.target.value)}
+                        />
+
+                      </Box>
+                      <Box>
+                        <TextField
+                          value={costDenominator}
+                          select
+                          label='  '
+                          variant='standard'
+                          SelectProps={{ IconComponent: () => null }}
+                          onChange={(e) => setCostDenominator(e.target.value)}
+                        >
+                          <MenuItem value='equal'>{'='}</MenuItem>
+                          <MenuItem value='bigger'>{'=>'}</MenuItem>
+                          <MenuItem value='smaller'>{'<='}</MenuItem>
+                        </TextField>
+                      </Box>
+                    </Box>
                     <Autocomplete
                       id='country-select-demo'
                       options={operations}
@@ -303,9 +330,9 @@ const OrdersScreen = ({ ...props }) => {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ marginLeft: 'auto' }}>
-              <Button onClick={handleClick}>
+              <IconButton onClick={handleClick}>
                 <Filter />
-              </Button>
+              </IconButton>
             </div>
           </div>
         </div>
@@ -318,7 +345,7 @@ const OrdersScreen = ({ ...props }) => {
           clickRoute={detailPage}
         />
 
-{/* 
+        {/* 
         <MyDataGrid title={t('tipos-operacao')} entity='tipoOperacao' entityPlural="tiposOperacao"
           columns={[{ name: 'descricao', label: t('descricao'), options: { filter: true, filterType: 'textField' } },
           { name: 'precoCusto', label: t('preco-custo'), type: 'number', options: { filter: true, filterType: 'textField' } },

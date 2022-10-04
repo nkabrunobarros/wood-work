@@ -112,7 +112,8 @@ const NewUser = ({ ...props }) => {
       morada: cidade,
       paisCodigo: pais,
       idPerfil: perfil,
-      password: generatePassword ? 'changeMe' : password,
+      password: generatePassword ? `${process.env.NEXT_PUBLIC_DEFAULT_PASS}` : password,
+      tos: false,
       obs,
     }
 

@@ -1,15 +1,12 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 //  Custom Components
 import Loader from '../../../components/loader/loader';
 
 //  Page Component
 import UserScreen from '../../../components/pages/profile/profile';
-
-//  PropTypes
-import PropTypes from 'prop-types';
 
 //  Navigation
 import routes from '../../../navigation/routes';
@@ -24,17 +21,13 @@ const User = ({ ...pageProps }) => {
   const id = router.query.Id;
 
   useEffect(() => {
-    const getAll = async () => {
+    const getData = async () => {
       await UserActions
       .userById({id})
-      .then((res) => {
-        console.log(res)
-        setUser(res.data.payload)
-      }
-    )
+      .then((res) =>  setUser(res.data.payload))
     };
 
-    Promise.all([getAll()]).then(() => setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
@@ -53,11 +46,6 @@ const User = ({ ...pageProps }) => {
       user,
       breadcrumbsPath,
       pageProps,
-    };
-
-    UserScreen.propTypes = {
-      users: PropTypes.array,
-      breadcrumbsPath: PropTypes.array,
     };
 
     return <UserScreen {...props} />

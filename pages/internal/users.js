@@ -27,9 +27,9 @@ const Users = ({ ...pageProps }) => {
     const getData = async () => {
       await UserActions
         .users()
-        .then((res) => {  console.log(res.data.payload.data); setUsers(res.data.payload.data )}
-       
-      );
+        .then((res) => { console.log(res.data.payload.data); setUsers(res.data.payload.data) }
+
+        );
 
       await ProfileActions
         .perfis()
@@ -47,8 +47,7 @@ const Users = ({ ...pageProps }) => {
         href: `${routes.private.users}`,
       },
     ];
-  
-  
+
     const headCells = [
       {
         id: 'nome',
@@ -75,11 +74,11 @@ const Users = ({ ...pageProps }) => {
         label: 'Ações',
       },
     ];
-  
+
     const editRoute = routes.private.internal.editUser;
     const detailRoute = routes.private.internal.user;
     const newRoute = routes.private.internal.newUser;
-  
+
     const props = {
       items,
       breadcrumbsPath,
@@ -89,11 +88,11 @@ const Users = ({ ...pageProps }) => {
       headCells,
       newRoute,
     };
-  
-  
+
+
     return loaded && <UsersScreen {...props} />
 
-  } else return  <Loader center={true} />
+  } else return <Loader center={true} />
 };
 
 Users.propTypes = {

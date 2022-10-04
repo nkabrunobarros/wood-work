@@ -18,7 +18,10 @@ const MyInput = ({
   placeholder,
   adornmentIcon,
   adornmentOnClick,
-  adornmentPos
+  adornmentPos,
+  style,
+  iconTooltip,
+  helperText
 }) => {
 
   return (<>
@@ -34,6 +37,7 @@ const MyInput = ({
     <FormControl fullWidth disabled={disabled}>
       {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
       <OutlinedInput
+      
         type={type || 'string'}
         id={label}
         error={error}
@@ -42,17 +46,20 @@ const MyInput = ({
         required
         label={error}
         fullWidth={fullWidth}
-        sx={{ width: width && width }}
-        style={{ width: halfWidth && '50%' }}
+        sx={{ width: width || halfWidth && '50%' }}
+        style={style}
         placeholder={placeholder || ''}
         endAdornment={!!adornmentIcon &&
           <InputAdornment position={adornmentPos || "end"}>
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={adornmentOnClick || null}
-              edge="end">
-              {adornmentIcon}
-            </IconButton>
+            <Tooltip title={iconTooltip || '' }>
+              <IconButton component='label'
+                aria-label="toggle password visibility"
+                onClick={adornmentOnClick || null}
+                edge="end">
+
+                {adornmentIcon}
+              </IconButton>
+            </Tooltip>
           </InputAdornment>
         }
       />

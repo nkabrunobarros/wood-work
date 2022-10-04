@@ -66,8 +66,6 @@ const EditUser = ({ ...props }) => {
   const [backdrop, setBackdrop] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
 
-  console.log(user)
-
   function handleSave() {
     if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
 
@@ -109,24 +107,27 @@ const EditUser = ({ ...props }) => {
     const newUser = {
       id: user.id,
       email,
-      ativo: true,
+      ativo: active,
       nome: name,
       telemovel,
       telefone,
       morada,
       paisCodigo: pais,
-      idPerfil: perfil,
+      idPerfil: 'cl8om6j3q0000b4fjz5manyk3',
       obs,
+      tos: user.tos,
     }
+
 
     try {
       await UserActions.saveUser(newUser).then((res) => {
+        console.log(res)
         setName(res.data.payload.nome)
         setActive(res.data.payload.ativo)
         setEmail(res.data.payload.email)
         setTelefone(res.data.payload.telefone)
         setTelemovel(res.data.payload.telemovel)
-        setPerfil(res.data.payload.idPerfil)
+        // setPerfil(res.data.payload.idPerfil)
         setMorada(res.data.payload.morada)
         setPais(res.data.payload.paisCodigo)
         setObs(res.data.payload.obs)
@@ -283,14 +284,12 @@ const EditUser = ({ ...props }) => {
                 optionLabel='descricao'
                 fullWidth
                 value={perfil}
-                onChange={(e) => setPerfil(e.target.value)}
-              >
-                <MenuItem value={'Selecionar uma categoria'} disabled>
-                  Selecionar uma categoria
-                </MenuItem>
-                <MenuItem value={'interno'}>interno</MenuItem>
-                <MenuItem value={'cliente'}>cliente</MenuItem>
-              </Select>
+                onChange={(e) => {
+                  setPerfil(e.target.value)
+                  setErrorMessagePerfil('');
+                }}
+              />
+            
               <a style={{ color: 'var(--red)', fontSize: 'small' }}>
                 {errorMessagePerfil ? `${errorMessagePerfil}` : null}
               </a>

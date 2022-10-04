@@ -14,6 +14,7 @@ import {
   IconButton,
   Paper,
   Popover,
+  Skeleton,
   Switch,
   Table,
   TableBody,
@@ -27,7 +28,7 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { Edit, Filter, MoreVertical, Trash } from 'lucide-react';
+import { Edit, Filter, Trash } from 'lucide-react';
 
 //  Utlis
 import { FilterItem } from '../utils/FilterItem';
@@ -52,9 +53,11 @@ const AdvancedTable = ({
   headCells,
   headCellsUpper,
   clickRoute,
+  actionId,
   noPagination,
   editRoute,
-  filters }) => {
+  filters,
+}) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
   const [selected, setSelected] = useState([]);
@@ -68,6 +71,7 @@ const AdvancedTable = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [cellsFilter, setCellsFilter] = useState(headCells)
   const [refresh, setRefresh] = useState(new Date())
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -81,8 +85,6 @@ const AdvancedTable = ({
 
       setData(allData);
     };
-
-    getData();
 
     const BuildDeleteMessage = () => {
       if (Router.asPath.includes('/orders'))
@@ -101,9 +103,7 @@ const AdvancedTable = ({
         );
     };
 
-    BuildDeleteMessage();
-
-    function Test() {
+    function RebuildHeadCellsWithFilterState() {
 
       cellsFilter.map((cell, i) => {
         const oldState = cellsFilter;
@@ -115,7 +115,8 @@ const AdvancedTable = ({
       })
     }
 
-    Test();
+    Promise.all([getData(), BuildDeleteMessage(), RebuildHeadCellsWithFilterState()]).then(() => setLoaded(true));
+
   }, []);
 
   function onDeleteClick(row) {
@@ -124,8 +125,6 @@ const AdvancedTable = ({
     if (Router.asPath.includes('orders')) setDeleteItemId(row.numEncomenda);
     else setDeleteItemId(row.id);
   }
-
-
 
   function OnFilterChange(i) {
     const oldState = cellsFilter;
@@ -165,6 +164,7 @@ const AdvancedTable = ({
           idPerfil: thisRow.perfil.id,
           morada: thisRow.morada,
           obs: thisRow.obs,
+          tos: thisRow.tos,
           otherData: thisRow.otherData,
         }
 
@@ -250,9 +250,16 @@ const AdvancedTable = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {loaded ?
 
-                  {headCell.label}
-                  {orderBy === headCell.id ? <Box component='span'></Box> : null}
+                    <>
+                      {headCell.label}
+                      {orderBy === headCell.id ? <Box component='span'></Box> : null}
+                    </> :
+                    <Skeleton animation="wave" width='100%' />
+                  }
+
+
 
                 </div>
               </TableCell>
@@ -284,10 +291,16 @@ const AdvancedTable = ({
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
+                sx={{ width: '100%', height: '100%' }}
               >
-                {headCell.label}
-                {orderBy === headCell.id ? <Box component='span'></Box> : null}
-
+                {loaded ?
+                  <>
+                    {headCell.label}
+                    {orderBy === headCell.id ? <Box component='span'></Box> : null}
+                  </>
+                  :
+                  <Skeleton animation="wave" width='100%' />
+                }
               </TableSortLabel>
             </TableCell>
           }
@@ -345,9 +358,6 @@ const AdvancedTable = ({
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems.length) : 0;
-
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -403,33 +413,37 @@ const AdvancedTable = ({
         <Box className='tableChips'>
           <Box>
             {Object.keys(filters || {}).map((x, i) => {
-              if (filters[x]) return <Chip key={i} label={x} onDelete={() => console.log('deleted')} />
+              if (filters[x]) return <Chip key={i} label={filters[x]} onDelete={() => console.log('deleted')} />
             })}
 
           </Box>
-          {noPagination ? null : (
-            <TablePagination
-              showFirstButton
-              showLastButton
-              component='div'
-              sx={{ marginLeft: 'auto' }}
-              rowsPerPageOptions={[5, 10, 25]}
-              count={filteredItems ? filteredItems.length : rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              labelRowsPerPage={'Mostrar'}
-            />
-          )}
-          <Box>
+          {noPagination ? null : loaded ?
+            <>
+              <TablePagination
+                showFirstButton
+                showLastButton
+                component='div'
+                sx={{ marginLeft: 'auto' }}
+                rowsPerPageOptions={[5, 10, 25]}
+                count={filteredItems ? filteredItems.length : rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage={'Mostrar'}
+              />
+              <Box>
 
-            <Tooltip title='Filtrar tabela'>
-              <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
-                <Filter size={20} strokeWidth={1.5} />
-              </IconButton>
-            </Tooltip>
-          </Box>
+                <Tooltip title='Filtrar tabela'>
+                  <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
+                    <Filter size={20} strokeWidth={1.5} />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </>
+            :
+            <Skeleton animation="wave" width='100%' />
+          }
           <Popover
             open={Boolean(anchorEl)}
             anchorEl={anchorEl}
@@ -442,7 +456,7 @@ const AdvancedTable = ({
             <Box p={1}>
               <Grid container>
                 <Grid id={refresh}>
-                  <Grid id='align' container Item sx={{ borderBottom: '1px solid'}}>
+                  <Grid id='align' container Item sx={{ borderBottom: '1px solid' }}>
                     <Switch checked={!cellsFilter.find(item => item.show === false)} onClick={() => showAllHeaders()} />Mostrar todas
                   </Grid>
                   {cellsFilter.map((headCell, i) => {
@@ -455,8 +469,6 @@ const AdvancedTable = ({
             </Box>
           </Popover>
         </Box>
-
-
         <TableContainer>
           <Table aria-labelledby='tableTitle'>
             <EnhancedTableHead
@@ -503,57 +515,61 @@ const AdvancedTable = ({
                                 : null,
                             }}
                           >
-                            {headCell.id === 'actions' ? (
-                              <ButtonGroup>
-                                <Tooltip title='Editar'>
-                                  <IconButton
+                            {loaded ?
+                              <>
+                                {headCell.id === 'actions' ? (
+                                  <ButtonGroup>
+                                    <Tooltip title='Editar'>
+                                      <IconButton
+                                        onClick={() =>
+                                          clickRoute
+                                            ? Router.push(`${editRoute}${row.id}`)
+                                            : null
+                                        }
+                                      >
+                                        <Edit
+                                          strokeWidth='1'
+                                          className='link'
+                                          size={20}
+                                        />
+                                      </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title='Remover'>
+                                      <IconButton
+                                        onClick={() => onDeleteClick(row)}
+                                      >
+                                        <Trash
+                                          strokeWidth='1'
+                                          className='link'
+                                          size={20}
+                                        />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </ButtonGroup>
+                                ) : (
+                                  <div
                                     onClick={() =>
                                       clickRoute
-                                        ? Router.push(`${editRoute}${row.id}`)
+                                        ? Router.push(`${clickRoute}${row[actionId || 'id']}`)
                                         : null
                                     }
                                   >
-                                    <Edit
-                                      strokeWidth='1'
-                                      className='link'
-                                      size={20}
-                                    />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip title='Remover'>
-                                  <IconButton
-                                    onClick={() => onDeleteClick(row)}
-                                  >
-                                    <Trash
-                                      strokeWidth='1'
-                                      className='link'
-                                      size={20}
-                                    />
-                                  </IconButton>
-                                </Tooltip>
-                              </ButtonGroup>
-                            ) : (
-                              <div
-                                onClick={() =>
-                                  clickRoute
-                                    ? Router.push(`${clickRoute}${row.id}`)
-                                    : null
-                                }
-                              >
 
-                                {FilterItem(
-                                  data,
-                                  row,
-                                  headCell.id
+                                    {FilterItem(
+                                      data,
+                                      row,
+                                      headCell.id
+                                    )}
+                                  </div>
                                 )}
-                              </div>
-                            )}
+                              </>
+                              : <Skeleton animation="wave" width='100%' />}
                           </TableCell>
                         })}
                       </TableRow>
                     );
                   })}
-                {emptyRows > 0 && (
+                {(page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems.length) : 0) > 0 && (
                   <TableRow>
                     <TableCell colSpan={6} />
                   </TableRow>
@@ -564,7 +580,7 @@ const AdvancedTable = ({
         </TableContainer>
       </Paper>
     </Box>
-  );
+  )
 };
 
 AdvancedTable.propTypes = {
@@ -577,6 +593,8 @@ AdvancedTable.propTypes = {
   noPagination: PropTypes.any,
   filters: PropTypes.any,
   setRows: PropTypes.any,
+  actionId: PropTypes.any,
+  maxHeight: PropTypes.any,
 };
 
 export default AdvancedTable;

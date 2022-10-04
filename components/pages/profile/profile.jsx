@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Tooltip } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
   Edit,
@@ -20,14 +20,47 @@ import routes from '../../../navigation/routes';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
+import * as UserActions from '../../../pages/api/actions/user';
+import ConfirmDialog from '../../dialogs/ConfirmDialog';
 
 const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
   const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  async function DisableUser() {
+    const userCpy =  {
+      id: user.id,
+      email: user.email,
+      ativo: true,
+      nome: user.nome,
+      telemovel: user.telemovel,
+      telefone: user.telefone,
+      morada: user.morada,
+      paisCodigo: user.paisCodigo,
+      idPerfil: user.idPerfil,
+      obs: user.obs,
+    };
+
+    userCpy.ativo = false;
+
+    try {
+      await UserActions.saveUser(userCpy).then((res) => console.log(res))
+    } catch (err) {
+
+    }
+  }
 
   return (
     <Grid component='main'>
       <CssBaseline />
+      <ConfirmDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        onConfirm={() => DisableUser()}
+        message='Está prestes a desativar este Utilizador, tem certeza que quer continuar?'
+        icon='AlertOctagon'
+      />      
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
         <div id='pad' style={{ display: 'flex' }}>
@@ -47,11 +80,14 @@ const Profile = ({ ...props }) => {
                   } />
               </div>
               <div>
-                <PrimaryBtn text='Apagar' icon={
-                  <Trash
-                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                    size={pageProps.globalVars.iconSize} />
-                }
+                <PrimaryBtn
+                  onClick={() => setDialogOpen(true)}
+                  text='Apagar'
+                  icon={
+                    <Trash
+                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                      size={pageProps.globalVars.iconSize} />
+                  }
                   light
                 />
               </div>
@@ -66,77 +102,93 @@ const Profile = ({ ...props }) => {
           >
             <User /> Informações Gerais
           </a>
-          <div className='flex'>
-            <div id='pad' className='infoBox dark'>
-              <div>
-                <a className='lightTextSm'>Nome</a>
-                <br></br>
-                <a className='lightTextSm black'>{user.nome}</a>
-              </div>
-              <br></br>
-              <div>
-                <a className='lightTextSm'>Perfil de Utilizador</a>
-                <br></br>
-                <a className='lightTextSm black'> {user.perfil.descricao} </a>
-              </div>
-              <br></br>
-              <div>
-                <a className='lightTextSm'>Estado</a>
-                <br></br>
-                <a className='lightTextSm' style={{ color: 'var(--primary)' }}>
-                  {user.ativo ? 'Ativo' : 'Desativado'}
-                </a>
-              </div>
-            </div>
-            <div id='pad' className='infoBox'>
-              <a id='align' className='lightTextSm'>
-                <Tooltip title='Email'>
-                  <Mail className='primaryIcon' size={22} />
-                </Tooltip>
-                <span>
-                  {user.email}
-                </span>
 
-              </a>
-              <a id='align' className='lightTextSm'>
-              <Tooltip title='Telemovel'>
-                <a href={`tel:${user.telemovel}`}>
-                  <Smartphone className='primaryIcon' size={22} />
-                </a>
-              </Tooltip>
-                <span>
-                  {user.telemovel}
-                </span>
-              </a>
-              <a id='align' className='lightTextSm'>
-                <Tooltip title='Telefone'>
-                  <a href={`tel:${user.telefone}`}>
-                    <Phone className='primaryIcon' size={22} />
-                  </a>
-                </Tooltip>
-                <span>
-                  {user.telefone}
-                </span>
-              </a>
-              <a id='align' className='lightTextSm'>
-                <Tooltip title='Morada'>
-                  <Map className='primaryIcon' size={22} />
-                </Tooltip>
-                <span>
-                  {user.morada}
-                </span>
+          <Grid container sx={12}>
+            <Grid container sm={12} md={6}>
+              <Grid container sx={12}>
+                <Grid xs={12} sm={6} container p={2} className='infoBox dark'>
 
-              </a>
-              <a id='align' className='lightTextSm'>
-                <Tooltip title='Pais'>
-                  <Flag className='primaryIcon' size={22} />
-                </Tooltip>
-                <span>
-                  {user.pais.descricao}
-                </span>
-              </a>
-            </div>
-          </div>
+                  <Grid item xs={12}>
+                    <Typography item className='lightTextSm'>Nome </Typography>
+                    <Typography item className='lightTextSm black'>{user.nome}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography item className='lightTextSm'>Perfil de Utilizador </Typography>
+                    <Typography item className='lightTextSm black'>{user.perfil.descricao}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography item className='lightTextSm'>Estado </Typography>
+                    <Typography item>
+                      <a className='lightTextSm' style={{ color: 'var(--primary)' }}>
+                        {user.ativo ? 'Ativo' : 'Desativado'}
+                      </a>
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid xs={12} sm={6} container p={2} spacing={2}>
+                  <Grid container item>
+                    <Tooltip title='Email'>
+                      <a href={`mailto:${user.email}`}>
+                        <Mail className='primaryIcon' size={22} />
+                      </a>
+                    </Tooltip>
+                    <span>
+                      {user.email}
+                    </span>
+                  </Grid>
+                  <Grid container item>
+                    <Tooltip title='Telemovel'>
+                      <a href={`tel:${user.telemovel}`}>
+                        <Smartphone className='primaryIcon' size={22} />
+                      </a>
+                    </Tooltip>
+                    <span>
+                      {user.telemovel}
+                    </span>
+                  </Grid>
+                  <Grid container item>
+                    <Tooltip title='Telefone'>
+                      <a href={`tel:${user.telefone}`}>
+                        <Phone className='primaryIcon' size={22} />
+                      </a>
+                    </Tooltip>
+                    <span>
+                      {user.telefone}
+                    </span>
+                  </Grid>
+                  <Grid container item>
+                    <Tooltip title='Morada'>
+                      <Map className='primaryIcon' size={22} />
+                    </Tooltip>
+                    <span>
+                      {user.morada}
+                    </span>
+
+                  </Grid>
+                  <Grid container item>
+                    <Tooltip title='Pais'>
+                      <Flag className='primaryIcon' size={22} />
+                    </Tooltip>
+                    <span>
+                      {user.pais.descricao}
+                    </span>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Only shows when on user detail NOT profile */}
+          {Router.route.replace('[Id]', '') === routes.private.internal.user &&
+            <Grid container>
+              <Grid container p={2} sm={12} xs={12} md={6}>
+                <Grid item xs={12}>
+                  <Typography item className='lightTextSm'>Observações </Typography>
+                  <Typography item className='lightTextSm black'>{user.obs}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          }
+
         </div>
       </Content>
     </Grid>

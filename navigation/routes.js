@@ -6,7 +6,7 @@ const routes = {
       clients: '/internal/clients',
       client: '/internal/client/',
       editClient: '/internal/edit-client/',
-      newClient: '/internal/new-client/',
+      newClient: '/internal/new-client',
 
       users: '/internal/users',
       user: '/internal/user/',
@@ -24,6 +24,11 @@ const routes = {
       
       messages: '/internal/messages/',
       profile: '/profile/',
+      error: '/404',
+      
+      
+      dashboards: '/internal/dashboards',
+      
     },
     //  Pages shared
     terms: '/terms',
@@ -32,10 +37,13 @@ const routes = {
     order: '/order/',
     profile: '/profile/',
     messages: '/messages',
+    error: '/404',
+
   },
   public: {
     forgotPassword: '/forgot-password',
     signIn: '/',
+
   }
 }
 

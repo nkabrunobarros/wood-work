@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  CircularProgress, IconButton, InputLabel, TextField
+  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, InputLabel, TextField
 } from '@mui/material';
 import styles from '../../../styles/SignIn.module.css';
 
@@ -21,14 +21,14 @@ import routes from '../../../navigation/routes';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 
+import { XCircle } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 import { toast } from 'react-toastify';
 import * as authActions from '../../../pages/api/actions/auth';
-import * as permissionActions from '../../../pages/api/actions/permission';
-import ToastSet from '../../utils/ToastSet';
 import EmailValidation from '../../utils/EmailValidation';
 import IsInternal from '../../utils/IsInternal';
+import ToastSet from '../../utils/ToastSet';
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
@@ -38,8 +38,8 @@ const SignIn = (props) => {
   const [loading, setLoading] = useState(false);
   const [emailErrors, setEmailErrors] = useState()
   const [senhaErrors, setSenhaErrors] = useState()
+  const [dialogOpen, setDialogOpen] = useState(false)
   const router = useRouter();
-
 
 
   const handleSubmit = async (event) => {
@@ -52,11 +52,11 @@ const SignIn = (props) => {
 
     if (email === '') errors.email = 'Email é obrigatório'
     else if (!EmailValidation(email)) errors.email = 'Email mal estruturado'
-    
 
-    if (password === '')  errors.password = 'Senha é obrigatório'
+
+    if (password === '') errors.password = 'Senha é obrigatório'
     else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres'
-    
+
 
     if (errors.password || errors.email) {
       setSenhaErrors(errors.password)
@@ -77,6 +77,9 @@ const SignIn = (props) => {
 
         ToastSet(loadingNotification, 'Credenciais invalidas', 'error')
         setLoading(false)
+      } else if (!result.data.success && result.data.message === 'utilizador-inativo') {
+        ToastSet(loadingNotification, 'Utilizador Inativo', 'error')
+        setLoading(false)
       }
 
       setCookie(undefined, 'auth_token', result.data.payload.token);
@@ -84,27 +87,24 @@ const SignIn = (props) => {
       const resUser = await authActions.me({ token: result.data.payload.token })
       const user = resUser.data.payload;
 
-      // const builtUser = {
-      //   id: user.id,
-      //   email: user.email,
-      //   nome: user.nome,
-      //   morada: user.morada,
-      //   telefone: user.telefone,
-      //   telemovel: user.telemovel,
-      //   ativo: user.ativo,
-      //   pais: user.paisCodigo,
-      //   perfil: permission.data.payload,
-      // }
       localStorage.setItem("user", JSON.stringify(user));
       ToastSet(loadingNotification, 'A entrar', 'success')
-
-      if (IsInternal(user.perfil.descricao)) router.push(routes.private.internal.orders)
-      else router.push(routes.private.orders)
-
       setLoading(false)
 
+      if (IsInternal(user.perfil.descricao)) router.push(routes.private.internal.orders)
+      else 
+      {
+        if (!user.tos) router.push(routes.private.terms)
+          else router.push(routes.private.orders)
+      }
     } catch (error) {
-      console.log(error)
+      setLoading(false)
+
+      if (!error.response.data.success && error.response.data.message === 'utilizador-inativo') {
+        ToastSet(loadingNotification, 'Utilizador Inativo', 'error')
+        setDialogOpen(true)
+        setLoading(false)
+      }
     }
   };
 
@@ -113,6 +113,31 @@ const SignIn = (props) => {
     <Grid container component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
       <Notification />
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title' sx={{ color: 'var(--primary)' }}>
+          Conta Bloqueada
+        </DialogTitle>
+        <Divider />
+        <DialogContent>
+          <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <XCircle size={80} color='var(--red)' />
+          </Box>
+
+          <DialogContentText id='alert-dialog-description'>
+            Esta conta está bloqueada. Se não é suposto, por favor entre em  <a className='link' href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`}>contacto</a> com o responsavel.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)}>
+            Entendido
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
         <Box
           sx={{
@@ -258,9 +283,11 @@ const SignIn = (props) => {
               </Grid>
             </Grid>
             <Button
+              id="submitForm"
               type='submit'
               fullWidth
               variant='contained'
+              disabled={loading}
               sx={{ mt: 3, mb: 2 }}
             >
               {loading ? (

@@ -13,61 +13,31 @@ import routes from '../../../navigation/routes';
 
 //  Services
 import * as OrdersActions from '../../../pages/api/actions/order';
+import * as FilesActions from '../../../pages/api/actions/file';
 
 const Order = ({ ...pageProps }) => {
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
+  const [files, setFiles] = useState();
   const orderId = router.query.Id;
 
   useEffect(() => {
     const getData = async () => {
       await OrdersActions
         .order({id: orderId})
-        .then((res) => {
-          console.log(res)
-          setOrder(res.data.payload)
-        });
+        .then((res) => setOrder(res.data.payload));
+
+      await FilesActions
+        .files()
+        .then((res) =>setFiles(res.data.payload.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
-    const docs = [
-      {
-        id: 1,
-        name: 'Desenho 1',
-        data: '11/03/2022',
-        fileSize: ' 150 Mb',
-        createdAt: '11 de Fevereiro 2022',
-        updatedAt: '02 de Março de 2022',
-      },
-      {
-        id: 2,
-        name: 'Maquete 1',
-        data: '12/03/2022',
-        fileSize: ' 170 Mb',
-        createdAt: '11 de Janeiro 2022',
-        updatedAt: '04 de Março de 2022',
-      },
-      {
-        id: 3,
-        name: 'Desenho 2',
-        data: '13/03/2022',
-        fileSize: ' 22 Mb',
-        createdAt: '14 de Fevereiro 2022',
-        updatedAt: '01 de Março de 2022',
-      },
-      {
-        id: 4,
-        name: 'Maquete 2',
-        data: '14/03/2022',
-        fileSize: ' 1 Gb',
-        createdAt: '23 de Fevereiro 2022',
-        updatedAt: '22 de Março de 2022',
-      },
-    ];
+   
 
     const headCellsUpperOrderDetail = [
       {
@@ -270,7 +240,6 @@ const Order = ({ ...pageProps }) => {
 
     const props = {
       order,
-      docs,
       breadcrumbsPath,
       internalPOV,
       productionDetail,
@@ -282,6 +251,7 @@ const Order = ({ ...pageProps }) => {
       headCellsDocs,
       pageProps,
       orderDetail,
+      files,
     };
 
 

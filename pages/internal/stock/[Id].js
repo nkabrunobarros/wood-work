@@ -15,64 +15,57 @@ import routes from '../../../navigation/routes';
 import hasData from '../../../components/utils/hasData';
 
 //  Services
-import categoryService from '../../../services/categories/category-service';
-import productService from '../../../services/products/product-service';
-import stockService from '../../../services/stocks/stock-service';
+// import categoryService from '../../../services/categories/category-service';
+// import productService from '../../../services/products/product-service';
+// import stockService from '../../../services/stocks/stock-service';
+import * as CategoriesActions from '../../../pages/api/actions/category';
+import * as StocksActions from '../../../pages/api/actions/stock';
 
 const Stock = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [product, setProduct] = useState({});
   const [categories, setCategories] = useState();
   const [stock, setStock] = useState();
   const router = useRouter();
-  const stockId = router.query.Id;
 
   useEffect(() => {
-    const getProduct = async (prodId) => {
-      await productService
-        .getProductById(prodId)
-        .then((res) => setProduct(res.data.data));
-    };
-    const getAll = async () => {
-      await stockService.getStockById(stockId).then((res) => {
-        setStock(res.data.data);
-        getProduct(res.data.data.productId);
-      });
-      await categoryService
-        .getAllCategories()
-        .then((res) => setCategories(res.data.data));
-    };
-    Promise.all([getAll()]).then(setLoaded(true));
-    setTimeout(() => {}, 500);
+    const getData = async () => {
+      await StocksActions.stock({id: router.query.Id}).then((response) => setStock(response.data.payload))
+      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
+    }
+
+    Promise.all([getData()]).then(() => setLoaded(true));
+
   }, []);
+
   if (loaded) {
     const data = {
       categories,
     };
+
+    console.log(stock)
+
     const breadcrumbsPath = [
       {
         title: 'Stock',
         href: `${routes.private.internal.stocks}`,
       },
       {
-        title: `${product.nome}`,
+        title: `${stock.product.name}`,
         href: `${routes.private.internal.stockId}`,
       },
     ];
+
     const props = {
-      product,
       breadcrumbsPath,
       stock,
       data,
     };
-    if (hasData(product) && hasData(data) && hasData(stock))
-      pageProps.hasFullyLoaded = true;
-    return pageProps.hasFullyLoaded && loaded ? (
-      <StockScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
+
+
+    return loaded && <StockScreen {...props} />
   }
+
   return <Loader center={true} />;
 };
+
 export default Stock;

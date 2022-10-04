@@ -2,16 +2,11 @@
 import React from 'react'
 import TermsScreen from '../components/pages/terms/terms'
 
-//  Navigation
+const Terms = ({ ...pageProps }) => {
 
-//  PropTypes
 
-//  Styling
-
-const Terms = () => {
-  return <TermsScreen />
+  return <TermsScreen {...pageProps} />
 }
 
-Terms.propTypes = {
-}
+
 export default Terms

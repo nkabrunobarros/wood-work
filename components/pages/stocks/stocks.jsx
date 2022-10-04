@@ -160,11 +160,11 @@ const Stock = ({ ...props }) => {
           </div>
         </div>
         <AdvancedTable
-          
           rows={rows}
           headCells={headCells}
           clickRoute={routes.private.internal.stockId}
           filters={filters}
+          actionId='productId'
         ></AdvancedTable>
       </Content>
     </Grid>

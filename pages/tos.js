@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 
 const Terms = () => {
   const readOnly = true
+
   const props = {
     readOnly
   }
@@ -15,4 +16,5 @@ const Terms = () => {
 Terms.propTypes = {
   readOnly: PropTypes.boolean
 }
+
 export default Terms

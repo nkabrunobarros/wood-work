@@ -8,7 +8,9 @@ const Content = ({ children }) => (
       {children}
     </div>
 )
+
 Content.propTypes = {
   children: PropTypes.any
 }
+
 export default Content

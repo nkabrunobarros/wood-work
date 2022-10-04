@@ -11,18 +11,18 @@ import Content from '../../content/content';
 import {
   Box,
   Button,
-  InputLabel, OutlinedInput, TextareaAutosize, Typography
+  InputLabel, OutlinedInput, Typography
 } from '@mui/material';
 import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
+import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
+import * as OrdersActions from '../../../pages/api/actions/order';
 import styles from '../../../styles/NewOrder.module.css';
-import Select from '../../inputs/select';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
+import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
-import { toast } from 'react-toastify';
-import * as OrdersActions from '../../../pages/api/actions/order';
-import routes from '../../../navigation/routes';
 
 
 const NewOrder = ({ ...props }) => {
@@ -50,7 +50,8 @@ const NewOrder = ({ ...props }) => {
     const builtOrder= {
       productId: product,
       status: 'Em orçamentação',
-      orderedBy: client
+      clientId: client,
+      createdAt: Date.now(),
     }
 
     setProcessing(true)

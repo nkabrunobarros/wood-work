@@ -1,4 +1,4 @@
-import { Archive, MessageCircle, Table, Users } from 'lucide-react';
+import { Archive, LayoutDashboard, MessageCircle, Table, Users } from 'lucide-react';
 import routes from '../../navigation/routes';
 import React from 'react';
 
@@ -45,6 +45,12 @@ function getLinks() {
       url: routes.private.internal.users,
       icon: <Users strokeWidth='1' size={20} />,
       allowed: 'utilizadores',
+    },
+    {
+      title: 'Painel de Controlo',
+      url: routes.private.internal.dashboards,
+      icon: <LayoutDashboard strokeWidth='1' size={20} />,
+      allowed: 'dashboards',
     },
   ];
 

@@ -10,44 +10,48 @@ import Content from '../../content/content';
 import Paper from '@mui/material/Paper';
 import stylesMessage from '../../../styles/Messages.module.css';
 import styles from '../../../styles/Order.module.css';
+import GetFileSize from '../../utils/GetFileSize';
 import IsInternal from '../../utils/IsInternal';
 
 //  PropTypes
 import {
-  Avatar,
-  ButtonGroup,
-  Collapse,
-  IconButton,
-  Table,
-  TableBody,
+  Avatar, Box, ButtonGroup, Collapse,
+  IconButton, Table, TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import {
   Edit,
   Eye,
+  File,
   FilePlus,
   FileText,
   Folder,
   FolderOpen,
-  FolderPlus,
-  Info,
+  FolderPlus, Info,
   MessageSquare,
   Tag,
-  Trash
+  Trash,
+  View
 } from 'lucide-react';
+import moment from 'moment';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import * as FileActions from '../../../pages/api/actions/file';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Notification from '../../dialogs/Notification';
+import UploadImagesModal from '../../modals/UploadImages';
 
 const Order = ({ ...props }) => {
   const {
     order,
-    docs,
     breadcrumbsPath,
     productionDetail,
     headCellsUpperProductionDetail,
@@ -57,13 +61,21 @@ const Order = ({ ...props }) => {
     headCellsMessages,
     headCellsDocs,
     pageProps,
-    orderDetail,
+    orderDetail
   } = props;
 
+  const [files, setFiles] = useState(props.files)
+  const internalPOV = IsInternal(pageProps.loggedUser?.perfil.descricao)
+  const [newFolderName, setNewFolderName] = useState('');
+  const [folders, setFolders] = useState([]);
+  const [creatingFolder, setCreatingFolder] = useState(false);
   const [activeRow, setActiveRow] = useState(0);
-  const internalPOV = IsInternal(pageProps.loggedUser.perfil.descricao)
+  const [refresh, setRefresh] = useState(new Date());
+  const [docsModal, setDocsModal] = useState(false)
+  const [errorMessageFolderName, setErrorMessageFolderName] = useState()
 
-  function Row({ index }) {
+  function Row({ row }) {
+
     Row.propTypes = {
       row: PropTypes.any,
       index: PropTypes.number,
@@ -81,22 +93,21 @@ const Order = ({ ...props }) => {
     return (
       <React.Fragment>
         <TableRow
-          onClick={() => setOpen(!open)}
           sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer' }}
           className={styles.docRow}
           styles={style}
         >
-          <TableCell>
+          <TableCell onClick={() => setOpen(!open)}>
             <div id='align' style={{ color: 'var(--primary)' }}>
               {open ? (
                 <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
               ) : (
                 <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
               )}
-              Orçamentação {index}
+              {row.name}
             </div>
           </TableCell>
-          <TableCell>11/06/2022</TableCell>
+          <TableCell onClick={() => setOpen(!open)}>{moment(row.createdAt).format('DD/MM/YYYY')}</TableCell>
           <TableCell>
             <ButtonGroup>
               <Tooltip title='Edit'>
@@ -175,12 +186,92 @@ const Order = ({ ...props }) => {
     );
   }
 
+  async function getBase64(file) {
+    return new Promise(resolve => {
+      let baseURL = "";
+      // Make new FileReader
+      const reader = new FileReader();
+
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+        // Make a fileInfo Object
+        // console.log("Called", reader);
+        baseURL = reader.result;
+        // console.log(baseURL);
+        resolve(baseURL);
+      };
+
+    });
+  }
+
+  function handleFileInputChange(e) {
+
+    const file = e.target.files[0];
+
+    getBase64(file)
+      .then(async (result) => {
+        file.base64 = result;
+        console.log(file)
+
+        const builtFile = {
+          descricao: "Description here",
+          url: "a",
+          data: file.base64,
+          filename: file.name,
+          filesize: JSON.stringify(file.size),
+        }
+
+        await FileActions.saveFile(builtFile).then((res) => console.log(res))
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  function handleCreateFolder() {
+
+    if (!newFolderName) {
+      setErrorMessageFolderName('Não pode ser vazio')
+
+      return;
+    }
+
+    const builtFolder = {
+      id: Math.random().toString(),
+      name: newFolderName,
+      createdAt: Date.now()
+    }
+
+    const allFolders = folders;
+
+    allFolders.push(builtFolder);
+    setFolders(allFolders);
+    setNewFolderName('');
+    setCreatingFolder(false);
+    setRefresh(new Date())
+  }
+
+  async function deleteDoc(id) {
+    try {
+      await FileActions.removeFile({ id }).then((res) => {
+        setFiles(files.filter(item => item.id !== id))
+        toast.success(`${res.data.payload.filename} removido!`)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
+      <Notification />
       <CustomBreadcrumbs path={breadcrumbsPath} />
-
-      <Content>
+      <UploadImagesModal open={docsModal} folders={folders} {...pageProps} onClose={() => setDocsModal(false)} />
+      <Content id={refresh}>
         <div id='pad'>
           <div style={{ display: 'flex', marginBottom: '1rem' }}>
             <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
@@ -209,14 +300,14 @@ const Order = ({ ...props }) => {
                 <div>
                   <a className='lightTextSm'>Client</a>
                   <br></br>
-                  <a className='lightTextSm black'>Constrea Lda</a>
+                  <a className='lightTextSm black'>{order.client.legalName}</a>
                   <br></br>
                 </div>
 
                 <div>
                   <a className='lightTextSm'>Produto</a>
                   <br></br>
-                  <a className='lightTextSm black'>Tampão de cozinha</a>
+                  <a className='lightTextSm black'>{order.product.name}</a>
                   <br></br>
                 </div>
               </div>
@@ -249,180 +340,212 @@ const Order = ({ ...props }) => {
       </Content>
 
       {/* Produção section */}
-      {internalPOV ? (
-        <Content>
-          <div id='pad'>
-            <div style={{ display: 'flex', marginBottom: '1rem' }}>
-              <a className='headerTitle'>Produção</a>
-              <div style={{ marginLeft: 'auto' }}>
-                <PrimaryBtn
-                  icon={
-                    <Eye
-                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
+      {
+        internalPOV ? (
+          <Content>
+            <div id='pad'>
+              <div style={{ display: 'flex', marginBottom: '1rem' }}>
+                <a className='headerTitle'>Produção</a>
+                <div style={{ marginLeft: 'auto' }}>
+                  <PrimaryBtn
+                    icon={
+                      <Eye
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
+                    }
+                    text='Ver detalhes'
+                  />
+                </div>
+              </div>
+            </div>
+            <AdvancedTable
+              noPagination
+              rows={productionDetail}
+              headCells={headCellsProductionDetail}
+              headCellsUpper={headCellsUpperProductionDetail}
+            />
+          </Content>
+        ) : null
+      }
+      {/* Docs */}
+      {
+        internalPOV ? (
+          <Content>
+            <a className={styles.docsMain}>
+              <div className={styles.tableContainer}>
+                <div id='align' style={{ display: 'flex', padding: '24px' }}>
+                  <div style={{ flex: 1 }}>
+                    <a className='headerTitle'>Documentos</a>
+                  </div>
+                  <div className='flex'>
+                    {!creatingFolder ?
+                      <PrimaryBtn
+                        disabled={folders[0] === undefined}
+                        text='Carregar'
+                        onClick={() => setDocsModal(true)}
+                        icon={
+                          <FilePlus
+                            strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
+                        }
+                      />
+                      :
+                      <div id='align'>
+                        <span style={{ paddingRight: '.5rem' }}>Nome</span>
+                        <TextField
+                          error={!!errorMessageFolderName}
+                          label={errorMessageFolderName}
+                          inputProps={{
+                            maxlength: 30
+                          }}
+                          helperText={`${newFolderName.length}/20`}
+
+                          value={newFolderName}
+                          onChange={(e) => {
+                            setErrorMessageFolderName()
+                            setNewFolderName(e.target.value)
+                          }}
+                          variant='standard'
+                        />
+                      </div>
+                    }
+                    <div>
+                      <PrimaryBtn
+                        light
+                        text='Criar Pasta'
+                        onClick={() => !creatingFolder ? setCreatingFolder(true) : handleCreateFolder()}
+                        icon={
+                          <FolderPlus
+                            strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <TableContainer component={Paper}>
+                  <Table aria-label='collapsible table'>
+                    <TableHead aria-label='sticky table'>
+                      <TableRow style={{ backgroundColor: 'var(--grayBG)' }}>
+                        <TableCell width={!!folders[0] && '70%'}>Nome</TableCell>
+                        <TableCell width={!!folders[0] && '30%'}>Data</TableCell>
+                        <TableCell>Ações</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {folders?.map((row, i) => (
+                        <Row key={i} row={row} index={i} />
+                      ))}
+                      {!folders[0] && <>
+                        <TableCell></TableCell>
+                        <TableRow sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><span>Sem pastas, <a className='link' onClick={() => setCreatingFolder(true)}>Crie uma</a></span></TableRow>
+                        <TableCell></TableCell>
+                      </>}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+              <div className={styles.infoContainer}>
+                <a className='headerTitleSm'>Desenho 1</a>
+                <div className={styles.innerInfoContainer}>
+                  <a id='align'>
+                    <Info
+                      style={{ marginRight: '1rem' }}
+                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                       size={pageProps.globalVars.iconSize}
                     />
-                  }
-                  text='Ver detalhes'
-                />
-              </div>
-            </div>
-          </div>
-          <AdvancedTable
-            noPagination
-            rows={productionDetail}
-            headCells={headCellsProductionDetail}
-            headCellsUpper={headCellsUpperProductionDetail}
-          />
-        </Content>
-      ) : null}
-      {/* Docs */}
-      {internalPOV ? (
-        <Content>
-          <a className={styles.docsMain}>
-            <div className={styles.tableContainer}>
-              <div id='pad' style={{ display: 'flex' }}>
-                <div style={{ flex: 1 }}>
-                  <a className='headerTitle'>Documentos</a>
-                </div>
-                <div className='flex'>
-                  <div>
-                    <PrimaryBtn
-                      text='Carregar'
-                      icon={
-                        <FilePlus
-                          strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
-                        />
-                      }
+                    <b>Informações</b>
+                  </a>
+                  <div
+                    id='align'
+                    style={{
+                      justifyContent: 'center',
+                      padding: '1rem',
+                      flexDirection: 'column',
+                      color: '#8793AB',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    <Folder
+                      strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
+                      size={pageProps.globalVars.iconSizeXxl}
+                      stroke='#8793AB'
+                      fill='#E7E8E9'
                     />
+                    15 Ficheiros
                   </div>
-                  <div>
-                    <PrimaryBtn
-                      light
-                      text='Criar Pasta'
-                      icon={
-                        <FolderPlus
-                          strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
-                        />
-                      }
+                  <a id='align'>
+                    <FileText
+                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
+                      style={{ marginRight: '1rem' }}
                     />
-                  </div>
-                </div>
-              </div>
-              <TableContainer component={Paper}>
-                <Table aria-label='collapsible table'>
-                  <TableHead aria-label='sticky table'>
-                    <TableRow style={{ backgroundColor: 'var(--grayBG)' }}>
-                      <TableCell width='70%'>Nome</TableCell>
-                      <TableCell width='30%'>Data</TableCell>
-                      <TableCell>Ações</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {[...Array(2)].map((row, i) => (
-                      <Row key={i} row={row} index={i} />
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-            <div className={styles.infoContainer}>
-              <a className='headerTitleSm'>Desenho 1</a>
-              <div className={styles.innerInfoContainer}>
-                <a id='align'>
-                  <Info
-                    style={{ marginRight: '1rem' }}
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                  />
-                  <b>Informações</b>
-                </a>
-                <div
-                  id='align'
-                  style={{
-                    justifyContent: 'center',
-                    padding: '1rem',
-                    flexDirection: 'column',
-                    color: '#8793AB',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  <Folder
-                    strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
-                    size={pageProps.globalVars.iconSizeXxl}
-                    stroke='#8793AB'
-                    fill='#E7E8E9'
-                  />
-                  15 Ficheiros
-                </div>
-                <a id='align'>
-                  <FileText
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                    style={{ marginRight: '1rem' }}
-                  />
-                  <b>Propriedades</b>
-                </a>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    color: '#8793AB',
-                    fontWeight: 'bold',
-                    paddingTop: '0.5rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div id='align'>
-                      <FileText
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
-                        style={{ marginRight: '1rem' }}
-                        stroke='transparent'
-                      />
-                      <a>Salvo em</a>
-                    </div>
-                    <div id='align'>
-                      <a>
+                    <b>Propriedades</b>
+                  </a>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      color: '#8793AB',
+                      fontWeight: 'bold',
+                      paddingTop: '0.5rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <div id='align'>
                         <FileText
                           strokeWidth={pageProps.globalVars.iconStrokeWidth}
                           size={pageProps.globalVars.iconSize}
                           style={{ marginRight: '1rem' }}
                           stroke='transparent'
                         />
-                        Alterado em
-                      </a>
+                        <a>Salvo em</a>
+                      </div>
+                      <div id='align'>
+                        <a>
+                          <FileText
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                            style={{ marginRight: '1rem' }}
+                            stroke='transparent'
+                          />
+                          Alterado em
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div id='align'>
-                      <FileText
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
-                        style={{ marginRight: '1rem' }}
-                        stroke='transparent'
-                      />
-                      <a>11 de Fevereiro 2022</a>
-                    </div>
-                    <div id='align'>
-                      <a>
+                    <div>
+                      <div id='align'>
                         <FileText
                           strokeWidth={pageProps.globalVars.iconStrokeWidth}
                           size={pageProps.globalVars.iconSize}
                           style={{ marginRight: '1rem' }}
                           stroke='transparent'
                         />
-                        <a>02 de Março 2022</a>
-                      </a>
+                        <a>11 de Fevereiro 2022</a>
+                      </div>
+                      <div id='align'>
+                        <a>
+                          <FileText
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                            style={{ marginRight: '1rem' }}
+                            stroke='transparent'
+                          />
+                          <a>02 de Março 2022</a>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </a>
-        </Content>
-      ) : null}
+            </a>
+          </Content>
+        ) : null
+      }
 
       {/* Messages */}
       <Content>
@@ -464,8 +587,8 @@ const Order = ({ ...props }) => {
                     <Avatar className={stylesMessage.avatar}>N</Avatar>
                   </div>
                   <div style={{ paddingLeft: '1rem' }}>
-                    <div className={stylesMessage.sender}>Order Nº {i + 1}</div>
-                    <div>Mensagem contents</div>
+                    <div className={stylesMessage.sender}>Encomenda Nº {i + 1}</div>
+                    <div>Conteudo</div>
                   </div>
                 </TableCell>
                 <TableCell>11/02/2022</TableCell>
@@ -506,21 +629,20 @@ const Order = ({ ...props }) => {
                 <div>
                   <PrimaryBtn
                     text='Carregar'
+                    onClick={() => setDocsModal(true)}
                     icon={
                       <FilePlus
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                         size={pageProps.globalVars.iconSize}
                       />
                     }
-                  >
-                    <input type='file' hidden />
-                  </PrimaryBtn>
+                  />
                 </div>
               </div>
             </div>
 
-            <AdvancedTable headCells={headCellsDocs} rows={docs} noPagination>
-              {docs.map((doc, i) => (
+            <AdvancedTable headCells={headCellsDocs} rows={[]}>
+              {files.map((doc, i) => (
                 <TableRow
                   key={i}
                   style={{
@@ -532,140 +654,119 @@ const Order = ({ ...props }) => {
                       activeRow === doc.id - 1 ? 'var(--primary)' : null,
                   }}
                   className={styles.docRow}
-                  onClick={() => setActiveRow(doc.id - 1)}
+                  onClick={() => setActiveRow(i)}
                 >
-                  <TableCell className='link'>{doc.name}</TableCell>
-                  <TableCell>{doc.data}</TableCell>
+                  <TableCell className='link'>
+                    <Box id='align'>
+                      <File
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
+                      {doc.filename}
+                    </Box>
+                  </TableCell>
+                  <TableCell>{moment(doc.dataCriacao).format('DD/MM/YYYY')}</TableCell>
                   <TableCell>
-                    <Tooltip title='Edit'>
-                      <IconButton>
-                        <Edit
-                          className='link'
-                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
-                        />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title='Delete'>
-                      <IconButton>
-                        <Trash
-                          className='link'
-                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
-                        />
-                      </IconButton>
-                    </Tooltip>
+                    <ButtonGroup>
+                      <Tooltip title='Editar'>
+                        <IconButton>
+                          <Edit
+                            className='link'
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Remover'>
+                        <IconButton onClick={() => deleteDoc(doc.id)}>
+                          <Trash
+                            className='link'
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </ButtonGroup>
                   </TableCell>
                   <TableCell>
-                    {activeRow === doc.id - 1 ? (
-                      <div className='dot'></div>
+                    {activeRow === i ? (
+                      <Tooltip title='Ver Imagem'>
+                        <IconButton>
+                          <View className='link'
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
+                        </IconButton>
+                      </Tooltip>
                     ) : null}
                   </TableCell>
                 </TableRow>
               ))}
             </AdvancedTable>
+
           </div>
-          <div className={styles.infoContainer}>
-            <a className='headerTitleSm'>{docs[activeRow].name}</a>
-            <div className={styles.innerInfoContainer}>
-              <a id='align'>
-                <Info
-                  style={{ marginRight: '1rem' }}
-                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
-                />
-                <b>Informações</b>
-              </a>
-              <div
-                id='align'
-                style={{
-                  justifyContent: 'center',
-                  padding: '1rem',
-                  flexDirection: 'column',
-                  color: '#8793AB',
-                  fontWeight: 'bold',
-                }}
-              >
-                <FileText
-                  strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
-                  size={pageProps.globalVars.iconSizeXxl}
-                  stroke='#8793AB'
-                />
-                {docs[activeRow].fileSize}
-              </div>
-              <a id='align'>
-                <FileText
-                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
-                  style={{ marginRight: '1rem' }}
-                />
-                <b>Propriedades</b>
-              </a>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  color: '#8793AB',
-                  fontWeight: 'bold',
-                  paddingTop: '0.5rem',
-                }}
-              >
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div id='align'>
-                    <FileText
-                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
-                      style={{ marginRight: '1rem' }}
-                      stroke='transparent'
-                    />
-                    <a>Salvo em</a>
-                  </div>
-                  <div id='align'>
-                    <a>
+          {files[activeRow]?.filename &&
+            <div className={styles.infoContainer}>
+              <a className='headerTitleSm'>{files[activeRow]?.filename}</a>
+              <div className={styles.innerInfoContainer}>
+                <a id='align' target='#'>
+                  <Info
+                    style={{ marginRight: '1rem' }}
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
+                  <b>Informações</b>
+                </a>
+                <div
+                  id='align'
+                  style={{
+                    justifyContent: 'center',
+                    padding: '1rem',
+                    flexDirection: 'column',
+                    color: '#8793AB',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <FileText
+                    strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
+                    size={pageProps.globalVars.iconSizeXxl}
+                    stroke='#8793AB'
+                  />
+                  {GetFileSize(files[activeRow]?.filesize)}
+                </div>
+                {/* <Image src={files[activeRow].data} width={200} height={200} layout='responsive' /> */}
+                <Grid container >
+                  <Grid container>
+                    <Grid id='align' item sm={12}>
                       <FileText
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                         size={pageProps.globalVars.iconSize}
                         style={{ marginRight: '1rem' }}
-                        stroke='transparent'
                       />
-                      Alterado em
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <div id='align'>
-                    <FileText
-                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
-                      style={{ marginRight: '1rem' }}
-                      stroke='transparent'
-                    />
-                    <a>{docs[activeRow].createdAt}</a>
-                  </div>
-                  <div id='align'>
-                    <a>
-                      <FileText
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
-                        style={{ marginRight: '1rem' }}
-                        stroke='transparent'
-                      />
-                      <a>{docs[activeRow].updatedAt}</a>
-                    </a>
-                  </div>
-                </div>
+                      <Typography className='lightTextSm black' fontSize={'small'} >Propriedades</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item sm={6}>Salvo em</Grid>
+                    <Grid item sm={6}>{moment(files[activeRow]?.dataCriacao).format('DD/MM/YYYY hh:mm')}</Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item sm={6}>Alterado em</Grid>
+                    <Grid item sm={6}>{moment(files[activeRow]?.dataCriacao).format('DD/MM/YYYY hh:mm ')}</Grid>
+                  </Grid>
+                </Grid>
               </div>
             </div>
-          </div>
+          }
+
         </a>
       </Content>
-    </Grid>
+    </Grid >
   );
 };
 
 Order.propTypes = {
   order: PropTypes.string,
-  docs: PropTypes.arrayOf(PropTypes.object),
   orders: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.array,
   internalPOV: PropTypes.bool,
@@ -678,6 +779,7 @@ Order.propTypes = {
   headCellsDocs: PropTypes.array,
   pageProps: PropTypes.object,
   orderDetail: PropTypes.array,
+  files: PropTypes.array,
 };
 
 export default Order;

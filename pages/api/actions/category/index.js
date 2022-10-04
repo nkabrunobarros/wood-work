@@ -6,7 +6,7 @@ export async function categories(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: token && `Bearer ${token}` },
   };
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,

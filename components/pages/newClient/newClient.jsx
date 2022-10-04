@@ -11,12 +11,7 @@ import Content from '../../content/content';
 import PropTypes from 'prop-types';
 
 import {
-  Box,
-  Button,
-  CircularProgress,
-  InputLabel,
-  OutlinedInput,
-  Paper,
+  Box, InputLabel, Paper,
   Popover, TextareaAutosize,
   Tooltip,
   Typography
@@ -59,7 +54,6 @@ const NewClient = ({ ...props }) => {
   const [errorMessageAddress, setErrorMessageAddress] = useState('');
   const [errorMessagePostalCode, setErrorMessagePostalCode] = useState('');
   const [errorMessageNif, setErrorMessageNif] = useState('');
-  const [cleaningInputs, setCleaningInputs] = useState(false);
   const [postalCodeInfo, setPostalCodeInfo] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [newestUser, setNewestUser] = useState();
@@ -103,7 +97,7 @@ const NewClient = ({ ...props }) => {
       setDialogOpen(!dialogOpen);
   }
 
-  async function onConfirm() {   
+  async function onConfirm() {
     setDialogOpen(false)
     setProcessing(true)
 
@@ -124,10 +118,7 @@ const NewClient = ({ ...props }) => {
 
     try {
       await ClientService.saveClient(builtClient).then((response) => {
-        console.log(response)
-
-        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um Cliente ja existe com este email')
-        else if (!response.data.success) toast.error('Algo aconteceu')
+        if (!response.data.success) toast.error('Algo aconteceu')
         else {
           // success here
           setProcessing(false)
@@ -136,8 +127,11 @@ const NewClient = ({ ...props }) => {
 
         }
       })
-    } catch (e) { 
-      console.log(e)
+    } catch (error) {
+      if (!error.response.data.success && error.response.data.message === 'registo-ja-existe') {
+        toast.warning('Um Cliente ja existe com este email');
+        setProcessing(false)
+      }
     }
 
     setProcessing(false)
@@ -145,7 +139,6 @@ const NewClient = ({ ...props }) => {
 
   const ClearFields = () => {
     setSuccessOpen(false)
-    setCleaningInputs(true);
     setName('');
     setLegalName('');
     setEmail('');
@@ -165,9 +158,6 @@ const NewClient = ({ ...props }) => {
     setErrorMessagePostalCode();
     setErrorMessageNif();
 
-    setTimeout(() => {
-      setCleaningInputs(false);
-    }, 500);
   };
 
   useEffect(() => {
@@ -192,7 +182,7 @@ const NewClient = ({ ...props }) => {
 
   return (
     <Grid component='main'>
-      <CssBaseline /> 
+      <CssBaseline />
       <Notification />
 
       <Popover
@@ -205,14 +195,14 @@ const NewClient = ({ ...props }) => {
           horizontal: 'left',
         }}
       >
-        <Box sx={{ flexGrow: 1, p: 1}}>
+        <Box sx={{ flexGrow: 1, p: 1 }}>
           <Grid container spacing={1}>
             <Grid container item spacing={3}>
               <Grid item xs={6}>
                 <Item>Distrito</Item>
               </Grid>
               <Grid item xs={6}>
-              <Item>{postalCodeInfo?.Distrito}</Item>
+                <Item>{postalCodeInfo?.Distrito}</Item>
               </Grid>
             </Grid>
             <Grid container item spacing={3}>
@@ -220,7 +210,7 @@ const NewClient = ({ ...props }) => {
                 <Item>Concelho</Item>
               </Grid>
               <Grid item xs={6}>
-              <Item>{postalCodeInfo?.Concelho}</Item>
+                <Item>{postalCodeInfo?.Concelho}</Item>
               </Grid>
             </Grid>
             <Grid container item spacing={3}>
@@ -229,9 +219,9 @@ const NewClient = ({ ...props }) => {
               </Grid>
               <Grid item xs={6}>
                 <Item> {typeof postalCodeInfo?.Localidade === 'object' ?
-                <>
-                  {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
-                </> : postalCodeInfo?.Localidade}</Item>
+                  <>
+                    {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
+                  </> : postalCodeInfo?.Localidade}</Item>
               </Grid>
             </Grid>
           </Grid>

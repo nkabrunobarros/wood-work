@@ -27,11 +27,11 @@ import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 //  Utlis
 
 const Orders = ({ globalVars }) => {
+  const [panelsInfo, setPanelsInfo] = useState();
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
-  const [panelsInfo, setPanelsInfo] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -159,13 +159,13 @@ const Orders = ({ globalVars }) => {
         label: 'Numero',
       },
       {
-        id: 'orderedBy',
+        id: 'client.legalName',
         numeric: false,
         disablePadding: true,
         label: 'Cliente',
       },
       {
-        id: 'product.category',
+        id: 'product.category.name',
         numeric: false,
         disablePadding: true,
         label: 'Categoria',
@@ -178,12 +178,14 @@ const Orders = ({ globalVars }) => {
       },
       {
         id: 'order_prod',
+        // id: 'order_prod',
         numeric: false,
         disablePadding: false,
         label: 'Produção',
       },
       {
         id: 'order_dispatch',
+        // id: 'order_dispatch',
         numeric: false,
         disablePadding: false,
         label: 'Em distribuição',

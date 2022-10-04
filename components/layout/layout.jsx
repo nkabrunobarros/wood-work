@@ -20,8 +20,9 @@ import IsInternal from '../utils/IsInternal';
 
 //  Material UI
 import { CssBaseline, Hidden, Tooltip } from '@mui/material';
-import moment from 'moment';
+
 import { parseCookies } from 'nookies';
+import moment from 'moment';
 
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
@@ -46,7 +47,6 @@ async function Test(pageProps) {
         return true;
       }
       else {
-
         const u = JSON.parse(localStorage.getItem('user'))
 
         pageProps.loggedUser = u;
@@ -74,8 +74,7 @@ const Layout = ({ children, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouter();
   const [loaded, setLoaded] = useState(false);
-  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('/[Id]', ''))
-
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''))
 
   if (typeof window !== "undefined") pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -120,8 +119,7 @@ const Layout = ({ children, ...pageProps }) => {
         />
       </Hidden>
       <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>
-        {IsInternal(pageProps.loggedUser.perfil.descricao) 
-        === isInternalPage ? children : <>
+        {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage ? children : <>
           <div className={styles.main} target="_blank" rel="noreferrer">
             <header className={styles.topheader}></header>
 

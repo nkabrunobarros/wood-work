@@ -35,6 +35,7 @@ const OrdersSimilar = ({...pageProps }) => {
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
   const [woodTypes, setWoodTypes] = useState();
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const getAll = async () => {
@@ -67,10 +68,12 @@ const OrdersSimilar = ({...pageProps }) => {
       });
     };
 
-    Promise.all([getAll()]).then((pageProps.hasFullyLoaded = true));
+    Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
 
-  //  Breadcrumbs path feed
+  if (loaded) {
+  
+    //  Breadcrumbs path feed
   const breadcrumbsPath = [
     {
       title: 'Encomendas Similares',
@@ -118,7 +121,7 @@ const OrdersSimilar = ({...pageProps }) => {
       label: 'Nome',
     },
     {
-      id: 'cliente',
+      id: 'client.legalName',
       numeric: false,
       disablePadding: true,
       label: 'Cliente',
@@ -209,8 +212,6 @@ const OrdersSimilar = ({...pageProps }) => {
   //  Convert main listing items to items var for coherence amongst pages
   const items = orders;
 
-  console.log(items)
-
   //  Page Props
   const props = {
     items,
@@ -226,18 +227,8 @@ const OrdersSimilar = ({...pageProps }) => {
   };
 
   //  Verifies if all data as been loaded and set page to fully Loaded
-  if (
-    hasData(items) &&
-    hasData(clients) &&
-    hasData(products)
-  )
-    pageProps.hasFullyLoaded = true;
-
-  return pageProps.hasFullyLoaded ? (
-    <OrdersScreen {...props} />
-  ) : (
-    <Loader center={true} />
-  );
+  return <OrdersScreen {...props} />
+  } else return <Loader center={true} />
 };
 
 OrdersSimilar.propTypes = {

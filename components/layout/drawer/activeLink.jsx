@@ -8,7 +8,6 @@ import routes from '../../../navigation/routes';
 
 function ActiveLink({ children, href, handleDrawerToggle, page }) {
   const path = useRouter();
-
   const orderSimilarPages = [`${routes.private.internal.ordersSimilar}`];
   const messagesPages = [`${routes.private.messages}`];
 
@@ -39,16 +38,26 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.editUser}[Id]`,
     `${routes.private.internal.newUser}`,
   ];
-  const profilePages = [`${routes.private.profile}[Id]`];
 
+  const profilePages = [`${routes.private.profile}[Id]`];
+  const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
+
   if (ordersPages.includes(path.route)) currentSection = 'Encomendas';
+
   if (orderSimilarPages.includes(path.route)) currentSection = 'Encomendas Similares';
+
   if (stockPages.includes(path.route)) currentSection = 'Stock';
+
   if (clientsPages.includes(path.route)) currentSection = 'Clientes';
+
   if (usersPages.includes(path.route)) currentSection = 'Utilizadores';
+
   if (profilePages.includes(path.route)) currentSection = 'Perfil';
+
   if (messagesPages.includes(path.route)) currentSection = 'Mensagens';
+
+  if (dashboardPages.includes(path.route)) currentSection = 'Painel de Controlo';
   
   const style = {
     borderLeft:
@@ -77,6 +86,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     </a>
   );
 }
+
 ActiveLink.propTypes = {
   children: PropTypes.any,
   href: PropTypes.string,

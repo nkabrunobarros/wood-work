@@ -1,4 +1,4 @@
-import { Breadcrumbs, IconButton, Tooltip } from '@mui/material';
+import { Box, Breadcrumbs, IconButton, Link, Tooltip } from '@mui/material';
 import { ChevronRight, Home } from 'lucide-react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
@@ -6,19 +6,19 @@ import React from 'react';
 import routes from '../../navigation/routes';
 
 import styles from '../../styles/components/navbar.module.css';
+import IsInternal from '../utils/IsInternal';
 
 const CustomBreadcrumbs = ({ path }) => {
   const style = {
-    fontWeight: 1600,
-    color: 'var(--primary)',
-    pointerEvents: 'none',
+    color: 'var(--grayLight) !important',
+    pointerEvents: 'all',
   };
 
   const output = Object.keys(path).sort((a, b) => b - a);
   const arrayLenght = parseInt(output[0]);
 
   return (
-    <div
+    <Box
       style={{
         background: 'white',
         marginTop: '2rem',
@@ -28,26 +28,24 @@ const CustomBreadcrumbs = ({ path }) => {
       }}
     >
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
-        <a>
-          <IconButton onClick={() => Router.push(Router.asPath.includes('internal') ? routes.private.internal.orders : routes.private.orders)}>
-            <Tooltip title='Voltar para Encomendas'>
-              <Home color='var(--primary)' strokeWidth={1} />
-            </Tooltip>
-          </IconButton>
-        </a>
+        {/* Case internal or not */}
+        <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao) ? routes.private.internal.orders : routes.private.orders)}>
+          <Tooltip title='Ir para Encomendas'>
+            <Home color='var(--primary)' strokeWidth={1} />
+          </Tooltip>
+        </IconButton>
         {path.map((crumb, i) => (
-          <a
-            href={crumb.href}
+          <Link
             key={i}
             onClick={() => Router.push(crumb.href)}
             className={styles.breadcrumb}
-            style={i < arrayLenght ? null : style}
+            sx={i < arrayLenght && style}
           >
             {crumb.title}
-          </a>
+          </Link>
         ))}
       </Breadcrumbs>
-    </div>
+    </Box>
   );
 };
 

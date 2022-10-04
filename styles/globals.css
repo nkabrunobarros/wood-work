@@ -3,7 +3,10 @@
   --primary: #225ee8;
   --primary-dark: #0c2254;
   --primary-light-opacity: #f1f7ff;
-
+  --primary-gradient: radial-gradient(circle, rgba(27,216,231,1) 0%, rgba(27,145,231,1) 82%);
+  --primary-dark-gradient: radial-gradient(circle, rgba(34,94,232,1) 0%, rgba(12,34,84,1) 82%);
+  --orange-gradient: radial-gradient(circle, rgba(233,189,9,1) 0%, rgba(233,134,9,1) 82%);
+  --green-gradient: radial-gradient(circle, rgba(11,158,35,0.5217437316723564) 0%, rgba(11,158,35,1) 82%);
   --white: rgb(255, 255, 255);
   --green: #0b9e23;
   --greenLight: #e8fcf1;

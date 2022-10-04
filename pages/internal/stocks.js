@@ -55,7 +55,7 @@ const Stock = ({ ...pageProps }) => {
         label: 'Fornecedor',
       },
       {
-        id: 'product.category',
+        id: 'product.category.name',
         label: 'Categoria',
       },
       {

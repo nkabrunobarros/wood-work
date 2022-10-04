@@ -23,6 +23,7 @@ import Router from 'next/router';
 
 const EditOrder = ({ ...props }) => {
   const { breadcrumbsPath, order, pageProps, clients } = props;
+
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -161,6 +162,7 @@ const EditOrder = ({ ...props }) => {
     </Grid>
   );
 };
+
 EditOrder.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
   order: PropTypes.object,
