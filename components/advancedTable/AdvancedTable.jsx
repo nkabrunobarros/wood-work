@@ -239,6 +239,7 @@ const AdvancedTable = ({
                 align={headCell.numeric ? 'right' : 'left'}
                 padding={headCell.disablePadding ? 'none' : 'normal'}
                 sortDirection={orderBy === headCell.id ? order : false}
+                color={'palette.background.default'}
                 sx={{
                   borderRight: headCell.borderRight
                     ? '1px solid var(--grayEdges)'
@@ -246,27 +247,23 @@ const AdvancedTable = ({
                   borderLeft: headCell.borderLeft
                     ? '1px solid var(--grayEdges)'
                     : null,
-                  backgroundColor: 'var(--grayBG)',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {loaded ?
-
                     <>
                       {headCell.label}
                       {orderBy === headCell.id ? <Box component='span'></Box> : null}
                     </> :
                     <Skeleton animation="wave" width='100%' />
                   }
-
-
-
                 </div>
               </TableCell>
             )
             )}
           </>
-        ) : null}
+        ) : null
+        }
 
         <TableRow id={refresh}>
           {cellsFilter.map((headCell) => {
@@ -284,7 +281,6 @@ const AdvancedTable = ({
                 borderLeft: headCell.borderLeft
                   ? '1px solid var(--grayEdges)'
                   : null,
-                backgroundColor: 'var(--grayBG)',
               }}
             >
               <TableSortLabel
@@ -307,16 +303,16 @@ const AdvancedTable = ({
 
           )}
         </TableRow>
-      </TableHead>
+      </TableHead >
     );
   }
 
   EnhancedTableHead.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+    numSelected: PropTypes.number,
+    onRequestSort: PropTypes.func,
+    order: PropTypes.oneOf(['asc', 'desc']),
+    orderBy: PropTypes.string,
+    rowCount: PropTypes.number,
     headCellsUpper: PropTypes.array,
   };
 
@@ -413,7 +409,7 @@ const AdvancedTable = ({
         <Box className='tableChips'>
           <Box>
             {Object.keys(filters || {}).map((x, i) => {
-              if (filters[x]) return <Chip key={i} label={filters[x]} onDelete={() => console.log('deleted')} />
+              if (filters[x]) return <Chip key={i} label={x} onDelete={() => console.log('deleted')} />
             })}
 
           </Box>
@@ -433,7 +429,6 @@ const AdvancedTable = ({
                 labelRowsPerPage={'Mostrar'}
               />
               <Box>
-
                 <Tooltip title='Filtrar tabela'>
                   <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
                     <Filter size={20} strokeWidth={1.5} />
@@ -584,9 +579,9 @@ const AdvancedTable = ({
 };
 
 AdvancedTable.propTypes = {
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.array,
   headCellsUpper: PropTypes.array,
-  headCells: PropTypes.array.isRequired,
+  headCells: PropTypes.array,
   children: PropTypes.any,
   clickRoute: PropTypes.any,
   editRoute: PropTypes.string,

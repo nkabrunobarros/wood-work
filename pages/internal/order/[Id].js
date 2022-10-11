@@ -21,23 +21,36 @@ const Order = ({ ...pageProps }) => {
   const [order, setOrder] = useState();
   const [files, setFiles] = useState();
   const orderId = router.query.Id;
+  const [total, setTotal] = useState();
 
   useEffect(() => {
     const getData = async () => {
       await OrdersActions
-        .order({id: orderId})
-        .then((res) => setOrder(res.data.payload));
+        .order({ id: orderId })
+        .then((res) => {
+          console.log(res)
+
+          let time = 0;
+          let amount = 0;
+          res.data.payload.data.map(ord => {
+            time += ord.product.craftTime * ord.amount
+            amount += ord.amount
+          })
+
+          setTotal({ time, amount})
+          setOrder(res.data.payload.data)
+        });
 
       await FilesActions
         .files()
-        .then((res) =>setFiles(res.data.payload.data));
+        .then((res) => setFiles(res.data.payload.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
-   
+
 
     const headCellsUpperOrderDetail = [
       {
@@ -64,27 +77,27 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: 'Quantidade Encomendada: 25 Un',
+        label: `Quantidade Encomendada: ${total.amount} Un`,
         span: 1,
       },
     ];
 
     const headCellsOrderDetail = [
       {
-        id: 'clienteTime',
+        id: 'startAt',
         label: 'Cliente',
       },
       {
-        id: 'real',
+        id: 'startAt',
         label: 'Real',
       },
       {
-        id: 'start',
+        id: 'startAt',
         label: 'Inicio',
         borderLeft: true,
       },
       {
-        id: 'end',
+        id: 'endAt',
         label: 'Fim',
         borderRight: true,
       },
@@ -119,7 +132,7 @@ const Order = ({ ...pageProps }) => {
         borderRight: true,
       },
       {
-        id: 'previsto2',
+        id: 'product.craftTime',
         label: 'Previsto',
       },
       {
@@ -227,11 +240,11 @@ const Order = ({ ...pageProps }) => {
     const orderDetail = [
       {
         id: Math.random(),
-        clienteTime: '04 abril 2022',
+        startAt: order[0].order.startAt,
         real: '06 abril 2022',
         start: '17 março 2022',
-        end: '06 abril 2022',
-        time: 37,
+        endAt: order[0].order.endAt,
+        time: `${total.time} H`,
       },
     ];
 
@@ -252,6 +265,7 @@ const Order = ({ ...pageProps }) => {
       pageProps,
       orderDetail,
       files,
+      total
     };
 
 

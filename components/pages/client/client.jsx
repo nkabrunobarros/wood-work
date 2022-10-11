@@ -20,9 +20,9 @@ import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
 import { Edit, PackagePlus, Trash, User } from 'lucide-react';
-import ConfirmDialog from '../../dialogs/ConfirmDialog';
-import * as ClientsActions from '../../../pages/api/actions/client';
 import routes from '../../../navigation/routes';
+import * as ClientsActions from '../../../pages/api/actions/client';
+import ConfirmDialog from '../../dialogs/ConfirmDialog';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, client, editRoute, pageProps } = props;
@@ -93,45 +93,44 @@ const EditClient = ({ ...props }) => {
             <Grid item xs={12} md={6}>
               <Grid container spacing={3} >
                 <Grid container item>
-                  <Typography id='align' item className='lightTextSm'><User
+                  <Typography id='align' item color='lightTextSm.main'><User
                     strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                     size={pageProps.globalVars.iconSize}
                   />  Dados Gerais</Typography>
                 </Grid>
                 <Grid container item>
                   <Grid item xs={12} md={6} sx={{ overflow: 'hidden' }}>
-                    <Typography item className='lightTextSm'>Email</Typography>
-                    <Typography item className='lightTextSm black' >{client.email}</Typography>
+                    <Typography item color='lightTextSm.main'>Email</Typography>
+                    <Typography item color='lightTextSm.black' >{client.email}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'>Telefone </Typography>
-                    <Typography item className='lightTextSm black' >{client.telephone}</Typography>
+                    <Typography item color='lightTextSm.main'>Telefone </Typography>
+                    <Typography item color='lightTextSm.black' >{client.telephone}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'>Pessoa de Contacto </Typography>
-                    <Typography item className='lightTextSm black' >{client.contact}</Typography>
+                    <Typography item color='lightTextSm.main'>Pessoa de Contacto </Typography>
+                    <Typography item color='lightTextSm.black' >{client.contact}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'>Contacto </Typography>
-                    <Typography item className='lightTextSm black' >{client.telephone}</Typography>
+                    <Typography item color='lightTextSm.main'>Contacto </Typography>
+                    <Typography item color='lightTextSm.black' >{client.telephone}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item>
                   <Grid item xs={12}>
-                    <Typography item className='lightTextSm'>Observações </Typography>
-                    <Typography item className='lightTextSm black' >{client.obs}</Typography>
+                    <Typography item color='lightTextSm.main'>Observações </Typography>
+                    <Typography item color='lightTextSm.black' >{client.obs}</Typography>
                   </Grid>
-
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Grid container spacing={3} className={styles.clientContainer}>
+              <Grid container spacing={3} bgcolor={"lightGray.main"} className={styles.clientContainer}>
                 <Grid container item>
                   <Grid item xs={12}>
-                    <Typography id='align' item className='lightTextSm'>
+                    <Typography id='align' item color='lightTextSm.main'>
                       <PackagePlus
                         strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                         size={pageProps.globalVars.iconSize}
@@ -143,22 +142,22 @@ const EditClient = ({ ...props }) => {
 
                 <Grid container item>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'>Morada Fiscal</Typography>
-                    <Typography item className='lightTextSm black' >{client.address}</Typography>
+                    <Typography item color='lightTextSm.main'>Morada Fiscal</Typography>
+                    <Typography item color='lightTextSm.black' >{client.address}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'>Codigo Postal</Typography>
-                    <Typography item className='lightTextSm black' >{client.postalCode}</Typography>
+                    <Typography item color='lightTextSm.main'>Codigo Postal</Typography>
+                    <Typography item color='lightTextSm.black' >{client.postalCode}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'> Número de Indentificação Fiscal (Nif)</Typography>
-                    <Typography item className='lightTextSm black' >{client.taxId}</Typography>
+                    <Typography item color='lightTextSm.main'> Número de Indentificação Fiscal (Nif)</Typography>
+                    <Typography item color='lightTextSm.black' >{client.taxId}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <Typography item className='lightTextSm'>Outros Dados</Typography>
-                    <Typography item className='lightTextSm black' >{client.otherData}</Typography>
+                    <Typography item color='lightTextSm.main'>Outros Dados</Typography>
+                    <Typography item color='lightTextSm.black' >{client.otherData}</Typography>
                   </Grid>
                 </Grid>
               </Grid>

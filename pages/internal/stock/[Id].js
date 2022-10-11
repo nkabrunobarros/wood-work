@@ -1,6 +1,6 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 //  Custom Components
 import Loader from '../../../components/loader/loader';
@@ -12,12 +12,8 @@ import StockScreen from '../../../components/pages/stock/stock';
 import routes from '../../../navigation/routes';
 
 //  Utils
-import hasData from '../../../components/utils/hasData';
 
 //  Services
-// import categoryService from '../../../services/categories/category-service';
-// import productService from '../../../services/products/product-service';
-// import stockService from '../../../services/stocks/stock-service';
 import * as CategoriesActions from '../../../pages/api/actions/category';
 import * as StocksActions from '../../../pages/api/actions/stock';
 

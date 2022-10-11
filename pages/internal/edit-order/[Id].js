@@ -8,35 +8,38 @@ import Loader from '../../../components/loader/loader';
 //  Page Component
 import EditOrderScreen from '../../../components/pages/editOrder/editOrder';
 
-//  Utils
-import hasData from '../../../components/utils/hasData';
-
 //  Navigation
 import routes from '../../../navigation/routes';
-import clientService from '../../../services/clients/client-service';
 
 //  Services
-import orderService from '../../../services/orders/order-service';
+import * as OrdersActions from '../../../pages/api/actions/order';
+import * as ClientsActions from '../../../pages/api/actions/client';
+import * as ProductsActions from '../../../pages/api/actions/product';
 
 const EditOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
   const [clients, setClients] = useState();
-
+  const [products, setProducts] = useState();
   const router = useRouter();
-  const orderId = router.query.Id;
 
   useEffect(() => {
     const getAll = async () => {
-      await orderService
-        .getOrderById(orderId)
-        .then((res) => setOrder(res.data.data));
-      await clientService
-        .getAllClients()
-        .then((res) => setClients(res.data.data));
+      await OrdersActions
+        .order({id: router.query.Id})
+        .then((res) => setOrder(res.data.payload));
+
+      await ClientsActions
+        .clients()
+        .then((res) => setClients(res.data.payload.data));
+
+      await ProductsActions.products().then((response) => setProducts(response.data.payload.data))
+
     };
-    Promise.all([getAll()]).then(setLoaded(true));
+
+    Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
+
   if (loaded) {
     const breadcrumbsPath = [
       {
@@ -48,19 +51,19 @@ const EditOrder = ({ ...pageProps }) => {
         href: `${routes.private.internal.order}`,
       },
     ];
+
     const props = {
       order,
       breadcrumbsPath,
       pageProps,
-      clients
+      clients,
+      products
     };
-    if (hasData(order) && hasData(clients)) pageProps.hasFullyLoaded = true;
-    return loaded && pageProps.hasFullyLoaded ? (
-      <EditOrderScreen {...props} />
-    ) : (
-      <Loader center={true} />
-    );
-  }
-  return <Loader center={true} />;
+  
+
+    return <EditOrderScreen {...props} />
+   
+  } else return <Loader center={true} />;
 };
+
 export default EditOrder;

@@ -12,3 +12,14 @@ Tipos de Madeira, quem gere?
 Categorias de produtos, quem gere?
 
 Painel de controlo, preciso? Dashboard
+
+
+Serviço de email?
+if
+
+na criação de encomenda?
+ao cliente ser criado?
+confirmação de email (na criacao)?
+reset password por email?
+á encomenda estar pronta?
+ao responder entre mensagens?

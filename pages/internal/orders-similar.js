@@ -14,13 +14,12 @@ import PropTypes from 'prop-types';
 import routes from '../../navigation/routes';
 
 //  Services
-import * as OrdersActions from '../../pages/api/actions/order';
 import * as ClientsActions from '../../pages/api/actions/client';
+import * as OrdersActions from '../../pages/api/actions/order';
 import * as ProductsActions from '../../pages/api/actions/product';
 import * as WoodTypeActions from '../../pages/api/actions/woodtype';
 
 //  Utils
-import hasData from '../../components/utils/hasData';
 
 function formatNum(val1, val2) {
   const res = val1 - val2;
@@ -90,7 +89,7 @@ const OrdersSimilar = ({...pageProps }) => {
       borderLeft: false,
       borderRight: false,
       label: 'Quantidade Produzida:12 Un',
-      span: 6,
+      span: 5,
     },
     {
       id: 'orderAmount',
@@ -114,23 +113,23 @@ const OrdersSimilar = ({...pageProps }) => {
 
   //  Table lower cols
   const headCells = [
+    // {
+    //   id: 'id',
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: 'Nome',
+    // },
     {
-      id: 'product.name',
+      id: 'id',
       numeric: false,
       disablePadding: false,
-      label: 'Nome',
+      label: 'Num. Encomenda',
     },
     {
       id: 'client.legalName',
       numeric: false,
       disablePadding: true,
       label: 'Cliente',
-    },
-    {
-      id: 'id',
-      numeric: false,
-      disablePadding: false,
-      label: 'Num. Encomenda',
     },
     {
       id: 'product.craftTime',
@@ -225,6 +224,7 @@ const OrdersSimilar = ({...pageProps }) => {
     headCellsUpper,
     headCells,
   };
+
 
   //  Verifies if all data as been loaded and set page to fully Loaded
   return <OrdersScreen {...props} />

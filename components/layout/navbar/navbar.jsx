@@ -1,16 +1,23 @@
 // Node modules
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Switch, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Menu } from 'lucide-react';
+import { Menu, Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv.png';
 import styles from '../../../styles/components/navbar.module.css';
 
-const Navbar = ({ openDrawer, ...pageProps }) => {
+const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
   const open = Boolean();
+  const [theme, setTheme] = useState('dark')
+
+  function toggleThemeHere() {
+    const res = toggleTheme()
+
+    setTheme(res)
+  }
 
   return (
     <>
@@ -23,7 +30,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
               placeholder='blur'
             />
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center'}}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Tooltip title='Menu'>
               <IconButton
                 className={styles.menuBtn}
@@ -42,12 +49,22 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
             </Tooltip>
           </Box>
         </Box>
-        <Box className={styles.logos} sx={{ marginRight: '2rem' }}>
-          <Image
-            src={woodWorkyLogo}
-            layout='responsive'
-            placeholder='blur'
-          />
+
+        <Box id='align'>
+          <Box id='align' >
+            <Sun color='yellow' />
+            {console.log(theme)}
+            <Switch checked={theme === 'dark'} onClick={toggleThemeHere} />
+            <Moon color={'white'} />
+          </Box>
+
+          <Box className={styles.logos} sx={{ marginRight: '2rem' }}>
+            <Image
+              src={woodWorkyLogo}
+              layout='responsive'
+              placeholder='blur'
+            />
+          </Box>
         </Box>
       </Box>
     </>
@@ -56,6 +73,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
 
 Navbar.propTypes = {
   openDrawer: PropTypes.any,
+  toggleTheme: PropTypes.any,
 };
 
 export default Navbar;

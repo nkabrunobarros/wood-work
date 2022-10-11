@@ -1,140 +1,194 @@
 //  Nodes
-import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 
-import styles from '../../../styles/NewOrder.module.css';
-import { Save, User, X } from 'lucide-react';
 import {
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextareaAutosize,
+  Box,
+  Button,
+  InputLabel, OutlinedInput,
+  Typography
 } from '@mui/material';
+import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
+import styles from '../../../styles/NewOrder.module.css';
+import Notification from '../../dialogs/Notification';
+import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import { toast } from 'react-toastify';
+import * as OrdersActions from '../../../pages/api/actions/order';
+import Loader from '../../loader/loader';
+import Select from '../../inputs/select';
 
 const EditOrder = ({ ...props }) => {
-  const { breadcrumbsPath, order, pageProps, clients } = props;
+  const { breadcrumbsPath, order, pageProps, clients, products } = props;
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [product, setProduct] = useState(order.product.id);
+  const [client, setClient] = useState(order.client.id);
+  const [errorProd, setErrorProd] = useState('');
+  const [errorClient, setErrorClient] = useState('');
+  const [obs, setObs] = useState('');
+
+  async function CreateOrder() {
+    const builtOrder = {
+      productId: product,
+      status: 'Em orçamentação',
+      clientId: client,
+      createdAt: Date.now(),
+    }
+
+    setProcessing(true)
+
+    try {
+      await OrdersActions.saveOrder(builtOrder).then(() => {
+        setDialogOpen(false)
+        setProcessing(false)
+
+      })
+    } catch (err) {
+      toast.error('Algo Aconteceu')
+      setProcessing(false)
+      setDialogOpen(false)
+
+    }
+  }
+
+  function ClearAll() {
+    setClient()
+    setProduct()
+    setObs("")
+    setErrorClient()
+    setErrorProd()
+  }
 
   return (
-    <Grid component='main'>
+    <Grid component='main' >
       <CssBaseline />
+      <Notification />
       <CustomBreadcrumbs path={breadcrumbsPath} />
+      {/* Confirm Create Order Modal */}
+      <ConfirmDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        onConfirm={() => CreateOrder()}
+        message={`Está prestes a criar uma encomenda, tem certeza que quer continuar?`}
+        icon='AlertOctagon'
+      />
+      {processing && <Loader center={true} backdrop />}
+      {/* What do do after Create Modal */}
+
       <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
-          </div>
-          <div style={{ display: 'flex' }}>
+        <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+          <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title}</Typography>
+          <Box sx={{ marginLeft: 'auto' }}>
             <PrimaryBtn
               text='Guardar'
-              icon={
-                <Save
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
-                />
-              }
-            />
+              icon={<Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />} />
             <PrimaryBtn
               text='Cancelar'
-              icon={
-                <X
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
-                />
-              }
+              icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
               light
               onClick={() => Router.back()}
             />
-          </div>
-        </div>
-        <div className='flex'>
-          <div id='pad' className='filters' style={{ flex: 1 }}>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Lorem Ipsum dolor sit'
-              />
-            </div>
-            <InputLabel htmlFor='email'>Observações</InputLabel>
+          </Box>
+        </Box>
+        <Grid container sx={{ p: 2 }}>
+          <Grid container md={8} sm={12} p={2}>
+            <Box fullWidth sx={{ width: '100%' }}>
+              <Grid container spacing={1} sm={12} xs={12}>
+                <Grid container item md={12} sm={12} xs={12}>
+                  <Typography id='align' className='headerTitleSm'>
+                    <Package size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Produto
+                  </Typography>
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+                  <Select
+                    error={errorProd}
+                    label={'Produto'}
+                    optionLabel="name"
+                    required
+                    fullWidth
+                    options={products}
+                    value={product}
+                    onChange={(e) => {
+                      setErrorProd()
+                      setProduct(e.target.value)
+                    }}
+                  />
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+                  <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
+                  <OutlinedInput
 
-            <TextareaAutosize
-              placeholder='Escrever Texto'
-              className={styles.textarea}
-            />
-          </div>
-          <div id='pad' className={styles.clientContainer}>
-            <a id='align' className='headerTitleSm'>
-              <User
-                strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                    required
+                    fullWidth
+                    id='email'
+                    name='email'
+                    autoComplete='email'
+                    placeholder='Lorem Ipsum dolor sit'
+                  />
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+
+                  <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
+                  <OutlinedInput
+
+                    required
+                    fullWidth
+                    id='email'
+                    name='email'
+                    autoComplete='email'
+                    placeholder='Lorem Ipsum dolor sit'
+                  />
+
+                </Grid>
+                <Grid container item md={6} sm={12} xs={12}>
+
+                  <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
+                  <OutlinedInput
+
+                    required
+                    fullWidth
+                    id='email'
+                    name='email'
+                    autoComplete='email'
+                    placeholder='Lorem Ipsum dolor sit'
+                  />
+
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid container md={4} spacing={1} sm={12} p={2} bgcolor={"lightGray.main"} className={styles.clientContainer}>
+            <Grid container item sm={12} xs={12} >
+              <Typography id='align' className='headerTitleSm'>
+                <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Cliente
+              </Typography>
+            </Grid>
+            <Grid container item sm={12} xs={12} >
+              <Select
+                error={errorClient}
+                label={'Cliente'}
+                required
+                fullWidth
+                options={clients}
+                optionValue={'id'}
+                optionLabel="giveName"
+                value={client}
+                onChange={(e) => {
+                  setErrorClient()
+                  setClient(e.target.value)
+                }}
               />
-              Dados do Cliente
-            </a>
-            <div>
-              <InputLabel htmlFor='email'>Cliente</InputLabel>
-              <Select fullWidth>
-                <MenuItem value={'Selecionar uma categoria'}>
-                  Selecionar uma categoria
-                </MenuItem>
-                {clients.map((client, i) => (
-                  <MenuItem key={i} value={client.id}>
-                    {client.nome}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            <div>
+            </Grid>
+            <Grid container item sm={12} xs={12} >
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
                 required
@@ -144,8 +198,8 @@ const EditOrder = ({ ...props }) => {
                 autoComplete='email'
                 placeholder='Lorem Ipsum dolor sit'
               />
-            </div>
-            <div>
+            </Grid>
+            <Grid container item sm={12} xs={12} >
               <InputLabel htmlFor='email'>Lorem Ipsum</InputLabel>
               <OutlinedInput
                 required
@@ -155,9 +209,12 @@ const EditOrder = ({ ...props }) => {
                 autoComplete='email'
                 placeholder='Lorem Ipsum dolor sit'
               />
-            </div>
-          </div>
-        </div>
+            </Grid>
+          </Grid>
+          <Button onClick={ClearAll} style={{ marginLeft: 'auto' }}>
+            Limpar
+          </Button>
+        </Grid>
       </Content>
     </Grid>
   );
@@ -168,6 +225,7 @@ EditOrder.propTypes = {
   order: PropTypes.object,
   pageProps: PropTypes.any,
   clients: PropTypes.array,
+  products: PropTypes.array,
 };
 
 export default EditOrder;

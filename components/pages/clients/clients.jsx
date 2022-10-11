@@ -11,14 +11,12 @@ import Select from '../../inputs/select';
 
 //  PropTypes
 import {
-  Autocomplete, InputLabel,
-  OutlinedInput,
-  TextField
+  InputLabel,
+  OutlinedInput
 } from '@mui/material';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
-import routes from '../../../navigation/routes';
 
 const Clients = ({ ...props }) => {
   const {
@@ -41,8 +39,9 @@ const Clients = ({ ...props }) => {
     setFilters({
       legalName: nome,
       email,
+      perfilId: profilesFilter
     })
-  }, [nome, email, profiles])
+  }, [nome, email, profiles, profilesFilter])
 
   const ClearFilters = () => {
     setNome('');

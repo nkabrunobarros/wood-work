@@ -1,12 +1,13 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 
+import { Box } from '@mui/material'
 import styles from '../../styles/components/content.module.css'
 
 const Content = ({ children }) => (
-    <div className={styles.main}>
-      {children}
-    </div>
+  <Box bgcolor={"default.main"} className={styles.main}>
+    {children}
+  </Box>
 )
 
 Content.propTypes = {

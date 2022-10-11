@@ -13,16 +13,17 @@ import jwt from 'jsonwebtoken';
 import * as authActions from '../../pages/api/actions/auth';
 import styles from '../../styles/404.module.css';
 import Loader from '../loader/loader';
+import IsInternal from '../utils/IsInternal';
 import DrawerMobile from './drawer/drawer';
 import Footer from './footer/footer';
 import Navbar from './navbar/navbar';
-import IsInternal from '../utils/IsInternal';
 
 //  Material UI
-import { CssBaseline, Hidden, Tooltip } from '@mui/material';
+import { Box, CssBaseline, Fab, Hidden, Tooltip } from '@mui/material';
 
-import { parseCookies } from 'nookies';
+import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
+import { parseCookies } from 'nookies';
 
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
@@ -70,13 +71,34 @@ async function Test(pageProps) {
 }
 
 
-const Layout = ({ children, ...pageProps }) => {
+const Layout = ({ children, toggleTheme, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouter();
   const [loaded, setLoaded] = useState(false);
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''))
+  const [isVisible, setIsVisible] = useState(false);
 
   if (typeof window !== "undefined") pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
+
+
+  const listenToScroll = () => {
+    const heightToHideFrom = 500;
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+    if (winScroll > heightToHideFrom) {
+      !isVisible && setIsVisible(true)
+      isVisible && setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', listenToScroll);
+
+    return () => window.removeEventListener('scroll', listenToScroll);
+  }, []);
+
 
   useEffect(() => {
     async function load() {
@@ -110,27 +132,43 @@ const Layout = ({ children, ...pageProps }) => {
   return loaded ? (
     <React.Fragment>
       <CssBaseline />
-      <Navbar openDrawer={handleDrawerToggle} {...pageProps} />
+      <Navbar openDrawer={handleDrawerToggle} toggleTheme={toggleTheme} {...pageProps} />
       <Hidden implementation='css'>
         <DrawerMobile
+          toggleTheme={toggleTheme}
           mobileOpen={mobileOpen}
           handleDrawerToggle={handleDrawerToggle}
           {...pageProps}
         />
       </Hidden>
       <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>
-        {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage ? children : <>
-          <div className={styles.main} target="_blank" rel="noreferrer">
-            <header className={styles.topheader}></header>
+        {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage ? <>
+          {children}
+          {isVisible && (
+            <Box className={styles.floatingBtnContainer} style={{ position: 'fixed', bottom: '10%', right: '5%' }}>
+              <Fab
+                aria-label="like"
+                size={'medium'}
+                color={'primary'}
+                onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+              >
+                <ChevronUp color="white" />
+              </Fab>
+            </Box>
+          )}
+        </>
+          : <>
+            <div className={styles.main} target="_blank" rel="noreferrer">
+              <header className={styles.topheader}></header>
 
-            <div>
-              <div className={styles.starsec}></div>
-              <div className={styles.starthird}></div>
-              <div className={styles.starfourth}></div>
-              <div className={styles.starfifth}></div>
-            </div>
-            {/* Lamp section */}
-            {/* <div className={styles.lamp__wrap}>
+              <div>
+                <div className={styles.starsec}></div>
+                <div className={styles.starthird}></div>
+                <div className={styles.starfourth}></div>
+                <div className={styles.starfifth}></div>
+              </div>
+              {/* Lamp section */}
+              {/* <div className={styles.lamp__wrap}>
   <div className={styles.lamp}>
     <div className={styles.cable}></div>
     <div className={styles.cover}></div>
@@ -140,28 +178,28 @@ const Layout = ({ children, ...pageProps }) => {
     <div className={styles.light}></div>
   </div>
 </div> */}
-            <section className={styles.error}>
-              <div className={styles.error__content}>
-                <div className={styles.error__message}>
-                  <h1 className={styles.message__title}>Você não tem acesso a esta página</h1>
-                  <p className={styles.message__text}>
+              <section className={styles.error}>
+                <div className={styles.error__content}>
+                  <div className={styles.error__message}>
+                    <h1 className={styles.message__title}>Você não tem acesso a esta página</h1>
+                    <p className={styles.message__text}>
 
-                    Se é suposto ter acesso a esta página, por favor entre em
-                    <Tooltip title='Enviar email'>
-                      <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
-                    </Tooltip>
-                    com o responsavel
-                  </p>
+                      Se é suposto ter acesso a esta página, por favor entre em
+                      <Tooltip title='Enviar email'>
+                        <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
+                      </Tooltip>
+                      com o responsavel
+                    </p>
+                  </div>
+                  <div className={styles.error__nav}>
+                    <a className={styles.enav__link} onClick={() => Router.back()}>
+                      {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
+                      VOLTAR
+                    </a>
+                  </div>
                 </div>
-                <div className={styles.error__nav}>
-                  <a className={styles.enav__link} onClick={() => Router.back()}>
-                    {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
-                    VOLTAR
-                  </a>
-                </div>
-              </div>
-            </section>
-          </div></>}
+              </section>
+            </div></>}
 
       </div>
       <div style={{ width: '100%' }}>
@@ -173,6 +211,7 @@ const Layout = ({ children, ...pageProps }) => {
 
 Layout.propTypes = {
   children: PropTypes.any,
+  toggleTheme: PropTypes.any,
 };
 
 export default Layout;

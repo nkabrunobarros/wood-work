@@ -16,12 +16,14 @@ const Select2 = ({
   required,
   width,
   halfWidth,
-  error
+  error,
+  name,
+  id
 }) => {
 
   return (
     <React.Fragment>
-      {variant !== 'standard' && (
+      {variant !== 'standard' && label ? (
         <InputLabel htmlFor={label}>
           {label}
           {required &&
@@ -29,17 +31,17 @@ const Select2 = ({
               <span style={{ color: 'var(--red)' }}> *</span>
             </Tooltip>}
         </InputLabel>
-      )}
+      ) : null}
       <FormControl fullWidth>
-        {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
+        {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}
         <Select
           error={!!error}
           label={error}
           required={required}
           select
-
+          name={name}
           disabled={disabled}
-          id={label}
+          id={id}
           fullWidth={fullWidth || false}
           value={value}
           onChange={onChange}

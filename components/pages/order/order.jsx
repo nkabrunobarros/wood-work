@@ -53,7 +53,6 @@ const Order = ({ ...props }) => {
   const {
     order,
     breadcrumbsPath,
-    productionDetail,
     headCellsUpperProductionDetail,
     headCellsProductionDetail,
     headCellsOrderDetail,
@@ -65,7 +64,7 @@ const Order = ({ ...props }) => {
   } = props;
 
   const [files, setFiles] = useState(props.files)
-  const internalPOV = IsInternal(pageProps.loggedUser?.perfil.descricao)
+  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao)
   const [newFolderName, setNewFolderName] = useState('');
   const [folders, setFolders] = useState([]);
   const [creatingFolder, setCreatingFolder] = useState(false);
@@ -87,7 +86,6 @@ const Order = ({ ...props }) => {
     if (open)
       style = {
         borderColor: 'var(--primary)',
-        backgroundColor: 'red',
       };
 
     return (
@@ -186,50 +184,6 @@ const Order = ({ ...props }) => {
     );
   }
 
-  async function getBase64(file) {
-    return new Promise(resolve => {
-      let baseURL = "";
-      // Make new FileReader
-      const reader = new FileReader();
-
-      // Convert the file to base64 text
-      reader.readAsDataURL(file);
-
-      // on reader load somthing...
-      reader.onload = () => {
-        // Make a fileInfo Object
-        // console.log("Called", reader);
-        baseURL = reader.result;
-        // console.log(baseURL);
-        resolve(baseURL);
-      };
-
-    });
-  }
-
-  function handleFileInputChange(e) {
-
-    const file = e.target.files[0];
-
-    getBase64(file)
-      .then(async (result) => {
-        file.base64 = result;
-        console.log(file)
-
-        const builtFile = {
-          descricao: "Description here",
-          url: "a",
-          data: file.base64,
-          filename: file.name,
-          filesize: JSON.stringify(file.size),
-        }
-
-        await FileActions.saveFile(builtFile).then((res) => console.log(res))
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
 
   function handleCreateFolder() {
 
@@ -274,7 +228,7 @@ const Order = ({ ...props }) => {
       <Content id={refresh}>
         <div id='pad'>
           <div style={{ display: 'flex', marginBottom: '1rem' }}>
-            <a className='headerTitleXl'>Encomenda Nº {order.id}</a>
+            <a className='headerTitleXl'>Encomenda Nº {order[0].order.id}</a>
             <div style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
                 icon={
@@ -289,40 +243,28 @@ const Order = ({ ...props }) => {
           </div>
           {internalPOV ? (
             <div className='flex'>
-              <div
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                <div>
-                  <a className='lightTextSm'>Client</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{order.client.legalName}</a>
-                  <br></br>
-                </div>
-
-                <div>
-                  <a className='lightTextSm'>Produto</a>
-                  <br></br>
-                  <a className='lightTextSm black'>{order.product.name}</a>
-                  <br></br>
-                </div>
-              </div>
-              <div
-                style={{
-                  flex: 3,
-                }}
-              >
-                <AdvancedTable
-                  noPagination
-                  rows={orderDetail}
-                  headCells={headCellsOrderDetail}
-                  headCellsUpper={headCellsUpperOrderDetail}
-                />
-              </div>
+              <Grid container md={12}>
+                <Grid md={4} container>
+                  <Grid md={12} sm={6}>
+                    <Typography color={"lightTextSm.main"} >Cliente</Typography>
+                    <Typography color={"lightTextSm.black"} >{order[0].order.client.legalName}</Typography>
+                  </Grid>
+                  <Grid md={12} sm={6}>
+                    <Typography color={"lightTextSm.main"} >Produto</Typography>
+                    <Typography color={"lightTextSm.black"} >{Object.keys(order).length}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid
+                  md={8}
+                  container>
+                  <AdvancedTable
+                    noPagination
+                    rows={orderDetail}
+                    headCells={headCellsOrderDetail}
+                    headCellsUpper={headCellsUpperOrderDetail}
+                  />
+                </Grid>
+              </Grid>
             </div>
           ) : (
             <div>
@@ -361,7 +303,7 @@ const Order = ({ ...props }) => {
             </div>
             <AdvancedTable
               noPagination
-              rows={productionDetail}
+              rows={order}
               headCells={headCellsProductionDetail}
               headCellsUpper={headCellsUpperProductionDetail}
             />
@@ -398,7 +340,7 @@ const Order = ({ ...props }) => {
                           error={!!errorMessageFolderName}
                           label={errorMessageFolderName}
                           inputProps={{
-                            maxlength: 30
+                            maxlength: 20
                           }}
                           helperText={`${newFolderName.length}/20`}
 

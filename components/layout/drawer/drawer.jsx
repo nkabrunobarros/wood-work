@@ -37,7 +37,7 @@ import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
 
-const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
+const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProps }) => {
   const theme = useTheme();
   const navLinks = getLinks();
   const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -47,7 +47,8 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   };
-  
+
+
   return loggedUser && (
     <SwipeableDrawer
       disableSwipeToOpen={false}
@@ -115,21 +116,21 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, ...pageProps }) => {
               {loggedUser ? (
                 <React.Fragment key={i * 100}>
                   {/* {console.log(item.url)} */}
-                  {loggedUser.perfil.permissoes.find(ele => ele.sujeito === item.allowed && ele.accao === 'READ') 
-                  &&  
-                  IsInternal(pageProps.loggedUser.perfil.descricao) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
-                  ? (
-                    <ActiveLink
-                      key={i}
-                      href={item.url}
-                      handleDrawerToggle={handleDrawerToggle}
-                      page={item.title}
-                    >
-                      {item.icon}
-                      <div className='spacerBox' />
-                      {item.title}
-                    </ActiveLink>
-                  ) : null}
+                  {loggedUser.perfil.permissoes.find(ele => ele.sujeito === item.allowed && ele.accao === 'READ')
+                    &&
+                    IsInternal(pageProps.loggedUser.perfil.descricao) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
+                    ? (
+                      <ActiveLink
+                        key={i}
+                        href={item.url}
+                        handleDrawerToggle={handleDrawerToggle}
+                        page={item.title}
+                      >
+                        {item.icon}
+                        <div className='spacerBox' />
+                        {item.title}
+                      </ActiveLink>
+                    ) : null}
                 </React.Fragment>
               ) : null}
             </React.Fragment>

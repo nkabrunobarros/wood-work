@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
@@ -16,22 +15,23 @@ import PropTypes from 'prop-types';
 
 //  Data services
 
-import * as CategoriesActions from '../../pages/api/actions/category';
+// import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as OrdersActions from '../../pages/api/actions/order';
-import * as StockActions from '../../pages/api/actions/stock';
 
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 
 //  Utlis
 
-const Orders = ({ globalVars }) => {
+const Orders = ({ ...pageProps }) => {
   const [panelsInfo, setPanelsInfo] = useState();
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
-  const [categories, setCategories] = useState();
+  // const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
+  const detailPage = routes.private.internal.order;
+  const editPage = routes.private.internal.editOrder;
 
   useEffect(() => {
     const getData = async () => {
@@ -43,8 +43,7 @@ const Orders = ({ globalVars }) => {
       }
 
       await OrdersActions.orders().then(async (response) => {
-
-        response.data.payload.data.map(async (ord, i) => {
+        response.data.payload.data.map(async (ord) => {
           switch (ord.status) {
             case 'Em orçamentação':
               counts.budgeting++;
@@ -68,25 +67,19 @@ const Orders = ({ globalVars }) => {
             default:
               break;
           }
-
-          await StockActions.stock({ id: ord.product.id }).then((res) => {
-            response.data.payload.data[i].stock = res.data.payload.amount
-          })
-
         })
 
         setOrders(response.data.payload.data);
         setPanelsInfo(counts)
       });
 
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
+      // await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
       await ClientsActions.clients().then((response) => setClients(response.data.payload.data))
     }
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, [])
 
-  console.log(loaded)
 
   if (loaded) {
     //  Breadcrumbs path feed
@@ -97,9 +90,6 @@ const Orders = ({ globalVars }) => {
       },
     ];
 
-    const items = orders;
-    const internalPOV = true;
-
     const cards = [
       {
         num: 1,
@@ -107,8 +97,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.budgeting,
         icon: (
           <Layers
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--primary)',
@@ -119,8 +109,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.drawing,
         icon: (
           <LayoutTemplate
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--green)',
@@ -131,8 +121,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.production,
         icon: (
           <PackagePlus
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--orange)',
@@ -143,8 +133,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.concluded,
         icon: (
           <Settings
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--babyblue)',
@@ -163,18 +153,6 @@ const Orders = ({ globalVars }) => {
         numeric: false,
         disablePadding: true,
         label: 'Cliente',
-      },
-      {
-        id: 'product.category.name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Categoria',
-      },
-      {
-        id: 'stock',
-        numeric: false,
-        disablePadding: false,
-        label: 'Stock',
       },
       {
         id: 'order_prod',
@@ -198,38 +176,29 @@ const Orders = ({ globalVars }) => {
       },
     ];
 
-    const detailPage = routes.private.internal.order;
-    const editPage = routes.private.internal.editOrder;
-
     const props = {
-      categories,
-      items,
+      items: orders,
       panelsInfo,
       headCells,
       breadcrumbsPath,
       detailPage,
-      internalPOV,
       cards,
       clients,
       editPage,
+      pageProps,
     };
-    
+
     return <OrdersScreen {...props} />
   } else return <Loader center={true} />
 };
 
 Orders.propTypes = {
-  categories: PropTypes.array.isRequired,
-  panelsInfo: PropTypes.object.isRequired,
-  headCells: PropTypes.array.isRequired,
-  breadcrumbsPath: PropTypes.array.isRequired,
-  clients: PropTypes.array.isRequired,
-  detailPage: PropTypes.string.isRequired,
-  editPage: PropTypes.string.isRequired,
-  internalPOV: PropTypes.boolean,
-  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
-  hasFullyLoaded: PropTypes.bool,
-  globalVars: PropTypes.object,
+  panelsInfo: PropTypes.object,
+  headCells: PropTypes.array,
+  breadcrumbsPath: PropTypes.array,
+  clients: PropTypes.array,
+  detailPage: PropTypes.string,
+  editPage: PropTypes.string,
 };
 
 export default Orders;

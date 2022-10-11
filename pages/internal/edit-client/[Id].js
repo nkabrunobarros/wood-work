@@ -23,7 +23,7 @@ const EditClient = ({ ...pageProps }) => {
   useEffect(() => {
     const getAll = async () => {
       await ClientActions
-        .client({id: clientId})
+        .client({ id: clientId })
         .then((res) => setClient(res.data.payload));
     };
 
@@ -37,6 +37,10 @@ const EditClient = ({ ...pageProps }) => {
       {
         title: 'Clientes',
         href: `${routes.private.internal.clients}`,
+      },
+      {
+        title: client.giveName,
+        href: `${routes.private.internal.client}${client.id}`,
       },
       {
         title: `Editar Cliente`,

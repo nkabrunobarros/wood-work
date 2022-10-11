@@ -19,8 +19,8 @@ const CustomBreadcrumbs = ({ path }) => {
 
   return (
     <Box
+      bgcolor={"default.main"}
       style={{
-        background: 'white',
         marginTop: '2rem',
         borderRadius: '8px',
         padding: '12px',
@@ -31,7 +31,7 @@ const CustomBreadcrumbs = ({ path }) => {
         {/* Case internal or not */}
         <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao) ? routes.private.internal.orders : routes.private.orders)}>
           <Tooltip title='Ir para Encomendas'>
-            <Home color='var(--primary)' strokeWidth={1} />
+            <Home color='var(--primary)' strokeWidth={1} size={18} />
           </Tooltip>
         </IconButton>
         {path.map((crumb, i) => (

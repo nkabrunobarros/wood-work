@@ -1,104 +1,81 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 //  Material UI
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
 import {
   Autocomplete,
+  Box,
+  Grid,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
-  TextField,
+  TextField
 } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 
 //  Custom Components
+import AdvancedTable from '../../advancedTable/AdvancedTable';
 import CustomBreadcrumbs from '../../breadcrumbs';
+import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/infoCard';
 import Content from '../../content/content';
-import PrimaryBtn from '../../buttons/primaryBtn';
-import AdvancedTable from '../../advancedTable/AdvancedTable';
+
+//  Utils
+import CanDo from '../../utils/CanDo';
 
 //  Navigation
 import routes from '../../../navigation/routes';
 
-//  Styles
-import styles from '../../../styles/Orders.module.css';
-
 const OrdersScreen = ({ ...props }) => {
   const {
     items,
-    categories,
-    panelsInfo,
     breadcrumbsPath,
     detailPage,
-    internalPOV,
     cards,
     clients,
     editPage,
     headCells,
   } = props;
 
-
   //  States
-  const [rows, setRows] = useState(items);
   const [number, setNumber] = useState('');
   const [client, setClient] = useState('');
   const [category, setCategory] = useState('');
-  const [stock, setStock] = useState('');
+  const [producao, setProducao] = useState('');
   const [filters, setFilters] = useState({});
 
   const ClearFilters = () => {
     setNumber('');
     setClient('');
     setCategory('');
-    setStock('');
+    setCategory('');
     setFilters({});
   };
 
   //  Triggers when a filter input changes
   useEffect(() => {
     setFilters({
-      numero: number,
+      id: number,
       categoria: category,
-      stock,
+      status: producao,
       cliente: client,
     });
-  }, [number, client, category, stock]);
-
-  const onClientChange = (value) => {
-    if (value === null) setClient('');
-    else setClient(value.id);
-  };
-
-  const onDeleteOrder = (orderId) => {
-    console.log('deleting order nº ' + orderId);
-  };
-   
+  }, [number, client, category, producao]);
 
   return (
     <Grid component='main'>
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
-
-
       {/* Statistics Cards */}
-      {panelsInfo ? (
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            padding: 0,
-          }}
-        >
-          {cards.map((card) => (
+      <Grid container md={12} sx={12} xs={12}>
+        {cards.map((card) => (
+          <Grid container item key={card.num} lg={3} md={6} sm={12} p={1}>
             <InfoCard
               key={card.num}
               amount={card.amount}
@@ -106,137 +83,82 @@ const OrdersScreen = ({ ...props }) => {
               icon={card.icon}
               title={card.title}
             />
-          ))}
-        </div>
-      ) : null}
+          </Grid>
+        ))}
+      </Grid>
       {/* Filters */}
       <Content>
-        <div id='pad'>
-          <a className='headerTitleSm'>Filtros</a>
-          <div className={styles.filters}>
-            <div className={styles.filterContainer}>
-              <InputLabel htmlFor='email'>Número</InputLabel>
-              <OutlinedInput
-                fullWidth
-                id='number'
-                name='number'
-                autoComplete='number'
-                type='number'
-                placeholder='Escrever um número'
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-              />
-            </div>{console.log(clients)}
-            <div className={styles.filterContainer}>
-              <InputLabel htmlFor='email'>Cliente</InputLabel>
-              <Autocomplete
-                disablePortal
-                id='combo-box-demo'
-                options={clients}
-                getOptionLabel={(option) => option.giveName}
-                onChange={(event, value) => onClientChange(value)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    value={client}
-                    onChange={(event) => setClient(event.target.value)}
-                    placeholder='Escrever um nome'
-                  />
-                )}
-              />
-            </div>
-            <div className={styles.filterContainer}>
-              <InputLabel htmlFor='Categoria'>Categoria</InputLabel>
-              <Select
-                labelId='Categoria'
-                id='Categoria'
-                fullWidth
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <MenuItem value={''} disabled>
-                  Selecionar uma categoria
-                </MenuItem>
-                {categories.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            <div className={styles.filterContainer}>
-              <InputLabel htmlFor='Stock'>Stock</InputLabel>
-              <Select
-                labelId='Stock'
-                id='Stock'
-                fullWidth
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-              >
-                <MenuItem value={''} disabled>
-                  Selecionar uma estado de stock
-                </MenuItem>
-                <MenuItem value={'Disponível'}>Disponível</MenuItem>
-                <MenuItem value={'Indisponível'}>Indisponível</MenuItem>
-              </Select>
-            </div>
-          </div>
-          <div
-            style={{
-              width: 'fit-content',
-              marginLeft: 'auto',
-              paddingTop: '1rem',
-            }}
-          >
-            <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
-          </div>
-        </div>
+        <Grid id='pad' md={12} container>
+          <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
+          <Grid container item md={4} sm={6} xs={12} p={1}>
+            <InputLabel htmlFor='email'>Número encomenda</InputLabel>
+            <OutlinedInput
+              fullWidth
+              id='number'
+              name='number'
+              autoComplete='number'
+              placeholder='Escrever um número'
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+            />
+          </Grid>
+          <Grid container item md={4} sm={6} xs={12} p={1}>
+            <InputLabel htmlFor='email'>Cliente</InputLabel>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id='combo-box-demo'
+              options={clients}
+              getOptionLabel={(option) => option.giveName}
+              onChange={(e) => setClient(e.target.value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  value={client}
+                  onChange={(e) => setClient(e.target.value)}
+                  placeholder='Escrever um nome'
+                />
+              )}
+            />
+          </Grid>
+          <Grid container item md={4} sm={6} xs={12} p={1}>
+            <InputLabel htmlFor='Stock'>Producao</InputLabel>
+            <Select
+              fullWidth
+              value={producao}
+              onChange={(e) => setProducao(e.target.value)}
+            >
+              <MenuItem value={''} disabled>
+                Selecionar um estágio
+              </MenuItem>
+              <MenuItem value={'Em orçamentação'}>Não Iniciada</MenuItem>
+              <MenuItem value={'Iniciada'}>Iniciada</MenuItem>
+              <MenuItem value={'Terminada'}>Terminada</MenuItem>
+            </Select>
+
+          </Grid>
+          <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
+            <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
+          </Grid>
+        </Grid>
       </Content>
       {/* Orders */}
       <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div>
-            <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-          </div>
-          <div
-            style={{
-              marginLeft: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              color: 'var(--grayTexts)',
-              fontSize: 'small',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-              }}
-            >
-              {internalPOV ? (
-                <PrimaryBtn
-                  text='Adicionar'
-                  onClick={() => Router.push(routes.private.internal.newOrder)}
-                />
-              ) : null}
-            </div>
-          </div>
-        </div>
-
+        <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+          <PrimaryBtn
+            hidden={!CanDo(['write', 'orders'])}
+            text='Adicionar'
+            onClick={() => Router.push(routes.private.internal.newOrder)}
+          />
+        </Box>
         <AdvancedTable
-          rows={rows}
+          rows={items}
           headCells={headCells}
           filters={filters}
           clickRoute={detailPage}
           editRoute={editPage}
-          onDeleteClickFunc={onDeleteOrder}
-          setRows={() => setRows}
         />
       </Content>
     </Grid>
@@ -251,7 +173,6 @@ OrdersScreen.propTypes = {
   clients: PropTypes.array,
   detailPage: PropTypes.string,
   editPage: PropTypes.string,
-  internalPOV: PropTypes.any,
   cards: PropTypes.arrayOf(PropTypes.object),
   headCells: PropTypes.array,
 };

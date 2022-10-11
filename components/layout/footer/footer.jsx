@@ -1,12 +1,13 @@
 // Node modules
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import Image from 'next/image';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../../navigation/routes';
-import Tooltip from '@mui/material/Tooltip';
-import Image from 'next/image';
 import logosFooter from '../../../public/Fundos-Europeus.png';
+
 // Pages without layout (sidebar + navbar + footer)
 function Copyright(props) {
   return (
@@ -25,16 +26,17 @@ function Copyright(props) {
     </Typography>
   );
 }
+
 const Footer = ({ section }) => {
   return (
-    <div
+    <Box
+      bgcolor={"default.main"}
       className='flex'
       style={{
         position: 'fixed',
         minHeight: '45px',
         width: '100%',
         bottom: 0,
-        backgroundColor: 'white',
         borderTop: '1px solid var(--grayEdges)',
         color: 'var(--grayTextsLight)',
         fontSize: '12px',
@@ -43,31 +45,31 @@ const Footer = ({ section }) => {
     >
       {section !== 'client' ? (
         <>
-          <div style={{ flex: 1 }}>
+          <Box style={{ flex: 1 }}>
             <Copyright />
-          </div>
-          <div style={{ paddingRight: '1rem' }}>
+          </Box>
+          <Box style={{ paddingRight: '1rem' }}>
             <Image
               placeholder='blur'
               priority
               src={logosFooter}
               layout='intrinsic'
             />
-          </div>
+          </Box>
         </>
       ) : (
         <>
-          <div style={{ paddingLeft: '1rem' }}>
-            <div>
+          <Box style={{ paddingLeft: '1rem' }}>
+            <Box>
               <Image
                 placeholder='blur'
                 priority
                 src={logosFooter}
                 layout='intrinsic'
               />
-            </div>
-          </div>
-          <div
+            </Box>
+          </Box>
+          <Box
             style={{
               flex: 1,
               display: 'flex',
@@ -82,12 +84,13 @@ const Footer = ({ section }) => {
             >
               Termos e Condições | Política de Privacidade
             </a>
-          </div>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 };
+
 Footer.propTypes = {
   page: PropTypes.string,
   section: PropTypes.string,

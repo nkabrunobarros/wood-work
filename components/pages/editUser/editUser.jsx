@@ -7,8 +7,8 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
-import Loader from '../../loader/loader';
 import MyInput from '../../inputs/myInput';
+import Loader from '../../loader/loader';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -24,9 +24,7 @@ import {
   Backdrop,
   Button,
   CircularProgress,
-  InputLabel,
-  MenuItem,
-  OutlinedInput, TextareaAutosize
+  InputLabel, OutlinedInput, TextareaAutosize
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -36,10 +34,11 @@ import EmailValidation from '../../utils/EmailValidation';
 import hasData from '../../utils/hasData';
 
 //  Navigation
-import * as UserActions from '../../../pages/api/actions/user';
-import Select from '../../inputs/select';
 import { toast } from 'react-toastify';
+import * as UserActions from '../../../pages/api/actions/user';
 import Notification from '../../dialogs/Notification';
+import PhoneInput from '../../inputs/phoneInput/PhoneInput';
+import Select from '../../inputs/select';
 
 const EditUser = ({ ...props }) => {
   const { breadcrumbsPath, user, countries, profiles, pageProps } = props;
@@ -262,9 +261,23 @@ const EditUser = ({ ...props }) => {
                 }}
                 type='number'
               />
+              <PhoneInput
+                required
+                label={'Telefone'}
+                error={errorMessageTelefone}
+                placeholder='Escrever numero de telefone'
+                value={telefone}
+                onChange={(e) => {
+                  setTelefone(e.target.value);
+                  setErrorMessageTelefone('');
+                }}
+                type='number'
+                options={countries}
+
+              />
             </div>
             <div className='filterContainer2'>
-              <MyInput
+              {/* <MyInput
                 required
                 label={'Telemovel'}
                 error={errorMessageTelemovel}
@@ -275,6 +288,18 @@ const EditUser = ({ ...props }) => {
                   setErrorMessageTelemovel('');
                 }}
                 type='number'
+              /> */}
+              <PhoneInput
+                required
+                label='Telemovel'
+                type='number'
+                options={countries}
+                value={telemovel}
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setTelemovel(e.target.value);
+                  setErrorMessageTelemovel('');
+                }}
               />
             </div>
             <div className='filterContainer2'>
@@ -289,7 +314,7 @@ const EditUser = ({ ...props }) => {
                   setErrorMessagePerfil('');
                 }}
               />
-            
+
               <a style={{ color: 'var(--red)', fontSize: 'small' }}>
                 {errorMessagePerfil ? `${errorMessagePerfil}` : null}
               </a>
@@ -336,7 +361,7 @@ const EditUser = ({ ...props }) => {
               />
             </div>
           </div>
-          <div id='pad' style={{ flex: 1 }} className={styles.clientContainer}>
+          <div id='pad' style={{ flex: 1 }} bgcolor={"lightGray.main"} className={styles.clientContainer}>
             <a id='align' className='headerTitleSm'>
               <Lock
                 strokeWidth={pageProps.globalVars.iconStrokeWidth}

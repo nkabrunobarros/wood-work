@@ -367,7 +367,7 @@ const EditClient = ({ ...props }) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={4} className={styles.clientContainer}>
+          <Grid item xs={12} md={4} bgcolor={"lightGray.main"} className={styles.clientContainer}>
             <Grid container>
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <Typography id='align' item className='lightTextSm'>

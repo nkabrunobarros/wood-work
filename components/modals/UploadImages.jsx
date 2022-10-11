@@ -2,12 +2,12 @@
 import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from "@mui/material"
 import { ImagePlus, X, XCircle } from "lucide-react"
 import React, { useState } from "react"
+import { toast } from "react-toastify"
+import * as FileActions from '../../pages/api/actions/file'
 import PrimaryBtn from "../buttons/primaryBtn"
 import MyInput from "../inputs/myInput"
 import Select from "../inputs/select"
 import GetFileSize from "../utils/GetFileSize"
-import * as FileActions from '../../pages/api/actions/file';
-import { toast } from "react-toastify"
 
 const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
   const [newImages, setNewImages] = useState()
@@ -89,7 +89,7 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
 
 
   return <Modal open={open} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <Box sx={{ background: 'white', maxWidth: '600px', padding: '1rem', borderRadius: '8px', boxShadow: '0px 0px 20px -6px #5A5A5A' }}>
+    <Box bgcolor={"default.main"} sx={{ maxWidth: '600px', padding: '1rem', borderRadius: '8px', boxShadow: '0px 0px 20px -6px #5A5A5A' }}>
       <Grid container>
         <Grid container md={12} sx={{ display: 'flex' }}>
           <Box sx={{ marginLeft: 'auto' }}>
@@ -105,8 +105,8 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
             </IconButton>
           </Box>
         </Grid>
-        <Grid container md={12} sx={{ width: '100%'}}>
-          <Grid p={1} md={folders[0] && 6} sx={{ width: '100%'}}>
+        <Grid container md={12} sx={{ width: '100%' }}>
+          <Grid p={1} md={folders[0] && 6} sx={{ width: '100%' }}>
             <MyInput
               placeholder='Descricão.'
               value={newImageDescription}

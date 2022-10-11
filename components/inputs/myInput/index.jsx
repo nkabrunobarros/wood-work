@@ -21,12 +21,12 @@ const MyInput = ({
   adornmentPos,
   style,
   iconTooltip,
-  helperText
 }) => {
+
 
   return (<>
     {variant !== 'standard' && (
-      <InputLabel htmlFor={label}>
+      <InputLabel htmlFor={label} >
         {label}
         {required &&
           <Tooltip title='Obrigatório' >
@@ -37,7 +37,7 @@ const MyInput = ({
     <FormControl fullWidth disabled={disabled}>
       {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
       <OutlinedInput
-      
+
         type={type || 'string'}
         id={label}
         error={error}
@@ -51,12 +51,11 @@ const MyInput = ({
         placeholder={placeholder || ''}
         endAdornment={!!adornmentIcon &&
           <InputAdornment position={adornmentPos || "end"}>
-            <Tooltip title={iconTooltip || '' }>
+            <Tooltip title={iconTooltip || ''}>
               <IconButton component='label'
                 aria-label="toggle password visibility"
                 onClick={adornmentOnClick || null}
                 edge="end">
-
                 {adornmentIcon}
               </IconButton>
             </Tooltip>

@@ -53,10 +53,9 @@ const DashBoards = ({ ...pageProps }) => {
             default:
               break;
           }
-
-          await StockActions.stock({ id: ord.product.id }).then((res) => {
-            response.data.payload.data[i].stock = res.data.payload.amount
-          })
+          // await StockActions.stock({ id: ord.product.id }).then((res) => {
+          //   response.data.payload.data[i].stock = res.data.payload.amount
+          // })
         })
 
         setOrders(response.data.payload.data);
@@ -93,22 +92,7 @@ const DashBoards = ({ ...pageProps }) => {
       arrValues.push((Object.keys(res).length))
     })
 
-    const ops = {
-      options: {
-        dataLabels: {
-          enabled: false
-        },
-        fill: {
-          type: 'gradient',
-        },
-        xaxis: {
-          categories: arrDates
-        },
-      },
-
-      series: [ordersInfo.budgeting, ordersInfo.drawing, ordersInfo.production, ordersInfo.concluded],
-      labels: ['Em Orçamentação', 'Em Desenho', 'Em Produção', 'Concluida']
-    }
+    
 
     const ordersDonut = {
      

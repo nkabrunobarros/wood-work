@@ -1,6 +1,8 @@
 /* eslint-disable no-fallthrough */
+import moment from "moment";
 import React from "react";
 import displayWithStyle from "./displayTextWithStyle";
+
 
 const FilterItem = (data, item, col) => {
   if (Object.keys(data).length !== 0) {
@@ -11,10 +13,18 @@ const FilterItem = (data, item, col) => {
         switch (col2[0]) {
           case 'order_prod': {
             switch (item.status) {
-              case 'Em orçamentação' || 'Em desenho':return <a className="errorBalloon">Não Iniciada</a>;
-              case 'Em Produção':return <a className="warningBalloon">Iniciada</a>;
+              case 'Em orçamentação' || 'Em desenho': return <a className="errorBalloon">Não Iniciada</a>;
+              case 'Em Produção': return <a className="warningBalloon">Iniciada</a>;
               default: return <a className="successBalloon">Terminada</a>;
             }
+          }
+
+          case 'startAt': {
+            return moment(item[col2[0]]).locale('pt').format('DD MMMM YYYY')
+          }
+
+          case 'endAt': {
+            return moment(item[col2[0]]).locale('pt').format('DD MMMM YYYY')
           }
 
           case 'order_dispatch': {
@@ -25,14 +35,14 @@ const FilterItem = (data, item, col) => {
           }
 
           case "desvio" || "desvio2": {
-    
+
             if (item[`${col}`] < 0 && (col === "desvio" || col === "desvio2")) return <a className="successBalloon">{item[`${col}`]} horas</a>;
             else if (item[`${col}`] > 0 && (col === "desvio" || col === "desvio2")) return <a className="errorBalloon">{item[`${col}`]} horas</a>;
             else if (
               Math.ceil(item[`${col}`]) === 0 &&
               (col === "desvio" || col === "desvio2")
             ) return <a className="warningBalloon">{item[`${col}`]} horas</a>;
-    
+
             break;
           }
 
@@ -47,7 +57,7 @@ const FilterItem = (data, item, col) => {
           }
 
           default: {
-   
+
             if (['id', 'giveName', 'numero', 'nome', 'name', 'custo'].find(ele => ele === col2[0])) return <a className="link">{item[col2[0]]}</a>
             else return <a>{item[col2[0]]}</a>
           }
@@ -58,9 +68,11 @@ const FilterItem = (data, item, col) => {
         switch (col2[1]) {
           case 'name': return <a className="link" >{item[col2[0]][col2[1]]}</a>
 
-          default: return <a>{item[col2[0]][col2[1]]}</a>
+          default: {
+            return item[col2[0]] && item[col2[0]][col2[1]] ? <a>{item[col2[0]][col2[1]]}</a> : <a>Nan</a>
+          }
+        }
       }
-    }
 
       case 3: return <a>{item[col2[0]][col2[1]][col2[2]]}</a>
       case 4: return <a>{item[col2[0]][col2[1]][col2[2]][col2[3]]}</a>

@@ -37,7 +37,8 @@ const OrdersScreen = ({ ...props }) => {
     headCells,
     headCellsUpper,
     editPage,
-    detailPage
+    detailPage,
+    pageProps
   } = props;
 
   const rows = items;
@@ -344,14 +345,6 @@ const OrdersScreen = ({ ...props }) => {
           editRoute={editPage}
           clickRoute={detailPage}
         />
-
-        {/* 
-        <MyDataGrid title={t('tipos-operacao')} entity='tipoOperacao' entityPlural="tiposOperacao"
-          columns={[{ name: 'descricao', label: t('descricao'), options: { filter: true, filterType: 'textField' } },
-          { name: 'precoCusto', label: t('preco-custo'), type: 'number', options: { filter: true, filterType: 'textField' } },
-          { name: 'precoVenda', label: t('preco-venda'), type: 'number', options: { filter: true, filterType: 'textField' } },
-          { name: 'margem', label: t('margem'), type: 'number', options: { filter: true, filterType: 'textField' } },
-          ]} editAction='/definicoes/tipos-operacao' deleteAction={true} /> */}
       </Content>
     </Grid>
   );
@@ -370,6 +363,7 @@ OrdersScreen.propTypes = {
   woodTypes: PropTypes.arrayOf(PropTypes.object),
   operations: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object),
+  pageProps: PropTypes.object,
 };
 
 export default OrdersScreen;

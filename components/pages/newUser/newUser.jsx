@@ -27,10 +27,11 @@ import Loader from '../../loader/loader';
 import EmailValidation from '../../utils/EmailValidation';
 import hasData from '../../utils/hasData';
 
-import * as UserActions from '../../../pages/api/actions/user';
 import { toast } from 'react-toastify';
-import Notification from '../../dialogs/Notification';
 import routes from '../../../navigation/routes';
+import * as UserActions from '../../../pages/api/actions/user';
+import Notification from '../../dialogs/Notification';
+import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
 
 const NewUser = ({ ...props }) => {
@@ -261,18 +262,28 @@ const NewUser = ({ ...props }) => {
                 />
               </div>
               <div className='filterContainer4'>
-                <MyInput
+                {/* <MyInput
                   required
                   label='Telemovel'
                   onChange={(e) => {
                     setTelemovel(e.target.value);
                     setErrorMessageTelemovel('');
-                  }} value={telemovel}
+                  }}
+                  value={telemovel}
                   error={errorMessageTelemovel}
                   placeholder='Escrever numero de telemovel'
+                /> */}
+                <PhoneInput
+                  label='Telemovel'
                   type='number'
+                  options={countries}
+                  value={telemovel}
+                  onChange={(e) => {
+                    console.log(e.target.value)
+                    setTelemovel(e.target.value);
+                    setErrorMessageTelemovel('');
+                  }}
                 />
-
               </div>
               <div className='filterContainer4'>
 

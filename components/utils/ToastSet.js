@@ -12,4 +12,5 @@ function ToastSet( id, message, type ) {
     pauseOnHover: true,
   });
 }
+
 export default ToastSet;

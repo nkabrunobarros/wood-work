@@ -17,10 +17,10 @@ import {
 } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
 import routes from '../../../navigation/routes';
+import * as UserActions from '../../../pages/api/actions/user';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
-import * as UserActions from '../../../pages/api/actions/user';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 
 const Profile = ({ ...props }) => {
@@ -29,7 +29,7 @@ const Profile = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
 
   async function DisableUser() {
-    const userCpy =  {
+    const userCpy = {
       id: user.id,
       email: user.email,
       ativo: true,
@@ -60,7 +60,7 @@ const Profile = ({ ...props }) => {
         onConfirm={() => DisableUser()}
         message='Está prestes a desativar este Utilizador, tem certeza que quer continuar?'
         icon='AlertOctagon'
-      />      
+      />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
         <div id='pad' style={{ display: 'flex' }}>
@@ -106,20 +106,20 @@ const Profile = ({ ...props }) => {
           <Grid container sx={12}>
             <Grid container sm={12} md={6}>
               <Grid container sx={12}>
-                <Grid xs={12} sm={6} container p={2} className='infoBox dark'>
+                <Grid xs={12} sm={6} container p={2} bgcolor={"lightGray.main"}>
 
                   <Grid item xs={12}>
-                    <Typography item className='lightTextSm'>Nome </Typography>
-                    <Typography item className='lightTextSm black'>{user.nome}</Typography>
+                    <Typography item color='lightTextSm.main'>Nome </Typography>
+                    <Typography item color='lightTextSm.black'>{user.nome}</Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography item className='lightTextSm'>Perfil de Utilizador </Typography>
-                    <Typography item className='lightTextSm black'>{user.perfil.descricao}</Typography>
+                    <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
+                    <Typography item color='lightTextSm.black'>{user.perfil.descricao}</Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography item className='lightTextSm'>Estado </Typography>
+                    <Typography item color='lightTextSm.main'>Estado </Typography>
                     <Typography item>
-                      <a className='lightTextSm' style={{ color: 'var(--primary)' }}>
+                      <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
                         {user.ativo ? 'Ativo' : 'Desativado'}
                       </a>
                     </Typography>
@@ -182,8 +182,8 @@ const Profile = ({ ...props }) => {
             <Grid container>
               <Grid container p={2} sm={12} xs={12} md={6}>
                 <Grid item xs={12}>
-                  <Typography item className='lightTextSm'>Observações </Typography>
-                  <Typography item className='lightTextSm black'>{user.obs}</Typography>
+                  <Typography item color='lightTextSm.main'>Observações </Typography>
+                  <Typography item color='lightTextSm.black'>{user.obs}</Typography>
                 </Grid>
               </Grid>
             </Grid>

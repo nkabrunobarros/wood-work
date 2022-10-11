@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
@@ -26,7 +25,7 @@ import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react
 
 //  Utlis
 
-const Orders = ({ globalVars }) => {
+const Orders = ({ ...pageProps }) => {
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [categories, setCategories] = useState();
@@ -105,8 +104,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.budgeting,
         icon: (
           <PackageCheck
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--primary)',
@@ -117,8 +116,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.drawing,
         icon: (
           <LayoutTemplate
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--green)',
@@ -129,8 +128,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.production,
         icon: (
           <Layers
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--orange)',
@@ -141,8 +140,8 @@ const Orders = ({ globalVars }) => {
         amount: panelsInfo.concluded,
         icon: (
           <AlertOctagon
-            size={globalVars.iconSizeXl}
-            strokeWidth={globalVars.iconStrokeWidth}
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
           />
         ),
         color: 'var(--babyblue)',
@@ -200,6 +199,7 @@ const Orders = ({ globalVars }) => {
       internalPOV,
       cards,
       clients,
+      pageProps,
     };
     
     return <OrdersScreen {...props} />
@@ -217,7 +217,6 @@ Orders.propTypes = {
   internalPOV: PropTypes.boolean,
   cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasFullyLoaded: PropTypes.bool,
-  globalVars: PropTypes.object,
 };
 
 export default Orders;

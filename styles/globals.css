@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 :root {
   --primary: #225ee8;
   --primary-dark: #0c2254;
   --primary-light-opacity: #f1f7ff;
-  --primary-gradient: radial-gradient(circle, rgba(27,216,231,1) 0%, rgba(27,145,231,1) 82%);
-  --primary-dark-gradient: radial-gradient(circle, rgba(34,94,232,1) 0%, rgba(12,34,84,1) 82%);
-  --orange-gradient: radial-gradient(circle, rgba(233,189,9,1) 0%, rgba(233,134,9,1) 82%);
-  --green-gradient: radial-gradient(circle, rgba(11,158,35,0.5217437316723564) 0%, rgba(11,158,35,1) 82%);
+  --primary-gradient: radial-gradient(circle, rgba(27, 216, 231, 1) 0%, rgba(27, 145, 231, 1) 82%);
+  --primary-dark-gradient: radial-gradient(circle, rgba(34, 94, 232, 1) 0%, rgba(12, 34, 84, 1) 82%);
+  --orange-gradient: radial-gradient(circle, rgba(233, 189, 9, 1) 0%, rgba(233, 134, 9, 1) 82%);
+  --green-gradient: radial-gradient(circle, rgba(11, 158, 35, 0.5217437316723564) 0%, rgba(11, 158, 35, 1) 82%);
   --white: rgb(255, 255, 255);
   --green: #0b9e23;
   --greenLight: #e8fcf1;
@@ -21,6 +22,7 @@
   --redLight: #ffe8e5;
   --yellow: #cc7e00;
   --yellowLight: #fff5e5;
+
 }
 
 html,
@@ -29,6 +31,29 @@ body {
   margin: 0;
   font-family: 'Montserrat' !important;
   transition: all .2s ease-in-out;
+  scrollbar-color: red yellow;
+
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--lightestgrey);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 a {
@@ -39,11 +64,13 @@ a {
 * {
   box-sizing: border-box;
 }
+
 .link {
   color: var(--primary);
   cursor: pointer !important;
   text-decoration: none;
 }
+
 .pagination {
   background-color: var(--grayBG);
   border: 1px solid var(--grayEdges);
@@ -54,30 +81,31 @@ a {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-.spacerBox {
-    width:1rem;
-}
+
 .successBalloon {
   color: var(--green);
   background: var(--greenLight);
-  font-weight: bold;
+  border: 1px solid var(--green);
   padding: 0.5rem;
   border-radius: 50px;
 }
+
 .warningBalloon {
   color: var(--yellow);
   background: var(--yellowLight);
-  font-weight: bold;
+  border: 1px solid var(--yellow);
   padding: 0.5rem;
   border-radius: 50px;
 }
+
 .errorBalloon {
   color: var(--red);
   background: var(--redLight);
-  font-weight: bold;
+  border: 1px solid var(--red);
   padding: 0.5rem;
   border-radius: 50px;
 }
+
 .dot {
   height: 8px;
   width: 8px;
@@ -86,37 +114,45 @@ a {
   display: inline-block;
   margin-left: 25%;
 }
+
 .headerTitleXl {
-  font-size: 3vw !important;
+  font-size: 2vw !important;
   font-weight: bolder !important;
 }
+
 .headerTitle {
   font-size: 30px;
   font-weight: bolder;
 }
+
 .headerTitleSm {
   font-size: 24px !important;
   font-weight: bolder !important;
 }
+
 #pad {
   padding: 24px;
 }
+
 #align {
   display: flex;
   align-items: center;
 }
+
 .sidePanelTerms {
   background-image: url('../public/Consentimento.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
+
 .sidePanelTos {
   background-image: url('../public/tos.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
+
 .footerImages {
   background-image: url('../public/Fundos-Europeus.png');
   background-repeat: no-repeat;
@@ -126,10 +162,12 @@ a {
   width: 100%;
   min-width: 300px;
 }
+
 .primaryIcon {
   color: var(--primary);
   margin-right: 1rem;
 }
+
 .lightTextSm {
   font-size: 15px;
   color: var(--grayLight);
@@ -137,9 +175,11 @@ a {
   padding: 0.2rem;
   width: fit-content;
 }
+
 .bold {
   font-weight: bold;
 }
+
 .black {
   color: black !important;
 }
@@ -154,26 +194,32 @@ a {
   display: flex;
   flex-direction: column;
 }
+
 .dark {
   background-color: var(--grayBG);
 }
+
 .lightText {
   color: var(--grayLight);
   letter-spacing: 1px;
   padding: 0.2rem;
   width: fit-content;
 }
+
 .flex {
   display: flex;
   flex-direction: row;
 }
+
 .mobile {
   display: none;
 }
+
 .flexRow {
   display: flex;
   flex-direction: row;
 }
+
 /* /////////////////////////////////////////// */
 /* /////////////////////////////////////////// */
 /* /////////////////////////////////////////// */
@@ -189,12 +235,14 @@ a {
   border-radius: 8px;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
+
 .filterPopupCol {
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: 1rem;
 }
+
 .filterPopupCol #standard-basic {
   color: var(--grayLight);
 }
@@ -203,18 +251,23 @@ a {
   .flex {
     flex-direction: column;
   }
+
   .mobile {
     display: block !important;
   }
+
   .pagination {
     display: none;
   }
+
   .headerTitleXl {
     font-size: 6vw !important;
   }
+
   .mobileView {
     display: none;
   }
+
   .filterPopupMain {
     position: absolute;
     width: 100%;
@@ -227,21 +280,26 @@ a {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .filterContainer {
   width: 100%;
   flex: 0 1 300;
 }
+
 .filterContainer4 {
   width: 100%;
   flex: 0 1 300;
 }
+
 .filterContainer2 {
   width: 100%;
   flex: 0 1 300;
 }
+
 .scrollableX {
   overflow-y: hidden;
 }
+
 .scrollableY {
   overflow-x: hidden;
 }
@@ -253,9 +311,11 @@ a {
     align-items: center;
     flex-direction: row;
   }
+
   .filterContainer {
     max-width: calc(50% - 1em);
   }
+
   .filterContainer4 {
     max-width: calc(50% - 1em);
   }
@@ -266,13 +326,16 @@ a {
     max-width: calc(33% - 1em);
   }
 }
+
 @media screen and (min-width: 60em) {
   .filterContainer2 {
     max-width: calc(50% - 1em);
   }
+
   .filterContainer {
     max-width: calc(33% - 1em);
   }
+
   .filterContainer4 {
     max-width: calc(25% - 1em);
   }
@@ -283,17 +346,21 @@ a {
   width: 100%;
   height: 100%;
 }
+
 .scrollableZone::-webkit-scrollbar {
   display: none;
 }
+
 .messagesContainer::-webkit-scrollbar {
   display: none;
 }
+
 .activeFilterBalloonContainer {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
+
 .activeFilterBalloon {
   display: flex;
   align-items: center;
@@ -306,6 +373,7 @@ a {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
+
 .activeFilterBalloonIcon {
   color: white;
   background-color: #a5a5a5;
@@ -313,6 +381,7 @@ a {
   margin-left: 0.5rem;
   cursor: pointer;
 }
+
 .logoImg {
   background-position: center;
   background-image: url('../public/Logotipo_Vetorizado.png');
@@ -322,6 +391,7 @@ a {
   height: 100%;
   width: 100%;
 }
+
 .editor {
   box-sizing: border-box;
   border: 1px solid #ddd;

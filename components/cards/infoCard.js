@@ -1,26 +1,24 @@
 //  Nodes
 import React from 'react'
-import CssBaseline from '@mui/material/CssBaseline'
 
 import PropTypes from 'prop-types'
 
+import { Grid } from '@mui/material'
 import styles from '../../styles/components/infoCard.module.css'
 
 const InfoCard = ({ title, icon, amount, color }) => {
   const style = {
-    color: `${color}`
+    color: `${color}`,
   }
 
   return (
-    <div className={styles.card} style={style}>
-      <CssBaseline />
-      <div className={styles.cardIcon}>{icon}</div>
-      <div>
-        <a className={styles.cardTitle}>{title}</a>
-        <br></br>
-        <a>{amount} Encomendas</a>
-      </div>
-    </div>
+    <Grid bgcolor={"default.main"} container md={12} className={styles.card} style={style}>
+      <Grid container md={2}>{icon}</Grid>
+      <Grid container md={10} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid><a className={styles.cardTitle}>{title}</a></Grid>
+        <Grid><a >{amount} Encomendas</a></Grid>
+      </Grid>
+    </Grid>
   )
 }
 

@@ -1,17 +1,16 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React from 'react';
 
 import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import { Edit, PackagePlus, Trash } from 'lucide-react';
-import { FilterItem } from '../../utils/FilterItem';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
-import styles from '../../../styles/StockDetail.module.css';
 import { Divider } from '@mui/material';
+import styles from '../../../styles/StockDetail.module.css';
 
 const Stock = ({ ...props }) => {
   const { stock, breadcrumbsPath } = props;

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
@@ -13,6 +14,8 @@ import { PackageCheck } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 // import Chart from 'react-apexcharts';
 import dynamic from 'next/dynamic';
+import Content from '../../content/content';
+import CurrencyInput from '../../inputs/CurrencyInput';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -155,11 +158,17 @@ const OrdersScreen = ({ ...props }) => {
     }
   };
 
+
   return (
     <Grid component='main'>
-      <CssBaseline />
       {/* Breadcrumbs */}
+      <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
+
+      <Content>
+      <CurrencyInput label={'Amount'} onChange={(e) => console.log(e.target.value.replace(' ', ''))}/>
+      
+      </Content>
       <Grid container p={2}>
         <Grid item md={3} p={1}>
           <Card sx={{ background: 'var(--primary-gradient)' }}>
@@ -218,7 +227,6 @@ const OrdersScreen = ({ ...props }) => {
           </Card>
         </Grid>
       </Grid>
-
       <Grid container p={2} md={12}>
         <Grid container item md={4} p={2}>
           <Card sx={{ width: '100%' }}>

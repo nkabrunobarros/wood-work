@@ -55,7 +55,8 @@ const querys = {
       orders {
         count
         data {
-          id
+           id
+           status
           client {
             id
             email
@@ -67,44 +68,55 @@ const querys = {
             telephone
             organization {
               id
-              legalName
             }
             otherData
             buysTo
             obs
             postalCode
-            contact
+            
+            
+            
           }
-          product {
-            id
-            code
-            name
-            cost
-            craftTime
-            #categoryId
-            #woodTypeId
-            category {
-               id
-              name
-            }
-            woodtype {
-              id
-              description
-            }
+        createdBy {
+          id
+          nome    
           }
-          createdAt
           status
-          clientId
+          createdAt
+          endAt
+          startAt
+          
+          }
         }
       }
-    }`
+    `
   },
   ORDER: {
-    return: 'order',
+    return: 'orderDetails',
     query: `query order ($id: String!) {
-          order (id: $id) {
+      orderDetails(id: $id) {
+        count
+      data {
+        id
+         product {
+        id
+        code
+        name
+        cost
+        craftTime
+           woodtype {
+          id
+          description
+        }
+           category {
+          id
+          name
+        }
+      }
+      status
+       order {
             id
-          client {
+           client {
             id
             email
             giveName
@@ -113,38 +125,41 @@ const querys = {
             status
             taxId
             telephone
-            organization {
+            contact
+               organization {
               id
               legalName
+              taxId
+              ssnId
+              address
+              email
+              telephone
             }
             otherData
-            buysTo
             obs
-            postalCode
-            contact
           }
-          product {
-            id
-            code
-            name
-            cost
-            craftTime
-            #categoryId
-            #woodTypeId
-            category {
-               id
-              name
-            }
-            woodtype {
-              id
-              description
-            }
-          }
-          createdAt
-          status
-          clientId
+           createdBy {
+          id
+          nome
+          email
+          ativo
+          ativo
+          tos
+          telemovel
+          telefone
+          morada
+          idPerfil
+          obs
+          paisCodigo
         }
-      }`
+           status
+           createdAt
+           endAt
+           startAt
+      }
+    }  
+      }
+    }`
   },
   CATEGORIES: {
     return: 'categories',
@@ -317,6 +332,7 @@ const querys = {
                      id
                 code
                 name
+                description
                 cost
                 craftTime
                 category {
@@ -453,25 +469,23 @@ const querys = {
   SAVE_ORDER: {
     return: 'saveOrder',
     query: `mutation saveOrder ($input: OrderInput!) {
-        saveOrder (saveOrderData: $input) {
+      saveOrder (saveOrderData: $input) {
           id
-          product {
-            id
-            code
-            name
-            cost
-            craftTime
-            woodtype {
-              id
-              description
-            }
-            category {
-              id
-              name
-            }
-          }
           status
-          clientId
+          createdAt
+          endAt
+          startAt
+      } 
+    }`
+  },
+  SAVE_ORDER_DETAILS: {
+    return: 'saveOrderDetails',
+    query: `mutation saveOrderDetails ($input: OrderDetailsInput!) {
+      saveOrderDetails (saveOrderData: $input) {
+        id
+        product {id}
+        order {id}
+        status
       } 
     }`
   },
