@@ -2,25 +2,26 @@
 import React, { useEffect, useState } from 'react';
 
 //  Material Ui
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
 import {
   Avatar,
   Button,
+  IconButton,
   OutlinedInput,
   TableCell,
-  TableRow,
+  TableRow
 } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
 import { Box } from '@mui/system';
 
 //  Custom Components
-import CustomBreadcrumbs from '../../breadcrumbs';
-import Content from '../../content/content';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 //  Icons
-import { MessageSquare, Package } from 'lucide-react';
+import { ImagePlus, MessageSquare, Package } from 'lucide-react';
 
 //  Styles
 import styles from '../../../styles/Messages.module.css';
@@ -32,8 +33,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 //  Utils
-import scrollToBottom from '../../utils/ScrollToBottom';
 import hasData from '../../utils/hasData';
+import scrollToBottom from '../../utils/ScrollToBottom';
 
 const Messages = ({ ...props }) => {
   const { breadcrumbsPath, headCellsMessages, pageProps } = props;
@@ -42,9 +43,7 @@ const Messages = ({ ...props }) => {
   const [activeRow, setActiveRow] = useState(0);
   const [loadMessage, setLoadMessage] = useState(new Date());
   const [conversationDisplayed, setConversationDisplayed] = useState(conversations[0]);
-  const loggedUser = pageProps.loggedUser;
-
-  console.log(conversations)
+  const loggedUser = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const scroll = () => {
@@ -122,32 +121,32 @@ const Messages = ({ ...props }) => {
       message: PropTypes.object,
     };
 
-      if (message.sentBy.toString() === loggedUser?.id.toString()) {
-        return (
-          <div className={styles.conversation}>
-            <a
-              className={styles.conversationContentMe}
-              style={{ marginLeft: 'auto' }}
-            >
-              {message.content}
-              <br></br>
-              <a className={styles.messageDate}> {message.createdAt}</a>
-            </a>
-            <Avatar className={styles.avatar}>{loggedUser.nome.charAt(0).toUpperCase()}</Avatar>
+    if (message.sentBy.toString() === loggedUser?.id.toString()) {
+      return (
+        <div className={styles.conversation}>
+          <a
+            className={styles.conversationContentMe}
+            style={{ marginLeft: 'auto' }}
+          >
+            {message.content}
+            <br></br>
+            <a className={styles.messageDate}> {message.createdAt}</a>
+          </a>
+          <Avatar className={styles.avatar}>{loggedUser.nome.charAt(0).toUpperCase()}</Avatar>
+        </div>
+      );
+    } else {
+      return (
+        <div className={styles.conversation}>
+          <Avatar className={styles.avatar}>N</Avatar>
+          <div className={styles.conversationContent}>
+            {message.content}
+            <br></br>
+            <a className={styles.messageDate}> {message.createdAt}</a>
           </div>
-        );
-      } else {
-        return (
-          <div className={styles.conversation}>
-            <Avatar className={styles.avatar}>N</Avatar>
-            <div className={styles.conversationContent}>
-              {message.content}
-              <br></br>
-              <a className={styles.messageDate}> {message.createdAt}</a>
-            </div>
-          </div>
-        );
-      }
+        </div>
+      );
+    }
   };
 
   return (
@@ -185,22 +184,22 @@ const Messages = ({ ...props }) => {
               rows={conversations}
               noPagination
             >
-                <>
-                  {conversations.map((conversation, i) => (
-                    <React.Fragment key={i * 100}>
-                      {/* eslint-disable-next-line react/prop-types */}
-                      {/* {conversation.users.find(
+              <>
+                {conversations.map((conversation, i) => (
+                  <React.Fragment key={i * 100}>
+                    {/* eslint-disable-next-line react/prop-types */}
+                    {/* {conversation.users.find(
                         (user) => user.toString() === loggedUser.id.toString()
                       ) ? ( */}
-                        <MessageRow
-                          key={i}
-                          num={i}
-                          conversation={conversation}
-                        />
-                      {/* ) : null} */}
-                    </React.Fragment>
-                  ))}
-                </>
+                    <MessageRow
+                      key={i}
+                      num={i}
+                      conversation={conversation}
+                    />
+                    {/* ) : null} */}
+                  </React.Fragment>
+                ))}
+              </>
             </AdvancedTable>
             <div className={styles.scrollableZone}></div>
           </div>
@@ -217,7 +216,7 @@ const Messages = ({ ...props }) => {
                   <a>Encomenda Nº {conversationDisplayed.orderId}</a>
                 </div>
                 <div id='messagesContainer' className={styles.scrollableZone}>
-                  {conversationDisplayed.messagesContent.map((message,i) => (
+                  {conversationDisplayed.messagesContent.map((message, i) => (
                     <ConversationRow key={i} message={message} />
                   ))}
                 </div>
@@ -244,9 +243,18 @@ const Messages = ({ ...props }) => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     className={styles.writeMessageInput}
                     endAdornment={
-                      <Button position='end' type='submit'>
-                        Enviar
-                      </Button>
+                      <>
+                        <IconButton component='label'>
+                          <ImagePlus
+                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                          />
+                          <input multiple type='file' accept='image/*,.pdf' name='file' hidden />
+                        </IconButton>
+                        <Button disabled={!newMessage} position='end' type='submit'>
+                          Enviar
+                        </Button>
+                      </>
                     }
                   />
                 </Box>

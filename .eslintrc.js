@@ -21,6 +21,7 @@ module.exports = {
   plugins: ['react', 'react-hooks', 'jsx-a11y'],
 
   rules: {
+    'semi': [2, 'always'],
     'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
     'no-undef': ['error'],
     'comma-dangle': ['error', 'only-multiline'],
@@ -62,4 +63,4 @@ module.exports = {
       },
     ],
   },
-}
+};

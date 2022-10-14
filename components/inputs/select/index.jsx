@@ -18,7 +18,8 @@ const Select2 = ({
   halfWidth,
   error,
   name,
-  id
+  id,
+  children
 }) => {
 
   return (

@@ -21,14 +21,15 @@ const routes = {
       order: '/internal/order/',
       newOrder: '/internal/new-order',
       editOrder: '/internal/edit-order/',
-      
-      messages: '/internal/messages/',
+
+      messages: '/internal/messages',
       profile: '/profile/',
       error: '/404',
-      
-      
+
+      leftovers: '/internal/leftovers',
+
       dashboards: '/internal/dashboards',
-      
+
     },
     //  Pages shared
     terms: '/terms',
@@ -45,6 +46,6 @@ const routes = {
     signIn: '/',
 
   }
-}
+};
 
-export default routes
+export default routes;

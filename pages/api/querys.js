@@ -73,9 +73,6 @@ const querys = {
             buysTo
             obs
             postalCode
-            
-            
-            
           }
         createdBy {
           id
@@ -85,19 +82,67 @@ const querys = {
           createdAt
           endAt
           startAt
-          
           }
         }
       }
     `
   },
+  ORDERS_PRODUCTION: {
+    return: 'ordersProduction',
+    query: `query OrdersProduction {
+      ordersProduction {
+        count
+        data {
+          id
+          amount
+          completed
+          status
+          product {
+            id
+            code
+            name
+            description
+            cost
+            craftTime
+            woodtype {
+              id
+              description
+            }
+            category {
+              id
+              name
+              code
+            }
+          }
+          order {
+            id
+            client {
+              id
+              email
+              giveName
+              legalName
+            }
+            createdBy {
+              id
+              nome
+            }
+            status
+            createdAt
+            endAt
+            startAt
+          }
+        }
+      }
+    }`
+  },
   ORDER: {
     return: 'orderDetails',
     query: `query order ($id: String!) {
       orderDetails(id: $id) {
-        count
-      data {
         id
+        completed
+        status
+        amount
          product {
         id
         code
@@ -111,6 +156,7 @@ const querys = {
            category {
           id
           name
+          code
         }
       }
       status
@@ -157,7 +203,6 @@ const querys = {
            endAt
            startAt
       }
-    }  
       }
     }`
   },
@@ -288,6 +333,7 @@ const querys = {
               category {
                 id
                 name
+                code
               }
               
             }
@@ -311,6 +357,7 @@ const querys = {
                   category {
                     id
                     name
+                    code
                   }
                   woodtype {
                     id 
@@ -338,6 +385,7 @@ const querys = {
                 category {
                   id
                   name
+                  code
                 }
                 woodtype {
                   id
@@ -518,8 +566,8 @@ const querys = {
   },
   FILES: {
     return: 'ficheiros',
-    query: `query ficheiros {
-      ficheiros {
+    query: `query ficheiros ($id: String!) {
+      ficheiros (where: {folderId: { contains: $id}}){
         count
         data {
           id
@@ -529,6 +577,42 @@ const querys = {
           filename
           filesize
           dataCriacao
+        }
+      }
+    }`
+  },
+  ORDER_FOLDERS: {
+    return: 'folders',
+    query: `query Folders ($id: String!) {
+      folders (where: {orderDetailId: { contains: $id}}){
+        count
+        data {
+          id
+          name
+          orderDetailId
+          orderDetail { 
+            id
+            product {
+              id
+              code
+            }
+            status
+            amount
+            completed
+          }
+        }
+      }
+    }`
+  },
+  SAVE_FOLDER: {
+    return: 'saveFolder',
+    query: `mutation SaveFolder ($input: FolderInput!) {
+      saveFolder ( saveFolderData: $input) {
+        id
+        name
+        orderDetailId
+        orderDetail {
+          id
         }
       }
     }`

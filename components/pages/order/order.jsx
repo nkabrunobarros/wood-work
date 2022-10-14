@@ -44,6 +44,7 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import * as FileActions from '../../../pages/api/actions/file';
+import * as FolderActions from '../../../pages/api/actions/folder';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Notification from '../../dialogs/Notification';
@@ -51,51 +52,48 @@ import UploadImagesModal from '../../modals/UploadImages';
 
 const Order = ({ ...props }) => {
   const {
-    order,
-    breadcrumbsPath,
     headCellsUpperProductionDetail,
     headCellsProductionDetail,
-    headCellsOrderDetail,
     headCellsUpperOrderDetail,
+    headCellsOrderDetail,
     headCellsMessages,
+    productionDetail,
+    breadcrumbsPath,
     headCellsDocs,
+    orderDetail,
     pageProps,
-    orderDetail
+    order,
   } = props;
 
-  const [files, setFiles] = useState(props.files)
-  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao)
+  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
   const [newFolderName, setNewFolderName] = useState('');
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState(props.folders);
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [activeRow, setActiveRow] = useState(0);
   const [refresh, setRefresh] = useState(new Date());
-  const [docsModal, setDocsModal] = useState(false)
-  const [errorMessageFolderName, setErrorMessageFolderName] = useState()
+  const [docsModal, setDocsModal] = useState(false);
+  const [docsModalClient, setDocsModalClient] = useState(false);
+  const [errorMessageFolderName, setErrorMessageFolderName] = useState();
+  const [activeFolder, setActiveFolder] = useState(0);
 
-  function Row({ row }) {
-
-    Row.propTypes = {
-      row: PropTypes.any,
-      index: PropTypes.number,
-    };
-
+  function Row({ row, index }) {
     const [open, setOpen] = useState(false);
-    let style = {};
 
-    if (open)
-      style = {
-        borderColor: 'var(--primary)',
-      };
+    function onRowClick() {
+      setOpen(!open);
+      setActiveFolder(index);
+    }
 
     return (
       <React.Fragment>
         <TableRow
           sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer' }}
           className={styles.docRow}
-          styles={style}
+          style={{ borderColor: open && 'var(--primary)' }}
+          onClick={() => onRowClick()}
+        // styles={open && style}
         >
-          <TableCell onClick={() => setOpen(!open)}>
+          <TableCell >
             <div id='align' style={{ color: 'var(--primary)' }}>
               {open ? (
                 <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
@@ -140,42 +138,46 @@ const Order = ({ ...props }) => {
               in={open}
               timeout='auto'
               unmountOnExit
+
             >
               <Table sx={{ padding: 0, margin: 0 }}>
-                <TableRow fullWidth style={{ backgroundColor: '#F1FBFF' }}>
-                  <TableCell width='70%'>
-                    <div id='align' style={{ color: 'var(--primary)' }}>
-                      <FileText
-                        strokeWidth='1'
-                        style={{ marginRight: '1rem' }}
-                      />
-                      Documento 1
-                    </div>
-                  </TableCell>
-                  <TableCell width='30%'>11/03/2022</TableCell>
-                  <TableCell>
-                    <ButtonGroup>
-                      <Tooltip title='Edit'>
-                        <IconButton>
-                          <Edit
-                            className='link'
-                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                            size={pageProps.globalVars.iconSize}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title='Delete'>
-                        <IconButton>
-                          <Trash
-                            className='link'
-                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                            size={pageProps.globalVars.iconSize}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </ButtonGroup>
-                  </TableCell>
-                </TableRow>
+                {row.files[0] && row.files[0].map((file) => (
+                  <TableRow key={file.id} fullWidth style={{ backgroundColor: '#F1FBFF' }}>
+                    <TableCell width='70%'>
+                      <div id='align' style={{ color: 'var(--primary)' }}>
+                        <FileText
+                          strokeWidth='1'
+                          style={{ marginRight: '1rem' }}
+                        />
+                        {file.filename}
+                      </div>
+                    </TableCell>
+                    <TableCell width='30%'>11/03/2022</TableCell>
+                    <TableCell>
+                      <ButtonGroup>
+                        <Tooltip title='Edit'>
+                          <IconButton>
+                            <Edit
+                              className='link'
+                              strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                              size={pageProps.globalVars.iconSize}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Delete'>
+                          <IconButton>
+                            <Trash
+                              className='link'
+                              strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                              size={pageProps.globalVars.iconSize}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </ButtonGroup>
+                    </TableCell>
+                  </TableRow>
+
+                ))}
               </Table>
             </Collapse>
           </TableCell>
@@ -184,51 +186,83 @@ const Order = ({ ...props }) => {
     );
   }
 
+  Row.propTypes = {
+    row: PropTypes.any,
+    index: PropTypes.number,
+  };
 
-  function handleCreateFolder() {
+  async function handleCreateFolder() {
 
     if (!newFolderName) {
-      setErrorMessageFolderName('Não pode ser vazio')
+      setErrorMessageFolderName('Não pode ser vazio');
 
       return;
     }
 
     const builtFolder = {
-      id: Math.random().toString(),
       name: newFolderName,
-      createdAt: Date.now()
-    }
+      orderDetailId: order.id
+    };
 
-    const allFolders = folders;
+    await FolderActions
+      .saveFolder(builtFolder)
+      .then((response) => {
+        response.data.payload.files = [];
+        setFolders([...folders, response.data.payload]);
+        setNewFolderName('');
+        setRefresh(new Date());
+      })
+      .catch((err) => console.log(err));
 
-    allFolders.push(builtFolder);
-    setFolders(allFolders);
-    setNewFolderName('');
     setCreatingFolder(false);
-    setRefresh(new Date())
   }
 
   async function deleteDoc(id) {
     try {
       await FileActions.removeFile({ id }).then((res) => {
-        setFiles(files.filter(item => item.id !== id))
-        toast.success(`${res.data.payload.filename} removido!`)
-      })
+        toast.success(`${res.data.payload.filename} removido!`);
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
+
+  async function onImagesUpload() {
+
+    await FolderActions
+      .folders({ id: order.id })
+      .then(async (res) => {
+
+        res.data.payload.data.map(async (fold, i) => {
+          res.data.payload.data[i].files = [];
+
+          await FileActions
+            .files({ id: fold.id })
+            .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
+            .catch((err) => console.log(err));
+        });
+
+        setFolders(res.data.payload.data);
+      })
+      .catch((err) => console.log(err));
+
+    setDocsModal(false);
+    setDocsModalClient(false);
+
+  }
+
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
       <Notification />
       <CustomBreadcrumbs path={breadcrumbsPath} />
-      <UploadImagesModal open={docsModal} folders={folders} {...pageProps} onClose={() => setDocsModal(false)} />
+      <UploadImagesModal open={docsModalClient} client folders={folders} {...pageProps} orderId={order.id} onClose={() => onImagesUpload()} />
+      <UploadImagesModal open={docsModal} folders={folders.filter(ele => ele.name !== order.id)} {...pageProps} onClose={() => onImagesUpload()} />
       <Content id={refresh}>
         <div id='pad'>
           <div style={{ display: 'flex', marginBottom: '1rem' }}>
-            <a className='headerTitleXl'>Encomenda Nº {order[0].order.id}</a>
+            <a className='headerTitleXl'>Encomenda Nº {order.order.id}</a>
             <div style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
                 icon={
@@ -247,11 +281,11 @@ const Order = ({ ...props }) => {
                 <Grid md={4} container>
                   <Grid md={12} sm={6}>
                     <Typography color={"lightTextSm.main"} >Cliente</Typography>
-                    <Typography color={"lightTextSm.black"} >{order[0].order.client.legalName}</Typography>
+                    <Typography color={"lightTextSm.black"} >{order.order.client.legalName}</Typography>
                   </Grid>
                   <Grid md={12} sm={6}>
                     <Typography color={"lightTextSm.main"} >Produto</Typography>
-                    <Typography color={"lightTextSm.black"} >{Object.keys(order).length}</Typography>
+                    <Typography color={"lightTextSm.black"} >{order.product.name}</Typography>
                   </Grid>
                 </Grid>
                 <Grid
@@ -303,7 +337,7 @@ const Order = ({ ...props }) => {
             </div>
             <AdvancedTable
               noPagination
-              rows={order}
+              rows={productionDetail}
               headCells={headCellsProductionDetail}
               headCellsUpper={headCellsUpperProductionDetail}
             />
@@ -323,7 +357,7 @@ const Order = ({ ...props }) => {
                   <div className='flex'>
                     {!creatingFolder ?
                       <PrimaryBtn
-                        disabled={folders[0] === undefined}
+                        disabled={!folders.filter(ele => !(ele.name === order.id))[0]}
                         text='Carregar'
                         onClick={() => setDocsModal(true)}
                         icon={
@@ -346,8 +380,8 @@ const Order = ({ ...props }) => {
 
                           value={newFolderName}
                           onChange={(e) => {
-                            setErrorMessageFolderName()
-                            setNewFolderName(e.target.value)
+                            setErrorMessageFolderName();
+                            setNewFolderName(e.target.value);
                           }}
                           variant='standard'
                         />
@@ -372,17 +406,17 @@ const Order = ({ ...props }) => {
                 <TableContainer component={Paper}>
                   <Table aria-label='collapsible table'>
                     <TableHead aria-label='sticky table'>
-                      <TableRow style={{ backgroundColor: 'var(--grayBG)' }}>
-                        <TableCell width={!!folders[0] && '70%'}>Nome</TableCell>
-                        <TableCell width={!!folders[0] && '30%'}>Data</TableCell>
+                      <TableRow>
+                        <TableCell width={!!folders && '70%'}>Nome</TableCell>
+                        <TableCell width={!!folders && '30%'}>Data</TableCell>
                         <TableCell>Ações</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {folders?.map((row, i) => (
+                      {folders && folders.filter(ele => !(ele.name === order.id)).map((row, i) => (
                         <Row key={i} row={row} index={i} />
                       ))}
-                      {!folders[0] && <>
+                      {!folders && <>
                         <TableCell></TableCell>
                         <TableRow sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><span>Sem pastas, <a className='link' onClick={() => setCreatingFolder(true)}>Crie uma</a></span></TableRow>
                         <TableCell></TableCell>
@@ -391,9 +425,9 @@ const Order = ({ ...props }) => {
                   </Table>
                 </TableContainer>
               </div>
-              <div className={styles.infoContainer}>
-                <a className='headerTitleSm'>Desenho 1</a>
-                <div className={styles.innerInfoContainer}>
+              <Box className={styles.infoContainer}>
+                <a className='headerTitleSm'>{folders[activeFolder].name}</a>
+                <Box bgcolor={"lightGray.main"} className={styles.innerInfoContainer}>
                   <a id='align'>
                     <Info
                       style={{ marginRight: '1rem' }}
@@ -418,7 +452,8 @@ const Order = ({ ...props }) => {
                       stroke='#8793AB'
                       fill='#E7E8E9'
                     />
-                    15 Ficheiros
+                    {console.log(Object.keys(folders[activeFolder]?.files[0] || {}).length)}
+                    {Object.keys(folders[activeFolder]?.files[0]).length || {}} Ficheiro(s)
                   </div>
                   <a id='align'>
                     <FileText
@@ -482,8 +517,8 @@ const Order = ({ ...props }) => {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </Box>
+              </Box>
             </a>
           </Content>
         ) : null
@@ -560,7 +595,7 @@ const Order = ({ ...props }) => {
         </div>
       </Content>
       {/* Docs Cliente */}
-      <Content>
+      <Content id={refresh}>
         <a className={styles.docsMain}>
           <div className={styles.tableContainer}>
             <div id='pad' style={{ display: 'flex' }}>
@@ -571,7 +606,7 @@ const Order = ({ ...props }) => {
                 <div>
                   <PrimaryBtn
                     text='Carregar'
-                    onClick={() => setDocsModal(true)}
+                    onClick={() => setDocsModalClient(true)}
                     icon={
                       <FilePlus
                         strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
@@ -582,9 +617,8 @@ const Order = ({ ...props }) => {
                 </div>
               </div>
             </div>
-
             <AdvancedTable headCells={headCellsDocs} rows={[]}>
-              {files.map((doc, i) => (
+              {folders.find(ele => ele.name === order.id)?.files[0]?.map((doc, i) => (
                 <TableRow
                   key={i}
                   style={{
@@ -647,9 +681,10 @@ const Order = ({ ...props }) => {
             </AdvancedTable>
 
           </div>
-          {files[activeRow]?.filename &&
+          {/* {folders.files && */}
+          {false &&
             <div className={styles.infoContainer}>
-              <a className='headerTitleSm'>{files[activeRow]?.filename}</a>
+              <a className='headerTitleSm'>{folders[activeRow]?.filename}</a>
               <div className={styles.innerInfoContainer}>
                 <a id='align' target='#'>
                   <Info
@@ -674,7 +709,7 @@ const Order = ({ ...props }) => {
                     size={pageProps.globalVars.iconSizeXxl}
                     stroke='#8793AB'
                   />
-                  {GetFileSize(files[activeRow]?.filesize)}
+                  {GetFileSize(folders[activeRow]?.filesize)}
                 </div>
                 {/* <Image src={files[activeRow].data} width={200} height={200} layout='responsive' /> */}
                 <Grid container >
@@ -690,11 +725,11 @@ const Order = ({ ...props }) => {
                   </Grid>
                   <Grid container>
                     <Grid item sm={6}>Salvo em</Grid>
-                    <Grid item sm={6}>{moment(files[activeRow]?.dataCriacao).format('DD/MM/YYYY hh:mm')}</Grid>
+                    <Grid item sm={6}>{moment(folders[activeRow]?.dataCriacao).format('DD/MM/YYYY hh:mm')}</Grid>
                   </Grid>
                   <Grid container>
                     <Grid item sm={6}>Alterado em</Grid>
-                    <Grid item sm={6}>{moment(files[activeRow]?.dataCriacao).format('DD/MM/YYYY hh:mm ')}</Grid>
+                    <Grid item sm={6}>{moment(folders[activeRow]?.dataCriacao).format('DD/MM/YYYY hh:mm ')}</Grid>
                   </Grid>
                 </Grid>
               </div>
@@ -721,7 +756,7 @@ Order.propTypes = {
   headCellsDocs: PropTypes.array,
   pageProps: PropTypes.object,
   orderDetail: PropTypes.array,
-  files: PropTypes.array,
+  folders: PropTypes.array,
 };
 
 export default Order;

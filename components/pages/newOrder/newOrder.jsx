@@ -28,7 +28,6 @@ import ConvertBase64 from '../../utils/ConvertBase64';
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients, products } = props;
   const [client, setClient] = useState(" ");
-  // eslint-disable-next-line no-unused-vars
   const [obs, setObs] = useState('');
   const [errorClient, setErrorClient] = useState('');
   // const [errorStartAt, setErrorStartAt] = useState('');
@@ -42,13 +41,20 @@ const NewOrder = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState([
     { prod: '', amount: 1, errorProd: '', files: [] }
-  ])
+  ]);
 
   function ValidateData() {
     let hasErrors = false;
 
-    if (!client || client === ' ') setErrorClient('Campo Obrigatório');
+    if (!client || client === ' ') {
+      setErrorClient('Campo Obrigatório');
+      hasErrors = true;
+    }
 
+    if (inputFields.length === 0) {
+      hasErrors = true;
+
+    }
     // if (!startAt) setErrorStartAt('Campo Obrigatório');
 
     // if (!endAt) setErrorEndAt('Campo Obrigatório');
@@ -64,10 +70,10 @@ const NewOrder = ({ ...props }) => {
         setInputFields(data);
         hasErrors = true;
       }
-    })
+    });
 
-    if (hasErrors) toast.error('Prencha todos os campos.')
-    else setDialogOpen(true)
+    if (hasErrors) toast.error('Prencha todos os campos.');
+    else setDialogOpen(true);
   }
 
   async function CreateOrder() {
@@ -80,56 +86,51 @@ const NewOrder = ({ ...props }) => {
       endAt,
       startAt,
       createdAt: Date.now(),
-    }
+    };
 
-    setProcessing(true)
+    setProcessing(true);
 
     try {
       await OrdersActions.saveOrder(builtOrder).then((response) => {
 
         inputFields.map(async (input) => {
-          console.log(input)
 
           const buildOrderDetail = {
             productId: input.prod,
             orderId: response.data.payload.id,
             status: 'not started',
-          }
+            amount: input.amount,
+            completed: 0,
 
-          for (let index = 0; index < input.amount; index++) {
+          };
 
-            await OrdersActions.saveOrderDetails(buildOrderDetail)
-
-          }
-
-        })
+          await OrdersActions.saveOrderDetails(buildOrderDetail);
 
 
+        });
 
+        setNewestOrder(response.data.payload);
+        setDialogOpen(false);
+        setProcessing(false);
+        setSuccessOpen(true);
 
-
-        setNewestOrder(response.data.payload)
-        setDialogOpen(false)
-        setProcessing(false)
-        setSuccessOpen(true)
-
-      })
+      });
     } catch (err) {
-      toast.error('Algo Aconteceu')
-      setProcessing(false)
-      setDialogOpen(false)
+      toast.error('Algo Aconteceu');
+      setProcessing(false);
+      setDialogOpen(false);
 
     }
   }
 
   function ClearAll() {
-    setSuccessOpen(false)
-    setClient()
-    setStartAt(Date.now())
-    setEndAt(Date.now())
-    setObs("")
-    setErrorClient()
-    setInputFields([{ prod: '', amount: 1, errorProd: '', files: [] }])
+    setSuccessOpen(false);
+    setClient();
+    setStartAt(Date.now());
+    setEndAt(Date.now());
+    setObs("");
+    setErrorClient();
+    setInputFields([{ prod: '', amount: 1, errorProd: '', files: [] }]);
   }
 
   const handleFormChange = (i, e) => {
@@ -139,22 +140,22 @@ const NewOrder = ({ ...props }) => {
     data[i].errorProd = '';
     setInputFields(data);
 
-  }
+  };
 
   const addFields = () => {
-    const newfield = { prod: '', amount: 1, errorProd: '', files: [] }
+    const newfield = { prod: '', amount: 1, errorProd: '', files: [] };
 
-    setInputFields([...inputFields, newfield])
+    setInputFields([...inputFields, newfield]);
 
-  }
+  };
 
   const DisplayTotal = () => {
     let total = 0;
 
     // eslint-disable-next-line array-callback-return
     inputFields.map((input) => {
-      total += products.find((product) => product.id === input.prod)?.cost * input.amount || 0
-    })
+      total += products.find((product) => product.id === input.prod)?.cost * input.amount || 0;
+    });
 
 
     return <NumericFormat displayType="text"
@@ -162,15 +163,15 @@ const NewOrder = ({ ...props }) => {
       decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
       decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
       thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
-      value={total || 0} />
-  }
+      value={total || 0} />;
+  };
 
   const removeFields = (index) => {
     const data = [...inputFields];
 
-    data.splice(index, 1)
-    setInputFields(data)
-  }
+    data.splice(index, 1);
+    setInputFields(data);
+  };
 
   async function onFileInput(e, i) {
     const arr = [];
@@ -181,17 +182,17 @@ const NewOrder = ({ ...props }) => {
       await ConvertBase64(file)
         .then(result => {
           file.base64 = result;
-          arr.push(file)
+          arr.push(file);
         })
         .catch(err => {
           console.log(err);
-        })
+        });
 
     }
 
-    const a = arr.filter(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE)
+    const a = arr.filter(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE);
 
-    if (arr.find(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE)) toast.error(`${Object.keys(a).length} não foram carregadas, tamanho maximo de 1 MB ( ${a.map(x => `${x.name} `)} )`)
+    if (arr.find(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE)) toast.error(`${Object.keys(a).length} não foram carregadas, tamanho maximo de 1 MB ( ${a.map(x => `${x.name} `)} )`);
 
     const data = [...inputFields];
 
@@ -217,7 +218,10 @@ const NewOrder = ({ ...props }) => {
       <ConfirmDialog
         open={successOpen}
         handleClose={() => ClearAll()}
-        onConfirm={() => Router.push(`${routes.private.internal.order}${newestOrder.id}`)}
+        onConfirm={() => Router.push({
+          pathname: `${routes.private.internal.orders}`,
+          query: { order: newestOrder.id }
+        })}
         message={`Encomenda Criada com sucesso, que deseja fazer agora?`}
         icon='Verified'
         iconType='success'
@@ -278,14 +282,17 @@ const NewOrder = ({ ...props }) => {
                           </Grid>
                           <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} md={2} >{products.find(ele => ele.id === input.prod)?.description}</Grid>
                           <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }} md={2} >
-                            <NumericFormat displayType="text"
-                              suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
-                              decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
-                              decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
-                              thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
-                              value={products.find(ele => ele.id === input.prod)?.cost || 0} />
+                            <Typography color='link.main'>
+                              <NumericFormat displayType="text"
+                                suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
+                                decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
+                                decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
+                                thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
+                                value={products.find(ele => ele.id === input.prod)?.cost || 0} />
+                            </Typography>
                           </Grid>
                           <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} container item md={2} sm={12} xs={12}>
+
                             <ButtonGroup >
                               <Button sx={{ border: '1px solid var(--grayEdges)', borderRight: '0px' }}
                                 aria-label="reduce"
@@ -315,13 +322,15 @@ const NewOrder = ({ ...props }) => {
                             </ButtonGroup>
 
                           </Grid>
-                          <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', fontWeight: 'bold', color: 'var(--primary-dark)', fontSize: '20px' }} md={1} >
-                            <NumericFormat displayType="text"
-                              suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
-                              decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
-                              decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
-                              thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
-                              value={products.find(ele => ele.id === input.prod)?.cost * (input.amount) || 0} />
+                          <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', fontWeight: 'bold' }} md={1} >
+                            <Typography color='link.main'>
+                              <NumericFormat displayType="text"
+                                suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
+                                decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
+                                decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
+                                thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
+                                value={products.find(ele => ele.id === input.prod)?.cost * (input.amount) || 0} />
+                            </Typography>
                           </Grid>
 
                           <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }} md={2}>
@@ -365,8 +374,8 @@ const NewOrder = ({ ...props }) => {
                   optionLabel="giveName"
                   value={client}
                   onChange={(e) => {
-                    setErrorClient()
-                    setClient(e.target.value)
+                    setErrorClient();
+                    setClient(e.target.value);
                   }}
                   adornmentIcon={
                     <Tooltip title='Detalhes Codigo Postal' >

@@ -29,7 +29,17 @@ const Stock = ({ ...pageProps }) => {
   //  Data Fetching
   useEffect(() => {
     const getData = async () => {
-      await StocksActions.stocks().then((response) => setItems(response.data.payload.data))
+      await StocksActions.stocks().then((response) => {
+
+        // eslint-disable-next-line array-callback-return
+        response.data.payload.data.map((ele, i) => {
+          response.data.payload.data[i].code = response.data.payload.data[i].product.code
+          response.data.payload.data[i].category = response.data.payload.data[i].product.category.id
+        })
+
+        setItems(response.data.payload.data)
+      })
+
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data))
     }

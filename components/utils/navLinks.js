@@ -1,6 +1,6 @@
-import { Archive, LayoutDashboard, MessageCircle, Table, Users } from 'lucide-react';
-import routes from '../../navigation/routes';
+import { Archive, LayoutDashboard, MessageCircle, Scan, Table, Users } from 'lucide-react';
 import React from 'react';
+import routes from '../../navigation/routes';
 
 function getLinks() {
   const navLinks = [
@@ -44,6 +44,13 @@ function getLinks() {
       title: 'Utilizadores',
       url: routes.private.internal.users,
       icon: <Users strokeWidth='1' size={20} />,
+      allowed: 'utilizadores',
+    },
+    {
+      title: 'Sobrantes',
+      url: routes.private.internal.leftovers,
+      icon: <Scan strokeWidth='1' size={20} />,
+      //  TODOS: FIX
       allowed: 'utilizadores',
     },
     {

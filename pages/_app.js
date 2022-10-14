@@ -39,7 +39,7 @@ const App = ({ Component, pageProps }) => {
       mode: selectedTheme,
 
       primary: {
-        main: '#225EE8',
+        main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
       },
       default: {
         main: selectedTheme === 'light' ? '#fff' : '#282828',
@@ -47,17 +47,23 @@ const App = ({ Component, pageProps }) => {
       lightGray: {
         main: selectedTheme === 'light' ? 'var(--grayBG)' : '#383838',
       },
+      collapseImg: {
+        main: selectedTheme === 'light' ? 'red' : 'red',
+      },
       lightTextSm: {
         main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
         black: selectedTheme === 'light' ? 'black' : 'var(--white)'
+      },
+      link: {
+        main: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
       }
     },
     typography: {
-      fontFamily: 'Montserrat',
-      wordWrap: "break-word",
+      fontFamily: 'Montserrat'
     },
     TextareaAutosize: {
       fontFamily: 'Montserrat',
+      backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
     },
     components: {
       MuiOutlinedInput: {
@@ -85,7 +91,6 @@ const App = ({ Component, pageProps }) => {
         styleOverrides: {
           root: {
             textTransform: 'none',
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828'
           },
         },
       },
@@ -102,7 +107,14 @@ const App = ({ Component, pageProps }) => {
             backgroundColor: selectedTheme === 'light' && 'var(--grayBG)'
           }
         }
-      }
+      },
+      MuiTextareaAutosize: {
+        styleOverrides: {
+          root: {
+            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
+          }
+        }
+      },
     },
   });
 
@@ -111,20 +123,20 @@ const App = ({ Component, pageProps }) => {
   const router = useRouter();
 
   const toggleTheme = () => {
-    const desiredTheme = selectedTheme === 'light' ? 'dark' : 'light'
+    const desiredTheme = selectedTheme === 'light' ? 'dark' : 'light';
 
-    localStorage.setItem('theme', desiredTheme)
-    setSelectedTheme(desiredTheme)
+    localStorage.setItem('theme', desiredTheme);
+    setSelectedTheme(desiredTheme);
 
-    return desiredTheme
-  }
+    return desiredTheme;
+  };
 
 
   useEffect(() => {
     const load = () => {
       //  theme
-      if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'light')
-      else if (selectedTheme !== localStorage.getItem('theme')) setSelectedTheme(localStorage.getItem('theme'))
+      if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'light');
+      else if (selectedTheme !== localStorage.getItem('theme')) setSelectedTheme(localStorage.getItem('theme'));
 
 
       if (token) {
@@ -132,12 +144,12 @@ const App = ({ Component, pageProps }) => {
 
         if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment()) {
           pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
-          pageProps.theme = selectedTheme
+          pageProps.theme = selectedTheme;
 
           const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
 
           if (isPublicPage && !!token) {
-            if (IsInternal(pageProps.loggedUser.perfil.descricao)) router.push(routes.private.internal.orders)
+            if (IsInternal(pageProps.loggedUser.perfil.descricao)) router.push(routes.private.internal.orders);
             else {
               if (pageProps.loggedUser.tos) router.push(routes.private.orders);
               else router.push(routes.private.terms);
@@ -147,13 +159,13 @@ const App = ({ Component, pageProps }) => {
         }
         else {
           destroyCookie('auth-token');
-          router.push(routes.public.signIn)
+          router.push(routes.public.signIn);
         }
       }
-    }
+    };
 
     load();
-  }, [])
+  }, []);
 
 
   return (
@@ -168,7 +180,7 @@ const App = ({ Component, pageProps }) => {
         </Layout>
       </AppContext.Provider>
     </ThemeProvider>
-  )
+  );
 };
 
 App.getInitialProps = async ({ Component, ctx }) => {

@@ -10,13 +10,12 @@ import woodWorkyLogo from '../../../public/logo_bw_ww40_inv.png';
 import styles from '../../../styles/components/navbar.module.css';
 
 const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
+  const [theme, setTheme] = useState('light')
   const open = Boolean();
-  const [theme, setTheme] = useState('dark')
 
   function toggleThemeHere() {
-    const res = toggleTheme()
-
-    setTheme(res)
+    // const res = toggleTheme()
+    setTheme(toggleTheme())
   }
 
   return (
@@ -53,7 +52,6 @@ const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
         <Box id='align'>
           <Box id='align' >
             <Sun color='yellow' />
-            {console.log(theme)}
             <Switch checked={theme === 'dark'} onClick={toggleThemeHere} />
             <Moon color={'white'} />
           </Box>

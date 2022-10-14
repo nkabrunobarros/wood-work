@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, IconButton, Link, Tooltip } from '@mui/material';
+import { Box, Breadcrumbs, IconButton, Link, Tooltip, Typography } from '@mui/material';
 import { ChevronRight, Home } from 'lucide-react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ const CustomBreadcrumbs = ({ path }) => {
   const style = {
     color: 'var(--grayLight) !important',
     pointerEvents: 'all',
+    textDecoration: 'none !important',
   };
 
   const output = Object.keys(path).sort((a, b) => b - a);
@@ -28,10 +29,9 @@ const CustomBreadcrumbs = ({ path }) => {
       }}
     >
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
-        {/* Case internal or not */}
         <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao) ? routes.private.internal.orders : routes.private.orders)}>
           <Tooltip title='Ir para Encomendas'>
-            <Home color='var(--primary)' strokeWidth={1} size={18} />
+            <Home strokeWidth={1} size={18} />
           </Tooltip>
         </IconButton>
         {path.map((crumb, i) => (
@@ -40,8 +40,9 @@ const CustomBreadcrumbs = ({ path }) => {
             onClick={() => Router.push(crumb.href)}
             className={styles.breadcrumb}
             sx={i < arrayLenght && style}
+
           >
-            {crumb.title}
+            <Typography fontSize='12px' color='link.main' sx={i < arrayLenght && style}> {crumb.title}</Typography>
           </Link>
         ))}
       </Breadcrumbs>

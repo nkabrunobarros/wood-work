@@ -12,27 +12,11 @@ export async function files(data) {
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
     {
       query: querys.FILES,
-      data
+      data: data || { id: "" }
     },
     config
   )
 }
-
-// export async function userById(data) {
-//   const { auth_token: token } = parseCookies();
-
-//   const config = {
-//       headers: { Authorization: token && `Bearer ${token}` },
-//   };
-
-//   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
-//     {
-//       query: querys.USER,
-//       data
-//     },
-//     config
-//   )
-// }
 
 export async function saveFile(data) {
   const { auth_token: token } = parseCookies();

@@ -115,38 +115,38 @@ const EditUser = ({ ...props }) => {
       idPerfil: 'cl8om6j3q0000b4fjz5manyk3',
       obs,
       tos: user.tos,
-    }
+    };
 
 
     try {
       await UserActions.saveUser(newUser).then((res) => {
-        console.log(res)
-        setName(res.data.payload.nome)
-        setActive(res.data.payload.ativo)
-        setEmail(res.data.payload.email)
-        setTelefone(res.data.payload.telefone)
-        setTelemovel(res.data.payload.telemovel)
+        console.log(res);
+        setName(res.data.payload.nome);
+        setActive(res.data.payload.ativo);
+        setEmail(res.data.payload.email);
+        setTelefone(res.data.payload.telefone);
+        setTelemovel(res.data.payload.telemovel);
         // setPerfil(res.data.payload.idPerfil)
-        setMorada(res.data.payload.morada)
-        setPais(res.data.payload.paisCodigo)
-        setObs(res.data.payload.obs)
+        setMorada(res.data.payload.morada);
+        setPais(res.data.payload.paisCodigo);
+        setObs(res.data.payload.obs);
         setBackdrop(false);
-        toast.success('Utilizador Atualizado.')
-      })
+        toast.success('Utilizador Atualizado.');
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   const ClearFields = () => {
-    setName(user.nome)
-    setActive(user.ativo)
-    setEmail(user.email)
-    setTelefone(user.telefone)
-    setTelemovel(user.telemovel)
-    setPerfil(user.idPerfil)
-    setMorada(user.morada)
-    setPais(user.paisCodigo)
+    setName(user.nome);
+    setActive(user.ativo);
+    setEmail(user.email);
+    setTelefone(user.telefone);
+    setTelemovel(user.telemovel);
+    setPerfil(user.idPerfil);
+    setMorada(user.morada);
+    setPais(user.paisCodigo);
     setObs('');
     setErrorMessageName('');
     setErrorMessageEmail('');
@@ -296,7 +296,6 @@ const EditUser = ({ ...props }) => {
                 options={countries}
                 value={telemovel}
                 onChange={(e) => {
-                  console.log(e.target.value)
                   setTelemovel(e.target.value);
                   setErrorMessageTelemovel('');
                 }}
@@ -310,7 +309,7 @@ const EditUser = ({ ...props }) => {
                 fullWidth
                 value={perfil}
                 onChange={(e) => {
-                  setPerfil(e.target.value)
+                  setPerfil(e.target.value);
                   setErrorMessagePerfil('');
                 }}
               />

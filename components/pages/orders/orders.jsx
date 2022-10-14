@@ -1,5 +1,5 @@
 //  Nodes
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  Material UI
@@ -7,10 +7,7 @@ import {
   Autocomplete,
   Box,
   Grid,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
+  InputLabel, OutlinedInput,
   TextField
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -24,6 +21,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/infoCard';
 import Content from '../../content/content';
+import Select from '../../inputs/select';
 
 //  Utils
 import CanDo from '../../utils/CanDo';
@@ -40,32 +38,41 @@ const OrdersScreen = ({ ...props }) => {
     clients,
     editPage,
     headCells,
+    products,
+    categories
   } = props;
 
+  const router = useRouter()
   //  States
-  const [number, setNumber] = useState('');
+  const [number, setNumber] = useState(router.query.order || '');
   const [client, setClient] = useState('');
   const [category, setCategory] = useState('');
   const [producao, setProducao] = useState('');
   const [filters, setFilters] = useState({});
+  const [product, setProduct] = useState('');
+
 
   const ClearFilters = () => {
+    setProduct('');
     setNumber('');
     setClient('');
     setCategory('');
-    setCategory('');
+    setProducao('');
     setFilters({});
   };
 
   //  Triggers when a filter input changes
   useEffect(() => {
     setFilters({
-      id: number,
+      orderId: number,
       categoria: category,
       status: producao,
-      cliente: client,
+      clientId: client,
+      productId: product
     });
-  }, [number, client, category, producao]);
+  }, [number, client, category, producao, product]);
+
+
 
   return (
     <Grid component='main'>
@@ -75,7 +82,7 @@ const OrdersScreen = ({ ...props }) => {
       {/* Statistics Cards */}
       <Grid container md={12} sx={12} xs={12}>
         {cards.map((card) => (
-          <Grid container item key={card.num} lg={3} md={6} sm={12} p={1}>
+          <Grid container item key={card.num} lg={3} md={3} sm={6} xs={12} p={1}>
             <InfoCard
               key={card.num}
               amount={card.amount}
@@ -90,7 +97,15 @@ const OrdersScreen = ({ ...props }) => {
       <Content>
         <Grid id='pad' md={12} container>
           <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-          <Grid container item md={4} sm={6} xs={12} p={1}>
+          <Grid container item md={3} sm={6} xs={12} p={1}>
+            <Select
+              label='Produto'
+              options={products}
+              fullWidth
+              optionLabel={'name'}
+            />
+          </Grid>
+          <Grid container item md={3} sm={6} xs={12} p={1}>
             <InputLabel htmlFor='email'>Número encomenda</InputLabel>
             <OutlinedInput
               fullWidth
@@ -102,7 +117,7 @@ const OrdersScreen = ({ ...props }) => {
               onChange={(e) => setNumber(e.target.value)}
             />
           </Grid>
-          <Grid container item md={4} sm={6} xs={12} p={1}>
+          <Grid container item md={3} sm={6} xs={12} p={1}>
             <InputLabel htmlFor='email'>Cliente</InputLabel>
             <Autocomplete
               fullWidth
@@ -122,19 +137,26 @@ const OrdersScreen = ({ ...props }) => {
               )}
             />
           </Grid>
-          <Grid container item md={4} sm={6} xs={12} p={1}>
+          <Grid container item md={3} sm={6} xs={12} p={1}>
             <InputLabel htmlFor='Stock'>Producao</InputLabel>
             <Select
               fullWidth
               value={producao}
               onChange={(e) => setProducao(e.target.value)}
+              options={[
+                {
+                  id: 'Iniciada',
+                  label: 'Iniciada'
+                },
+                {
+                  id: 'Terminada',
+                  label: 'Terminada'
+                },
+              ]}
             >
-              <MenuItem value={''} disabled>
-                Selecionar um estágio
-              </MenuItem>
-              <MenuItem value={'Em orçamentação'}>Não Iniciada</MenuItem>
+              {/* <MenuItem value={'Em orçamentação'}>Não Iniciada</MenuItem>
               <MenuItem value={'Iniciada'}>Iniciada</MenuItem>
-              <MenuItem value={'Terminada'}>Terminada</MenuItem>
+              <MenuItem value={'Terminada'}>Terminada</MenuItem> */}
             </Select>
 
           </Grid>
@@ -167,6 +189,7 @@ const OrdersScreen = ({ ...props }) => {
 
 OrdersScreen.propTypes = {
   items: PropTypes.array,
+  products: PropTypes.array,
   categories: PropTypes.array,
   panelsInfo: PropTypes.object,
   breadcrumbsPath: PropTypes.array,

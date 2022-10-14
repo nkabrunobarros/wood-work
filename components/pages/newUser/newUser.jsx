@@ -100,9 +100,9 @@ const NewUser = ({ ...props }) => {
   }
 
   async function CreateUser() {
-    setDialogOpen(false)
+    setDialogOpen(false);
     //  open success modal && success toast
-    setProcessing(true)
+    setProcessing(true);
 
     const newUser = {
       email,
@@ -116,26 +116,26 @@ const NewUser = ({ ...props }) => {
       password: generatePassword ? `${process.env.NEXT_PUBLIC_DEFAULT_PASS}` : password,
       tos: false,
       obs,
-    }
+    };
 
     try {
       await UserActions.saveUser(newUser).then((response) => {
-        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um utilizador ja existe com este Email')
-        else if (!response.data.success) toast.error('Algo aconteceu')
+        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um utilizador ja existe com este Email');
+        else if (!response.data.success) toast.error('Algo aconteceu');
         else {
           // success here
-          setNewestUser(response.data.payload)
-          setProcessing(false)
-          setSuccessOpen(true)
+          setNewestUser(response.data.payload);
+          setProcessing(false);
+          setSuccessOpen(true);
 
         }
 
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    setProcessing(false)
+    setProcessing(false);
 
   }
 
@@ -248,13 +248,12 @@ const NewUser = ({ ...props }) => {
                 />
               </div>
               <div className='filterContainer4'>
-                <MyInput
-                  required
-                  label='Telemovel'
-                  value={telefone}
-                  error={errorMessageTelefone}
-                  placeholder='Escrever numero de telefone'
+                <PhoneInput
+                  label='Telefone'
                   type='number'
+                  error={errorMessageTelefone}
+                  options={countries}
+                  value={telefone}
                   onChange={(e) => {
                     setTelefone(e.target.value);
                     setErrorMessageTelefone('');
@@ -262,24 +261,14 @@ const NewUser = ({ ...props }) => {
                 />
               </div>
               <div className='filterContainer4'>
-                {/* <MyInput
-                  required
-                  label='Telemovel'
-                  onChange={(e) => {
-                    setTelemovel(e.target.value);
-                    setErrorMessageTelemovel('');
-                  }}
-                  value={telemovel}
-                  error={errorMessageTelemovel}
-                  placeholder='Escrever numero de telemovel'
-                /> */}
                 <PhoneInput
                   label='Telemovel'
                   type='number'
+                  error={errorMessageTelemovel}
                   options={countries}
                   value={telemovel}
                   onChange={(e) => {
-                    console.log(e.target.value)
+                    console.log(e.target.value);
                     setTelemovel(e.target.value);
                     setErrorMessageTelemovel('');
                   }}
@@ -297,8 +286,8 @@ const NewUser = ({ ...props }) => {
                   optionLabel='descricao'
                   optionValue='id'
                   onChange={(e) => {
-                    setErrorMessagePerfil()
-                    setPerfil(e.target.value)
+                    setErrorMessagePerfil();
+                    setPerfil(e.target.value);
                   }}
                 />
               </div>
@@ -326,8 +315,8 @@ const NewUser = ({ ...props }) => {
                   optionLabel="descricao"
                   value={perfil}
                   onChange={(e) => {
-                    setErrorMessagePais()
-                    setPais(e.target.value)
+                    setErrorMessagePais();
+                    setPais(e.target.value);
                   }}
                 />
               </div>

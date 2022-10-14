@@ -48,11 +48,11 @@ async function Test(pageProps) {
         return true;
       }
       else {
-        const u = JSON.parse(localStorage.getItem('user'))
+        const u = JSON.parse(localStorage.getItem('user'));
 
         pageProps.loggedUser = u;
 
-        const resUser = await authActions.me({ token })
+        const resUser = await authActions.me({ token });
 
         localStorage.setItem("user", JSON.stringify(resUser.data.payload));
         pageProps.loggedUser = resUser.data.payload;
@@ -60,13 +60,13 @@ async function Test(pageProps) {
         return true;
       }
     } else {
-      console.log('token is invalid')
+      console.log('token is invalid');
       //  case token is invalid
     }
 
   } else {
     // Case no token at all on cookie
-    authActions.logout()
+    authActions.logout();
   }
 }
 
@@ -75,7 +75,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouter();
   const [loaded, setLoaded] = useState(false);
-  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''))
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const [isVisible, setIsVisible] = useState(false);
 
   if (typeof window !== "undefined") pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -86,7 +86,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
 
     if (winScroll > heightToHideFrom) {
-      !isVisible && setIsVisible(true)
+      !isVisible && setIsVisible(true);
       isVisible && setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -109,8 +109,8 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
       setLoaded(isLoaded);
     }
 
-    Promise.all([load()]).then(() => setLoaded(true))
-  }, [])
+    Promise.all([load()]).then(() => setLoaded(true));
+  }, []);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -206,7 +206,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
         <Footer section={footer} />
       </div>
     </React.Fragment>
-  ) : <Loader center={true} />
+  ) : <Loader center={true} />;
 };
 
 Layout.propTypes = {

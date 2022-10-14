@@ -1,14 +1,14 @@
-import React from 'react'
-import SignInScreen from '../../components/pages/signin/signin'
+import React from 'react';
+import SignInScreen from '../../components/pages/signin/signin';
 
 const SignIn = () => {
-  const client = true
+  const client = true;
 
   const props = {
     client
-  }
+  };
 
-  return <SignInScreen { ...props } />
-}
+  return <SignInScreen {...props} />;
+};
 
-export default SignIn
+export default SignIn;

@@ -12,46 +12,50 @@ import OrderScreen from '../../../components/pages/order/order';
 import routes from '../../../navigation/routes';
 
 //  Services
-import * as OrdersActions from '../../../pages/api/actions/order';
 import * as FilesActions from '../../../pages/api/actions/file';
+import * as FolderActions from '../../../pages/api/actions/folder';
+import * as OrdersActions from '../../../pages/api/actions/order';
 
 const Order = ({ ...pageProps }) => {
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
-  const [files, setFiles] = useState();
-  const orderId = router.query.Id;
-  const [total, setTotal] = useState();
+  const [folders, setFolders] = useState();
 
   useEffect(() => {
     const getData = async () => {
       await OrdersActions
-        .order({ id: orderId })
-        .then((res) => {
-          console.log(res)
+        .order({ id: router.query.Id })
+        .then(async (res) => {
+          setOrder(res.data.payload);
 
-          let time = 0;
-          let amount = 0;
-          res.data.payload.data.map(ord => {
-            time += ord.product.craftTime * ord.amount
-            amount += ord.amount
-          })
+          await FolderActions
+            .folders({ id: res.data.payload.id })
+            .then(async (res) => {
 
-          setTotal({ time, amount})
-          setOrder(res.data.payload.data)
-        });
+              res.data.payload.data.map(async (fold, i) => {
+                res.data.payload.data[i].files = [];
 
-      await FilesActions
-        .files()
-        .then((res) => setFiles(res.data.payload.data));
+                await FilesActions
+                  .files({ id: fold.id })
+                  .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
+                  .catch((err) => console.log(err));
+              });
+
+              setFolders(res.data.payload.data);
+
+            })
+            .catch((err) => console.log(err));
+
+        })
+        .catch((err) => console.log(err));
     };
 
-    Promise.all([getData()]).then(() => setLoaded(true));
+    Promise.all([getData()])
+      .then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
-
-
     const headCellsUpperOrderDetail = [
       {
         id: 'deadline',
@@ -77,7 +81,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${total.amount} Un`,
+        label: `Quantidade Encomendada: ${order.amount} Un`,
         span: 1,
       },
     ];
@@ -118,7 +122,7 @@ const Order = ({ ...pageProps }) => {
         label: 'Previsto',
       },
       {
-        id: 'realizado',
+        id: 'realizado1',
         label: 'Realizado',
       },
       {
@@ -132,7 +136,7 @@ const Order = ({ ...pageProps }) => {
         borderRight: true,
       },
       {
-        id: 'product.craftTime',
+        id: 'previsto2',
         label: 'Previsto',
       },
       {
@@ -152,7 +156,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: 'Quantidade Produzida: 12 Un',
+        label: `Quantidade Produzida: ${order.completed} Un`,
         span: 4,
       },
       {
@@ -161,7 +165,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: 'Quantidade Encomendada: 25 Un',
+        label: `Quantidade Encomendada: ${order.amount} Un`,
         span: 1,
       },
       {
@@ -212,27 +216,13 @@ const Order = ({ ...pageProps }) => {
       {},
     ];
 
-    const productionDetail = [
-      {
-        id: Math.random(),
-        operacao: 'Corte',
-        previsto1: 18,
-        realizado: 17,
-        desvio: -1,
-        previstoAtual: 34,
-        previsto2: 1,
-        realizado2: 1,
-        desvio2: 0,
-      },
-    ];
-
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
         href: `${routes.private.internal.orders}`,
       },
       {
-        title: `Encomenda Nº ${orderId}`,
+        title: `Encomenda Nº ${router.query.Id}`,
         href: `${routes.private.internal.order}`,
       },
     ];
@@ -240,39 +230,50 @@ const Order = ({ ...pageProps }) => {
     const orderDetail = [
       {
         id: Math.random(),
-        startAt: order[0].order.startAt,
+        startAt: order.order.startAt,
         real: '06 abril 2022',
         start: '17 março 2022',
-        endAt: order[0].order.endAt,
-        time: `${total.time} H`,
+        endAt: order.order.endAt,
+        time: `${order.product.craftTime * order.amount} H`,
       },
     ];
 
-    //  Filters what can the user see depending of profile
-    const internalPOV = true;
+    const productionDetail = [
+      {
+        operacao: order.status,
+        previsto1: `${order.product.craftTime * order.amount} H`,
+        realizado1: `${18} H`,
+        desvio: (order.product.craftTime * order.amount) - 18,
+        previstoAtual: 20,
+        previsto2: order.product.craftTime,
+        realizado2: 2,
+        desvio2: -2
+      }
+    ];
+
+    //  Test para calcular diferença entre duas datas 
+    // const days = moment(order.order.endAt).diff(moment(order.order.startAt), 'hours');
+
+    // console.log(days)
 
     const props = {
       order,
       breadcrumbsPath,
-      internalPOV,
-      productionDetail,
       headCellsUpperProductionDetail,
       headCellsProductionDetail,
-      headCellsOrderDetail,
       headCellsUpperOrderDetail,
+      headCellsOrderDetail,
       headCellsMessages,
+      productionDetail,
       headCellsDocs,
-      pageProps,
       orderDetail,
-      files,
-      total
+      pageProps,
+      folders,
     };
 
+    return <OrderScreen {...props} />;
+  } else return <Loader center={true} />;
 
-    return loaded && <OrderScreen {...props} />
-  }
-
-  return <Loader center={true} />;
 };
 
 export default Order;

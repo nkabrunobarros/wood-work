@@ -7,27 +7,28 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
+  Typography
 } from '@mui/material';
-import React from 'react';
-import PropTypes from 'prop-types';
-import * as icons from 'lucide-react';
 import { Box } from '@mui/system';
+import * as icons from 'lucide-react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, iconType, okTxt, cancelTxt }) => {
-  const Icon= icons[icon || 'XCircle'];
+  const Icon = icons[icon || 'XCircle'];
   const style = {};
 
   switch (iconType) {
-    case icon: 
-    style.color = 'var(--red)'
+    case icon:
+      style.color = 'var(--red)'
 
-    break
+      break
 
     case 'success':
       style.color = 'var(--green)'
 
       break;
-  
+
     default:
       style.color = 'var(--yellow)'
 
@@ -41,7 +42,7 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id='alert-dialog-title' sx={{ color: 'var(--primary)' }}>
+      <DialogTitle color="link.main" id='alert-dialog-title' >
         {title ? `${title}` : 'Confirmar a Ação'}
       </DialogTitle>
       <Divider />
@@ -58,7 +59,7 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
       </DialogContent>
       <DialogActions>
         <Button onClick={onConfirm} autoFocus>
-          {okTxt || 'Concordo'}
+          <Typography color="link.main">{okTxt || 'Concordo'}</Typography>
         </Button>
         <Button onClick={handleClose} sx={{ color: 'var(--gray)' }}>{cancelTxt || 'Cancelar'}</Button>
       </DialogActions>

@@ -88,6 +88,9 @@ a {
   border: 1px solid var(--green);
   padding: 0.5rem;
   border-radius: 50px;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+
 }
 
 .warningBalloon {
@@ -96,6 +99,9 @@ a {
   border: 1px solid var(--yellow);
   padding: 0.5rem;
   border-radius: 50px;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+
 }
 
 .errorBalloon {
@@ -104,6 +110,9 @@ a {
   border: 1px solid var(--red);
   padding: 0.5rem;
   border-radius: 50px;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+
 }
 
 .dot {
@@ -402,4 +411,26 @@ a {
   box-shadow: inset 0px 1px 8px -3px #ababab;
   background: #fefefe;
   min-height: 140px;
+}
+
+.dragDrop {
+  padding: 0rem;
+  border-radius: 16px;
+  border: 3px dashed var(--grayEdges);
+  width: fit-content;
+  height: 300px;
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fullCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.infoContainerLeftOvers {
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }

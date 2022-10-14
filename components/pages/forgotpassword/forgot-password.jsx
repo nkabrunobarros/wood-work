@@ -1,38 +1,39 @@
 //  Nodes
-import React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import styles from '../../../styles/SignIn.module.css';
-import { OutlinedInput } from '@mui/material';
-
 import emailjs from '@emailjs/browser';
-import routes from '../../../navigation/routes';
-import Router from 'next/router';
-
+import { OutlinedInput } from '@mui/material';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import { ChevronLeft } from 'lucide-react';
-import Footer from '../../layout/footer/footer';
-import Notification from '../../dialogs/Notification';
+import Router from 'next/router';
+import React from 'react';
 import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
+import styles from '../../../styles/SignIn.module.css';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import Notification from '../../dialogs/Notification';
+import Footer from '../../layout/footer/footer';
 
-const ForgotPassword = (e) => {
+const ForgotPassword = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const USER_ID = `service_kqtxrtc`;
     const TEMPLATE_ID = `template_6nvzzrx`;
     const data = new FormData(event.currentTarget);
+
     console.log({
       email: data.get('email'),
     });
+
     emailjs
       .sendForm(USER_ID, TEMPLATE_ID, event.currentTarget, 'HtyN6X3l4PFTtFQSI')
       .then(
         (result) => {
           console.log(result);
-          toast.success('Sent');
+          toast.success('Sucesso!. Siga as instruções dadas no email para nova Senha');
         },
         (error) => {
           toast.error('An error occurred, Please try again', error);
@@ -62,7 +63,7 @@ const ForgotPassword = (e) => {
           </div>
         </Box>
       </Grid>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={24} square>
+      <Grid item xs={12} sm={8} md={5} component={Paper} square>
         <Box
           sx={{
             my: '25%',
@@ -103,27 +104,30 @@ const ForgotPassword = (e) => {
               placeholder='email'
               autoFocus
             />
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Submeter
-            </Button>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <a
-                onClick={() => Router.push(routes.public.signIn)}
-                className='link'
+            <Box mt={2}>
+              <PrimaryBtn
+                fullWidth
+                type='submit'
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
               >
-                <ChevronLeft /> Voltar a página de Login
-              </a>
+                Submeter
+              </PrimaryBtn>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <a
+                  id='align'
+                  onClick={() => Router.push(routes.public.signIn)}
+                  className='link'
+                >
+                  <ChevronLeft className='link' />
+                  <span>Voltar a página de Login</span>
+                </a>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -132,4 +136,5 @@ const ForgotPassword = (e) => {
     </Grid>
   );
 };
+
 export default ForgotPassword;

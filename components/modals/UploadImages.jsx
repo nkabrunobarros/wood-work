@@ -1,19 +1,23 @@
 /* eslint-disable react/prop-types */
-import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from "@mui/material"
-import { ImagePlus, X, XCircle } from "lucide-react"
-import React, { useState } from "react"
-import { toast } from "react-toastify"
-import * as FileActions from '../../pages/api/actions/file'
-import PrimaryBtn from "../buttons/primaryBtn"
-import MyInput from "../inputs/myInput"
-import Select from "../inputs/select"
-import GetFileSize from "../utils/GetFileSize"
+import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from "@mui/material";
+import { ImagePlus, X, XCircle } from "lucide-react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import * as FileActions from '../../pages/api/actions/file';
+import * as FolderActions from '../../pages/api/actions/folder';
+import PrimaryBtn from "../buttons/primaryBtn";
+import MyInput from "../inputs/myInput";
+import Select from "../inputs/select";
+import GetFileSize from "../utils/GetFileSize";
+import IsInternal from "../utils/IsInternal";
 
-const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
-  const [newImages, setNewImages] = useState()
-  const [newImageDescription, setNewImageDescription] = useState('')
-  const [selectedFolder, setSelectedFolder] = useState()
-  const [uploading, setUploading] = useState(false)
+const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pageProps }) => {
+  const [newImages, setNewImages] = useState();
+  const [newImageDescription, setNewImageDescription] = useState('');
+  const [folders2, setFolders] = useState(folders);
+  const [selectedFolder, setSelectedFolder] = useState(folders2.find(ele => ele.name === orderId)?.id);
+  const [uploading, setUploading] = useState(false);
+  const [errorFolder, setErrorFolder] = useState('');
 
   function getBase64(file) {
     return new Promise(resolve => {
@@ -46,45 +50,91 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
       await getBase64(file)
         .then(result => {
           file.base64 = result;
-          arr.push(file)
+          arr.push(file);
         })
         .catch(err => {
           console.log(err);
-        })
+        });
 
     }
 
-    setNewImages(arr)
+    setNewImages(arr);
   }
 
   async function handleSaveImages() {
-    setUploading(true)
 
-    let errors;
+    if (!selectedFolder && !client) {
+      setErrorFolder('Campo Obrigatório');
 
-    newImages.map(async (file) => {
-      const builtFile = {
-        descricao: newImageDescription,
-        url: "a",
-        data: file.base64,
-        filename: file.name,
-        filesize: JSON.stringify(file.size),
+      return toast.warning('Escolha uma pasta');
+    }
 
-      }
+    if (!newImages) return toast.warning('Sem imagens escolhidas');
 
-      try {
-        await FileActions.saveFile(builtFile).then((res) => console.log(res))
-      } catch (err) {
-        errors.push(err)
-      }
-    })
+    setUploading(true);
 
-    if (errors) toast.error('Algo aconteceu')
-    else toast.success('Ficheiros carregados!')
+    const errors = [];
 
-    setUploading(false)
+    //  If client folder does not existe, create it (folder name === orderId)
+    if (client && folders.find(ele => ele.name === orderId) === undefined) {
+      const builtFolder = {
+        name: orderId,
+        orderDetailId: orderId
+      };
+
+      const newFolder = await FolderActions
+        .saveFolder(builtFolder)
+        .catch((err) => console.log(err));
+
+      newFolder.data.payload.files = [];
+      setFolders([...folders, newFolder.data.payload]);
+
+      newImages.map(async (file) => {
+        const builtFile = {
+          descricao: newImageDescription,
+          url: "",
+          data: file.base64,
+          filename: file.name,
+          filesize: JSON.stringify(file.size),
+          folderId: newFolder.id,
+        };
+
+        try {
+          await FileActions.saveFile(builtFile).then((res) => console.log(res));
+        } catch (err) {
+          errors.push(err);
+        }
+      });
+
+      onClose();
+
+    } else {
+      newImages.map(async (file) => {
+        const builtFile = {
+          descricao: newImageDescription,
+          url: "",
+          data: file.base64,
+          filename: file.name,
+          filesize: JSON.stringify(file.size),
+          folderId: selectedFolder,
+        };
+
+        try {
+          await FileActions.saveFile(builtFile).then((res) => console.log(res));
+        } catch (err) {
+          errors.push(err);
+        }
+      });
+
+      onClose();
+    }
+
+    if (errors[0]) toast.error('Algo aconteceu');
+    else toast.success('Ficheiros carregados!');
+
+    setNewImages();
+    setUploading(false);
     onClose();
-
   }
 
 
@@ -95,7 +145,7 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
           <Box sx={{ marginLeft: 'auto' }}>
             <IconButton onClick={() => {
               setNewImages();
-              setNewImageDescription()
+              setNewImageDescription();
               onClose(false);
             }}>
               <X
@@ -125,16 +175,18 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
             />
             <span style={{ fontSize: 'small' }}>Tamanho Maximo 1 MB</span>
           </Grid>
-          {folders[0] && <Grid md={6} p={1}>
+          {folders && !client && IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao) ? <Grid md={6} p={1}>
             <Select
+              required
               label='Pasta'
+              error={errorFolder}
               value={selectedFolder}
               onChange={(e) => setSelectedFolder(e.target.value)}
               optionLabel={'name'}
               options={folders}
             />
-          </Grid>}
-
+          </Grid>
+            : null}
         </Grid>
 
         <Grid container md={12} sx={{ padding: '1rem', maxHeight: '400px', overflow: 'scroll', overflowX: 'hidden' }}>
@@ -167,7 +219,7 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
               <PrimaryBtn disabled={uploading || newImages?.find(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE)} text={uploading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'Guardar'} onClick={() => handleSaveImages()} />
               <PrimaryBtn light text={'Cancelar'} onClick={() => {
                 setNewImages();
-                setNewImageDescription('')
+                setNewImageDescription('');
                 onClose();
               }} />
             </Box>
@@ -175,8 +227,8 @@ const UploadImagesModal = ({ open, onClose, folders, ...pageProps }) => {
         </Grid>
       </Grid>
     </Box>
-  </Modal>
+  </Modal>;
 
-}
+};
 
-export default UploadImagesModal
+export default UploadImagesModal;

@@ -1,24 +1,24 @@
 //  Nodes
-import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
 
-import Content from '../../content/content';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 
 //  PropTypes
-import PropTypes from 'prop-types';
-import AdvancedTable from '../../advancedTable/AdvancedTable';
 import {
   Autocomplete,
   InputLabel,
   MenuItem,
   Select,
-  TextField,
+  TextField
 } from '@mui/material';
+import PropTypes from 'prop-types';
 import routes from '../../../navigation/routes';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
 
 const Stock = ({ ...props }) => {
   const { items, breadcrumbsPath, categories, headCells, products } = props;
@@ -47,8 +47,8 @@ const Stock = ({ ...props }) => {
     // Set Filters
     setFilters({
       productId,
-      categoria: category,
-      codigo,
+      category,
+      code: codigo,
       stock,
     });
   };
@@ -159,13 +159,14 @@ const Stock = ({ ...props }) => {
             <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
           </div>
         </div>
+        {console.log(rows)}
         <AdvancedTable
           rows={rows}
           headCells={headCells}
           clickRoute={routes.private.internal.stockId}
           filters={filters}
           actionId='productId'
-        ></AdvancedTable>
+        />
       </Content>
     </Grid>
   );

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import styles from '../../../styles/components/navbar.module.css';
 
@@ -39,6 +39,10 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.newUser}`,
   ];
 
+  const leftoversPages = [
+    `${routes.private.internal.leftovers}`,
+  ];
+
   const profilePages = [`${routes.private.profile}[Id]`];
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
@@ -58,10 +62,12 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   if (messagesPages.includes(path.route)) currentSection = 'Mensagens';
 
   if (dashboardPages.includes(path.route)) currentSection = 'Painel de Controlo';
-  
+
+  if (leftoversPages.includes(path.route)) currentSection = 'Sobrantes';
+
   const style = {
     borderLeft:
-    page === currentSection
+      page === currentSection
         ? '5px solid var(--white)'
         : '5px solid transparent',
   };

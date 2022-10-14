@@ -2,7 +2,7 @@ import axios from "axios";
 import { parseCookies } from "nookies";
 import querys from "../../querys";
 
-export async function orders(data) {
+export async function folders(data) {
     const { auth_token: token } = parseCookies();
 
     const config = {
@@ -11,14 +11,14 @@ export async function orders(data) {
 
     return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
         {
-            query: querys.ORDERS,
+            query: querys.ORDER_FOLDERS,
             data
         },
         config
-    )
+    );
 }
 
-export async function ordersProduction(data) {
+export async function fol(data) {
     const { auth_token: token } = parseCookies();
 
     const config = {
@@ -27,11 +27,11 @@ export async function ordersProduction(data) {
 
     return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
         {
-            query: querys.ORDERS_PRODUCTION,
+            query: querys.ORDER_FOLDERS,
             data
         },
         config
-    )
+    );
 }
 
 export async function order(data) {
@@ -47,10 +47,10 @@ export async function order(data) {
             data
         },
         config
-    )
+    );
 }
 
-export async function saveOrder(data) {
+export async function saveFolder(data) {
     const { auth_token: token } = parseCookies();
 
     const config = {
@@ -59,11 +59,11 @@ export async function saveOrder(data) {
 
     return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
         {
-            query: querys.SAVE_ORDER,
+            query: querys.SAVE_FOLDER,
             data: { input: { ...data } }
         },
         config
-    )
+    );
 }
 
 export async function saveOrderDetails(data) {
@@ -79,5 +79,5 @@ export async function saveOrderDetails(data) {
             data: { input: { ...data } }
         },
         config
-    )
+    );
 }

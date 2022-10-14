@@ -1,24 +1,24 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import React, { useState } from 'react';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
 import styles from '../../../styles/SignIn.module.css';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import Footer from '../../layout/footer/footer';
 
 //  Navigation
-import Router from 'next/router';
-import routes from '../../../navigation/routes';
 import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
-import backgroundImgTos from '../../../public/tos.png';
-import backgroundImgTerms from '../../../public/Consentimento.png';
+import Router from 'next/router';
+import routes from '../../../navigation/routes';
 import * as UserActions from '../../../pages/api/actions/user';
+import backgroundImgTerms from '../../../public/Consentimento.png';
+import backgroundImgTos from '../../../public/tos.png';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -44,12 +44,12 @@ const Terms = ({ ...props }) => {
       idPerfil: user.perfil.id,
       obs: user.obs || '',
       tos: true,
-    }
+    };
 
     try {
       await UserActions.saveUser(newUser).then((response) => {
-        if (response.data.payload.tos) Router.push(routes.private.orders)
-      })
+        if (response.data.payload.tos) Router.push(routes.private.orders);
+      });
     } catch (err) { console.log(err); } 
   };
 

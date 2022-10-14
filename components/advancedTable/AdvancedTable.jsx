@@ -69,14 +69,14 @@ const AdvancedTable = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-  const [cellsFilter, setCellsFilter] = useState(headCells)
-  const [refresh, setRefresh] = useState(new Date())
+  const [cellsFilter, setCellsFilter] = useState(headCells);
+  const [refresh, setRefresh] = useState(new Date());
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
-      const categories = await CategoriesActions.categories()
-      const clients = await ClientsActions.clients()
+      const categories = await CategoriesActions.categories();
+      const clients = await ClientsActions.clients();
 
       const allData = {
         categories: categories.data.payload.data,
@@ -107,12 +107,12 @@ const AdvancedTable = ({
 
       cellsFilter.map((cell, i) => {
         const oldState = cellsFilter;
-        const newState = cellsFilter[i]
+        const newState = cellsFilter[i];
 
         newState.show = true;
         oldState[i] = newState;
-        setCellsFilter(oldState)
-      })
+        setCellsFilter(oldState);
+      });
     }
 
     Promise.all([getData(), BuildDeleteMessage(), RebuildHeadCellsWithFilterState()]).then(() => setLoaded(true));
@@ -128,28 +128,28 @@ const AdvancedTable = ({
 
   function OnFilterChange(i) {
     const oldState = cellsFilter;
-    const newState = cellsFilter[i]
+    const newState = cellsFilter[i];
 
     newState.show = !newState.show;
     oldState[i] = newState;
-    setCellsFilter(oldState)
-    setRefresh(new Date())
+    setCellsFilter(oldState);
+    setRefresh(new Date());
   }
 
   function showAllHeaders() {
     cellsFilter.map((cell, i) => {
       const oldState = cellsFilter;
-      const newState = cellsFilter[i]
+      const newState = cellsFilter[i];
 
       newState.show = true;
       oldState[i] = newState;
-      setCellsFilter(oldState)
-      setRefresh(new Date())
-    })
+      setCellsFilter(oldState);
+      setRefresh(new Date());
+    });
   }
 
   async function onDeleteItem() {
-    const thisRow = rows.find(r => r.id === deleteItemId)
+    const thisRow = rows.find(r => r.id === deleteItemId);
 
     switch (Router.route) {
       case routes.private.internal.users:
@@ -166,10 +166,10 @@ const AdvancedTable = ({
           obs: thisRow.obs,
           tos: thisRow.tos,
           otherData: thisRow.otherData,
-        }
+        };
 
         try {
-          await UserActions.saveUser(builtUser)
+          await UserActions.saveUser(builtUser);
         } catch (err) { }
 
         break;
@@ -190,7 +190,7 @@ const AdvancedTable = ({
           taxId: thisRow.taxId,
           postalCode: thisRow.postalCode,
 
-        }
+        };
 
         try {
           await ClientsActions.saveClient(builtClient);
@@ -210,7 +210,7 @@ const AdvancedTable = ({
 
       setFilteredItems(newRows);
     } else {
-      const newRows = oldRows.filter((row) => !(row.id === deleteItemId))
+      const newRows = oldRows.filter((row) => !(row.id === deleteItemId));
 
       setFilteredItems(newRows);
     }
@@ -298,7 +298,7 @@ const AdvancedTable = ({
                   <Skeleton animation="wave" width='100%' />
                 }
               </TableSortLabel>
-            </TableCell>
+            </TableCell>;
           }
 
           )}
@@ -409,7 +409,7 @@ const AdvancedTable = ({
         <Box className='tableChips'>
           <Box>
             {Object.keys(filters || {}).map((x, i) => {
-              if (filters[x]) return <Chip key={i} label={x} onDelete={() => console.log('deleted')} />
+              if (filters[x]) return <Chip key={i} label={x} onDelete={() => console.log('deleted')} />;
             })}
 
           </Box>
@@ -457,7 +457,7 @@ const AdvancedTable = ({
                   {cellsFilter.map((headCell, i) => {
                     return <Grid id='align' container item key={i} >
                       <Switch checked={headCell.show} onClick={() => OnFilterChange(i)} />{headCell.label}
-                    </Grid>
+                    </Grid>;
                   })}
                 </Grid>
               </Grid>
@@ -513,7 +513,7 @@ const AdvancedTable = ({
                             {loaded ?
                               <>
                                 {headCell.id === 'actions' ? (
-                                  <ButtonGroup>
+                                  <ButtonGroup color='link.main'>
                                     <Tooltip title='Editar'>
                                       <IconButton
                                         onClick={() =>
@@ -545,8 +545,7 @@ const AdvancedTable = ({
                                   <div
                                     onClick={() =>
                                       clickRoute
-                                        ? Router.push(`${clickRoute}${row[actionId || 'id']}`)
-                                        : null
+                                      && Router.push(`${clickRoute}${row[actionId || 'id']}`)
                                     }
                                   >
 
@@ -559,7 +558,7 @@ const AdvancedTable = ({
                                 )}
                               </>
                               : <Skeleton animation="wave" width='100%' />}
-                          </TableCell>
+                          </TableCell>;
                         })}
                       </TableRow>
                     );
@@ -575,7 +574,7 @@ const AdvancedTable = ({
         </TableContainer>
       </Paper>
     </Box>
-  )
+  );
 };
 
 AdvancedTable.propTypes = {

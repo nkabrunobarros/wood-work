@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -14,8 +14,8 @@ import { PackageCheck } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 // import Chart from 'react-apexcharts';
 import dynamic from 'next/dynamic';
+import { useDropzone } from 'react-dropzone';
 import Content from '../../content/content';
-import CurrencyInput from '../../inputs/CurrencyInput';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -70,7 +70,7 @@ const OrdersScreen = ({ ...props }) => {
     tooltip: {
       y: {
         formatter: function (val) {
-          return "$ " + val + " thousands"
+          return "$ " + val + " thousands";
         }
       }
     }
@@ -158,6 +158,14 @@ const OrdersScreen = ({ ...props }) => {
     }
   };
 
+  const [uploadedFiles, setUploadedFiles] = useState();
+
+  const onDrop = useCallback(acceptedFiles => {
+    // Do something with the files
+    setUploadedFiles(acceptedFiles);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <Grid component='main'>
@@ -166,8 +174,14 @@ const OrdersScreen = ({ ...props }) => {
       <CustomBreadcrumbs path={breadcrumbsPath} />
 
       <Content>
-      <CurrencyInput label={'Amount'} onChange={(e) => console.log(e.target.value.replace(' ', ''))}/>
-      
+        <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
+          <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => console.log(e.target.files)} />
+          {
+            isDragActive ?
+              <p>Drop...</p> :
+              <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Drag and Drop or click to upload files'}</p>
+          }
+        </Box>
       </Content>
       <Grid container p={2}>
         <Grid item md={3} p={1}>

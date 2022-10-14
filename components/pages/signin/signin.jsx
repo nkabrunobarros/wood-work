@@ -5,7 +5,6 @@ import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
@@ -13,7 +12,7 @@ import React, { useState } from 'react';
 
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, InputLabel, TextField
+  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, InputLabel, TextField
 } from '@mui/material';
 import styles from '../../../styles/SignIn.module.css';
 
@@ -26,6 +25,8 @@ import Router, { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 import { toast } from 'react-toastify';
 import * as authActions from '../../../pages/api/actions/auth';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import MyInput from '../../inputs/myInput';
 import EmailValidation from '../../utils/EmailValidation';
 import IsInternal from '../../utils/IsInternal';
 import ToastSet from '../../utils/ToastSet';
@@ -36,9 +37,9 @@ const SignIn = (props) => {
   const [email, setEmail] = useState('geral@nka.pt');
   const [password, setPassword] = useState('123456');
   const [loading, setLoading] = useState(false);
-  const [emailErrors, setEmailErrors] = useState()
-  const [senhaErrors, setSenhaErrors] = useState()
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [emailErrors, setEmailErrors] = useState();
+  const [senhaErrors, setSenhaErrors] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
 
 
@@ -48,19 +49,19 @@ const SignIn = (props) => {
     const errors = {
       email: '',
       password: ''
-    }
+    };
 
-    if (email === '') errors.email = 'Email é obrigatório'
-    else if (!EmailValidation(email)) errors.email = 'Email mal estruturado'
+    if (email === '') errors.email = 'Email é obrigatório';
+    else if (!EmailValidation(email)) errors.email = 'Email mal estruturado';
 
 
-    if (password === '') errors.password = 'Senha é obrigatório'
-    else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres'
+    if (password === '') errors.password = 'Senha é obrigatório';
+    else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres';
 
 
     if (errors.password || errors.email) {
-      setSenhaErrors(errors.password)
-      setEmailErrors(errors.email)
+      setSenhaErrors(errors.password);
+      setEmailErrors(errors.email);
 
       return;
     }
@@ -69,43 +70,35 @@ const SignIn = (props) => {
 
     const loadingNotification = toast.loading('');
 
-    try {
 
-      const result = await authActions.login({ email, password })
+    await authActions.login({ email, password })
+      .then(async (result) => {
+        setCookie(undefined, 'auth_token', result.data.payload.token);
 
-      if (!result.data.success && result.data.message === 'credenciais-invalidas') {
+        const resUser = await authActions.me({ token: result.data.payload.token });
+        const user = resUser.data.payload;
 
-        ToastSet(loadingNotification, 'Credenciais invalidas', 'error')
-        setLoading(false)
-      } else if (!result.data.success && result.data.message === 'utilizador-inativo') {
-        ToastSet(loadingNotification, 'Utilizador Inativo', 'error')
-        setLoading(false)
-      }
+        localStorage.setItem("user", JSON.stringify(user));
 
-      setCookie(undefined, 'auth_token', result.data.payload.token);
+        // Success
 
-      const resUser = await authActions.me({ token: result.data.payload.token })
-      const user = resUser.data.payload;
+        ToastSet(loadingNotification, 'A entrar', 'success');
+        setLoading(false);
 
-      localStorage.setItem("user", JSON.stringify(user));
-      ToastSet(loadingNotification, 'A entrar', 'success')
-      setLoading(false)
+        if (IsInternal(user.perfil.descricao)) router.push(routes.private.internal.orders);
+        else {
+          if (!user.tos) router.push(routes.private.terms);
+          else router.push(routes.private.orders);
+        }
+      })
+      //  Error
+      .catch((err) => {
+        setLoading(false);
 
-      if (IsInternal(user.perfil.descricao)) router.push(routes.private.internal.orders)
-      else 
-      {
-        if (!user.tos) router.push(routes.private.terms)
-          else router.push(routes.private.orders)
-      }
-    } catch (error) {
-      setLoading(false)
-
-      if (!error.response.data.success && error.response.data.message === 'utilizador-inativo') {
-        ToastSet(loadingNotification, 'Utilizador Inativo', 'error')
-        setDialogOpen(true)
-        setLoading(false)
-      }
-    }
+        if (!err.response.data.success && err.response.data.message === 'credenciais-invalidas') ToastSet(loadingNotification, 'Credenciais invalidas', 'error');
+        else if (err.response.data.message === 'utilizador-inativo') ToastSet(loadingNotification, 'Conta Inativa', 'error');
+        else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
+      });
   };
 
 
@@ -198,9 +191,9 @@ const SignIn = (props) => {
               id='email'
               value={email}
               onChange={(e) => {
-                if (emailErrors) setEmailErrors('')
+                if (emailErrors) setEmailErrors('');
 
-                setEmail(e.target.value)
+                setEmail(e.target.value);
               }
               }
               type='email'
@@ -210,68 +203,21 @@ const SignIn = (props) => {
               error={!!emailErrors}
               label={emailErrors || ''}
             />
-            <InputLabel htmlFor='password'>Senha</InputLabel>
-            <TextField
-              variant='outlined'
-              id='password'
-              required
-              fullWidth
-              error={!!senhaErrors}
-              label={senhaErrors || ''}
-              name='password'
-              type={visible ? 'password' : 'text'}
-              autoComplete='current-password'
+            <MyInput
+              label='Senha'
+              onChange={(e) => { setSenhaErrors(''); setPassword(e.target.value); }}
               value={password}
-              onChange={(e) => {
-                if (senhaErrors) setSenhaErrors('')
-
-                setPassword(e.target.value)
-              }}
-              InputProps={{
-                endAdornment:
-                  <InputAdornment position='end'>
-                    <IconButton
-                      aria-label='toggle password visibility'
-                      edge='end'
-                    >
-                      {visible ? (
-                        <Visibility
-                          color={'primary'}
-                          onClick={() => setVisible(false)}
-                        />
-                      ) : (
-                        <VisibilityOff onClick={() => setVisible(true)} />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-              }}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label='toggle password visibility'
-                    edge='end'
-                  >
-                    {visible ? (
-                      <Visibility
-                        color={'primary'}
-                        onClick={() => setVisible(false)}
-                      />
-                    ) : (
-                      <VisibilityOff onClick={() => setVisible(true)} />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
+              error={senhaErrors}
+              type={visible ? 'password' : 'text'}
+              iconTooltip={visible && 'Mostrar Senha'}
+              adornmentOnClick={() => setVisible(!visible)}
+              adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />} />
             <Grid container style={{ alignItems: 'center' }}>
               <Grid item xs>
                 <a
                   onClick={() => Router.push(routes.public.forgotPassword)}
-                  variant='body2'
                   className='link'
-                >
-                  Esqueceu-se da sua senha?
-                </a>
+                >Esqueceu-se da sua senha?</a>
               </Grid>
               <Grid item>
                 <FormControlLabel
@@ -282,8 +228,8 @@ const SignIn = (props) => {
                 />
               </Grid>
             </Grid>
-            <Button
-              id="submitForm"
+            <PrimaryBtn
+              onClick={(e) => handleSubmit(e)}
               type='submit'
               fullWidth
               variant='contained'
@@ -295,7 +241,7 @@ const SignIn = (props) => {
               ) : (
                 'Entrar'
               )}
-            </Button>
+            </PrimaryBtn>
           </Box>
         </Box>
         <Footer section='client' />
