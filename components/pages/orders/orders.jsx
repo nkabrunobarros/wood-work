@@ -8,7 +8,8 @@ import {
   Box,
   Grid,
   InputLabel, OutlinedInput,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -39,10 +40,10 @@ const OrdersScreen = ({ ...props }) => {
     editPage,
     headCells,
     products,
-    categories
+    // categories
   } = props;
 
-  const router = useRouter()
+  const router = useRouter();
   //  States
   const [number, setNumber] = useState(router.query.order || '');
   const [client, setClient] = useState('');
@@ -138,7 +139,7 @@ const OrdersScreen = ({ ...props }) => {
             />
           </Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
-            <InputLabel htmlFor='Stock'>Producao</InputLabel>
+            <InputLabel htmlFor='Stock'>Producão</InputLabel>
             <Select
               fullWidth
               value={producao}
@@ -168,7 +169,7 @@ const OrdersScreen = ({ ...props }) => {
       {/* Orders */}
       <Content>
         <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+          <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
           <PrimaryBtn
             hidden={!CanDo(['write', 'orders'])}
             text='Adicionar'

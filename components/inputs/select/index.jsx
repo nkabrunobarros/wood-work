@@ -19,7 +19,6 @@ const Select2 = ({
   error,
   name,
   id,
-  children
 }) => {
 
   return (
@@ -49,10 +48,10 @@ const Select2 = ({
           sx={{ width: width && width }}
           style={{ width: halfWidth && '50%' }}
         >
-          <MenuItem value=" " disabled>
+          <MenuItem value="" disabled>
             Escolha uma opcao
           </MenuItem>
-          {options
+          {options && options
             .map((opt, i) => (
               <MenuItem key={i} value={opt[optionValue] || opt.id}>
                 <Box

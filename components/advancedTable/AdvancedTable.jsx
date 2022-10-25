@@ -46,6 +46,7 @@ import * as ClientsActions from '../../pages/api/actions/client';
 import * as UserActions from '../../pages/api/actions/user';
 
 import routes from '../../navigation/routes';
+import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
   children,
@@ -72,6 +73,7 @@ const AdvancedTable = ({
   const [cellsFilter, setCellsFilter] = useState(headCells);
   const [refresh, setRefresh] = useState(new Date());
   const [loaded, setLoaded] = useState(false);
+  const [displaying, setDisplaying] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -84,6 +86,30 @@ const AdvancedTable = ({
       };
 
       setData(allData);
+    };
+
+    const getWhatDisplaying = () => {
+
+      switch (Router.route) {
+        case routes.private.internal.orders: setDisplaying('orders');
+
+          break;
+        case routes.private.internal.ordersSimilar: setDisplaying('orders');
+
+          break;
+        case routes.private.internal.stocks: setDisplaying('stocks');
+
+          break;
+        case routes.private.internal.clients: setDisplaying('clients');
+
+          break;
+        case routes.private.internal.users: setDisplaying('utilizadores');
+
+          break;
+
+        default:
+          break;
+      }
     };
 
     const BuildDeleteMessage = () => {
@@ -115,14 +141,15 @@ const AdvancedTable = ({
       });
     }
 
-    Promise.all([getData(), BuildDeleteMessage(), RebuildHeadCellsWithFilterState()]).then(() => setLoaded(true));
+    Promise.all([getData(), BuildDeleteMessage(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => setLoaded(true));
 
   }, []);
 
   function onDeleteClick(row) {
     setDialogOpen(true);
+    console.log(row);
 
-    if (Router.asPath.includes('orders')) setDeleteItemId(row.numEncomenda);
+    if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
     else setDeleteItemId(row.id);
   }
 
@@ -268,12 +295,12 @@ const AdvancedTable = ({
         <TableRow id={refresh}>
           {cellsFilter.map((headCell) => {
             return headCell.show && <TableCell
-              colSpan={headCell.span}
               key={headCell.id}
+              colSpan={headCell.span}
               align={headCell.numeric ? 'right' : 'left'}
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
-              width={headCell.width ? `${headCell.width}%` : null}
+              width={headCell.width && `${headCell.width}%`}
               sx={{
                 borderRight: headCell.borderRight
                   ? '1px solid var(--grayEdges)'
@@ -514,32 +541,26 @@ const AdvancedTable = ({
                               <>
                                 {headCell.id === 'actions' ? (
                                   <ButtonGroup color='link.main'>
-                                    <Tooltip title='Editar'>
-                                      <IconButton
-                                        onClick={() =>
-                                          clickRoute
-                                            ? Router.push(`${editRoute}${row.id}`)
-                                            : null
-                                        }
-                                      >
-                                        <Edit
-                                          strokeWidth='1'
-                                          className='link'
-                                          size={20}
-                                        />
-                                      </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title='Remover'>
-                                      <IconButton
-                                        onClick={() => onDeleteClick(row)}
-                                      >
+                                    {CanDo(['WRITE', displaying]) &&
+                                      <Tooltip title='Editar'>
+                                        <IconButton
+                                          onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
+                                          <Edit
+                                            strokeWidth='1'
+                                            className='link'
+                                            size={20}
+                                          />
+                                        </IconButton>
+                                      </Tooltip>}
+                                    {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover ' + displaying}>
+                                      <IconButton onClick={() => onDeleteClick(row)}>
                                         <Trash
                                           strokeWidth='1'
                                           className='link'
                                           size={20}
                                         />
                                       </IconButton>
-                                    </Tooltip>
+                                    </Tooltip>}
                                   </ButtonGroup>
                                 ) : (
                                   <div
@@ -548,7 +569,6 @@ const AdvancedTable = ({
                                       && Router.push(`${clickRoute}${row[actionId || 'id']}`)
                                     }
                                   >
-
                                     {FilterItem(
                                       data,
                                       row,
@@ -573,7 +593,7 @@ const AdvancedTable = ({
           </Table>
         </TableContainer>
       </Paper>
-    </Box>
+    </Box >
   );
 };
 

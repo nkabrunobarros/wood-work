@@ -1,7 +1,7 @@
 const scrollToBottom = (id) => {
-  const element = document.getElementById(id)
+  const element = document.getElementById(id);
 
-  element.scrollTop = element.scrollHeight
-}
+  element.scrollTop = element.scrollHeight;
+};
 
-export default scrollToBottom
+export default scrollToBottom;

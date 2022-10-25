@@ -15,8 +15,7 @@ import Layout from '../components/layout/layout';
 //  Services
 
 //  Material UI
-// eslint-disable-next-line sort-imports
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 
 //  Navigation
 import routes from '../navigation/routes';
@@ -28,97 +27,13 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
 import IsInternal from '../components/utils/IsInternal';
-import AppContext from './AppContenxt';
+import MuiTheme from './MuiTheme';
 
 
 const App = ({ Component, pageProps }) => {
   const [selectedTheme, setSelectedTheme] = useState('light');
-
-  const theme = createTheme({
-    palette: {
-      mode: selectedTheme,
-
-      primary: {
-        main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
-      },
-      default: {
-        main: selectedTheme === 'light' ? '#fff' : '#282828',
-      },
-      lightGray: {
-        main: selectedTheme === 'light' ? 'var(--grayBG)' : '#383838',
-      },
-      collapseImg: {
-        main: selectedTheme === 'light' ? 'red' : 'red',
-      },
-      lightTextSm: {
-        main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
-        black: selectedTheme === 'light' ? 'black' : 'var(--white)'
-      },
-      link: {
-        main: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
-      }
-    },
-    typography: {
-      fontFamily: 'Montserrat'
-    },
-    TextareaAutosize: {
-      fontFamily: 'Montserrat',
-      backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
-    },
-    components: {
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
-          },
-        },
-      },
-      MuiSelect: {
-        styleOverrides: {
-          root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
-          },
-        },
-      },
-      MuiAutocomplete: {
-        styleOverrides: {
-          root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
-          },
-        },
-      },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            textTransform: 'none',
-          },
-        },
-      },
-      MuiGrid: {
-        styleOverrides: {
-          root: {
-            width: '100%'
-          }
-        }
-      },
-      MuiTableRow: {
-        styleOverrides: {
-          root: {
-            backgroundColor: selectedTheme === 'light' && 'var(--grayBG)'
-          }
-        }
-      },
-      MuiTextareaAutosize: {
-        styleOverrides: {
-          root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
-          }
-        }
-      },
-    },
-  });
-
-
+  const [fontSize, setFontSize] = useState('md');
+  const theme = MuiTheme({ selectedTheme, fontSize });
   const { auth_token: token } = parseCookies();
   const router = useRouter();
 
@@ -137,6 +52,9 @@ const App = ({ Component, pageProps }) => {
       //  theme
       if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'light');
       else if (selectedTheme !== localStorage.getItem('theme')) setSelectedTheme(localStorage.getItem('theme'));
+
+      if (!localStorage.getItem('font')) localStorage.setItem('font', 'md');
+      else if (fontSize !== localStorage.getItem('font')) setFontSize(localStorage.getItem('font'));
 
 
       if (token) {
@@ -170,15 +88,13 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppContext.Provider>
-        <Head>
-          <title>Wood Work 4.0</title>
-          <link rel='icon' href='/logo_bw_ww40_inv.png' />
-        </Head>
-        <Layout {...pageProps} toggleTheme={toggleTheme}>
-          <Component {...pageProps} />
-        </Layout>
-      </AppContext.Provider>
+      <Head>
+        <title>Wood Work 4.0</title>
+        <link rel='icon' href='/logo_bw_ww40_inv.png' />
+      </Head>
+      <Layout {...pageProps} toggleTheme={toggleTheme}>
+        <Component {...pageProps} />
+      </Layout>
     </ThemeProvider>
   );
 };

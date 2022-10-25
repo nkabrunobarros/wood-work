@@ -112,7 +112,7 @@ const EditUser = ({ ...props }) => {
       telefone,
       morada,
       paisCodigo: pais,
-      idPerfil: 'cl8om6j3q0000b4fjz5manyk3',
+      idPerfil: perfil,
       obs,
       tos: user.tos,
     };
@@ -126,7 +126,7 @@ const EditUser = ({ ...props }) => {
         setEmail(res.data.payload.email);
         setTelefone(res.data.payload.telefone);
         setTelemovel(res.data.payload.telemovel);
-        // setPerfil(res.data.payload.idPerfil)
+        setPerfil(res.data.payload.idPerfil);
         setMorada(res.data.payload.morada);
         setPais(res.data.payload.paisCodigo);
         setObs(res.data.payload.obs);

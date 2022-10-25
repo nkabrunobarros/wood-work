@@ -14,7 +14,6 @@ import OrdersScreen from '../../components/pages/orders/orders';
 import PropTypes from 'prop-types';
 
 //  Data services
-
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as OrdersActions from '../../pages/api/actions/order';
@@ -23,15 +22,12 @@ import * as ProductsActions from '../../pages/api/actions/product';
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 
-//  Utlis
-
 const Orders = ({ ...pageProps }) => {
   const [panelsInfo, setPanelsInfo] = useState();
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
   const [categories, setCategories] = useState();
-  // const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const detailPage = routes.private.internal.order;
   const editPage = routes.private.internal.editOrder;
@@ -46,8 +42,6 @@ const Orders = ({ ...pageProps }) => {
       };
 
       await OrdersActions.ordersProduction().then(async (response) => {
-        console.log(response.data.payload.data);
-
         response.data.payload.data.map(async (ord, i) => {
           switch (ord.order.status.toLowerCase()) {
             case 'em orçamentação':

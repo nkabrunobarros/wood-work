@@ -20,4 +20,4 @@ function ConvertBase64(file) {
     });
 }
 
-export default ConvertBase64
+export default ConvertBase64;

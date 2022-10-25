@@ -8,11 +8,17 @@ import IsInternal from '../../utils/IsInternal';
 //  Material UI
 import {
   Box,
+  Collapse,
   Divider,
   IconButton,
   ListItemButton,
   ListItemText,
-  SwipeableDrawer
+  MenuItem,
+  SpeedDial,
+  SpeedDialAction, SwipeableDrawer,
+  Switch,
+  Tooltip,
+  Typography
 } from '@mui/material';
 
 //  Utlis
@@ -21,7 +27,7 @@ import {
 import getLinks from '../../utils/navLinks';
 
 //  Icons
-import { LogOut, User, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, LogOut, Moon, Settings, Sun, Type, User, X } from 'lucide-react';
 
 //  Navigation
 import routes from '../../../navigation/routes';
@@ -42,12 +48,22 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
   const navLinks = getLinks();
   const loggedUser = JSON.parse(localStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [ecraOpen, setEcraOpen] = useState(false);
 
   const handleClick = (event) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
   };
 
+  const actions = [
+    { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
+    { icon: <Typography variant='sm'>T</Typography>, name: 'Pequeno', value: 'sm' },
+    { icon: <Typography variant='md'>T</Typography>, name: 'Normal', value: 'md' },
+    { icon: <Typography variant='xl'>T</Typography>, name: 'Grande', value: 'xl' },
+    { icon: <Typography variant='xxl'>T</Typography>, name: 'Maior', value: 'xxl' },
+
+  ];
 
   return loggedUser && (
     <SwipeableDrawer
@@ -64,16 +80,16 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
     >
       <Box
         style={{
-          backgroundColor: 'var(--primary-dark)',
+          backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)',
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100%',
+          maxWidth: '250px'
         }}
       >
         {/* Sidebar Items List here */}
         <Box
           style={{
-            backgroundColor: 'var(--primary-dark)',
             alignItems: 'center',
             display: 'flex',
             flexDirection: 'column',
@@ -84,12 +100,12 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
             onClick={handleDrawerToggle}>
             <X />
           </IconButton>
-          <Box style={{ width: '100px', height: '100px', margin: '1rem' }}>
+          <Box style={{ width: '75px', height: '75px', margin: '1rem' }}>
             <Image
               src={companyLogo}
               style={{ margin: '1rem' }}
-              width={100}
-              height={100}
+              width={75}
+              height={75}
               layout='fixed'
             />
           </Box>
@@ -115,26 +131,104 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
             <React.Fragment key={i}>
               {loggedUser ? (
                 <React.Fragment key={i * 100}>
-                  {/* {console.log(item.url)} */}
-                  {loggedUser.perfil.permissoes.find(ele => ele.sujeito === item.allowed && ele.accao === 'READ')
+                  {loggedUser.perfil.permissoes.find(ele => (ele.sujeito === item.allowed || item.allowed.toLowerCase() === loggedUser.perfil.descricao.toLowerCase()) && ele.accao === 'READ')
                     &&
                     IsInternal(pageProps.loggedUser.perfil.descricao) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
                     ? (
-                      <ActiveLink
-                        key={i}
-                        href={item.url}
-                        handleDrawerToggle={handleDrawerToggle}
-                        page={item.title}
-                      >
-                        {item.icon}
-                        <div className='spacerBox' />
-                        {item.title}
-                      </ActiveLink>
+                      <MenuItem sx={{ padding: '0' }}>
+                        <ActiveLink
+                          key={i}
+                          href={item.url}
+                          handleDrawerToggle={handleDrawerToggle}
+                          page={item.title}
+                        >
+
+                          {item.icon}
+                          <div style={{ paddingRight: '.5rem' }} />
+                          {item.title}
+                        </ActiveLink>
+                      </MenuItem>
                     ) : null}
                 </React.Fragment>
               ) : null}
             </React.Fragment>
           ))}
+          {/* Definições */}
+          <MenuItem sx={{ padding: '0' }}>
+            <Box
+              variant='sm'
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                borderLeft: '5px solid transparent',
+              }}
+              className={styles.navItemContainer}
+              onClick={() => setSettingsOpen(!settingsOpen)}>
+              <Box id='align'>
+                <Settings strokeWidth='1' size={20} color='white' />
+                <span style={{ paddingLeft: '.5rem', cursor: 'pointer' }}>
+                  Definições
+                </span>
+
+              </Box>
+              {settingsOpen ? <ChevronUp strokeWidth='1' size={20} /> : <ChevronDown strokeWidth='1' size={20} />}
+
+
+            </Box>
+          </MenuItem>
+          <Collapse in={settingsOpen} sx={{ backgroundColor: localStorage.getItem('theme') === 'light' ? 'var(--primary)' : '#121212' }}>
+            <MenuItem sx={{ padding: '0' }}>
+
+              <a className={styles.navItemContainer} onClick={() => setEcraOpen(!ecraOpen)}>
+                <Box id='align'>
+                  <Moon color={'white'} size={16} />
+                  <span style={{ paddingLeft: '.5rem', cursor: 'pointer' }}>
+                    Ecrã e acessibilidade
+                  </span>
+                  {ecraOpen ? <ChevronUp strokeWidth='1' size={20} /> : <ChevronDown strokeWidth='1' size={20} />}
+                </Box>
+              </a>
+            </MenuItem>
+            <Collapse in={ecraOpen}>
+              <Box sx={{ width: '100%', marginLeft: '1rem' }} >
+                <Box >
+                  <Tooltip title='Ajusta o aspeto da aplicação para reduzir o brilho excessivo e para descansares os olhos.'>
+                    <Typography variant='sm' color='white'>Modo Escuro</Typography>
+                  </Tooltip>
+                  <Switch checked={localStorage.getItem('theme') === 'dark'} onClick={toggleTheme} />
+                  {localStorage.getItem('theme') === 'light' ? <Sun color='yellow' size={16} /> : <Moon color={'white'} size={16} />}
+                </Box>
+                <Tooltip title='Ajusta o tamanho do tipo de letra para que possam aparecer mais ou menos conteúdos no ecrã.'>
+                  <Typography variant='sm' color='white'>Modo Compacto</Typography>
+                </Tooltip>
+                <Tooltip title='Altere o tamanho de letra' placement="right">
+                  <SpeedDial
+                    ariaLabel="SpeedDial basic example"
+                    sx={{ position: 'fixed', bottom: 16, left: 225 }}
+
+                    icon={<Type />}
+                  >
+                    {actions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        icon={action.icon}
+                        tooltipTitle={action.name}
+                        disabled={localStorage.getItem('font') === action.value}
+                        onClick={() => {
+                          localStorage.setItem('font', action.value);
+                          window.location.reload(false);
+                        }}
+                      />
+                    ))}
+                  </SpeedDial>
+                </Tooltip>
+              </Box>
+            </Collapse>
+
+          </Collapse>
           <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             {loggedUser ? (
               <>
@@ -143,24 +237,29 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
                   width='100%'
                   style={{ marginTop: '1rem', marginBottom: '1rem' }}
                 />
-                <ActiveLink
-                  handleDrawerToggle={handleDrawerToggle}
-                  href={`${routes.private.profile}${loggedUser.id}`}
-                  page={'Perfil'}
-                >
-                  <User strokeWidth='1' size={20} color='white' />{' '}
-                  <div className='spacerBox' />
-                  Perfil
-                </ActiveLink>
-                <a
-                  className={styles.navItemContainer}
-                  onClick={() => {
-                    authActions.logout()
-                  }}
-                >
-                  <LogOut strokeWidth='1' size={20} />
-                  <div className='spacerBox' /> LogOut
-                </a>
+                <MenuItem sx={{ padding: '0' }}>
+
+                  <ActiveLink
+                    handleDrawerToggle={handleDrawerToggle}
+                    href={`${routes.private.profile}${loggedUser.id}`}
+                    page={'Perfil'}
+                  >
+                    <User strokeWidth='1' size={20} color='white' />{' '}
+                    <div className='spacerBox' />
+                    Perfil
+                  </ActiveLink>
+                </MenuItem>
+                <MenuItem sx={{ padding: '0' }}>
+                  <a
+                    className={styles.navItemContainer}
+                    onClick={() => {
+                      authActions.logout();
+                    }}
+                  >
+                    <LogOut strokeWidth='1' size={20} />
+                    <div className='spacerBox' /> LogOut
+                  </a>
+                </MenuItem>
               </>
             ) : null}
           </div>

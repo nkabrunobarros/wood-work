@@ -60,7 +60,6 @@ async function Test(pageProps) {
         return true;
       }
     } else {
-      console.log('token is invalid');
       //  case token is invalid
     }
 
@@ -84,6 +83,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
   const listenToScroll = () => {
     const heightToHideFrom = 500;
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+
 
     if (winScroll > heightToHideFrom) {
       !isVisible && setIsVisible(true);
@@ -141,7 +141,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
           {...pageProps}
         />
       </Hidden>
-      <div style={{ padding: '0rem 2rem 4rem 2rem', overflow: 'hidden' }}>
+      <div id="appMainContainer" >
         {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage ? <>
           {children}
           {isVisible && (
@@ -160,7 +160,6 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
           : <>
             <div className={styles.main} target="_blank" rel="noreferrer">
               <header className={styles.topheader}></header>
-
               <div>
                 <div className={styles.starsec}></div>
                 <div className={styles.starthird}></div>
@@ -203,7 +202,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
 
       </div>
       <div style={{ width: '100%' }}>
-        <Footer section={footer} />
+        <Footer section={footer} {...pageProps} />
       </div>
     </React.Fragment>
   ) : <Loader center={true} />;

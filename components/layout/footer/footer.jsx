@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 // Node modules
-import { Box, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Image from 'next/image';
 import Router from 'next/router';
@@ -7,6 +8,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../../navigation/routes';
 import logosFooter from '../../../public/Fundos-Europeus.png';
+import logosFooterDark from '../../../public/Fundos-Europeus_dark_mode.png';
+import IsInternal from '../../utils/IsInternal';
 
 // Pages without layout (sidebar + navbar + footer)
 function Copyright(props) {
@@ -27,9 +30,12 @@ function Copyright(props) {
   );
 }
 
-const Footer = ({ section }) => {
+const Footer = (props) => {
+
   return (
-    <Box
+    <Grid
+      md={12}
+      container
       bgcolor={"default.main"}
       className='flex'
       style={{
@@ -41,54 +47,37 @@ const Footer = ({ section }) => {
         color: 'var(--grayTextsLight)',
         fontSize: '12px',
         alignItems: 'center',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
       }}
     >
-      {section !== 'client' ? (
-        <>
-          <Box style={{ flex: 1 }}>
-            <Copyright />
-          </Box>
-          <Box style={{ paddingRight: '1rem' }}>
-            <Image
-              placeholder='blur'
-              priority
-              src={logosFooter}
-              layout='intrinsic'
-            />
-          </Box>
-        </>
-      ) : (
-        <>
-          <Box style={{ paddingLeft: '1rem' }}>
-            <Box>
-              <Image
-                placeholder='blur'
-                priority
-                src={logosFooter}
-                layout='intrinsic'
-              />
-            </Box>
-          </Box>
-          <Box
-            style={{
-              flex: 1,
-              display: 'flex',
-              justifyContent: 'flex-end',
-              paddingRight: '1rem',
-            }}
+      <Grid md={6} container >
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.perfil.descricao) ? <Copyright /> : <Image
+          placeholder='blur'
+          priority
+          src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
+          layout='intrinsic'
+        />}
+      </Grid>
+      <Grid md={6} sx={{ textAlign: 'end', display: 'flex', justifyContent: 'end' }} container >
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.perfil.descricao) ? <Image
+          placeholder='blur'
+          priority
+          src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
+          layout='intrinsic'
+        /> :
+          <a
+            className='link'
+            style={{ color: 'inherit' }}
+            onClick={() => Router.push(routes.private.tos)}
           >
-            <a
-              className='link'
-              style={{ color: 'inherit' }}
-              onClick={() => Router.push(routes.private.tos)}
-            >
-              Termos e Condições | Política de Privacidade
-            </a>
-          </Box>
-        </>
-      )}
-    </Box>
+            Termos e Condições | Política de Privacidade
+          </a>
+        }
+      </Grid>
+    </Grid >
   );
+
 };
 
 Footer.propTypes = {

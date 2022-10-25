@@ -9,7 +9,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
-import { Divider } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import styles from '../../../styles/StockDetail.module.css';
 
 const Stock = ({ ...props }) => {
@@ -20,123 +20,102 @@ const Stock = ({ ...props }) => {
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
-        <div
+        <Box
           id='pad'
           className='flex'
           style={{ display: 'flex', alignItems: 'center' }}
         >
-          <div id='align' style={{ flex: 1 }}>
+          <Box id='align' style={{ flex: 1 }}>
             <a className='headerTitleXl'>{stock.product.name}</a>
-            <div className='spacer' />
-            { stock.amount > 0 ? <a className="successBalloon">Disponivel</a>
-       : <a className="errorBalloon">Indisponivel</a>}
-          </div>
-          <div style={{ display: 'flex' }}>
+            <Box className='spacer' />
+            {stock.amount > 0 ?
+              <a className="successBalloon">Disponivel</a>
+              :
+              <a className="errorBalloon">Indisponivel</a>}
+          </Box>
+          <Box style={{ display: 'flex' }}>
             <PrimaryBtn text='Editar' icon={<Edit strokeWidth='1' />} />
             <PrimaryBtn text='Apagar' icon={<Trash strokeWidth='1' />} light />
-          </div>
-        </div>
-        <div id='pad' className='flex'>
+          </Box>
+        </Box>
+        <Grid container id='pad' className='flex'>
           {/* Product Info panels */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
-            <div style={{ flex: 1, flexDirection: 'column' }}>
-              <div>
-                <a className='lightTextSm'>Código</a>
-                <br></br>
-                <a className='lightTextSm black'>{stock.product.code}</a>
-                <br></br>
-              </div>
-              <br></br>
-
-              <div>
-                <a className='lightTextSm'>Encomendas</a>
-                <br></br>
-                <a className='lightTextSm black'>Lorem Ipsum</a>
-                <br></br>
-              </div>
-              <br></br>
-
-              <div>
-                <a className='lightTextSm'>Quantidade disponivel</a>
-                <br></br>
-                <a className='lightTextSm black'>{stock.amount}</a>
-                <br></br>
-              </div>
-            </div>
-            <div style={{ flex: 1, flexDirection: 'column' }}>
-              <div>
-                <a className='lightTextSm'>Categoria</a>
-                <br></br>
-                <a className='lightTextSm black'>
-                  <a className='lightTextSm black'>{stock.product.category.name}</a>
-                </a>
-                <br></br>
-              </div>
-              <br></br>
-
-              <div>
-                <a className='lightTextSm'>Quantidade disponivel</a>
-                <br></br>
-                <a className='lightTextSm black'>{stock.quantidade}</a>
-                <br></br>
-              </div>
-            </div>
-          </div>
+          <Grid container md={6} xs={12}>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Código</Typography>
+                <Typography item color='lightTextSm.black'>{stock.product.code}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Encomendas</Typography>
+                <Typography item color='lightTextSm.black'>Lorem Ipsum</Typography>
+              </Grid>
+            </Grid>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Quantidade disponivel</Typography>
+                <Typography item color='lightTextSm.black'>{stock.amount}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Código</Typography>
+                <Typography item color='lightTextSm.black'>{stock.product.code}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Categoria</Typography>
+                <Typography item color='lightTextSm.black'>{stock.product.category.name}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Quantidade disponivel</Typography>
+                <Typography item color='lightTextSm.black'>{stock.amount}</Typography>
+                {console.log(stock)}
+              </Grid>
+            </Grid>
+          </Grid>
           {/* Supplier info panel */}
-          <div style={{ flex: 1 }}>
-            <div className={styles.supplierInfoContainer}>
-              <div id='align' className='lightTextSm'>
+          <Grid container md={6} xs={12}>
+            <Grid container bgcolor={"lightGray.main"} className={styles.supplierInfoContainer}>
+              <Grid container item md={12} p={1} id='align' className='lightTextSm'>
                 <PackagePlus style={{ marginRight: '1rem' }} size={20} />
                 Fornecedor(es)
-              </div>
-              <div className={styles.innerInfoContainer}>
-                <a id='align'>
-                  <b>Lorem Ipsum</b>
-                </a>
-                <br></br>
-                <div className='flex'>
-                  <div style={{ flex: 1 }}>
-                    <a className='lightTextSm'>Lorem Ipsum</a>
-                    <br></br>
-                    <a className='lightTextSm black'>
-                      Lorem ipsum dolor sit amet, consectetur.
-                    </a>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <a className='lightTextSm'>Lorem Ipsum</a>
-                    <br></br>
-                    <a className='lightTextSm black'>
-                      Lorem ipsum dolor sit amet, consectetur.
-                    </a>
-                  </div>
-                </div>
-                <br></br>
+              </Grid>
+              <Grid container item md={6} sm={6} xs={12} p={1}>
+                <Grid item xs={12}>
+                  <Typography item color='lightTextSm.main'>Lorem Ipsum</Typography>
+                  <Typography item color='lightTextSm.black'>Lorem ipsum dolor sit amet, consectetur.</Typography>
+                </Grid>
+              </Grid>
+              <Grid container item md={6} sm={6} xs={12} p={1}>
+                <Grid item xs={12}>
+                  <Typography item color='lightTextSm.main'>Lorem Ipsum</Typography>
+                  <Typography item color='lightTextSm.black'>Lorem ipsum dolor sit amet, consectetur.</Typography>
+                </Grid>
+              </Grid>
+              <Grid md={12}>
                 <Divider />
-                <br></br>
-                <a id='align'>
-                  <b>Lorem Ipsum</b>
-                </a>
-                <br></br>
-                <div className='flex'>
-                  <div style={{ flex: 1 }}>
-                    <a className='lightTextSm'>Lorem Ipsum</a>
-                    <br></br>
-                    <a className='lightTextSm black'>
-                      Lorem ipsum dolor sit amet, consectetur.
-                    </a>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <a className='lightTextSm'>Lorem Ipsum</a>
-                    <br></br>
-                    <a className='lightTextSm black'>
-                      Lorem ipsum dolor sit amet, consectetur.
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              </Grid>
+              <Grid container item md={6} sm={6} xs={12} p={1}>
+                <Grid item xs={12}>
+                  <Typography item color='lightTextSm.main'>Lorem Ipsum</Typography>
+                  <Typography item color='lightTextSm.black'>Lorem ipsum dolor sit amet, consectetur.</Typography>
+                </Grid>
+              </Grid>
+              <Grid container item md={6} sm={6} xs={12} p={1}>
+                <Grid item xs={12}>
+                  <Typography item color='lightTextSm.main'>Lorem Ipsum</Typography>
+                  <Typography item color='lightTextSm.black'>Lorem ipsum dolor sit amet, consectetur.</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Content>
     </Grid>
   );

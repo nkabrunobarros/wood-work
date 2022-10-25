@@ -20,7 +20,7 @@ function getLinks() {
       title: 'Mensagens',
       url: routes.private.messages,
       icon: <MessageCircle strokeWidth='1' size={20} />,
-      allowed: 'messages',
+      allowed: 'cliente',
     },
     {
       title: 'Encomendas Similares',

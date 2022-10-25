@@ -24,7 +24,7 @@ const CustomBreadcrumbs = ({ path }) => {
       style={{
         marginTop: '2rem',
         borderRadius: '8px',
-        padding: '12px',
+        padding: '6px',
         boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.1)',
       }}
     >
@@ -39,14 +39,12 @@ const CustomBreadcrumbs = ({ path }) => {
             key={i}
             onClick={() => Router.push(crumb.href)}
             className={styles.breadcrumb}
-            sx={i < arrayLenght && style}
-
           >
-            <Typography fontSize='12px' color='link.main' sx={i < arrayLenght && style}> {crumb.title}</Typography>
+            <Typography color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>
           </Link>
         ))}
       </Breadcrumbs>
-    </Box>
+    </Box >
   );
 };
 

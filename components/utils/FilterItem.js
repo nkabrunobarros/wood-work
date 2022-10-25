@@ -20,18 +20,32 @@ const FilterItem = (data, item, col) => {
           case 'order_prod': {
 
             switch (item.order.status.toLowerCase()) {
-              case 'em desenho': return <a className="errorBalloon">Não Iniciada</a>;
-              case 'em orçamentação': return <a className="errorBalloon">Não Iniciada</a>;
-              case 'em produção': return <Tooltip title={`${item.status}`}><a className="warningBalloon">Iniciada</a></Tooltip>;
-              default: return <a className="successBalloon">Terminada</a>;
+              case 'em desenho': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+              case 'em orçamentação': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+              case 'em produção': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
+              default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+            }
+          }
+
+          case 'order_prod_2': {
+
+            switch (item.status.toLowerCase()) {
+              case 'em desenho': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+              case 'em orçamentação': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+              case 'em produção': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
+              default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
             }
           }
 
           case 'startAt': return moment(item[col2[0]]).locale('pt').format('DD MMMM YYYY');
           case 'endAt': return moment(item[col2[0]]).locale('pt').format('DD MMMM YYYY');
           case 'order_dispatch':
-            if (item.order.status.toLowerCase() === 'concluida') return <a className="successBalloon">Entregue</a>;
-            else return <a className="errorBalloon">Não</a>;
+            if (item.order.status.toLowerCase() === 'concluida') return <Typography variant='md' className="successBalloon">Entregue</Typography>;
+            else return <Typography variant='md' className="errorBalloon">Não</Typography>;
+
+          case 'order_dispatch_2':
+            if (item.status.toLowerCase() === 'concluida') return <Typography variant='md' className="successBalloon">Entregue</Typography>;
+            else return <Typography variant='md' className="errorBalloon">Não</Typography>;
 
 
           case "desvio2": return calcDesvio(item[`${col}`]);
@@ -55,16 +69,16 @@ const FilterItem = (data, item, col) => {
 
           }
 
-          case "stock": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><a className="successBalloon">Disponivel</a></Tooltip>;
-          else return <a className="errorBalloon">Indisponivel</a>;
+          case "stock": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
+          else return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
 
 
-          case "amount": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><a className="successBalloon">Disponivel</a></Tooltip>;
-          else return <a className="errorBalloon">Indisponivel</a>;
+          case "amount": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
+          else return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
 
 
           default: if (['id', 'giveName', 'numero', 'nome', 'name', 'custo'].find(ele => ele === col2[0])) return <Typography color="link.main" className="link" >{item[col2[0]]}</Typography>;
-          else return <a>{item[col2[0]]}</a>;
+          else return <Typography variant='md'>{item[col2[0]]}</Typography>;
 
         }
       }
@@ -74,7 +88,7 @@ const FilterItem = (data, item, col) => {
           case 'name': return <Typography color="link.main" className="link" >{item[col2[0]][col2[1]]}</Typography>;
 
           default: {
-            return item[col2[0]] && item[col2[0]][col2[1]] ? <a>{item[col2[0]][col2[1]]}</a> : <a>Nan</a>;
+            return item[col2[0]] && item[col2[0]][col2[1]] ? <Typography variant='md'>{item[col2[0]][col2[1]]}</Typography> : <Typography variant='md'>Nan</Typography>;
           }
         }
       }
@@ -85,18 +99,18 @@ const FilterItem = (data, item, col) => {
           case 'name': return <Typography>{item[col2[0]][col2[1]][col2[2]]}{' '} [{item.product.category.code}]</Typography>;
 
           default: {
-            return item[col2[0]] && item[col2[0]][col2[1]][col2[2]] ? <a>{item[col2[0]][col2[1]][col2[2]]}</a> : <a>Nan</a>;
+            return item[col2[0]] && item[col2[0]][col2[1]][col2[2]] ? <Typography variant='md'>{item[col2[0]][col2[1]][col2[2]]}</Typography> : <Typography variant='md'>Nan</Typography>;
           }
         }
 
       }
 
-      case 4: return <a>{item[col2[0]][col2[1]][col2[2]][col2[3]]}</a>;
-      default: return <a>{displayWithStyle(item[col], col)}</a>;
+      case 4: return <Typography variant='md'>{item[col2[0]][col2[1]][col2[2]][col2[3]]}</Typography>;
+      default: return <Typography variant='md'>{displayWithStyle(item[col], col)}</Typography>;
     }
   }
   else if (col === undefined) {
-    return <a>{displayWithStyle(item, col)}</a>;
+    return <Typography variant='md'>{displayWithStyle(item, col)}</Typography>;
   }
 
 };

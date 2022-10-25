@@ -10,7 +10,7 @@ import routes from '../navigation/routes';
 
 //  Page Component
 
-const Messages = ({ ...pageProps}) => {
+const Messages = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -22,9 +22,9 @@ const Messages = ({ ...pageProps}) => {
   const conversations = [
     {
       id: 1,
-      users: ['cl16o9cag0000x3tqp8lbslcr', '2'],
+      users: ['cl16o9cag0000x3tqp8lbslcr', 'cl98lcmni202362vfjr5avu1ph'],
       orderId: 12312,
-      messages: [1234, 123, 12345],
+      messages: [1234, 123, 12345, 12346, 12347],
       messagesContent: [],
       message: '',
       createdAt: '',
@@ -34,7 +34,25 @@ const Messages = ({ ...pageProps}) => {
   const messagsContents = [
     {
       id: 1234,
-      sentBy: 'cl16o9cag0000x3tqp8lbslcr',
+      sentBy: "cl98lcmni202362vfjr5avu1ph",
+      content: 'Hi, i would like to know the Eta of my order please? Thank you',
+      createdAt: '03/02/2022',
+    },
+    {
+      id: 12345,
+      sentBy: "cl98lcmni202362vfjr5avu1ph",
+      content: 'Hi, i would like to know the Eta of my order please? Thank you',
+      createdAt: '03/02/2022',
+    },
+    {
+      id: 12346,
+      sentBy: "cl98lcmni202362vfjr5avu1ph",
+      content: 'Hi, i would like to know the Eta of my order please? Thank you',
+      createdAt: '03/02/2022',
+    },
+    {
+      id: 12347,
+      sentBy: "cl98lcmni202362vfjr5avu1ph",
       content: 'Hi, i would like to know the Eta of my order please? Thank you',
       createdAt: '03/02/2022',
     },
@@ -47,7 +65,7 @@ const Messages = ({ ...pageProps}) => {
     },
     {
       id: 12345,
-      sentBy: 'cl16o9cag0000x3tqp8lbslcr',
+      sentBy: "cl98lcmni202362vfjr5avu1ph",
       content: 'Ok thank you',
       createdAt: '03/02/2022',
     },

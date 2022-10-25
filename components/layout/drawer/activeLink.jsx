@@ -4,6 +4,7 @@ import React from 'react';
 
 import styles from '../../../styles/components/navbar.module.css';
 
+import { Typography } from '@mui/material';
 import routes from '../../../navigation/routes';
 
 function ActiveLink({ children, href, handleDrawerToggle, page }) {
@@ -66,6 +67,10 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   if (leftoversPages.includes(path.route)) currentSection = 'Sobrantes';
 
   const style = {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'start',
+    alignItems: 'center',
     borderLeft:
       page === currentSection
         ? '5px solid var(--white)'
@@ -78,7 +83,8 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   };
 
   return (
-    <a
+    <Typography
+      variant='sm'
       key={href}
       href={href}
       onClick={(e) => {
@@ -89,7 +95,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
       style={style}
     >
       {children}
-    </a>
+    </Typography>
   );
 }
 

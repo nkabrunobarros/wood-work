@@ -25,9 +25,9 @@ const Stock = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      await StocksActions.stock({id: router.query.Id}).then((response) => setStock(response.data.payload))
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
-    }
+      await StocksActions.stock({ id: router.query.Id }).then((response) => setStock(response.data.payload));
+      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
+    };
 
     Promise.all([getData()]).then(() => setLoaded(true));
 
@@ -37,8 +37,6 @@ const Stock = ({ ...pageProps }) => {
     const data = {
       categories,
     };
-
-    console.log(stock)
 
     const breadcrumbsPath = [
       {
@@ -58,7 +56,7 @@ const Stock = ({ ...pageProps }) => {
     };
 
 
-    return loaded && <StockScreen {...props} />
+    return  <StockScreen {...props} />;
   }
 
   return <Loader center={true} />;

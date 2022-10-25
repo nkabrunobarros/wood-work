@@ -29,6 +29,15 @@ const Messages = ({ ...pageProps }) => {
             message: '',
             createdAt: '',
         },
+        {
+            id: 1,
+            users: ['cl16o9cag0000x3tqp8lbslcr', '2'],
+            orderId: 456,
+            messages: [1234],
+            messagesContent: [],
+            message: '',
+            createdAt: '',
+        },
     ];
 
     const messagsContents = [
@@ -36,20 +45,22 @@ const Messages = ({ ...pageProps }) => {
             id: 1234,
             sentBy: 'cl16o9cag0000x3tqp8lbslcr',
             content: 'Hi, i would like to know the Eta of my order please? Thank you',
-            createdAt: '03/02/2022',
+            createdAt: '2022-10-21T10:30:56+01:00',
+            type: 'text'
         },
         {
             id: 123,
             sentBy: '2',
-            content:
-                'Hi, the expected time of arrivel for your order is within 1 week, thank you',
-            createdAt: '03/02/2022',
+            content: 'Hi, the expected time of arrivel for your order is within 1 week, thank you',
+            createdAt: '2022-10-21T12:30:56+01:00',
+            type: 'text'
         },
         {
             id: 12345,
             sentBy: 'cl16o9cag0000x3tqp8lbslcr',
             content: 'Ok thank you',
-            createdAt: '03/02/2022',
+            createdAt: '2022-10-21T12:30:56+01:00',
+            type: 'text'
         },
     ];
 

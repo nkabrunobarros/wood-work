@@ -39,12 +39,10 @@ const routes = {
     profile: '/profile/',
     messages: '/messages',
     error: '/404',
-
   },
   public: {
     forgotPassword: '/forgot-password',
     signIn: '/',
-
   }
 };
 

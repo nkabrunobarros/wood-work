@@ -26,7 +26,7 @@ import ConfirmDialog from '../../dialogs/ConfirmDialog';
 const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
   const router = useRouter();
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   async function DisableUser() {
     const userCpy = {
@@ -45,7 +45,7 @@ const Profile = ({ ...props }) => {
     userCpy.ativo = false;
 
     try {
-      await UserActions.saveUser(userCpy).then((res) => console.log(res))
+      await UserActions.saveUser(userCpy).then((res) => console.log(res));
     } catch (err) {
 
     }
@@ -180,7 +180,7 @@ const Profile = ({ ...props }) => {
           {/* Only shows when on user detail NOT profile */}
           {Router.route.replace('[Id]', '') === routes.private.internal.user &&
             <Grid container>
-              <Grid container p={2} sm={12} xs={12} md={6}>
+              <Grid container item p={2} sm={12} xs={12} md={6}>
                 <Grid item xs={12}>
                   <Typography item color='lightTextSm.main'>Observações </Typography>
                   <Typography item color='lightTextSm.black'>{user.obs}</Typography>

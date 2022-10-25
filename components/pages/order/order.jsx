@@ -346,9 +346,9 @@ const Order = ({ ...props }) => {
       }
       {/* Docs */}
       {
-        internalPOV ? (
+        internalPOV && (
           <Content>
-            <a className={styles.docsMain}>
+            <div className={styles.docsMain}>
               <div className={styles.tableContainer}>
                 <div id='align' style={{ display: 'flex', padding: '24px' }}>
                   <div style={{ flex: 1 }}>
@@ -426,102 +426,62 @@ const Order = ({ ...props }) => {
                 </TableContainer>
               </div>
               <Box className={styles.infoContainer}>
-                <a className='headerTitleSm'>{folders[activeFolder].name}</a>
-                <Box bgcolor={"lightGray.main"} className={styles.innerInfoContainer}>
-                  <a id='align'>
-                    <Info
-                      style={{ marginRight: '1rem' }}
-                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
-                    />
-                    <b>Informações</b>
-                  </a>
-                  <div
-                    id='align'
-                    style={{
-                      justifyContent: 'center',
-                      padding: '1rem',
-                      flexDirection: 'column',
-                      color: '#8793AB',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    <Folder
-                      strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
-                      size={pageProps.globalVars.iconSizeXxl}
-                      stroke='#8793AB'
-                      fill='#E7E8E9'
-                    />
-                    {console.log(Object.keys(folders[activeFolder]?.files[0] || {}).length)}
-                    {Object.keys(folders[activeFolder]?.files[0]).length || {}} Ficheiro(s)
-                  </div>
-                  <a id='align'>
-                    <FileText
-                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
-                      style={{ marginRight: '1rem' }}
-                    />
-                    <b>Propriedades</b>
-                  </a>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      color: '#8793AB',
-                      fontWeight: 'bold',
-                      paddingTop: '0.5rem',
-                    }}
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <div id='align'>
-                        <FileText
-                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
-                          style={{ marginRight: '1rem' }}
-                          stroke='transparent'
-                        />
-                        <a>Salvo em</a>
-                      </div>
-                      <div id='align'>
-                        <a>
-                          <FileText
-                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                            size={pageProps.globalVars.iconSize}
-                            style={{ marginRight: '1rem' }}
-                            stroke='transparent'
-                          />
-                          Alterado em
-                        </a>
-                      </div>
-                    </div>
-                    <div>
-                      <div id='align'>
-                        <FileText
-                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
-                          style={{ marginRight: '1rem' }}
-                          stroke='transparent'
-                        />
-                        <a>11 de Fevereiro 2022</a>
-                      </div>
-                      <div id='align'>
-                        <a>
-                          <FileText
-                            strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                            size={pageProps.globalVars.iconSize}
-                            style={{ marginRight: '1rem' }}
-                            stroke='transparent'
-                          />
-                          <a>02 de Março 2022</a>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </Box>
+                <Typography className='headerTitleSm'>{folders[activeFolder]?.name}</Typography>
+                <Grid container md={12} bgcolor={"lightGray.main"} className={styles.innerInfoContainer}>
+                  <Grid container md={12}>
+                    <Grid md={2}>
+                      <Info
+                        style={{ marginRight: '1rem' }}
+                        strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
+                    </Grid>
+                    <Grid md={10}>Informações</Grid>
+                  </Grid>
+                  <Grid container md={12} id="fullCenter">
+                    <Box
+                      id='align'
+                      style={{
+                        justifyContent: 'center',
+                        padding: '1rem',
+                        flexDirection: 'column',
+                        color: '#8793AB',
+                        fontWeight: 'bold',
+                        width: '100%',
+                      }}>
+                      <Folder
+                        strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
+                        size={pageProps.globalVars.iconSizeXxl}
+                        stroke='#8793AB'
+                        fill='#E7E8E9'
+                      />
+                      <Typography fontSize={'14px'} >{folders[activeFolder]?.files ? Object.keys(folders[activeFolder]?.files).length : '0'} Ficheiro(s)</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid container md={12}>
+                    <Grid md={2}>
+                      <FileText
+                        style={{ marginRight: '1rem' }}
+                        strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
+                    </Grid>
+                    <Grid md={10}>Propriedades</Grid>
+                  </Grid>
+                  <Grid container md={12}>
+                    <Grid md={6}> <Typography fontSize={'14px'} color={"lightTextSm.black"} >Salvo em</Typography></Grid>
+                    <Grid md={6}> <Typography fontSize={'14px'} color={"lightTextSm.main"} >CreatedAT</Typography></Grid>
+                  </Grid>
+                  <Grid container md={12}>
+                    <Grid md={6}> <Typography fontSize={'14px'} color={"lightTextSm.black"} >Alterado em</Typography></Grid>
+                    <Grid md={6}> <Typography fontSize={'14px'} color={"lightTextSm.main"} >AlteradoEm</Typography></Grid>
+                  </Grid>
+                </Grid>
               </Box>
-            </a>
+
+            </div>
           </Content>
-        ) : null
+        )
       }
 
       {/* Messages */}

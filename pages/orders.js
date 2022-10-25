@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import * as CategoriesActions from '../pages/api/actions/category';
 import * as ClientsActions from '../pages/api/actions/client';
 import * as OrdersActions from '../pages/api/actions/order';
-import * as StockActions from '../pages/api/actions/stock';
+import * as ProductsActions from '../pages/api/actions/product';
 
 //  Icons
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
@@ -31,6 +31,7 @@ const Orders = ({ ...pageProps }) => {
   const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const [panelsInfo, setPanelsInfo] = useState();
+  const [products, setProducts] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -39,7 +40,7 @@ const Orders = ({ ...pageProps }) => {
         drawing: 0,
         production: 0,
         concluded: 0,
-      }
+      };
 
       await OrdersActions.orders().then(async (response) => {
 
@@ -68,22 +69,24 @@ const Orders = ({ ...pageProps }) => {
               break;
           }
 
-          await StockActions.stock({ id: ord.product.id }).then((res) => {
-            response.data.payload.data[i].stock = res.data.payload.amount
-          })
 
-        })
+          // await StockActions.stock({ id: ord.product.id }).then((res) => {
+          //   response.data.payload.data[i].stock = res.data.payload.amount;
+          // });
+
+        });
 
         setOrders(response.data.payload.data);
-        setPanelsInfo(counts)
+        setPanelsInfo(counts);
       });
 
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
-      await ClientsActions.clients().then((response) => setClients(response.data.payload.data))
-    }
+      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
+      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
+      await ClientsActions.clients().then((response) => setClients(response.data.payload.data));
+    };
 
     Promise.all([getData()]).then(() => setLoaded(true));
-  }, [])
+  }, []);
 
   if (loaded) {
     //  Breadcrumbs path feed
@@ -138,12 +141,10 @@ const Orders = ({ ...pageProps }) => {
         num: 4,
         title: 'Em Montagem e Testes',
         amount: panelsInfo.concluded,
-        icon: (
-          <AlertOctagon
-            size={pageProps.globalVars.iconSizeXl}
-            strokeWidth={pageProps.globalVars.iconStrokeWidth}
-          />
-        ),
+        icon: <AlertOctagon
+          size={pageProps.globalVars.iconSizeXl}
+          strokeWidth={pageProps.globalVars.iconStrokeWidth} />
+        ,
         color: 'var(--babyblue)',
       },
     ];
@@ -155,12 +156,12 @@ const Orders = ({ ...pageProps }) => {
         disablePadding: false,
         label: 'Numero',
       },
-      {
-        id: 'product.category',
-        numeric: false,
-        disablePadding: true,
-        label: 'Categoria',
-      },
+      // {
+      //   id: 'product.category',
+      //   numeric: false,
+      //   disablePadding: true,
+      //   label: 'Categoria',
+      // },
       {
         id: 'stock',
         numeric: false,
@@ -168,23 +169,23 @@ const Orders = ({ ...pageProps }) => {
         label: 'Stock',
       },
       {
-        id: 'order_prod',
+        id: 'order_prod_2',
         numeric: false,
         disablePadding: false,
         label: 'Produção',
       },
       {
-        id: 'order_dispatch',
+        id: 'order_dispatch_2',
         numeric: false,
         disablePadding: false,
         label: 'Em distribuição',
       },
-      {
-        id: 'actions',
-        numeric: true,
-        disablePadding: false,
-        label: 'Ações',
-      },
+      // {
+      //   id: 'actions',
+      //   numeric: true,
+      //   disablePadding: false,
+      //   label: 'Ações',
+      // },
     ];
 
     const detailPage = routes.private.order;
@@ -200,10 +201,11 @@ const Orders = ({ ...pageProps }) => {
       cards,
       clients,
       pageProps,
+      products,
     };
-    
-    return <OrdersScreen {...props} />
-  } else return <Loader center={true} />
+
+    return <OrdersScreen {...props} />;
+  } else return <Loader center={true} />;
 };
 
 Orders.propTypes = {

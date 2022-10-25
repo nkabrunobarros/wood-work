@@ -44,10 +44,10 @@ const EditClient = ({ ...props }) => {
       taxId: client.taxId,
       postalCode: client.postalCode,
 
-    }
+    };
 
     try {
-      await ClientsActions.saveClient(builtClient).then(() => Router.push(routes.private.internal.clients))
+      await ClientsActions.saveClient(builtClient).then(() => Router.push(routes.private.internal.clients));
     } catch (err) { }
   }
 
