@@ -187,6 +187,22 @@ const NewClient = ({ ...props }) => {
       ]
     };
 
+    inputFields.map((ele) => {
+      builtClient[ele.id] = {};
+
+      // if (ele.options) {
+      if (false) {
+        // builtWorker[ele.id].type = 'Relationship';
+        // builtWorker[ele.id].object = ele.value;
+      }
+      else {
+        if (ele.type === 'password')  ele.value = 'ChangeMe';
+
+        builtClient[ele.id].type = 'Property';
+        builtClient[ele.id].value = ele.value;
+        }
+    }); 
+
     try {
       await ClientActions.saveClient(builtClient)
       .then(() => setSuccessOpen(true))

@@ -24,7 +24,7 @@ import {
 //  Utlis
 
 //  Services
-import getLinks from '../../utils/navLinks';
+import { navLinks } from '../../utils/navLinks';
 
 //  Icons
 import { ChevronDown, ChevronUp, LogOut, Moon, Settings, Sun, Type, User, X } from 'lucide-react';
@@ -39,17 +39,18 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
+import { useRouter } from 'next/router';
 import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
 
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontSize, ...pageProps }) => {
   const theme = useTheme();
-  const navLinks = getLinks();
   const loggedUser = JSON.parse(localStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
+  const path = useRouter();
 
   const handleClick = (event) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
@@ -194,13 +195,13 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
               <Box sx={{ width: '100%', marginLeft: '1rem' }} >
                 <Box >
                   <Tooltip title='Ajusta o aspeto da aplicação para reduzir o brilho excessivo e para descansares os olhos.'>
-                    <a variant='md' style={{ color: 'white' }} >Modo Escuro</a>
+                    <a  style={{ color: 'white' }} >Modo Escuro</a>
                   </Tooltip>
                   <Switch checked={localStorage.getItem('theme') === 'dark'} onClick={toggleTheme} />
                   {localStorage.getItem('theme') === 'light' ? <Sun color='yellow' size={16} /> : <Moon color={'white'} size={16} />}
                 </Box>
                 <Tooltip title='Ajusta o tamanho do tipo de letra para que possam aparecer mais ou menos conteúdos no ecrã.'>
-                  <a variant='md' style={{ color: 'white' }} >Modo Compacto</a>
+                  <a style={{ color: 'white' }} >Modo Compacto</a>
                 </Tooltip>
                 <Tooltip title='Altere o tamanho de letra' placement="right">
                   <SpeedDial

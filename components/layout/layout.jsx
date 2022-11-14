@@ -14,6 +14,7 @@ import * as authActions from '../../pages/api/actions/auth';
 import styles from '../../styles/404.module.css';
 import Loader from '../loader/loader';
 import IsInternal from '../utils/IsInternal';
+import { navLinks } from '../utils/navLinks';
 import DrawerMobile from './drawer/drawer';
 import Footer from './footer/footer';
 import Navbar from './navbar/navbar';
@@ -125,78 +126,87 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     `${routes.private.profile}`,
   ];
 
-  let footer = '';
+  let imAllowed;
 
-  if (clientPages.includes(path.route)) footer = 'client';
+  if (loaded) {
+    const loggedUser = pageProps.loggedUser;
 
-  if (noLayoutScreens.includes(path.route)) return children;
+    imAllowed = !!loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
 
-  return loaded ? (
-    <React.Fragment>
-      <CssBaseline />
-      <Navbar openDrawer={handleDrawerToggle} toggleTheme={toggleTheme} {...pageProps} />
-      <Hidden implementation='css'>
-        <DrawerMobile
-          toggleFontSize={toggleFontSize}
-          toggleTheme={toggleTheme}
-          mobileOpen={mobileOpen}
-          handleDrawerToggle={handleDrawerToggle}
-          {...pageProps}
-        />
-      </Hidden>
-      <Box id="appMainContainer" >
-        {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage ? <>
-          {children}
-          {isVisible && (
-            <Box className={styles.floatingBtnContainer} style={{ position: 'fixed', bottom: '10%', right: '5%' }}>
-              <Fab
-                aria-label="like"
-                size={'medium'}
-                color={'primary'}
-                onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-              >
-                <ChevronUp color="white" />
-              </Fab>
-            </Box>
-          )}
-        </>
-          : <>
-            <Box className={styles.main} target="_blank" rel="noreferrer">
-              <header className={styles.topheader}></header>
-              <Box>
-                <Box className={styles.starsec}></Box>
-                <Box className={styles.starthird}></Box>
-                <Box className={styles.starfourth}></Box>
-                <Box className={styles.starfifth}></Box>
+    let footer = '';
+  
+    if (clientPages.includes(path.route)) footer = 'client';
+  
+    if (noLayoutScreens.includes(path.route)) return children;
+
+    return  (
+      <React.Fragment>
+        <CssBaseline />
+        <Navbar openDrawer={handleDrawerToggle} toggleTheme={toggleTheme} {...pageProps} />
+        <Hidden implementation='css'>
+          <DrawerMobile
+            toggleFontSize={toggleFontSize}
+            toggleTheme={toggleTheme}
+            mobileOpen={mobileOpen}
+            handleDrawerToggle={handleDrawerToggle}
+            {...pageProps}
+          />
+        </Hidden>
+        <Box id="appMainContainer" >
+          {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage 
+          // && imAllowed 
+          ? <>
+            {children}
+            {isVisible && (
+              <Box className={styles.floatingBtnContainer} style={{ position: 'fixed', bottom: '10%', right: '5%' }}>
+                <Fab
+                  aria-label="like"
+                  size={'medium'}
+                  color={'primary'}
+                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+                >
+                  <ChevronUp color="white" />
+                </Fab>
               </Box>
-              <section className={styles.error}>
-                <Box className={styles.error__content}>
-                  <Box className={styles.error__message}>
-                    <h1 className={styles.message__title}>Você não tem acesso a esta página</h1>
-                    <p className={styles.message__text}>
-                      Se é suposto ter acesso a esta página, por favor entre em
-                      <Tooltip title='Enviar email'>
-                        <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
-                      </Tooltip>
-                      com o responsavel
-                    </p>
-                  </Box>
-                  <Box className={styles.error__nav}>
-                    <a className={styles.enav__link} onClick={() => Router.back()}>
-                      {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
-                      VOLTAR
-                    </a>
-                  </Box>
+            )}
+          </>
+            : <>
+              <Box className={styles.main} target="_blank" rel="noreferrer">
+                <header className={styles.topheader}></header>
+                <Box>
+                  <Box className={styles.starsec}></Box>
+                  <Box className={styles.starthird}></Box>
+                  <Box className={styles.starfourth}></Box>
+                  <Box className={styles.starfifth}></Box>
                 </Box>
-              </section>
-            </Box></>}
-
-      </Box>
-      <Box style={{ width: '100%' }}>
-        <Footer section={footer} {...pageProps} />
-      </Box>
-    </React.Fragment>
-  ) : <Loader center={true} />;
+                <section className={styles.error}>
+                  <Box className={styles.error__content}>
+                    <Box className={styles.error__message}>
+                      <h1 className={styles.message__title}>Você não tem acesso a esta página</h1>
+                      <p className={styles.message__text}>
+                        Se é suposto ter acesso a esta página, por favor entre em
+                        <Tooltip title='Enviar email'>
+                          <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
+                        </Tooltip>
+                        com o responsavel
+                      </p>
+                    </Box>
+                    <Box className={styles.error__nav}>
+                      <a className={styles.enav__link} onClick={() => Router.back()}>
+                        {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
+                        VOLTAR
+                      </a>
+                    </Box>
+                  </Box>
+                </section>
+              </Box></>}
+  
+        </Box>
+        <Box style={{ width: '100%' }}>
+          <Footer section={footer} {...pageProps} />
+        </Box>
+      </React.Fragment>);
+  } else return  <Loader center={true} />;
 };
 
 Layout.propTypes = {

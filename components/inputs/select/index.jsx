@@ -55,7 +55,7 @@ const Select2 = ({
           </MenuItem>
           {options && options
             .map((opt, i) => (
-              <MenuItem key={i} value={opt[optionValue].value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
+              <MenuItem key={i} value={opt[optionValue]?.value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
                 <Box
                   sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                 >

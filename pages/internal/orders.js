@@ -79,7 +79,7 @@ const Orders = ({ ...pageProps }) => {
 
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
-      await ClientsActions.clients().then((response) => setClients(response.data.payload.data));
+      await ClientsActions.clients().then((response) => setClients(response.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

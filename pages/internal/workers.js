@@ -98,7 +98,7 @@ const Workers = () => {
 
     const editRoute = routes.private.internal.editUser;
     const detailRoute = routes.private.internal.user;
-    const newRoute = routes.private.internal.newUser;
+    const newRoute = routes.private.internal.newWorker;
 
     const props = {
       breadcrumbsPath,

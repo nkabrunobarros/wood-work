@@ -49,7 +49,6 @@ const Clients = ({ ...props }) => {
     setProfilesFilter('');
   };
 
-  console.log(items);
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>

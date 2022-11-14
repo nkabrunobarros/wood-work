@@ -18,6 +18,7 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import CanDo from '../../utils/CanDo';
 
 const Workers = ({ ...props }) => {
   const {
@@ -137,6 +138,7 @@ const Workers = ({ ...props }) => {
           >
             <div>
               <PrimaryBtn
+                hidden={!CanDo(['write', 'workers'])}
                 text='Adicionar'
                 onClick={() => Router.push(`${newRoute}`)}
               />
