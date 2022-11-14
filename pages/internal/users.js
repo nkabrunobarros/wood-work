@@ -17,7 +17,7 @@ import * as ProfileActions from '../../pages/api/actions/perfil';
 import * as UserActions from '../../pages/api/actions/user';
 import * as WorkerActions from '../../pages/api/actions/worker';
 
-const Users = ({ ...pageProps }) => {
+const Users = () => {
   const [loaded, setLoaded] = useState(false);
   const [users, setUsers] = useState();
   const [workers, setWorkers] = useState();

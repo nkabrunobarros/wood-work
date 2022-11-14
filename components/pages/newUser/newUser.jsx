@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,50 +12,25 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box,
-  Button,
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  InputLabel, TextareaAutosize, Tooltip
+  Box, Checkbox, FormControlLabel, Tooltip
 } from '@mui/material';
-import { Save, User, X } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import Router from 'next/router';
-import styles from '../../../styles/NewOrder.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import MyInput from '../../inputs/myInput';
 import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
 import EmailValidation from '../../utils/EmailValidation';
-import hasData from '../../utils/hasData';
 
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
-import * as UserActions from '../../../pages/api/actions/user';
+import * as WorkerActions from '../../../pages/api/actions/worker';
 import Notification from '../../dialogs/Notification';
 import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
 
 const NewUser = ({ ...props }) => {
   const { breadcrumbsPath, countries, profiles } = props;
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [telefone, setTelefone] = useState();
-  const [telemovel, setTelemovel] = useState();
-  const [pais, setPais] = useState();
-  const [cidade, setCidade] = useState();
-  const [perfil, setPerfil] = useState();
-  const [password, setPassword] = useState();
-  const [obs, setObs] = useState('');
-  //  Errors states
-  const [errorMessageName, setErrorMessageName] = useState('');
-  const [errorMessageEmail, setErrorMessageEmail] = useState('');
-  const [errorMessageTelefone, setErrorMessageTelefone] = useState('');
-  const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
-  const [errorMessagePais, setErrorMessagePais] = useState('');
-  const [errorMessageCidade, setErrorMessageCidade] = useState('');
-  const [errorMessagePerfil, setErrorMessagePerfil] = useState('');
-  const [errorMessagePassword, setErrorMessagePassword] = useState('');
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -80,43 +56,36 @@ const NewUser = ({ ...props }) => {
 
   const functions = [
     {
-     label:   'CNC', 
-     value:   'CNC', 
-  
-    },
-      {
-     label: 'Nesting', 
-     value: 'Nesting', 
-  
+      label:   'CNC', 
+      value:   'CNC', 
     },
     {
-     label: 'Manual Cut', 
-     value: 'Manual Cut', 
-  
+      label: 'Nesting', 
+      value: 'Nesting', 
     },
     {
-     label: 'Assembly', 
-     value: 'Assembly', 
-  
+      label: 'Manual Cut', 
+      value: 'Manual Cut', 
     },
     {
-     label: 'Manager', 
-     value: 'Manager', 
-  
+      label: 'Assembly', 
+      value: 'Assembly', 
     },
     {
-     label: 'Designer', 
-     value: 'Designer', 
-  
+      label: 'Manager', 
+      value: 'Manager', 
     },
     {
-     label: 'Budgeting', 
-     value: 'Budgeting', 
-  
+      label: 'Designer', 
+      value: 'Designer', 
     },
     {
-    value: 'Warehouse',
-    label:  'Warehouse'
+      label: 'Budgeting', 
+      value: 'Budgeting', 
+    },
+    {
+      value: 'Warehouse',
+      label:  'Warehouse'
     }
 ];
 
@@ -189,9 +158,9 @@ const NewUser = ({ ...props }) => {
     {
       id: 'assemblyFor',
       label: 'Montagem',
-      value: '',
+      value: 'urn:ngsi-ld:Project:MC_MuebleTv_A',
       error: '',
-      required: true
+      required: false
     },
     {
       id: 'cellphone',
@@ -199,7 +168,7 @@ const NewUser = ({ ...props }) => {
       value: '',
       error: '',
       type: 'phone',
-      required: true
+      required: false
     },
     {
       id: 'phone',
@@ -207,7 +176,7 @@ const NewUser = ({ ...props }) => {
       value: '',
       error: '',
       type: 'phone',
-      required: true
+      required: false
     },
     {
       id: 'password',
@@ -223,83 +192,58 @@ const NewUser = ({ ...props }) => {
       value: '',
       error: '',
       type: 'area',
-      required: true
+      required: false
     },
 
   ]
   );
-
-
-  function handleSave() {
-    if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
-
-    if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
-    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido');
-
-    if (!hasData(telefone)) setErrorMessageTelefone('Campo Obrigatório');
-    else if (telefone < 100000000)
-      setErrorMessageTelefone('Numero tem que ter 9 digitos');
-
-    if (!hasData(telemovel))
-      setErrorMessageTelemovel('Campo Obrigatório');
-    else if (telemovel < 100000000)
-      setErrorMessageTelemovel('Numero tem que ter 9 digitos');
-
-    if (!hasData(cidade)) setErrorMessageCidade('Campo Obrigatório');
-
-    if (!hasData(pais) || pais === ' ') setErrorMessagePais('Campo Obrigatório');
-
-    if (!hasData(perfil) || perfil === ' ') setErrorMessagePerfil('Campo Obrigatório');
-
-    if (!hasData(password)) setErrorMessagePassword('Campo Obrigatório');
-    else if (password.lenght < 6)
-      setErrorMessagePassword('Senha tem que ter 6 caracteres');
-
-    if (
-      hasData(name) &&
-      !!EmailValidation(email) &&
-      hasData(telefone) &&
-      hasData(telemovel) &&
-      hasData(cidade) &&
-      hasData(pais) &&
-      hasData(perfil)
-    )
-      setDialogOpen(!dialogOpen);
-  }
 
   async function CreateUser() {
     setDialogOpen(false);
     //  open success modal && success toast
     setProcessing(true);
 
-    const newUser = {
-      email,
-      ativo: true,
-      nome: name,
-      telemovel,
-      telefone,
-      morada: cidade,
-      paisCodigo: pais,
-      idPerfil: perfil,
-      password: generatePassword ? `${process.env.NEXT_PUBLIC_DEFAULT_PASS}` : password,
+    const builtWorker = {
+      id: 'urn:ngsi-ld:Worker:17',
+      type: 'Worker',
+      active: {
+        type : 'Property',
+        value: 'True'
+      },
+      "@context": [
+        "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    ]
     };
 
-    try {
-      await UserActions.saveUser(newUser).then((response) => {
-        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um utilizador ja existe com este Email');
-        else if (!response.data.success) toast.error('Algo aconteceu');
-        else {
-          // success here
-          setNewestUser(response.data.payload);
-          setProcessing(false);
-          setSuccessOpen(true);
+    inputFields.map((ele) => {
+      builtWorker[ele.id] = {};
 
+      // if (ele.options) {
+      if (false) {
+        // builtWorker[ele.id].type = 'Relationship';
+        // builtWorker[ele.id].object = ele.value;
+      }
+      else {
+        if (ele.type === 'password')  ele.value = 'ChangeMe';
+
+        builtWorker[ele.id].type = 'Property';
+        builtWorker[ele.id].value = ele.value;
         }
-
+    }); 
+    
+    try {
+      await WorkerActions.createWorker(builtWorker)
+      .then(() => setSuccessOpen(true))
+      .catch((err) => {
+        if (err.response.status === 409) toast.warning('Este Worker já existe');
+        else toast.error('Algo aconteceu. Por favor tente mais tarde.');
       });
-    } catch (error) {
-      console.log(error);
     }
+     catch (e) {
+       console.log(e);
+
+     }
 
     setProcessing(false);
 
@@ -307,23 +251,11 @@ const NewUser = ({ ...props }) => {
 
   const ClearFields = () => {
     setCleaningInputs(true);
-    setName('');
-    setEmail('');
-    setTelefone('');
-    setTelemovel('');
-    setPerfil('');
-    setCidade('');
-    setPais(" ");
-    setPerfil(" ");
-    setObs('');
-    setErrorMessageName('');
-    setErrorMessageEmail('');
-    setErrorMessageTelefone('');
-    setErrorMessageTelemovel('');
-    setErrorMessagePerfil('');
-    setErrorMessageCidade('');
-    setErrorMessagePais('');
-    setErrorMessagePassword('');
+    
+    const data = [...inputFields];
+
+    data.map((ele) => ele.value = '');
+    setInputFields(data);
 
     setTimeout(() => {
       setCleaningInputs(false);
@@ -343,7 +275,6 @@ const NewUser = ({ ...props }) => {
   function ValidateFields () {
     let hasErrors = false;
 
-
     inputFields.map((input, i) => {
       const data = [...inputFields];
 
@@ -355,7 +286,12 @@ const NewUser = ({ ...props }) => {
       } else if (input.required && input.value === '') {
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
-      } else if (input.value.length < 9 && input.type === 'phone') {
+
+      // Case it reaches here, validates specifiq fields and value structure
+      } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
+        data[i].error = 'Email mal estruturado';
+        hasErrors = true;
+      } else if (input.value.length < 9 && input.type === 'phone' && input.required) {
         data[i].error = 'Numero mal estruturado';
         hasErrors = true;
       }
@@ -375,27 +311,7 @@ const NewUser = ({ ...props }) => {
 
   }
 
-  function TestCreate () {
-    const builtWorker = {
-      id: 'urn:ngsi-ld:Worker:9',
-      type: 'Worker'
-    };
-
-    inputFields.map((ele) => {
-      builtWorker[ele.id] = {};
-
-      if (ele.options) {
-        builtWorker[ele.id].type = 'Relationship';
-        builtWorker[ele.id].object = ele.value;
-      }
-      else {
-        builtWorker[ele.id].type = 'Property';
-        builtWorker[ele.id].value = ele.value;
-        }
-    });
-
-    console.log(builtWorker);
-  }
+  
 
 
   return (
@@ -407,7 +323,7 @@ const NewUser = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => CreateUser()}
-        message='Está prestes a criar um novo utilizador, tem certeza que quer continuar?'
+        message='Está prestes a criar um novo worker, tem certeza que quer continuar?'
         icon='AlertOctagon'
       />
       {processing && <Loader center={true} backdrop />}
@@ -416,11 +332,11 @@ const NewUser = ({ ...props }) => {
         open={successOpen}
         handleClose={() => ClearFields()}
         onConfirm={() => Router.push(`${routes.private.internal.user}${newestUser.id}`)}
-        message={`Utilizador Criado com sucesso, que deseja fazer a agora?`}
+        message={`Worker criado com sucesso, que deseja fazer a agora?`}
         icon='Verified'
         iconType='success'
-        okTxt='Ver Utilizador'
-        cancelTxt='Criar novo Utilizador'
+        okTxt='Ver Worker'
+        cancelTxt='Criar novo Worker'
       />
 
       <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -437,7 +353,7 @@ const NewUser = ({ ...props }) => {
             <PrimaryBtn
               text='Guardar'
               icon={<Save strokeWidth='1' />}
-              onClick={handleSave}
+              onClick={ValidateFields}
             />
             <PrimaryBtn
               text='Cancelar'
@@ -468,7 +384,7 @@ const NewUser = ({ ...props }) => {
                   /> 
                 </Grid>;
 
-              if (field.type === 'phone') 
+              if (field.type === 'phone' && field.required) 
                 return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
                 <PhoneInput
                   name={field.id}
@@ -482,7 +398,7 @@ const NewUser = ({ ...props }) => {
                 />
                 </Grid>;
 
-              if (field.type === 'password') 
+              if (field.type === 'password' && field.required) 
                 return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
                 {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
                     :
@@ -519,11 +435,9 @@ const NewUser = ({ ...props }) => {
             </Grid>;
 
             })}
-            <Button onClick={() => ValidateFields()}> Submit</Button>
-            <Button onClick={() => TestCreate()}> Create</Button>
           </Grid>
         </Box>
-        <div className='flex'>
+        {/* <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
               <User size={20} strokeWidth='1' /> Dados de Utilizador
@@ -665,7 +579,7 @@ const NewUser = ({ ...props }) => {
           <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
             {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
           </Button>
-        </div>
+        </div> */}
       </Content>
     </Grid>
   );

@@ -52,7 +52,7 @@ const MyInput = ({
         sx={{
            width: width || halfWidth && '50%',
            minHeight: type === 'area' && '100px',
-       }}
+        }}
         rows={4}
         style={style}
         placeholder={placeholder || ''}
