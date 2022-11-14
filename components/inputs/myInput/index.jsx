@@ -41,6 +41,7 @@ const MyInput = ({
       <OutlinedInput
         name={name}
         type={type || 'string'}
+        multiline={type === 'area'}
         id={id}
         error={error}
         value={value}
@@ -48,7 +49,11 @@ const MyInput = ({
         required
         label={error}
         fullWidth={fullWidth}
-        sx={{ width: width || halfWidth && '50%' }}
+        sx={{
+           width: width || halfWidth && '50%',
+           minHeight: type === 'area' && '100px',
+       }}
+        rows={4}
         style={style}
         placeholder={placeholder || ''}
         endAdornment={!!adornmentIcon &&

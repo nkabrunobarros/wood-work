@@ -28,6 +28,8 @@ const Users = ({ ...props }) => {
     editRoute,
     detailRoute,
     newRoute,
+    workers,
+    headCellsWorkers,
   } = props;
 
   //  States
@@ -142,12 +144,17 @@ const Users = ({ ...props }) => {
             </div>
           </div>
         </div>
-        {console.log(items)}
-        {console.log(profilesFilter)}
         <AdvancedTable
           rows={items.filter((item) => item.ativo && item)}
           headCells={headCells}
           clickRoute={detailRoute}
+          editRoute={editRoute}
+          filters={filters}
+        />
+        <AdvancedTable
+          rows={workers.filter((item) => item.active?.value && item)}
+          headCells={headCellsWorkers}
+          // clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
         />
@@ -159,8 +166,10 @@ const Users = ({ ...props }) => {
 Users.propTypes = {
   breadcrumbsPath: PropTypes.array,
   items: PropTypes.array,
+  workers: PropTypes.array,
   profiles: PropTypes.array,
   headCells: PropTypes.array,
+  headCellsWorkers: PropTypes.array,
   editRoute: PropTypes.string,
   detailRoute: PropTypes.string,
   newRoute: PropTypes.string,

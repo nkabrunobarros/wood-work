@@ -78,7 +78,7 @@ const PhoneInput = ({
             inputComponent: NumberFormatCustom,
             maxlength: 9,
           }}
-          helperText={`${value.length}/20`}
+          helperText={`${value?.length}/20`}
           startAdornment={
             <InputAdornment position={"start"}>
               <Select aria-selected='PT' value='PT' onChange={() => console.log('')}>
@@ -96,7 +96,6 @@ const PhoneInput = ({
                             srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
                             alt=''
                           />}
-
                         +351
                       </Box>
                     </MenuItem>

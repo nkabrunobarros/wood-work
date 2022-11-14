@@ -9,27 +9,32 @@ import UsersScreen from '../../components/pages/users/users';
 import routes from '../../navigation/routes';
 
 //  Proptypes
-import PropTypes from 'prop-types';
 
 //  Utils
 
 //  Services
 import * as ProfileActions from '../../pages/api/actions/perfil';
 import * as UserActions from '../../pages/api/actions/user';
+import * as WorkerActions from '../../pages/api/actions/worker';
 
 const Users = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [users, setUsers] = useState();
+  const [workers, setWorkers] = useState();
   const [profiles, setProfiles] = useState();
   const items = users;
+
+
 
   useEffect(() => {
     const getData = async () => {
       await UserActions
         .users()
-        .then((res) => { console.log(res.data.payload.data); setUsers(res.data.payload.data); }
+        .then((res) => setUsers(res.data.payload.data));
 
-        );
+      await WorkerActions
+        .workers()
+        .then((res) => setWorkers(res.data));
 
       await ProfileActions
         .perfis()
@@ -75,6 +80,33 @@ const Users = ({ ...pageProps }) => {
       },
     ];
 
+    const headCellsWorkers = [
+      {
+        id: 'givenName.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nome',
+      },
+      {
+        id: 'email.value',
+        numeric: false,
+        disablePadding: true,
+        label: 'Email',
+      },
+      {
+        id: 'hasPermission.type',
+        numeric: true,
+        disablePadding: false,
+        label: 'Perfil',
+      },
+      {
+        id: 'actions',
+        numeric: true,
+        disablePadding: false,
+        label: 'Ações',
+      },
+    ];
+
     const editRoute = routes.private.internal.editUser;
     const detailRoute = routes.private.internal.user;
     const newRoute = routes.private.internal.newUser;
@@ -87,23 +119,15 @@ const Users = ({ ...pageProps }) => {
       detailRoute,
       headCells,
       newRoute,
+      workers,
+      headCellsWorkers,
     };
 
 
-    return loaded && <UsersScreen {...props} />;
+    return <UsersScreen {...props} />;
 
   } else return <Loader center={true} />;
 };
 
-Users.propTypes = {
-  items: PropTypes.array,
-  headCells: PropTypes.array,
-  breadcrumbsPath: PropTypes.array,
-  users: PropTypes.array,
-  countries: PropTypes.array,
-  editRoute: PropTypes.string,
-  detailRoute: PropTypes.string,
-  newRoute: PropTypes.string,
-};
 
 export default Users;

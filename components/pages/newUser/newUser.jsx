@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
@@ -8,9 +9,9 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 import {
+  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -61,6 +62,173 @@ const NewUser = ({ ...props }) => {
   const [processing, setProcessing] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
   const [newestUser, setNewestUser] = useState();
+
+  const shifts = [
+    {
+      label: 'Morning',
+      value: [1,2]
+    },
+    {
+      label: 'Afternoon',
+      value: [2,3]
+    },
+    {
+      label: 'Night',
+      value: [3,4]
+    }
+  ];
+
+  const functions = [
+    {
+     label:   'CNC', 
+     value:   'CNC', 
+  
+    },
+      {
+     label: 'Nesting', 
+     value: 'Nesting', 
+  
+    },
+    {
+     label: 'Manual Cut', 
+     value: 'Manual Cut', 
+  
+    },
+    {
+     label: 'Assembly', 
+     value: 'Assembly', 
+  
+    },
+    {
+     label: 'Manager', 
+     value: 'Manager', 
+  
+    },
+    {
+     label: 'Designer', 
+     value: 'Designer', 
+  
+    },
+    {
+     label: 'Budgeting', 
+     value: 'Budgeting', 
+  
+    },
+    {
+    value: 'Warehouse',
+    label:  'Warehouse'
+    }
+];
+
+  const [inputFields, setInputFields] = useState([ 
+    {
+      id: 'givenName',
+      label: 'Primeiro Nome',
+      value: '',
+      error: '',
+      required: true
+    },
+    {
+      id: 'familyName',
+      label: 'Ultimo Nome',
+      value: '',
+      error: '',
+      required: true
+    },
+    {
+      id: 'email',
+      label: 'Email',
+      value: '',
+      error: '',
+      type: 'email',
+      required: true
+    },
+    {
+      id: 'taxId',
+      label: 'Tax Id',
+      value: '',
+      error: '',
+      required: true,
+      type: 'number'
+    },
+    {
+      id: 'ssnId',
+      label: 'Numero Segurança Social',
+      value: '',
+      error: '',
+      required: true,
+      type: 'number'
+    },
+    {
+      id: 'functionPerformed',
+      label: 'Função',
+      value: '',
+      error: '',
+      required: true,
+      options: functions,
+      optLabel: 'label',
+      optValue: 'value'
+    },
+    {
+      id: 'workerShift',
+      label: 'Turno',
+      value: '',
+      error: '',
+      required: true,
+      options: shifts,
+      optLabel: 'label',
+      optValue: 'value'
+    },
+    {
+      id: 'hasOrganization',
+      label: 'Organização',
+      value: '',
+      error: '',
+      required: true
+    },
+    {
+      id: 'assemblyFor',
+      label: 'Montagem',
+      value: '',
+      error: '',
+      required: true
+    },
+    {
+      id: 'cellphone',
+      label: 'Telemovel',
+      value: '',
+      error: '',
+      type: 'phone',
+      required: true
+    },
+    {
+      id: 'phone',
+      label: 'Telephone',
+      value: '',
+      error: '',
+      type: 'phone',
+      required: true
+    },
+    {
+      id: 'password',
+      label: 'Senha',
+      value: '',
+      error: '',
+      type: 'password',
+      required: true
+    },
+    {
+      id: 'obs',
+      label: 'Observações',
+      value: '',
+      error: '',
+      type: 'area',
+      required: true
+    },
+
+  ]
+  );
+
 
   function handleSave() {
     if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
@@ -163,6 +331,73 @@ const NewUser = ({ ...props }) => {
     }, 500);
   };
 
+  const handleFormChange = (i, e) => {
+    const data = [...inputFields];
+
+    data[i].value = e.target.value;
+    data[i].error = '';
+    setInputFields(data);
+
+  };
+
+  function ValidateFields () {
+    let hasErrors = false;
+
+
+    inputFields.map((input, i) => {
+      const data = [...inputFields];
+
+      if (input.type === 'password') {
+          if ( !generatePassword && input.value === '' ) {
+            data[i].error = 'Campo Óbrigatorio';
+            hasErrors = true;
+          }
+      } else if (input.required && input.value === '') {
+        data[i].error = 'Campo Óbrigatorio';
+        hasErrors = true;
+      } else if (input.value.length < 9 && input.type === 'phone') {
+        data[i].error = 'Numero mal estruturado';
+        hasErrors = true;
+      }
+
+      setInputFields(data);
+
+    });
+
+    
+    if (hasErrors) {
+      toast.error('Prencha todos os campos.');
+
+      return true;
+    }
+
+    setDialogOpen(true);
+
+  }
+
+  function TestCreate () {
+    const builtWorker = {
+      id: 'urn:ngsi-ld:Worker:9',
+      type: 'Worker'
+    };
+
+    inputFields.map((ele) => {
+      builtWorker[ele.id] = {};
+
+      if (ele.options) {
+        builtWorker[ele.id].type = 'Relationship';
+        builtWorker[ele.id].object = ele.value;
+      }
+      else {
+        builtWorker[ele.id].type = 'Property';
+        builtWorker[ele.id].value = ele.value;
+        }
+    });
+
+    console.log(builtWorker);
+  }
+
+
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -212,6 +447,82 @@ const NewUser = ({ ...props }) => {
             />
           </div>
         </div>
+        <Box>
+          {/* Input Fields Generator */}
+          <Grid container p={'12px'}>
+            {inputFields.map((field, index) => {
+              if (field.options) 
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+                  <Select
+                    name={field.id}
+                    label={field.label}
+                    required={field.required}
+                    value={field.value}
+                    error={field.error}
+                    type={field.type && field.type}
+                    onChange={(e) => handleFormChange(index, e)}
+                    options={field.options}
+                    optionValue={field.optValue}
+                    optionLabel={field.optLabel}
+                    placeholder={`Escrever ${field.label}`}
+                  /> 
+                </Grid>;
+
+              if (field.type === 'phone') 
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+                <PhoneInput
+                  name={field.id}
+                  label={field.label}
+                  options={countries}
+                  required={field.required}
+                  value={field.value}
+                  placeholder={`Escrever ${field.label}`}
+                  error={field.error}
+                  onChange={(e) => handleFormChange(index, e)}
+                />
+                </Grid>;
+
+              if (field.type === 'password') 
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
+                    :
+                    <MyInput
+                      label={
+                        <Tooltip title='Trocar para senha autogerada'>
+                          <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
+                        </Tooltip>
+                      }
+                        name={field.id}
+                        required={field.required}
+                        value={field.value}
+                        error={field.error}
+                        type={field.type}
+                        placeholder={`Escrever ${field.label}`}
+                        onChange={(e) => handleFormChange(index, e)}
+                    />
+                  }
+                </Grid>;
+
+              //  Default case regular text input 
+              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+                <MyInput 
+                  name={field.id}
+                  label={field.label}
+                  required={field.required}
+                  value={field.value}
+                  error={field.error}
+                  type={field.type && field.type}
+                  onChange={(e) => handleFormChange(index, e)}
+                  placeholder={`Escrever ${field.label}`}
+                  
+                />
+            </Grid>;
+
+            })}
+            <Button onClick={() => ValidateFields()}> Submit</Button>
+            <Button onClick={() => TestCreate()}> Create</Button>
+          </Grid>
+        </Box>
         <div className='flex'>
           <div style={{ flex: 1 }}>
             <a id='pad' className='lightTextSm'>
@@ -360,10 +671,5 @@ const NewUser = ({ ...props }) => {
   );
 };
 
-NewUser.propTypes = {
-  breadcrumbsPath: PropTypes.array.isRequired,
-  countries: PropTypes.arrayOf(PropTypes.object),
-  profiles: PropTypes.arrayOf(PropTypes.object),
-};
 
 export default NewUser;
