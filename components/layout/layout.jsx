@@ -28,6 +28,7 @@ import { parseCookies } from 'nookies';
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
   `${routes.public.signIn}`,
+  `${routes.public.signInInternal}`,
   `${routes.public.forgotPassword}`,
   `${routes.private.terms}`,
   `${routes.private.tos}`,
@@ -51,6 +52,7 @@ async function Test(pageProps) {
         const u = JSON.parse(localStorage.getItem('user'));
 
         pageProps.loggedUser = u;
+        console.log('here');
 
         const resUser = await authActions.me({ token });
 
@@ -64,13 +66,13 @@ async function Test(pageProps) {
     }
 
   } else {
-    // Case no token at all on cookie
-    authActions.logout();
+    // Case no token at all on cookie && its not a public page
+    if (!Object.values(routes.public).includes(Router.route.replace('[Id]', ''))) authActions.logout();
   }
 }
 
 
-const Layout = ({ children, toggleTheme, ...pageProps }) => {
+const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouter();
   const [loaded, setLoaded] = useState(false);
@@ -135,13 +137,14 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
       <Navbar openDrawer={handleDrawerToggle} toggleTheme={toggleTheme} {...pageProps} />
       <Hidden implementation='css'>
         <DrawerMobile
+          toggleFontSize={toggleFontSize}
           toggleTheme={toggleTheme}
           mobileOpen={mobileOpen}
           handleDrawerToggle={handleDrawerToggle}
           {...pageProps}
         />
       </Hidden>
-      <div id="appMainContainer" >
+      <Box id="appMainContainer" >
         {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage ? <>
           {children}
           {isVisible && (
@@ -158,52 +161,40 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
           )}
         </>
           : <>
-            <div className={styles.main} target="_blank" rel="noreferrer">
+            <Box className={styles.main} target="_blank" rel="noreferrer">
               <header className={styles.topheader}></header>
-              <div>
-                <div className={styles.starsec}></div>
-                <div className={styles.starthird}></div>
-                <div className={styles.starfourth}></div>
-                <div className={styles.starfifth}></div>
-              </div>
-              {/* Lamp section */}
-              {/* <div className={styles.lamp__wrap}>
-  <div className={styles.lamp}>
-    <div className={styles.cable}></div>
-    <div className={styles.cover}></div>
-    <div className={styles.in}>
-      <div className={styles.bulb}></div>
-    </div>
-    <div className={styles.light}></div>
-  </div>
-</div> */}
+              <Box>
+                <Box className={styles.starsec}></Box>
+                <Box className={styles.starthird}></Box>
+                <Box className={styles.starfourth}></Box>
+                <Box className={styles.starfifth}></Box>
+              </Box>
               <section className={styles.error}>
-                <div className={styles.error__content}>
-                  <div className={styles.error__message}>
+                <Box className={styles.error__content}>
+                  <Box className={styles.error__message}>
                     <h1 className={styles.message__title}>Você não tem acesso a esta página</h1>
                     <p className={styles.message__text}>
-
                       Se é suposto ter acesso a esta página, por favor entre em
                       <Tooltip title='Enviar email'>
                         <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
                       </Tooltip>
                       com o responsavel
                     </p>
-                  </div>
-                  <div className={styles.error__nav}>
+                  </Box>
+                  <Box className={styles.error__nav}>
                     <a className={styles.enav__link} onClick={() => Router.back()}>
                       {/* <a className={styles.enav__link} onClick={() => Router.push(routes.private.internal.orders)}> */}
                       VOLTAR
                     </a>
-                  </div>
-                </div>
+                  </Box>
+                </Box>
               </section>
-            </div></>}
+            </Box></>}
 
-      </div>
-      <div style={{ width: '100%' }}>
+      </Box>
+      <Box style={{ width: '100%' }}>
         <Footer section={footer} {...pageProps} />
-      </div>
+      </Box>
     </React.Fragment>
   ) : <Loader center={true} />;
 };
@@ -211,6 +202,7 @@ const Layout = ({ children, toggleTheme, ...pageProps }) => {
 Layout.propTypes = {
   children: PropTypes.any,
   toggleTheme: PropTypes.any,
+  toggleFontSize: PropTypes.any,
 };
 
 export default Layout;

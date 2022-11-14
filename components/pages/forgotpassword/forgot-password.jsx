@@ -1,6 +1,6 @@
 //  Nodes
 import emailjs from '@emailjs/browser';
-import { OutlinedInput } from '@mui/material';
+import { Button, OutlinedInput } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -12,7 +12,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import styles from '../../../styles/SignIn.module.css';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 
@@ -22,11 +21,9 @@ const ForgotPassword = () => {
 
     const USER_ID = `service_kqtxrtc`;
     const TEMPLATE_ID = `template_6nvzzrx`;
-    const data = new FormData(event.currentTarget);
 
-    console.log({
-      email: data.get('email'),
-    });
+    console.log(event.currentTarget);
+
 
     emailjs
       .sendForm(USER_ID, TEMPLATE_ID, event.currentTarget, 'HtyN6X3l4PFTtFQSI')
@@ -73,7 +70,7 @@ const ForgotPassword = () => {
             alignItems: 'start',
           }}
         >
-          <Typography color={'primary'}>Portal Interno WW4.0</Typography>
+          <Typography color={'primary'}>Portal WW4.0</Typography>
           <Typography component='h2' variant='h3'>
             Esqueceu a Senha?
           </Typography>
@@ -105,14 +102,14 @@ const ForgotPassword = () => {
               autoFocus
             />
             <Box mt={2}>
-              <PrimaryBtn
+              <Button
                 fullWidth
                 type='submit'
                 variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
                 Submeter
-              </PrimaryBtn>
+              </Button>
               <Box
                 sx={{
                   display: 'flex',

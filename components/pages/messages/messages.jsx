@@ -290,7 +290,6 @@ const Messages = ({ ...props }) => {
                     required
                     fullWidth
                     placeholder='Pesquisa'
-                    autoFocus
                     sx={styles.writeMessageInput}
                     endAdornment={
                       <InputAdornment position={"start"}>
@@ -346,12 +345,11 @@ const Messages = ({ ...props }) => {
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Avatar sx={styles.avatar}>N</Avatar>
-                    <Typography variant='body2'>Encomenda {conversations[activeRow].orderId}</Typography>
+                    <Typography variant='md'>Encomenda {conversations[activeRow].orderId}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <ButtonGroup>
                       <Tooltip title="Ajuda">
-
                         <IconButton>
                           <HelpCircle
                             strokeWidth={pageProps.globalVars.iconStrokeWidth}

@@ -23,13 +23,14 @@ const routes = {
       editOrder: '/internal/edit-order/',
 
       messages: '/internal/messages',
-      profile: '/profile/',
+      profile: '/internal/profile/',
       error: '/404',
 
       leftovers: '/internal/leftovers',
 
       dashboards: '/internal/dashboards',
 
+      factoryLevel: '/internal/factory'
     },
     //  Pages shared
     terms: '/terms',
@@ -43,6 +44,7 @@ const routes = {
   public: {
     forgotPassword: '/forgot-password',
     signIn: '/',
+    signInInternal: '/signin',
   }
 };
 

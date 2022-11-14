@@ -15,7 +15,7 @@ export async function orders(data) {
             data
         },
         config
-    )
+    );
 }
 
 export async function ordersProduction(data) {
@@ -31,7 +31,7 @@ export async function ordersProduction(data) {
             data
         },
         config
-    )
+    );
 }
 
 export async function order(data) {
@@ -47,7 +47,7 @@ export async function order(data) {
             data
         },
         config
-    )
+    );
 }
 
 export async function saveOrder(data) {
@@ -63,7 +63,7 @@ export async function saveOrder(data) {
             data: { input: { ...data } }
         },
         config
-    )
+    );
 }
 
 export async function saveOrderDetails(data) {
@@ -79,5 +79,5 @@ export async function saveOrderDetails(data) {
             data: { input: { ...data } }
         },
         config
-    )
+    );
 }

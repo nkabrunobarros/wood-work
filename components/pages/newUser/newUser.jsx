@@ -114,8 +114,6 @@ const NewUser = ({ ...props }) => {
       paisCodigo: pais,
       idPerfil: perfil,
       password: generatePassword ? `${process.env.NEXT_PUBLIC_DEFAULT_PASS}` : password,
-      tos: false,
-      obs,
     };
 
     try {

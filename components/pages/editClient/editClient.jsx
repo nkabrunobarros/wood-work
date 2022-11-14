@@ -1,14 +1,14 @@
 //  Nodes
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
 //  Mui
 import {
   Box,
   Button, Grid,
-  InputLabel, Paper, Popover, TextareaAutosize,
-  Tooltip, Typography, styled
+  InputLabel, Paper, Popover, styled, TextareaAutosize,
+  Tooltip, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -16,8 +16,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
-import Notification from '../../dialogs/Notification';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Notification from '../../dialogs/Notification';
 import MyInput from '../../inputs/myInput';
 import Loader from '../../loader/loader';
 
@@ -32,15 +32,15 @@ import Router from 'next/router';
 import styles from '../../../styles/NewOrder.module.css';
 
 //  Utils
-import hasData from '../../utils/hasData';
 import EmailValidation from '../../utils/EmailValidation';
+import hasData from '../../utils/hasData';
 
 //  Actions
 import * as ClientService from '../../../pages/api/actions/client';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, detailPage, pageProps } = props;
-  const [client, setClient] = useState(props.client)
+  const [client, setClient] = useState(props.client);
   const [name, setName] = useState(client.giveName);
   const [legalName, setLegalName] = useState(client.legalName);
   const [email, setEmail] = useState(client.email);
@@ -69,18 +69,18 @@ const EditClient = ({ ...props }) => {
   useEffect(() => {
     async function PostalCodeInfo() {
       try {
-        const res = await axios.get(`https://geoapi.pt/cp/${postalCode}?json=1`)
+        const res = await axios.get(`https://geoapi.pt/cp/${postalCode}?json=1`);
 
-        if (res.data) setPostalCodeInfo(res.data)
+        if (res.data) setPostalCodeInfo(res.data);
 
       } catch (error) {
-        setPostalCodeInfo()
+        setPostalCodeInfo();
       }
     }
 
     PostalCodeInfo();
 
-  }, [postalCode])
+  }, [postalCode]);
 
   function handleSave() {
     if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
@@ -121,8 +121,8 @@ const EditClient = ({ ...props }) => {
 
 
   async function onConfirm() {
-    setDialogOpen(false)
-    setProcessing(true)
+    setDialogOpen(false);
+    setProcessing(true);
 
     const builtClient = {
       id: client.id,
@@ -138,24 +138,24 @@ const EditClient = ({ ...props }) => {
       contact: contactName,
       postalCode,
       obs
-    }
+    };
 
 
     try {
       await ClientService.saveClient(builtClient).then((response) => {
-        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um Cliente ja existe com este email')
-        else if (!response.data.success) toast.error('Algo aconteceu')
+        if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um Cliente ja existe com este email');
+        else if (!response.data.success) toast.error('Algo aconteceu');
         else {
           // success here
-          setProcessing(false)
-          setClient(response.data.payload)
-          toast.success('Cliente Atualizado')
+          setProcessing(false);
+          setClient(response.data.payload);
+          toast.success('Cliente Atualizado');
 
           setTimeout(() => {
-            Router.push(`${detailPage}${response.data.payload.id}`)
+            Router.push(`${detailPage}${response.data.payload.id}`);
           }, 500);
         }
-      })
+      });
     } catch (e) { }
 
   }
@@ -165,24 +165,24 @@ const EditClient = ({ ...props }) => {
   }));
 
   function RestoreData() {
-    setName(client.giveName)
-    setLegalName(client.legalName)
-    setContactName(client.contact)
-    setTelefone(client.telephone)
-    setAddress(client.address)
-    setNif(client.taxId)
-    setPostalCode(client.postalCode)
-    setOtherData(client.otherData)
-    setObs(client.obs)
-    setErrorMessageName()
-    setErrorMessageLegalName()
-    setErrorMessageEmail()
-    setErrorMessageContact()
-    setErrorMessageTelefone()
-    setErrorMessageAddress()
-    setErrorMessagePostalCode()
-    setErrorMessageNif()
-    toast.success('Dados Restaurados.')
+    setName(client.giveName);
+    setLegalName(client.legalName);
+    setContactName(client.contact);
+    setTelefone(client.telephone);
+    setAddress(client.address);
+    setNif(client.taxId);
+    setPostalCode(client.postalCode);
+    setOtherData(client.otherData);
+    setObs(client.obs);
+    setErrorMessageName();
+    setErrorMessageLegalName();
+    setErrorMessageEmail();
+    setErrorMessageContact();
+    setErrorMessageTelefone();
+    setErrorMessageAddress();
+    setErrorMessagePostalCode();
+    setErrorMessageNif();
+    toast.success('Dados Restaurados.');
   }
 
   return (
@@ -412,9 +412,9 @@ const EditClient = ({ ...props }) => {
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <MyInput
                   required
-                  label={'Número de Indentificação Fiscal (Nif)'}
+                  label={'Número de Identificação Fiscal (Nif)'}
                   error={errorMessageNif}
-                  placeholder='Escrever Número de Indentificação Fiscal'
+                  placeholder='Escrever Número de Identificação Fiscal'
                   value={nif}
                   onChange={(e) => {
                     setNif(e.target.value);

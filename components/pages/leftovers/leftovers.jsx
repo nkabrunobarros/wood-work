@@ -1,14 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Button, Divider, Grid, IconButton, Slider, Stack } from "@mui/material";
-import { ArrowLeftRight, Send, SwitchCamera, X } from "lucide-react";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { ArrowLeftRight, Send, XCircle } from "lucide-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Camera } from "react-camera-pro";
-import Carousel from 'react-material-ui-carousel';
 import Select from "../../inputs/select";
 
 const Leftovers = () => {
-    const [imagesTaken, setImagesTaken] = useState([]);
+    const [imagesTaken, setImagesTaken] = useState();
     const camera = React.useRef(null);
     const [currentPanel, setCurrentPanel] = useState(-1);
     const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -27,10 +26,14 @@ const Leftovers = () => {
         if (camera.current) {
             const photo = await camera.current.takePhoto();
 
-            setImagesTaken([...imagesTaken, {
+            setImagesTaken({
                 data: photo,
                 takenAt: Date.now()
-            }]);
+            });
+
+
+
+            setCurrentPanel(0);
         }
     }
 
@@ -49,32 +52,18 @@ const Leftovers = () => {
                             :
                             <>
                                 {/* View a ver foto */}
-                                <IconButton onClick={() => setCurrentPanel(-1)} >
-                                    <ArrowLeftRight />
-                                </IconButton>
+                                {loggedUser.nome}
                             </>
                         }
                     </Box>
                 </Grid>
                 {/* Type */}
-                <Grid md={3} sx={3} p={1}><Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
-                    {currentPanel < 0 ?
-                        <>
-                            <Box sx={{ width: '100%' }}>
-                                <Select fullWidth label='Tipo' />
-                            </Box>
-                        </>
-                        :
-                        <IconButton onClick={() => {
-                            const data = [...imagesTaken];
-
-                            data.splice(currentPanel, 1);
-                            setImagesTaken(data);
-                        }}>
-                            <X />
-                        </IconButton>
-                    }
-                </Box>
+                <Grid md={3} sx={3} p={1}>
+                    <Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
+                        <Box sx={{ width: '100%', paddingLeft: 3, paddingRight: 3 }} >
+                            <Select fullWidth label='Tipo' />
+                        </Box>
+                    </Box>
                 </Grid>
                 {/* Date & Time */}
                 <Grid md={3} sx={3} p={1}>
@@ -83,35 +72,51 @@ const Leftovers = () => {
                             <>
                                 {/* View a tirar foto */}
                                 <Grid >
-                                    <Grid container className='fullCenter'>{moment(clock).format('DD.MM.YYYY')}</Grid>
+                                    <Grid container className='fullCenter'>
+                                        <Box>
+                                            {/* <Typography item color='lightTextSm.main'>Data</Typography> */}
+                                            <Typography item color='lightTextSm.black' >{moment(clock).format('DD.MM.YYYY')}</Typography>
+                                        </Box>
+                                    </Grid>
                                     <Divider />
-                                    <Grid container className='fullCenter'>{moment(clock).format('HH:mm')}</Grid>
+
+                                    <Grid container className='fullCenter'>
+                                        <Box>
+                                            <Typography item color='lightTextSm.main'>Hora</Typography>
+                                            <Typography item color='lightTextSm.black' > {moment(clock).format('HH:mm')}</Typography>
+                                        </Box>
+                                    </Grid>
                                 </Grid>
 
                             </>
                             :
                             <>
                                 {/* View a ver foto */}
-                                <IconButton onClick={() => setCurrentPanel(-1)} >
-                                    <ArrowLeftRight />
-                                </IconButton>
+                                <Grid >
+                                    <Grid container className='fullCenter'>
+                                        Data
+                                        {moment(clock).format('DD.MM.YYYY')}
+                                    </Grid>
+                                    <Divider />
+                                    <Grid container className='fullCenter'>{moment(clock).format('HH:mm')}</Grid>
+                                </Grid>
+
                             </>
                         }
                     </Box>
                 </Grid>
+                {/* Project */}
                 <Grid md={3} sx={3} p={1}>
                     <Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
                         {currentPanel < 0 ?
                             <>
                                 {/* View a tirar foto */}
-                                {loggedUser.nome}
+                                Project
                             </>
                             :
                             <>
                                 {/* View a ver foto */}
-                                <IconButton onClick={() => setCurrentPanel(-1)} >
-                                    <ArrowLeftRight />
-                                </IconButton>
+                                Project
                             </>
                         }
                     </Box>
@@ -120,9 +125,9 @@ const Leftovers = () => {
             <Grid container sx={{ height: '65vh' }}>
                 {currentPanel < 0 ?
                     <>
-                        <Grid container md={6}>
+                        <Grid container md={10} >
                             <Box p={2} className="fullCenter" sx={{ width: '100%' }}>
-                                <div className="fullCenter" style={{ width: '640px', height: '100%' }} >
+                                <div className="fullCenter" style={{ width: '100%', height: '100%' }} >
                                     {/* <Camera ref={webcamRef} aspectRatio={16 / 9} facingMode='user' /> */}
                                     <Camera
                                         ref={camera}
@@ -140,60 +145,78 @@ const Leftovers = () => {
                             </Box>
                         </Grid>
 
-                        <Grid container md={2} style={{ overflow: 'scroll', maxHeight: '100%' }}>
-                            <Stack>
-                                {imagesTaken?.map((imga, i) => <img onClick={() => setCurrentPanel(i)} key={i} src={imga.data} style={{ width: '100%', padding: '0.5rem' }} />)}
-                            </Stack>
-                        </Grid>
 
-                        <Grid container md={1} >
-                            <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                <Box>
-                                    <Slider
-                                        sx={{
-                                            '& input[type="range"]': {
-                                                WebkitAppearance: 'slider-vertical',
-                                            },
-                                        }}
-                                        orientation="vertical"
-                                        defaultValue={1}
-                                        max={5}
-                                        step={.1}
-                                        valueLabelDisplay="auto"
-                                        getAriaValueText={(value) => <div>{value} X</div>}
-                                    />
-                                </Box>
-                                <Box className="fullCenter">
-                                    <IconButton
-                                        className='cameraSwitchBtn'
-                                        onClick={() => camera.current.switchCamera()}
-                                    >
-                                        <Box className="fullCenter" sx={{ border: '2px solid', padding: '.5rem', borderRadius: '50%' }}>  <SwitchCamera /></Box>
-                                    </IconButton>
-                                </Box>
-                            </Stack>
-
-
-                        </Grid>
                     </>
                     :
-                    <Grid md={8}>
-                        <Carousel
-                            next={(next) => setCurrentPanel(next)}
-                            prev={(prev) => setCurrentPanel(prev)}
-                            active={currentPanel}
-                            autoPlay
-                            navButtonsAlwaysVisible
-                            indicators
-                            animation="slide"
-                        >
-                            {imagesTaken?.map((imga, i) => <img key={i} src={imga.data} style={{ width: '100vh', padding: '0.5rem' }} />)}
-                        </Carousel>
-                    </Grid>}
-                <Grid container md={3} >
-                    <Grid p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}><Box bgcolor={"default.main"} className="fullCenter" sx={{ height: '100%' }}>Espessura</Box></Grid>
-                    <Grid p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}><Box bgcolor={"default.main"} className="fullCenter" sx={{ height: '100%' }}>Comprimento</Box></Grid>
-                    <Grid p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}><Box bgcolor={"default.main"} className="fullCenter" sx={{ height: '100%' }}>Largura</Box></Grid>
+                    <>
+                        <Grid md={8} >
+                            {/* <Carousel
+                                next={(next) => setCurrentPanel(next)}
+                                prev={(prev) => setCurrentPanel(prev)}
+                                active={currentPanel}
+                                autoPlay
+                                navButtonsAlwaysVisible
+                                indicators
+                                animation="slide"
+                            >
+                            </Carousel> */}
+                            <img src={imagesTaken?.data} style={{ width: '100%', padding: '0.5rem' }} />
+                        </Grid>
+                        <Grid container md={2} >
+                            <Grid container p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
+
+                                <Button onClick={() => {
+                                    setCurrentPanel(-1);
+                                    setImagesTaken();
+                                }} sx={{ width: '100%', height: '100%' }} >
+                                    <XCircle size={40} strokeWidth={1} />
+                                </Button>
+
+                            </Grid>
+                            <Grid container p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
+                                <Box>
+                                    <Typography item color='lightTextSm.main'>Comprimento Min:</Typography>
+                                    <Typography item color='lightTextSm.black' >0cm</Typography>
+                                </Box>
+                            </Grid>
+                            <Grid p={1} container bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
+                                <Box>
+                                    <Typography item color='lightTextSm.main'>Largura Min:</Typography>
+                                    <Typography item color='lightTextSm.black' >0cm</Typography>
+                                </Box>
+                            </Grid>
+                            <Grid p={1}>
+                                <Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
+                                    <Button onClick={() => setCurrentPanel(-1)} >
+                                        <Box className="fullCenter infoContainerLeftOvers" sx={{ border: '2px solid', padding: '.5rem', borderRadius: '50%' }}>
+
+                                            <ArrowLeftRight />
+                                        </Box>
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </>
+                }
+                <Grid container md={2} >
+                    <Grid container p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
+                        <Box>
+                            <Typography item color='lightTextSm.main'>Espessura</Typography>
+                            <Typography item color='lightTextSm.black' >0cm</Typography>
+                        </Box>
+                    </Grid>
+                    <Grid container p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
+                        <Box>
+                            <Typography item color='lightTextSm.main'>{imagesTaken ? 'Comprimento Max:' : 'Comprimento'}</Typography>
+                            <Typography item color='lightTextSm.black' >0cm</Typography>
+                        </Box>
+                    </Grid>
+                    <Grid p={1} container bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
+                        <Box>
+                            <Typography item color='lightTextSm.main'>{imagesTaken ? 'Largura Max:' : 'Largura'}</Typography>
+                            <Typography item color='lightTextSm.black' >0cm</Typography>
+                        </Box>
+                    </Grid>
                     <Grid p={1}>
                         <Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
                             <Button sx={{ width: '100%', height: '100%' }} onClick={() => SaveImg()}>

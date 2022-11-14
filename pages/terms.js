@@ -1,12 +1,12 @@
 //  Nodes
-import React from 'react'
-import TermsScreen from '../components/pages/terms/terms'
+import React from 'react';
+import TermsScreen from '../components/pages/terms/terms';
 
 const Terms = ({ ...pageProps }) => {
 
 
-  return <TermsScreen {...pageProps} />
-}
+  return <TermsScreen {...pageProps} />;
+};
 
 
-export default Terms
+export default Terms;

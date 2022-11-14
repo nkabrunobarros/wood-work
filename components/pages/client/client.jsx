@@ -152,7 +152,7 @@ const EditClient = ({ ...props }) => {
                 </Grid>
                 <Grid container item>
                   <Grid item xs={12} md={6}>
-                    <Typography item color='lightTextSm.main'> Número de Indentificação Fiscal (Nif)</Typography>
+                    <Typography item color='lightTextSm.main'> Número de Identificação Fiscal (Nif)</Typography>
                     <Typography item color='lightTextSm.black' >{client.taxId}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>

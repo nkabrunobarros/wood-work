@@ -1,13 +1,13 @@
-import React from 'react'
+import React from 'react';
 
 //  PropTypes
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-import styles from '../../styles/components/loader.module.css'
-import { Backdrop } from '@mui/material'
+import { Backdrop } from '@mui/material';
+import styles from '../../styles/components/loader.module.css';
 
 const Loader = ({ center, backdrop }) => {
-  let style = {}
+  let style = {};
 
   if (center) {
     style = {
@@ -18,7 +18,7 @@ const Loader = ({ center, backdrop }) => {
       height: '50px',
       width: '50px',
       margin: '-25px 0 0 -25px'
-    }
+    };
   }
 
   return backdrop ? (
@@ -49,12 +49,12 @@ const Loader = ({ center, backdrop }) => {
         <span></span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 Loader.propTypes = {
   center: PropTypes.any,
   backdrop: PropTypes.bool
-}
+};
 
-export default Loader
+export default Loader;

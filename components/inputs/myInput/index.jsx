@@ -21,6 +21,8 @@ const MyInput = ({
   adornmentPos,
   style,
   iconTooltip,
+  name,
+  id,
 }) => {
 
 
@@ -37,9 +39,9 @@ const MyInput = ({
     <FormControl fullWidth disabled={disabled}>
       {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
       <OutlinedInput
-
+        name={name}
         type={type || 'string'}
-        id={label}
+        id={id}
         error={error}
         value={value}
         onChange={onChange}
@@ -63,7 +65,7 @@ const MyInput = ({
         }
       />
     </FormControl>
-  </>)
+  </>);
 
 };
 

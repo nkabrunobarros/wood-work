@@ -27,7 +27,7 @@ const Users = ({ ...pageProps }) => {
     const getData = async () => {
       await UserActions
         .users()
-        .then((res) => { console.log(res.data.payload.data); setUsers(res.data.payload.data) }
+        .then((res) => { console.log(res.data.payload.data); setUsers(res.data.payload.data); }
 
         );
 
@@ -43,7 +43,7 @@ const Users = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Utilizadores',
+        title: 'Workers',
         href: `${routes.private.users}`,
       },
     ];
@@ -90,9 +90,9 @@ const Users = ({ ...pageProps }) => {
     };
 
 
-    return loaded && <UsersScreen {...props} />
+    return loaded && <UsersScreen {...props} />;
 
-  } else return <Loader center={true} />
+  } else return <Loader center={true} />;
 };
 
 Users.propTypes = {

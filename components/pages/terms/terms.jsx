@@ -37,20 +37,23 @@ const Terms = ({ ...props }) => {
       email: user.email,
       ativo: true,
       nome: name,
-      telemovel: user.telemovel,
-      telefone: user.telefone,
-      morada: user.morada,
-      paisCodigo: user.paisCodigo,
+      taxId: user.taxId,
+      telefone: user.telephone,
+      morada: user.address,
+      postalCode: user.postalCode,
+      codigoPais: user.pais.codigo,
       idPerfil: user.perfil.id,
-      obs: user.obs || '',
+      obs: user.obs,
       tos: true,
+      buysTo: user.buysTo,
+
     };
 
     try {
       await UserActions.saveUser(newUser).then((response) => {
         if (response.data.payload.tos) Router.push(routes.private.orders);
       });
-    } catch (err) { console.log(err); } 
+    } catch (err) { console.log(err); }
   };
 
   return (

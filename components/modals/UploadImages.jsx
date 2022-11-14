@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from "@mui/material";
-import { ImagePlus, X, XCircle } from "lucide-react";
-import React, { useState } from "react";
+import { X, XCircle } from "lucide-react";
+import React, { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import * as FileActions from '../../pages/api/actions/file';
 import * as FolderActions from '../../pages/api/actions/folder';
@@ -15,7 +16,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
   const [newImages, setNewImages] = useState();
   const [newImageDescription, setNewImageDescription] = useState('');
   const [folders2, setFolders] = useState(folders);
-  const [selectedFolder, setSelectedFolder] = useState(folders2.find(ele => ele.name === orderId)?.id);
+  const [selectedFolder, setSelectedFolder] = useState(orderId);
   const [uploading, setUploading] = useState(false);
   const [errorFolder, setErrorFolder] = useState('');
 
@@ -43,6 +44,8 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
 
   async function handleModalImageUpload(e) {
     const arr = [];
+
+    console.log(e);
 
     for (let index = 0; index < Object.keys(e.target.files).length; index++) {
       const file = e.target.files[index];
@@ -137,6 +140,14 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
     onClose();
   }
 
+  const [uploadedFiles, setUploadedFiles] = useState();
+
+  const onDrop = useCallback(acceptedFiles => {
+    // Do something with the files
+    setUploadedFiles(acceptedFiles);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return <Modal open={open} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <Box bgcolor={"default.main"} sx={{ maxWidth: '600px', padding: '1rem', borderRadius: '8px', boxShadow: '0px 0px 20px -6px #5A5A5A' }}>
@@ -161,16 +172,16 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
               placeholder='Descricão.'
               value={newImageDescription}
               onChange={(e) => setNewImageDescription(e.target.value)}
-              iconTooltip='jpeg / png / pdf'
-              adornmentIcon={
-                <>
-                  <ImagePlus
-                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                  />
-                  <input multiple type='file' accept='image/*,.pdf' name='file' hidden onChange={(e) => handleModalImageUpload(e)} />
-                </>
-              }
+              // iconTooltip='jpeg / png / pdf'
+              // adornmentIcon={
+              //   <>
+              //     <ImagePlus
+              //       strokeWidth={pageProps.globalVars.iconStrokeWidth}
+              //       size={pageProps.globalVars.iconSize}
+              //     />
+              //     <input multiple type='file' accept='image/*,.pdf' name='file' hidden onChange={(e) => handleModalImageUpload(e)} />
+              //   </>
+              // }
               label='Descrição'
             />
             <span style={{ fontSize: 'small' }}>Tamanho Maximo 1 MB</span>
@@ -212,6 +223,14 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
             )
             )}
           </ImageList>
+          <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
+            <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => handleModalImageUpload(e)} />
+            {
+              isDragActive ?
+                <p>Drop...</p> :
+                <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Arraste ou clique para carregar ficheiros'}</p>
+            }
+          </Box>
         </Grid>
         <Grid md={12} sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', width: '100%' }}>

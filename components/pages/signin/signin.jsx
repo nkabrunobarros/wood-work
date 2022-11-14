@@ -1,39 +1,46 @@
 //  Nodes
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, InputLabel, TextField
-} from '@mui/material';
-import styles from '../../../styles/SignIn.module.css';
-
-import routes from '../../../navigation/routes';
-import Notification from '../../dialogs/Notification';
-import Footer from '../../layout/footer/footer';
-
-import { XCircle } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
+import React, { useEffect, useState } from 'react';
+
+//  Mui
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid, InputLabel, Paper, TextField, Typography
+} from '@mui/material';
+
+//  Styles
+import styles from '../../../styles/SignIn.module.css';
+
+//  Navigation
+import routes from '../../../navigation/routes';
+
+//  Dialogs
 import { toast } from 'react-toastify';
-import * as authActions from '../../../pages/api/actions/auth';
-import PrimaryBtn from '../../buttons/primaryBtn';
+import Notification from '../../dialogs/Notification';
+import ToastSet from '../../utils/ToastSet';
+
+//  Custom components
 import MyInput from '../../inputs/myInput';
+import Footer from '../../layout/footer/footer';
+
+//  Lucide icons
+import { XCircle } from 'lucide-react';
+
+//  Utils
 import EmailValidation from '../../utils/EmailValidation';
 import IsInternal from '../../utils/IsInternal';
-import ToastSet from '../../utils/ToastSet';
+
+//  PropTypes
+import PropTypes from 'prop-types';
+
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
-  const { client } = props;
+  const { client, login, me } = props;
   const [email, setEmail] = useState('geral@nka.pt');
   const [password, setPassword] = useState('123456');
   const [loading, setLoading] = useState(false);
@@ -41,7 +48,24 @@ const SignIn = (props) => {
   const [senhaErrors, setSenhaErrors] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
+  const [windowWidth, setWindowHeight] = useState();
 
+  if (typeof window !== 'undefined') {
+    useEffect(() => {
+      setWindowHeight(window.innerWidth);
+    }, [window.innerWidth]);
+
+  }
+
+  const listenToResize = () => {
+    setWindowHeight(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', listenToResize);
+
+    return () => window.removeEventListener('resize', listenToResize);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,17 +95,15 @@ const SignIn = (props) => {
     const loadingNotification = toast.loading('');
 
 
-    await authActions.login({ email, password })
+    await login({ email, password })
       .then(async (result) => {
         setCookie(undefined, 'auth_token', result.data.payload.token);
 
-        const resUser = await authActions.me({ token: result.data.payload.token });
+        const resUser = await me({ ...result.data.payload });
         const user = resUser.data.payload;
 
         localStorage.setItem("user", JSON.stringify(user));
-
         // Success
-
         ToastSet(loadingNotification, 'A entrar', 'success');
         setLoading(false);
 
@@ -131,32 +153,31 @@ const SignIn = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Grid className={styles.sidePanel} item xs={false} sm={4} md={7}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-          }}
-        >
-          <div className={styles.logoImg}>
-            <div
-              styles={{
-                width: '300px',
-                height: '300px',
-                position: 'absolute',
-              }}
-            ></div>
-          </div>
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={8}
-        md={5}
+      {windowWidth > 600 &&
+        <Grid className={styles.sidePanel} item xs={0} sm={6} md={7}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+            }}
+          >
+            <div className={styles.logoImg}>
+              <div
+                styles={{
+                  width: '300px',
+                  height: '300px',
+                  position: 'absolute',
+                }}
+              ></div>
+            </div>
+          </Box>
+        </Grid>
+      }
+
+      <Grid container item xs={12} sm={6} md={5}
         component={Paper}
         elevation={6}
         square
@@ -169,10 +190,11 @@ const SignIn = (props) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'start',
+            width: '100%'
           }}
         >
           <Typography color={'primary'}>
-            {!client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
+            {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>
           <Typography component='h1' variant='h2'>
             Login
@@ -204,10 +226,12 @@ const SignIn = (props) => {
               label={emailErrors || ''}
             />
             <MyInput
+              id='password'
               label='Senha'
               onChange={(e) => { setSenhaErrors(''); setPassword(e.target.value); }}
               value={password}
               error={senhaErrors}
+              name='password'
               type={visible ? 'password' : 'text'}
               iconTooltip={visible && 'Mostrar Senha'}
               adornmentOnClick={() => setVisible(!visible)}
@@ -228,7 +252,8 @@ const SignIn = (props) => {
                 />
               </Grid>
             </Grid>
-            <PrimaryBtn
+            <Button
+              id='submit'
               onClick={(e) => handleSubmit(e)}
               type='submit'
               fullWidth
@@ -241,17 +266,20 @@ const SignIn = (props) => {
               ) : (
                 'Entrar'
               )}
-            </PrimaryBtn>
+            </Button>
           </Box>
         </Box>
-        <Footer section='client' />
+        <Footer />
       </Grid>
     </Grid>
   );
 };
 
+
 SignIn.propTypes = {
-  client: PropTypes.any,
+  client: PropTypes.boolean,
+  login: PropTypes.func,
+  me: PropTypes.func,
 };
 
 export default SignIn;

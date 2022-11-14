@@ -65,7 +65,7 @@ const Profile = ({ ...props }) => {
       <Content>
         <div id='pad' style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{user.nome}</a>
+            <a className='headerTitleXl'>{user.nome || user.legalName}</a>
           </div>
           {router.pathname === `${routes.private.profile}[Id]` ? null : (
             <div className='flex'>
@@ -110,7 +110,7 @@ const Profile = ({ ...props }) => {
 
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Nome </Typography>
-                    <Typography item color='lightTextSm.black'>{user.nome}</Typography>
+                    <Typography item color='lightTextSm.black'>{user.nome || user.legalName}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>

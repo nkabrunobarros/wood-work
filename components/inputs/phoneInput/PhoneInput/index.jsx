@@ -19,12 +19,8 @@ const PhoneInput = ({
   name,
   id,
   style,
-  adornmentIcon,
-  adornmentOnClick,
-  adornmentPos,
-  iconTooltip,
   placeholder,
-  options
+  options,
 }) => {
 
 
@@ -41,7 +37,7 @@ const PhoneInput = ({
       decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
       decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
       thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
-    />
+    />;
 
   });
 
@@ -64,37 +60,6 @@ const PhoneInput = ({
       )}
       <FormControl fullWidth disabled={disabled}>
         {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
-        {/* <TextField
-          placeholder={placeholder}
-          disabled={disabled}
-          id={id}
-          variant={variant || 'outlined'}
-          error={error}
-          label={error}
-          value={value}
-          fullWidth={fullWidth}
-          sx={{ width: width || halfWidth && '50%' }}
-          onChange={onChange}
-          style={style}
-          name={name}
-          InputProps={{
-            inputComponent: NumberFormatCustom,
-          }}
-          endAdornment={!!adornmentIcon &&
-            <InputAdornment position={adornmentPos || "end"}>
-              <Tooltip title={iconTooltip || ''}>
-                <IconButton component='label'
-                  onClick={adornmentOnClick || null}
-                  edge="end">
-
-                  {adornmentIcon}
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          }
-          
-        /> */}
-
         <OutlinedInput
           sx={{ paddingLeft: '0px', width: width || halfWidth && '50%' }}
           placeholder={placeholder}
@@ -107,11 +72,13 @@ const PhoneInput = ({
           fullWidth={fullWidth}
           onChange={onChange}
           style={style}
+          type='number'
           name={name}
           inputProps={{
             inputComponent: NumberFormatCustom,
-            maxlength: 9
+            maxlength: 9,
           }}
+          helperText={`${value.length}/20`}
           startAdornment={
             <InputAdornment position={"start"}>
               <Select aria-selected='PT' value='PT' onChange={() => console.log('')}>

@@ -28,7 +28,7 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { Edit, Filter, Trash } from 'lucide-react';
+import { Filter } from 'lucide-react';
 
 //  Utlis
 import { FilterItem } from '../utils/FilterItem';
@@ -45,6 +45,7 @@ import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as UserActions from '../../pages/api/actions/user';
 
+import { DeleteOutline, EditOutlined } from '@mui/icons-material';
 import routes from '../../navigation/routes';
 import CanDo from '../utils/CanDo';
 
@@ -545,19 +546,15 @@ const AdvancedTable = ({
                                       <Tooltip title='Editar'>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
-                                          <Edit
-                                            strokeWidth='1'
-                                            className='link'
-                                            size={20}
+                                          <EditOutlined
+                                            color={'primary'}
                                           />
                                         </IconButton>
                                       </Tooltip>}
                                     {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover ' + displaying}>
-                                      <IconButton onClick={() => onDeleteClick(row)}>
-                                        <Trash
-                                          strokeWidth='1'
-                                          className='link'
-                                          size={20}
+                                      <IconButton onClick={() => onDeleteClick(row)} >
+                                        <DeleteOutline
+                                          color={'primary'}
                                         />
                                       </IconButton>
                                     </Tooltip>}

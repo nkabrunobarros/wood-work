@@ -25,7 +25,6 @@ const Order = ({ ...pageProps }) => {
       await OrdersActions
         .order({id: orderId})
         .then((res) => {
-          console.log(res)
           setOrder(res.data.payload)
         });
     };

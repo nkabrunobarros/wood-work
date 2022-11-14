@@ -33,8 +33,8 @@ import MuiTheme from './MuiTheme';
 const App = ({ Component, pageProps }) => {
   const [selectedTheme, setSelectedTheme] = useState('light');
   const [fontSize, setFontSize] = useState('md');
-  const theme = MuiTheme({ selectedTheme, fontSize });
   const { auth_token: token } = parseCookies();
+  const theme = MuiTheme({ selectedTheme, fontSize });
   const router = useRouter();
 
   const toggleTheme = () => {
@@ -44,6 +44,13 @@ const App = ({ Component, pageProps }) => {
     setSelectedTheme(desiredTheme);
 
     return desiredTheme;
+  };
+
+  const toggleFontSize = (value) => {
+    localStorage.setItem('font', value);
+    setFontSize(value);
+
+    return value;
   };
 
 
@@ -67,9 +74,9 @@ const App = ({ Component, pageProps }) => {
           const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
 
           if (isPublicPage && !!token) {
-            if (IsInternal(pageProps.loggedUser.perfil.descricao)) router.push(routes.private.internal.orders);
+            if (IsInternal(pageProps.loggedUser?.perfil.descricao)) router.push(routes.private.internal.orders);
             else {
-              if (pageProps.loggedUser.tos) router.push(routes.private.orders);
+              if (pageProps.loggedUser?.tos) router.push(routes.private.orders);
               else router.push(routes.private.terms);
             }
           }
@@ -92,7 +99,7 @@ const App = ({ Component, pageProps }) => {
         <title>Wood Work 4.0</title>
         <link rel='icon' href='/logo_bw_ww40_inv.png' />
       </Head>
-      <Layout {...pageProps} toggleTheme={toggleTheme}>
+      <Layout {...pageProps} toggleTheme={toggleTheme} toggleFontSize={toggleFontSize}>
         <Component {...pageProps} />
       </Layout>
     </ThemeProvider>

@@ -46,8 +46,8 @@ const Users = ({ ...props }) => {
       nome,
       email,
       idPerfil: profilesFilter,
-    })
-  }, [nome, email, profilesFilter])
+    });
+  }, [nome, email, profilesFilter]);
 
   const ClearFilters = () => {
     setNome('');

@@ -23,14 +23,14 @@ const NewOrder = () => {
     const getData = async () => {
       try {
         await CountryActions
-        .countries()
-        .then((res) => setCountries(res.data.payload.data))
-        
+          .countries()
+          .then((res) => setCountries(res.data.payload.data));
+
         await ProfileActions
-        .perfis()
-        .then((res) => setProfiles(res.data.payload.data))
-      } catch (error) {}
-    }
+          .perfis()
+          .then((res) => setProfiles(res.data.payload.data));
+      } catch (error) { }
+    };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
@@ -38,23 +38,23 @@ const NewOrder = () => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Utilizadores',
+        title: 'Workers',
         href: `${routes.private.internal.users}`,
       },
       {
-        title: 'Novo Utilizador',
+        title: 'Novo Worker',
         href: `${routes.private.internal.newUser}`,
       },
     ];
-  
+
     const props = {
       breadcrumbsPath,
       countries,
       profiles,
     };
-  
-    return loaded && <NewUserScreen {...props} />
-  } else return  <Loader center={true} />
+
+    return loaded && <NewUserScreen {...props} />;
+  } else return <Loader center={true} />;
 };
 
 export default NewOrder;

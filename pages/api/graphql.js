@@ -37,7 +37,6 @@ const handler = async (req, res) => {
         });
 
     } catch (error) {
-        // if (error.response.status === 403) return Router.push(routes.public.signIn)
         return res.status(error.response?.status || 500).json({ success: false, message: error.message });
     }
 };

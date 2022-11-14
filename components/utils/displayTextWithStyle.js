@@ -1,12 +1,13 @@
-import getKeywords from './Keywords';
+import { Typography } from '@mui/material';
 import React from 'react';
-import ItsNumber from './ItsNumber';
 import hasData from './hasData';
+import ItsNumber from './ItsNumber';
+import getKeywords from './Keywords';
 
 const displayWithStyle = (item, col, index) => {
   const keywords = getKeywords();
 
-  if (!hasData(item)) return <a>Nan {item}</a>
+  if (!hasData(item)) return <Typography>Nan {item}</Typography>;
 
   //  Find if the text match's with any of the keywords
   const resError = keywords.errorKeywords.find((keywork) => keywork === item);
@@ -21,41 +22,41 @@ const displayWithStyle = (item, col, index) => {
 
   if (col) {
     if (item[`${col}`] < 0 && (col === 'desvio' || col === 'desvio2')) {
-      return <a className='successBalloon'>{item[`${col}`]} horas</a>;
+      return <Typography variant='md' className='successBalloon'>{item[`${col}`]} horas</Typography>;
     } else if (item[`${col}`] > 0 && (col === 'desvio' || col === 'desvio2')) {
-      return <a className='errorBalloon'>{item[`${col}`]} horas</a>;
+      return <Typography variant='md' className='errorBalloon'>{item[`${col}`]} horas</Typography>;
     } else if (
       Math.ceil(item[`${col}`]) === 0 &&
       (col === 'desvio' || col === 'desvio2')
     ) {
-      return <a className='warningBalloon'>{item[`${col}`]} horas</a>;
+      return <Typography variant='md' className='warningBalloon'>{item[`${col}`]} horas</Typography>;
     }
 
     if (index === 0) {
       return (
-        <a className='link'>
+        <Typography variant='md' className='link'>
           Nº {displayWithStyle(item[`${col}`])}{' '}
           {ItsNumber(item[`${col}`]) ? 'horas' : null}
-        </a>
+        </Typography>
       );
     }
   }
-  
-  if (item < 0 && (col === 'desvio' || col === 'desvio2')) return <a className='successBalloon'>{item} horas</a>;
-  else if (item > 0 &&(col === 'desvio' || col === 'desvio2')) return <a className='errorBalloon'>{item} horas</a>;
-  else if (item === 0 &&(col === 'desvio' || col === 'desvio2')) return <a className='warningBalloon'>{item} horas</a>;
- 
- 
+
+  if (item < 0 && (col === 'desvio' || col === 'desvio2')) return <Typography variant='md' className='successBalloon'>{item} horas</Typography>;
+  else if (item > 0 && (col === 'desvio' || col === 'desvio2')) return <Typography variant='md' className='errorBalloon'>{item} horas</Typography>;
+  else if (item === 0 && (col === 'desvio' || col === 'desvio2')) return <Typography variant='md' className='warningBalloon'>{item} horas</Typography>;
+
+
   if (resError !== undefined)
     //  If match res is something else undefined && case undefined return default text
-    return <a className='errorBalloon'>{item} </a>;
+    return <Typography variant='md' className='errorBalloon'>{item} </Typography>;
 
   if (resSuccess !== undefined) {
-    return <a className='successBalloon'>{item} </a>;
+    return <Typography variant='md' className='successBalloon'>{item} </Typography>;
   }
 
   if (resWarning !== undefined) {
-    return <a className='warningBalloon'>{item} </a>;
+    return <Typography variant='md' className='warningBalloon'>{item} </Typography>;
   }
 
   return item;

@@ -20,17 +20,17 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
 
   switch (iconType) {
     case icon:
-      style.color = 'var(--red)'
+      style.color = 'var(--red)';
 
-      break
+      break;
 
     case 'success':
-      style.color = 'var(--green)'
+      style.color = 'var(--green)';
 
       break;
 
     default:
-      style.color = 'var(--yellow)'
+      style.color = 'var(--yellow)';
 
       break;
   }

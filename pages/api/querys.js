@@ -4,6 +4,7 @@ const querys = {
     query: `query login ($input: LoginInput!) {
             login (input: $input) {
                 token
+                type
             }
         }
         `
@@ -19,7 +20,6 @@ const querys = {
             idPerfil
             telemovel
             telefone
-            tos
             telefone
             morada
             paisCodigo
@@ -190,12 +190,10 @@ const querys = {
           email
           ativo
           ativo
-          tos
           telemovel
           telefone
           morada
           idPerfil
-          obs
           paisCodigo
         }
            status
@@ -221,67 +219,91 @@ const querys = {
   },
   CLIENTS: {
     return: 'clients',
-    query: `
-        query Clients {
-            clients {
-              count
-              data {
-                id
-                email
-                giveName
-                legalName
-                address
-                status
-                contact
-                postalCode
-                taxId
-                telephone
-                organization {
-                  id
-                  legalName
-                  taxId
-                  ssnId
-                  address
-                  email
-                  telephone
-                }
-                otherData
-                obs
-              }
+    query: `query Clients {
+      clients {
+        count
+        data {
+          id
+          email
+          giveName
+          legalName
+          address
+          status
+          taxId
+          telephone
+          otherData
+          buysTo
+          obs
+          postalCode
+          contact
+          pais {
+            codigo
+            descricao
+          }
+          tos
+          perfil {
+            id
+            descricao
+             permissoes {
+              sujeito
+              accao
             }
           }
+          organization {
+            id
+            legalName
+            taxId
+            ssnId
+            address
+            email
+            telephone
+          }
+        }
+        }
+    }
         `
   },
   CLIENT: {
     return: 'client',
-    query: `
-        query Client($id: String!) {
-          client (id: $id){
-            id
-            email
-            giveName
-            legalName
-            address
-            status
-            taxId
-            postalCode
-            telephone
-            contact
-            organization {
-              id
-              legalName
-              taxId
-              ssnId
-              address
-              email
-              telephone
-            }
-            otherData
-            buysTo
-            obs
+    query: `query Client($id: String!) {
+      client (id: $id){
+        id
+        email
+        contact
+        giveName
+        legalName
+        address
+        status
+        taxId
+        telephone
+        otherData
+        buysTo
+        obs
+        postalCode
+        pais {
+          codigo
+          descricao
+        }
+        tos
+        perfil {
+          id
+          descricao
+           permissoes {
+            sujeito
+            accao
           }
         }
-        `
+        organization {
+          id
+          legalName
+          taxId
+          ssnId
+          address
+          email
+          telephone
+        }
+      }
+    }`
   },
   SAVE_CLIENT: {
     return: 'saveClient',
@@ -434,8 +456,6 @@ const querys = {
                 telefone
                 telefone
                 morada
-                obs
-                tos
                 paisCodigo
                 pais {
                   codigo
@@ -461,8 +481,6 @@ const querys = {
             email
             ativo
             nome
-            obs
-            tos
             telemovel
             telefone
             morada
@@ -495,10 +513,8 @@ const querys = {
           telemovel
           telefone
           telefone
-          tos
           morada
           paisCodigo
-          obs
           pais {
             codigo
             descricao
@@ -617,6 +633,24 @@ const querys = {
       }
     }`
   },
-}
+  ORGANIZATIONS: {
+    return: 'organizations',
+    query: `query Organizatios {
+      organizations {
+        count
+        data {
+          id
+          legalName
+          taxId
+          ssnId
+          address
+          email
+          telephone
+        }
+      }
+    }`
+  },
+
+};
 
 export default querys;

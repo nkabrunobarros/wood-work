@@ -43,7 +43,7 @@ import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
 
-const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProps }) => {
+const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontSize, ...pageProps }) => {
   const theme = useTheme();
   const navLinks = getLinks();
   const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -79,8 +79,8 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
       }}
     >
       <Box
+        sx={{ backgroundColor: 'default.sides' }}
         style={{
-          backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)',
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100%',
@@ -111,10 +111,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
           </Box>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
             <ListItemText
-              primary={loggedUser ? loggedUser.nome : 'user'}
+              primary={loggedUser && (loggedUser.nome || loggedUser.legalName)}
               secondary={
                 <a style={{ color: '#FFFFFF', fontSize: 'small' }}>
-                  {loggedUser ? loggedUser.email : 'email'}
+                  {loggedUser && loggedUser.email}
                 </a>
               }
             />
@@ -135,14 +135,13 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
                     &&
                     IsInternal(pageProps.loggedUser.perfil.descricao) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
                     ? (
-                      <MenuItem sx={{ padding: '0' }}>
+                      <MenuItem id={item.id} sx={{ padding: '0' }}>
                         <ActiveLink
                           key={i}
                           href={item.url}
                           handleDrawerToggle={handleDrawerToggle}
                           page={item.title}
                         >
-
                           {item.icon}
                           <div style={{ paddingRight: '.5rem' }} />
                           {item.title}
@@ -156,7 +155,6 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
           {/* Definições */}
           <MenuItem sx={{ padding: '0' }}>
             <Box
-              variant='sm'
               style={{
                 width: '100%',
                 display: 'flex',
@@ -179,7 +177,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
 
             </Box>
           </MenuItem>
-          <Collapse in={settingsOpen} sx={{ backgroundColor: localStorage.getItem('theme') === 'light' ? 'var(--primary)' : '#121212' }}>
+          <Collapse in={settingsOpen} sx={{ backgroundColor: localStorage.getItem('theme') === 'light' ? 'primary.light' : '#121212' }}>
             <MenuItem sx={{ padding: '0' }}>
 
               <a className={styles.navItemContainer} onClick={() => setEcraOpen(!ecraOpen)}>
@@ -196,13 +194,13 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
               <Box sx={{ width: '100%', marginLeft: '1rem' }} >
                 <Box >
                   <Tooltip title='Ajusta o aspeto da aplicação para reduzir o brilho excessivo e para descansares os olhos.'>
-                    <Typography variant='sm' color='white'>Modo Escuro</Typography>
+                    <a variant='md' style={{ color: 'white' }} >Modo Escuro</a>
                   </Tooltip>
                   <Switch checked={localStorage.getItem('theme') === 'dark'} onClick={toggleTheme} />
                   {localStorage.getItem('theme') === 'light' ? <Sun color='yellow' size={16} /> : <Moon color={'white'} size={16} />}
                 </Box>
                 <Tooltip title='Ajusta o tamanho do tipo de letra para que possam aparecer mais ou menos conteúdos no ecrã.'>
-                  <Typography variant='sm' color='white'>Modo Compacto</Typography>
+                  <a variant='md' style={{ color: 'white' }} >Modo Compacto</a>
                 </Tooltip>
                 <Tooltip title='Altere o tamanho de letra' placement="right">
                   <SpeedDial
@@ -217,10 +215,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
                         icon={action.icon}
                         tooltipTitle={action.name}
                         disabled={localStorage.getItem('font') === action.value}
-                        onClick={() => {
-                          localStorage.setItem('font', action.value);
-                          window.location.reload(false);
-                        }}
+                        onClick={() => toggleFontSize(action.value)}
                       />
                     ))}
                   </SpeedDial>
@@ -241,7 +236,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, ...pageProp
 
                   <ActiveLink
                     handleDrawerToggle={handleDrawerToggle}
-                    href={`${routes.private.profile}${loggedUser.id}`}
+                    href={IsInternal(pageProps.loggedUser.perfil.descricao) ? `${routes.private.internal.profile}${loggedUser.id}` : `${routes.private.profile}${loggedUser.id}`}
                     page={'Perfil'}
                   >
                     <User strokeWidth='1' size={20} color='white' />{' '}

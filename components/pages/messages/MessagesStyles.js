@@ -64,6 +64,7 @@ function MessagesStyles({ ...props }) {
         },
         appBars: {
             backgroundColor: theme === 'light' && 'var(--white)',
+            color: theme === 'light' ? 'black' : 'var(--white)'
         },
         image: {
             padding: '.2rem',

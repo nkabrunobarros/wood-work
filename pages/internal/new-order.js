@@ -7,17 +7,17 @@ import * as ClientActions from '../../pages/api/actions/client';
 import * as ProductsActions from '../../pages/api/actions/product';
 // import * as StockActions from '../../pages/api/actions/stock';
 
-const NewOrder = ({...pageProps}) => {
+const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
 
   useEffect(() => {
     const getData = async () => {
-      await ClientActions.clients().then((response) => setClients(response.data.payload.data))
+      await ClientActions.clients().then((response) => setClients(response.data.payload.data));
 
       await ProductsActions.products().then((response) => {
-        setProducts(response.data.payload.data)
+        setProducts(response.data.payload.data);
         // console.log(response.data.payload.data)
 
         //   response.data.payload.data.map(async (ord, i) => {
@@ -32,9 +32,9 @@ const NewOrder = ({...pageProps}) => {
 
         //     }
         // })
-        
-      })
-    }
+
+      });
+    };
 
     Promise.all([getData()]).then(() => setLoaded(true));
 

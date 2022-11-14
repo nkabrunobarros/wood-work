@@ -32,6 +32,7 @@ const Order = ({ ...pageProps }) => {
           await FolderActions
             .folders({ id: res.data.payload.id })
             .then(async (res) => {
+              console.log(res);
 
               res.data.payload.data.map(async (fold, i) => {
                 res.data.payload.data[i].files = [];
@@ -81,7 +82,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${order.amount} Un`,
+        label: `Quantidade Encomendada: ${order?.amount} Un`,
         span: 1,
       },
     ];
@@ -156,7 +157,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Produzida: ${order.completed} Un`,
+        label: `Quantidade Produzida: ${order?.completed} Un`,
         span: 4,
       },
       {
@@ -165,7 +166,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: `Quantidade Encomendada: ${order.amount} Un`,
+        label: `Quantidade Encomendada: ${order?.amount} Un`,
         span: 1,
       },
       {

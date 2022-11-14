@@ -4,7 +4,6 @@ import React from 'react';
 
 import styles from '../../../styles/components/navbar.module.css';
 
-import { Typography } from '@mui/material';
 import routes from '../../../navigation/routes';
 
 function ActiveLink({ children, href, handleDrawerToggle, page }) {
@@ -44,6 +43,10 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.leftovers}`,
   ];
 
+  const factoryPages = [
+    `${routes.private.internal.factoryLevel}`,
+  ];
+
   const profilePages = [`${routes.private.profile}[Id]`];
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
@@ -56,7 +59,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
 
   if (clientsPages.includes(path.route)) currentSection = 'Clientes';
 
-  if (usersPages.includes(path.route)) currentSection = 'Utilizadores';
+  if (usersPages.includes(path.route)) currentSection = 'Workers';
 
   if (profilePages.includes(path.route)) currentSection = 'Perfil';
 
@@ -65,6 +68,8 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   if (dashboardPages.includes(path.route)) currentSection = 'Painel de Controlo';
 
   if (leftoversPages.includes(path.route)) currentSection = 'Sobrantes';
+
+  if (factoryPages.includes(path.route)) currentSection = 'Chão de Fabrica';
 
   const style = {
     width: '100%',
@@ -83,8 +88,8 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   };
 
   return (
-    <Typography
-      variant='sm'
+    <a
+      variant='md'
       key={href}
       href={href}
       onClick={(e) => {
@@ -95,7 +100,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
       style={style}
     >
       {children}
-    </Typography>
+    </a>
   );
 }
 

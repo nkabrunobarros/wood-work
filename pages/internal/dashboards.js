@@ -79,8 +79,6 @@ const DashBoards = ({ ...pageProps }) => {
 
 
     orders.map((order) => {
-
-
       if (!arrDates.find(ele => moment(ele).format('DD/MM/YYYY') === moment(order.createdAt).format('DD/MM/YYYY'))) arrDates.push(order.order.createdAt);
     });
 

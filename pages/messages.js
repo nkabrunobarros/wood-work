@@ -22,9 +22,18 @@ const Messages = ({ ...pageProps }) => {
   const conversations = [
     {
       id: 1,
-      users: ['cl16o9cag0000x3tqp8lbslcr', 'cl98lcmni202362vfjr5avu1ph'],
+      users: ['cl16o9cag0000x3tqp8lbslcr', '123'],
       orderId: 12312,
-      messages: [1234, 123, 12345, 12346, 12347],
+      messages: [1234, 123, 12345],
+      messagesContent: [],
+      message: '',
+      createdAt: '',
+    },
+    {
+      id: 1,
+      users: ['cl16o9cag0000x3tqp8lbslcr', '123'],
+      orderId: 456,
+      messages: [1234],
       messagesContent: [],
       message: '',
       createdAt: '',
@@ -34,40 +43,24 @@ const Messages = ({ ...pageProps }) => {
   const messagsContents = [
     {
       id: 1234,
-      sentBy: "cl98lcmni202362vfjr5avu1ph",
+      sentBy: '123',
       content: 'Hi, i would like to know the Eta of my order please? Thank you',
-      createdAt: '03/02/2022',
-    },
-    {
-      id: 12345,
-      sentBy: "cl98lcmni202362vfjr5avu1ph",
-      content: 'Hi, i would like to know the Eta of my order please? Thank you',
-      createdAt: '03/02/2022',
-    },
-    {
-      id: 12346,
-      sentBy: "cl98lcmni202362vfjr5avu1ph",
-      content: 'Hi, i would like to know the Eta of my order please? Thank you',
-      createdAt: '03/02/2022',
-    },
-    {
-      id: 12347,
-      sentBy: "cl98lcmni202362vfjr5avu1ph",
-      content: 'Hi, i would like to know the Eta of my order please? Thank you',
-      createdAt: '03/02/2022',
+      createdAt: '2022-10-21T10:30:56+01:00',
+      type: 'text'
     },
     {
       id: 123,
-      sentBy: '2',
-      content:
-        'Hi, the expected time of arrivel for your order is within 1 week, thank you',
-      createdAt: '03/02/2022',
+      sentBy: 'cl16o9cag0000x3tqp8lbslcr',
+      content: 'Hi, the expected time of arrivel for your order is within 1 week, thank you',
+      createdAt: '2022-10-21T12:30:56+01:00',
+      type: 'text'
     },
     {
       id: 12345,
-      sentBy: "cl98lcmni202362vfjr5avu1ph",
+      sentBy: '123',
       content: 'Ok thank you',
-      createdAt: '03/02/2022',
+      createdAt: '2022-10-21T12:30:56+01:00',
+      type: 'text'
     },
   ];
 

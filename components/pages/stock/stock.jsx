@@ -9,7 +9,9 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, ButtonGroup, Divider, Tooltip, Typography } from '@mui/material';
+import { Router } from 'next/router';
+import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
 
 const Stock = ({ ...props }) => {
@@ -28,14 +30,19 @@ const Stock = ({ ...props }) => {
           <Box id='align' style={{ flex: 1 }}>
             <a className='headerTitleXl'>{stock.product.name}</a>
             <Box className='spacer' />
-            {stock.amount > 0 ?
-              <a className="successBalloon">Disponivel</a>
-              :
-              <a className="errorBalloon">Indisponivel</a>}
+            <Tooltip title={`${stock.amount} unidade(s)`}>
+
+              {stock.amount > 0 ?
+                <a className="successBalloon">Disponivel</a>
+                :
+                <a className="errorBalloon">Indisponivel</a>}
+            </Tooltip>
           </Box>
           <Box style={{ display: 'flex' }}>
-            <PrimaryBtn text='Editar' icon={<Edit strokeWidth='1' />} />
-            <PrimaryBtn text='Apagar' icon={<Trash strokeWidth='1' />} light />
+            <ButtonGroup>
+              <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.ed)} icon={<Edit strokeWidth='1' />} />
+              <PrimaryBtn text='Apagar' icon={<Trash strokeWidth='1' />} light />
+            </ButtonGroup>
           </Box>
         </Box>
         <Grid container id='pad' className='flex'>
@@ -50,7 +57,7 @@ const Stock = ({ ...props }) => {
             <Grid container md={6} xs={6}>
               <Grid item xs={12}>
                 <Typography item color='lightTextSm.main'>Encomendas</Typography>
-                <Typography item color='lightTextSm.black'>Lorem Ipsum</Typography>
+                <Typography item color='lightTextSm.black'>{stock.ordersCount}</Typography>
               </Grid>
             </Grid>
             <Grid container md={6} xs={6}>

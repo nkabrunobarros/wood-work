@@ -13,17 +13,74 @@ function MuiTheme({ ...props }) {
         titlexxl: 32,
     };
 
+    const redTheme = {
+        primary: {
+            main: selectedTheme === 'light' ? '#E50000' : '#3F0000',
+            dark: selectedTheme === 'light' ? '#3F0000' : '#3F0000',
+            light: selectedTheme === 'light' ? '#ffe8e5' : '#ffe8e5',
+        },
+        default: {
+            main: selectedTheme === 'light' ? '#fff' : '#282828',
+            sides: selectedTheme === 'light' ? '#3F0000' : '#282828',
+        },
+        link: {
+            main: selectedTheme === 'light' ? '#E50000' : '#E50000',
+        },
+    };
+
+    const blueTheme = {
+        primary: {
+            main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
+            dark: selectedTheme === 'light' ? '#0c2254' : '#1b91e7',
+            light: selectedTheme === 'light' ? '#1b91e7' : '#1b91e7',
+        },
+        default: {
+            main: selectedTheme === 'light' ? '#fff' : '#282828',
+            sides: selectedTheme === 'light' ? '#0c2254' : '#282828',
+        },
+        lightGray: {
+            main: selectedTheme === 'light' ? 'var(--grayBG)' : '#383838',
+        },
+        lightTextSm: {
+            main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
+            black: selectedTheme === 'light' ? 'black' : 'var(--white)'
+        },
+        link: {
+            main: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
+        },
+        messages: {
+            sender: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
+            receiver: selectedTheme === 'light' ? '#E4E6EB' : '#3E4042',
+        }
+    };
+
+    const currentClient = 'Etos';
+    let colorScheme = blueTheme;
+
+    if (currentClient === 'Etos') colorScheme = blueTheme;
+    else if (currentClient === 'red') colorScheme = redTheme;
+    else colorScheme = blueTheme;
+
     const theme = createTheme({
         palette: {
             mode: selectedTheme,
             primary: {
-                main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
+                main: colorScheme.primary.main,
+                dark: colorScheme.primary.dark,
+                light: colorScheme.primary.light,
             },
+            // primary: {
+            //     main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
+            //     dark: selectedTheme === 'light' ? '#0c2254' : '#1b91e7',
+            // },
             default: {
-                main: selectedTheme === 'light' ? '#fff' : '#282828',
+                main: colorScheme.default.main,
+                sides: colorScheme.default.sides,
             },
             lightGray: {
                 main: selectedTheme === 'light' ? 'var(--grayBG)' : '#383838',
+                edges: selectedTheme === 'light' ? '#EDEDED' : '#3B3B3B',
+                secondary: selectedTheme === 'light' && '#FAFAFA'
             },
             collapseImg: {
                 main: selectedTheme === 'light' ? 'red' : 'red',
@@ -33,7 +90,7 @@ function MuiTheme({ ...props }) {
                 black: selectedTheme === 'light' ? 'black' : 'var(--white)'
             },
             link: {
-                main: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
+                main: colorScheme.link.main,
             },
             messages: {
                 sender: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
@@ -110,7 +167,6 @@ function MuiTheme({ ...props }) {
                 }
             },
         },
-
     });
 
     return theme;

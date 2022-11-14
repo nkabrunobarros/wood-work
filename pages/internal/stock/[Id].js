@@ -15,11 +15,13 @@ import routes from '../../../navigation/routes';
 
 //  Services
 import * as CategoriesActions from '../../../pages/api/actions/category';
+import * as OrdersActions from '../../../pages/api/actions/order';
 import * as StocksActions from '../../../pages/api/actions/stock';
 
 const Stock = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [categories, setCategories] = useState();
+  const [orders, setOrders] = useState();
   const [stock, setStock] = useState();
   const router = useRouter();
 
@@ -27,6 +29,7 @@ const Stock = ({ ...pageProps }) => {
     const getData = async () => {
       await StocksActions.stock({ id: router.query.Id }).then((response) => setStock(response.data.payload));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
+      await OrdersActions.ordersProduction().then((response) => setOrders(response.data.payload.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -49,6 +52,9 @@ const Stock = ({ ...pageProps }) => {
       },
     ];
 
+
+    stock.ordersCount = Object.keys(orders.filter(ele => ele.product.id === router.query.Id)).length;
+
     const props = {
       breadcrumbsPath,
       stock,
@@ -56,7 +62,7 @@ const Stock = ({ ...pageProps }) => {
     };
 
 
-    return  <StockScreen {...props} />;
+    return <StockScreen {...props} />;
   }
 
   return <Loader center={true} />;

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-import woodWorkyLogo from '../../../public/logo_bw_ww40_inv.png';
+import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
 import styles from '../../../styles/components/navbar.module.css';
 
 const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
@@ -20,7 +20,7 @@ const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
 
   return (
     <>
-      <AppBar position='sticky' sx={{ backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)' }}>
+      <AppBar position='sticky' sx={{ backgroundColor: 'default.sides' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex' }}>
             <Box className={styles.logos}>
@@ -33,6 +33,7 @@ const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Tooltip title='Menu'>
                 <IconButton
+                  id='drawerToggleBtn'
                   className={styles.menuBtn}
                   color='inherit'
                   aria-label='open drawer'

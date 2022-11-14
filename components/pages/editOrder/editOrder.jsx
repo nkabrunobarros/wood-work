@@ -13,28 +13,30 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Button,
+  ButtonGroup,
   InputLabel, OutlinedInput,
   Typography
 } from '@mui/material';
 import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
-import styles from '../../../styles/NewOrder.module.css';
-import Notification from '../../dialogs/Notification';
-import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import { toast } from 'react-toastify';
 import * as OrdersActions from '../../../pages/api/actions/order';
-import Loader from '../../loader/loader';
+import styles from '../../../styles/NewOrder.module.css';
+import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Notification from '../../dialogs/Notification';
 import Select from '../../inputs/select';
+import Loader from '../../loader/loader';
 
 const EditOrder = ({ ...props }) => {
   const { breadcrumbsPath, order, pageProps, clients, products } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [product, setProduct] = useState(order.product.id);
-  const [client, setClient] = useState(order.client.id);
+  const [client, setClient] = useState(order.order.client?.id);
   const [errorProd, setErrorProd] = useState('');
   const [errorClient, setErrorClient] = useState('');
   const [obs, setObs] = useState('');
+
 
   async function CreateOrder() {
     const builtOrder = {
@@ -42,30 +44,30 @@ const EditOrder = ({ ...props }) => {
       status: 'Em orçamentação',
       clientId: client,
       createdAt: Date.now(),
-    }
+    };
 
-    setProcessing(true)
+    setProcessing(true);
 
     try {
       await OrdersActions.saveOrder(builtOrder).then(() => {
-        setDialogOpen(false)
-        setProcessing(false)
+        setDialogOpen(false);
+        setProcessing(false);
 
-      })
+      });
     } catch (err) {
-      toast.error('Algo Aconteceu')
-      setProcessing(false)
-      setDialogOpen(false)
+      toast.error('Algo Aconteceu');
+      setProcessing(false);
+      setDialogOpen(false);
 
     }
   }
 
   function ClearAll() {
-    setClient()
-    setProduct()
-    setObs("")
-    setErrorClient()
-    setErrorProd()
+    setClient();
+    setProduct();
+    setObs("");
+    setErrorClient();
+    setErrorProd();
   }
 
   return (
@@ -88,15 +90,18 @@ const EditOrder = ({ ...props }) => {
         <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
           <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title}</Typography>
           <Box sx={{ marginLeft: 'auto' }}>
-            <PrimaryBtn
-              text='Guardar'
-              icon={<Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />} />
-            <PrimaryBtn
-              text='Cancelar'
-              icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
-              light
-              onClick={() => Router.back()}
-            />
+            <ButtonGroup>
+
+              <PrimaryBtn
+                text='Guardar'
+                icon={<Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />} />
+              <PrimaryBtn
+                text='Cancelar'
+                icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
+                light
+                onClick={() => Router.back()}
+              />
+            </ButtonGroup>
           </Box>
         </Box>
         <Grid container sx={{ p: 2 }}>
@@ -118,8 +123,8 @@ const EditOrder = ({ ...props }) => {
                     options={products}
                     value={product}
                     onChange={(e) => {
-                      setErrorProd()
-                      setProduct(e.target.value)
+                      setErrorProd();
+                      setProduct(e.target.value);
                     }}
                   />
                 </Grid>
@@ -183,8 +188,8 @@ const EditOrder = ({ ...props }) => {
                 optionLabel="giveName"
                 value={client}
                 onChange={(e) => {
-                  setErrorClient()
-                  setClient(e.target.value)
+                  setErrorClient();
+                  setClient(e.target.value);
                 }}
               />
             </Grid>

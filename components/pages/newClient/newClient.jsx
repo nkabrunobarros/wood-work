@@ -1,17 +1,19 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable react/prop-types */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid';
+import * as ClientActions from '../../../pages/api/actions/client';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 import {
-  Box, InputLabel, Paper,
+  Box, Checkbox, FormControlLabel, InputLabel, Paper,
   Popover, TextareaAutosize,
   Tooltip,
   Typography
@@ -22,159 +24,302 @@ import Router from 'next/router';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import routes from '../../../navigation/routes';
-import * as ClientService from '../../../pages/api/actions/client';
 import styles from '../../../styles/NewOrder.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import MyInput from '../../inputs/myInput';
+import PhoneInput from '../../inputs/phoneInput/PhoneInput';
+import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
 import EmailValidation from '../../utils/EmailValidation';
-import hasData from '../../utils/hasData';
 
 const NewClient = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps } = props;
-  const [name, setName] = useState();
-  const [legalName, setLegalName] = useState();
-  const [email, setEmail] = useState();
-  const [contactName, setContactName] = useState();
-  const [telefone, setTelefone] = useState();
-  const [address, setAddress] = useState();
-  const [postalCode, setPostalCode] = useState();
-  const [nif, setNif] = useState();
-  const [obs, setObs] = useState('');
-  const [otherData, setOtherData] = useState('');
+  const { breadcrumbsPath, pageProps, countries,
+    // organizations,
+    profiles } = props;
+
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   //  Errors states
-  const [errorMessageName, setErrorMessageName] = useState('');
-  const [errorMessageLegalName, setErrorMessageLegalName] = useState('');
-  const [errorMessageEmail, setErrorMessageEmail] = useState('');
-  const [errorMessageContact, setErrorMessageContact] = useState('');
-  const [errorMessageTelefone, setErrorMessageTelefone] = useState('');
-  const [errorMessageAddress, setErrorMessageAddress] = useState('');
-  const [errorMessagePostalCode, setErrorMessagePostalCode] = useState('');
-  const [errorMessageNif, setErrorMessageNif] = useState('');
   const [postalCodeInfo, setPostalCodeInfo] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [newestUser, setNewestUser] = useState();
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [generatePassword, setGeneratePassword] = useState(true);
+
+  const [inputFields, setInputFields] = useState(
+    {
+      name: {
+        value: '',
+        error: '',
+        required: true
+      },
+      legalName: {
+        value: '',
+        error: '',
+        required: true
+      },
+      email: {
+        value: '',
+        error: '',
+        required: true
+      },
+      telephone: {
+        value: '',
+        error: '',
+        required: true
+      },
+      cellphone: {
+        value: '',
+        error: '',
+        required: true
+      },
+      contact: {
+        value: '',
+        error: '',
+        required: true
+      },
+      obs: {
+        value: '',
+        error: '',
+        required: false
+      },
+      address: {
+        value: '',
+        error: '',
+        required: true
+      },
+      postalCode: {
+        value: '',
+        error: '',
+        required: true
+      },
+      taxId: {
+        value: '',
+        error: '',
+        required: true
+      },
+      otherData: {
+        value: '',
+        error: '',
+        required: false
+      },
+      country: {
+        value: '',
+        error: '',
+        required: true
+      },
+      profileId: {
+        value: '',
+        error: '',
+        required: true
+      },
+      password: {
+        value: '',
+        error: '',
+        required: false
+      },
+      buysTo: {
+        value: '',
+        error: '',
+        required: false
+      },
+    }
+  );
+
+
+  function onInputChange(e) {
+    const newfields = { ...inputFields };
+
+    newfields[e.target.name].value = e.target.value;
+    newfields[e.target.name].error = '';
+    setInputFields(newfields);
+  }
+
 
   function handleSave() {
-    if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
+    //  Get inputs property's and mapping each field
+    const keys = Object.keys(inputFields);
+    let errors = false;
 
-    if (!hasData(legalName)) setErrorMessageLegalName('Campo Obrigatório');
+    keys.map(key => {
+      const newfields = { ...inputFields };
 
-    if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
-    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido *');
+      if (inputFields[key].required && !inputFields[key].value) {
+        //  Case input is empty
 
-    if (!hasData(contactName))
-      setErrorMessageContact('Campo Obrigatório');
+        console.log('error on ' + key);
+        errors = true;
+        newfields[key].error = 'Campo Obrigatório';
+        setInputFields(newfields);
+      } else if (key === 'email' && !EmailValidation(inputFields[key].value)) {
+        newfields[key].error = 'Email invalido';
+        errors = true;
+      } else if ((key === 'cellphone' || key === 'telephone') && inputFields[key].value < 100000000) {
+        newfields[key].error = 'Numero tem que ter 9 digitos';
+        errors = true;
+      } else if (key === 'postalCode' && !postalCodeInfo) {
+        newfields[key].error = 'Codigo Postal Invalido';
+        errors = true;
+      }
 
-    if (!hasData(telefone))
-      setErrorMessageTelefone('Campo Obrigatório');
-    else if (telefone < 100000000)
-      setErrorMessageTelefone('Number has to have 9 digits');
+      setInputFields(newfields);
+      console.log(newfields);
 
-    if (!hasData(address)) setErrorMessageAddress('Campo Obrigatório');
 
-    if (!hasData(postalCode)) setErrorMessagePostalCode('Campo Obrigatório');
-    else if (!hasData(postalCodeInfo)) setErrorMessagePostalCode('Codigo Postal Invalido');
+    });
 
-    if (!hasData(nif)) setErrorMessageNif('Campo Obrigatório');
-
-    if (
-      hasData(name) &&
-      hasData(legalName) &&
-      hasData(email) &&
-      EmailValidation(email) &&
-      hasData(contactName) &&
-      hasData(telefone) &&
-      hasData(address) &&
-      hasData(postalCodeInfo) &&
-      hasData(nif)
-    )
-      setDialogOpen(!dialogOpen);
+    if (!errors) setDialogOpen(!dialogOpen);
   }
 
   async function onConfirm() {
-    setDialogOpen(false)
-    setProcessing(true)
+    setDialogOpen(false);
+    setProcessing(true);
 
     const builtClient = {
-      giveName: name,
-      email,
-      legalName,
-      address,
+      email: inputFields.email.value,
+      idPerfil: inputFields.profileId.value,
+      giveName: inputFields.name.value,
+      legalName: inputFields.legalName.value,
+      address: inputFields.address.value,
+      contact: inputFields.contact.value,
+      postalCode: inputFields.postalCode.value,
+      password: inputFields.password.value || 'ChangeMe',
+      buysTo: '1123', //
+      // buysTo: inputFields.buysTo.value || null, //
+      otherData: inputFields.otherData.value,
+      obs: inputFields.obs.value,
+      taxId: Number(inputFields.taxId.value),
+      telephone: Number(inputFields.telephone.value),
+      // cellphone: inputFields.telephone.value,
+      paisCodigo: inputFields.country.value,
+      tos: false,
       status: true,
-      taxId: Number(nif),
-      telephone: Number(telefone),
-      buysTo: '1123',
-      otherData,
-      contact: contactName,
-      postalCode,
-      obs
-    }
+      ativo: true,
+    };
+
+    console.log(builtClient);
 
     try {
-      await ClientService.saveClient(builtClient).then((response) => {
-        if (!response.data.success) toast.error('Algo aconteceu')
+      await ClientActions.saveClient(builtClient).then((response) => {
+        console.log(response);
+
+        if (!response.data.success) toast.error('Algo aconteceu');
         else {
           // success here
-          setProcessing(false)
-          setNewestUser(response.data.payload)
-          setSuccessOpen(true)
-
+          setProcessing(false);
+          setNewestUser(response.data.payload);
+          setSuccessOpen(true);
         }
-      })
+      });
     } catch (error) {
       if (!error.response.data.success && error.response.data.message === 'registo-ja-existe') {
-        toast.warning('Um Cliente ja existe com este email');
-        setProcessing(false)
+        toast.warning('Um Cliente já existe com este email');
+        setProcessing(false);
       }
     }
 
-    setProcessing(false)
+    setProcessing(false);
   }
 
   const ClearFields = () => {
-    setSuccessOpen(false)
-    setName('');
-    setLegalName('');
-    setEmail('');
-    setContactName('');
-    setTelefone('');
-    setAddress('');
-    setPostalCode('');
-    setNif('');
-    setObs('');
-    setOtherData('');
-    setErrorMessageName();
-    setErrorMessageLegalName();
-    setErrorMessageEmail();
-    setErrorMessageContact();
-    setErrorMessageTelefone();
-    setErrorMessageAddress();
-    setErrorMessagePostalCode();
-    setErrorMessageNif();
+    setSuccessOpen(false);
 
+    setInputFields({
+      name: {
+        value: '',
+        error: '',
+        required: true
+      },
+      legalName: {
+        value: '',
+        error: '',
+        required: true
+      },
+      email: {
+        value: '',
+        error: '',
+        required: true
+      },
+      telephone: {
+        value: '',
+        error: '',
+        required: true
+      },
+      cellphone: {
+        value: '',
+        error: '',
+        required: true
+      },
+      contact: {
+        value: '',
+        error: '',
+        required: true
+      },
+      obs: {
+        value: '',
+        error: '',
+        required: false
+      },
+      address: {
+        value: '',
+        error: '',
+        required: true
+      },
+      postalCode: {
+        value: '',
+        error: '',
+        required: true
+      },
+      taxId: {
+        value: '',
+        error: '',
+        required: true
+      },
+      otherData: {
+        value: '',
+        error: '',
+        required: false
+      },
+      country: {
+        value: '',
+        error: '',
+        required: true
+      },
+      profileId: {
+        value: '',
+        error: '',
+        required: true
+      },
+      password: {
+        value: '',
+        error: '',
+        required: false
+      },
+      buysTo: {
+        value: '',
+        error: '',
+        required: false
+      },
+    });
   };
 
   useEffect(() => {
     async function PostalCodeInfo() {
       try {
-        const res = await axios.get(`https://geoapi.pt/cp/${postalCode}?json=1`)
+        const res = await axios.get(`https://geoapi.pt/cp/${inputFields.postalCode.value}?json=1`);
 
-        if (res.data) setPostalCodeInfo(res.data)
+        if (res.data) setPostalCodeInfo(res.data);
 
       } catch (error) {
-        setPostalCodeInfo()
+        setPostalCodeInfo();
       }
     }
 
     PostalCodeInfo();
 
-  }, [postalCode])
+  }, [inputFields.postalCode.value]);
 
   const Item = styled(Paper)(() => ({
     padding: '.5rem',
@@ -184,7 +329,6 @@ const NewClient = ({ ...props }) => {
     <Grid component='main'>
       <CssBaseline />
       <Notification />
-
       <Popover
         id={anchorEl ? 'simple-popover' : undefined}
         open={!!anchorEl}
@@ -291,28 +435,25 @@ const NewClient = ({ ...props }) => {
               <Grid container item>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <MyInput
-                    required
+                    required={inputFields.name.required}
+
                     label={'Nome'}
-                    error={errorMessageName}
+                    name={'name'}
+                    error={inputFields.name.error}
+                    value={inputFields.name.value}
+                    onChange={(e) => onInputChange(e)}
                     placeholder='Escrever nome'
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      setErrorMessageName('');
-                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <MyInput
-                    required
+                    required={inputFields.legalName.required}
                     label={'Nome Legal'}
-                    error={errorMessageLegalName}
                     placeholder='Escrever Nome Legal'
-                    value={legalName}
-                    onChange={(e) => {
-                      setLegalName(e.target.value);
-                      setErrorMessageLegalName('');
-                    }}
+                    name={'legalName'}
+                    error={inputFields.legalName.error}
+                    value={inputFields.legalName.value}
+                    onChange={(e) => onInputChange(e)}
                   />
 
                 </Grid>
@@ -320,30 +461,56 @@ const NewClient = ({ ...props }) => {
               <Grid container item>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <MyInput
-                    required
+                    required={inputFields.email.required}
                     label={'Email'}
-                    error={errorMessageEmail}
                     placeholder='Escrever email'
-                    value={email}
                     type='email'
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setErrorMessageEmail('');
-                    }}
+                    name={'email'}
+                    error={inputFields.email.error}
+                    value={inputFields.email.value}
+                    onChange={(e) => onInputChange(e)}
                   />
 
                 </Grid>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <Select
+                    error={inputFields.profileId.error}
+                    label={'Perfil'}
+                    required={inputFields.profileId.required}
+                    fullWidth
+                    options={profiles}
+                    optionValue={'id'}
+                    optionLabel={"descricao"}
+                    name={'profileId'}
+                    value={inputFields.profileId.value}
+                    onChange={(e) => onInputChange(e)}
+                  />
+
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <Select
+                    error={inputFields.country.error}
+                    label={'País'}
+                    required={inputFields.country.required}
+                    fullWidth
+                    name='country'
+                    options={countries}
+                    optionValue={'codigo'}
+                    optionLabel="descricao"
+                    value={inputFields.country.value}
+                    onChange={(e) => onInputChange(e)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <MyInput
-                    required
+                    required={inputFields.contact.required}
+
                     label={'Pessoa de Contacto'}
-                    error={errorMessageContact}
                     placeholder='Escrever pessoa de contacto'
-                    value={contactName}
-                    onChange={(e) => {
-                      setContactName(e.target.value);
-                      setErrorMessageContact('');
-                    }}
+                    name={'contact'}
+                    error={inputFields.contact.error}
+                    value={inputFields.contact.value}
+                    onChange={(e) => onInputChange(e)}
                   />
 
                 </Grid>
@@ -351,27 +518,68 @@ const NewClient = ({ ...props }) => {
               <Grid container item>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <MyInput
-                    required
+                    required={inputFields.telephone.required}
                     label={'Telefone'}
-                    error={errorMessageTelefone}
                     placeholder='Escrever numero de telefone'
-                    value={telefone}
+                    name={'telephone'}
+                    error={inputFields.telephone.error}
+                    value={inputFields.telephone.value}
+                    onChange={(e) => onInputChange(e)}
                     type='number'
-                    onChange={(e) => {
-                      setTelefone(e.target.value);
-                      setErrorMessageTelefone('');
-                    }}
+
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  {/* <MyInput
+                    required={inputFields.cellphone.required}
+                    label={'Telemovel'}
+                    placeholder='Escrever numero de telefone'
+                    name={'cellphone'}
+                    error={inputFields.cellphone.error}
+                    value={inputFields.cellphone.value}
+                    onChange={(e) => onInputChange(e)}
+                    type='number'
+
+                  /> */}
+                  <PhoneInput
+                    label='Telemovel'
+                    required={inputFields.cellphone.required}
+                    error={inputFields.cellphone.error}
+                    options={countries}
+                    name='cellphone'
+                    value={inputFields.cellphone.value}
+                    onChange={(e) => onInputChange(e)}
                   />
                 </Grid>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <InputLabel htmlFor='email'>Observações</InputLabel>
 
                   <TextareaAutosize
+                    required={inputFields.obs.required}
                     placeholder='Escrever observações'
                     className={styles.textarea}
-                    value={obs}
-                    onChange={(e) => setObs(e.target.value)}
+                    name={'obs'}
+                    error={inputFields.obs.error}
+                    value={inputFields.obs.value}
+                    onChange={(e) => onInputChange(e)}
                   />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
+                    :
+                    <MyInput
+                      label={
+                        <Tooltip title='Trocar para senha autogerada'>
+                          <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
+                        </Tooltip>
+                      }
+                      required={inputFields.obs.required}
+                      error={inputFields.obs.error}
+                      value={inputFields.obs.value}
+                      placeholder='Escrever Senha'
+                      onChange={(e) => onInputChange(e)}
+                    />
+                  }
                 </Grid>
 
               </Grid>
@@ -390,28 +598,26 @@ const NewClient = ({ ...props }) => {
               </Grid>
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <MyInput
-                  required
+                  required={inputFields.telephone.required}
+
                   label={'Morada Fiscal'}
-                  error={errorMessageAddress}
                   placeholder='Escrever Morada Fiscal'
-                  value={address}
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                    setErrorMessageAddress('');
-                  }}
+                  name={'address'}
+                  error={inputFields.address.error}
+                  value={inputFields.address.value}
+                  onChange={(e) => onInputChange(e)}
                 />
               </Grid>
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <MyInput
-                  required
+                  required={inputFields.telephone.required}
+
                   label={'Codigo Postal'}
-                  error={errorMessagePostalCode}
                   placeholder='Escrever Codigo Postal'
-                  value={postalCode}
-                  onChange={(e) => {
-                    setPostalCode(e.target.value);
-                    setErrorMessagePostalCode('');
-                  }}
+                  name={'postalCode'}
+                  value={inputFields.postalCode.value}
+                  error={inputFields.postalCode.error}
+                  onChange={(e) => onInputChange(e)}
                   adornmentIcon={!!postalCodeInfo &&
                     <Tooltip title='Detalhes Codigo Postal' >
                       <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
@@ -421,26 +627,25 @@ const NewClient = ({ ...props }) => {
               </Grid>
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <MyInput
-                  required
-                  label={'Número de Indentificação Fiscal (Nif)'}
-                  error={errorMessageNif}
-                  placeholder='Escrever Número de Indentificação Fiscal'
-                  value={nif}
-                  onChange={(e) => {
-                    setNif(e.target.value);
-                    setErrorMessageNif('');
-                  }}
+                  required={inputFields.telephone.required}
+                  type='number'
+                  label={'Número de Identificação Fiscal (Nif)'}
+                  placeholder='Escrever Número de Identificação Fiscal'
+                  name={'taxId'}
+                  value={inputFields.taxId.value}
+                  error={inputFields.taxId.error}
+                  onChange={(e) => onInputChange(e)}
                 />
               </Grid>
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <MyInput
-                  required
+                  required={inputFields.telephone.required}
                   label={'Outros Dados'}
                   placeholder='Escrever outros dados'
-                  value={otherData}
-                  onChange={(e) => {
-                    setOtherData(e.target.value);
-                  }}
+                  name={'otherData'}
+                  value={inputFields.otherData.value}
+                  error={inputFields.otherData.error}
+                  onChange={(e) => onInputChange(e)}
                 />
               </Grid>
             </Grid>
@@ -451,10 +656,5 @@ const NewClient = ({ ...props }) => {
   );
 };
 
-NewClient.propTypes = {
-  breadcrumbsPath: PropTypes.array.isRequired,
-  pageProps: PropTypes.any,
-
-};
 
 export default NewClient;
