@@ -27,7 +27,10 @@ const Clients = ({ ...pageProps }) => {
     const getData = async () => {
       await ClientsActions
         .clients()
-        .then((res) => setClients(res.data.payload.data));
+        .then((res) => {
+          console.log(res);
+          setClients(res.data);
+        });
 
       await ProfileActions
         .perfis()
@@ -40,13 +43,13 @@ const Clients = ({ ...pageProps }) => {
   if (loaded) {
     const headCells = [
       {
-        id: 'giveName',
+        id: 'givenName.value',
         numeric: false,
         disablePadding: false,
         label: 'Nome',
       },
       {
-        id: 'email',
+        id: 'email.value',
         numeric: false,
         disablePadding: true,
         label: 'Email',
@@ -84,7 +87,7 @@ const Clients = ({ ...pageProps }) => {
     };
 
 
-    return <ClientsScreen {...props} />
+    return <ClientsScreen {...props} />;
   } else return <Loader center={true} />;
 
 };

@@ -83,7 +83,7 @@ const AdvancedTable = ({
 
       const allData = {
         categories: categories.data.payload.data,
-        clients: clients.data.payload.data,
+        clients: clients.data,
       };
 
       setData(allData);

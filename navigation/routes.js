@@ -8,10 +8,10 @@ const routes = {
       editClient: '/internal/edit-client/',
       newClient: '/internal/new-client',
 
-      users: '/internal/users',
-      user: '/internal/user/',
-      newUser: '/internal/new-user',
-      editUser: '/internal/edit-user/',
+      workers: '/internal/workers',
+      worker: '/internal/worker/',
+      newWorker: '/internal/new-worker',
+      editWorker: '/internal/edit-worker/',
 
       stocks: '/internal/stocks',
       stockId: '/internal/stock/',

@@ -63,7 +63,7 @@ function getLinks() {
     {
       title: 'Workers',
       id: 'workers',
-      url: routes.private.internal.users,
+      url: routes.private.internal.workers,
       icon: <Users strokeWidth='1' size={20} />,
       allowed: 'utilizadores',
     },

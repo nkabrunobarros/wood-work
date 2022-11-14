@@ -3,35 +3,24 @@ import React, { useEffect, useState } from 'react';
 
 //  Custom Components
 import Loader from '../../components/loader/loader';
-import UsersScreen from '../../components/pages/users/users';
+import WorkersScreen from '../../components/pages/workers/workers';
 
 //  Navigation
 import routes from '../../navigation/routes';
 
 //  Proptypes
 
-//  Utils
-
 //  Services
-import * as ProfileActions from '../../pages/api/actions/perfil';
-import * as UserActions from '../../pages/api/actions/user';
-import * as WorkerActions from '../../pages/api/actions/worker';
+import * as ProfileActions from '../api/actions/perfil';
+import * as WorkerActions from '../api/actions/worker';
 
-const Users = () => {
+const Workers = () => {
   const [loaded, setLoaded] = useState(false);
-  const [users, setUsers] = useState();
   const [workers, setWorkers] = useState();
   const [profiles, setProfiles] = useState();
-  const items = users;
-
-
 
   useEffect(() => {
     const getData = async () => {
-      await UserActions
-        .users()
-        .then((res) => setUsers(res.data.payload.data));
-
       await WorkerActions
         .workers()
         .then((res) => setWorkers(res.data));
@@ -112,7 +101,6 @@ const Users = () => {
     const newRoute = routes.private.internal.newUser;
 
     const props = {
-      items,
       breadcrumbsPath,
       profiles,
       editRoute,
@@ -124,10 +112,10 @@ const Users = () => {
     };
 
 
-    return <UsersScreen {...props} />;
+    return <WorkersScreen {...props} />;
 
   } else return <Loader center={true} />;
 };
 
 
-export default Users;
+export default Workers;

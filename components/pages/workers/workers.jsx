@@ -19,9 +19,8 @@ import PropTypes from 'prop-types';
 import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 
-const Users = ({ ...props }) => {
+const Workers = ({ ...props }) => {
   const {
-    items,
     breadcrumbsPath,
     profiles,
     headCells,
@@ -71,9 +70,9 @@ const Users = ({ ...props }) => {
 
               <Select
                 label={'Nome'}
-                options={items.filter((item) => item.ativo && item)}
-                optionValue={'nome'}
-                optionLabel={'nome'}
+                options={workers.filter((item) => item.active && item)}
+                optionValue={'givenName'}
+                optionLabel={'givenName'}
                 onChange={(event) => setNome(event.target.value)}
               />
 
@@ -144,26 +143,26 @@ const Users = ({ ...props }) => {
             </div>
           </div>
         </div>
-        <AdvancedTable
+        {/* <AdvancedTable
           rows={items.filter((item) => item.ativo && item)}
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
-        />
+        /> */}
         <AdvancedTable
           rows={workers.filter((item) => item.active?.value && item)}
           headCells={headCellsWorkers}
-          // clickRoute={detailRoute}
+          clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
-        />
+        /> 
       </Content>
     </Grid>
   );
 };
 
-Users.propTypes = {
+Workers.propTypes = {
   breadcrumbsPath: PropTypes.array,
   items: PropTypes.array,
   workers: PropTypes.array,
@@ -175,4 +174,4 @@ Users.propTypes = {
   newRoute: PropTypes.string,
 };
 
-export default Users;
+export default Workers;

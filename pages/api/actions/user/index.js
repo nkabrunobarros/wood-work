@@ -6,7 +6,7 @@ export async function users(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
-      headers: { Authorization: token && `Bearer ${token}` },
+    headers: { Authorization: token && `Bearer ${token}` },
   };
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
@@ -15,14 +15,14 @@ export async function users(data) {
       data
     },
     config
-  )
+  );
 }
 
 export async function userById(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
-      headers: { Authorization: token && `Bearer ${token}` },
+    headers: { Authorization: token && `Bearer ${token}` },
   };
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
@@ -31,14 +31,14 @@ export async function userById(data) {
       data
     },
     config
-  )
+  );
 }
 
 export async function saveUser(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
-      headers: { Authorization: token && `Bearer ${token}` },
+    headers: { Authorization: token && `Bearer ${token}` },
   };
 
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
@@ -47,5 +47,5 @@ export async function saveUser(data) {
       data: { input: data }
     },
     config
-  )
+  );
 }

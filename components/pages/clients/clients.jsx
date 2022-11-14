@@ -40,8 +40,8 @@ const Clients = ({ ...props }) => {
       legalName: nome,
       email,
       perfilId: profilesFilter
-    })
-  }, [nome, email, profiles, profilesFilter])
+    });
+  }, [nome, email, profiles, profilesFilter]);
 
   const ClearFilters = () => {
     setNome('');
@@ -49,7 +49,7 @@ const Clients = ({ ...props }) => {
     setProfilesFilter('');
   };
 
-  console.log(nome)
+  console.log(items);
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>
@@ -128,7 +128,8 @@ const Clients = ({ ...props }) => {
         </div>
 
         <AdvancedTable
-          rows={items.filter((item) => item.status && item)}
+          rows={items}
+          // rows={items.filter((item) => item.active?.value === 'True' && item)}
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}

@@ -12,7 +12,7 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, Checkbox, FormControlLabel, Tooltip
+  Box, Button, Checkbox, CircularProgress, FormControlLabel, Tooltip
 } from '@mui/material';
 import { Save, X } from 'lucide-react';
 import Router from 'next/router';
@@ -29,7 +29,7 @@ import Notification from '../../dialogs/Notification';
 import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
 
-const NewUser = ({ ...props }) => {
+const newWorker = ({ ...props }) => {
   const { breadcrumbsPath, countries, profiles } = props;
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -37,7 +37,7 @@ const NewUser = ({ ...props }) => {
   const [cleaningInputs, setCleaningInputs] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
-  const [newestUser, setNewestUser] = useState();
+  const [newestWorker, setNewestWorker] = useState();
 
   const shifts = [
     {
@@ -198,7 +198,7 @@ const NewUser = ({ ...props }) => {
   ]
   );
 
-  async function CreateUser() {
+  async function CreateWorker() {
     setDialogOpen(false);
     //  open success modal && success toast
     setProcessing(true);
@@ -208,7 +208,7 @@ const NewUser = ({ ...props }) => {
       type: 'Worker',
       active: {
         type : 'Property',
-        value: 'True'
+        value: 'True'.catch((res) => console.log(res));
       },
       "@context": [
         "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
@@ -234,7 +234,9 @@ const NewUser = ({ ...props }) => {
     
     try {
       await WorkerActions.createWorker(builtWorker)
-      .then(() => setSuccessOpen(true))
+      .then(() => {
+        setSuccessOpen(true);
+      })
       .catch((err) => {
         if (err.response.status === 409) toast.warning('Este Worker já existe');
         else toast.error('Algo aconteceu. Por favor tente mais tarde.');
@@ -242,11 +244,9 @@ const NewUser = ({ ...props }) => {
     }
      catch (e) {
        console.log(e);
-
      }
 
     setProcessing(false);
-
   }
 
   const ClearFields = () => {
@@ -311,9 +311,6 @@ const NewUser = ({ ...props }) => {
 
   }
 
-  
-
-
   return (
     <Grid component='main'>
       <CssBaseline />
@@ -322,7 +319,7 @@ const NewUser = ({ ...props }) => {
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
-        onConfirm={() => CreateUser()}
+        onConfirm={() => CreateWorker()}
         message='Está prestes a criar um novo worker, tem certeza que quer continuar?'
         icon='AlertOctagon'
       />
@@ -331,7 +328,7 @@ const NewUser = ({ ...props }) => {
       <ConfirmDialog
         open={successOpen}
         handleClose={() => ClearFields()}
-        onConfirm={() => Router.push(`${routes.private.internal.user}${newestUser.id}`)}
+        onConfirm={() => Router.push(`${routes.private.internal.worker}${newestWorker.id}`)}
         message={`Worker criado com sucesso, que deseja fazer a agora?`}
         icon='Verified'
         iconType='success'
@@ -433,8 +430,12 @@ const NewUser = ({ ...props }) => {
                   
                 />
             </Grid>;
-
             })}
+            <Grid container md={12} >
+              <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
+                {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
+              </Button>
+            </Grid>
           </Grid>
         </Box>
         {/* <div className='flex'>
@@ -586,4 +587,4 @@ const NewUser = ({ ...props }) => {
 };
 
 
-export default NewUser;
+export default newWorker;

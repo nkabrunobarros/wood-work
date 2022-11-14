@@ -5,14 +5,14 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 
 //  Page Component
-import NewUserScreen from '../../components/pages/newUser/newUser';
+import NewWorkerScreen from '../../components/pages/newWorker/newWorker';
 
 //  Navigation
 import routes from '../../navigation/routes';
 
 //  Actions
-import * as CountryActions from '../../pages/api/actions/country';
-import * as ProfileActions from '../../pages/api/actions/perfil';
+import * as CountryActions from '../api/actions/country';
+import * as ProfileActions from '../api/actions/perfil';
 
 const NewOrder = () => {
   const [loaded, setLoaded] = useState(false);
@@ -39,11 +39,11 @@ const NewOrder = () => {
     const breadcrumbsPath = [
       {
         title: 'Workers',
-        href: `${routes.private.internal.users}`,
+        href: `${routes.private.internal.workers}`,
       },
       {
         title: 'Novo Worker',
-        href: `${routes.private.internal.newUser}`,
+        href: `${routes.private.internal.newWorker}`,
       },
     ];
 
@@ -53,7 +53,7 @@ const NewOrder = () => {
       profiles,
     };
 
-    return loaded && <NewUserScreen {...props} />;
+    return loaded && <NewWorkerScreen {...props} />;
   } else return <Loader center={true} />;
 };
 

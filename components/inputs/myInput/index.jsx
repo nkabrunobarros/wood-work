@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // Node modules
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Tooltip } from '@mui/material';
+import { Box, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Tooltip } from '@mui/material';
 import React from 'react';
 
 const MyInput = ({
@@ -26,7 +26,7 @@ const MyInput = ({
 }) => {
 
 
-  return (<>
+  return (<Box sx={{ width: '100%'}}>
     {variant !== 'standard' && (
       <InputLabel htmlFor={label} >
         {label}
@@ -51,7 +51,6 @@ const MyInput = ({
         fullWidth={fullWidth}
         sx={{
            width: width || halfWidth && '50%',
-           minHeight: type === 'area' && '100px',
         }}
         rows={4}
         style={style}
@@ -70,7 +69,7 @@ const MyInput = ({
         }
       />
     </FormControl>
-  </>);
+  </Box>);
 
 };
 

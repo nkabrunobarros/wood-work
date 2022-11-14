@@ -47,7 +47,7 @@ const PhoneInput = ({
   };
 
   return (
-    <>
+    <Box sx={{ width: '100%'}}>
       {variant !== 'standard' && (
         <InputLabel htmlFor={label}>
           {label}
@@ -110,7 +110,7 @@ const PhoneInput = ({
 
       </FormControl>
 
-    </>
+    </Box>
   );
 };
 

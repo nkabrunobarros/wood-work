@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 //  Nodes
@@ -13,18 +14,15 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, Checkbox, FormControlLabel, InputLabel, Paper,
-  Popover, TextareaAutosize,
-  Tooltip,
-  Typography
+  Box, Checkbox, Divider, FormControlLabel, Paper,
+  Popover, Tooltip, Typography
 } from '@mui/material';
 import axios from 'axios';
-import { Edit2, Info, Save, User, X } from 'lucide-react';
+import { Info, Save, X } from 'lucide-react';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import routes from '../../../navigation/routes';
-import styles from '../../../styles/NewOrder.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import MyInput from '../../inputs/myInput';
@@ -48,282 +46,203 @@ const NewClient = ({ ...props }) => {
   const [processing, setProcessing] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
 
+
   const [inputFields, setInputFields] = useState(
-    {
-      name: {
+    [
+      {
+        id: 'legalName',
+        label: 'legal Name',
         value: '',
         error: '',
         required: true
       },
-      legalName: {
+      {
+        id: 'givenName',
+        label: 'given Name',
         value: '',
         error: '',
         required: true
       },
-      email: {
+      {
+        id: 'email',
+        type: 'email',
+        label: 'Email',
         value: '',
         error: '',
         required: true
       },
-      telephone: {
+      {
+        id: 'cellphone',
+        label: 'Telemovel',
+        value: '',
+        error: '',
+        type: 'phone',
+        required: true
+      },
+      {
+        id: 'telephone',
+        label: 'Telefone',
+        value: '',
+        error: '',
+        type: 'phone',
+        required: true
+      },
+      {
+        id: 'clientTypeInstitution',
+        label: 'Tipo Instituição',
         value: '',
         error: '',
         required: true
       },
-      cellphone: {
+     
+      {
+        id: 'postalCode',
+        label: 'Codigo Postal',
         value: '',
         error: '',
         required: true
       },
-      contact: {
+      {
+        id: 'taxId',
+        label: 'taxId',
         value: '',
         error: '',
         required: true
       },
-      obs: {
-        value: '',
-        error: '',
-        required: false
-      },
-      address: {
-        value: '',
+      {
+        id: 'hasOrganization',
+        label: 'Organização',
+        value: 'urn:ngsi-ld:Organization:Mofreita',
         error: '',
         required: true
       },
-      postalCode: {
+      {
+        id: 'address',
+        label: 'Morada',
         value: '',
         error: '',
+        type: 'area',
         required: true
       },
-      taxId: {
+      {
+        id: 'password',
+        label: 'Senha',
         value: '',
         error: '',
+        type:'password',
         required: true
       },
-      otherData: {
-        value: '',
-        error: '',
-        required: false
-      },
-      country: {
-        value: '',
-        error: '',
-        required: true
-      },
-      profileId: {
-        value: '',
-        error: '',
-        required: true
-      },
-      password: {
-        value: '',
-        error: '',
-        required: false
-      },
-      buysTo: {
-        value: '',
-        error: '',
-        required: false
-      },
-    }
+    ]
   );
 
+  function ValidateFields () {
+    let hasErrors = false;
 
-  function onInputChange(e) {
-    const newfields = { ...inputFields };
+    inputFields.map((input, i) => {
+      const data = [...inputFields];
 
-    newfields[e.target.name].value = e.target.value;
-    newfields[e.target.name].error = '';
-    setInputFields(newfields);
-  }
+      if (input.type === 'password') {
+          if ( !generatePassword && input.value === '' ) {
+            data[i].error = 'Campo Óbrigatorio';
+            hasErrors = true;
+          }
+      } else if (input.required && input.value === '') {
+        data[i].error = 'Campo Óbrigatorio';
+        hasErrors = true;
 
-
-  function handleSave() {
-    //  Get inputs property's and mapping each field
-    const keys = Object.keys(inputFields);
-    let errors = false;
-
-    keys.map(key => {
-      const newfields = { ...inputFields };
-
-      if (inputFields[key].required && !inputFields[key].value) {
-        //  Case input is empty
-
-        console.log('error on ' + key);
-        errors = true;
-        newfields[key].error = 'Campo Obrigatório';
-        setInputFields(newfields);
-      } else if (key === 'email' && !EmailValidation(inputFields[key].value)) {
-        newfields[key].error = 'Email invalido';
-        errors = true;
-      } else if ((key === 'cellphone' || key === 'telephone') && inputFields[key].value < 100000000) {
-        newfields[key].error = 'Numero tem que ter 9 digitos';
-        errors = true;
-      } else if (key === 'postalCode' && !postalCodeInfo) {
-        newfields[key].error = 'Codigo Postal Invalido';
-        errors = true;
+      // Case it reaches here, validates specifiq fields and value structure
+      } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
+        data[i].error = 'Email mal estruturado';
+        hasErrors = true;
+      } else if (!postalCodeInfo && input.id === 'postalCode') {
+        data[i].error = 'Codigo Postal Invalido';
+        hasErrors = true;
+      } else if (input.value.length !== 9 && input.type === 'phone' && input.required) {
+        data[i].error = 'Numero mal estruturado';
+        hasErrors = true;
       }
 
-      setInputFields(newfields);
-      console.log(newfields);
-
+      setInputFields(data);
 
     });
 
-    if (!errors) setDialogOpen(!dialogOpen);
-  }
+    
+    if (hasErrors) {
+      toast.error('Prencha todos os campos.');
 
-  async function onConfirm() {
-    setDialogOpen(false);
-    setProcessing(true);
-
-    const builtClient = {
-      email: inputFields.email.value,
-      idPerfil: inputFields.profileId.value,
-      giveName: inputFields.name.value,
-      legalName: inputFields.legalName.value,
-      address: inputFields.address.value,
-      contact: inputFields.contact.value,
-      postalCode: inputFields.postalCode.value,
-      password: inputFields.password.value || 'ChangeMe',
-      buysTo: '1123', //
-      // buysTo: inputFields.buysTo.value || null, //
-      otherData: inputFields.otherData.value,
-      obs: inputFields.obs.value,
-      taxId: Number(inputFields.taxId.value),
-      telephone: Number(inputFields.telephone.value),
-      // cellphone: inputFields.telephone.value,
-      paisCodigo: inputFields.country.value,
-      tos: false,
-      status: true,
-      ativo: true,
-    };
-
-    console.log(builtClient);
-
-    try {
-      await ClientActions.saveClient(builtClient).then((response) => {
-        console.log(response);
-
-        if (!response.data.success) toast.error('Algo aconteceu');
-        else {
-          // success here
-          setProcessing(false);
-          setNewestUser(response.data.payload);
-          setSuccessOpen(true);
-        }
-      });
-    } catch (error) {
-      if (!error.response.data.success && error.response.data.message === 'registo-ja-existe') {
-        toast.warning('Um Cliente já existe com este email');
-        setProcessing(false);
-      }
+      return true;
     }
 
-    setProcessing(false);
+    setDialogOpen(true);
+
+  }
+
+  async function handleSave() {
+    const builtClient = {
+      id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'legalName').value}`,
+      type: 'Owner',
+      "@context": [
+        "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+      ]
+    };
+
+    try {
+      await ClientActions.saveClient(builtClient)
+      .then(() => setSuccessOpen(true))
+      .catch((err) => {
+        if (err.response.status === 409) toast.warning('Este Cliente já existe');
+        else toast.error('Algo aconteceu. Por favor tente mais tarde.');
+      });    
+    } 
+      catch (e) {console.log(e);}
+
+      setDialogOpen(false);
   }
 
   const ClearFields = () => {
-    setSuccessOpen(false);
+    
+    const data = [...inputFields];
 
-    setInputFields({
-      name: {
-        value: '',
-        error: '',
-        required: true
-      },
-      legalName: {
-        value: '',
-        error: '',
-        required: true
-      },
-      email: {
-        value: '',
-        error: '',
-        required: true
-      },
-      telephone: {
-        value: '',
-        error: '',
-        required: true
-      },
-      cellphone: {
-        value: '',
-        error: '',
-        required: true
-      },
-      contact: {
-        value: '',
-        error: '',
-        required: true
-      },
-      obs: {
-        value: '',
-        error: '',
-        required: false
-      },
-      address: {
-        value: '',
-        error: '',
-        required: true
-      },
-      postalCode: {
-        value: '',
-        error: '',
-        required: true
-      },
-      taxId: {
-        value: '',
-        error: '',
-        required: true
-      },
-      otherData: {
-        value: '',
-        error: '',
-        required: false
-      },
-      country: {
-        value: '',
-        error: '',
-        required: true
-      },
-      profileId: {
-        value: '',
-        error: '',
-        required: true
-      },
-      password: {
-        value: '',
-        error: '',
-        required: false
-      },
-      buysTo: {
-        value: '',
-        error: '',
-        required: false
-      },
-    });
+    data.map((ele) => ele.value = '');
+    setInputFields(data);
+
+    setTimeout(() => {
+      setSuccessOpen(false);
+    }, 500);
   };
 
   useEffect(() => {
     async function PostalCodeInfo() {
       try {
-        const res = await axios.get(`https://geoapi.pt/cp/${inputFields.postalCode.value}?json=1`);
+        const res = await axios.get(`https://geoapi.pt/cp/${inputFields?.find(ele => ele.id === 'postalCode').value}?json=1`);
 
         if (res.data) setPostalCodeInfo(res.data);
 
       } catch (error) {
         setPostalCodeInfo();
       }
+
     }
 
     PostalCodeInfo();
 
-  }, [inputFields.postalCode.value]);
+  }, [inputFields.find(ele => ele.id === 'postalCode').value]);
+
 
   const Item = styled(Paper)(() => ({
     padding: '.5rem',
   }));
+
+
+  const handleFormChange = (i, e) => {
+    const data = [...inputFields];
+
+    data[i].value = e.target.value;
+    data[i].error = '';
+    setInputFields(data);
+
+  };
 
   return (
     <Grid component='main'>
@@ -340,31 +259,31 @@ const NewClient = ({ ...props }) => {
         }}
       >
         <Box sx={{ flexGrow: 1, p: 1 }}>
-          <Grid container spacing={1}>
-            <Grid container item spacing={3}>
-              <Grid item xs={6}>
+          <Grid container >
+            <Grid container item >
+              <Grid item xs={6} sx={{ padding: '.5rem'}}>
                 <Item>Distrito</Item>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} sx={{ padding: '.5rem'}}>
                 <Item>{postalCodeInfo?.Distrito}</Item>
               </Grid>
             </Grid>
-            <Grid container item spacing={3}>
-              <Grid item xs={6}>
+            <Grid container item >
+              <Grid item xs={6} sx={{ padding: '.5rem'}}>
                 <Item>Concelho</Item>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} sx={{ padding: '.5rem'}}>
                 <Item>{postalCodeInfo?.Concelho}</Item>
               </Grid>
             </Grid>
-            <Grid container item spacing={3}>
-              <Grid item xs={6}>
+            <Grid container item >
+              <Grid item xs={6} sx={{ padding: '.5rem'}}>
                 <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} sx={{ maxHeight: '300px', overflow: 'scroll', padding: '.5rem'}}>
                 <Item> {typeof postalCodeInfo?.Localidade === 'object' ?
                   <>
-                    {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
+                    {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<Divider /></a>)}
                   </> : postalCodeInfo?.Localidade}</Item>
               </Grid>
             </Grid>
@@ -375,7 +294,7 @@ const NewClient = ({ ...props }) => {
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
-        onConfirm={() => onConfirm()}
+        onConfirm={() => handleSave()}
         message='Está prestes a criar um novo cliente, tem certeza que quer continuar?'
         icon='AlertOctagon'
       />
@@ -405,7 +324,7 @@ const NewClient = ({ ...props }) => {
                   size={pageProps.globalVars.iconSize}
                 />
               }
-              onClick={handleSave}
+              onClick={ValidateFields}
             />
             <PrimaryBtn
               text='Cancelar'
@@ -422,150 +341,41 @@ const NewClient = ({ ...props }) => {
         </Box>
 
         <Grid container sx={{ padding: '24px' }}>
-          <Grid item xs={12} md={8}>
-            <Grid container >
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <Typography id='align' item className='lightTextSm'><User
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                  />  Dados Gerais</Typography>
-                </Grid>
-              </Grid>
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required={inputFields.name.required}
-
-                    label={'Nome'}
-                    name={'name'}
-                    error={inputFields.name.error}
-                    value={inputFields.name.value}
-                    onChange={(e) => onInputChange(e)}
-                    placeholder='Escrever nome'
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required={inputFields.legalName.required}
-                    label={'Nome Legal'}
-                    placeholder='Escrever Nome Legal'
-                    name={'legalName'}
-                    error={inputFields.legalName.error}
-                    value={inputFields.legalName.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
-
-                </Grid>
-              </Grid>
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required={inputFields.email.required}
-                    label={'Email'}
-                    placeholder='Escrever email'
-                    type='email'
-                    name={'email'}
-                    error={inputFields.email.error}
-                    value={inputFields.email.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
-
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+        {inputFields.map((field, index) => {
+              if (field.options) 
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
                   <Select
-                    error={inputFields.profileId.error}
-                    label={'Perfil'}
-                    required={inputFields.profileId.required}
-                    fullWidth
-                    options={profiles}
-                    optionValue={'id'}
-                    optionLabel={"descricao"}
-                    name={'profileId'}
-                    value={inputFields.profileId.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
+                    name={field.id}
+                    label={field.label}
+                    required={field.required}
+                    value={field.value}
+                    error={field.error}
+                    type={field.type && field.type}
+                    onChange={(e) => handleFormChange(index, e)}
+                    options={field.options}
+                    optionValue={field.optValue}
+                    optionLabel={field.optLabel}
+                    placeholder={`Escrever ${field.label}`}
+                  /> 
+                </Grid>;
 
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <Select
-                    error={inputFields.country.error}
-                    label={'País'}
-                    required={inputFields.country.required}
-                    fullWidth
-                    name='country'
-                    options={countries}
-                    optionValue={'codigo'}
-                    optionLabel="descricao"
-                    value={inputFields.country.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required={inputFields.contact.required}
+              if (field.type === 'phone' && field.required) 
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+                <PhoneInput
+                  name={field.id}
+                  label={field.label}
+                  options={countries}
+                  required={field.required}
+                  value={field.value}
+                  placeholder={`Escrever ${field.label}`}
+                  error={field.error}
+                  onChange={(e) => handleFormChange(index, e)}
+                />
+                </Grid>;
 
-                    label={'Pessoa de Contacto'}
-                    placeholder='Escrever pessoa de contacto'
-                    name={'contact'}
-                    error={inputFields.contact.error}
-                    value={inputFields.contact.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
-
-                </Grid>
-              </Grid>
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required={inputFields.telephone.required}
-                    label={'Telefone'}
-                    placeholder='Escrever numero de telefone'
-                    name={'telephone'}
-                    error={inputFields.telephone.error}
-                    value={inputFields.telephone.value}
-                    onChange={(e) => onInputChange(e)}
-                    type='number'
-
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  {/* <MyInput
-                    required={inputFields.cellphone.required}
-                    label={'Telemovel'}
-                    placeholder='Escrever numero de telefone'
-                    name={'cellphone'}
-                    error={inputFields.cellphone.error}
-                    value={inputFields.cellphone.value}
-                    onChange={(e) => onInputChange(e)}
-                    type='number'
-
-                  /> */}
-                  <PhoneInput
-                    label='Telemovel'
-                    required={inputFields.cellphone.required}
-                    error={inputFields.cellphone.error}
-                    options={countries}
-                    name='cellphone'
-                    value={inputFields.cellphone.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <InputLabel htmlFor='email'>Observações</InputLabel>
-
-                  <TextareaAutosize
-                    required={inputFields.obs.required}
-                    placeholder='Escrever observações'
-                    className={styles.textarea}
-                    name={'obs'}
-                    error={inputFields.obs.error}
-                    value={inputFields.obs.value}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
+              if (field.type === 'password' && field.required) 
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
                     :
                     <MyInput
                       label={
@@ -573,83 +383,39 @@ const NewClient = ({ ...props }) => {
                           <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
                         </Tooltip>
                       }
-                      required={inputFields.obs.required}
-                      error={inputFields.obs.error}
-                      value={inputFields.obs.value}
-                      placeholder='Escrever Senha'
-                      onChange={(e) => onInputChange(e)}
+                        name={field.id}
+                        required={field.required}
+                        value={field.value}
+                        error={field.error}
+                        type={field.type}
+                        placeholder={`Escrever ${field.label}`}
+                        onChange={(e) => handleFormChange(index, e)}
                     />
                   }
-                </Grid>
+                </Grid>;
 
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} md={4} bgcolor={"lightGray.main"} className={styles.clientContainer}>
-            <Grid container>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <Typography id='align' item className='lightTextSm'>
-                  <Edit2
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                  />
-                  Dados de Faturação
-                </Typography>
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required={inputFields.telephone.required}
-
-                  label={'Morada Fiscal'}
-                  placeholder='Escrever Morada Fiscal'
-                  name={'address'}
-                  error={inputFields.address.error}
-                  value={inputFields.address.value}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required={inputFields.telephone.required}
-
-                  label={'Codigo Postal'}
-                  placeholder='Escrever Codigo Postal'
-                  name={'postalCode'}
-                  value={inputFields.postalCode.value}
-                  error={inputFields.postalCode.error}
-                  onChange={(e) => onInputChange(e)}
-                  adornmentIcon={!!postalCodeInfo &&
+              //  Default case regular text input 
+              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+                <MyInput 
+                  name={field.id}
+                  label={field.label}
+                  required={field.required}
+                  value={field.value}
+                  error={field.error}
+                  type={field.type && field.type}
+                  onChange={(e) => handleFormChange(index, e)}
+                  placeholder={`Escrever ${field.label}`}
+                  adornmentIcon={!!postalCodeInfo && field.id === 'postalCode' ?
                     <Tooltip title='Detalhes Codigo Postal' >
                       <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
-                    </Tooltip>
+                    </Tooltip> : null
                   }
                 />
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required={inputFields.telephone.required}
-                  type='number'
-                  label={'Número de Identificação Fiscal (Nif)'}
-                  placeholder='Escrever Número de Identificação Fiscal'
-                  name={'taxId'}
-                  value={inputFields.taxId.value}
-                  error={inputFields.taxId.error}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required={inputFields.telephone.required}
-                  label={'Outros Dados'}
-                  placeholder='Escrever outros dados'
-                  name={'otherData'}
-                  value={inputFields.otherData.value}
-                  error={inputFields.otherData.error}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
+            </Grid>;
+            })}
+
+          
+        
         </Grid>
       </Content>
     </Grid>

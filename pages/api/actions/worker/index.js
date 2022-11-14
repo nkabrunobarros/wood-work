@@ -46,7 +46,7 @@ export async function updateWorker(data) {
 
   const config = {
     method: 'post',
-    url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + + methods.UPDATE,
+    url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.UPDATE,
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',

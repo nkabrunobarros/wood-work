@@ -21,6 +21,8 @@ const Select2 = ({
   id,
 }) => {
 
+
+  
   return (
     <React.Fragment>
       {variant !== 'standard' && label ? (
@@ -53,7 +55,7 @@ const Select2 = ({
           </MenuItem>
           {options && options
             .map((opt, i) => (
-              <MenuItem key={i} value={opt[optionValue] || opt.id}>
+              <MenuItem key={i} value={opt[optionValue].value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
                 <Box
                   sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                 >
@@ -65,8 +67,7 @@ const Select2 = ({
                       srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
                       alt=''
                     />}
-
-                  {opt[optionLabel] || opt.label || 'Empty'}
+                  {opt[optionLabel]?.value ? opt[optionLabel].value : opt[optionLabel]  || opt.label || 'Empty'}
                 </Box>
               </MenuItem>
             ))}
