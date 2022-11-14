@@ -32,11 +32,11 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.newClient}`,
   ];
 
-  const usersPages = [
-    `${routes.private.internal.users}`,
-    `${routes.private.internal.user}[Id]`,
-    `${routes.private.internal.editUser}[Id]`,
-    `${routes.private.internal.newUser}`,
+  const workersPages = [
+    `${routes.private.internal.workers}`,
+    `${routes.private.internal.worker}[Id]`,
+    `${routes.private.internal.editWorker}[Id]`,
+    `${routes.private.internal.newWorker}`,
   ];
 
   const leftoversPages = [
@@ -59,7 +59,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
 
   if (clientsPages.includes(path.route)) currentSection = 'Clientes';
 
-  if (usersPages.includes(path.route)) currentSection = 'Workers';
+  if (workersPages.includes(path.route)) currentSection = 'Workers';
 
   if (profilePages.includes(path.route)) currentSection = 'Perfil';
 

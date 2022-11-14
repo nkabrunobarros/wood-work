@@ -24,7 +24,7 @@ const Select2 = ({
 
   
   return (
-    <React.Fragment>
+    <Box sx={{ width: '100%'}}>
       {variant !== 'standard' && label ? (
         <InputLabel htmlFor={label}>
           {label}
@@ -73,7 +73,7 @@ const Select2 = ({
             ))}
         </Select>
       </FormControl>
-    </React.Fragment>
+    </Box>
   );
 };
 

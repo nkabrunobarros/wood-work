@@ -25,25 +25,24 @@ import styled from 'styled-components';
 import routes from '../../../navigation/routes';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
+import FormGenerator from '../../formGenerator';
 import MyInput from '../../inputs/myInput';
 import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 import Select from '../../inputs/select';
-import Loader from '../../loader/loader';
 import EmailValidation from '../../utils/EmailValidation';
 
 const NewClient = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, countries,
-    // organizations,
-    profiles } = props;
+    organizations,
+    // profiles
+   } = props;
 
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   //  Errors states
   const [postalCodeInfo, setPostalCodeInfo] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [newestUser, setNewestUser] = useState();
   const [successOpen, setSuccessOpen] = useState(false);
-  const [processing, setProcessing] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
 
 
@@ -112,7 +111,9 @@ const NewClient = ({ ...props }) => {
       {
         id: 'hasOrganization',
         label: 'Organização',
-        value: 'urn:ngsi-ld:Organization:Mofreita',
+        value: organizations[0].id,
+        options: organizations,
+        optLabel: 'legalName',
         error: '',
         required: true
       },
@@ -163,10 +164,8 @@ const NewClient = ({ ...props }) => {
       }
 
       setInputFields(data);
-
     });
 
-    
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
 
@@ -174,7 +173,6 @@ const NewClient = ({ ...props }) => {
     }
 
     setDialogOpen(true);
-
   }
 
   async function handleSave() {
@@ -317,14 +315,14 @@ const NewClient = ({ ...props }) => {
       <ConfirmDialog
         open={successOpen}
         handleClose={() => ClearFields()}
-        onConfirm={() => Router.push(`${routes.private.internal.client}${newestUser.id}`)}
+        onConfirm={() => Router.push(`${routes.private.internal.clients}`)}
         message={`Cliente criado com sucesso, que deseja fazer a agora?`}
         icon='Verified'
         iconType='success'
         okTxt='Ver Cliente'
         cancelTxt='Criar novo Cliente'
       />
-      {processing && <Loader center={true} backdrop />}
+      {/* {processing && <Loader center={true} backdrop />} */}
 
       <CustomBreadcrumbs path={breadcrumbsPath} />
 
@@ -355,7 +353,9 @@ const NewClient = ({ ...props }) => {
             />
           </Box>
         </Box>
-
+        <Grid container sx={{ padding: '24px' }}>
+          <FormGenerator fields={inputFields} onFormChange={handleFormChange} countries={countries} organizations={organizations} />
+        </Grid>
         <Grid container sx={{ padding: '24px' }}>
         {inputFields.map((field, index) => {
               if (field.options) 
@@ -391,6 +391,8 @@ const NewClient = ({ ...props }) => {
 
               if (field.type === 'password' && field.required) 
                 return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+                <Box>
+
                 {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
                     :
                     <MyInput
@@ -408,6 +410,8 @@ const NewClient = ({ ...props }) => {
                         onChange={(e) => handleFormChange(index, e)}
                     />
                   }
+                </Box>
+
                 </Grid>;
 
               //  Default case regular text input 

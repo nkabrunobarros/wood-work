@@ -27,7 +27,7 @@ const NewOrder = ({ ...pageProps }) => {
 
         await OrganizationActions
           .organizations()
-          .then((res) => setOrganizations(res.data.payload.data));
+          .then((res) => setOrganizations(res.data));
       } catch (error) { }
     };
 
