@@ -1,19 +1,36 @@
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, Select, styled, Tooltip } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from "@mui/material";
 import { Info } from "lucide-react";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import * as CountryActions from '../../pages/api/actions/country';
 import MyInput from "../inputs/myInput";
 import PhoneInput from "../inputs/phoneInput/PhoneInput";
+import Select2 from "../inputs/select";
+//  Proptypes
+import PropTypes from 'prop-types';
 
-const FormGenerator = ({fields, onFormChange, countries, organizations}) => {
-    const [generatePassword, setGeneratePassword] = useState(true);
-    const [postalCodeInfo, setPostalCodeInfo] = useState();
+const FormGenerator = ({fields, onFormChange, generatePassword, setGeneratePassword, postalCodeInfo}) => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [countries, setCountries] = useState();
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          await CountryActions
+            .countries()
+            .then((res) => setCountries(res.data.payload.data));
+        } catch (error) { }
+      };
+  
+      Promise.all([getData()]).then(() => setLoaded(true));
+    }, []);
+
 
     const Item = styled(Paper)(() => ({
       padding: '.5rem',
     }));
   
-    return <>
+    return loaded && <>
       <Popover
         id={anchorEl ? 'simple-popover' : undefined}
         open={!!anchorEl}
@@ -62,10 +79,10 @@ const FormGenerator = ({fields, onFormChange, countries, organizations}) => {
 
               if (field.options) 
               {
-                console.log(field?.options);
 
                 return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
-                  <Select
+                  <Select2
+                    fullWidth
                     name={field.id}
                     label={field.label}
                     required={field.required}
@@ -142,5 +159,14 @@ const FormGenerator = ({fields, onFormChange, countries, organizations}) => {
     </Grid>
     </>;
 };
+
+FormGenerator.propTypes = {
+  fields: PropTypes.array,
+  onFormChange: PropTypes.function,
+  generatePassword: PropTypes.bool,
+  setGeneratePassword: PropTypes.any,
+  postalCodeInfo: PropTypes.object
+};
+
 
 export default FormGenerator;

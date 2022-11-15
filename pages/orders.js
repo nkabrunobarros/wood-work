@@ -14,7 +14,6 @@ import OrdersScreen from '../components/pages/orders/orders';
 import PropTypes from 'prop-types';
 
 //  Data services
-
 import * as CategoriesActions from '../pages/api/actions/category';
 import * as ClientsActions from '../pages/api/actions/client';
 import * as OrdersActions from '../pages/api/actions/order';
@@ -22,8 +21,6 @@ import * as ProductsActions from '../pages/api/actions/product';
 
 //  Icons
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
-
-//  Utlis
 
 const Orders = ({ ...pageProps }) => {
   const [orders, setOrders] = useState();

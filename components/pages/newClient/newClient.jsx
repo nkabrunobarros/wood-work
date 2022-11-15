@@ -14,11 +14,11 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, Checkbox, Divider, FormControlLabel, Paper,
-  Popover, Tooltip, Typography
+  Box, Divider, Paper,
+  Popover, Typography
 } from '@mui/material';
 import axios from 'axios';
-import { Info, Save, X } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
@@ -26,9 +26,6 @@ import routes from '../../../navigation/routes';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
-import MyInput from '../../inputs/myInput';
-import PhoneInput from '../../inputs/phoneInput/PhoneInput';
-import Select from '../../inputs/select';
 import EmailValidation from '../../utils/EmailValidation';
 
 const NewClient = ({ ...props }) => {
@@ -159,7 +156,7 @@ const NewClient = ({ ...props }) => {
         data[i].error = 'Codigo Postal Invalido';
         hasErrors = true;
       } else if (input.value.length !== 9 && input.type === 'phone' && input.required) {
-        data[i].error = 'Numero mal estruturado';
+        data[i].error = 'Número mal estruturado';
         hasErrors = true;
       }
 
@@ -354,88 +351,13 @@ const NewClient = ({ ...props }) => {
           </Box>
         </Box>
         <Grid container sx={{ padding: '24px' }}>
-          <FormGenerator fields={inputFields} onFormChange={handleFormChange} countries={countries} organizations={organizations} />
-        </Grid>
-        <Grid container sx={{ padding: '24px' }}>
-        {inputFields.map((field, index) => {
-              if (field.options) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
-                  <Select
-                    name={field.id}
-                    label={field.label}
-                    required={field.required}
-                    value={field.value}
-                    error={field.error}
-                    type={field.type && field.type}
-                    onChange={(e) => handleFormChange(index, e)}
-                    options={field.options}
-                    optionValue={field.optValue}
-                    optionLabel={field.optLabel}
-                    placeholder={`Escrever ${field.label}`}
-                  /> 
-                </Grid>;
-
-              if (field.type === 'phone' && field.required) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                <PhoneInput
-                  name={field.id}
-                  label={field.label}
-                  options={countries}
-                  required={field.required}
-                  value={field.value}
-                  placeholder={`Escrever ${field.label}`}
-                  error={field.error}
-                  onChange={(e) => handleFormChange(index, e)}
-                />
-                </Grid>;
-
-              if (field.type === 'password' && field.required) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                <Box>
-
-                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
-                    :
-                    <MyInput
-                      label={
-                        <Tooltip title='Trocar para senha autogerada'>
-                          <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
-                        </Tooltip>
-                      }
-                        name={field.id}
-                        required={field.required}
-                        value={field.value}
-                        error={field.error}
-                        type={field.type}
-                        placeholder={`Escrever ${field.label}`}
-                        onChange={(e) => handleFormChange(index, e)}
-                    />
-                  }
-                </Box>
-
-                </Grid>;
-
-              //  Default case regular text input 
-              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
-                <MyInput 
-                  name={field.id}
-                  label={field.label}
-                  required={field.required}
-                  value={field.value}
-                  error={field.error}
-                  type={field.type && field.type}
-                  onChange={(e) => handleFormChange(index, e)}
-                  placeholder={`Escrever ${field.label}`}
-                  adornmentIcon={!!postalCodeInfo && field.id === 'postalCode' ?
-                    <Tooltip title='Detalhes Codigo Postal' >
-                      <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
-                    </Tooltip> : null
-                  }
-                />
-            </Grid>;
-            })}
-
-          
-        
+          <FormGenerator 
+            fields={inputFields}
+            onFormChange={handleFormChange}
+            countries={countries} 
+            generatePassword={generatePassword}
+            postalCodeInfo={postalCodeInfo}
+            setGeneratePassword={setGeneratePassword} />
         </Grid>
       </Content>
     </Grid>
