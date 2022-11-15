@@ -67,8 +67,8 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
   );
 };
 
-ConfirmDialog.PropTypes = {
-  open: PropTypes.boolean,
+ConfirmDialog.propTypes = {
+  open: PropTypes.any,
   handleClose: PropTypes.any,
 };
 

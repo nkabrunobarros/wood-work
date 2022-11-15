@@ -3,7 +3,7 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material';
 import React from 'react';
 
-const Select2 = ({
+const MySelect = ({
   disabled,
   value,
   label,
@@ -80,4 +80,4 @@ const Select2 = ({
   );
 };
 
-export default Select2;
+export default MySelect;

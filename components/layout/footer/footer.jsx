@@ -35,11 +35,8 @@ const Footer = (props) => {
 
   return typeof window !== 'undefined' && (
     <Grid
-      md={12}
-      sm={12}
       container
       bgcolor={"default.main"}
-      className='flex'
       style={{
         position: 'fixed',
         minHeight: '45px',
@@ -53,7 +50,7 @@ const Footer = (props) => {
         paddingRight: '1rem',
       }}
     >
-      <Grid md={6} sm={12} container >
+      <Grid container item md={6} sm={12}  >
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.perfil.descricao) ? <Copyright /> : <Image
           placeholder='blur'
           priority
@@ -61,7 +58,7 @@ const Footer = (props) => {
           layout='intrinsic'
         />}
       </Grid>
-      <Grid md={6} sm={12} sx={{ textAlign: 'end', display: 'flex', justifyContent: 'end' }} container >
+      <Grid container item md={6} sm={12} sx={{ textAlign: 'end', display: 'flex', justifyContent: 'end' }}  >
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.perfil.descricao) ? <Image
           placeholder='blur'
           priority

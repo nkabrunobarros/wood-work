@@ -14,7 +14,7 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, Divider, Paper,
+  Box, ButtonGroup, Divider, Paper,
   Popover, Typography
 } from '@mui/material';
 import axios from 'axios';
@@ -338,6 +338,8 @@ const NewClient = ({ ...props }) => {
         <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
           <Typography item className='headerTitleXl'>Novo Cliente</Typography>
           <Box sx={{ marginLeft: 'auto' }}>
+            <ButtonGroup>
+
             <PrimaryBtn
               text='Guardar'
               icon={
@@ -352,13 +354,14 @@ const NewClient = ({ ...props }) => {
               text='Cancelar'
               icon={
                 <X
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                size={pageProps.globalVars.iconSize}
                 />
               }
               light
               onClick={() => Router.back()}
-            />
+              />
+              </ButtonGroup>
           </Box>
         </Box>
         <Grid container sx={{ padding: '24px' }}>

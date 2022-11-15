@@ -1,8 +1,8 @@
 
-  import React from 'react';
   import PropTypes from 'prop-types';
-  import { ToastContainer } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
   const Notification = () => {
     return (
@@ -20,8 +20,8 @@
     );
   };
 
-  Notification.PropTypes = {
-    open: PropTypes.boolean,
+  Notification.propTypes = {
+    open: PropTypes.bool,
     handleClose: PropTypes.any,
   };
 

@@ -28,6 +28,7 @@ import {
 } from '@mui/material';
 
 //  Icons
+import { DeleteOutline, EditOutlined } from '@mui/icons-material';
 import { Filter } from 'lucide-react';
 
 //  Utlis
@@ -35,18 +36,19 @@ import { FilterItem } from '../utils/FilterItem';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
 
 //  Services
+import * as CategoriesActions from '../../pages/api/actions/category';
+import * as ClientsActions from '../../pages/api/actions/client';
+import * as WorkerActions from '../../pages/api/actions/worker';
 
 //  Dialogs
+import { toast } from 'react-toastify';
 import ConfirmDialog from '../dialogs/ConfirmDialog';
 import Notification from '../dialogs/Notification';
 
-import { toast } from 'react-toastify';
-import * as CategoriesActions from '../../pages/api/actions/category';
-import * as ClientsActions from '../../pages/api/actions/client';
-import * as UserActions from '../../pages/api/actions/user';
-
-import { DeleteOutline, EditOutlined } from '@mui/icons-material';
+//  Navigation
 import routes from '../../navigation/routes';
+
+//  Utils
 import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
@@ -92,43 +94,32 @@ const AdvancedTable = ({
     const getWhatDisplaying = () => {
 
       switch (Router.route) {
-        case routes.private.internal.orders: setDisplaying('orders');
+        case routes.private.internal.orders: 
+          setDisplaying('orders');
 
           break;
-        case routes.private.internal.ordersSimilar: setDisplaying('orders');
+        case routes.private.internal.ordersSimilar: 
+          setDisplaying('orders');
+          setDialogMessage( 'Está prestes a apagar uma encomenda o que é irreversivel, tem certeza que quer continuar?');
 
           break;
-        case routes.private.internal.stocks: setDisplaying('stocks');
+        case routes.private.internal.stocks: 
+          setDisplaying('stocks');
 
           break;
-        case routes.private.internal.clients: setDisplaying('clients');
+        case routes.private.internal.clients: 
+          setDisplaying('clients');
+          setDialogMessage('Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?');
 
           break;
-        case routes.private.internal.users: setDisplaying('utilizadores');
+        case routes.private.internal.workers: 
+          setDisplaying('workers');
+          setDialogMessage( 'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?');
 
-          break;
-
-        default:
           break;
       }
     };
 
-    const BuildDeleteMessage = () => {
-      if (Router.asPath.includes('/orders'))
-        setDialogMessage(
-          'Está prestes a apagar uma encomenda o que é irreversivel, tem certeza que quer continuar?'
-        );
-
-      if (Router.asPath.includes('/users'))
-        setDialogMessage(
-          'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?'
-        );
-
-      if (Router.asPath.includes('/clients'))
-        setDialogMessage(
-          'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'
-        );
-    };
 
     function RebuildHeadCellsWithFilterState() {
 
@@ -142,16 +133,15 @@ const AdvancedTable = ({
       });
     }
 
-    Promise.all([getData(), BuildDeleteMessage(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => setLoaded(true));
+    Promise.all([getData(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => setLoaded(true));
 
   }, []);
 
   function onDeleteClick(row) {
     setDialogOpen(true);
-    console.log(row);
 
     if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
-    else setDeleteItemId(row.id);
+        else setDeleteItemId(row.id);
   }
 
   function OnFilterChange(i) {
@@ -179,72 +169,29 @@ const AdvancedTable = ({
   async function onDeleteItem() {
     const thisRow = rows.find(r => r.id === deleteItemId);
 
-    switch (Router.route) {
-      case routes.private.internal.users:
-        const builtUser = {
-          id: thisRow.id,
-          nome: thisRow.nome,
-          ativo: false,
-          email: thisRow.email,
-          telemovel: thisRow.telemovel,
-          telefone: thisRow.telefone,
-          paisCodigo: thisRow.paisCodigo,
-          idPerfil: thisRow.perfil.id,
-          morada: thisRow.morada,
-          obs: thisRow.obs,
-          tos: thisRow.tos,
-          otherData: thisRow.otherData,
-        };
+    try {
+      switch (Router.route) {
+        case routes.private.internal.workers:
+            await WorkerActions.deleteWorker({id: deleteItemId })
+            .then(() => toast.success('Worker removido com sucesso!'));
 
-        try {
-          await UserActions.saveUser(builtUser);
-        } catch (err) { }
+            console.log('here');
 
-        break;
+          break;
 
-      case routes.private.internal.clients:
-        const builtClient = {
-          id: thisRow.id,
-          email: thisRow.email,
-          giveName: thisRow.giveName,
-          legalName: thisRow.legalName,
-          address: thisRow.address,
-          status: false,
-          telephone: thisRow.telephone,
-          buysTo: thisRow.organization.id,
-          otherData: thisRow.otherData,
-          obs: thisRow.obs,
-          contact: thisRow.contact,
-          taxId: thisRow.taxId,
-          postalCode: thisRow.postalCode,
+        case routes.private.internal.clients:
+            await ClientsActions.deleteClient({id: deleteItemId })
+            .then(() => toast.success('Cliente removido com sucesso!'));
 
-        };
+          break;
+        }
 
-        try {
-          await ClientsActions.saveClient(builtClient);
-        } catch (err) { }
-
-        break;
-      default:
-        break;
+      setFilteredItems(filteredItems.filter( ele => ele !== thisRow));
+      setDialogOpen(false);
+    } catch {
+      toast.error('Algo inesperado aconteceu. Se o problema persistir, contacte o responsavel.');
+      setDialogOpen(false);
     }
-
-    const oldRows = filteredItems;
-
-    if (Router.asPath.includes('/orders')) {
-      const newRows = oldRows.filter(
-        (row) => !(row.numEncomenda === deleteItemId)
-      );
-
-      setFilteredItems(newRows);
-    } else {
-      const newRows = oldRows.filter((row) => !(row.id === deleteItemId));
-
-      setFilteredItems(newRows);
-    }
-
-    setDialogOpen(false);
-    toast.success('Removido com sucesso!');
   }
 
   function EnhancedTableHead(props) {
@@ -293,7 +240,7 @@ const AdvancedTable = ({
         ) : null
         }
 
-        <TableRow id={refresh}>
+        <TableRow >
           {cellsFilter.map((headCell) => {
             return headCell.show && <TableCell
               key={headCell.id}
@@ -328,7 +275,6 @@ const AdvancedTable = ({
               </TableSortLabel>
             </TableCell>;
           }
-
           )}
         </TableRow>
       </TableHead >
@@ -406,10 +352,8 @@ const AdvancedTable = ({
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
 
-      if (order !== 0) {
-        return order;
-      }
-
+      if (order !== 0)  return order;
+      
       return a[1] - b[1];
     });
 
@@ -425,7 +369,7 @@ const AdvancedTable = ({
   }, [filters]);
 
   return (
-    <Box id={refresh} sx={{ width: '100%' }}>
+    <Box  sx={{ width: '100%' }}>
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
@@ -449,7 +393,7 @@ const AdvancedTable = ({
                 component='div'
                 sx={{ marginLeft: 'auto' }}
                 rowsPerPageOptions={[5, 10, 25]}
-                count={filteredItems ? filteredItems.length : rows.length}
+                count={filteredItems ? filteredItems?.length : rows?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -495,15 +439,13 @@ const AdvancedTable = ({
         <TableContainer>
           <Table aria-labelledby='tableTitle'>
             <EnhancedTableHead
-              numSelected={selected.length}
+              numSelected={selected?.length}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={filteredItems.length}
+              rowCount={filteredItems?.length}
             />
-            {children ? (
-              <>{children}</>
-            ) : (
+            {children || (
               <TableBody>
                 {stableSort(filteredItems, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -530,12 +472,8 @@ const AdvancedTable = ({
                               headCell.disablePadding ? 'none' : 'normal'
                             }
                             sx={{
-                              borderRight: headCell.borderRight
-                                ? '1px solid var(--grayEdges)'
-                                : null,
-                              borderLeft: headCell.borderLeft
-                                ? '1px solid var(--grayEdges)'
-                                : null,
+                              borderRight: headCell.borderRight && '1px solid var(--grayEdges)',
+                              borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
                             }}
                           >
                             {loaded ?
@@ -543,7 +481,7 @@ const AdvancedTable = ({
                                 {headCell.id === 'actions' ? (
                                   <ButtonGroup color='link.main'>
                                     {CanDo(['WRITE', displaying]) &&
-                                      <Tooltip title='Editar'>
+                                      <Tooltip title={'Editar'}>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
                                           <EditOutlined
@@ -551,7 +489,7 @@ const AdvancedTable = ({
                                           />
                                         </IconButton>
                                       </Tooltip>}
-                                    {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover ' + displaying}>
+                                    {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover'}>
                                       <IconButton onClick={() => onDeleteClick(row)} >
                                         <DeleteOutline
                                           color={'primary'}
@@ -582,7 +520,7 @@ const AdvancedTable = ({
                       </TableRow>
                     );
                   })}
-                {(page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems.length) : 0) > 0 && (
+                {(page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems?.length) : 0) > 0 && (
                   <TableRow>
                     <TableCell colSpan={6} />
                   </TableRow>
@@ -596,18 +534,17 @@ const AdvancedTable = ({
   );
 };
 
+
 AdvancedTable.propTypes = {
-  rows: PropTypes.array,
-  headCellsUpper: PropTypes.array,
-  headCells: PropTypes.array,
   children: PropTypes.any,
+  rows: PropTypes.array,
+  headCells: PropTypes.array,
+  headCellsUpper: PropTypes.array,
   clickRoute: PropTypes.any,
-  editRoute: PropTypes.string,
-  noPagination: PropTypes.any,
-  filters: PropTypes.any,
-  setRows: PropTypes.any,
   actionId: PropTypes.any,
-  maxHeight: PropTypes.any,
+  noPagination: PropTypes.bool,
+  editRoute: PropTypes.any,
+  filters: PropTypes.object,
 };
 
 export default AdvancedTable;

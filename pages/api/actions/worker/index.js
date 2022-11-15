@@ -60,3 +60,21 @@ export async function updateWorker(data) {
 
   return await axios(config);
 }
+
+//  Delete Worker
+export async function deleteWorker(data) {
+  const { auth_token: token } = parseCookies();
+
+  const config = {
+    method: 'delete',
+    url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.DELETE + data.id,
+    headers: {
+      Authorization: token && `Bearer ${token}`,
+      'Content-Type': 'application/ld+json',
+      'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+    },
+    data,
+  };
+
+  return await axios(config);
+}
