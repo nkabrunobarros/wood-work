@@ -21,6 +21,7 @@ const PhoneInput = ({
   style,
   placeholder,
   options,
+  tooltip,
 }) => {
 
 
@@ -49,14 +50,16 @@ const PhoneInput = ({
   return (
     <Box sx={{ width: '100%'}}>
       {variant !== 'standard' && (
-        <InputLabel htmlFor={label}>
-          {label}
-          {required &&
-            <Tooltip title='Obrigatório' >
-              <span style={{ color: 'var(--red)' }}> *</span>
-            </Tooltip>
-          }
-        </InputLabel>
+        <Tooltip title={tooltip || ''} >
+          <InputLabel htmlFor={label}>
+            {label}
+            {required &&
+              <Tooltip title='Obrigatório' >
+                <span style={{ color: 'var(--red)' }}> *</span>
+              </Tooltip>
+            }
+          </InputLabel>
+        </Tooltip>
       )}
       <FormControl fullWidth disabled={disabled}>
         {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}

@@ -4,23 +4,17 @@ import NewClientScreen from '../../components/pages/newClient/newClient';
 import routes from '../../navigation/routes';
 
 //  Actions
-import * as CountryActions from '../../pages/api/actions/country';
 import * as OrganizationActions from '../../pages/api/actions/organization';
 import * as ProfileActions from '../../pages/api/actions/perfil';
 
 const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [countries, setCountries] = useState();
   const [profiles, setProfiles] = useState();
   const [organizations, setOrganizations] = useState();
 
   useEffect(() => {
     const getData = async () => {
       try {
-        await CountryActions
-          .countries()
-          .then((res) => setCountries(res.data.payload.data));
-
         await ProfileActions
           .perfis()
           .then((res) => setProfiles(res.data.payload.data));
@@ -49,7 +43,6 @@ const NewOrder = ({ ...pageProps }) => {
     const props = {
       breadcrumbsPath,
       pageProps,
-      countries,
       profiles,
       organizations,
     };

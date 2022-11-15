@@ -19,6 +19,7 @@ const Select2 = ({
   error,
   name,
   id,
+  tooltip,
 }) => {
 
 
@@ -26,13 +27,15 @@ const Select2 = ({
   return (
     <Box sx={{ width: '100%'}}>
       {variant !== 'standard' && label ? (
-        <InputLabel htmlFor={label}>
-          {label}
-          {required &&
-            <Tooltip title='Obrigatório' >
-              <span style={{ color: 'var(--red)' }}> *</span>
-            </Tooltip>}
-        </InputLabel>
+        <Tooltip title={tooltip || ''} >
+          <InputLabel htmlFor={label}>
+            {label}
+            {required &&
+              <Tooltip title='Obrigatório' >
+                <span style={{ color: 'var(--red)' }}> *</span>
+              </Tooltip>}
+          </InputLabel>
+        </Tooltip>
       ) : null}
       <FormControl fullWidth>
         {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}

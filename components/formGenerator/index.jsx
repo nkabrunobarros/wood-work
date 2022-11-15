@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, Tooltip, styled } from "@mui/material";
 import { Info } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import * as CountryActions from '../../pages/api/actions/country';
@@ -8,10 +8,39 @@ import Select2 from "../inputs/select";
 //  Proptypes
 import PropTypes from 'prop-types';
 
-const FormGenerator = ({fields, onFormChange, generatePassword, setGeneratePassword, postalCodeInfo}) => {
+// HOW TO USE
+// to use this form generator, u need to provida a array of objects for the inputs.
+// for the minimum display of the input, only needs a blank obj.
+// the form is ready for this fields
+// id, label, value, error, required, type
+//
+// if u wish to use a phoneInput, use type : 'phone'
+//
+// for a select field, provide the options ->  options: countries (array)
+// to select the specifiq field to display in the options, u can use -> optLabel: 'id',
+// by default, is using the field label
+// to select the specifiq value field in the options, u can use -> optValue: 'id',
+//
+// for a area text field, use type: 'area'
+//  
+//  for the password field, use type: 'password'
+//  if u wish for it to be randomized, provide the FormGenerator component,
+//  on the optionData property, with a generatePassword state (bool) and a setGeneratePassword
+//  
+//  you can also provide the fields with a tooltip, which appear while hovering over the input label
+
+
+const FormGenerator = ({fields, onFormChange, optionalData}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [countries, setCountries] = useState();
     const [loaded, setLoaded] = useState(false);
+    const placeholderDefault = 'Escrever';
+
+    const { 
+      generatePassword,
+      setGeneratePassword,
+      postalCodeInfo
+      } = optionalData;
 
     useEffect(() => {
       const getData = async () => {
@@ -93,7 +122,9 @@ const FormGenerator = ({fields, onFormChange, generatePassword, setGeneratePassw
                     options={field.options}
                     optionValue={field.optValue}
                     optionLabel={field.optLabel}
-                    placeholder={`Escrever ${field.label}`}
+                    placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+                    tooltip={field.tooltip}
+
                   /> 
                 </Grid>;
               }
@@ -106,9 +137,11 @@ const FormGenerator = ({fields, onFormChange, generatePassword, setGeneratePassw
                   options={countries}
                   required={field.required}
                   value={field.value}
-                  placeholder={`Escrever ${field.label}`}
+                  placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
                   error={field.error}
                   onChange={(e) => onFormChange(index, e)}
+                  tooltip={field.tooltip}
+
                 />
                 </Grid>;
 
@@ -116,25 +149,23 @@ const FormGenerator = ({fields, onFormChange, generatePassword, setGeneratePassw
                 return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
                 <Box sx={{ width: '100%'}}>
 
-                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
-                    :
-                    <MyInput
-                      label={
-                        <Tooltip title='Trocar para senha autogerada'>
-                          <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
-                        </Tooltip>
-                      }
-                        name={field.id}
-                        required={field.required}
-                        value={field.value}
-                        error={field.error}
-                        type={field.type}
-                        placeholder={`Escrever ${field.label}`}
-                        onChange={(e) => onFormChange(index, e)}
-                    />
-                  }
-                </Box>
-
+                  {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label={field.label} />
+                      :
+                      <MyInput
+                        label={
+                            <a className='link' onClick={() => generatePassword !== 'undefined' && setGeneratePassword(!generatePassword)} >{field.label}</a>
+                        }
+                          name={field.id}
+                          required={field.required}
+                          value={field.value}
+                          error={field.error}
+                          type={field.type}
+                          placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+                          onChange={(e) => onFormChange(index, e)}
+                          tooltip={field.tooltip}
+                      />
+                    }
+                  </Box>
                 </Grid>;
 
               //  Default case regular text input 
@@ -145,9 +176,10 @@ const FormGenerator = ({fields, onFormChange, generatePassword, setGeneratePassw
                   required={field.required}
                   value={field.value}
                   error={field.error}
+                  tooltip={field.tooltip}
                   type={field.type && field.type}
                   onChange={(e) => onFormChange(index, e)}
-                  placeholder={`Escrever ${field.label}`}
+                  placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
                   adornmentIcon={!!postalCodeInfo && field.id === 'postalCode' ?
                     <Tooltip title='Detalhes Codigo Postal' >
                       <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
@@ -165,7 +197,8 @@ FormGenerator.propTypes = {
   onFormChange: PropTypes.function,
   generatePassword: PropTypes.bool,
   setGeneratePassword: PropTypes.any,
-  postalCodeInfo: PropTypes.object
+  postalCodeInfo: PropTypes.object,
+  optionalData: PropTypes.object,
 };
 
 

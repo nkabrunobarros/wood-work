@@ -23,11 +23,14 @@ const MyInput = ({
   iconTooltip,
   name,
   id,
+  tooltip,
 }) => {
 
 
   return (<Box sx={{ width: '100%'}}>
     {variant !== 'standard' && (
+       <Tooltip title={tooltip || ''} >
+
       <InputLabel htmlFor={label} >
         {label}
         {required &&
@@ -35,6 +38,8 @@ const MyInput = ({
             <span style={{ color: 'var(--red)' }}> *</span>
           </Tooltip>}
       </InputLabel>
+      </Tooltip>
+
     )}
     <FormControl fullWidth disabled={disabled}>
       {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}

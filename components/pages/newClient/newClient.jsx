@@ -29,10 +29,10 @@ import FormGenerator from '../../formGenerator';
 import EmailValidation from '../../utils/EmailValidation';
 
 const NewClient = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, countries,
+  const { breadcrumbsPath, pageProps,
     organizations,
     // profiles
-   } = props;
+  } = props;
 
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -50,14 +50,16 @@ const NewClient = ({ ...props }) => {
         label: 'legal Name',
         value: '',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'givenName',
         label: 'given Name',
         value: '',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'email',
@@ -65,7 +67,8 @@ const NewClient = ({ ...props }) => {
         label: 'Email',
         value: '',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'cellphone',
@@ -73,7 +76,8 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         type: 'phone',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'telephone',
@@ -81,29 +85,33 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         type: 'phone',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'clientTypeInstitution',
         label: 'Tipo Instituição',
         value: '',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
-     
+
       {
         id: 'postalCode',
         label: 'Codigo Postal',
         value: '',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'taxId',
         label: 'taxId',
         value: '',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'hasOrganization',
@@ -112,7 +120,8 @@ const NewClient = ({ ...props }) => {
         options: organizations,
         optLabel: 'legalName',
         error: '',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'address',
@@ -120,35 +129,37 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         type: 'area',
-        required: true
+        required: true,
+        tooltip: ''
       },
       {
         id: 'password',
         label: 'Senha',
         value: '',
         error: '',
-        type:'password',
-        required: true
+        type: 'password',
+        required: true,
+        tooltip: 'Trocar para senha autogerada'
       },
     ]
   );
 
-  function ValidateFields () {
+  function ValidateFields() {
     let hasErrors = false;
 
     inputFields.map((input, i) => {
       const data = [...inputFields];
 
       if (input.type === 'password') {
-          if ( !generatePassword && input.value === '' ) {
-            data[i].error = 'Campo Óbrigatorio';
-            hasErrors = true;
-          }
+        if (!generatePassword && input.value === '') {
+          data[i].error = 'Campo Óbrigatorio';
+          hasErrors = true;
+        }
       } else if (input.required && input.value === '') {
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
 
-      // Case it reaches here, validates specifiq fields and value structure
+        // Case it reaches here, validates specifiq fields and value structure
       } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
         data[i].error = 'Email mal estruturado';
         hasErrors = true;
@@ -191,28 +202,28 @@ const NewClient = ({ ...props }) => {
         // builtWorker[ele.id].object = ele.value;
       }
       else {
-        if (ele.type === 'password')  ele.value = 'ChangeMe';
+        if (ele.type === 'password') ele.value = 'ChangeMe';
 
         builtClient[ele.id].type = 'Property';
         builtClient[ele.id].value = ele.value;
-        }
-    }); 
+      }
+    });
 
     try {
       await ClientActions.saveClient(builtClient)
-      .then(() => setSuccessOpen(true))
-      .catch((err) => {
-        if (err.response.status === 409) toast.warning('Este Cliente já existe');
-        else toast.error('Algo aconteceu. Por favor tente mais tarde.');
-      });    
-    } 
-      catch (e) {console.log(e);}
+        .then(() => setSuccessOpen(true))
+        .catch((err) => {
+          if (err.response.status === 409) toast.warning('Este Cliente já existe');
+          else toast.error('Algo aconteceu. Por favor tente mais tarde.');
+        });
+    }
+    catch (e) { console.log(e); }
 
-      setDialogOpen(false);
+    setDialogOpen(false);
   }
 
   const ClearFields = () => {
-    
+
     const data = [...inputFields];
 
     data.map((ele) => ele.value = '');
@@ -272,26 +283,26 @@ const NewClient = ({ ...props }) => {
         <Box sx={{ flexGrow: 1, p: 1 }}>
           <Grid container >
             <Grid container item >
-              <Grid item xs={6} sx={{ padding: '.5rem'}}>
+              <Grid item xs={6} sx={{ padding: '.5rem' }}>
                 <Item>Distrito</Item>
               </Grid>
-              <Grid item xs={6} sx={{ padding: '.5rem'}}>
+              <Grid item xs={6} sx={{ padding: '.5rem' }}>
                 <Item>{postalCodeInfo?.Distrito}</Item>
               </Grid>
             </Grid>
             <Grid container item >
-              <Grid item xs={6} sx={{ padding: '.5rem'}}>
+              <Grid item xs={6} sx={{ padding: '.5rem' }}>
                 <Item>Concelho</Item>
               </Grid>
-              <Grid item xs={6} sx={{ padding: '.5rem'}}>
+              <Grid item xs={6} sx={{ padding: '.5rem' }}>
                 <Item>{postalCodeInfo?.Concelho}</Item>
               </Grid>
             </Grid>
             <Grid container item >
-              <Grid item xs={6} sx={{ padding: '.5rem'}}>
+              <Grid item xs={6} sx={{ padding: '.5rem' }}>
                 <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
               </Grid>
-              <Grid item xs={6} sx={{ maxHeight: '300px', overflow: 'scroll', padding: '.5rem'}}>
+              <Grid item xs={6} sx={{ maxHeight: '300px', overflow: 'scroll', padding: '.5rem' }}>
                 <Item> {typeof postalCodeInfo?.Localidade === 'object' ?
                   <>
                     {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<Divider /></a>)}
@@ -351,13 +362,15 @@ const NewClient = ({ ...props }) => {
           </Box>
         </Box>
         <Grid container sx={{ padding: '24px' }}>
-          <FormGenerator 
+          <FormGenerator
             fields={inputFields}
             onFormChange={handleFormChange}
-            countries={countries} 
-            generatePassword={generatePassword}
-            postalCodeInfo={postalCodeInfo}
-            setGeneratePassword={setGeneratePassword} />
+            optionalData={{
+              generatePassword,
+              postalCodeInfo,
+              setGeneratePassword
+            }}
+          />
         </Grid>
       </Content>
     </Grid>
