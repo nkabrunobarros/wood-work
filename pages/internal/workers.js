@@ -96,8 +96,8 @@ const Workers = () => {
       },
     ];
 
-    const editRoute = routes.private.internal.editUser;
-    const detailRoute = routes.private.internal.user;
+    const editRoute = routes.private.internal.editWorker;
+    const detailRoute = routes.private.internal.worker;
     const newRoute = routes.private.internal.newWorker;
 
     const props = {

@@ -12,7 +12,7 @@ import UserScreen from '../../../components/pages/profile/profile';
 import routes from '../../../navigation/routes';
 
 //  Services
-import * as UserActions from '../../../pages/api/actions/user';
+import * as WorkerActions from '../../api/actions/worker';
 
 const User = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -22,9 +22,9 @@ const User = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      await UserActions
-      .userById({id})
-      .then((res) =>  setUser(res.data.payload))
+      await WorkerActions
+        .worker({ id })
+        .then((res) => setUser(res.data[0]));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -33,12 +33,12 @@ const User = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Utilizadores',
-        href: `${routes.private.internal.users}`,
+        title: 'Workers',
+        href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${user.nome}`,
-        href: `${routes.private.internal.user}`,
+        title: `${user.givenName.value}`,
+        href: `${routes.private.internal.worker}`,
       },
     ];
 
@@ -48,9 +48,9 @@ const User = ({ ...pageProps }) => {
       pageProps,
     };
 
-    return <UserScreen {...props} />
-     
-  } else return  <Loader center={true} />
+    return <UserScreen {...props} />;
+
+  } else return <Loader center={true} />;
 
 };
 

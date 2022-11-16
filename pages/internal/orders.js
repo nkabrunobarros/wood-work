@@ -13,7 +13,7 @@ import OrdersScreen from '../../components/pages/orders/orders';
 //  Proptypes
 import PropTypes from 'prop-types';
 
-//  Data services
+//  USEFUL
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as OrdersActions from '../../pages/api/actions/order';
@@ -21,6 +21,9 @@ import * as ProductsActions from '../../pages/api/actions/product';
 
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
+
+
+//  TODO: TROCAR PARA UTILIZAR OS DADOS FIREWARE E DAI PARA A FRENTE
 
 const Orders = ({ ...pageProps }) => {
   const [panelsInfo, setPanelsInfo] = useState();

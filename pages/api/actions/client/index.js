@@ -1,9 +1,9 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
-import querys from "../../querys";
 import { methods } from '../methods';
 
-export async function clients(data) {
+//  Get All Clients
+export async function clients() {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -26,22 +26,28 @@ export async function clients(data) {
 
 }
 
+//  Get a Client
 export async function client(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
-    headers: { Authorization: token && `Bearer ${token}` },
+    method: 'get',
+    url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET,
+    headers: {
+      Authorization: token && `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+    },
+    params: {
+      id: data.id
+    }
   };
 
-  return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
-    {
-      query: querys.CLIENT,
-      data
-    },
-    config
-  );
+  return await axios(config);
 }
 
+//  Create Client
 export async function saveClient(data) {
   const { auth_token: token } = parseCookies();
 
@@ -59,7 +65,7 @@ export async function saveClient(data) {
   return await axios(config);
 }
 
-//  Update Cliente
+//  Update Client
 export async function updateClient(data) {
   const { auth_token: token } = parseCookies();
 
@@ -69,6 +75,7 @@ export async function updateClient(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
+      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     data,
@@ -80,7 +87,7 @@ export async function updateClient(data) {
   return await axios(config);
 }
 
-//  Delete Cliente
+//  Delete Client
 export async function deleteClient(data) {
   const { auth_token: token } = parseCookies();
 

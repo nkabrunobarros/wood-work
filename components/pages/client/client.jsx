@@ -3,7 +3,7 @@ import Router from 'next/router';
 import React, { useState } from 'react';
 
 //  Material UI
-import { Box, Typography } from '@mui/material';
+import { Box, ButtonGroup, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 
@@ -30,19 +30,19 @@ const EditClient = ({ ...props }) => {
 
   async function onDelete() {
     const builtClient = {
-      id: client.id,
-      email: client.email,
-      giveName: client.giveName,
-      legalName: client.legalName,
-      address: client.address,
+      id: client?.id,
+      email: client?.email?.value,
+      giveName: client?.giveName?.value,
+      legalName: client?.legalName?.value,
+      // address: client?.address?.value,
       status: false,
-      telephone: client.telephone,
-      buysTo: client.organization.id,
-      otherData: client.otherData,
-      obs: client.obs,
-      contact: client.contact,
-      taxId: client.taxId,
-      postalCode: client.postalCode,
+      telephone: client?.telephone?.value,
+      buysTo: client?.organization.id?.value,
+      otherData: client?.otherData?.value,
+      obs: client?.obs?.value,
+      contact: client?.contact?.value,
+      taxId: client?.taxId?.value,
+      postalCode: client?.postalCode?.value,
 
     };
 
@@ -64,8 +64,10 @@ const EditClient = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
           <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-            <Typography item className='headerTitleXl'>{client.legalName}</Typography>
+            <Typography item className='headerTitleXl'>{client?.legalName?.value}</Typography>
             <Box sx={{ marginLeft: 'auto' }}>
+              <ButtonGroup>
+
               <PrimaryBtn
                 text='Editar'
                 icon={
@@ -74,23 +76,24 @@ const EditClient = ({ ...props }) => {
                     size={pageProps.globalVars.iconSize}
                   />
                 }
-                onClick={() => Router.push(`${editRoute}${client.id}`)}
+                onClick={() => Router.push(`${editRoute}${client?.id}`)}
               />
               <PrimaryBtn
                 text='Apagar'
                 onClick={() => setDialogOpen(true)}
                 icon={
                   <Trash
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
                   />
                 }
                 light
-              />
+                />
+                </ButtonGroup>
             </Box>
           </Box>
           <Grid id='clientPanel' container sx={{ padding: '24px' }}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} sm={6}>
               <Grid container spacing={3} >
                 <Grid container item>
                   <Typography id='align' item color='lightTextSm.main'><User
@@ -99,34 +102,34 @@ const EditClient = ({ ...props }) => {
                   />  Dados Gerais</Typography>
                 </Grid>
                 <Grid container item>
-                  <Grid item xs={12} md={6} sx={{ overflow: 'hidden' }}>
+                  <Grid item xs={12} md={6} sm={6} sx={{ overflow: 'hidden' }}>
                     <Typography item color='lightTextSm.main'>Email</Typography>
-                    <Typography item color='lightTextSm.black' >{client.email}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.email?.value}</Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Telefone </Typography>
-                    <Typography item color='lightTextSm.black' >{client.telephone}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.telephone?.value}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Pessoa de Contacto </Typography>
-                    <Typography item color='lightTextSm.black' >{client.contact}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.contact?.value}</Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Contacto </Typography>
-                    <Typography item color='lightTextSm.black' >{client.telephone}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.telephone?.value}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Observações </Typography>
-                    <Typography item color='lightTextSm.black' >{client.obs}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} sm={6}>
               <Grid container spacing={3} bgcolor={"lightGray.main"} className={styles.clientContainer}>
                 <Grid container item>
                   <Grid item xs={12}>
@@ -141,23 +144,28 @@ const EditClient = ({ ...props }) => {
                 </Grid>
 
                 <Grid container item>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Morada Fiscal</Typography>
-                    <Typography item color='lightTextSm.black' >{client.address}</Typography>
+                    <Typography item color='lightTextSm.black'>
+                      {client?.address?.value.streetAddres}
+                      </Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Codigo Postal</Typography>
-                    <Typography item color='lightTextSm.black' >{client.postalCode}</Typography>
+                    <Typography item color='lightTextSm.black' >
+                    {client?.address.value.postalCode}
+
+                    </Typography>
                   </Grid>
                 </Grid>
                 <Grid container item>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'> Número de Identificação Fiscal (Nif)</Typography>
-                    <Typography item color='lightTextSm.black' >{client.taxId}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.taxId?.value}</Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Outros Dados</Typography>
-                    <Typography item color='lightTextSm.black' >{client.otherData}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.otherData?.value}</Typography>
                   </Grid>
                 </Grid>
               </Grid>

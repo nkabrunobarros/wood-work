@@ -13,10 +13,12 @@ import routes from '../../../navigation/routes';
 
 //  Services
 import * as ClientActions from '../../../pages/api/actions/client';
+import * as OrganizationActions from '../../../pages/api/actions/organization';
 
 const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState();
+  const [organizations, setOrganizations] = useState();
   const router = useRouter();
   const clientId = router.query.Id;
 
@@ -24,8 +26,14 @@ const EditClient = ({ ...pageProps }) => {
     const getAll = async () => {
       await ClientActions
         .client({ id: clientId })
-        .then((res) => setClient(res.data.payload));
+        .then((res) => setClient(res.data[0]));
+
+      await OrganizationActions
+        .organizations()
+        .then((res) => setOrganizations(res.data));
     };
+
+
 
     Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
@@ -39,7 +47,7 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
       {
-        title: client.giveName,
+        title: `${client.legalName.value}`,
         href: `${routes.private.internal.client}${client.id}`,
       },
       {
@@ -53,10 +61,11 @@ const EditClient = ({ ...pageProps }) => {
       breadcrumbsPath,
       detailPage,
       pageProps,
+      organizations,
     };
 
 
-    return loaded && <EditClientScreen {...props} />
+    return <EditClientScreen {...props} />;
   }
 
   return <Loader center={true} />;

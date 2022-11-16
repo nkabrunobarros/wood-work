@@ -504,8 +504,8 @@ const AdvancedTable = ({
                                       && Router.push(`${clickRoute}${row[actionId || 'id']}`)
                                     }
                                     color={index === 0 && 'primary.main'}
+                                    sx={{ cursor: clickRoute && 'pointer'}}
                                   >
-                                    
                                     {FilterItem(
                                       data,
                                       row,

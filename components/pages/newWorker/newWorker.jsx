@@ -204,11 +204,11 @@ const newWorker = ({ ...props }) => {
     setProcessing(true);
 
     const builtWorker = {
-      id: 'urn:ngsi-ld:Worker:17',
+      id: 'urn:ngsi-ld:Worker:1',
       type: 'Worker',
       active: {
         type : 'Property',
-        value: 'True'.catch((res) => console.log(res)),
+        value: 'True',
       },
       "@context": [
         "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",

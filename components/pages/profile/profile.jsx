@@ -25,21 +25,22 @@ import ConfirmDialog from '../../dialogs/ConfirmDialog';
 
 const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
-  const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
+
 
   async function DisableUser() {
     const userCpy = {
-      id: user.id,
-      email: user.email,
+      id: user?.id,
+      email: user?.email.value,
       ativo: true,
-      nome: user.nome,
-      telemovel: user.telemovel,
-      telefone: user.telefone,
-      morada: user.morada,
-      paisCodigo: user.paisCodigo,
-      idPerfil: user.idPerfil,
-      obs: user.obs,
+      nome: user?.nome,
+      // telemovel: user?.telemovel.value,
+      telefone: user?.telefone,
+      morada: user?.morada,
+      paisCodigo: user?.paisCodigo,
+      idPerfil: user?.idPerfil,
+      obs: user?.obs,
     };
 
     userCpy.ativo = false;
@@ -65,13 +66,13 @@ const Profile = ({ ...props }) => {
       <Content>
         <div id='pad' style={{ display: 'flex' }}>
           <div style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{user.nome || user.legalName}</a>
+            <a className='headerTitleXl'>{user?.givenName?.value || user?.legalName?.value}</a>
           </div>
           {router.pathname === `${routes.private.profile}[Id]` ? null : (
             <div className='flex'>
               <div>
                 <PrimaryBtn text='Editar'
-                  onClick={() => Router.push(`${routes.private.internal.editUser}${user.id}`)}
+                  onClick={() => Router.push(`${routes.private.internal.editUser}${user?.id}`)}
                   icon={
                     <Edit
                       strokeWidth={pageProps.globalVars.iconStrokeWidth}
@@ -110,17 +111,17 @@ const Profile = ({ ...props }) => {
 
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Nome </Typography>
-                    <Typography item color='lightTextSm.black'>{user.nome || user.legalName}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.givenName?.value || user?.legalName?.value}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                    <Typography item color='lightTextSm.black'>{user.perfil.descricao}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.functionPerformed?.value}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Estado </Typography>
                     <Typography item>
                       <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
-                        {user.ativo ? 'Ativo' : 'Desativado'}
+                        {user?.active?.value === 'True' ? 'Ativo' : 'Desativado'}
                       </a>
                     </Typography>
                   </Grid>
@@ -128,32 +129,32 @@ const Profile = ({ ...props }) => {
                 <Grid xs={12} sm={6} container p={2} spacing={2}>
                   <Grid container item>
                     <Tooltip title='Email'>
-                      <a href={`mailto:${user.email}`}>
+                      <a href={`mailto:${user?.email?.value}`}>
                         <Mail className='primaryIcon' size={22} />
                       </a>
                     </Tooltip>
                     <span>
-                      {user.email}
+                      {user?.email?.value}
                     </span>
                   </Grid>
                   <Grid container item>
-                    <Tooltip title='Telemovel'>
-                      <a href={`tel:${user.telemovel}`}>
+                    <Tooltip title='telemovel'>
+                      <a href={`tel:${user?.telemovel?.value}`}>
                         <Smartphone className='primaryIcon' size={22} />
                       </a>
                     </Tooltip>
                     <span>
-                      {user.telemovel}
+                      {user?.telemovel?.value}
                     </span>
                   </Grid>
                   <Grid container item>
                     <Tooltip title='Telefone'>
-                      <a href={`tel:${user.telefone}`}>
+                      <a href={`tel:${user?.telefone?.value}`}>
                         <Phone className='primaryIcon' size={22} />
                       </a>
                     </Tooltip>
                     <span>
-                      {user.telefone}
+                      {user?.telefone?.value}
                     </span>
                   </Grid>
                   <Grid container item>
@@ -161,7 +162,7 @@ const Profile = ({ ...props }) => {
                       <Map className='primaryIcon' size={22} />
                     </Tooltip>
                     <span>
-                      {user.morada}
+                      {user?.address}
                     </span>
 
                   </Grid>
@@ -170,7 +171,8 @@ const Profile = ({ ...props }) => {
                       <Flag className='primaryIcon' size={22} />
                     </Tooltip>
                     <span>
-                      {user.pais.descricao}
+                      {/* {user?.pais.descricao || ''} */}
+                      pais
                     </span>
                   </Grid>
                 </Grid>
@@ -183,7 +185,7 @@ const Profile = ({ ...props }) => {
               <Grid container item p={2} sm={12} xs={12} md={6}>
                 <Grid item xs={12}>
                   <Typography item color='lightTextSm.main'>Observações </Typography>
-                  <Typography item color='lightTextSm.black'>{user.obs}</Typography>
+                  <Typography item color='lightTextSm.black'>{user?.obs}</Typography>
                 </Grid>
               </Grid>
             </Grid>

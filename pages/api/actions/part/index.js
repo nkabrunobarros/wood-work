@@ -2,8 +2,8 @@ import axios from "axios";
 import { parseCookies } from "nookies";
 import { methods } from '../methods';
 
-//  Get all workers
-export async function workers() {
+//  Get All Parts
+export async function parts() {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -16,15 +16,16 @@ export async function workers() {
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
-      type: 'Worker'
+      type: 'Part'
     }
+
   };
 
   return await axios(config);
 }
 
-//  Get 1 worker
-export async function worker(data) {
+//  Get a Part
+export async function part(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -44,8 +45,8 @@ export async function worker(data) {
   return await axios(config);
 }
 
-//  Create Worker
-export async function createWorker(data) {
+//  Create Part
+export async function savePart(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -62,8 +63,8 @@ export async function createWorker(data) {
   return await axios(config);
 }
 
-//  Update Worker
-export async function updateWorker(data) {
+//  Update Part
+export async function updatePart(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -72,6 +73,7 @@ export async function updateWorker(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
+      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     data,
@@ -83,8 +85,8 @@ export async function updateWorker(data) {
   return await axios(config);
 }
 
-//  Delete Worker
-export async function deleteWorker(data) {
+//  Delete Part
+export async function deletePart(data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

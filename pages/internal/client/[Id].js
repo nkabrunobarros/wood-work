@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 //  Services
 import * as ClientActions from '../../../pages/api/actions/client';
 
-const EditClient = ({ ...pageProps}) => {
+const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState();
   const router = useRouter();
@@ -25,8 +25,8 @@ const EditClient = ({ ...pageProps}) => {
   useEffect(() => {
     const getAll = async () => {
       await ClientActions
-        .client({id: router.query.Id})
-        .then((res) => setClient(res.data.payload));
+        .client({ id: router.query.Id })
+        .then((res) => setClient(res.data[0]));
     };
 
     Promise.all([getAll()]).then(() => setLoaded(true));
@@ -41,7 +41,7 @@ const EditClient = ({ ...pageProps}) => {
         href: `${routes.private.internal.clients}`,
       },
       {
-        title: `${client.legalName}`,
+        title: `${client.legalName.value}`,
         href: `${routes.private.internal.clients}`,
       },
     ];
@@ -54,7 +54,7 @@ const EditClient = ({ ...pageProps}) => {
     };
 
 
-    return loaded && <ClientScreen {...props} />
+    return loaded && <ClientScreen {...props} />;
   } else return <Loader center={true} />;
 };
 

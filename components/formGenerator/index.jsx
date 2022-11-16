@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import * as CountryActions from '../../pages/api/actions/country';
 import MyInput from "../inputs/myInput";
 import PhoneInput from "../inputs/phoneInput/PhoneInput";
-import Select2 from "../inputs/select";
+import MySelect from "../inputs/select";
 //  Proptypes
 import PropTypes from 'prop-types';
 
@@ -30,7 +30,7 @@ import PropTypes from 'prop-types';
 //  you can also provide the fields with a tooltip, which appear while hovering over the input label
 
 
-const FormGenerator = ({fields, onFormChange, optionalData}) => {
+const FormGenerator = ({fields, onFormChange, optionalData, perRow}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [countries, setCountries] = useState();
     const [loaded, setLoaded] = useState(false);
@@ -102,93 +102,93 @@ const FormGenerator = ({fields, onFormChange, optionalData}) => {
           </Grid>
         </Box>
       </Popover>
-    <Grid container>
-          {fields.map((field, index) => {
-            
-
-              if (field.options) 
-              {
-
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
-                  <Select2
-                    fullWidth
-                    name={field.id}
-                    label={field.label}
-                    required={field.required}
-                    value={field.value}
-                    error={field.error}
-                    type={field.type && field.type}
-                    onChange={(e) => onFormChange(index, e)}
-                    options={field.options}
-                    optionValue={field.optValue}
-                    optionLabel={field.optLabel}
-                    placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-                    tooltip={field.tooltip}
-
-                  /> 
-                </Grid>;
-              }
-
-              if (field.type === 'phone' && field.required) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                <PhoneInput
-                  name={field.id}
-                  label={field.label}
-                  options={countries}
-                  required={field.required}
-                  value={field.value}
-                  placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-                  error={field.error}
-                  onChange={(e) => onFormChange(index, e)}
-                  tooltip={field.tooltip}
-
-                />
-                </Grid>;
-
-              if (field.type === 'password' && field.required) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                <Box sx={{ width: '100%'}}>
-
-                  {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label={field.label} />
-                      :
-                      <MyInput
-                        label={
-                            <a className='link' onClick={() => generatePassword !== 'undefined' && setGeneratePassword(!generatePassword)} >{field.label}</a>
-                        }
-                          name={field.id}
-                          required={field.required}
-                          value={field.value}
-                          error={field.error}
-                          type={field.type}
-                          placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-                          onChange={(e) => onFormChange(index, e)}
-                          tooltip={field.tooltip}
-                      />
-                    }
-                  </Box>
-                </Grid>;
-
-              //  Default case regular text input 
-              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
-                <MyInput 
+      <Grid container>
+        {fields.map((field, index) => {
+          if (field.options) 
+            return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+                <MySelect
+                  fullWidth
                   name={field.id}
                   label={field.label}
                   required={field.required}
                   value={field.value}
                   error={field.error}
-                  tooltip={field.tooltip}
                   type={field.type && field.type}
                   onChange={(e) => onFormChange(index, e)}
+                  options={field.options}
+                  optionValue={field.optValue}
+                  optionLabel={field.optLabel}
+                  disabled={field.disabled}
                   placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-                  adornmentIcon={!!postalCodeInfo && field.id === 'postalCode' ?
-                    <Tooltip title='Detalhes Codigo Postal' >
-                      <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
-                    </Tooltip> : null
-                  }
-                />
+                  tooltip={field.tooltip}
+
+                /> 
+              </Grid>;
+
+          if (field.type === 'phone' ) 
+            return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+            <PhoneInput
+              name={field.id}
+              label={field.label}
+              options={countries}
+              required={field.required}
+              value={field.value}
+              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              error={field.error}
+              onChange={(e) => onFormChange(index, e)}
+              tooltip={field.tooltip}
+              disabled={field.disabled}
+
+            />
             </Grid>;
-            })}
-    </Grid>
+
+          if (field.type === 'password') 
+            return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+            <Box sx={{ width: '100%'}}>
+              {generatePassword ? 
+                <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label={field.label} />
+                  :
+                  <MyInput
+                    label={
+                        <a className='link' onClick={() => generatePassword !== 'undefined' && setGeneratePassword(!generatePassword)} >{field.label}</a>
+                    }
+                      name={field.id}
+                      required={field.required}
+                      value={field.value}
+                      error={field.error}
+                      type={field.type}
+                      placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+                      onChange={(e) => onFormChange(index, e)}
+                      tooltip={field.tooltip}
+                      disabled={field.disabled}
+
+                  />
+                }
+              </Box>
+            </Grid>;
+
+          //  Default case regular text input
+          return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+            <MyInput 
+              name={field.id}
+              label={field.label}
+              required={field.required}
+              value={field.value}
+              error={field.error}
+              tooltip={field.tooltip}
+              disabled={field.disabled}
+              type={field.type && field.type}
+              onChange={(e) => onFormChange(index, e)}
+              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              adornmentIcon={!!postalCodeInfo && field.id === 'postalCode' ?
+                <Tooltip title='Detalhes Codigo Postal' >
+                  <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
+                </Tooltip> : null
+              }
+            />
+          </Grid>;
+        })}
+      </Grid>
     </>;
 };
 
@@ -197,6 +197,7 @@ FormGenerator.propTypes = {
   onFormChange: PropTypes.function,
   generatePassword: PropTypes.bool,
   setGeneratePassword: PropTypes.any,
+  perRow: PropTypes.number,
   postalCodeInfo: PropTypes.object,
   optionalData: PropTypes.object,
 };
