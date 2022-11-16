@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, Tooltip, styled } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from "@mui/material";
 import { Info } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import * as CountryActions from '../../pages/api/actions/country';
@@ -6,6 +6,7 @@ import MyInput from "../inputs/myInput";
 import PhoneInput from "../inputs/phoneInput/PhoneInput";
 import MySelect from "../inputs/select";
 //  Proptypes
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PropTypes from 'prop-types';
 
 // HOW TO USE
@@ -30,17 +31,19 @@ import PropTypes from 'prop-types';
 //  you can also provide the fields with a tooltip, which appear while hovering over the input label
 
 
-const FormGenerator = ({fields, onFormChange, optionalData, perRow}) => {
+const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [countries, setCountries] = useState();
     const [loaded, setLoaded] = useState(false);
     const placeholderDefault = 'Escrever';
+    const optData = props.optionalData || {};
+    const [visible, setVisible] = useState(false) ;
 
     const { 
       generatePassword,
       setGeneratePassword,
       postalCodeInfo
-      } = optionalData;
+      } = optData;
 
     useEffect(() => {
       const getData = async () => {
@@ -126,7 +129,11 @@ const FormGenerator = ({fields, onFormChange, optionalData, perRow}) => {
               </Grid>;
 
           if (field.type === 'phone' ) 
-            return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+            return <Grid key={index}  
+            md={ perRow ? (12 / perRow) : 3} 
+            sm={ perRow !== 1 ? 6  : 12} 
+            xs={ perRow !== 1 ? 12 : 12}
+            container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
             <PhoneInput
               name={field.id}
               label={field.label}
@@ -138,29 +145,33 @@ const FormGenerator = ({fields, onFormChange, optionalData, perRow}) => {
               onChange={(e) => onFormChange(index, e)}
               tooltip={field.tooltip}
               disabled={field.disabled}
-
             />
             </Grid>;
 
           if (field.type === 'password') 
-            return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
+            return <Grid key={index}  md={ perRow ? (12 / perRow) : 3} 
+            sm={ perRow !== 1 ? 6  : 12} 
+            xs={ perRow !== 1 ? 12 : 12}  container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
             <Box sx={{ width: '100%'}}>
               {generatePassword ? 
                 <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label={field.label} />
                   :
                   <MyInput
                     label={
-                        <a className='link' onClick={() => generatePassword !== 'undefined' && setGeneratePassword(!generatePassword)} >{field.label}</a>
+                        <a className={ generatePassword !== 'undefined' && setGeneratePassword ?'link': null } onClick={() => generatePassword !== 'undefined' && setGeneratePassword ? setGeneratePassword(!generatePassword) : null} >{field.label}</a>
                     }
                       name={field.id}
                       required={field.required}
                       value={field.value}
                       error={field.error}
-                      type={field.type}
+                      type={visible ? 'text' :field.type}
                       placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
                       onChange={(e) => onFormChange(index, e)}
                       tooltip={field.tooltip}
                       disabled={field.disabled}
+                      adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
+                      adornmentOnClick={() => setVisible(!visible)}
+                      iconTooltip={!visible && 'Mostrar Senha'}
 
                   />
                 }
@@ -168,7 +179,11 @@ const FormGenerator = ({fields, onFormChange, optionalData, perRow}) => {
             </Grid>;
 
           //  Default case regular text input
-          return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+          return <Grid key={index} 
+          md={ perRow ? (12 / perRow) : 3} 
+          sm={ perRow !== 1 ? 6  : 12} 
+          xs={ perRow !== 1 ? 12 : 12} 
+          container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
             <MyInput 
               name={field.id}
               label={field.label}
@@ -194,7 +209,7 @@ const FormGenerator = ({fields, onFormChange, optionalData, perRow}) => {
 
 FormGenerator.propTypes = {
   fields: PropTypes.array,
-  onFormChange: PropTypes.function,
+  onFormChange: PropTypes.func,
   generatePassword: PropTypes.bool,
   setGeneratePassword: PropTypes.any,
   perRow: PropTypes.number,

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../components/loader/loader';
-import SignIn from '../components/pages/signin/signin';
+import SignInScreen from '../components/pages/signin/signin';
 import * as authActions from '../pages/api/actions/auth';
 
-const Home = () => {
+//  Navigation
+import routes from '../navigation/routes';
+
+const SignIn = () => {
     const [loaded, setLoaded] = useState(false);
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -12,12 +16,19 @@ const Home = () => {
         }, 500);
     }, []);
 
-    const props = {
-        login: authActions.loginClient,
-        me: authActions.me
-    };
+    if (loaded) {
+        const loginSuccessRoute = routes.private.internal.orders;
 
-    return loaded ? <SignIn {...props} /> : <Loader center={true} />;
+        const props = {
+
+            loginSuccessRoute,
+            login: authActions.login,
+            me: authActions.me,
+        };
+
+        return <SignInScreen {...props} />;
+    } else return <Loader center={true} />;
+
 };
 
-export default Home;
+export default SignIn;

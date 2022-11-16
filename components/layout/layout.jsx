@@ -31,9 +31,11 @@ const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.signInInternal}`,
   `${routes.public.forgotPassword}`,
+  `${routes.public.forgotPasswordInternal}`,
+  `${routes.public.resetPassword}`,
+  `${routes.public.resetPasswordInternal}`,
   `${routes.private.terms}`,
   `${routes.private.tos}`,
-  // `${routes.public.internal.signInClient}`,
 ];
 
 async function Test(pageProps) {

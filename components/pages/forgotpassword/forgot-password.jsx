@@ -15,16 +15,19 @@ import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 
-const ForgotPassword = () => {
+//  PropTypes
+import PropTypes from 'prop-types';
+
+const ForgotPassword = (props) => {
+  const { client } = props;
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const USER_ID = `service_kqtxrtc`;
     const TEMPLATE_ID = `template_6nvzzrx`;
 
-    console.log(event.currentTarget);
-
-
+    //  TODO: separar o email de cliente e de colaborador com url's corretos
     emailjs
       .sendForm(USER_ID, TEMPLATE_ID, event.currentTarget, 'HtyN6X3l4PFTtFQSI')
       .then(
@@ -55,7 +58,7 @@ const ForgotPassword = () => {
         >
           <div className={styles.logoImg}>
             <div
-              styles={{ width: '300px', height: '300px', position: 'absolute' }}
+              style={{ width: '300px', height: '300px', position: 'absolute' }}
             ></div>
           </div>
         </Box>
@@ -70,7 +73,7 @@ const ForgotPassword = () => {
             alignItems: 'start',
           }}
         >
-          <Typography color={'primary'}>Portal WW4.0</Typography>
+          <Typography color={'primary'}>{client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}</Typography>
           <Typography component='h2' variant='h3'>
             Esqueceu a Senha?
           </Typography>
@@ -132,6 +135,10 @@ const ForgotPassword = () => {
       </Grid>
     </Grid>
   );
+};
+
+ForgotPassword.propTypes = {
+  client: PropTypes.bool
 };
 
 export default ForgotPassword;

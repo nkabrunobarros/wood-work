@@ -1,8 +1,8 @@
-import PageNotFound from '../components/pages/404'
-import React from 'react'
+import React from 'react';
+import PageNotFound from '../components/pages/404';
 
 const notFoundPage = () => {
-    return  <PageNotFound />
-}
+    return <PageNotFound />;
+};
 
 export default notFoundPage;

@@ -1,8 +1,6 @@
 const routes = {
   private: {
     internal: {
-      signIn: '/internal/signin/',
-
       clients: '/internal/clients',
       client: '/internal/client/',
       editClient: '/internal/edit-client/',
@@ -42,9 +40,14 @@ const routes = {
     error: '/404',
   },
   public: {
-    forgotPassword: '/forgot-password',
+    //  client
     signIn: '/',
+    forgotPassword: '/forgot-password',
+    resetPassword: '/reset-password',
+    //  Internal
     signInInternal: '/signin',
+    forgotPasswordInternal: '/forgotPassword',
+    resetPasswordInternal: '/resetPassword',
   }
 };
 

@@ -35,12 +35,21 @@ import EmailValidation from '../../utils/EmailValidation';
 import IsInternal from '../../utils/IsInternal';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
-  const { client, login, me } = props;
+
+  console.log(props);
+
+  const { 
+    client, 
+    login, 
+    me,
+    loginSuccessRoute,
+    loginSuccessRouteTerm } = props;
+
+
   const [email, setEmail] = useState('geral@nka.pt');
   const [password, setPassword] = useState('123456');
   const [loading, setLoading] = useState(false);
@@ -106,16 +115,23 @@ const SignIn = (props) => {
         // Success
         ToastSet(loadingNotification, 'A entrar', 'success');
         setLoading(false);
+        console.log(user.perfil.descricao);
+        console.log(loginSuccessRoute);
+        console.log(loginSuccessRouteTerm);
+        console.log(user.tos);
 
-        if (IsInternal(user.perfil.descricao)) router.push(routes.private.internal.orders);
+
+
+        if (IsInternal(user.perfil.descricao)) router.push(loginSuccessRoute);
         else {
-          if (!user.tos) router.push(routes.private.terms);
-          else router.push(routes.private.orders);
+          if (client && user.tos === false) router.push(loginSuccessRouteTerm);
+          else router.push(loginSuccessRoute);
         }
       })
       //  Error
       .catch((err) => {
         setLoading(false);
+        console.log(err);
 
         if (!err.response.data.success && err.response.data.message === 'credenciais-invalidas') ToastSet(loadingNotification, 'Credenciais invalidas', 'error');
         else if (err.response.data.message === 'utilizador-inativo') ToastSet(loadingNotification, 'Conta Inativa', 'error');
@@ -165,13 +181,7 @@ const SignIn = (props) => {
             }}
           >
             <div className={styles.logoImg}>
-              <div
-                styles={{
-                  width: '300px',
-                  height: '300px',
-                  position: 'absolute',
-                }}
-              ></div>
+              
             </div>
           </Box>
         </Grid>
@@ -276,10 +286,5 @@ const SignIn = (props) => {
 };
 
 
-SignIn.propTypes = {
-  client: PropTypes.boolean,
-  login: PropTypes.func,
-  me: PropTypes.func,
-};
 
 export default SignIn;
