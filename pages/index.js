@@ -20,13 +20,15 @@ const SignIn = () => {
     const client = true;
     const loginSuccessRoute = routes.private.orders;
     const loginSuccessRouteTerms = routes.private.terms;
+    const forgotPasswordRoute = routes.public.forgotPassword;
 
     const props = {
       client,
       login: authActions.login,
       me: authActions.me,
       loginSuccessRoute,
-      loginSuccessRouteTerms
+      loginSuccessRouteTerms,
+      forgotPasswordRoute
     };
 
     return <SignInScreen {...props} />;

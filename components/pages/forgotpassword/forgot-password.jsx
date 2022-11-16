@@ -19,7 +19,7 @@ import Footer from '../../layout/footer/footer';
 import PropTypes from 'prop-types';
 
 const ForgotPassword = (props) => {
-  const { client } = props;
+  const { client, signinRoute } = props;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -121,7 +121,7 @@ const ForgotPassword = (props) => {
               >
                 <a
                   id='align'
-                  onClick={() => Router.push(routes.public.signIn)}
+                  onClick={() => Router.push(signinRoute)}
                   className='link'
                 >
                   <ChevronLeft className='link' />
@@ -138,7 +138,8 @@ const ForgotPassword = (props) => {
 };
 
 ForgotPassword.propTypes = {
-  client: PropTypes.bool
+  client: PropTypes.bool,
+  signinRoute: PropTypes.bool
 };
 
 export default ForgotPassword;

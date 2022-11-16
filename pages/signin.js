@@ -18,12 +18,14 @@ const SignIn = () => {
 
     if (loaded) {
         const loginSuccessRoute = routes.private.internal.orders;
+        const forgotPasswordRoute = routes.public.forgotPasswordInternal;
 
         const props = {
 
             loginSuccessRoute,
             login: authActions.login,
             me: authActions.me,
+            forgotPasswordRoute
         };
 
         return <SignInScreen {...props} />;

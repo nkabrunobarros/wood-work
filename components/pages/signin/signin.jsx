@@ -16,7 +16,6 @@ import {
 import styles from '../../../styles/SignIn.module.css';
 
 //  Navigation
-import routes from '../../../navigation/routes';
 
 //  Dialogs
 import { toast } from 'react-toastify';
@@ -35,7 +34,7 @@ import EmailValidation from '../../utils/EmailValidation';
 import IsInternal from '../../utils/IsInternal';
 
 //  PropTypes
-
+import PropTypes from 'prop-types';
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
@@ -47,7 +46,8 @@ const SignIn = (props) => {
     login, 
     me,
     loginSuccessRoute,
-    loginSuccessRouteTerm } = props;
+    loginSuccessRouteTerm,
+    forgotPasswordRoute } = props;
 
 
   const [email, setEmail] = useState('geral@nka.pt');
@@ -249,7 +249,7 @@ const SignIn = (props) => {
             <Grid container style={{ alignItems: 'center' }}>
               <Grid item xs>
                 <a
-                  onClick={() => Router.push(routes.public.forgotPassword)}
+                  onClick={() => Router.push(forgotPasswordRoute)}
                   className='link'
                 >Esqueceu-se da sua senha?</a>
               </Grid>
@@ -285,6 +285,13 @@ const SignIn = (props) => {
   );
 };
 
-
+SignIn.propTypes = {
+  me: PropTypes.func,
+  login: PropTypes.func, 
+  client: PropTypes.bool, 
+  loginSuccessRoute: PropTypes.string,
+  forgotPasswordRoute: PropTypes.string,
+  loginSuccessRouteTerm: PropTypes.string,
+};
 
 export default SignIn;
