@@ -8,6 +8,8 @@ import {
   Box,
   Grid,
   InputLabel, OutlinedInput,
+  Tab,
+  Tabs,
   TextField,
   Typography
 } from '@mui/material';
@@ -40,6 +42,8 @@ const OrdersScreen = ({ ...props }) => {
     editPage,
     headCells,
     products,
+    budgets,
+    headCellsBudget
     // categories
   } = props;
 
@@ -51,6 +55,7 @@ const OrdersScreen = ({ ...props }) => {
   const [producao, setProducao] = useState('');
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
+  const [currentTab, setCurrentTab] = useState(0);
 
 
   const ClearFilters = () => {
@@ -74,6 +79,38 @@ const OrdersScreen = ({ ...props }) => {
   }, [number, client, category, producao, product]);
 
 
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box >
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `tab-${index}`,
+      'aria-controls': `tabpanel-${index}`,
+    };
+  }
 
   return (
     <Grid component='main'>
@@ -176,6 +213,15 @@ const OrdersScreen = ({ ...props }) => {
             onClick={() => Router.push(routes.private.internal.newOrder)}
           />
         </Box>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)} aria-label="basic tabs example">
+            <Tab label="Em Produção" {...a11yProps(0)} />
+            <Tab label="Por Confirmar" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+
+        {/* Tab Projects */}
+        <TabPanel value={currentTab} index={0}>
         <AdvancedTable
           rows={items}
           headCells={headCells}
@@ -183,6 +229,19 @@ const OrdersScreen = ({ ...props }) => {
           clickRoute={detailPage}
           editRoute={editPage}
         />
+      </TabPanel>
+      {/* Tab Budgets */}
+      <TabPanel value={currentTab} index={1}>
+        <AdvancedTable
+          rows={budgets}
+          headCells={headCellsBudget}
+          filters={filters}
+          clickRoute={detailPage}
+          editRoute={editPage}
+        />
+      </TabPanel>
+
+       
       </Content>
     </Grid>
   );
@@ -199,6 +258,8 @@ OrdersScreen.propTypes = {
   editPage: PropTypes.string,
   cards: PropTypes.arrayOf(PropTypes.object),
   headCells: PropTypes.array,
+  budgets: PropTypes.array,
+  headCellsBudget: PropTypes.array,
 };
 
 export default OrdersScreen;

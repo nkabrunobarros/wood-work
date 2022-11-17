@@ -39,8 +39,6 @@ import PropTypes from 'prop-types';
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
 
-  console.log(props);
-
   const { 
     client, 
     login, 
@@ -111,15 +109,12 @@ const SignIn = (props) => {
         const resUser = await me({ ...result.data.payload });
         const user = resUser.data.payload;
 
+        console.log(user);
         localStorage.setItem("user", JSON.stringify(user));
         // Success
         ToastSet(loadingNotification, 'A entrar', 'success');
         setLoading(false);
-        console.log(user.perfil.descricao);
-        console.log(loginSuccessRoute);
-        console.log(loginSuccessRouteTerm);
-        console.log(user.tos);
-
+     
 
 
         if (IsInternal(user.perfil.descricao)) router.push(loginSuccessRoute);

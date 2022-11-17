@@ -77,7 +77,7 @@ const FilterItem = (data, item, col) => {
           else return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
 
 
-          default: if (['id', 'giveName', 'numero', 'nome', 'name', 'custo'].find(ele => ele === col2[0])) return <Typography color="link.main" className="link" >{item[col2[0]]}</Typography>;
+          default: if (['giveName', 'nome', 'name', 'custo'].find(ele => ele === col2[0])) return <Typography variant='md' color="link.main" className="link" >{item[col2[0]]}</Typography>;
           else return <Typography variant='md'>{item[col2[0]]}</Typography>;
 
         }

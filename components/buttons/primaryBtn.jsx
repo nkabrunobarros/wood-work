@@ -12,7 +12,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
     pointerEvents: disabled ? 'none' : 'all',
     opacity: disabled ? '0.5' : '1',
     border: noBorder && 'none',
-    // maxHeight: '20px'
+    maxHeight: '30px'
   };
 
   return !hidden && (

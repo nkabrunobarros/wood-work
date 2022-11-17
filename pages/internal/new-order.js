@@ -3,18 +3,20 @@ import Loader from '../../components/loader/loader';
 import NewOrderScreen from '../../components/pages/newOrder/newOrder';
 import routes from '../../navigation/routes';
 
+import * as BudgetsActions from '../../pages/api/actions/budget';
 import * as ClientActions from '../../pages/api/actions/client';
 import * as ProductsActions from '../../pages/api/actions/product';
-// import * as StockActions from '../../pages/api/actions/stock';
 
 const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
+  const [budgets, setBudgets] = useState();
 
   useEffect(() => {
     const getData = async () => {
-      await ClientActions.clients().then((response) => setClients(response.data.payload.data));
+      await ClientActions.clients().then((response) => setClients(response.data));
+      await BudgetsActions.budgets().then((response) => setBudgets(response.data));
 
       await ProductsActions.products().then((response) => {
         setProducts(response.data.payload.data);
@@ -40,25 +42,29 @@ const NewOrder = ({ ...pageProps }) => {
 
   }, []);
 
-  const breadcrumbsPath = [
-    {
-      title: 'Encomendas',
-      href: `${routes.private.internal.orders}`,
-    },
-    {
-      title: 'Nova Encomenda',
-      href: `${routes.private.internal.orders}`,
-    },
-  ];
+  if (loaded) {
+    const breadcrumbsPath = [
+      {
+        title: 'Encomendas',
+        href: `${routes.private.internal.orders}`,
+      },
+      {
+        title: 'Nova Encomenda',
+        href: `${routes.private.internal.orders}`,
+      },
+    ];
+  
+    const props = {
+      pageProps,
+      breadcrumbsPath,
+      clients,
+      products,
+      budgets,
+    };
+  
+    return <NewOrderScreen {...props} />;
 
-  const props = {
-    pageProps,
-    breadcrumbsPath,
-    clients,
-    products,
-  };
-
-  return loaded ? <NewOrderScreen {...props} /> : <Loader center={true} />;
+  } else return <Loader center={true}  />;
 };
 
 export default NewOrder;

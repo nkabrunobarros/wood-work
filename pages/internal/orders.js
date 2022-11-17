@@ -14,6 +14,7 @@ import OrdersScreen from '../../components/pages/orders/orders';
 import PropTypes from 'prop-types';
 
 //  USEFUL
+import * as BudgetsActions from '../../pages/api/actions/budget';
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as OrdersActions from '../../pages/api/actions/order';
@@ -30,6 +31,7 @@ const Orders = ({ ...pageProps }) => {
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
+  const [budgets, setBudgets] = useState();
   const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const detailPage = routes.private.internal.order;
@@ -83,35 +85,11 @@ const Orders = ({ ...pageProps }) => {
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
       await ClientsActions.clients().then((response) => setClients(response.data));
+      await BudgetsActions.budgets().then((response) => setBudgets(response.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
-
-  // const pos = [
-  //   'O', null, 'X',
-  //   'O', 'X', 'O',
-  //   'X', null, null,
-  // ];
-
-  // //  Horizontal
-  // if (pos[0] === pos[1] && pos[0] === pos[2]) console.log('winner : ', pos[0])
-
-  // if (pos[3] === pos[4] && pos[3] === pos[5]) console.log('winner : ', pos[3])
-
-  // if (pos[6] === pos[7] && pos[6] === pos[8]) console.log('winner : ', pos[6])
-
-  // //  VERTICAL
-  // if (pos[0] === pos[3] && pos[0] === pos[6]) console.log('winner : ', pos[0])
-
-  // if (pos[1] === pos[4] && pos[1] === pos[7]) console.log('winner : ', pos[1])
-
-  // if (pos[2] === pos[5] && pos[2] === pos[8]) console.log('winner : ', pos[2])
-
-  // //  Sides
-  // if (pos[0] === pos[4] && pos[0] === pos[8]) console.log('winner : ', pos[0])
-
-  // if (pos[2] === pos[4] && pos[2] === pos[6]) console.log('winner : ', pos[2])
 
   if (loaded) {
     //  Breadcrumbs path feed
@@ -226,6 +204,34 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
+
+    const headCellsBudget = [
+      {
+        id: 'name.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nome',
+      },
+      {
+        id: 'amount.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Quantidade',
+      },
+      {
+        id: 'belongsTo.object',
+        numeric: false,
+        disablePadding: false,
+        label: 'Cliente',
+      },
+      {
+        id: 'aprovedDate.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Data Aprovada',
+      },
+    ];
+
     const props = {
       items: orders,
       panelsInfo,
@@ -237,7 +243,9 @@ const Orders = ({ ...pageProps }) => {
       editPage,
       pageProps,
       products,
-      categories
+      categories,
+      budgets,
+      headCellsBudget
     };
 
     return <OrdersScreen {...props} />;
