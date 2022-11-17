@@ -118,7 +118,7 @@ const ClientTab = (props) => {
           </Grid>
           <Grid container md={9} sm={12} sx={{ border: '1px solid var(--white)' }}>
             {!clients.find(ele => ele.id === client.value) ?
-              <Box className='fullCenter' sx={{ width: '100%', border: '1px solid' }}>
+              <Box className='fullCenter' sx={{ width: '100%', border: '1px solid', borderColor: 'divider' }}>
                 <Typography>Escolha um cliente</Typography>
               </Box>
               :

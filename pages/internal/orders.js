@@ -230,6 +230,12 @@ const Orders = ({ ...pageProps }) => {
         disablePadding: false,
         label: 'Data Aprovada',
       },
+      {
+        id: 'actionsConf',
+        numeric: true,
+        disablePadding: false,
+        label: 'Ações',
+      },
     ];
 
     const props = {

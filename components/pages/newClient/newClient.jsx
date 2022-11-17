@@ -42,7 +42,6 @@ const NewClient = ({ ...props }) => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
 
-
   const [inputFields, setInputFields] = useState(
     [
       {
@@ -96,7 +95,6 @@ const NewClient = ({ ...props }) => {
         required: true,
         tooltip: ''
       },
-
       {
         id: 'postalCode',
         label: 'Codigo Postal',
@@ -131,6 +129,18 @@ const NewClient = ({ ...props }) => {
         type: 'area',
         required: true,
         tooltip: ''
+      },
+      {
+        id: 'clientType',
+        label: 'Tipo Cliente',
+        value: 'Potential',
+        error: '',
+        options: [
+          { id: 'Potential', label: 'Potential' },
+          { id: 'Buyer',label: 'Buyer' },
+        ],
+        required: true,
+        tooltip: 'Isto ainda nao está aplicado no fireware.'
       },
       {
         id: 'password',
@@ -193,6 +203,7 @@ const NewClient = ({ ...props }) => {
       ]
     };
 
+
     inputFields.map((ele) => {
       builtClient[ele.id] = {};
 
@@ -208,6 +219,9 @@ const NewClient = ({ ...props }) => {
         builtClient[ele.id].value = ele.value;
       }
     });
+
+    //  FIX: remove this when type is in fireware
+    // delete builtClient.clientType;
 
     try {
       await ClientActions.saveClient(builtClient)

@@ -22,8 +22,7 @@ import SwipeableViews from 'react-swipeable-views';
 import routes from '../../../navigation/routes';
 
 //  Actions
-import * as OrdersActions from '../../../pages/api/actions/order';
-
+import * as BudgetActions from '../../../pages/api/actions/budget';
 //  Page Component Styles
 
 //  Breadcrumbs Component
@@ -54,7 +53,7 @@ import FinalizeTab from './Tabs/finalizeTab';
 
 
 const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, products, budgets, clients } = props;
+  const { breadcrumbsPath, pageProps, budgets } = props;
 
   const [client, setClient] = useState({
     value: " ",
@@ -62,8 +61,6 @@ const NewOrder = ({ ...props }) => {
   });
 
   const [obs, setObs] = useState('');
-  // const [errorStartAt, setErrorStartAt] = useState('');
-  // const [errorEndAt, setErrorEndAt] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -121,6 +118,7 @@ const NewOrder = ({ ...props }) => {
     const data = {...client};
 
     data.value = props;
+    data.error = '';
     setClient(data);
   }
 
@@ -219,7 +217,6 @@ const NewOrder = ({ ...props }) => {
   }
 
   async function CreateOrder() {
-
     const builtOrder = {
       userId: JSON.parse(localStorage.getItem('user')).id,
       status: 'Em orçamentação',
@@ -232,37 +229,70 @@ const NewOrder = ({ ...props }) => {
 
     setProcessing(true);
 
-    try {
-      await OrdersActions.saveOrder(builtOrder).then((response) => {
+    if (false)
+    {
+  
+      // try {
+      //   await OrdersActions.saveOrder(builtOrder).then((response) => {
+      //     inputFields.map(async (input) => {
+      //       const buildOrderDetail = {
+      //         productId: input.prod,
+      //         orderId: response.data.payload.id,
+      //         status: 'not started',
+      //         amount: input.amount,
+      //         completed: 0,
+      //       };
+  
+      //       await OrdersActions.saveOrderDetails(buildOrderDetail);
+      //     });
+  
+      //     setNewestOrder(response.data.payload);
+      //     setSuccessOpen(true);
+  
+      //   });
+      // } catch (err) {
+      //   toast.error('Algo Aconteceu');
+      // }
+  
 
-        inputFields.map(async (input) => {
 
-          const buildOrderDetail = {
-            productId: input.prod,
-            orderId: response.data.payload.id,
-            status: 'not started',
-            amount: input.amount,
-            completed: 0,
+    } else {
+      const built = {
+       id: budget.id || `urn:ngsi-ld:Budget:${budget.name.replace(' ', '_').toUpperCase()}`,
+        type: "Budget",
+        name: {
+            "type": "Property",
+            value: budget.id || budget.name
+        },
+        amount: {
+            "type": "Property",
+            value: budget.amount
+        },
+        aprovedDate: {
+            "type": "Property",
+            value: ""
+        },
+        image: {
+            "type": "Property",
+            value: "urn:ngsi-ld:Image:Budget:MC_MUEBLETV_A"
+        },
+        belongsTo: {
+            "type": "Relationship",
+            object: client.value
+        },
+        "@context": [
+            "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        ]
+    };
 
-          };
-
-          await OrdersActions.saveOrderDetails(buildOrderDetail);
-        });
-
-        setNewestOrder(response.data.payload);
-        setDialogOpen(false);
-        setProcessing(false);
-        setSuccessOpen(true);
-
-      });
-    } catch (err) {
-      toast.error('Algo Aconteceu');
-      setProcessing(false);
-      setDialogOpen(false);
-
+    await BudgetActions.saveBudget(built).then((res) => console.log(res));
     }
-  }
 
+    setProcessing(false);
+    setDialogOpen(false);
+  }
+  
   function ClearAll() {
     setSuccessOpen(false);
     setClient();
@@ -273,10 +303,7 @@ const NewOrder = ({ ...props }) => {
   }
 
   const handleNextStep = () => {
-    const res = ValidateData();
-
-    console.log(res);
-    res && setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    ValidateData() && setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBackStep = () => {
@@ -298,7 +325,7 @@ const NewOrder = ({ ...props }) => {
   };
 
   return (
-    <Grid component='main' >
+    <Grid>
       <CssBaseline />
       <Notification />
       <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -312,9 +339,10 @@ const NewOrder = ({ ...props }) => {
       />
       {processing && <Loader center={true} backdrop />}
       {/* What do do after Create Modal */}
-      <ConfirmDialog  {...successModalProps}
+      <ConfirmDialog  
+        {...successModalProps}
         onConfirm={() => Router.push({
-          pathname: `${routes.private.internal.orders}`,
+          pathname: routes.private.internal.orders,
           query: { order: newestOrder.id }
         })}
       />
@@ -363,6 +391,7 @@ const NewOrder = ({ ...props }) => {
           </Grid>
         </Grid>
         <Box sx={{ width: '100%' }}>
+          {/* Carrousel Component */}
           <SwipeableViews
             axis={theme?.direction === 'rtl' ? 'x-reverse' : 'x'}
             index={activeStep}
@@ -406,7 +435,6 @@ const NewOrder = ({ ...props }) => {
             </TabPanel>
           </SwipeableViews>
         </Box>
-
       </Content>
     </Grid >
   );

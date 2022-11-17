@@ -28,7 +28,7 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { DeleteOutline, EditOutlined } from '@mui/icons-material';
+import { CheckCircleOutline, DeleteOutline, EditOutlined } from '@mui/icons-material';
 import { Filter } from 'lucide-react';
 
 //  Utlis
@@ -36,6 +36,7 @@ import { FilterItem } from '../utils/FilterItem';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
 
 //  Services
+import * as BudgetActions from '../../pages/api/actions/budget';
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as WorkerActions from '../../pages/api/actions/worker';
@@ -49,6 +50,7 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
+import moment from 'moment/moment';
 import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
@@ -71,6 +73,7 @@ const AdvancedTable = ({
   const [data, setData] = useState({});
   const [deleteItemId, setDeleteItemId] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [cellsFilter, setCellsFilter] = useState(headCells);
@@ -137,6 +140,28 @@ const AdvancedTable = ({
 
   }, []);
 
+  async function onConfirmItem() {
+    const thisRow = rows.find(r => r.id === deleteItemId);
+
+    const builtBudget = [{
+      id: deleteItemId,
+      type:'Budget',
+      aprovedDate: {
+          type: "Property",
+          value: moment().format('DD/MM/YYYY HH:MM')
+      },
+    }];
+
+    try {
+      await BudgetActions.updateBudget(builtBudget).then((res) => {
+        setConfirmDialogOpen(false);
+        toast.success('Encomenda Confirmada. Passou para produção');
+        setFilteredItems(filteredItems.filter( ele => ele !== thisRow));
+
+      });
+    } catch (err) {toast.error('Algo aconteceu. Por favor tente mais tarde');}
+  }
+
   function onDeleteClick(row) {
     setDialogOpen(true);
 
@@ -174,8 +199,6 @@ const AdvancedTable = ({
         case routes.private.internal.workers:
             await WorkerActions.deleteWorker({id: deleteItemId })
             .then(() => toast.success('Worker removido com sucesso!'));
-
-            console.log('here');
 
           break;
 
@@ -376,6 +399,15 @@ const AdvancedTable = ({
         onConfirm={() => onDeleteItem()}
         message={dialogMessage}
       />
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        onConfirm={() => onConfirmItem()}
+        message={'Está prestes a confirmar uma ordem!'}
+        icon='Check'
+        iconType='success'
+      />
+      
       <Notification />
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Box className='tableChips'>
@@ -478,9 +510,12 @@ const AdvancedTable = ({
                           >
                             {loaded ?
                               <>
-                                {headCell.id === 'actions' ? (
+                                {headCell.id === 'actions' || headCell.id === 'actionsConf' ? (
                                   <ButtonGroup color='link.main'>
-                                    {CanDo(['WRITE', displaying]) &&
+                                   
+                                    {headCell.id !== 'actionsConf' ? 
+                                    <>
+                                     {CanDo(['WRITE', displaying]) &&
                                       <Tooltip title={'Editar'}>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
@@ -489,8 +524,21 @@ const AdvancedTable = ({
                                           />
                                         </IconButton>
                                       </Tooltip>}
+                                    </> 
+                                    :
+                                      <>
+                                        {CanDo(['WRITE', displaying]) &&
+                                        <Tooltip title={'Confirmar Budget'}>
+                                          <IconButton onClick={() =>{
+                                             setConfirmDialogOpen(true);
+                                             setDeleteItemId(row.id);
+                                             }} >
+                                            <CheckCircleOutline color={'success'} />
+                                          </IconButton>
+                                        </Tooltip>}
+                                    </>}
                                     {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover'}>
-                                      <IconButton onClick={() => onDeleteClick(row)} >
+                                      <IconButton onClick={() => onDeleteClick(true)} >
                                         <DeleteOutline
                                           color={'primary'}
                                         />

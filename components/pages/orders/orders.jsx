@@ -233,7 +233,7 @@ const OrdersScreen = ({ ...props }) => {
       {/* Tab Budgets */}
       <TabPanel value={currentTab} index={1}>
         <AdvancedTable
-          rows={budgets}
+          rows={budgets.filter( ele => ele.aprovedDate.value === '')}
           headCells={headCellsBudget}
           filters={filters}
           clickRoute={detailPage}
