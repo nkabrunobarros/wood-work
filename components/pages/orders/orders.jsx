@@ -43,9 +43,13 @@ const OrdersScreen = ({ ...props }) => {
     headCells,
     products,
     budgets,
-    headCellsBudget
+    headCellsBudget,
+    headCellsProjects,
+    projects
     // categories
   } = props;
+
+  console.log(projects);
 
   const router = useRouter();
   //  States
@@ -222,26 +226,31 @@ const OrdersScreen = ({ ...props }) => {
 
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
-        <AdvancedTable
-          rows={items}
-          headCells={headCells}
-          filters={filters}
-          clickRoute={detailPage}
-          editRoute={editPage}
-        />
-      </TabPanel>
-      {/* Tab Budgets */}
-      <TabPanel value={currentTab} index={1}>
-        <AdvancedTable
-          rows={budgets.filter( ele => ele.aprovedDate.value === '')}
-          headCells={headCellsBudget}
-          filters={filters}
-          clickRoute={detailPage}
-          editRoute={editPage}
-        />
-      </TabPanel>
-
-       
+          <AdvancedTable
+            rows={projects}
+            headCells={headCellsProjects}
+            filters={filters}
+            clickRoute={detailPage}
+            editRoute={editPage}
+          />
+          <AdvancedTable
+            rows={items}
+            headCells={headCells}
+            filters={filters}
+            clickRoute={detailPage}
+            editRoute={editPage}
+          />
+        </TabPanel>
+        {/* Tab Budgets */}
+        <TabPanel value={currentTab} index={1}>
+          <AdvancedTable
+            rows={budgets.filter( ele => ele.aprovedDate.value === '')}
+            headCells={headCellsBudget}
+            filters={filters}
+            clickRoute={detailPage}
+            editRoute={editPage}
+          />
+        </TabPanel>
       </Content>
     </Grid>
   );
@@ -260,6 +269,8 @@ OrdersScreen.propTypes = {
   headCells: PropTypes.array,
   budgets: PropTypes.array,
   headCellsBudget: PropTypes.array,
+  headCellsProjects: PropTypes.array,
+  projects: PropTypes.array,
 };
 
 export default OrdersScreen;

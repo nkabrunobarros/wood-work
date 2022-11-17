@@ -19,6 +19,7 @@ import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as OrdersActions from '../../pages/api/actions/order';
 import * as ProductsActions from '../../pages/api/actions/product';
+import * as ProjectsActions from '../../pages/api/actions/project';
 
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
@@ -32,6 +33,7 @@ const Orders = ({ ...pageProps }) => {
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
   const [budgets, setBudgets] = useState();
+  const [projects, setProjects] = useState();
   const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const detailPage = routes.private.internal.order;
@@ -86,6 +88,7 @@ const Orders = ({ ...pageProps }) => {
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
       await ClientsActions.clients().then((response) => setClients(response.data));
       await BudgetsActions.budgets().then((response) => setBudgets(response.data));
+      await ProjectsActions.projects().then((response) => setProjects(response.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -238,6 +241,45 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
+    const headCellsProjects = [
+      {
+        id: 'name.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Nome',
+      },
+      {
+        id: 'category.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Categoria',
+      },
+      {
+        id: 'orderBy.object',
+        numeric: false,
+        disablePadding: false,
+        label: 'Cliente',
+      },
+      {
+        id: 'status.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Status',
+      },
+      {
+        id: 'nestingTag.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Tag de aninhamento',
+      },
+      {
+        id: 'actions',
+        numeric: true,
+        disablePadding: false,
+        label: 'Ações',
+      },
+    ];
+
     const props = {
       items: orders,
       panelsInfo,
@@ -251,7 +293,9 @@ const Orders = ({ ...pageProps }) => {
       products,
       categories,
       budgets,
-      headCellsBudget
+      headCellsBudget,
+      projects,
+      headCellsProjects
     };
 
     return <OrdersScreen {...props} />;
