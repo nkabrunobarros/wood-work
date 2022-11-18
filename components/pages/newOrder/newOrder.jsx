@@ -248,11 +248,11 @@ const NewOrder = ({ ...props }) => {
 
     } else {
       const built = {
-       id: budget.id || `urn:ngsi-ld:Budget:${budget.name.replace(' ', '_').toUpperCase()}`,
+       id: (budget.id + Math.random()) || `urn:ngsi-ld:Budget:${budget.name.replace(' ', '_').toUpperCase()}`,
         type: "Budget",
         name: {
             "type": "Property",
-            value: budget.id || budget.name
+            value: budget.id.replace('urn:ngsi-ld:Budget:', '') || budget.name
         },
         amount: {
             "type": "Property",
@@ -280,7 +280,7 @@ const NewOrder = ({ ...props }) => {
         ]
     };
 
-    await BudgetActions.saveBudget(built).then((res) => console.log(res));
+    await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
     }
 
     setProcessing(false);

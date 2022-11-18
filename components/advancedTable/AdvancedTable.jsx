@@ -170,7 +170,73 @@ const AdvancedTable = ({
             },
           }];
 
-          await ClientsActions.updateClient(builtClient).then((res) => console.log('Updated Client')).catch((err) => console.log(err));
+          const builtProject = {
+            id: "urn:ngsi-ld:Project:" + thisRow.name.value + Math.random(),
+            type: "Project",
+            name: {
+                type: "Property",
+                value:  thisRow.name.value
+            },
+            category: {
+                type: "Property",
+                value:  thisRow.category.value
+            },
+            status: {
+               type: "Property",
+                value: "waiting"
+            },
+            producedBy: {
+                type: "Relationship",
+                object: ["urn:ngsi-ld:Worker:1","urn:ngsi-ld:Worker:2","urn:ngsi-ld:Worker:3","urn:ngsi-ld:Worker:4","urn:ngsi-ld:Worker:5","urn:ngsi-ld:Worker:6","urn:ngsi-ld:Worker:7","urn:ngsi-ld:Worker:8","urn:ngsi-ld:Worker:9","urn:ngsi-ld:Worker:10","urn:ngsi-ld:Worker:11","urn:ngsi-ld:Worker:12","urn:ngsi-ld:Worker:13"]
+            },
+            orderBy: {
+               type: "Relationship",
+                object:  thisRow.belongsTo.object
+            },
+            assemblyBy: {
+                type: "Relationship",
+                object: ["urn:ngsi-ld:Worker:10"]
+            },
+            image: {
+                type: "Property",
+                value: "urn:ngsi-ld:image:project:MC_MUEBLETV_A"
+            },
+            amount: {
+              type: 'Property',
+              value: thisRow.amount.value || 0
+            },
+            expedition: {
+                type: "Relationship",
+                object: "urn:ngsi-ld:expedition:" + thisRow.name.value
+            },
+            "@context": [
+                "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
+                "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+            ]
+        };
+
+        const config = {
+          method: 'post',
+          url: 'http://woodwork4.ddns.net/api//ngsi-ld/v1/entities/',
+          headers: { 
+            'Content-Type': 'application/ld+json', 
+            'Fiware-Service': 'woodwork40'
+          },
+          data: builtProject
+        };
+
+        const axios = require('axios');
+
+        axios(config)
+        .then(() => {
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+          // await ClientsActions.updateClient(builtClient).then(async () => {
+
+          // }).catch((err) => console.log(err));
         } else console.log('did not find  the owner');
       });
     } catch (err) {toast.error('Algo aconteceu. Por favor tente mais tarde');}
@@ -597,16 +663,5 @@ const AdvancedTable = ({
 };
 
 
-AdvancedTable.propTypes = {
-  children: PropTypes.any,
-  rows: PropTypes.array,
-  headCells: PropTypes.array,
-  headCellsUpper: PropTypes.array,
-  clickRoute: PropTypes.any,
-  actionId: PropTypes.any,
-  noPagination: PropTypes.bool,
-  editRoute: PropTypes.any,
-  filters: PropTypes.object,
-};
 
 export default AdvancedTable;

@@ -115,8 +115,8 @@ const FilterItem = (data, item, col) => {
 
       case 4: {
         if (col === 'expedition.object.deliveryFlag.value') {
-          if (item[col2[0]][col2[1]][col2[2]][col2[3]] === 0 && item.expedition.object.expeditionTime?.value) return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em curso</Typography></Tooltip>;
-          else if (item[col2[0]][col2[1]][col2[2]][col2[3]] === 1) return <Typography variant='md' className="successBalloon">Entrege</Typography>;
+          if (item.expedition.object?.deliveryFlag.value === 0 && item.expedition?.object.expeditionTime?.value) return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em curso</Typography></Tooltip>;
+          else if (item.expedition.object?.deliveryFlag.value === 1) return <Typography variant='md' className="successBalloon">Entrege</Typography>;
           else return <Typography variant='md' className="errorBalloon">Não</Typography>;
         }
 
