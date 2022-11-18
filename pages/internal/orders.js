@@ -275,6 +275,12 @@ const Orders = ({ ...pageProps }) => {
         label: 'Produção',
       },
       {
+        id: 'ord_amount_proj',
+        numeric: false,
+        disablePadding: false,
+        label: 'Quantidade',
+      },
+      {
         id: 'expedition.object.deliveryFlag.value',
         numeric: false,
         disablePadding: false,

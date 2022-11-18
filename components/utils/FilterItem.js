@@ -69,6 +69,24 @@ const FilterItem = (data, item, col) => {
 
           }
 
+          case "ord_amount_proj": {
+
+            return <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box>
+                <Typography variant="body2" color="text.secondary">0</Typography>
+              </Box>
+              <Tooltip title={`${(((item.completed?.value || 0) * 100) / (item.amount?.value || 0) || 0)} %`}>
+                <Box sx={{ width: '100%', padding: '0.5rem' }}>
+                  <LinearProgress variant="determinate" value={((item.completed?.value || 0) * 100) / (item.amount?.value || 0)} />
+                </Box>
+              </Tooltip>
+              <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" color="text.secondary">{item.amount?.value || 0}</Typography>
+              </Box>
+            </Box>;
+
+          }
+
           case "stock": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
           else return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
 
