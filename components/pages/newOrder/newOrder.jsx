@@ -60,6 +60,7 @@ const NewOrder = ({ ...props }) => {
     error: ''
   });
 
+
   const [obs, setObs] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -87,6 +88,10 @@ const NewOrder = ({ ...props }) => {
     amount: {
       value: '',
       error: '',
+    },
+    category: {
+      value: '',
+      error: '',
     }
   });
 
@@ -96,6 +101,10 @@ const NewOrder = ({ ...props }) => {
       error: '',
     },
     amount: {
+      value: '',
+      error: '',
+    },
+    category: {
       value: '',
       error: '',
     }
@@ -129,8 +138,10 @@ const NewOrder = ({ ...props }) => {
       data[props.name].error = '';
 
       if (props.name === 'id') {
-        data.amount.value = budgets.find(ele => ele.id === props.value)?.amount?.value;
+        data.amount.value = budgets.find(ele => ele.id === props.value)?.amount?.value  || '';
         data.amount.error =  '';
+        data.category.value = budgets.find(ele => ele.id === props.value)?.vategory?.value || '';
+        data.category.error =  '';
       }
 
       setChosenBudget(data);
@@ -146,7 +157,6 @@ const NewOrder = ({ ...props }) => {
 
   function ValidateData() {
     let hasErrors = false;
-
 
     switch (activeStep) {
       case 0:
@@ -177,6 +187,12 @@ const NewOrder = ({ ...props }) => {
             hasErrors = true;
           }
 
+          if (chosenBudget.category.value === '')
+          {
+            data.category.error = 'Campo Obrigatório';
+            hasErrors = true;
+          }
+
           setChosenBudget(data);
         } else {
           const data = {...newBudgetData};
@@ -193,13 +209,19 @@ const NewOrder = ({ ...props }) => {
             hasErrors = true;
           }
 
+          if (newBudgetData.category.value === '')
+          {
+            data.category.error = 'Campo Obrigatório';
+            hasErrors = true;
+          }
+
           setNewBudgetData(data);
         }
 
         !hasErrors && setBudget(budgetTabIndex === 0 ? 
-          {id: chosenBudget.id.value,amount: chosenBudget.amount.value}
+          {id: chosenBudget.id.value,amount: chosenBudget.amount.value, category: chosenBudget.category.value}
           : 
-          {name: newBudgetData.name.value,amount: newBudgetData.amount.value}
+          {name: newBudgetData.name.value,amount: newBudgetData.amount.value, category: chosenBudget.category.value}
           );
 
         break;
@@ -273,8 +295,12 @@ const NewOrder = ({ ...props }) => {
             value: ""
         },
         image: {
-            "type": "Property",
+            type: "Property",
             value: "urn:ngsi-ld:Image:Budget:MC_MUEBLETV_A"
+        },
+        category: {
+            type: "Property",
+            value: budget.category || ''
         },
         belongsTo: {
             "type": "Relationship",
@@ -411,7 +437,7 @@ const NewOrder = ({ ...props }) => {
                 onProcessing={setProcessing}
               />
             </TabPanel>
-            {/* Orçamento Tab */}
+            {/* Budget Tab */}
             <TabPanel value={activeStep} index={1}>
               <BudgetTab {...props}
                 dragDrop={{getRootProps, getInputProps, isDragActive}}

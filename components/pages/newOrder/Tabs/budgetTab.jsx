@@ -77,6 +77,17 @@ const BudgetTab = (props) => {
                               disabled={!chosenBudget.id.value}
                              />
                         </Grid>
+                        <Grid container md={6} p={1}>
+                            <MyInput
+                              label='Categoria'
+                              required
+                              value={chosenBudget.category.value}
+                              error={chosenBudget.category.error}
+                              name='category'
+                              onChange={(e) => onBudgetChange(e.target)}
+                              disabled={!chosenBudget.id.value}
+                             />
+                        </Grid>
                       </Grid>
                     </TabPanel>
                     {/* Create New Budget */}
@@ -102,6 +113,16 @@ const BudgetTab = (props) => {
                               error={newBudgetData.amount.error}
                               onChange={(e) => onNewBudgetChange(e.target)}
                             />
+                        </Grid>
+                        <Grid container md={6} p={1}>
+                            <MyInput
+                              label='Categoria'
+                              required
+                              value={newBudgetData.category.value}
+                              error={newBudgetData.category.error}
+                              name='category'
+                              onChange={(e) => onNewBudgetChange(e.target)}
+                             />
                         </Grid>
                       </Grid>
                     </TabPanel>

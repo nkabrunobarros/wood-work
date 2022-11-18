@@ -84,11 +84,19 @@ const FilterItem = (data, item, col) => {
       }
 
       case 2: {
-        switch (col2[1]) {
+        switch (col) {
           case 'name': return <Typography color="link.main" className="link" >{item[col2[0]][col2[1]]}</Typography>;
 
+          case 'status.value': {
+            switch (item.status.value.toLowerCase()) {
+              case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+              case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
+              default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+            }
+          }
+
           default: {
-            return item[col2[0]] && item[col2[0]][col2[1]] ? <Typography variant='md'>{item[col2[0]][col2[1]]}</Typography> : <Typography variant='md'>Nan</Typography>;
+            return item[col2[0]] && item[col2[0]][col2[1]] ? <Typography variant='md'>{item[col2[0]][col2[1]]}</Typography> : <Typography variant='md'></Typography>;
           }
         }
       }

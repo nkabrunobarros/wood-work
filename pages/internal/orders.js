@@ -207,7 +207,6 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
-
     const headCellsBudget = [
       {
         id: 'name.value',

@@ -166,7 +166,7 @@ const OrdersScreen = ({ ...props }) => {
               disablePortal
               id='combo-box-demo'
               options={clients}
-              getOptionLabel={(option) => option.giveName}
+              getOptionLabel={(option) => option.givenName?.value}
               onChange={(e) => setClient(e.target.value)}
               renderInput={(params) => (
                 <TextField
