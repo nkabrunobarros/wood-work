@@ -153,11 +153,25 @@ const AdvancedTable = ({
     }];
 
     try {
-      await BudgetActions.updateBudget(builtBudget).then((res) => {
+      await BudgetActions.updateBudget(builtBudget).then(async() => {
         setConfirmDialogOpen(false);
         toast.success('Encomenda Confirmada. Passou para produção');
         setFilteredItems(filteredItems.filter( ele => ele !== thisRow));
 
+        //  TODO: FIX OWNER UPDATE
+        if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined  )
+        {
+          const builtClient = [{
+            id: thisRow.belongsTo.object,
+            type: 'Owner',
+            ownerType: {
+                type: 'Property',
+                value: 'buyer'
+            },
+          }];
+
+          await ClientsActions.updateClient(builtClient).then((res) => console.log('Updated Client')).catch((err) => console.log(err));
+        } else console.log('did not find  the owner');
       });
     } catch (err) {toast.error('Algo aconteceu. Por favor tente mais tarde');}
   }

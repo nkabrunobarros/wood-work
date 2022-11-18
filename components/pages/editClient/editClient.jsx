@@ -278,8 +278,6 @@ const EditClient = ({ ...props }) => {
 
   async function onConfirm() {
 
-    console.log(client);
-
     const builtClient = {
       id: client.id,
       type: client.type,
@@ -316,8 +314,6 @@ const EditClient = ({ ...props }) => {
         builtClient[ele.id].value = ele.value;
       }
     });
-
-    console.log(builtClient);
 
     try {
       await ClientActions.updateClient(

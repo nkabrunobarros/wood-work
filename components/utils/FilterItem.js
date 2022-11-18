@@ -113,7 +113,16 @@ const FilterItem = (data, item, col) => {
 
       }
 
-      case 4: return <Typography variant='md'>{item[col2[0]][col2[1]][col2[2]][col2[3]]}</Typography>;
+      case 4: {
+        if (col === 'expedition.object.deliveryFlag.value') {
+          if (item[col2[0]][col2[1]][col2[2]][col2[3]] === 0 && item.expedition.object.expeditionTime?.value) return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em curso</Typography></Tooltip>;
+          else if (item[col2[0]][col2[1]][col2[2]][col2[3]] === 1) return <Typography variant='md' className="successBalloon">Entrege</Typography>;
+          else return <Typography variant='md' className="errorBalloon">Não</Typography>;
+        }
+
+        return <Typography variant='md'>{item[col2[0]][col2[1]][col2[2]][col2[3]]}</Typography>;
+      }
+
       default: return <Typography variant='md'>{displayWithStyle(item[col], col)}</Typography>;
     }
   }

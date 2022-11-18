@@ -18,8 +18,6 @@ import { ArrowLeft, ArrowRight, Save, X } from 'lucide-react';
 import SwipeableViews from 'react-swipeable-views';
 
 
-//  Navigation
-import routes from '../../../navigation/routes';
 
 //  Actions
 import * as BudgetActions from '../../../pages/api/actions/budget';
@@ -36,7 +34,6 @@ import Content from '../../content/content';
 import { toast } from 'react-toastify';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
-
 
 //  Loader
 import Loader from '../../loader/loader';
@@ -60,12 +57,10 @@ const NewOrder = ({ ...props }) => {
     error: ''
   });
 
-
   const [obs, setObs] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [newestOrder, setNewestOrder] = useState();
   const [startAt, setStartAt] = useState();
   const [endAt, setEndAt] = useState();
   const [uploadedFiles, setUploadedFiles] = useState();
@@ -81,33 +76,15 @@ const NewOrder = ({ ...props }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: false });
 
   const [newBudgetData, setNewBudgetData] = useState({
-    name: {
-      value: '',
-      error: '',
-    },
-    amount: {
-      value: '',
-      error: '',
-    },
-    category: {
-      value: '',
-      error: '',
-    }
+    name: {value: '', error: '' },
+    amount: { value: '',error: '' },
+    category: {value: '',error: ''}
   });
 
   const [chosenBudget, setChosenBudget] = useState({
-    id: {
-      value: '',
-      error: '',
-    },
-    amount: {
-      value: '',
-      error: '',
-    },
-    category: {
-      value: '',
-      error: '',
-    }
+    id: {value: '', error: '' },
+    amount: {value: '', error: '' },
+    category: {value: '', error: '' }
   });
 
   const [budget, setBudget] = useState();
@@ -140,7 +117,7 @@ const NewOrder = ({ ...props }) => {
       if (props.name === 'id') {
         data.amount.value = budgets.find(ele => ele.id === props.value)?.amount?.value  || '';
         data.amount.error =  '';
-        data.category.value = budgets.find(ele => ele.id === props.value)?.vategory?.value || '';
+        data.category.value = budgets.find(ele => ele.id === props.value)?.category?.value || '';
         data.category.error =  '';
       }
 
@@ -218,10 +195,11 @@ const NewOrder = ({ ...props }) => {
           setNewBudgetData(data);
         }
 
+        //  Build final Budget based on index
         !hasErrors && setBudget(budgetTabIndex === 0 ? 
           {id: chosenBudget.id.value,amount: chosenBudget.amount.value, category: chosenBudget.category.value}
           : 
-          {name: newBudgetData.name.value,amount: newBudgetData.amount.value, category: chosenBudget.category.value}
+          {name: newBudgetData.name.value,amount: newBudgetData.amount.value, category: newBudgetData.category.value}
           );
 
         break;
@@ -239,16 +217,6 @@ const NewOrder = ({ ...props }) => {
   }
 
   async function CreateOrder() {
-    const builtOrder = {
-      userId: JSON.parse(localStorage.getItem('user')).id,
-      status: 'Em orçamentação',
-      clientId: client,
-      obs,
-      endAt,
-      startAt,
-      createdAt: Date.now(),
-    };
-
     setProcessing(true);
 
     if (false)
@@ -367,10 +335,10 @@ const NewOrder = ({ ...props }) => {
       {/* What do do after Create Modal */}
       <ConfirmDialog  
         {...successModalProps}
-        onConfirm={() => Router.push({
-          pathname: routes.private.internal.orders,
-          query: { order: newestOrder.id }
-        })}
+        // onConfirm={() => Router.push({
+        //   pathname: routes.private.internal.orders,
+        //   query: { order: newestOrder.id }
+        // })}
       />
       <Content>
         <Grid container md={12} sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>

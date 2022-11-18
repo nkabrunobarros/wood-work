@@ -13,19 +13,17 @@ import OrdersScreen from '../../components/pages/orders/orders';
 //  Proptypes
 import PropTypes from 'prop-types';
 
-//  USEFUL
+//  Actions
 import * as BudgetsActions from '../../pages/api/actions/budget';
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
+import * as ExpeditionActions from '../../pages/api/actions/expedition';
 import * as OrdersActions from '../../pages/api/actions/order';
 import * as ProductsActions from '../../pages/api/actions/product';
 import * as ProjectsActions from '../../pages/api/actions/project';
 
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
-
-
-//  TODO: TROCAR PARA UTILIZAR OS DADOS FIREWARE E DAI PARA A FRENTE
 
 const Orders = ({ ...pageProps }) => {
   const [panelsInfo, setPanelsInfo] = useState();
@@ -34,6 +32,7 @@ const Orders = ({ ...pageProps }) => {
   const [products, setProducts] = useState();
   const [budgets, setBudgets] = useState();
   const [projects, setProjects] = useState();
+  // const [expeditions, setExpeditions] = useState();
   const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const detailPage = routes.private.internal.order;
@@ -88,13 +87,23 @@ const Orders = ({ ...pageProps }) => {
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
       await ClientsActions.clients().then((response) => setClients(response.data));
       await BudgetsActions.budgets().then((response) => setBudgets(response.data));
-      await ProjectsActions.projects().then((response) => setProjects(response.data));
+
+      await ExpeditionActions.expeditions().then(async (expResponse) => {
+        // setExpeditions(expResponse.data);
+
+        //  Get projects and build
+        await ProjectsActions.projects().then((response) => {
+          response.data.map((proj, index) => (response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase())));
+          setProjects(response.data);
+        });
+      });
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
+
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
@@ -263,13 +272,19 @@ const Orders = ({ ...pageProps }) => {
         id: 'status.value',
         numeric: false,
         disablePadding: false,
-        label: 'Status',
+        label: 'Produção',
+      },
+      {
+        id: 'expedition.object.deliveryFlag.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Em distribuição',
       },
       {
         id: 'nestingTag.value',
         numeric: false,
         disablePadding: false,
-        label: 'Tag de aninhamento',
+        label: 'Tag de alinhamento',
       },
       {
         id: 'actions',

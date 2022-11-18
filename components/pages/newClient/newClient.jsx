@@ -131,13 +131,13 @@ const NewClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'clientType',
+        id: 'ownerType',
         label: 'Tipo Cliente',
-        value: 'Potential',
+        value: 'owner',
         error: '',
         options: [
-          { id: 'Potential', label: 'Potential' },
-          { id: 'Buyer',label: 'Buyer' },
+          { id: 'owner', label: 'Potential' },
+          { id: 'buyer',label: 'Buyer' },
         ],
         required: true,
         tooltip: 'Isto ainda nao está aplicado no fireware.'
@@ -195,7 +195,7 @@ const NewClient = ({ ...props }) => {
 
   async function handleSave() {
     const builtClient = {
-      id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'legalName').value}`,
+      id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'legalName').value.replace(/ /g, '')}`,
       type: 'Owner',
       "@context": [
         "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",

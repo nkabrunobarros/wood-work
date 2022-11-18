@@ -43,7 +43,7 @@ const Clients = ({ ...pageProps }) => {
   if (loaded) {
     const headCells = [
       {
-        id: 'givenName.value',
+        id: 'legalName.value',
         numeric: false,
         disablePadding: false,
         label: 'Nome',

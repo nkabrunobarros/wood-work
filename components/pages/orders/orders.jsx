@@ -49,8 +49,6 @@ const OrdersScreen = ({ ...props }) => {
     // categories
   } = props;
 
-  console.log(projects);
-
   const router = useRouter();
   //  States
   const [number, setNumber] = useState(router.query.order || '');
