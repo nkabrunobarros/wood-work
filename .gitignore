@@ -2,6 +2,14 @@
 
 # dependencies
 /node_modules
+/cypress
+/ios
+/android
+/models
+/.vscode
+.gitignore
+.prettierrc.json
+Questions.txt
 /.pnp
 .pnp.js
 
