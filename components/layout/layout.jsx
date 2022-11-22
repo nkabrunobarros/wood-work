@@ -121,24 +121,11 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     setMobileOpen(!mobileOpen);
   }
 
-  const clientPages = [
-    `${routes.private.messages}`,
-    `${routes.private.order}`,
-    `${routes.private.orders}`,
-    `${routes.private.profile}`,
-  ];
-
   let imAllowed;
 
   if (loaded) {
-    const loggedUser = pageProps.loggedUser;
+    imAllowed = !!pageProps.loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
 
-    imAllowed = !!loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
-
-    let footer = '';
-  
-    if (clientPages.includes(path.route)) footer = 'client';
-  
     if (noLayoutScreens.includes(path.route)) return children;
 
     return  (
@@ -205,7 +192,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   
         </Box>
         <Box style={{ width: '100%' }}>
-          <Footer section={footer} {...pageProps} />
+          <Footer {...pageProps} />
         </Box>
       </React.Fragment>);
   } else return  <Loader center={true} />;

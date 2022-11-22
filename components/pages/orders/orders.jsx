@@ -31,6 +31,7 @@ import CanDo from '../../utils/CanDo';
 
 //  Navigation
 import routes from '../../../navigation/routes';
+import IsInternal from '../../utils/IsInternal';
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -56,6 +57,7 @@ const OrdersScreen = ({ ...props }) => {
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
+  const internalPOV = !IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
 
   const ClearFilters = () => {
     setProduct('');
@@ -211,12 +213,12 @@ const OrdersScreen = ({ ...props }) => {
             onClick={() => Router.push(routes.private.internal.newOrder)}
           />
         </Box>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        {internalPOV &&<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)} aria-label="basic tabs example">
             <Tab label="Em Produção" {...a11yProps(0)} />
             <Tab label="Por Confirmar" {...a11yProps(1)} />
           </Tabs>
-        </Box>
+        </Box> }
 
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
@@ -229,7 +231,7 @@ const OrdersScreen = ({ ...props }) => {
           />
         </TabPanel>
         {/* Tab Budgets */}
-        <TabPanel value={currentTab} index={1}>
+         {internalPOV && <TabPanel value={currentTab} index={1}>
           <AdvancedTable
             rows={budgets.filter( ele => ele.aprovedDate.value === '')}
             headCells={headCellsBudget}
@@ -237,7 +239,7 @@ const OrdersScreen = ({ ...props }) => {
             clickRoute={detailPage}
             editRoute={editPage}
           />
-        </TabPanel>
+        </TabPanel>}
       </Content>
     </Grid>
   );

@@ -16,19 +16,22 @@ import PropTypes from 'prop-types';
 //  Data services
 import * as CategoriesActions from '../pages/api/actions/category';
 import * as ClientsActions from '../pages/api/actions/client';
-import * as OrdersActions from '../pages/api/actions/order';
+import * as ExpeditionActions from '../pages/api/actions/expedition';
 import * as ProductsActions from '../pages/api/actions/product';
+import * as ProjectsActions from '../pages/api/actions/project';
 
 //  Icons
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
 
 const Orders = ({ ...pageProps }) => {
-  const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
   const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const [panelsInfo, setPanelsInfo] = useState();
   const [products, setProducts] = useState();
+  const [projects, setProjects] = useState();
+  const detailPage = routes.private.order;
+
 
   useEffect(() => {
     const getData = async () => {
@@ -39,47 +42,46 @@ const Orders = ({ ...pageProps }) => {
         concluded: 0,
       };
 
-      await OrdersActions.orders().then(async (response) => {
-
-        response.data.payload.data.map(async (ord, i) => {
-          switch (ord.status) {
-            case 'Em orçamentação':
-              counts.budgeting++;
-
-              break;
-
-            case 'Em desenho':
-              counts.drawing++;
-
-              break;
-
-            case 'Em produçao':
-              counts.production++;
-
-              break;
-            case 'Concluida':
-              counts.concluded++;
-
-              break;
-
-            default:
-              break;
-          }
-
-
-          // await StockActions.stock({ id: ord.product.id }).then((res) => {
-          //   response.data.payload.data[i].stock = res.data.payload.amount;
-          // });
-
-        });
-
-        setOrders(response.data.payload.data);
-        setPanelsInfo(counts);
-      });
-
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
-      await ClientsActions.clients().then((response) => setClients(response.data.payload.data));
+      await ClientsActions.clients().then((response) => setClients(response.data));
+
+      await ExpeditionActions.expeditions().then(async (expResponse) => {
+        //  Get projects and build
+        await ProjectsActions.projects().then((response) => {
+          response.data.map((proj, index) => (response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase())));
+          setProjects(response.data);
+
+          response.data.map(async (ord) => {
+            switch (ord.status.value.toLowerCase()) {
+              case 'waiting':
+                counts.budgeting++;
+
+                break;
+
+              case 'em desenho':
+                counts.drawing++;
+
+                break;
+
+              case 'working':
+                counts.production++;
+
+                break;
+              case 'finished':
+                counts.concluded++;
+
+                break;
+
+              default:
+                break;
+            }
+          });
+
+          setPanelsInfo(counts);
+
+        });
+      });
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -94,7 +96,6 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
-    const items = orders;
     const internalPOV = true;
 
     const cards = [
@@ -146,52 +147,43 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
-    const headCells = [
+
+    const headCellsProjects = [
       {
-        id: 'id',
+        id: 'name.value',
         numeric: false,
         disablePadding: false,
-        label: 'Numero',
+        label: 'Nome',
       },
-      // {
-      //   id: 'product.category',
-      //   numeric: false,
-      //   disablePadding: true,
-      //   label: 'Categoria',
-      // },
       {
-        id: 'stock',
+        id: 'category.value',
         numeric: false,
         disablePadding: false,
-        label: 'Stock',
+        label: 'Categoria',
       },
       {
-        id: 'order_prod_2',
+        id: 'ord_amount_proj',
+        numeric: false,
+        disablePadding: false,
+        label: 'Quantidade',
+      },
+      {
+        id: 'status.value',
         numeric: false,
         disablePadding: false,
         label: 'Produção',
       },
       {
-        id: 'order_dispatch_2',
+        id: 'expedition.object.deliveryFlag.value',
         numeric: false,
         disablePadding: false,
         label: 'Em distribuição',
       },
-      // {
-      //   id: 'actions',
-      //   numeric: true,
-      //   disablePadding: false,
-      //   label: 'Ações',
-      // },
     ];
-
-    const detailPage = routes.private.order;
 
     const props = {
       categories,
-      items,
       panelsInfo,
-      headCells,
       breadcrumbsPath,
       detailPage,
       internalPOV,
@@ -199,6 +191,8 @@ const Orders = ({ ...pageProps }) => {
       clients,
       pageProps,
       products,
+      projects,
+      headCellsProjects
     };
 
     return <OrdersScreen {...props} />;

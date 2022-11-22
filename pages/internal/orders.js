@@ -89,8 +89,6 @@ const Orders = ({ ...pageProps }) => {
       await BudgetsActions.budgets().then((response) => setBudgets(response.data));
 
       await ExpeditionActions.expeditions().then(async (expResponse) => {
-        // setExpeditions(expResponse.data);
-
         //  Get projects and build
         await ProjectsActions.projects().then((response) => {
           response.data.map((proj, index) => (response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase())));
@@ -163,58 +161,7 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
-    const headCells = [
-      {
-        id: 'product.name',
-        numeric: false,
-        disablePadding: false,
-        label: 'Produto',
-      },
-      {
-        id: 'id',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nº Encomenda',
-      },
-      {
-        id: 'order.client.legalName',
-        numeric: false,
-        disablePadding: true,
-        label: 'Cliente',
-      },
-      {
-        id: 'ord_amount',
-        numeric: false,
-        disablePadding: false,
-        label: 'Quantidade',
-      },
-      {
-        id: 'product.category.name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Categoria',
-      },
-      {
-        id: 'order_prod',
-        // id: 'order_prod',
-        numeric: false,
-        disablePadding: false,
-        label: 'Produção',
-      },
-      {
-        id: 'order_dispatch',
-        // id: 'order_dispatch',
-        numeric: false,
-        disablePadding: false,
-        label: 'Em distribuição',
-      },
-      {
-        id: 'actions',
-        numeric: true,
-        disablePadding: false,
-        label: 'Ações',
-      },
-    ];
+ 
 
     const headCellsBudget = [
       {
@@ -303,7 +250,6 @@ const Orders = ({ ...pageProps }) => {
     const props = {
       items: orders,
       panelsInfo,
-      headCells,
       breadcrumbsPath,
       detailPage,
       cards,

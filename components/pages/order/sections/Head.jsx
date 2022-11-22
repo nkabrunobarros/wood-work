@@ -3,8 +3,8 @@ import React from "react";
 import PrimaryBtn from "../../../buttons/primaryBtn";
 
 //  PropTypes
-import PropTypes from 'prop-types';
 import { Box, Grid, Tooltip, Typography } from "@mui/material";
+import PropTypes from 'prop-types';
 import routes from '../../../../navigation/routes';
 import AdvancedTable from "../../../advancedTable/AdvancedTable";
 import IsInternal from "../../../utils/IsInternal";
@@ -20,6 +20,7 @@ const Head = (props) => {
             <Typography className='headerTitleXl'>Encomenda {order.name.value}</Typography>
             <Box style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
+                hidden={!internalPOV}
                 icon={
                   <Tag
                     strokeWidth={pageProps.globalVars.iconStrokeWidth}

@@ -21,7 +21,7 @@ import Production from './sections/Production';
 
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
-  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
+  const internalPOV = !IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
   const [refresh, setRefresh] = useState(new Date());
 
   return (

@@ -81,7 +81,6 @@ const Footer = (props) => {
 
 Footer.propTypes = {
   page: PropTypes.string,
-  section: PropTypes.string,
 };
 
 export default Footer;
