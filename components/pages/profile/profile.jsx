@@ -48,9 +48,17 @@ const Profile = ({ ...props }) => {
     try {
       await UserActions.saveUser(userCpy).then((res) => console.log(res));
     } catch (err) {
-
     }
   }
+
+    function displayShift (value) {
+      switch (JSON.stringify(value)) {
+        case '[1,2]': return 'Manhã';
+        case '[2,3]': return 'Tarde';
+        case '[3,4]': return 'Noite';
+        default: return 'f';
+      }
+    }
 
   return (
     <Grid component='main'>
@@ -103,12 +111,10 @@ const Profile = ({ ...props }) => {
           >
             <User /> Informações Gerais
           </a>
-
           <Grid container sx={12}>
             <Grid container sm={12} md={6}>
               <Grid container sx={12}>
                 <Grid xs={12} sm={6} container p={2} bgcolor={"lightGray.main"}>
-
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Nome </Typography>
                     <Typography item color='lightTextSm.black'>{user?.givenName?.value || user?.legalName?.value}</Typography>
@@ -117,6 +123,11 @@ const Profile = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
                     <Typography item color='lightTextSm.black'>{user?.functionPerformed?.value}</Typography>
                   </Grid>
+                  {user?.workerShif?.value && <Grid item xs={12}>
+                    {/* Only applies to workers */}
+                    <Typography item color='lightTextSm.main'>Turno</Typography>
+                    <Typography item color='lightTextSm.black'>{displayShift(user?.workerShif?.value)}</Typography>
+                  </Grid>}
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Estado </Typography>
                     <Typography item>

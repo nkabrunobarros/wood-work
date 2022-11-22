@@ -12,44 +12,51 @@ import OrderScreen from '../../../components/pages/order/order';
 import routes from '../../../navigation/routes';
 
 //  Services
-import * as FilesActions from '../../../pages/api/actions/file';
-import * as FolderActions from '../../../pages/api/actions/folder';
-import * as OrdersActions from '../../../pages/api/actions/order';
+// import * as FilesActions from '../../../pages/api/actions/file';
+// import * as FolderActions from '../../../pages/api/actions/folder';
+// import * as OrdersActions from '../../../pages/api/actions/order';
+import * as ClientsActions from '../../../pages/api/actions/client';
+import * as ExpeditionsActions from '../../../pages/api/actions/expedition';
+import * as ProjectsActions from '../../../pages/api/actions/project';
 
 const Order = ({ ...pageProps }) => {
-  const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
-  const [folders, setFolders] = useState();
+  const [folders, setFolders] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
-      await OrdersActions
-        .order({ id: router.query.Id })
-        .then(async (res) => {
-          setOrder(res.data.payload);
+      await ProjectsActions.project({ id: router.query.Id }).then(async (res) => {
+        const thisOrder = res.data[0];
 
-          await FolderActions
-            .folders({ id: res.data.payload.id })
-            .then(async (res) => {
-              console.log(res);
+        await ClientsActions.client({ id: thisOrder.orderBy.object }).then(async (clientRes) => {
+          thisOrder.orderBy.object = clientRes.data[0];
+        });
 
-              res.data.payload.data.map(async (fold, i) => {
-                res.data.payload.data[i].files = [];
+        await ExpeditionsActions.expedition({ id: thisOrder.expedition.object }).then(async (expeditionRes) => {
+          thisOrder.expedition.object = expeditionRes.data[0];
+        });
 
-                await FilesActions
-                  .files({ id: fold.id })
-                  .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
-                  .catch((err) => console.log(err));
-              });
+        setOrder(thisOrder);
+        //   await FolderActions
+        //     .folders({ id: res.data.id })
+        //     .then(async (res) => {
+        //       res.data.payload.data.map(async (fold, i) => {
+        //         res.data.payload.data[i].files = [];
 
-              setFolders(res.data.payload.data);
+        //         await FilesActions
+        //           .files({ id: fold.id })
+        //           .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
+        //           .catch((err) => console.log(err));
+        //       });
 
-            })
-            .catch((err) => console.log(err));
+        //       setFolders(res.data.payload.data);
 
-        })
-        .catch((err) => console.log(err));
+        //     })
+        //     .catch((err) => console.log(err));
+        // });
+      });
     };
 
     Promise.all([getData()])
@@ -82,7 +89,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${order?.amount} Un`,
+        label: `Quantidade Encomendada: ${order?.amount.value} Un`,
         span: 1,
       },
     ];
@@ -115,15 +122,15 @@ const Order = ({ ...pageProps }) => {
 
     const headCellsProductionDetail = [
       {
-        id: 'operacao',
+        id: 'operacao.value',
         label: 'Operação',
       },
       {
-        id: 'previsto1',
+        id: 'previsto1.value',
         label: 'Previsto',
       },
       {
-        id: 'realizado1',
+        id: 'realizado1.value',
         label: 'Realizado',
       },
       {
@@ -131,21 +138,21 @@ const Order = ({ ...pageProps }) => {
         label: 'Desvio',
       },
       {
-        id: 'previstoAtual',
+        id: 'previstoAtual.value',
         label: 'Previsto (Atual)',
         borderLeft: true,
         borderRight: true,
       },
       {
-        id: 'previsto2',
+        id: 'previsto2.value',
         label: 'Previsto',
       },
       {
-        id: 'realizado2',
+        id: 'realizado2.value',
         label: 'Realizado',
       },
       {
-        id: 'desvio2',
+        id: 'desvio2.value',
         label: 'Desvio',
       },
     ];
@@ -157,7 +164,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Produzida: ${order?.completed} Un`,
+        label: `Quantidade Produzida: ${order?.completed || 0} Un`,
         span: 4,
       },
       {
@@ -166,7 +173,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: `Quantidade Encomendada: ${order?.amount} Un`,
+        label: `Quantidade Encomendada: ${order?.amount?.value} Un`,
         span: 1,
       },
       {
@@ -223,7 +230,7 @@ const Order = ({ ...pageProps }) => {
         href: `${routes.private.internal.orders}`,
       },
       {
-        title: `Encomenda Nº ${router.query.Id}`,
+        title: `Encomenda ${order.name.value}`,
         href: `${routes.private.internal.order}`,
       },
     ];
@@ -231,22 +238,22 @@ const Order = ({ ...pageProps }) => {
     const orderDetail = [
       {
         id: Math.random(),
-        startAt: order.order.startAt,
+        startAt: order?.order?.startAt,
         real: '06 abril 2022',
         start: '17 março 2022',
-        endAt: order.order.endAt,
-        time: `${order.product.craftTime * order.amount} H`,
+        endAt: order?.order?.endAt,
+        time: `${order?.product?.craftTime * order?.amount} H`,
       },
     ];
 
     const productionDetail = [
       {
-        operacao: order.status,
-        previsto1: `${order.product.craftTime * order.amount} H`,
+        operacao: order?.status,
+        previsto1: `${order?.product?.craftTime * order?.amount} H`,
         realizado1: `${18} H`,
-        desvio: (order.product.craftTime * order.amount) - 18,
+        desvio: (order?.product?.craftTime * order?.amount) - 18,
         previstoAtual: 20,
-        previsto2: order.product.craftTime,
+        previsto2: order?.product?.craftTime,
         realizado2: 2,
         desvio2: -2
       }

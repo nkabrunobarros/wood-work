@@ -60,7 +60,7 @@ const DashBoards = ({ ...pageProps }) => {
         setOrdersInfo(counts);
       });
 
-      await ClientsActions.clients().then((response) => setClients(response.data.payload.data));
+      await ClientsActions.clients().then((response) => setClients(response.data));
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
     };
 

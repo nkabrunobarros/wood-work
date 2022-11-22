@@ -34,13 +34,11 @@ import routes from '../../../navigation/routes';
 
 const OrdersScreen = ({ ...props }) => {
   const {
-    items,
     breadcrumbsPath,
     detailPage,
     cards,
     clients,
     editPage,
-    headCells,
     products,
     budgets,
     headCellsBudget,
@@ -58,7 +56,6 @@ const OrdersScreen = ({ ...props }) => {
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
-
 
   const ClearFilters = () => {
     setProduct('');
@@ -79,7 +76,6 @@ const OrdersScreen = ({ ...props }) => {
       productId: product
     });
   }, [number, client, category, producao, product]);
-
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -227,13 +223,6 @@ const OrdersScreen = ({ ...props }) => {
           <AdvancedTable
             rows={projects}
             headCells={headCellsProjects}
-            filters={filters}
-            clickRoute={detailPage}
-            editRoute={editPage}
-          />
-          <AdvancedTable
-            rows={items}
-            headCells={headCells}
             filters={filters}
             clickRoute={detailPage}
             editRoute={editPage}
