@@ -68,7 +68,7 @@ const AdvancedTable = ({
   const [orderBy, setOrderBy] = useState();
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filteredItems, setFilteredItems] = useState(rows);
   const [data, setData] = useState({});
   const [deleteItemId, setDeleteItemId] = useState();
@@ -662,6 +662,17 @@ const AdvancedTable = ({
   );
 };
 
+AdvancedTable.propTypes = {
+  children: PropTypes.any,
+  rows: PropTypes.array,
+  headCells: PropTypes.array,
+  headCellsUpper: PropTypes.array,
+  clickRoute: PropTypes.string,
+  actionId: PropTypes.string,
+  noPagination: PropTypes.bool,
+  editRoute: PropTypes.string,
+  filters: PropTypes.object,
+};
 
 
 export default AdvancedTable;

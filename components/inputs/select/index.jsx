@@ -56,11 +56,11 @@ const MySelect = ({
           </MenuItem>
           {options && options
             .map((opt, i) => (
-              <MenuItem key={i} value={opt[optionValue]?.value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
+                <MenuItem disabled={opt.subheader} key={i} value={opt[optionValue]?.value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
                 <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
                   {!!opt.codigo &&
                     <img
-                      loading='lazy'
+                    loading='lazy'
                       width='20'
                       src={`https://flagcdn.com/w20/${opt.codigo.toLowerCase()}.png`}
                       srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
@@ -68,7 +68,8 @@ const MySelect = ({
                     />}
                   {opt[optionLabel]?.value ? opt[optionLabel].value : opt[optionLabel]  || opt.label || 'Empty'}
                 </Box>
-              </MenuItem>
+              </MenuItem>  
+             
             ))}
         </Select>
       </FormControl>

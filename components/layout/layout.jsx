@@ -14,7 +14,7 @@ import * as authActions from '../../pages/api/actions/auth';
 import styles from '../../styles/404.module.css';
 import Loader from '../loader/loader';
 import IsInternal from '../utils/IsInternal';
-import { navLinks } from '../utils/navLinks';
+// import { navLinks } from '../utils/navLinks';
 import DrawerMobile from './drawer/drawer';
 import Footer from './footer/footer';
 import Navbar from './navbar/navbar';
@@ -121,10 +121,10 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     setMobileOpen(!mobileOpen);
   }
 
-  let imAllowed;
+  // let imAllowed;
 
   if (loaded) {
-    imAllowed = !!pageProps.loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
+    // imAllowed = !!pageProps.loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
 
     if (noLayoutScreens.includes(path.route)) return children;
 

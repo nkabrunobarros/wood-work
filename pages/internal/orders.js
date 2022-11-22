@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
@@ -18,7 +19,6 @@ import * as BudgetsActions from '../../pages/api/actions/budget';
 import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as ExpeditionActions from '../../pages/api/actions/expedition';
-import * as OrdersActions from '../../pages/api/actions/order';
 import * as ProductsActions from '../../pages/api/actions/product';
 import * as ProjectsActions from '../../pages/api/actions/project';
 
@@ -47,41 +47,6 @@ const Orders = ({ ...pageProps }) => {
         concluded: 0,
       };
 
-      await OrdersActions.ordersProduction().then(async (response) => {
-        response.data.payload.data.map(async (ord, i) => {
-          switch (ord.order.status.toLowerCase()) {
-            case 'em orçamentação':
-              counts.budgeting++;
-
-              break;
-
-            case 'em desenho':
-              counts.drawing++;
-
-              break;
-
-            case 'em produção':
-              counts.production++;
-
-              break;
-            case 'concluida':
-              counts.concluded++;
-
-              break;
-
-            default:
-              break;
-          }
-          // filters on 1st level
-
-          response.data.payload.data[i].orderId = response.data.payload.data[i].order.id;
-          response.data.payload.data[i].productId = response.data.payload.data[i].product.id;
-          response.data.payload.data[i].clientId = response.data.payload.data[i].order.client.id;
-        });
-
-        setOrders(response.data.payload.data);
-        setPanelsInfo(counts);
-      });
 
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
@@ -91,8 +56,41 @@ const Orders = ({ ...pageProps }) => {
       await ExpeditionActions.expeditions().then(async (expResponse) => {
         //  Get projects and build
         await ProjectsActions.projects().then((response) => {
-          response.data.map((proj, index) => (response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase())));
+          response.data.map((proj, index) => {
+            response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
+            response.data[index].Cliente = proj.orderBy.object;
+            response.data[index].Numero = proj.id;
+            // response.data[index].Producao = proj.status.value;
+            response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
+
+            switch (proj.status.value.toLowerCase()) {
+              case 'waiting':
+                counts.budgeting++;
+
+                break;
+
+              case 'em desenho':
+                counts.drawing++;
+
+                break;
+
+              case 'working':
+                counts.production++;
+
+                break;
+              case 'finished':
+                counts.concluded++;
+
+                break;
+
+              default:
+                break;
+            }
+          });
+
           setProjects(response.data);
+          setPanelsInfo(counts);
+
         });
       });
     };
@@ -161,7 +159,7 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
- 
+
 
     const headCellsBudget = [
       {

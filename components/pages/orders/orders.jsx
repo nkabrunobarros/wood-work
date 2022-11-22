@@ -11,6 +11,7 @@ import {
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -40,7 +41,6 @@ const OrdersScreen = ({ ...props }) => {
     cards,
     clients,
     editPage,
-    products,
     budgets,
     headCellsBudget,
     headCellsProjects,
@@ -57,7 +57,7 @@ const OrdersScreen = ({ ...props }) => {
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
-  const internalPOV = !IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
+  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
 
   const ClearFilters = () => {
     setProduct('');
@@ -69,12 +69,15 @@ const OrdersScreen = ({ ...props }) => {
   };
 
   //  Triggers when a filter input changes
+  
   useEffect(() => {
+    console.log(producao);
+
     setFilters({
-      orderId: number,
+      Numero: number,
       categoria: category,
-      status: producao,
-      clientId: client,
+      Producao: producao,
+      Cliente: client,
       productId: product
     });
   }, [number, client, category, producao, product]);
@@ -136,14 +139,6 @@ const OrdersScreen = ({ ...props }) => {
         <Grid id='pad' md={12} container>
           <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
-            <Select
-              label='Produto'
-              options={products}
-              fullWidth
-              optionLabel={'name'}
-            />
-          </Grid>
-          <Grid container item md={3} sm={6} xs={12} p={1}>
             <InputLabel htmlFor='email'>Número encomenda</InputLabel>
             <OutlinedInput
               fullWidth
@@ -160,43 +155,67 @@ const OrdersScreen = ({ ...props }) => {
             <Autocomplete
               fullWidth
               disablePortal
-              id='combo-box-demo'
               options={clients}
               getOptionLabel={(option) => option.givenName?.value}
-              onChange={(e) => setClient(e.target.value)}
+              getOptionValue={(option) => option.id}
+              onChange={(e, value) =>{
+                setClient(value?.id || '');
+              }}
+              renderOption={(props, option) => {
+                return (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    {option.legalName.value}
+                  </Box>
+                );
+              }}
               renderInput={(params) => (
                 <TextField
-                  {...params}
-                  fullWidth
                   value={client}
-                  onChange={(e) => setClient(e.target.value)}
-                  placeholder='Escrever um nome'
+                  {...params}
+                  placeholder="Escrever Nome Cliente"
+                  inputProps={{
+                    ...params.inputProps,
+                    autoComplete: 'new-password', // disable autocomplete and autofill
+                  }}
                 />
               )}
+              
+              
             />
           </Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
-            <InputLabel htmlFor='Stock'>Producão</InputLabel>
             <Select
+              label='Producão'
               fullWidth
               value={producao}
               onChange={(e) => setProducao(e.target.value)}
               options={[
                 {
+                  id: 'waiting',
+                  label: 'Não Iniciada'
+                },
+                {
                   id: 'Iniciada',
                   label: 'Iniciada'
                 },
                 {
-                  id: 'Terminada',
+                  id: 'finished',
                   label: 'Terminada'
                 },
+                {
+                  subheader:  true,
+                  label: 'Distribuição'
+                },
+                {
+                  id: 'expediting',
+                  label: 'Em curso'
+                },
+                {
+                  id: 'delivered',
+                  label: 'Entregue'
+                },
               ]}
-            >
-              {/* <MenuItem value={'Em orçamentação'}>Não Iniciada</MenuItem>
-              <MenuItem value={'Iniciada'}>Iniciada</MenuItem>
-              <MenuItem value={'Terminada'}>Terminada</MenuItem> */}
-            </Select>
-
+            />
           </Grid>
           <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
             <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
@@ -213,10 +232,14 @@ const OrdersScreen = ({ ...props }) => {
             onClick={() => Router.push(routes.private.internal.newOrder)}
           />
         </Box>
-        {internalPOV &&<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        {internalPOV && <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)} aria-label="basic tabs example">
-            <Tab label="Em Produção" {...a11yProps(0)} />
-            <Tab label="Por Confirmar" {...a11yProps(1)} />
+            <Tooltip title='Confirmadas'>
+              <Tab label="Em Produção" {...a11yProps(0)} />
+            </Tooltip>
+            <Tooltip title='Por confirmar'>
+              <Tab label="Em Espera" {...a11yProps(1)} />
+            </Tooltip>
           </Tabs>
         </Box> }
 
