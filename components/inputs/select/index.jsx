@@ -22,8 +22,6 @@ const MySelect = ({
   tooltip,
 }) => {
 
-
-  
   return (
     <Box sx={{ width: '100%'}}>
       {variant !== 'standard' && label ? (
@@ -59,9 +57,7 @@ const MySelect = ({
           {options && options
             .map((opt, i) => (
               <MenuItem key={i} value={opt[optionValue]?.value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
-                <Box
-                  sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                >
+                <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
                   {!!opt.codigo &&
                     <img
                       loading='lazy'

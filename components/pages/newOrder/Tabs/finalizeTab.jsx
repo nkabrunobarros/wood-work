@@ -1,10 +1,14 @@
-import { Grid, Typography } from "@mui/material";
+import { Divider, Grid, Typography } from "@mui/material";
 import React from 'react';
 //  PropTypes
 import PropTypes from 'prop-types';
 
 const FinalizeTab = (props) => {
     const {inputFields, clients, client, budget, budgets} = props;
+    //  For clean code
+    const budgetClient = clients.find(ele => ele.id === client.value);
+
+    console.log(budgetClient);
 
     return (
         <Grid container >
@@ -12,7 +16,8 @@ const FinalizeTab = (props) => {
                 <Grid container md={5} sm={6} sx={{ border: '1px solid #EDEDED' }}>
                 {/* Header */}
                 <Grid container md={12} sx={{ padding: '1rem', display: 'flex', alignItems: 'center', backgroundColor: '#FAFAFA', borderBottom: '1px solid #EDEDED' }}>
-                    <Grid container md={9}>Items Encomendados</Grid>
+                    <Grid container md={6}>Items Encomendados</Grid>
+                    <Grid container md={3}>Categoria</Grid>
                     <Grid container md={3}>Quantidade</Grid>
                 </Grid>
                 {/* Rows */}
@@ -20,7 +25,8 @@ const FinalizeTab = (props) => {
                     return (
                     <Grid key={i} container md={12} sx={{ padding: '1rem', display: 'flex', alignItems: 'center' }}>
                         <Grid container md={2}><img src={'https://crm.innerjoin.pt/douromed/images/semimagem.jpg'} style={{ width: '50px', height: '50px' }} /></Grid>
-                        <Grid container md={7}>{budget.id ? budgets.find(ele => ele.id === budget.id).name.value : budget.name }</Grid>
+                        <Grid container md={4}>{budget.id ? budgets.find(ele => ele.id === budget.id).name.value : budget.name }</Grid>
+                        <Grid container md={3}>{budget.category}</Grid>
                         <Grid container md={3}>{budget.amount}</Grid>
                     </Grid>
                     );
@@ -47,19 +53,19 @@ const FinalizeTab = (props) => {
                     <Grid container p={1} md={12} sx={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid #EDEDED', backgroundColor: '#FAFAFA' }}>Endereço de faturação</Grid>
                     <Grid container md={12} p={1}>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography fontWeight='bold'>{clients.find(ele => ele.id === client)?.legalName}</Typography>
+                            <Typography fontWeight='bold'>{budgetClient?.legalName?.value}</Typography>
                         </Grid>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography fontWeight='bold'>{clients.find(ele => ele.id === client)?.address}</Typography>
+                            <Typography fontWeight='bold'>{budgetClient?.address?.value}</Typography>
                         </Grid>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography fontWeight='bold'>{clients.find(ele => ele.id === client)?.postalCode}</Typography>
+                            <Typography fontWeight='bold'>{budgetClient?.postalCode?.value}</Typography>
                         </Grid>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography fontWeight='bold'>{clients.find(ele => ele.id === client)?.country}</Typography>
+                            <Typography fontWeight='bold'>{budgetClient?.country?.value}</Typography>
                         </Grid>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography fontWeight='bold'>T: {clients.find(ele => ele.id === client)?.telephone}</Typography>
+                            <Typography fontWeight='bold'>T: {budgetClient?.telephone?.value}</Typography>
                         </Grid>
                     </Grid>
                     </Grid>
@@ -67,7 +73,22 @@ const FinalizeTab = (props) => {
                 <Grid container md={5.5} sx={{ display: 'flex', justifyContent: 'center', border: '1px solid #EDEDED' }}>
                     <Grid container md={12} >
                         <Grid container p={1} md={12} sx={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid #EDEDED', backgroundColor: '#FAFAFA' }}>Endereço de faturação</Grid>
-                        <Grid container p={1} md={12}>here</Grid>
+                        <Grid container p={1} md={12}>
+                            <Grid container md={12}sx={{ display: 'flex', justifyContent: 'center'}}>
+                                <Typography>Nome: </Typography>
+                                <Typography fontWeight='bold'>{budgetClient?.legalName?.value}</Typography>
+                            </Grid>
+                            <Divider sx={{ width: '100%', lineHeight: '20px'}} />
+                            <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+                                <Typography>Morada: </Typography>
+                                <Typography fontWeight='bold'>{budgetClient?.address?.value}</Typography>
+                            </Grid>
+                            <Divider sx={{ width: '100%', lineHeight: '10px'}} />
+                            <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+                                <Typography>Nif: </Typography>
+                                <Typography fontWeight='bold'>{budgetClient?.taxId?.value}</Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid container md={5.5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #EDEDED' }}>

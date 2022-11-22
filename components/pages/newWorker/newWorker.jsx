@@ -30,7 +30,7 @@ import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, countries, profiles } = props;
+  const { breadcrumbsPath, countries, profiles, organizations } = props;
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -41,15 +41,15 @@ const newWorker = ({ ...props }) => {
 
   const shifts = [
     {
-      label: 'Morning',
+      label: 'Manhã',
       value: [1,2]
     },
     {
-      label: 'Afternoon',
+      label: 'Tarde',
       value: [2,3]
     },
     {
-      label: 'Night',
+      label: 'Noite',
       value: [3,4]
     }
   ];
@@ -151,9 +151,12 @@ const newWorker = ({ ...props }) => {
     {
       id: 'hasOrganization',
       label: 'Organização',
-      value: '',
+      value: organizations[0].id,
+      options: organizations,
+      optLabel: 'legalName',
       error: '',
-      required: true
+      required: true,
+      tooltip: ''
     },
     {
       id: 'assemblyFor',
@@ -204,7 +207,7 @@ const newWorker = ({ ...props }) => {
     setProcessing(true);
 
     const builtWorker = {
-      id: 'urn:ngsi-ld:Worker:1',
+      id: 'urn:ngsi-ld:Worker:112',
       type: 'Worker',
       active: {
         type : 'Property',

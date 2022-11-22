@@ -219,7 +219,9 @@ const NewOrder = ({ ...props }) => {
   async function CreateOrder() {
     setProcessing(true);
 
-    if (false)
+    const a = false;
+
+    if (a)
     {
   
       // try {

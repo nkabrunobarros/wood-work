@@ -1,5 +1,6 @@
+/* eslint-disable sort-imports */
 import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from "@mui/material";
-import { Info } from "lucide-react";
+import { HelpCircle, Verified } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import * as CountryActions from '../../pages/api/actions/country';
 import MyInput from "../inputs/myInput";
@@ -9,40 +10,51 @@ import MySelect from "../inputs/select";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PropTypes from 'prop-types';
 
-// HOW TO USE
-// to use this form generator, u need to provida a array of objects for the inputs.
-// for the minimum display of the input, only needs a blank obj.
-// the form is ready for this fields
-// id, label, value, error, required, type
-//
-// if u wish to use a phoneInput, use type : 'phone'
-//
-// for a select field, provide the options ->  options: countries (array)
-// to select the specifiq field to display in the options, u can use -> optLabel: 'id',
-// by default, is using the field label
-// to select the specifiq value field in the options, u can use -> optValue: 'id',
-//
-// for a area text field, use type: 'area'
-//  
-//  for the password field, use type: 'password'
-//  if u wish for it to be randomized, provide the FormGenerator component,
-//  on the optionData property, with a generatePassword state (bool) and a setGeneratePassword
-//  
-//  you can also provide the fields with a tooltip, which appear while hovering over the input label
+/* HOW TO USE
+ * to use this form generator, u need to provida a array of objects for the inputs.
+ * for the minimum display of the input, only needs a blank obj.
+ * the form is ready for this fields
+ * id, label, value, error, required, type
+ * 
+ * if u wish to use a phoneInput, use type : 'phone'
+ * 
+ * for a select field, provide the options ->  options: countries (array)
+ * to select the specifiq field to display in the options, u can use -> optLabel: 'id',
+ * by default, is using the field label
+ * to select the specifiq value field in the options, u can use -> optValue: 'id',
+ * 
+ * for a area text field, use type: 'area'
+ *  
+ *  for the password field, use type: 'password'
+ *  if u wish for it to be randomized, provide the FormGenerator component,
+ *  on the optionData property, with a generatePassword state (bool) and a setGeneratePassword
+ *  
+ *  you can also provide the fields with a tooltip, which appear while hovering over the input label
+*/  
+
+/*
+ * You may think you know what the following code does.
+ * But you dont. Trust me.
+ * Fiddle with it, and youll spend many a sleepless
+ * night cursing the moment you thought youd be clever
+ * enough to "optimize" the code below.
+ * Now close this file and go play with something else.
+ */
 
 
 const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [countries, setCountries] = useState();
     const [loaded, setLoaded] = useState(false);
+    const [visible, setVisible] = useState(false) ;
     const placeholderDefault = 'Escrever';
     const optData = props.optionalData || {};
-    const [visible, setVisible] = useState(false) ;
 
     const { 
       generatePassword,
       setGeneratePassword,
-      postalCodeInfo
+      postalCodeInfo,
+      ValidatePostalCode
       } = optData;
 
     useEffect(() => {
@@ -193,12 +205,23 @@ const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
               tooltip={field.tooltip}
               disabled={field.disabled}
               type={field.type && field.type}
-              onChange={(e) => onFormChange(index, e)}
+              onChange={(e) => {
+                onFormChange(index, e);
+                field.id === 'postalCode' && ValidatePostalCode(null);
+              }}
               placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-              adornmentIcon={!!postalCodeInfo && field.id === 'postalCode' ?
-                <Tooltip title='Detalhes Codigo Postal' >
-                  <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
-                </Tooltip> : null
+              adornmentIcon={field.id === 'postalCode' &&
+              <>
+                {postalCodeInfo ?
+                  <Tooltip title='Detalhes Codigo Postal' >
+                    <Verified color="var(--green)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
+                  </Tooltip>
+                  :  
+                  <Tooltip title='Validar' >
+                    <HelpCircle color="var(--primary)" strokeWidth={1} onClick={() => ValidatePostalCode(field.value)} />
+                  </Tooltip>
+                }
+              </>
               }
             />
           </Grid>;
@@ -210,6 +233,7 @@ const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
 FormGenerator.propTypes = {
   fields: PropTypes.array,
   onFormChange: PropTypes.func,
+  ValidatePostalCode: PropTypes.func,
   generatePassword: PropTypes.bool,
   setGeneratePassword: PropTypes.any,
   perRow: PropTypes.number,

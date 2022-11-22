@@ -96,14 +96,6 @@ const NewClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'postalCode',
-        label: 'Codigo Postal',
-        value: '',
-        error: '',
-        required: true,
-        tooltip: ''
-      },
-      {
         id: 'taxId',
         label: 'taxId',
         value: '',
@@ -122,13 +114,56 @@ const NewClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'address',
-        label: 'Morada',
+        id: 'postalCode',
+        label: 'Codigo Postal',
         value: '',
         error: '',
-        type: 'area',
         required: true,
         tooltip: ''
+      },
+      {
+        id: 'streetAddres',
+        label: 'Rua',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'addressCountry',
+        label: 'País',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'addressRegion',
+        label: 'Concelho',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'addressDistrict',
+        label: 'Distrito',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'addressLocality',
+        label: 'Localidade',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
       },
       {
         id: 'ownerType',
@@ -153,6 +188,28 @@ const NewClient = ({ ...props }) => {
       },
     ]
   );
+
+  useEffect(() => {
+    function FillAddressFields() {
+      const data = [...inputFields];
+
+      postalCodeInfo && data.map( (field, i) => {
+      if (field.id === 'postalCode'){ data[i].error = '';}
+
+      if (field.id === 'addressCountry'){ data[i].value = 'Portugal';data[i].error = '';}
+
+      if (field.id === 'addressDistrict') {data[i].value = postalCodeInfo.Distrito;data[i].error = '';}
+
+      if (field.id === 'addressRegion') {data[i].value = postalCodeInfo.Concelho;data[i].error = '';}
+
+      if (field.id === 'addressLocality' && typeof postalCodeInfo.Localidade !== 'object') {data[i].value = postalCodeInfo.Localidade;data[i].error = '';}
+    });
+
+    setInputFields(data);
+    }
+
+    FillAddressFields();
+  },[postalCodeInfo]);
 
   function ValidateFields() {
     let hasErrors = false;
@@ -222,6 +279,30 @@ const NewClient = ({ ...props }) => {
 
     //  FIX: remove this when type is in fireware
     // delete builtClient.clientType;
+    //  Build address
+
+    builtClient.address = {};
+    builtClient.address.type = 'Property';
+    
+    builtClient.address.value={
+      streetAddres : builtClient.streetAddres.value,
+      postalCode : builtClient.postalCode.value,
+      addressLocality :builtClient.addressLocality.value,
+      addressRegion : builtClient.addressRegion.value,
+      addressCountry : builtClient.addressCountry.value
+    };
+    
+    builtClient.addressDelivery = {};
+    builtClient.addressDelivery.type = 'Property';
+    builtClient.addressDelivery.value ={...builtClient.address};
+    //  Remove extra props
+    delete builtClient.streetAddres;
+    delete builtClient.addressCountry;
+    delete builtClient.addressRegion;
+    delete builtClient.addressLocality;
+    delete builtClient.addressDistrict;
+    delete builtClient.postalCode;
+    console.log(builtClient);
 
     try {
       await ClientActions.saveClient(builtClient)
@@ -248,23 +329,40 @@ const NewClient = ({ ...props }) => {
     }, 500);
   };
 
-  useEffect(() => {
-    async function PostalCodeInfo() {
-      try {
-        const res = await axios.get(`https://geoapi.pt/cp/${inputFields?.find(ele => ele.id === 'postalCode').value}?json=1`);
+  async function ValidatePostalCode(e) {
+    //  e brings the postal code string
+    if ( e === null && postalCodeInfo !== null) 
+    {
+      setPostalCodeInfo();
 
-        if (res.data) setPostalCodeInfo(res.data);
+      const data = [...inputFields];
 
-      } catch (error) {
-        setPostalCodeInfo();
-      }
+      postalCodeInfo && data.map( (field, i) => {
+        if (field.id === 'addressCountry') data[i].value = '';
 
+        if (field.id === 'addressDistrict') data[i].value = '';
+
+        if (field.id === 'addressRegion') data[i].value = '';
+
+        if (field.id === 'addressLocality') data[i].value = '';
+      });
+
+      setInputFields(data);
+
+      return;
     }
 
-    PostalCodeInfo();
+    try {
+      const res = await axios.get(`https://geoapi.pt/cp/${e}?json=1`);
 
-  }, [inputFields.find(ele => ele.id === 'postalCode').value]);
+      if (res.data) setPostalCodeInfo(res.data);
+    } catch (error) {
 
+    // TODO: CATCH ERROR
+    toast.warning('Codigo Postal Invalido');
+     }
+
+  }
 
   const Item = styled(Paper)(() => ({
     padding: '.5rem',
@@ -385,7 +483,8 @@ const NewClient = ({ ...props }) => {
             optionalData={{
               generatePassword,
               postalCodeInfo,
-              setGeneratePassword
+              setGeneratePassword,
+              ValidatePostalCode
             }}
           />
         </Grid>

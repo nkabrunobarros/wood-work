@@ -12,12 +12,14 @@ import routes from '../../navigation/routes';
 
 //  Actions
 import * as CountryActions from '../api/actions/country';
+import * as OrganizationActions from '../api/actions/organization';
 import * as ProfileActions from '../api/actions/perfil';
 
 const NewOrder = () => {
   const [loaded, setLoaded] = useState(false);
   const [countries, setCountries] = useState();
   const [profiles, setProfiles] = useState();
+  const [organizations, setOrganizations] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -29,6 +31,10 @@ const NewOrder = () => {
         await ProfileActions
           .perfis()
           .then((res) => setProfiles(res.data.payload.data));
+
+        await OrganizationActions
+        .organizations()
+        .then((res) => setOrganizations(res.data));
       } catch (error) { }
     };
 
@@ -51,6 +57,7 @@ const NewOrder = () => {
       breadcrumbsPath,
       countries,
       profiles,
+      organizations,
     };
 
     return loaded && <NewWorkerScreen {...props} />;
