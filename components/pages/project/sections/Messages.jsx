@@ -9,7 +9,7 @@ import IsInternal from '../../../utils/IsInternal';
 
 const Messages = (props) => {
     const {pageProps, stylesMessage} = props;
-    const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
+    const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
     return <>
         <div

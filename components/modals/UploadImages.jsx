@@ -186,7 +186,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
             />
             <span style={{ fontSize: 'small' }}>Tamanho Maximo 1 MB</span>
           </Grid>
-          {folders && !client && IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao) ? <Grid md={6} p={1}>
+          {folders && !client && IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description) ? <Grid md={6} p={1}>
             <Select
               required
               label='Pasta'

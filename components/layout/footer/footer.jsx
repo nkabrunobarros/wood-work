@@ -31,7 +31,7 @@ function Copyright(props) {
   );
 }
 
-const Footer = (props) => {
+const Footer = () => {
 
   return typeof window !== 'undefined' && (
     <Grid
@@ -51,7 +51,7 @@ const Footer = (props) => {
       }}
     >
       <Grid container item md={6} sm={12}  >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.perfil.descricao) ? <Copyright /> : <Image
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) ? <Copyright /> : <Image
           placeholder='blur'
           priority
           src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
@@ -59,7 +59,7 @@ const Footer = (props) => {
         />}
       </Grid>
       <Grid container item md={6} sm={12} sx={{ textAlign: 'end', display: 'flex', justifyContent: 'end' }}  >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.perfil.descricao) ? <Image
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) ? <Image
           placeholder='blur'
           priority
           src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}

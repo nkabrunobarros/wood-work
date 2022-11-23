@@ -56,7 +56,7 @@ const Workers = () => {
         label: 'Email',
       },
       {
-        id: 'perfil.descricao',
+        id: 'profile.object.description',
         numeric: true,
         disablePadding: false,
         label: 'Perfil',

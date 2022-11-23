@@ -12,7 +12,7 @@ import IsInternal from "../../../utils/IsInternal";
 
 const Head = (props) => {
     const {order, pageProps, orderDetail, headCellsOrderDetail, headCellsUpperOrderDetail} = props;
-    const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
+    const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
     return <>
       <Box id='pad'>

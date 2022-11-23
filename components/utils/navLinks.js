@@ -72,7 +72,7 @@ export const navLinks = [
     url: routes.private.internal.leftovers,
     icon: <Scan strokeWidth='1' size={20} />,
     //  TODOS: FIX
-    allowed: 'utilizadores',
+    allowed: 'leftovers',
   },
   {
     title: 'Painel de Controlo',

@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 
 //  Material UI
 import {
-  Autocomplete,
-  Box,
-  Grid,
-  InputLabel, OutlinedInput,
-  Tab,
-  Tabs,
-  TextField,
-  Tooltip,
-  Typography
+    Autocomplete,
+    Box,
+    Grid,
+    InputLabel, OutlinedInput,
+    Tab,
+    Tabs,
+    TextField,
+    Tooltip,
+    Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -56,7 +56,7 @@ const ProjectsScreen = ({ ...props }) => {
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
-  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).perfil.descricao);
+  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
   const ClearFilters = () => {
     setProduct('');

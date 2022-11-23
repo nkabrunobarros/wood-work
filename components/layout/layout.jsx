@@ -16,7 +16,6 @@ import Loader from '../loader/loader';
 import IsInternal from '../utils/IsInternal';
 // import { navLinks } from '../utils/navLinks';
 import DrawerMobile from './drawer/drawer';
-import Footer from './footer/footer';
 import Navbar from './navbar/navbar';
 
 //  Material UI
@@ -25,6 +24,7 @@ import { Box, CssBaseline, Fab, Hidden, Tooltip } from '@mui/material';
 import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
+import Footer from './footer/footer';
 
 // Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
 const noLayoutScreens = [
@@ -59,8 +59,8 @@ async function Test(pageProps) {
 
         const resUser = await authActions.me({ token });
 
-        localStorage.setItem("user", JSON.stringify(resUser.data.payload));
-        pageProps.loggedUser = resUser.data.payload;
+        localStorage.setItem("user", JSON.stringify(resUser.data[0]));
+        pageProps.loggedUser = resUser.data[0];
 
         return true;
       }
@@ -122,7 +122,6 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   }
 
   // let imAllowed;
-
   if (loaded) {
     // imAllowed = !!pageProps.loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
 
@@ -142,7 +141,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
           />
         </Hidden>
         <Box id="appMainContainer" >
-          {IsInternal(pageProps.loggedUser?.perfil.descricao) === isInternalPage 
+          {IsInternal(pageProps.loggedUser?.profile.object.description) === isInternalPage 
           // && imAllowed 
           ? <>
             {children}
@@ -192,7 +191,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   
         </Box>
         <Box style={{ width: '100%' }}>
-          <Footer {...pageProps} />
+           <Footer {...pageProps} />
         </Box>
       </React.Fragment>);
   } else return  <Loader center={true} />;

@@ -97,12 +97,12 @@ const AdvancedTable = ({
     const getWhatDisplaying = () => {
 
       switch (Router.route) {
-        case routes.private.internal.orders: 
-          setDisplaying('orders');
+        case routes.private.internal.projects: 
+          setDisplaying('projects');
 
           break;
-        case routes.private.internal.ordersSimilar: 
-          setDisplaying('orders');
+        case routes.private.internal.projectsSimilar: 
+          setDisplaying('projects');
           setDialogMessage( 'Está prestes a apagar uma encomenda o que é irreversivel, tem certeza que quer continuar?');
 
           break;

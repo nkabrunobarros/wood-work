@@ -39,7 +39,6 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
-import { useRouter } from 'next/router';
 import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
@@ -50,7 +49,6 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
   const [anchorEl, setAnchorEl] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
-  const path = useRouter();
 
   const handleClick = (event) => {
     if (anchorEl === null) setAnchorEl(event.currentTarget);
@@ -112,10 +110,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
           </Box>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
             <ListItemText
-              primary={loggedUser && (loggedUser.nome || loggedUser.legalName)}
+              primary={loggedUser && (loggedUser.nome?.value || loggedUser.legalName?.value)}
               secondary={
                 <a style={{ color: '#FFFFFF', fontSize: 'small' }}>
-                  {loggedUser && loggedUser.email}
+                  {loggedUser && loggedUser.email.value}
                 </a>
               }
             />
@@ -132,9 +130,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
             <React.Fragment key={i}>
               {loggedUser ? (
                 <React.Fragment key={i * 100}>
-                  {loggedUser.perfil.permissoes.find(ele => (ele.sujeito === item.allowed || item.allowed.toLowerCase() === loggedUser.perfil.descricao.toLowerCase()) && ele.accao === 'READ')
+                  {loggedUser.profile.object.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === loggedUser.profile.object.description.toLowerCase()) && ele.action === 'READ')
                     &&
-                    IsInternal(pageProps.loggedUser.perfil.descricao) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
+                    IsInternal(pageProps.loggedUser.profile.object.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
                     ? (
                       <MenuItem id={item.id} sx={{ padding: '0' }}>
                         <ActiveLink
@@ -223,7 +221,6 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
                 </Tooltip>
               </Box>
             </Collapse>
-
           </Collapse>
           <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             {loggedUser ? (
@@ -237,7 +234,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
 
                   <ActiveLink
                     handleDrawerToggle={handleDrawerToggle}
-                    href={IsInternal(pageProps.loggedUser.perfil.descricao) ? `${routes.private.internal.profile}${loggedUser.id}` : `${routes.private.profile}${loggedUser.id}`}
+                    href={IsInternal(pageProps.loggedUser.profile.object.description) ? `${routes.private.internal.profile}${loggedUser.id}` : `${routes.private.profile}${loggedUser.id}`}
                     page={'Perfil'}
                   >
                     <User strokeWidth='1' size={20} color='white' />{' '}

@@ -74,7 +74,7 @@ const App = ({ Component, pageProps }) => {
           const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
 
           if (isPublicPage && !!token) {
-            if (IsInternal(pageProps.loggedUser?.perfil.descricao)) router.push(routes.private.internal.projects);
+            if (IsInternal(pageProps.loggedUser?.profile.object.description)) router.push(routes.private.internal.projects);
             else {
               if (pageProps.loggedUser?.tos) router.push(routes.private.projects);
               else router.push(routes.private.terms);

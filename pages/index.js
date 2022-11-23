@@ -18,7 +18,7 @@ const SignIn = () => {
 
   if (loaded) {
     const client = true;
-    const loginSuccessRoute = routes.private.orders;
+    const loginSuccessRoute = routes.private.projects;
     const loginSuccessRouteTerms = routes.private.terms;
     const forgotPasswordRoute = routes.public.forgotPassword;
 
