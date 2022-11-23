@@ -5,17 +5,17 @@ import routes from '../../navigation/routes';
 export const navLinks = [
   {
     title: 'Encomendas',
-    id: 'ordersInternal',
-    url: routes.private.orders,
+    id: 'projectsInternal',
+    url: routes.private.projects,
     icon: <Archive strokeWidth='1' size={20} />,
-    allowed: 'orders',
+    allowed: 'projects',
   },
   {
     title: 'Encomendas',
-    id: 'ordersClient',
-    url: routes.private.internal.orders,
+    id: 'projectsClient',
+    url: routes.private.internal.projects,
     icon: <Archive strokeWidth='1' size={20} />,
-    allowed: 'orders',
+    allowed: 'projects',
   },
   {
     title: 'Mensagens',
@@ -33,10 +33,10 @@ export const navLinks = [
   },
   {
     title: 'Encomendas Similares',
-    id: 'ordersSimilar',
-    url: routes.private.internal.ordersSimilar,
+    id: 'projectsSimilar',
+    url: routes.private.internal.projectsSimilar,
     icon: <Archive strokeWidth='1' size={20} />,
-    allowed: 'orders',
+    allowed: 'projects',
   },
   {
     title: 'Stock',

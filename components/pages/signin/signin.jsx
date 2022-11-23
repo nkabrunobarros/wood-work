@@ -109,7 +109,6 @@ const SignIn = (props) => {
         const resUser = await me({ ...result.data.payload });
         const user = resUser.data.payload;
 
-        console.log(user);
         localStorage.setItem("user", JSON.stringify(user));
         // Success
         ToastSet(loadingNotification, 'A entrar', 'success');

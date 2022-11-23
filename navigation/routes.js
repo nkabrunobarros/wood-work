@@ -14,11 +14,11 @@ const routes = {
       stocks: '/internal/stocks',
       stockId: '/internal/stock/',
 
-      ordersSimilar: '/internal/orders-similar',
-      orders: '/internal/orders',
-      order: '/internal/order/',
-      newOrder: '/internal/new-order',
-      editOrder: '/internal/edit-order/',
+      projectsSimilar: '/internal/projects-similar',
+      projects: '/internal/projects',
+      project: '/internal/project/',
+      newProject: '/internal/new-project',
+      editProject: '/internal/edit-project/',
 
       messages: '/internal/messages',
       profile: '/internal/profile/',
@@ -33,8 +33,8 @@ const routes = {
     //  Pages shared
     terms: '/terms',
     tos: '/tos',
-    orders: '/orders',
-    order: '/order/',
+    projects: '/projects',
+    project: '/project/',
     profile: '/profile/',
     messages: '/messages',
     error: '/404',

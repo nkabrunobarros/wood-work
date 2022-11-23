@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 
 //  Page Component
-import OrdersScreen from '../../components/pages/ordersSimilar/orders-similar';
+import OrdersScreen from '../../components/pages/ordersSimilar/projects-similar';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -14,10 +14,10 @@ import PropTypes from 'prop-types';
 import routes from '../../navigation/routes';
 
 //  Services
-import * as ClientsActions from '../../pages/api/actions/client';
-import * as OrdersActions from '../../pages/api/actions/order';
-import * as ProductsActions from '../../pages/api/actions/product';
-import * as WoodTypeActions from '../../pages/api/actions/woodtype';
+import * as ClientsActions from '../api/actions/client';
+import * as OrdersActions from '../api/actions/order';
+import * as ProductsActions from '../api/actions/product';
+import * as WoodTypeActions from '../api/actions/woodtype';
 
 //  Utils
 

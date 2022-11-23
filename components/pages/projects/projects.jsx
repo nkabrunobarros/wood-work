@@ -34,7 +34,7 @@ import CanDo from '../../utils/CanDo';
 import routes from '../../../navigation/routes';
 import IsInternal from '../../utils/IsInternal';
 
-const OrdersScreen = ({ ...props }) => {
+const ProjectsScreen = ({ ...props }) => {
   const {
     breadcrumbsPath,
     detailPage,
@@ -45,7 +45,6 @@ const OrdersScreen = ({ ...props }) => {
     headCellsBudget,
     headCellsProjects,
     projects
-    // categories
   } = props;
 
   const router = useRouter();
@@ -159,6 +158,7 @@ const OrdersScreen = ({ ...props }) => {
               getOptionLabel={(option) => option.givenName?.value}
               getOptionValue={(option) => option.id}
               onChange={(e, value) =>{
+                // eslint-disable-next-line react/prop-types
                 setClient(value?.id || '');
               }}
               renderOption={(props, option) => {
@@ -222,12 +222,12 @@ const OrdersScreen = ({ ...props }) => {
           </Grid>
         </Grid>
       </Content>
-      {/* Orders */}
+      {/* Projects */}
       <Content>
         <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
           <PrimaryBtn
-            hidden={!CanDo(['write', 'orders'])}
+            hidden={!CanDo(['write', 'projects'])}
             text='Adicionar'
             onClick={() => Router.push(routes.private.internal.newOrder)}
           />
@@ -268,8 +268,7 @@ const OrdersScreen = ({ ...props }) => {
   );
 };
 
-OrdersScreen.propTypes = {
-  items: PropTypes.array,
+ProjectsScreen.propTypes = {
   products: PropTypes.array,
   categories: PropTypes.array,
   panelsInfo: PropTypes.object,
@@ -285,4 +284,4 @@ OrdersScreen.propTypes = {
   projects: PropTypes.array,
 };
 
-export default OrdersScreen;
+export default ProjectsScreen;

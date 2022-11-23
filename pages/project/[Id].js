@@ -6,15 +6,15 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 
 //  Page Component
-import OrderScreen from '../../components/pages/order/order';
+import OrderScreen from '../../components/pages/project/project';
 
 //  Navigation
 import routes from '../../navigation/routes';
 
 //  Services
-import * as ClientsActions from '../../pages/api/actions/client';
-import * as ExpeditionsActions from '../../pages/api/actions/expedition';
-import * as ProjectsActions from '../../pages/api/actions/project';
+import * as ClientsActions from '../api/actions/client';
+import * as ExpeditionsActions from '../api/actions/expedition';
+import * as ProjectsActions from '../api/actions/project';
 
 const Order = ({ ...pageProps }) => {
   const router = useRouter();

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
-import NewOrderScreen from '../../components/pages/newOrder/newOrder';
+import NewOrderScreen from '../../components/pages/newOrder/newProject';
 import routes from '../../navigation/routes';
 
-import * as BudgetsActions from '../../pages/api/actions/budget';
-import * as ClientActions from '../../pages/api/actions/client';
-import * as ProductsActions from '../../pages/api/actions/product';
+import * as BudgetsActions from '../api/actions/budget';
+import * as ClientActions from '../api/actions/client';
+import * as ProductsActions from '../api/actions/product';
 
 const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
