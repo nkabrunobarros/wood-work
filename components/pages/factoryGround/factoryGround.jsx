@@ -1,5 +1,5 @@
 import { Box, Grid } from '@mui/material';
-import PropTypes from 'prop-types';
+import { X } from 'lucide-react';
 import React, { useState } from 'react';
 // import AdvancedTable from '../../advancedTable/AdvancedTable';
 // import CustomBreadcrumbs from '../../breadcrumbs';
@@ -9,47 +9,66 @@ const FactoryGround = ({ ...props }) => {
     const { breadcrumbsPath, headCells, headCellsUpper } = props;
     const [activeRow, setActiveRow] = useState(0);
 
+    const cellProps = {
+        md: 1,
+        sm: 1,
+        xs: 1,
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
+        className: 'fullCenter',
+        container: true
+    };
+
+    const rowProps = {
+        md: 12,
+        sm: 12,
+        xs: 12,
+        sx: { cursor: 'pointer' },
+        className: 'hoverOpacity',
+        container: true
+    };
+
     return <>
         {/* <CustomBreadcrumbs path={breadcrumbsPath} /> */}
         <Content>
             {/* <AdvancedTable rows={[{}]} headCells={headCells} headCellsUpper={headCellsUpper} /> */}
             <Grid container>
                 {/* Headers */}
-                <Grid container md={12} sm={12} xs={12} bgcolor={'lightGray.edges'} >
-                    {headCells.map((cell, i) => <Grid
-                        key={cell.id}
-                        container
-                        bgcolor={'lightGray.edges'}
-                        md={12 / Object.keys(headCells).length}
-                        sm={12 / Object.keys(headCells).length}
-                        xs={12 / Object.keys(headCells).length}
-                        sx={{
-                            paddingTop: '1rem',
-                            paddingBottom: '1rem'
-                        }}
-                    >
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center', width: '100%', borderRight: i !== Object.keys(headCells).length - 1 ? '1px solid' : null
-                        }}>{cell.label}</Box>
-                    </Grid>
-                    )}
+                <Grid container md={12} sm={12} xs={12} bgcolor={'lightGray.edges'}>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[0].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[1].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[2].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[3].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[4].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[5].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[6].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[7].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[8].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[9].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[10].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '0px solid' }}>{headCells[11].label}</Box></Grid>
                 </Grid>
                 <Grid container md={12} sm={12} xs={12}>
                     {[...Array(5)].map((x, rowIndex) => {
                         return (
                             <Grid
-                                container
-                                md={12}
-                                sm={12}
-                                xs={12}
+                                {...rowProps}
                                 key={rowIndex}
                                 bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'primary.main' : "lightGray.edges") : (rowIndex === activeRow && "primary.main")}
-                                className='hoverOpacity'
-                                sx={{ cursor: 'pointer' }}
                                 onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
                             >
-                                {headCells.map((cell, i) => <Grid key={i} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50px' }} container md={12 / Object.keys(headCells).length} sm={12 / Object.keys(headCells).length} xs={12 / Object.keys(headCells).length}>{i + 1}</Grid>)}
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ><X /></Grid>
+                                <Grid {...cellProps} ></Grid>
+                                <Grid {...cellProps} ></Grid>
                             </Grid>
                         );
 
@@ -60,10 +79,5 @@ const FactoryGround = ({ ...props }) => {
     </>;
 };
 
-FactoryGround.propTypes = {
-    breadcrumbsPath: PropTypes.any,
-    headCells: PropTypes.any,
-    headCellsUpper: PropTypes.any
-};
 
 export default FactoryGround;
