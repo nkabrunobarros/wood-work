@@ -1,5 +1,5 @@
 const IsInternal = (profileName) => {
-    const internalProfiles = ['Administrador'];
+    const internalProfiles = ['Admin'];
 
     if (internalProfiles.find(profile => profile === profileName)) return true;
     else return false;

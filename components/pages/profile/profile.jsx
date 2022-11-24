@@ -22,6 +22,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import CanDo from '../../utils/CanDo';
 
 const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
@@ -56,7 +57,7 @@ const Profile = ({ ...props }) => {
         case '[1,2]': return 'Manhã';
         case '[2,3]': return 'Tarde';
         case '[3,4]': return 'Noite';
-        default: return 'f';
+        default: return 'Nenhum';
       }
     }
 
@@ -90,6 +91,7 @@ const Profile = ({ ...props }) => {
               </div>
               <div>
                 <PrimaryBtn
+                  hidden={!CanDo(['delete','workers'])}
                   onClick={() => setDialogOpen(true)}
                   text='Apagar'
                   icon={
@@ -121,12 +123,13 @@ const Profile = ({ ...props }) => {
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                    <Typography item color='lightTextSm.black'>{user?.functionPerformed?.value}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description}</Typography>
                   </Grid>
-                  {user?.workerShif?.value && <Grid item xs={12}>
+                  {console.log(user)}
+                  {user?.workerShift?.value && <Grid item xs={12}>
                     {/* Only applies to workers */}
                     <Typography item color='lightTextSm.main'>Turno</Typography>
-                    <Typography item color='lightTextSm.black'>{displayShift(user?.workerShif?.value)}</Typography>
+                    <Typography item color='lightTextSm.black'>{displayShift(user?.workerShift?.value)}</Typography>
                   </Grid>}
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Estado </Typography>
@@ -173,7 +176,7 @@ const Profile = ({ ...props }) => {
                       <Map className='primaryIcon' size={22} />
                     </Tooltip>
                     <span>
-                      {user?.address}
+                      {/* {user?.address} */}
                     </span>
 
                   </Grid>

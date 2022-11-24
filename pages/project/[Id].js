@@ -20,7 +20,6 @@ const Order = ({ ...pageProps }) => {
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
-  const [folders, setFolders] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -124,11 +123,11 @@ const Order = ({ ...pageProps }) => {
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
-        href: `${routes.private.internal.orders}`,
+        href: `${routes.private.internal.projects}`,
       },
       {
         title: `Encomenda Nº ${order.name.value}`,
-        href: `${routes.private.internal.order}`,
+        href: `${routes.private.internal.project}`,
       },
     ];
 
@@ -152,7 +151,7 @@ const Order = ({ ...pageProps }) => {
       headCellsDocs,
       pageProps,
       orderDetail,
-      folders,
+      folders: [],
     };
 
     return <OrderScreen {...props} />;

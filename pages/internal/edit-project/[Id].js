@@ -6,28 +6,28 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../../components/loader/loader';
 
 //  Page Component
-import EditOrderScreen from '../../../components/pages/editOrder/editOrder';
+import EditProjectScreen from '../../../components/pages/editProject/editProject';
 
 //  Navigation
 import routes from '../../../navigation/routes';
 
 //  Services
-import * as OrdersActions from '../../../pages/api/actions/order';
-import * as ClientsActions from '../../../pages/api/actions/client';
-import * as ProductsActions from '../../../pages/api/actions/product';
+import * as projectsActions from '../../api/actions/project';
+import * as ClientsActions from '../../api/actions/client';
+import * as ProductsActions from '../../api/actions/product';
 
-const EditOrder = ({ ...pageProps }) => {
+const EditProject = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [order, setOrder] = useState();
+  const [project, setproject] = useState();
   const [clients, setClients] = useState();
   const [products, setProducts] = useState();
   const router = useRouter();
 
   useEffect(() => {
     const getAll = async () => {
-      await OrdersActions
-        .order({id: router.query.Id})
-        .then((res) => setOrder(res.data.payload));
+      await projectsActions
+        .project({id: router.query.Id})
+        .then((res) => setproject(res.data.payload));
 
       await ClientsActions
         .clients()
@@ -44,16 +44,16 @@ const EditOrder = ({ ...pageProps }) => {
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
-        href: `${routes.private.internal.orders}`,
+        href: `${routes.private.internal.projects}`,
       },
       {
         title: `Editar Encomenda`,
-        href: `${routes.private.internal.order}`,
+        href: `${routes.private.internal.project}`,
       },
     ];
 
     const props = {
-      order,
+      project,
       breadcrumbsPath,
       pageProps,
       clients,
@@ -61,9 +61,9 @@ const EditOrder = ({ ...pageProps }) => {
     };
   
 
-    return <EditOrderScreen {...props} />
+    return <EditProjectScreen {...props} />
    
   } else return <Loader center={true} />;
 };
 
-export default EditOrder;
+export default EditProject;

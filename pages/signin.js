@@ -9,7 +9,6 @@ import routes from '../navigation/routes';
 const SignIn = () => {
     const [loaded, setLoaded] = useState(false);
 
-
     useEffect(() => {
         setTimeout(() => {
             setLoaded(true);

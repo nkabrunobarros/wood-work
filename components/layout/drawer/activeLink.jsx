@@ -11,13 +11,13 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   const orderSimilarPages = [`${routes.private.internal.ordersSimilar}`];
   const messagesPages = [`${routes.private.messages}`];
 
-  const ordersPages = [
+  const projectsPages = [
     `${routes.private.orders}`,
     `${routes.private.order}[Id]`,
-    `${routes.private.internal.orders}`,
-    `${routes.private.internal.order}[Id]`,
-    `${routes.private.internal.newOrder}`,
-    `${routes.private.internal.editOrder}[Id]`,
+    `${routes.private.internal.projects}`,
+    `${routes.private.internal.project}[Id]`,
+    `${routes.private.internal.newProject}`,
+    `${routes.private.internal.editProject}[Id]`,
   ];
 
   const stockPages = [
@@ -51,7 +51,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 
-  if (ordersPages.includes(path.route)) currentSection = 'Encomendas';
+  if (projectsPages.includes(path.route)) currentSection = 'Encomendas';
 
   if (orderSimilarPages.includes(path.route)) currentSection = 'Encomendas Similares';
 
@@ -89,9 +89,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
 
   return (
     <a
-      variant='md'
       key={href}
-      href={href}
       onClick={(e) => {
         handleClick(e);
         handleDrawerToggle();
@@ -107,7 +105,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
 ActiveLink.propTypes = {
   children: PropTypes.any,
   href: PropTypes.string,
-  handleDrawerToggle: PropTypes.any,
+  handleDrawerToggle: PropTypes.func,
   page: PropTypes.string,
 };
 

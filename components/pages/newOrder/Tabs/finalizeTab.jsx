@@ -8,8 +8,6 @@ const FinalizeTab = (props) => {
     //  For clean code
     const budgetClient = clients.find(ele => ele.id === client.value);
 
-    console.log(budgetClient);
-
     return (
         <Grid container >
             <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -56,7 +54,7 @@ const FinalizeTab = (props) => {
                             <Typography fontWeight='bold'>{budgetClient?.legalName?.value}</Typography>
                         </Grid>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography fontWeight='bold'>{budgetClient?.address?.value}</Typography>
+                            <Typography fontWeight='bold'>{budgetClient?.address?.value?.streetAddres}</Typography>
                         </Grid>
                         <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Typography fontWeight='bold'>{budgetClient?.postalCode?.value}</Typography>
@@ -81,7 +79,7 @@ const FinalizeTab = (props) => {
                             <Divider sx={{ width: '100%', lineHeight: '20px'}} />
                             <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center'}}>
                                 <Typography>Morada: </Typography>
-                                <Typography fontWeight='bold'>{budgetClient?.address?.value}</Typography>
+                                <Typography fontWeight='bold'>{budgetClient?.address?.value?.streetAddres}</Typography>
                             </Grid>
                             <Divider sx={{ width: '100%', lineHeight: '10px'}} />
                             <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center'}}>

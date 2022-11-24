@@ -161,14 +161,14 @@ const AdvancedTable = ({
         //  TODO: FIX OWNER UPDATE
         if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined  )
         {
-          const builtClient = [{
-            id: thisRow.belongsTo.object,
-            type: 'Owner',
-            ownerType: {
-                type: 'Property',
-                value: 'buyer'
-            },
-          }];
+          // const builtClient = [{
+          //   id: thisRow.belongsTo.object,
+          //   type: 'Owner',
+          //   ownerType: {
+          //       type: 'Property',
+          //       value: 'buyer'
+          //   },
+          // }];
 
           const builtProject = {
             id: "urn:ngsi-ld:Project:" + thisRow.name.value + Math.random(),

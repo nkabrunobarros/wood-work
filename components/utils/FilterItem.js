@@ -113,6 +113,17 @@ const FilterItem = (data, item, col) => {
             }
           }
 
+          case 'statusClient.value': {
+            switch (item.statusClient.value.toLowerCase()) {
+              case 'espera confirmação': return <Typography variant='md' className="blankBalloon">Espera Confirmação</Typography>;
+              case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+              case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
+              case 'em transporte': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Em transporte</Typography></Tooltip>;
+              case 'entregue': return <Tooltip title={`${item.status}`}><Typography variant='md' className="successBalloon">Entregue</Typography></Tooltip>;
+              // default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+            }
+          }
+
           default: {
             return item[col2[0]] && item[col2[0]][col2[1]] ? <Typography variant='md'>{item[col2[0]][col2[1]]}</Typography> : <Typography variant='md'></Typography>;
           }

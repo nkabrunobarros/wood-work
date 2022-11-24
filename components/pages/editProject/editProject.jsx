@@ -20,26 +20,26 @@ import {
 import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
-import * as OrdersActions from '../../../pages/api/actions/order';
-import styles from '../../../styles/NewOrder.module.css';
+import * as projectsActions from '../../../pages/api/actions/project';
+import styles from '../../../styles/Newproject.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
 
-const EditOrder = ({ ...props }) => {
-  const { breadcrumbsPath, order, pageProps, clients, products } = props;
+const EditProject = ({ ...props }) => {
+  const { breadcrumbsPath, project, pageProps, clients, products } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [product, setProduct] = useState(order.product.id);
-  const [client, setClient] = useState(order.order.client?.id);
+  const [product, setProduct] = useState(project.product.id);
+  const [client, setClient] = useState(project.project.client?.id);
   const [errorProd, setErrorProd] = useState('');
   const [errorClient, setErrorClient] = useState('');
   const [obs, setObs] = useState('');
 
 
-  async function CreateOrder() {
-    const builtOrder = {
+  async function Createproject() {
+    const builtproject = {
       productId: product,
       status: 'Em orçamentação',
       clientId: client,
@@ -49,7 +49,7 @@ const EditOrder = ({ ...props }) => {
     setProcessing(true);
 
     try {
-      await OrdersActions.saveOrder(builtOrder).then(() => {
+      await projectsActions.saveproject(builtproject).then(() => {
         setDialogOpen(false);
         setProcessing(false);
 
@@ -75,11 +75,11 @@ const EditOrder = ({ ...props }) => {
       <CssBaseline />
       <Notification />
       <CustomBreadcrumbs path={breadcrumbsPath} />
-      {/* Confirm Create Order Modal */}
+      {/* Confirm Create project Modal */}
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
-        onConfirm={() => CreateOrder()}
+        onConfirm={() => Createproject()}
         message={`Está prestes a criar uma encomenda, tem certeza que quer continuar?`}
         icon='AlertOctagon'
       />
@@ -225,12 +225,12 @@ const EditOrder = ({ ...props }) => {
   );
 };
 
-EditOrder.propTypes = {
+EditProject.propTypes = {
   breadcrumbsPath: PropTypes.array.isRequired,
-  order: PropTypes.object,
+  project: PropTypes.object,
   pageProps: PropTypes.any,
   clients: PropTypes.array,
   products: PropTypes.array,
 };
 
-export default EditOrder;
+export default EditProject;

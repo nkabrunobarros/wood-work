@@ -254,7 +254,7 @@ const NewOrder = ({ ...props }) => {
         type: "Budget",
         name: {
             "type": "Property",
-            value: budget.id.replace('urn:ngsi-ld:Budget:', '') || budget.name
+            value: budget?.id?.replace('urn:ngsi-ld:Budget:', '') || budget?.name
         },
         amount: {
             "type": "Property",
@@ -312,7 +312,7 @@ const NewOrder = ({ ...props }) => {
 
   const successModalProps = {
     open: successOpen,
-    'handleClose': ClearAll,
+    handleClose: ClearAll,
     message:`Encomenda Criada com sucesso, que deseja fazer agora?`,
     icon:'Verified',
     iconType:'success',

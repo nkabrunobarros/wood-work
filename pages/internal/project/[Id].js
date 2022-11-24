@@ -22,7 +22,6 @@ import * as ProjectsActions from '../../api/actions/project';
 const Order = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [order, setOrder] = useState();
-  const [folders, setFolders] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,23 +38,6 @@ const Order = ({ ...pageProps }) => {
         });
 
         setOrder(thisOrder);
-        //   await FolderActions
-        //     .folders({ id: res.data.id })
-        //     .then(async (res) => {
-        //       res.data.payload.data.map(async (fold, i) => {
-        //         res.data.payload.data[i].files = [];
-
-        //         await FilesActions
-        //           .files({ id: fold.id })
-        //           .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
-        //           .catch((err) => console.log(err));
-        //       });
-
-        //       setFolders(res.data.payload.data);
-
-        //     })
-        //     .catch((err) => console.log(err));
-        // });
       });
     };
 
@@ -89,7 +71,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${order?.amount.value} Un`,
+        label: `Quantidade Encomendada: ${order?.amount?.value} Un`,
         span: 1,
       },
     ];
@@ -227,11 +209,11 @@ const Order = ({ ...pageProps }) => {
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
-        href: `${routes.private.internal.orders}`,
+        href: `${routes.private.internal.projects}`,
       },
       {
         title: `Encomenda ${order.name.value}`,
-        href: `${routes.private.internal.order}`,
+        href: `${routes.private.internal.project}`,
       },
     ];
 
@@ -259,11 +241,6 @@ const Order = ({ ...pageProps }) => {
       }
     ];
 
-    //  Test para calcular diferença entre duas datas 
-    // const days = moment(order.order.endAt).diff(moment(order.order.startAt), 'hours');
-
-    // console.log(days)
-
     const props = {
       order,
       breadcrumbsPath,
@@ -276,7 +253,7 @@ const Order = ({ ...pageProps }) => {
       headCellsDocs,
       orderDetail,
       pageProps,
-      folders,
+      folders: [],
     };
 
     return <OrderScreen {...props} />;

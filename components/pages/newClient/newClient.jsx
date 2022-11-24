@@ -254,6 +254,14 @@ const NewClient = ({ ...props }) => {
     const builtClient = {
       id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'legalName').value.replace(/ /g, '')}`,
       type: 'Owner',
+      active: {
+        type: 'Property',
+        value: 'True',
+      },
+      tos: {
+        type:'Property',
+        value:''
+      },
       "@context": [
         "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"

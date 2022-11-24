@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 
 //  Material UI
 import {
-    Autocomplete,
-    Box,
-    Grid,
-    InputLabel, OutlinedInput,
-    Tab,
-    Tabs,
-    TextField,
-    Tooltip,
-    Typography
+  Autocomplete,
+  Box,
+  Grid,
+  InputLabel, OutlinedInput,
+  Tab,
+  Tabs,
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -70,7 +70,6 @@ const ProjectsScreen = ({ ...props }) => {
   //  Triggers when a filter input changes
   
   useEffect(() => {
-    console.log(producao);
 
     setFilters({
       Numero: number,
@@ -229,7 +228,7 @@ const ProjectsScreen = ({ ...props }) => {
           <PrimaryBtn
             hidden={!CanDo(['write', 'projects'])}
             text='Adicionar'
-            onClick={() => Router.push(routes.private.internal.newOrder)}
+            onClick={() => Router.push(routes.private.internal.newProject)}
           />
         </Box>
         {internalPOV && <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -256,7 +255,7 @@ const ProjectsScreen = ({ ...props }) => {
         {/* Tab Budgets */}
          {internalPOV && <TabPanel value={currentTab} index={1}>
           <AdvancedTable
-            rows={budgets.filter( ele => ele.aprovedDate.value === '')}
+            rows={budgets.filter( ele => ele.aprovedDate?.value === '')}
             headCells={headCellsBudget}
             filters={filters}
             clickRoute={detailPage}

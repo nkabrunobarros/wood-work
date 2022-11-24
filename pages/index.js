@@ -24,7 +24,7 @@ const SignIn = () => {
 
     const props = {
       client,
-      login: authActions.login,
+      login: authActions.loginClient,
       me: authActions.me,
       loginSuccessRoute,
       loginSuccessRouteTerms,

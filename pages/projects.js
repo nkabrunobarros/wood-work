@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
@@ -14,6 +15,7 @@ import OrdersScreen from '../components/pages/projects/projects';
 import PropTypes from 'prop-types';
 
 //  Data services
+import * as BudgetsActions from './api/actions/budget';
 import * as CategoriesActions from './api/actions/category';
 import * as ClientsActions from './api/actions/client';
 import * as ExpeditionActions from './api/actions/expedition';
@@ -30,8 +32,14 @@ const Orders = ({ ...pageProps }) => {
   const [panelsInfo, setPanelsInfo] = useState();
   const [products, setProducts] = useState();
   const [projects, setProjects] = useState();
-  const detailPage = routes.private.order;
+  const detailPage = routes.private.project;
 
+  function calcState(value) {
+    if (value.status.value !== 'finished') return value.status.value;
+    else if (value.expedition.object.deliveryFlag.value) return 'Entregue';
+    else if (!value.expedition.object.deliveryFlag.value && value.expedition.object.expeditionTime) return 'Em transporte';
+    else return 'finished';
+  }
 
   useEffect(() => {
     const getData = async () => {
@@ -42,28 +50,49 @@ const Orders = ({ ...pageProps }) => {
         concluded: 0,
       };
 
+      const test = [];
+
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
       await ClientsActions.clients().then((response) => setClients(response.data));
 
+      await BudgetsActions.myBudgets().then((response) => {
+
+        response.data.map(item => test.push({
+          id: item.id,
+          category: { ...item.category },
+          name: { ...item.category },
+          amount: { ...item.amount },
+          statusClient: { type: 'Property', value: 'Espera Confirmação' },
+        }));
+      });
+
       await ExpeditionActions.expeditions().then(async (expResponse) => {
         //  Get projects and build
-        await ProjectsActions.projects().then((response) => {
-          response.data.map((proj, index) => (response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase())));
-          setProjects(response.data);
+        await ProjectsActions.myProjects().then((response) => {
+          response.data.map((proj, index) => {
+            response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
+            response.data[index].Cliente = proj.orderBy.object;
+            response.data[index].Numero = proj.id;
+            response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
 
-          response.data.map(async (ord) => {
-            switch (ord.status.value.toLowerCase()) {
+            test.push({
+              id: response.data[index].id,
+              category: { ...response.data[index].category },
+              name: { ...response.data[index].name },
+              amount: { ...response.data[index].amount },
+              statusClient: { type: 'Property', value: calcState(response.data[index]) },
+            });
+
+            switch (proj.status.value.toLowerCase()) {
               case 'waiting':
                 counts.budgeting++;
 
                 break;
-
               case 'em desenho':
                 counts.drawing++;
 
                 break;
-
               case 'working':
                 counts.production++;
 
@@ -72,16 +101,16 @@ const Orders = ({ ...pageProps }) => {
                 counts.concluded++;
 
                 break;
-
-              default:
-                break;
             }
           });
 
+          console.log(test);
+          setProjects(test);
           setPanelsInfo(counts);
 
         });
       });
+
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -95,8 +124,6 @@ const Orders = ({ ...pageProps }) => {
         href: `${routes.private.internal.orders}`,
       },
     ];
-
-    const internalPOV = true;
 
     const cards = [
       {
@@ -147,7 +174,6 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
-
     const headCellsProjects = [
       {
         id: 'name.value',
@@ -168,16 +194,10 @@ const Orders = ({ ...pageProps }) => {
         label: 'Quantidade',
       },
       {
-        id: 'status.value',
+        id: 'statusClient.value',
         numeric: false,
         disablePadding: false,
         label: 'Produção',
-      },
-      {
-        id: 'expedition.object.deliveryFlag.value',
-        numeric: false,
-        disablePadding: false,
-        label: 'Em distribuição',
       },
     ];
 
@@ -186,7 +206,6 @@ const Orders = ({ ...pageProps }) => {
       panelsInfo,
       breadcrumbsPath,
       detailPage,
-      internalPOV,
       cards,
       clients,
       pageProps,

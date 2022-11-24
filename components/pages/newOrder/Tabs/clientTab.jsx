@@ -16,10 +16,14 @@ import * as ClientsActions from '../../../../pages/api/actions/client';
 
 const ClientTab = (props) => {
     const { pageProps,
-         client, onClientChange,
-         startAt, onStartAtChange,
-         endAt, onEndAtChange,
-         obs, onObsChange,
+         client, 
+         onClientChange,
+         startAt, 
+         onStartAtChange,
+         endAt, 
+         onEndAtChange,
+         obs, 
+         onObsChange,
          onProcessing
          } = props;
          
@@ -172,7 +176,8 @@ const ClientTab = (props) => {
                   <Grid container item p={1}>
                     <Grid item xs={12} md={6} p={1}>
                       <Typography item color='lightTextSm.main'>Morada Fiscal</Typography>
-                      <Typography item color='lightTextSm.black' >{clients.find(ele => ele.id === client.value)?.address?.value}</Typography>
+                      {console.log(clients.find(ele => ele.id === client.value))}
+                      <Typography item color='lightTextSm.black' >{clients.find(ele => ele.id === client.value)?.address?.value?.streetAddres}</Typography>
                     </Grid>
                     <Grid item xs={12} md={6} p={1}>
                       <Typography item color='lightTextSm.main'>Codigo Postal</Typography>
