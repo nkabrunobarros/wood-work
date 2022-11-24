@@ -61,7 +61,7 @@ const Orders = ({ ...pageProps }) => {
         response.data.map(item => test.push({
           id: item.id,
           category: { ...item.category },
-          name: { ...item.category },
+          name: { ...item.name },
           amount: { ...item.amount },
           statusClient: { type: 'Property', value: 'Espera Confirmação' },
         }));

@@ -16,7 +16,7 @@ const NewOrder = ({ ...pageProps }) => {
   useEffect(() => {
     const getData = async () => {
       await ClientActions.clients().then((response) => setClients(response.data));
-      await BudgetsActions.budgets().then((response) => setBudgets(response.data));
+      await BudgetsActions.allBudgets().then((response) => setBudgets(response.data));
 
       await ProductsActions.products().then((response) => {
         setProducts(response.data.payload.data);
@@ -53,7 +53,7 @@ const NewOrder = ({ ...pageProps }) => {
         href: `${routes.private.internal.newProject}`,
       },
     ];
-  
+
     const props = {
       pageProps,
       breadcrumbsPath,
@@ -61,10 +61,10 @@ const NewOrder = ({ ...pageProps }) => {
       products,
       budgets,
     };
-  
+
     return <NewOrderScreen {...props} />;
 
-  } else return <Loader center={true}  />;
+  } else return <Loader center={true} />;
 };
 
 export default NewOrder;

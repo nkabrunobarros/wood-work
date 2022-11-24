@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { parseCookies } from "nookies";
 import { methods } from '../methods';
 
-//  Get ALL Budgets
+//  Get Budgets
 export async function budgets() {
     const { auth_token: token } = parseCookies();
 
@@ -18,7 +18,32 @@ export async function budgets() {
         },
         params: {
             type: 'Budget',
-            limit: 100
+            limit: 100,
+            q: `aprovedDate==""`,
+
+        }
+
+    };
+
+    return await axios(config);
+}
+
+//  Get Budgets
+export async function allBudgets() {
+    const { auth_token: token } = parseCookies();
+
+    const config = {
+        method: 'get',
+        url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET,
+        headers: {
+            Authorization: token && `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+        },
+        params: {
+            type: 'Budget',
+            limit: 1000
         }
 
     };
