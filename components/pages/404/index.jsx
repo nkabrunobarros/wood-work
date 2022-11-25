@@ -41,7 +41,7 @@ const notFoundPage = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default notFoundPage
+export default notFoundPage;

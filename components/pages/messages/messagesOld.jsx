@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 //  Material Ui
 import {
     Avatar,
+    Box,
     Button,
     IconButton,
     OutlinedInput,
@@ -12,7 +13,6 @@ import {
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import { Box } from '@mui/system';
 
 //  Custom Components
 import AdvancedTable from '../../advancedTable/AdvancedTable';

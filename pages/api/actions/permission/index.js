@@ -15,6 +15,6 @@ export async function permission(data) {
           data
       },
       config
-  )
+  );
 
 }

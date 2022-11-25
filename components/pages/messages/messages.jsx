@@ -34,12 +34,13 @@ import scrollToBottom from '../../utils/ScrollToBottom';
 import MessagesStyles from './MessagesStyles';
 
 const Messages = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps } = props;
+  const { pageProps } = props;
   const [conversations, setConversations] = useState(props.conversations);
   const [newMessage, setNewMessage] = useState('');
   const [activeRow, setActiveRow] = useState(0);
   const [loadMessage, setLoadMessage] = useState(new Date());
-  const [conversationDisplayed, setConversationDisplayed] = useState(conversations[0]);
+  const conversationDisplayed = conversations[0];
+  // const [conversationDisplayed, setConversationDisplayed] = useState(conversations[0]);
   const loggedUser = JSON.parse(localStorage.getItem('user'));
   const theme = localStorage.getItem('theme');
   const styles = MessagesStyles({ theme });

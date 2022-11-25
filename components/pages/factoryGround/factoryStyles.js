@@ -1,5 +1,5 @@
-function FactoryStyles({ ...props }) {
-    const { hovering, theme, sender, activeRow } = props;
+function FactoryStyles() {
+    // const { hovering, theme, sender, activeRow } = props;
 
     const styles = {
 

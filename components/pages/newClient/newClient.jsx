@@ -272,8 +272,10 @@ const NewClient = ({ ...props }) => {
     inputFields.map((ele) => {
       builtClient[ele.id] = {};
 
+      const a = false;
+
       // if (ele.options) {
-      if (false) {
+      if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
       }

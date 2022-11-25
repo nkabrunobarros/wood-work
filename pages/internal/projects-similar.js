@@ -22,7 +22,7 @@ import * as WoodTypeActions from '../api/actions/woodtype';
 //  Utils
 
 
-const OrdersSimilar = ({ ...pageProps }) => {
+const OrdersSimilar = () => {
   //  Data States
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();

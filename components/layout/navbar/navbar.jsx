@@ -1,7 +1,7 @@
 // Node modules
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
@@ -9,14 +9,14 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
 import styles from '../../../styles/components/navbar.module.css';
 
-const Navbar = ({ toggleTheme, openDrawer, ...pageProps }) => {
-  const [theme, setTheme] = useState('light');
+const Navbar = ({ openDrawer, ...pageProps }) => {
+  // const [theme, setTheme] = useState('light');
   const open = Boolean();
 
-  function toggleThemeHere() {
-    // const res = toggleTheme()
-    setTheme(toggleTheme());
-  }
+  // function toggleThemeHere() {
+  //   // const res = toggleTheme()
+  //   setTheme(toggleTheme());
+  // }
 
   return (
     <>

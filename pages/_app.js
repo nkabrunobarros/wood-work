@@ -66,8 +66,9 @@ const App = ({ Component, pageProps }) => {
 
       if (token) {
         const decodedToken = jwt.decode(token);
+        const a = true;
 
-        if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment() || true) {
+        if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment() || a) {
           pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
           pageProps.theme = selectedTheme;
 

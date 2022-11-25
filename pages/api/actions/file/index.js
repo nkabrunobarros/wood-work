@@ -15,7 +15,7 @@ export async function files(data) {
       data: data || { id: "" }
     },
     config
-  )
+  );
 }
 
 export async function saveFile(data) {
@@ -31,7 +31,7 @@ export async function saveFile(data) {
       data: { input: data }
     },
     config
-  )
+  );
 }
 
 export async function removeFile(data) {
@@ -47,5 +47,5 @@ export async function removeFile(data) {
       data
     },
     config
-  )
+  );
 }

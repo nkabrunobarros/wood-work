@@ -12,9 +12,9 @@ import EditProjectScreen from '../../../components/pages/editProject/editProject
 import routes from '../../../navigation/routes';
 
 //  Services
-import * as projectsActions from '../../api/actions/project';
 import * as ClientsActions from '../../api/actions/client';
 import * as ProductsActions from '../../api/actions/product';
+import * as projectsActions from '../../api/actions/project';
 
 const EditProject = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -33,7 +33,7 @@ const EditProject = ({ ...pageProps }) => {
         .clients()
         .then((res) => setClients(res.data.payload.data));
 
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data))
+      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
 
     };
 
@@ -61,7 +61,7 @@ const EditProject = ({ ...pageProps }) => {
     };
   
 
-    return <EditProjectScreen {...props} />
+    return <EditProjectScreen {...props} />;
    
   } else return <Loader center={true} />;
 };

@@ -5,15 +5,15 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../../components/loader/loader';
 
 //  Page Component
-import EditUserScreen from '../../../components/pages/editUser/editUser';
+import EditUserScreen from '../../../components/pages/editWorker/editWorker';
 
 //  Navigation
 import routes from '../../../navigation/routes';
 
 //  Services
 import * as CountryActions from '../../../pages/api/actions/country';
-import * as UserActions from '../../../pages/api/actions/user';
 import * as ProfileActions from '../../../pages/api/actions/perfil';
+import * as UserActions from '../../../pages/api/actions/user';
 
 const EditUser = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -69,8 +69,8 @@ const EditUser = ({ ...pageProps }) => {
 
 
 
-    return loaded && <EditUserScreen {...props} />
-  } else return <Loader center={true} />
+    return loaded && <EditUserScreen {...props} />;
+  } else return <Loader center={true} />;
 };
 
 export default EditUser;

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import LeftOversScreen from '../../components/pages/leftovers/leftovers';
+import React from 'react';
 import Loader from '../../components/loader/loader';
+import LeftOversScreen from '../../components/pages/leftovers/leftovers';
 
 const LeftOvers = () => {
-
-    const [loaded, setLoaded] = useState(true);
+    const loaded = true;
+    // const [loaded, setLoaded] = useState(true);
     // useEffect(() => {
     //     async function test() {
 

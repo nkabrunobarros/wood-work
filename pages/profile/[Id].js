@@ -1,28 +1,28 @@
 //  Nodes
-import React from 'react'
+import React from 'react';
 
 //  Custom Components
-import Loader from '../../components/loader/loader'
+import Loader from '../../components/loader/loader';
 
 //  Page Component
-import ProfileScreen from '../../components/pages/profile/profile'
+import ProfileScreen from '../../components/pages/profile/profile';
 
 //  Proptypes
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 //  Navigation
-import routes from '../../navigation/routes'
+import routes from '../../navigation/routes';
 
 //  Services
 
 
-const Profile = ({ ...pageProps }) => {
+const Profile = () => {
   let loaded = false;
   const user = JSON.parse(localStorage.getItem('user'));
   // const router = useRouter()
   // const id = router.query.Id
 
-  if (user) loaded = true
+  if (user) loaded = true;
 
   if (loaded) {
     const breadcrumbsPath = [
@@ -35,16 +35,16 @@ const Profile = ({ ...pageProps }) => {
     const props = {
       user,
       breadcrumbsPath
-    }
+    };
 
-    return loaded && <ProfileScreen {...props} />
-  } else return <Loader center={true} />
+    return loaded && <ProfileScreen {...props} />;
+  } else return <Loader center={true} />;
 
 };
 
 Profile.propTypes = {
   users: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
-}
+};
 
-export default Profile
+export default Profile;

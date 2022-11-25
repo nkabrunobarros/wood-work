@@ -1,20 +1,20 @@
 //  Nodes
-import React from 'react'
-import TermsScreen from '../components/pages/terms/terms'
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import React from 'react';
+import TermsScreen from '../components/pages/terms/terms';
 
 const Terms = () => {
-  const readOnly = true
+  const readOnly = true;
 
   const props = {
     readOnly
-  }
+  };
 
-  return <TermsScreen {...props} />
-}
+  return <TermsScreen {...props} />;
+};
 
 Terms.propTypes = {
-  readOnly: PropTypes.boolean
-}
+  readOnly: PropTypes.bool
+};
 
-export default Terms
+export default Terms;

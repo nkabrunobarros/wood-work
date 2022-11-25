@@ -24,7 +24,6 @@ const Workers = ({ ...props }) => {
   const {
     breadcrumbsPath,
     profiles,
-    headCells,
     editRoute,
     detailRoute,
     newRoute,

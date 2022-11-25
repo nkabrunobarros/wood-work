@@ -21,7 +21,7 @@ import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import * as projectsActions from '../../../pages/api/actions/project';
-import styles from '../../../styles/Newproject.module.css';
+// import styles from '../../../styles/Newproject.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import Select from '../../inputs/select';
@@ -35,7 +35,7 @@ const EditProject = ({ ...props }) => {
   const [client, setClient] = useState(project.project.client?.id);
   const [errorProd, setErrorProd] = useState('');
   const [errorClient, setErrorClient] = useState('');
-  const [obs, setObs] = useState('');
+  // const [obs, setObs] = useState('');
 
 
   async function Createproject() {
@@ -65,7 +65,7 @@ const EditProject = ({ ...props }) => {
   function ClearAll() {
     setClient();
     setProduct();
-    setObs("");
+    // setObs("");
     setErrorClient();
     setErrorProd();
   }
@@ -171,7 +171,9 @@ const EditProject = ({ ...props }) => {
               </Grid>
             </Box>
           </Grid>
-          <Grid container md={4} spacing={1} sm={12} p={2} bgcolor={"lightGray.main"} className={styles.clientContainer}>
+          <Grid container md={4} spacing={1} sm={12} p={2} bgcolor={"lightGray.main"}
+          //  className={styles.clientContainer} 
+           >
             <Grid container item sm={12} xs={12} >
               <Typography id='align' className='headerTitleSm'>
                 <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Cliente

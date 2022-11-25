@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import "nka-gantt-task-react/dist/index.css";
+// import "nka-gantt-task-react/dist/index.css";
 import React, { useCallback, useState } from 'react';
 
 
@@ -16,7 +16,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 // import Chart from 'react-apexcharts';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
-import { Gantt } from 'nka-gantt-task-react';
+// import { Gantt } from 'nka-gantt-task-react';
 import { useDropzone } from 'react-dropzone';
 import Content from '../../content/content';
 
@@ -258,34 +258,34 @@ const OrdersScreen = ({ ...props }) => {
           </Grid>
 
         </Grid>
-        <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => console.log(e.target.files)} />
+        <input {...getInputProps()} type='file' hidden multiple webkitdirectory="" onChange={(e) => console.log(e.target.files)} />
       </Grid>
 
     );
   };
 
-  const tasks = [
-    {
-      start: new Date(2020, 1, 1),
-      end: new Date(2020, 1, 3),
-      name: 'Fazer isto',
-      id: 'Task 0',
-      type: 'task',
-      progress: 45,
-      isDisabled: true,
-      styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
-    },
-    {
-      start: new Date(2020, 1, 3),
-      end: new Date(2020, 1, 7),
-      name: 'Fazer aquilo',
-      id: 'Task 1',
-      type: 'task',
-      progress: 90,
-      isDisabled: false,
-      styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
-    },
-  ];
+  // const tasks = [
+  //   {
+  //     start: new Date(2020, 1, 1),
+  //     end: new Date(2020, 1, 3),
+  //     name: 'Fazer isto',
+  //     id: 'Task 0',
+  //     type: 'task',
+  //     progress: 45,
+  //     isDisabled: true,
+  //     styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
+  //   },
+  //   {
+  //     start: new Date(2020, 1, 3),
+  //     end: new Date(2020, 1, 7),
+  //     name: 'Fazer aquilo',
+  //     id: 'Task 1',
+  //     type: 'task',
+  //     progress: 90,
+  //     isDisabled: false,
+  //     styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
+  //   },
+  // ];
 
   return (
     <Grid component='main'>
@@ -295,10 +295,10 @@ const OrdersScreen = ({ ...props }) => {
       <Content>
         <Button onClick={() => test()}>test query</Button>
       </Content>
-      <Gantt
+      {/* <Gantt
         tasks={tasks}
         onClick={(e) => console.log(e)}
-      />
+      /> */}
       <Content>
 
         <Box>

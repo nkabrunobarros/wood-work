@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from "@mui/material";
 import { X, XCircle } from "lucide-react";
@@ -15,7 +16,7 @@ import IsInternal from "../utils/IsInternal";
 const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pageProps }) => {
   const [newImages, setNewImages] = useState();
   const [newImageDescription, setNewImageDescription] = useState('');
-  const [folders2, setFolders] = useState(folders);
+  // const [folders2, setFolders] = useState(folders);
   const [selectedFolder, setSelectedFolder] = useState(orderId);
   const [uploading, setUploading] = useState(false);
   const [errorFolder, setErrorFolder] = useState('');
@@ -90,7 +91,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
         .catch((err) => console.log(err));
 
       newFolder.data.payload.files = [];
-      setFolders([...folders, newFolder.data.payload]);
+      // setFolders([...folders, newFolder.data.payload]);
 
       newImages.map(async (file) => {
         const builtFile = {
@@ -224,7 +225,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
             )}
           </ImageList>
           <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
-            <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => handleModalImageUpload(e)} />
+            <input {...getInputProps()} type='file' hidden multiple webkitdirectory="" onChange={(e) => handleModalImageUpload(e)} />
             {
               isDragActive ?
                 <p>Drop...</p> :

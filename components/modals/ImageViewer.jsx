@@ -12,12 +12,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ImageViewer = ({ images, open, handleClose }) => {
     const [currentPanel, setCurrentPanel] = useState(0);
 
-    const images2 = [
-        "http://placeimg.com/1200/800/nature",
-        "http://placeimg.com/800/1200/nature",
-        "http://placeimg.com/1920/1080/nature",
-        "http://placeimg.com/1500/500/nature"
-    ];
+    // const images2 = [
+    //     "http://placeimg.com/1200/800/nature",
+    //     "http://placeimg.com/800/1200/nature",
+    //     "http://placeimg.com/1920/1080/nature",
+    //     "http://placeimg.com/1500/500/nature"
+    // ];
 
     return (
         <Dialog

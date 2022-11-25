@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Box, Grid } from '@mui/material';
 import { X } from 'lucide-react';
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import React, { useState } from 'react';
 import Content from '../../content/content';
 
 const FactoryGround = ({ ...props }) => {
-    const { breadcrumbsPath, headCells, headCellsUpper } = props;
+    const {  headCells } = props;
     const [activeRow, setActiveRow] = useState(0);
 
     const cellProps = {

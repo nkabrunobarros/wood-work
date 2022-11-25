@@ -18,7 +18,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: ['react', 'react-hooks', 'jsx-a11y'],
+  plugins: ['react'],
 
   rules: {
     'semi': [2, 'always'],

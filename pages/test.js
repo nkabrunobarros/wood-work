@@ -1,6 +1,5 @@
 //  Nodes
-import React from 'react'
-import Test from '../components/pages/test'
+// import Test from '../components/pages/test';
 
 //  Navigation
 
@@ -9,9 +8,11 @@ import Test from '../components/pages/test'
 //  Styling
 
 const Terms = () => {
-  return <Test />
-}
+  return 'hi';
+  // return <Test />;
+};
 
 Terms.propTypes = {
-}
-export default Terms
+};
+
+export default Terms;

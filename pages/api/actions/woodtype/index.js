@@ -15,5 +15,5 @@ export async function woodTypes(data) {
           data
       },
       config
-  ) 
+  ); 
 }

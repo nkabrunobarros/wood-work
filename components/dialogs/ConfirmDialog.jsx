@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -9,7 +10,6 @@ import {
   Divider,
   Typography
 } from '@mui/material';
-import { Box } from '@mui/system';
 import * as icons from 'lucide-react';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -13,12 +13,12 @@ import Footer from '../../layout/footer/footer';
 
 //  Navigation
 import { ChevronLeft } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import * as UserActions from '../../../pages/api/actions/user';
-import backgroundImgTerms from '../../../public/Consentimento.png';
-import backgroundImgTos from '../../../public/tos.png';
+// import backgroundImgTerms from '../../../public/Consentimento.png';
+// import backgroundImgTos from '../../../public/tos.png';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -69,12 +69,12 @@ const Terms = ({ ...props }) => {
             height: '100%',
           }}
         >
-          <Image
+          {/* <Image
             src={readOnly ? backgroundImgTerms : backgroundImgTos}
             layout='fill'
             placeholder="blur"
             priority
-          />
+          /> */}
         </div>
         <Box
           className={styles.logo}
@@ -88,7 +88,7 @@ const Terms = ({ ...props }) => {
         >
           <div className={styles.logoImg}>
             <div
-              styles={{
+              style={{
                 width: '300px',
                 height: '300px',
                 position: 'absolute',

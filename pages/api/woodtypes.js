@@ -6,7 +6,7 @@ const handler = async (req, res) => {
     const { auth_token: token } = parseCookies();
 
     if (method !== 'POST') {
-        return res.status(400).json({ success: false, message: 'Only POST requests are allowed' })
+        return res.status(400).json({ success: false, message: 'Only POST requests are allowed' });
     }
 
     const data = JSON.stringify({
@@ -41,14 +41,14 @@ const handler = async (req, res) => {
                         errors: false,
                         payload: result.data.data.woodTypes
                     }
-                )
+                );
 
             }
             else return res.status(200).json({ success: false, message: result.data.errors[0].message });
-        })
+        });
 
     } catch (error) { return res.status(error.response.status || 500).json({ success: false, message: error.message }); }
-}
+};
 
 export default handler;
 

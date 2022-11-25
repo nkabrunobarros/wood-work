@@ -6,7 +6,8 @@ import { toast } from 'react-toastify';
 
 //  Mui
 import {
-  Box, ButtonGroup, Grid, Paper, Popover, Typography, styled
+  // eslint-disable-next-line sort-imports
+  Box, ButtonGroup, Grid, Paper, Popover, styled, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -41,13 +42,14 @@ import * as ClientActions from '../../../pages/api/actions/client';
 
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, detailPage, pageProps,organizations } = props;
-  const [client, setClient] = useState(props.client);
+  const { breadcrumbsPath, pageProps,organizations, client } = props;
+  // const [client, setClient] = useState(props.client);
   const [postalCodeInfo, setPostalCodeInfo] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [processing, setProcessing] = useState(false);
+  const processing= false;
+  // const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState(
     [
@@ -286,8 +288,10 @@ const EditClient = ({ ...props }) => {
     inputFields.map((ele) => {
       builtClient[ele.id] = {};
 
+      const a = false;
+
       // if (ele.options) {
-      if (false) {
+      if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
       }
@@ -302,8 +306,10 @@ const EditClient = ({ ...props }) => {
     inputFields2.map((ele) => {
       builtClient[ele.id] = {};
 
+      const a = false;
+
       // if (ele.options) {
-      if (false) {
+      if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
       }

@@ -30,14 +30,14 @@ import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, countries, profiles, organizations } = props;
+  const { breadcrumbsPath, countries, organizations } = props;
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
-  const [newestWorker, setNewestWorker] = useState();
+  // const [newestWorker, setNewestWorker] = useState();
 
   const shifts = [
     {
@@ -222,8 +222,10 @@ const newWorker = ({ ...props }) => {
     inputFields.map((ele) => {
       builtWorker[ele.id] = {};
 
+      const a = false;
+
       // if (ele.options) {
-      if (false) {
+      if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
       }
@@ -331,7 +333,7 @@ const newWorker = ({ ...props }) => {
       <ConfirmDialog
         open={successOpen}
         handleClose={() => ClearFields()}
-        onConfirm={() => Router.push(`${routes.private.internal.worker}${newestWorker.id}`)}
+        onConfirm={() => Router.push(`${routes.private.internal.workers}`)}
         message={`Worker criado com sucesso, que deseja fazer a agora?`}
         icon='Verified'
         iconType='success'

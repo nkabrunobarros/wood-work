@@ -20,7 +20,7 @@ import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ProductsActions from '../../pages/api/actions/product';
 import * as StocksActions from '../../pages/api/actions/stock';
 
-const Stock = ({ ...pageProps }) => {
+const Stock = () => {
   const [loaded, setLoaded] = useState(false);
   const [items, setItems] = useState();
   const [products, setProducts] = useState();
@@ -33,16 +33,16 @@ const Stock = ({ ...pageProps }) => {
 
         // eslint-disable-next-line array-callback-return
         response.data.payload.data.map((ele, i) => {
-          response.data.payload.data[i].code = response.data.payload.data[i].product.code
-          response.data.payload.data[i].category = response.data.payload.data[i].product.category.id
-        })
+          response.data.payload.data[i].code = response.data.payload.data[i].product.code;
+          response.data.payload.data[i].category = response.data.payload.data[i].product.category.id;
+        });
 
-        setItems(response.data.payload.data)
-      })
+        setItems(response.data.payload.data);
+      });
 
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data))
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data))
-    }
+      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
+      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
+    };
 
     Promise.all([getData()]).then(() => setLoaded(true));
 
@@ -98,8 +98,8 @@ const Stock = ({ ...pageProps }) => {
       products,
     };
 
-    return <StockScreen {...props} />
-  } else return <Loader center={true} />
+    return <StockScreen {...props} />;
+  } else return <Loader center={true} />;
 
 };
 

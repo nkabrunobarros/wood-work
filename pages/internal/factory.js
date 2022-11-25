@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Loader from '../../components/loader/loader';
 import FactoryGroundScreen from '../../components/pages/factoryGround/factoryGround';
 import routes from '../../navigation/routes';
 
 const SignIn = () => {
-    const [loaded, setLoaded] = useState(true);
+    // const [loaded, setLoaded] = useState(true);
+    const loaded = true;
 
     if (loaded) {
 

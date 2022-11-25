@@ -10,7 +10,6 @@ import { ChevronLeft } from 'lucide-react';
 import Router from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
-import routes from '../../../navigation/routes';
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';

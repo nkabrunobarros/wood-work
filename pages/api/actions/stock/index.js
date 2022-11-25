@@ -15,7 +15,7 @@ export async function stocks(data) {
           data
       },
       config
-  )}
+  );}
 
 export async function stock(data) {
     const { auth_token: token } = parseCookies();
@@ -30,4 +30,4 @@ export async function stock(data) {
           data
       },
       config
-  )}
+  );}

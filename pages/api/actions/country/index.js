@@ -15,5 +15,5 @@ export async function countries(data) {
           data
       },
       config
-  ) 
+  ); 
 }

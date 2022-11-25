@@ -22,6 +22,7 @@ import { Lock, Save, User, X } from 'lucide-react';
 //  Material UI
 import {
   Backdrop,
+  Box,
   Button,
   CircularProgress,
   InputLabel, OutlinedInput, TextareaAutosize
@@ -55,7 +56,7 @@ const EditUser = ({ ...props }) => {
   const [errorMessageName, setErrorMessageName] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [errorMessageTelefone, setErrorMessageTelefone] = useState('');
-  const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
+  // const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
   const [errorMessagePais, setErrorMessagePais] = useState('');
   const [errorMessageMorada, setErrorMessageMorada] = useState('');
   const [errorMessagePerfil, setErrorMessagePerfil] = useState('');
@@ -75,10 +76,10 @@ const EditUser = ({ ...props }) => {
     else if (telefone < 100000000)
       setErrorMessageTelefone('Numero tem que ter 9 digitos');
 
-    if (!hasData(telemovel))
-      setErrorMessageTelemovel('Campo Obrigatório');
-    else if (telemovel < 100000000)
-      setErrorMessageTelemovel('Numero tem que ter 9 digitos');
+    // if (!hasData(telemovel))
+    //   setErrorMessageTelemovel('Campo Obrigatório');
+    // else if (telemovel < 100000000)
+    //   setErrorMessageTelemovel('Numero tem que ter 9 digitos');
 
     if (!hasData(morada)) setErrorMessageMorada('Campo Obrigatório');
 
@@ -151,7 +152,7 @@ const EditUser = ({ ...props }) => {
     setErrorMessageName('');
     setErrorMessageEmail('');
     setErrorMessageTelefone('');
-    setErrorMessageTelemovel('');
+    // setErrorMessageTelemovel('');
     setErrorMessagePerfil('');
     setErrorMessageMorada('');
     setErrorMessagePais('');
@@ -297,7 +298,7 @@ const EditUser = ({ ...props }) => {
                 value={telemovel}
                 onChange={(e) => {
                   setTelemovel(e.target.value);
-                  setErrorMessageTelemovel('');
+                  // setErrorMessageTelemovel('');
                 }}
               />
             </div>
@@ -360,7 +361,7 @@ const EditUser = ({ ...props }) => {
               />
             </div>
           </div>
-          <div id='pad' style={{ flex: 1 }} bgcolor={"lightGray.main"} className={styles.clientContainer}>
+          <Box id='pad' style={{ flex: 1 }} bgcolor={"lightGray.main"} className={styles.clientContainer}>
             <a id='align' className='headerTitleSm'>
               <Lock
                 strokeWidth={pageProps.globalVars.iconStrokeWidth}
@@ -404,7 +405,7 @@ const EditUser = ({ ...props }) => {
                 placeholder='Escrever password * '
               />
             </div>
-          </div>
+          </Box>
         </div>
         <div style={{ display: 'flex' }}>
           <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
