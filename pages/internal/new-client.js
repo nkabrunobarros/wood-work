@@ -5,19 +5,20 @@ import routes from '../../navigation/routes';
 
 //  Actions
 import * as OrganizationActions from '../../pages/api/actions/organization';
-import * as ProfileActions from '../../pages/api/actions/perfil';
+// import * as ProfileActions from '../../pages/api/actions/perfil';
 
 const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [profiles, setProfiles] = useState();
+  // const [profiles, setProfiles] = useState();
   const [organizations, setOrganizations] = useState();
+  const profiles = [];
 
   useEffect(() => {
     const getData = async () => {
       try {
-        await ProfileActions
-          .perfis()
-          .then((res) => setProfiles(res.data.payload.data));
+        // await ProfileActions
+        //   .perfis()
+        //   .then((res) => setProfiles(res.data.payload.data));
 
         await OrganizationActions
           .organizations()
@@ -39,14 +40,14 @@ const NewOrder = ({ ...pageProps }) => {
         href: `${routes.private.internal.newClient}`,
       },
     ];
-  
+
     const props = {
       breadcrumbsPath,
       pageProps,
       profiles,
       organizations,
     };
-  
+
     return <NewClientScreen {...props} />;
 
   } else return <Loader center={true} />;

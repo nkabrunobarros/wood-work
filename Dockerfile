@@ -1,26 +1,11 @@
-# Filename: Dockerfile
-FROM node:16
+FROM node:18.12.1-alpine3.15
 
-# Change the working directory.
-WORKDIR /home/node
-
-# Workaround because `WORKDIR` always runs as root.
-RUN chown -R node /home/node
-
-# Change the user to avoid running as `root`.
-USER node
-
-# Copy project directory.
+WORKDIR /app
 COPY . ./
 
-# Run yarn.
 RUN yarn
-
-# Run yarn.
 RUN yarn build
-
-# RUN apt-get install nettools
 
 EXPOSE 3000
 
-RUN yarn start
+CMD [ "yarn", "start" ]

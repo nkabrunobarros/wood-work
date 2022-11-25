@@ -16,25 +16,26 @@ import PropTypes from 'prop-types';
 //  Services
 // import countryService from '../../services/countries/country-service';
 import * as ClientsActions from '../../pages/api/actions/client';
-import * as ProfileActions from '../../pages/api/actions/perfil';
+// import * as ProfileActions from '../../pages/api/actions/perfil';
 
 const Clients = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
-  const [profiles, setProfiles] = useState();
+  // const [profiles, setProfiles] = useState();
+  const profiles = [];
 
+  // const profiles = []
   useEffect(() => {
     const getData = async () => {
       await ClientsActions
         .clients()
         .then((res) => {
-          console.log(res);
           setClients(res.data);
         });
 
-      await ProfileActions
-        .perfis()
-        .then((res) => setProfiles(res.data.payload.data));
+      // await ProfileActions
+      //   .perfis()
+      //   .then((res) => setProfiles(res.data.payload.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

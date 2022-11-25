@@ -37,7 +37,7 @@ import { MultiFilterArray } from '../utils/MultiFilterArray';
 
 //  Services
 import * as BudgetActions from '../../pages/api/actions/budget';
-import * as CategoriesActions from '../../pages/api/actions/category';
+// import * as CategoriesActions from '../../pages/api/actions/category';
 import * as ClientsActions from '../../pages/api/actions/client';
 import * as WorkerActions from '../../pages/api/actions/worker';
 
@@ -83,11 +83,12 @@ const AdvancedTable = ({
 
   useEffect(() => {
     const getData = async () => {
-      const categories = await CategoriesActions.categories();
+      // const categories = await CategoriesActions.categories();
       const clients = await ClientsActions.clients();
 
       const allData = {
-        categories: categories.data.payload.data,
+        categories: [],
+        // categories: categories.data.payload.data,
         clients: clients.data,
       };
 

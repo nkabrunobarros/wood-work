@@ -43,15 +43,15 @@ import Select from '../../inputs/select';
 
 const EditUser = ({ ...props }) => {
   const { breadcrumbsPath, user, countries, profiles, pageProps } = props;
-  const [name, setName] = useState(user.nome);
-  const [email, setEmail] = useState(user.email);
-  const [telefone, setTelefone] = useState(user.telefone);
-  const [telemovel, setTelemovel] = useState(user.telemovel);
-  const [pais, setPais] = useState(user.paisCodigo);
-  const [morada, setMorada] = useState(user.morada);
-  const [obs, setObs] = useState(user.obs);
-  const [active, setActive] = useState(user.ativo);
-  const [perfil, setPerfil] = useState(user.perfil.id);
+  const [name, setName] = useState(user.givenName?.value);
+  const [email, setEmail] = useState(user.email?.value);
+  const [telefone, setTelefone] = useState(user.telefone?.value);
+  const [telemovel, setTelemovel] = useState(user.telemovel?.value);
+  const [pais, setPais] = useState(user.paisCodigo?.value);
+  const [morada, setMorada] = useState(user.address?.object?.streetAddres);
+  const [obs, setObs] = useState(user.obs?.value);
+  const [active, setActive] = useState(user.active?.value);
+  const [perfil, setPerfil] = useState(user.profile?.object.id);
   //  Errors states
   const [errorMessageName, setErrorMessageName] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');

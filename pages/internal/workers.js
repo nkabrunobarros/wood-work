@@ -11,13 +11,14 @@ import routes from '../../navigation/routes';
 //  Proptypes
 
 //  Services
-import * as ProfileActions from '../api/actions/perfil';
+// import * as ProfileActions from '../api/actions/perfil';
 import * as WorkerActions from '../api/actions/worker';
 
 const Workers = () => {
   const [loaded, setLoaded] = useState(false);
   const [workers, setWorkers] = useState();
-  const [profiles, setProfiles] = useState();
+  // const [profiles, setProfiles] = useState();
+  const profiles = [];
 
   useEffect(() => {
     const getData = async () => {
@@ -25,9 +26,9 @@ const Workers = () => {
         .workers()
         .then((res) => setWorkers(res.data));
 
-      await ProfileActions
-        .perfis()
-        .then((res) => setProfiles(res.data.payload.data));
+      // await ProfileActions
+      //   .perfis()
+      //   .then((res) => setProfiles(res.data.payload.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

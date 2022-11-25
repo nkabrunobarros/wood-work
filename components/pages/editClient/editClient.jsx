@@ -6,8 +6,7 @@ import { toast } from 'react-toastify';
 
 //  Mui
 import {
-  // eslint-disable-next-line sort-imports
-  Box, ButtonGroup, Grid, Paper, Popover, styled, Typography
+  Box, ButtonGroup, Grid, Paper, Popover, Typography, styled
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -92,7 +91,7 @@ const EditClient = ({ ...props }) => {
         label: 'Telefone',
         value: client?.telephone?.value,
         error: '',
-        type: 'phone',
+        // type: 'phone',
         required: true,
         tooltip: ''
       },

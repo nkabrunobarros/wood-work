@@ -15,24 +15,26 @@ import ProjectsScreen from '../../components/pages/projects/projects';
 import PropTypes from 'prop-types';
 
 //  Actions
+// import * as CategoriesActions from '../api/actions/category';
+// import * as ProductsActions from '../api/actions/product';
 import * as BudgetsActions from '../api/actions/budget';
-import * as CategoriesActions from '../api/actions/category';
 import * as ClientsActions from '../api/actions/client';
 import * as ExpeditionActions from '../api/actions/expedition';
-import * as ProductsActions from '../api/actions/product';
 import * as ProjectsActions from '../api/actions/project';
 
 //  Icons
 import { Layers, LayoutTemplate, PackagePlus, Settings } from 'lucide-react';
 
 const Projects = ({ ...pageProps }) => {
+  // const [products, setProducts] = useState();
+  // const [categories, setCategories] = useState();
+  const products = [];
+  const categories = [];
   const [panelsInfo, setPanelsInfo] = useState();
   const [clients, setClients] = useState();
-  const [products, setProducts] = useState();
   const [budgets, setBudgets] = useState();
   const [projects, setProjects] = useState();
   // const [expeditions, setExpeditions] = useState();
-  const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
   const detailPage = routes.private.internal.project;
   const editPage = routes.private.internal.editProject;
@@ -47,8 +49,8 @@ const Projects = ({ ...pageProps }) => {
       };
 
 
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
+      // await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
+      // await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
       await ClientsActions.clients().then((response) => setClients(response.data));
       await BudgetsActions.budgets().then((response) => setBudgets(response.data));
 

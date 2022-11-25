@@ -2,7 +2,7 @@
 import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from "@mui/material";
 import { HelpCircle, Verified } from "lucide-react";
 import React, { useEffect, useState } from 'react';
-import * as CountryActions from '../../pages/api/actions/country';
+// import * as CountryActions from '../../pages/api/actions/country';
 import MyInput from "../inputs/myInput";
 import PhoneInput from "../inputs/phoneInput/PhoneInput";
 import MySelect from "../inputs/select";
@@ -44,11 +44,12 @@ import PropTypes from 'prop-types';
 
 const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [countries, setCountries] = useState();
+    // const [countries, setCountries] = useState();
     const [loaded, setLoaded] = useState(false);
     const [visible, setVisible] = useState(false) ;
     const placeholderDefault = 'Escrever';
     const optData = props.optionalData || {};
+  const countries = [];
 
     const { 
       generatePassword,
@@ -60,9 +61,9 @@ const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
     useEffect(() => {
       const getData = async () => {
         try {
-          await CountryActions
-            .countries()
-            .then((res) => setCountries(res.data.payload.data));
+          // await CountryActions
+          //   .countries()
+          //   .then((res) => setCountries(res.data.payload.data));
         } catch (error) { }
       };
   
