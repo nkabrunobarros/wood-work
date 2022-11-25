@@ -1,14 +1,16 @@
 /* eslint-disable react/prop-types */
-import { Box, Grid } from '@mui/material';
-import { X } from 'lucide-react';
+import { Box, Grid, TablePagination, TableSortLabel } from '@mui/material';
+import { Edit2, X } from 'lucide-react';
 import React, { useState } from 'react';
-// import AdvancedTable from '../../advancedTable/AdvancedTable';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
 // import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 
 const FactoryGround = ({ ...props }) => {
-    const {  headCells } = props;
+    const {  headCells, headCellsUpper } = props;
     const [activeRow, setActiveRow] = useState(0);
+
+    const rows = [{},{},{},{},{},{},{},{},{},{},{},{}];
 
     const cellProps = {
         md: 1,
@@ -32,25 +34,25 @@ const FactoryGround = ({ ...props }) => {
     return <>
         {/* <CustomBreadcrumbs path={breadcrumbsPath} /> */}
         <Content>
-            {/* <AdvancedTable rows={[{}]} headCells={headCells} headCellsUpper={headCellsUpper} /> */}
-            <Grid container>
+             <AdvancedTable rows={rows} headCells={headCells} headCellsUpper={headCellsUpper} /> 
+            <Grid container sx={{ minWidth: '1024px', overflow: 'scroll', display: 'none'}}>
                 {/* Headers */}
                 <Grid container md={12} sm={12} xs={12} bgcolor={'lightGray.edges'}>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[0].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[1].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[2].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[3].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[4].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[5].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[6].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[7].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[8].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[9].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}>{headCells[10].label}</Box></Grid>
-                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '0px solid' }}>{headCells[11].label}</Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[0].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[1].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[2].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[3].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[4].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[5].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[6].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[7].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[8].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[9].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '1px solid' }}><TableSortLabel active={false} direction='desc'> {headCells[10].label} </TableSortLabel></Box></Grid>
+                    <Grid {...cellProps}><Box className='fullCenter' sx={{  width: '100%', borderRight: '0px solid' }}><TableSortLabel active={false} direction='desc'> <Edit2 /> </TableSortLabel></Box></Grid>
                 </Grid>
                 <Grid container md={12} sm={12} xs={12}>
-                    {[...Array(5)].map((x, rowIndex) => {
+                    {[...Array(10)].map((x, rowIndex) => {
                         return (
                             <Grid
                                 {...rowProps}
@@ -72,8 +74,24 @@ const FactoryGround = ({ ...props }) => {
                                 <Grid {...cellProps} ></Grid>
                             </Grid>
                         );
-
                     })}
+                    <Grid
+                        {...rowProps}>
+                            <TablePagination
+                            showFirstButton
+                            showLastButton
+                            component='div'
+                            sx={{ marginLeft: 'auto' }}
+                            rowsPerPageOptions={[5, 10, 25]}
+                            count={50}
+                            // count={filteredItems ? filteredItems?.length : rows?.length}
+                            rowsPerPage={10}
+                            // page={page}
+                            // onPageChange={handleChangePage}
+                            // onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelRowsPerPage={'Mostrar'}
+                        />
+                    </Grid>
                 </Grid>
             </Grid>
         </Content>
