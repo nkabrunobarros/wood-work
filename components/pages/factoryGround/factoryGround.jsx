@@ -9,7 +9,6 @@ import Content from '../../content/content';
 const FactoryGround = ({ ...props }) => {
     const {  headCells, headCellsUpper } = props;
     const [activeRow, setActiveRow] = useState(0);
-
     const rows = [{},{},{},{},{},{},{},{},{},{},{},{}];
 
     const cellProps = {
