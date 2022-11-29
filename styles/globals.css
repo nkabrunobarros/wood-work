@@ -450,3 +450,16 @@ a {
   opacity: 0.7;
   transition: ease-in-out 0.2s;
 }
+
+.breathingBackgroundWarning {
+  animation: 1s infinite alternate ease-out breathing-color--dark;
+  cursor: pointer;
+}
+
+@keyframes breathing-color--dark {
+  from {}
+
+  to {
+    background-color: #e6b000;
+  }
+}

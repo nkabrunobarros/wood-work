@@ -4,7 +4,9 @@ import { ArrowLeftRight, Send, XCircle } from "lucide-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Camera } from "react-camera-pro";
+import LeftOversDialog from '../../dialogs/LeftOversDialog';
 import Select from "../../inputs/select";
+import HeightModal from "./modals/HeightModal";
 
 const Leftovers = () => {
     const [imagesTaken, setImagesTaken] = useState();
@@ -12,6 +14,9 @@ const Leftovers = () => {
     const [currentPanel, setCurrentPanel] = useState(-1);
     const loggedUser = JSON.parse(localStorage.getItem('user'));
     const [clock, setClock] = useState();
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [heightModal, setHeightModal] = useState(false);
+    const [height, setHeight] = useState();
 
     useEffect(() => {
         setInterval(() => {
@@ -21,6 +26,10 @@ const Leftovers = () => {
         }, 10000);
     }, []);
 
+    async function onConfirm(e) {
+        //  e has the manual sizes, veryfi if it brings them
+        setDialogOpen(false);
+    }
 
     async function SaveImg() {
         if (camera.current) {
@@ -31,14 +40,26 @@ const Leftovers = () => {
                 takenAt: Date.now()
             });
 
-
-
             setCurrentPanel(0);
         }
     }
 
+    function onHeightChange (e) {
+        setHeightModal(false);
+        setHeight(e);
+
+    }
 
     return <Box >
+           <LeftOversDialog
+            open={dialogOpen}
+            handleClose={() => setDialogOpen(false)}
+            onConfirm={(e) => onConfirm(e)}
+            type='alert'
+            message={'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'}
+        />
+        <HeightModal open={heightModal} onClose={() => setHeightModal(false)} onConfirm={(e) => onHeightChange(e)}  />
+      
         <Grid container>
             <Grid container md={12} sm={12} sx={{ height: '15vh' }}>
                 {/* Worker Name */}
@@ -185,12 +206,12 @@ const Leftovers = () => {
                                     <Typography item color='lightTextSm.black' >0cm</Typography>
                                 </Box>
                             </Grid>
-                            <Grid p={1}>
+                            <Grid p={1} md={12}>
                                 <Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
-                                    <Button onClick={() => setCurrentPanel(-1)} >
-                                        <Box className="fullCenter infoContainerLeftOvers" sx={{ border: '2px solid', padding: '.5rem', borderRadius: '50%' }}>
+                                    <Button >
+                                        <Box className="fullCenter " sx={{ border: '2px solid transparent', padding: '.5rem', borderRadius: '50%' }}>
 
-                                            <ArrowLeftRight />
+                                            <ArrowLeftRight color={'transparent'} />
                                         </Box>
                                     </Button>
                                 </Box>
@@ -199,10 +220,10 @@ const Leftovers = () => {
                     </>
                 }
                 <Grid container md={2} >
-                    <Grid container p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
-                        <Box>
+                    <Grid  onClick={() => setHeightModal(true)} container p={1} bgcolor={"default.main"} className={`fullCenter infoContainerLeftOvers ${!height && 'breathingBackgroundWarning'}` } m={1}>
+                        <Box >
                             <Typography item color='lightTextSm.main'>Espessura</Typography>
-                            <Typography item color='lightTextSm.black' >0cm</Typography>
+                            <Typography item color='lightTextSm.black' > {height} cm</Typography>
                         </Box>
                     </Grid>
                     <Grid container p={1} bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" m={1}>
@@ -219,7 +240,7 @@ const Leftovers = () => {
                     </Grid>
                     <Grid p={1}>
                         <Box bgcolor={"default.main"} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
-                            <Button sx={{ width: '100%', height: '100%' }} onClick={() => SaveImg()}>
+                            <Button sx={{ width: '100%', height: '100%' }} onClick={() => !imagesTaken ? SaveImg() : setDialogOpen(true)}>
                                 <Box className="fullCenter infoContainerLeftOvers" sx={{ border: '2px solid', padding: '.5rem', borderRadius: '50%' }}>
                                     <Send />
                                 </Box>

@@ -9,7 +9,21 @@ import Content from '../../content/content';
 const FactoryGround = ({ ...props }) => {
     const {  headCells, headCellsUpper } = props;
     const [activeRow, setActiveRow] = useState(0);
-    const rows = [{},{},{},{},{},{},{},{},{},{},{},{}];
+
+    const rows = [
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        { id: Math.random()},
+        ];
 
     const cellProps = {
         md: 1,
