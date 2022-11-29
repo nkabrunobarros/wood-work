@@ -102,7 +102,7 @@ const SignIn = (props) => {
 
   try {
     await login({email, password}).then(async (res) => {
-     setCookie(undefined, 'auth_token', res.data.token);
+      res.data.token !== undefined && setCookie(undefined, 'auth_token', res.data.token);
 
       await me({ ...res?.data }).then((resultMe) => { 
         const user = resultMe?.data[0];

@@ -55,7 +55,6 @@ async function Test(pageProps) {
         const u = JSON.parse(localStorage.getItem('user'));
 
         pageProps.loggedUser = u;
-        console.log('here');
 
         const resUser = await authActions.me({ token });
 
