@@ -26,15 +26,21 @@ const NewOrder = () => {
       try {
         await CountryActions
           .countries()
-          .then((res) => setCountries(res.data.payload.data));
+          .then((res) => setCountries(res.data.payload.data))
+          //  TODO: change this later
+          .catch(() => setCountries([]));
 
         await ProfileActions
           .perfis()
-          .then((res) => setProfiles(res.data.payload.data));
+          .then((res) => setProfiles(res.data.payload.data))
+          //  TODO: change this later
+          .catch(() => setProfiles([]));
 
         await OrganizationActions
-        .organizations()
-        .then((res) => setOrganizations(res.data));
+          .organizations()
+          .then((res) => setOrganizations(res.data))
+          //  TODO: change this later
+          .catch(() => setProfiles([]));
       } catch (error) { }
     };
 

@@ -158,13 +158,13 @@ const newWorker = ({ ...props }) => {
       required: true,
       tooltip: ''
     },
-    {
-      id: 'assemblyFor',
-      label: 'Montagem',
-      value: 'urn:ngsi-ld:Project:MC_MuebleTv_A',
-      error: '',
-      required: false
-    },
+    // {
+    //   id: 'assemblyFor',
+    //   label: 'Montagem',
+    //   value: 'urn:ngsi-ld:Project:MC_MuebleTv_A',
+    //   error: '',
+    //   required: false
+    // },
     {
       id: 'cellphone',
       label: 'Telemovel',

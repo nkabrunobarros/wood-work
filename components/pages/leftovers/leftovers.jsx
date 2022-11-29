@@ -29,6 +29,7 @@ const Leftovers = () => {
     async function onConfirm(e) {
         //  e has the manual sizes, veryfi if it brings them
         setDialogOpen(false);
+        console.log(e);
     }
 
     async function SaveImg() {

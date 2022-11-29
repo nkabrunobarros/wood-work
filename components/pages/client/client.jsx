@@ -43,13 +43,14 @@ const EditClient = ({ ...props }) => {
       contact: client?.contact?.value,
       taxId: client?.taxId?.value,
       postalCode: client?.postalCode?.value,
-
     };
 
     try {
       await ClientsActions.saveClient(builtClient).then(() => Router.push(routes.private.internal.clients));
     } catch (err) { }
   }
+
+  console.log(client);
 
   return (
     <>
@@ -67,28 +68,27 @@ const EditClient = ({ ...props }) => {
             <Typography item className='headerTitleXl'>{client?.legalName?.value}</Typography>
             <Box sx={{ marginLeft: 'auto' }}>
               <ButtonGroup>
-
-              <PrimaryBtn
-                text='Editar'
-                icon={
-                  <Edit
+                <PrimaryBtn
+                  text='Editar'
+                  icon={
+                    <Edit
+                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
+                    />
+                  }
+                  onClick={() => Router.push(`${editRoute}${client?.id}`)}
+                />
+                <PrimaryBtn
+                  text='Apagar'
+                  onClick={() => setDialogOpen(true)}
+                  icon={
+                    <Trash
                     strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                     size={pageProps.globalVars.iconSize}
+                    />
+                  }
+                  light
                   />
-                }
-                onClick={() => Router.push(`${editRoute}${client?.id}`)}
-              />
-              <PrimaryBtn
-                text='Apagar'
-                onClick={() => setDialogOpen(true)}
-                icon={
-                  <Trash
-                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
-                  />
-                }
-                light
-                />
                 </ButtonGroup>
             </Box>
           </Box>

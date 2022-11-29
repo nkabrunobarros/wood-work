@@ -178,7 +178,7 @@ const Profile = ({ ...props }) => {
                     <span>
                       {/* {user?.address} */}
                     </span>
-
+                    {console.log(user)}
                   </Grid>
                   <Grid container item>
                     <Tooltip title='Pais'>
