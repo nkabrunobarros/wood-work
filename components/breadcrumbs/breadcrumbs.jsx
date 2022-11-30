@@ -29,8 +29,8 @@ const CustomBreadcrumbs = ({ path }) => {
       }}
     >
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
-        <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description) ? routes.private.internal.orders : routes.private.orders)}>
-          <Tooltip title='Ir para Encomendas'>
+        <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description) ? routes.private.internal.projects : routes.private.projects)}>
+          <Tooltip title='Ir para Projetos'>
             <Home strokeWidth={1} size={18} />
           </Tooltip>
         </IconButton>

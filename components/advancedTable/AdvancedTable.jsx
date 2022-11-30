@@ -29,7 +29,7 @@ import {
 
 //  Icons
 import { CheckCircleOutline, DeleteOutline, EditOutlined } from '@mui/icons-material';
-import { Filter } from 'lucide-react';
+import { Copy, Filter } from 'lucide-react';
 
 //  Utlis
 import { FilterItem } from '../utils/FilterItem';
@@ -104,7 +104,7 @@ const AdvancedTable = ({
           break;
         case routes.private.internal.projectsSimilar: 
           setDisplaying('projects');
-          setDialogMessage( 'Está prestes a apagar uma encomenda o que é irreversivel, tem certeza que quer continuar?');
+          setDialogMessage( 'Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?');
 
           break;
         case routes.private.internal.stocks: 
@@ -468,6 +468,7 @@ const AdvancedTable = ({
     if (filters) {
       const filtered = MultiFilterArray(rows, filters);
 
+      console.log(filters);
       setFilteredItems(filtered);
     }
   }, [filters]);
@@ -484,7 +485,7 @@ const AdvancedTable = ({
         open={confirmDialogOpen}
         handleClose={() => setConfirmDialogOpen(false)}
         onConfirm={() => onConfirmItem()}
-        message={'Está prestes a confirmar uma ordem!'}
+        message={'Está prestes a registar a adjudicação do orçamento!'}
         icon='Check'
         iconType='success'
       />
@@ -512,6 +513,7 @@ const AdvancedTable = ({
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={'Mostrar'}
+                // labelDisplayedRows={() => {return { from:'', to:'', count:'', page:'' };}}
               />
               <Box>
                 <Tooltip title='Filtrar tabela'>
@@ -609,15 +611,27 @@ const AdvancedTable = ({
                                     :
                                       <>
                                         {CanDo(['WRITE', displaying]) &&
-                                        <Tooltip title={'Confirmar Budget'}>
+                                        <>
+                                        <Tooltip title={'Adjudicar orçamento'}>
                                           <IconButton onClick={() =>{
                                              setConfirmDialogOpen(true);
                                              setDeleteItemId(row.id);
                                              }} >
                                             <CheckCircleOutline color={'success'} />
                                           </IconButton>
-                                        </Tooltip>}
-                                    </>}
+                                        </Tooltip>
+                                        <Tooltip title={'Duplicar orçamento'}>
+                                          <IconButton onClick={() =>{
+                                             setConfirmDialogOpen(true);
+                                             setDeleteItemId(row.id);
+                                             }} >
+                                            <Copy size={20} strokeWidth={1.5} color={'#225ee8'}/>
+                                          </IconButton>
+                                        </Tooltip>
+                                        
+                                        </>}
+                                    </>
+                                    }
                                     {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover'}>
                                       <IconButton onClick={() => onDeleteClick(true)} >
                                         <DeleteOutline

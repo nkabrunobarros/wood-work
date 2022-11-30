@@ -34,8 +34,6 @@ const CurrencyInput = ({
       {...other}
       getInputRef={ref}
       // style={{ textAlign: 'start' }}
-      value={value}
-      onChange={onChange}
       suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
       decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
       decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
@@ -85,7 +83,6 @@ const CurrencyInput = ({
                 <IconButton component='label'
                   onClick={adornmentOnClick || null}
                   edge="end">
-
                   {adornmentIcon}
                 </IconButton>
               </Tooltip>

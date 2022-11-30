@@ -45,8 +45,8 @@ const NewClient = ({ ...props }) => {
   const [inputFields, setInputFields] = useState(
     [
       {
-        id: 'legalName',
-        label: 'legal Name',
+        id: 'Nome Legal',
+        label: 'Nome Legal',
         value: '',
         error: '',
         required: true,
@@ -54,7 +54,15 @@ const NewClient = ({ ...props }) => {
       },
       {
         id: 'givenName',
-        label: 'given Name',
+        label: 'Primeiro Nome',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'familyName',
+        label: 'Ultimo Nome',
         value: '',
         error: '',
         required: true,
@@ -69,15 +77,15 @@ const NewClient = ({ ...props }) => {
         required: true,
         tooltip: ''
       },
-      {
-        id: 'cellphone',
-        label: 'Telemovel',
-        value: '',
-        error: '',
-        type: 'phone',
-        required: true,
-        tooltip: ''
-      },
+      // {
+      //   id: 'cellphone',
+      //   label: 'Telemovel',
+      //   value: '',
+      //   error: '',
+      //   type: 'phone',
+      //   required: true,
+      //   tooltip: ''
+      // },
       {
         id: 'telephone',
         label: 'Telefone',
@@ -97,22 +105,22 @@ const NewClient = ({ ...props }) => {
       },
       {
         id: 'taxId',
-        label: 'taxId',
+        label: 'Numero Contribuinte',
         value: '',
         error: '',
         required: true,
         tooltip: ''
       },
-      {
-        id: 'hasOrganization',
-        label: 'Organização',
-        value: organizations[0].id,
-        options: organizations,
-        optLabel: 'legalName',
-        error: '',
-        required: true,
-        tooltip: ''
-      },
+      // {
+      //   id: 'hasOrganization',
+      //   label: 'Organização',
+      //   value: organizations[0].id,
+      //   options: organizations,
+      //   optLabel: 'legalName',
+      //   error: '',
+      //   required: true,
+      //   tooltip: ''
+      // },
       {
         id: 'postalCode',
         label: 'Codigo Postal',
@@ -252,15 +260,20 @@ const NewClient = ({ ...props }) => {
 
   async function handleSave() {
     const builtClient = {
-      id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'legalName').value.replace(/ /g, '')}`,
+      id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'email').value.replace(/ /g, '')}`,
       type: 'Owner',
       active: {
         type: 'Property',
         value: 'True',
       },
+      
       tos: {
         type:'Property',
         value:''
+      },
+      hasOrganization: {
+        type:'Relationship',
+        value: organizations[0].id,
       },
       "@context": [
         "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",

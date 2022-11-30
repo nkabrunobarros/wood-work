@@ -22,7 +22,7 @@ const Messages = ({ ...pageProps }) => {
     const conversations = [
         {
             id: 1,
-            users: ['cl16o9cag0000x3tqp8lbslcr', '2'],
+            users: ['urn:ngsi-ld:Worker:112', '2'],
             orderId: 12312,
             messages: [1234, 123, 12345],
             messagesContent: [],
@@ -31,7 +31,7 @@ const Messages = ({ ...pageProps }) => {
         },
         {
             id: 1,
-            users: ['cl16o9cag0000x3tqp8lbslcr', '2'],
+            users: ['urn:ngsi-ld:Worker:112', '2'],
             orderId: 456,
             messages: [1234],
             messagesContent: [],
@@ -43,7 +43,7 @@ const Messages = ({ ...pageProps }) => {
     const messagsContents = [
         {
             id: 1234,
-            sentBy: 'cl16o9cag0000x3tqp8lbslcr',
+            sentBy: 'urn:ngsi-ld:Worker:112',
             content: 'Hi, i would like to know the Eta of my order please? Thank you',
             createdAt: '2022-10-21T10:30:56+01:00',
             type: 'text'
@@ -57,7 +57,7 @@ const Messages = ({ ...pageProps }) => {
         },
         {
             id: 12345,
-            sentBy: 'cl16o9cag0000x3tqp8lbslcr',
+            sentBy: 'urn:ngsi-ld:Worker:112',
             content: 'Ok thank you',
             createdAt: '2022-10-21T12:30:56+01:00',
             type: 'text'

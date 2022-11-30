@@ -120,6 +120,9 @@ const FormGenerator = ({fields, onFormChange, perRow, ...props}) => {
       </Popover>
       <Grid container>
         {fields.map((field, index) => {
+
+          if (field.hidden) return true;
+
           if (field.options) 
             return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
                 <MySelect

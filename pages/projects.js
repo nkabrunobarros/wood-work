@@ -52,8 +52,8 @@ const Orders = ({ ...pageProps }) => {
 
       const test = [];
 
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
+      await ProductsActions.products().then((response) => setProducts(response.data.payload.data)).catch(() => setProducts([]));
+      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data)).catch(() => setCategories([]));
       await ClientsActions.clients().then((response) => setClients(response.data));
 
       await BudgetsActions.myBudgets().then((response) => {
@@ -104,7 +104,6 @@ const Orders = ({ ...pageProps }) => {
             }
           });
 
-          console.log(test);
           setProjects(test);
           setPanelsInfo(counts);
 

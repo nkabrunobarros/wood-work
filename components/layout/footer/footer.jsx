@@ -32,34 +32,36 @@ function Copyright(props) {
 }
 
 const Footer = () => {
+  const isPublicPage = Object.values(routes.public).includes(Router.route.replace('[Id]', ''));
 
   return typeof window !== 'undefined' && (
     <Grid
       container
+      
       bgcolor={"default.main"}
+      md={isPublicPage ? 5 : 12}
       style={{
+        // position: !isPublicPage &&'fixed',
         position: 'fixed',
-        minHeight: '45px',
         width: '100%',
         bottom: 0,
         borderTop: '1px solid var(--grayEdges)',
         color: 'var(--grayTextsLight)',
         fontSize: '12px',
-        alignItems: 'center',
         paddingLeft: '1rem',
         paddingRight: '1rem',
       }}
     >
-      <Grid container item md={6} sm={12}  >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) ? <Copyright /> : <Image
+      <Grid  container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{disply: 'flex', alignItems: 'center', maxHeight: '45px', justifyContent: isPublicPage && 'center'}}>
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || Router.route === '/' || Router.route === '/signin' ? <Copyright /> : <Image
           placeholder='blur'
           priority
           src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
           layout='intrinsic'
         />}
       </Grid>
-      <Grid container item md={6} sm={12} sx={{ textAlign: 'end', display: 'flex', justifyContent: 'end' }}  >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) ? <Image
+      <Grid container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{ height: 'fit-content',textAlign: 'end', display: 'flex', justifyContent: !isPublicPage ? 'end': 'center' }} >
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || Router.route === '/' || Router.route === '/signin' ? <Image
           placeholder='blur'
           priority
           src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
@@ -69,9 +71,7 @@ const Footer = () => {
             className='link'
             style={{ color: 'inherit' }}
             onClick={() => Router.push(routes.private.tos)}
-          >
-            Termos e Condições | Política de Privacidade
-          </a>
+          >  Termos e Condições | Política de Privacidade </a>
         }
       </Grid>
     </Grid >

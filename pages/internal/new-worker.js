@@ -50,11 +50,11 @@ const NewOrder = () => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Workers',
+        title: 'Utilizadores',
         href: `${routes.private.internal.workers}`,
       },
       {
-        title: 'Novo Worker',
+        title: 'Novo Utilizador',
         href: `${routes.private.internal.newWorker}`,
       },
     ];

@@ -152,7 +152,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
             </React.Fragment>
           ))}
           {/* Definições */}
-          <MenuItem sx={{ padding: '0' }}>
+          <MenuItem sx={{ padding: '0', display:'none' }}>
             <Box
               style={{
                 width: '100%',
@@ -250,7 +250,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
                     }}
                   >
                     <LogOut strokeWidth='1' size={20} />
-                    <div className='spacerBox' /> LogOut
+                    <div className='spacerBox' /> Sair
                   </a>
                 </MenuItem>
               </>

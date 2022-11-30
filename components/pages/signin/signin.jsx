@@ -32,9 +32,14 @@ import EmailValidation from '../../utils/EmailValidation';
 
 import { setCookie } from 'nookies';
 //  PropTypes
+import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+
 import IsInternal from '../../utils/IsInternal';
+
+
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
@@ -267,9 +272,18 @@ const SignIn = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Box
+        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+        >
+        <Image
+          src={companyLogo}
+          layout='responsive'
+          placeholder='blur'
+          />
+        </Box>
       {windowWidth > 600 &&
         <Grid className={styles.sidePanel} item xs={0} sm={6} md={7}>
-          <Box
+         <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -279,9 +293,9 @@ const SignIn = (props) => {
             }}
           >
             <div className={styles.logoImg}>
-              
             </div>
           </Box>
+       
         </Grid>
       }
 
@@ -293,7 +307,7 @@ const SignIn = (props) => {
       >
         <Box
           sx={{
-            my: '25%',
+            my: '20%',
             mx: '15%',
             display: 'flex',
             flexDirection: 'column',
@@ -301,9 +315,11 @@ const SignIn = (props) => {
             width: '100%'
           }}
         >
-          <Typography color={'primary'}>
+          <Typography variant='md' color={'primary'}  sx={{fontWeight: 600}}>
             {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>
+          {/* TODO: imagem de logo da mofreita aqui */}
+       
           <Typography component='h1' variant='h2'>
             Login
           </Typography>

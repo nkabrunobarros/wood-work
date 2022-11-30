@@ -63,12 +63,11 @@ const App = ({ Component, pageProps }) => {
       if (!localStorage.getItem('font')) localStorage.setItem('font', 'md');
       else if (fontSize !== localStorage.getItem('font')) setFontSize(localStorage.getItem('font'));
 
-
-      if (token) {
+      if (token !== 'undefined') {
         const decodedToken = jwt.decode(token);
         const a = true;
 
-        if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment() || a) {
+        if (moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment() || a) {
           pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
           pageProps.theme = selectedTheme;
 
@@ -87,6 +86,10 @@ const App = ({ Component, pageProps }) => {
           destroyCookie('auth-token');
           router.push(routes.public.signIn);
         }
+      } else {
+        destroyCookie('auth-token');
+        console.log('here destroyed');
+        router.push(routes.public.signIn);
       }
     };
 

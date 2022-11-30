@@ -50,11 +50,46 @@ const EditClient = ({ ...props }) => {
   const processing= false;
   // const [processing, setProcessing] = useState(false);
 
+  async function ValidatePostalCode(e) {
+    //  e brings the postal code string
+    if ( e === null && postalCodeInfo !== null) 
+    {
+      setPostalCodeInfo();
+
+      const data = [...inputFields];
+
+      postalCodeInfo && data.map( (field, i) => {
+        if (field.id === 'addressCountry') data[i].value = '';
+
+        if (field.id === 'addressDistrict') data[i].value = '';
+
+        if (field.id === 'addressRegion') data[i].value = '';
+
+        if (field.id === 'addressLocality') data[i].value = '';
+      });
+
+      setInputFields(data);
+
+      return;
+    }
+
+    try {
+      const res = await axios.get(`https://geoapi.pt/cp/${e}?json=1`);
+
+      if (res.data) setPostalCodeInfo(res.data);
+    } catch (error) {
+
+    // TODO: CATCH ERROR
+    toast.warning('Codigo Postal Invalido');
+     }
+
+  }
+
   const [inputFields, setInputFields] = useState(
     [
       {
         id: 'legalName',
-        label: 'legal Name',
+        label: 'Nome legal',
         value: client?.legalName?.value,
         error: '',
         required: true,
@@ -62,7 +97,7 @@ const EditClient = ({ ...props }) => {
       },
       {
         id: 'givenName',
-        label: 'given Name',
+        label: 'Primeiro nome',
         value: client?.givenName?.value,
         error: '',
         required: true,
@@ -114,6 +149,69 @@ const EditClient = ({ ...props }) => {
         optLabel: 'legalName',
         error: '',
         required: true,
+        tooltip: '',
+        hidden: true
+
+      },
+      {
+        id: 'postalCode',
+        label: 'Codigo Postal',
+        value: client?.address.value.postalCode,
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'streetAddres',
+        label: 'Rua',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'addressCountry',
+        label: 'País',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'addressRegion',
+        label: 'Concelho',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'addressDistrict',
+        label: 'Distrito',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'addressLocality',
+        label: 'Localidade',
+        value: '',
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'obs',
+        label: 'Observações',
+        value: client?.obs?.value,
+        type: 'area',
+        error: '',
+        required: false,
         tooltip: ''
       },
     ]
@@ -128,31 +226,7 @@ const EditClient = ({ ...props }) => {
       required: true,
       tooltip: ''
     },
-    {
-      id: 'postalCode',
-      label: 'Codigo Postal',
-      value: client?.address.value.postalCode,
-      error: '',
-      required: true,
-      tooltip: ''
-    },
-    {
-      id: 'address',
-      label: 'Morada Fiscal',
-      value: client?.address?.value.postalCode,
-      error: '',
-      required: true,
-      tooltip: ''
-    },
-    {
-      id: 'obs',
-      label: 'Observações',
-      value: client?.obs?.value,
-      type: 'area',
-      error: '',
-      required: false,
-      tooltip: ''
-    },
+   
   ]);
 
   const handleFormChange = (i, e) => {
@@ -441,7 +515,7 @@ const EditClient = ({ ...props }) => {
       {processing && <Loader center={true} backdrop />}
       <Content>
         <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-          <Typography item className='headerTitleXl'>{client.giveName}</Typography>
+          <Typography item className='headerTitleXl'>{client.givenName.value}</Typography>
           <Box sx={{ marginLeft: 'auto' }}>
             <ButtonGroup>
               <PrimaryBtn
@@ -580,7 +654,8 @@ const EditClient = ({ ...props }) => {
             fields={inputFields}
             onFormChange={handleFormChange}
             optionalData={{
-              postalCodeInfo
+              postalCodeInfo,
+              ValidatePostalCode
             }}
           />
           </Grid>

@@ -26,14 +26,15 @@ const EditProject = ({ ...pageProps }) => {
   useEffect(() => {
     const getAll = async () => {
       await projectsActions
-        .project({id: router.query.Id})
-        .then((res) => setproject(res.data.payload));
+        .project({ id: router.query.Id })
+        .then((res) => setproject(res.data))
+        .catch(() => setproject([]));
 
       await ClientsActions
         .clients()
-        .then((res) => setClients(res.data.payload.data));
+        .then((res) => setClients(res.data));
 
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
+      await ProductsActions.products().then((response) => setProducts(response.data)).catch(() => setProducts([]));
 
     };
 
@@ -59,10 +60,10 @@ const EditProject = ({ ...pageProps }) => {
       clients,
       products
     };
-  
+
 
     return <EditProjectScreen {...props} />;
-   
+
   } else return <Loader center={true} />;
 };
 

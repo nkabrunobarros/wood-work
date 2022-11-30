@@ -336,7 +336,7 @@ const Messages = ({ ...props }) => {
             </Grid>
             <Grid container md={12} className='fullCenter'>
               <Button>
-                Publicidade?
+                {/* Publicidade? */}
               </Button>
             </Grid>
           </Grid>

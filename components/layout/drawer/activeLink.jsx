@@ -51,15 +51,15 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 
-  if (projectsPages.includes(path.route)) currentSection = 'Encomendas';
+  if (projectsPages.includes(path.route)) currentSection = 'Projetos/Orçamentos';
 
-  if (orderSimilarPages.includes(path.route)) currentSection = 'Encomendas Similares';
+  if (orderSimilarPages.includes(path.route)) currentSection = 'Projetos Similares';
 
   if (stockPages.includes(path.route)) currentSection = 'Stock';
 
   if (clientsPages.includes(path.route)) currentSection = 'Clientes';
 
-  if (workersPages.includes(path.route)) currentSection = 'Workers';
+  if (workersPages.includes(path.route)) currentSection = 'Utilizadores';
 
   if (profilePages.includes(path.route)) currentSection = 'Perfil';
 

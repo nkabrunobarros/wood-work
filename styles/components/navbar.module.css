@@ -12,7 +12,8 @@
 }
 
 .logos {
-  min-width: 30px;
+  min-width: 60px;
+  border: '1px solid red'
 }
 
 .menuBtn:hover {

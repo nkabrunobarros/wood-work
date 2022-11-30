@@ -44,11 +44,11 @@ const NewOrder = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Encomendas',
+        title: 'Orçamentos',
         href: `${routes.private.internal.projects}`,
       },
       {
-        title: 'Nova Encomenda',
+        title: 'Novo Orçamento',
         href: `${routes.private.internal.newProject}`,
       },
     ];

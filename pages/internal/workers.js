@@ -38,7 +38,7 @@ const Workers = () => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Workers',
+        title: 'Utilizadores',
         href: `${routes.private.users}`,
       },
     ];
@@ -57,7 +57,7 @@ const Workers = () => {
         label: 'Email',
       },
       {
-        id: 'profile.object.description',
+        id: 'functionPerformed.object.description',
         numeric: true,
         disablePadding: false,
         label: 'Perfil',
@@ -84,10 +84,10 @@ const Workers = () => {
         label: 'Email',
       },
       {
-        id: 'hasPermission.type',
+        id: 'functionPerformed.value',
         numeric: true,
         disablePadding: false,
-        label: 'Perfil',
+        label: 'Função',
       },
       {
         id: 'actions',

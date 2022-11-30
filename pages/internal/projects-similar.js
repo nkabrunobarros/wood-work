@@ -8,15 +8,14 @@ import Loader from '../../components/loader/loader';
 import OrdersScreen from '../../components/pages/ordersSimilar/projects-similar';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 //  Navigation
 import routes from '../../navigation/routes';
 
 //  Services
 import * as ClientsActions from '../api/actions/client';
-import * as OrdersActions from '../api/actions/order';
 import * as ProductsActions from '../api/actions/product';
+import * as ProjectsActions from '../api/actions/project';
 import * as WoodTypeActions from '../api/actions/woodtype';
 
 //  Utils
@@ -34,29 +33,32 @@ const OrdersSimilar = () => {
     const getAll = async () => {
       await ProductsActions
         .products()
-        .then((res) => setProducts(res.data.payload.data));
+        .then((res) => setProducts(res.data))
+        .catch(() => setProducts([]));
 
       await ClientsActions.clients()
-        .then((res) => setClients(res.data.payload.data));
+        .then((res) => setClients(res.data))
+        .catch(() => setClients([]));
 
       await WoodTypeActions
         .woodTypes()
-        .then((res) => setWoodTypes(res.data.payload.data));
+        .then((res) => setWoodTypes(res.data.payload.data))
+        .catch(() => setWoodTypes([]));
 
-      await OrdersActions.ordersProduction().then((res) => {
-        const data = res.data.payload.data;
+      await ProjectsActions.projects().then((res) => {
+        const data = res.data;
 
         //  Calc desvios
         data.map(
           // eslint-disable-next-line array-callback-return
           (item, i) => {
             // data[i].desvio = formatNum(item.previsto, item.realizado)
-            data[i].operacao = data[i].order.status;
-            data[i].previsto1 = `${data[i].product.craftTime * data[i].amount} H`;
+            data[i].operacao = data[i].status.value;
+            data[i].previsto1 = `${data[i]?.product?.craftTime * data[i]?.amount} H`;
             data[i].realizado1 = `${18} horas`;
-            data[i].desvio = (data[i].product.craftTime * data[i].amount) - 18;
+            data[i].desvio = (data[i]?.product?.craftTime * data[i]?.amount) - 18;
             data[i].previstoAtual = 20;
-            data[i].previsto2 = data[i].product.craftTime;
+            data[i].previsto2 = data[i]?.product?.craftTime;
             data[i].realizado2 = 2;
             data[i].desvio2 = - 2;
           }
@@ -74,8 +76,8 @@ const OrdersSimilar = () => {
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
-        title: 'Encomendas Similares',
-        href: `${routes.private.internal.ordersSimilar}`,
+        title: 'Projetos Similares',
+        href: `${routes.private.internal.projectsSimilar}`,
       },
     ];
 
@@ -188,8 +190,8 @@ const OrdersSimilar = () => {
       },
     ];
 
-    const detailPage = routes.private.internal.order;
-    const editPage = routes.private.internal.editOrder;
+    const detailPage = routes.private.internal.project;
+    const editPage = routes.private.internal.editProject;
 
     //  Dummy Operation types
     const operations = [
@@ -230,18 +232,5 @@ const OrdersSimilar = () => {
   } else return <Loader center={true} />;
 };
 
-OrdersSimilar.propTypes = {
-  items: PropTypes.array,
-  orders: PropTypes.array,
-  breadcrumbsPath: PropTypes.array,
-  detailPage: PropTypes.string,
-  clients: PropTypes.array,
-  woodTypes: PropTypes.array,
-  products: PropTypes.array,
-  operations: PropTypes.array,
-  headCellsUpper: PropTypes.array,
-  headCells: PropTypes.array,
-  hasFullyLoaded: PropTypes.bool,
-};
 
 export default OrdersSimilar;

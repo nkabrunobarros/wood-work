@@ -31,8 +31,8 @@ const EditProject = ({ ...props }) => {
   const { breadcrumbsPath, project, pageProps, clients, products } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [product, setProduct] = useState(project.product.id);
-  const [client, setClient] = useState(project.project.client?.id);
+  const [product, setProduct] = useState(project?.product?.id);
+  const [client, setClient] = useState(project?.client?.id);
   const [errorProd, setErrorProd] = useState('');
   const [errorClient, setErrorClient] = useState('');
   // const [obs, setObs] = useState('');

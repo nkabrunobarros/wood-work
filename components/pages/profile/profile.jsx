@@ -125,7 +125,6 @@ const Profile = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
                     <Typography item color='lightTextSm.black'>{user?.profile?.object?.description}</Typography>
                   </Grid>
-                  {console.log(user)}
                   {user?.workerShift?.value && <Grid item xs={12}>
                     {/* Only applies to workers */}
                     <Typography item color='lightTextSm.main'>Turno</Typography>
@@ -135,7 +134,8 @@ const Profile = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Estado </Typography>
                     <Typography item>
                       <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
-                        {user?.active?.value === 'True' ? 'Ativo' : 'Desativado'}
+                        {console.log(user?.active?.value)}
+                        {user?.active?.value === 'True' ? 'Ativo' : user?.active?.value === undefined ? 'Ativo': 'Desativado'}
                       </a>
                     </Typography>
                   </Grid>
@@ -178,7 +178,6 @@ const Profile = ({ ...props }) => {
                     <span>
                       {/* {user?.address} */}
                     </span>
-                    {console.log(user)}
                   </Grid>
                   <Grid container item>
                     <Tooltip title='Pais'>

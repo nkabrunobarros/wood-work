@@ -11,7 +11,7 @@ export const navLinks = [
     allowed: 'projects',
   },
   {
-    title: 'Encomendas',
+    title: 'Projetos/Orçamentos',
     id: 'projectsClient',
     url: routes.private.internal.projects,
     icon: <Archive strokeWidth='1' size={20} />,
@@ -32,7 +32,7 @@ export const navLinks = [
     allowed: 'messages',
   },
   {
-    title: 'Encomendas Similares',
+    title: 'Projetos Similares',
     id: 'projectsSimilar',
     url: routes.private.internal.projectsSimilar,
     icon: <Archive strokeWidth='1' size={20} />,
@@ -60,7 +60,7 @@ export const navLinks = [
     allowed: 'clients',
   },
   {
-    title: 'Workers',
+    title: 'Utilizadores',
     id: 'workers',
     url: routes.private.internal.workers,
     icon: <Users strokeWidth='1' size={20} />,
@@ -79,6 +79,6 @@ export const navLinks = [
     id: 'dashboards',
     url: routes.private.internal.dashboards,
     icon: <LayoutDashboard strokeWidth='1' size={20} />,
-    allowed: 'dashboards',
+    allowed: 'dashboardss',
   },
 ];

@@ -13,7 +13,7 @@ import UploadImagesModal from '../../../modals/UploadImages';
 import GetFileSize from '../../../utils/GetFileSize';
 
 const DocsClient = (props) => {
-    const { pageProps, styles, headCellsDocs, order } = props;
+    const { pageProps, styles, headCellsDocs, order, isInternalPage } = props;
     const [activeRow, setActiveRow] = useState();
     const [docsModalClient, setDocsModalClient] = useState(false);
     const [folders, setFolders] = useState(props.folders);
@@ -57,7 +57,7 @@ const DocsClient = (props) => {
                 <div className={styles.tableContainer}>
                     <div id='pad' style={{ display: 'flex' }}>
                     <div style={{ flex: 1 }}>
-                        <a className='headerTitle'>Documentos Cliente</a>
+                        <a className='headerTitle'>Documentos {isInternalPage && 'Cliente'} </a>
                     </div>
                     <div className='flex'>
                         <div>
@@ -202,6 +202,7 @@ DocsClient.propTypes = {
     pageProps: PropTypes.any,
     headCellsDocs: PropTypes.array,
     order: PropTypes.object,
+    isInternalPage: PropTypes.bool,
 };
 
 export default DocsClient;

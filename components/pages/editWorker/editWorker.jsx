@@ -25,7 +25,7 @@ import {
   Box,
   Button,
   CircularProgress,
-  InputLabel, OutlinedInput, TextareaAutosize
+  InputLabel, OutlinedInput
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -38,11 +38,10 @@ import hasData from '../../utils/hasData';
 import { toast } from 'react-toastify';
 import * as UserActions from '../../../pages/api/actions/user';
 import Notification from '../../dialogs/Notification';
-import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 import Select from '../../inputs/select';
 
 const EditUser = ({ ...props }) => {
-  const { breadcrumbsPath, user, countries, profiles, pageProps } = props;
+  const { breadcrumbsPath, user, pageProps } = props;
   const [name, setName] = useState(user.givenName?.value);
   const [email, setEmail] = useState(user.email?.value);
   const [telefone, setTelefone] = useState(user.telefone?.value);
@@ -55,10 +54,8 @@ const EditUser = ({ ...props }) => {
   //  Errors states
   const [errorMessageName, setErrorMessageName] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
-  const [errorMessageTelefone, setErrorMessageTelefone] = useState('');
   // const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
   const [errorMessagePais, setErrorMessagePais] = useState('');
-  const [errorMessageMorada, setErrorMessageMorada] = useState('');
   const [errorMessagePerfil, setErrorMessagePerfil] = useState('');
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -71,17 +68,11 @@ const EditUser = ({ ...props }) => {
 
     if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
     else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido');
-
-    if (!hasData(telefone)) setErrorMessageTelefone('Campo Obrigatório');
-    else if (telefone < 100000000)
-      setErrorMessageTelefone('Numero tem que ter 9 digitos');
-
     // if (!hasData(telemovel))
     //   setErrorMessageTelemovel('Campo Obrigatório');
     // else if (telemovel < 100000000)
     //   setErrorMessageTelemovel('Numero tem que ter 9 digitos');
 
-    if (!hasData(morada)) setErrorMessageMorada('Campo Obrigatório');
 
     if (!hasData(pais)) setErrorMessagePais('Campo Obrigatório');
 
@@ -151,16 +142,64 @@ const EditUser = ({ ...props }) => {
     setObs('');
     setErrorMessageName('');
     setErrorMessageEmail('');
-    setErrorMessageTelefone('');
     // setErrorMessageTelemovel('');
     setErrorMessagePerfil('');
-    setErrorMessageMorada('');
     setErrorMessagePais('');
 
     setTimeout(() => {
       setCleaningInputs(false);
     }, 500);
   };
+
+  const shifts = [
+    {
+      label: 'Manhã',
+      value: [1,2]
+    },
+    {
+      label: 'Tarde',
+      value: [2,3]
+    },
+    {
+      label: 'Noite',
+      value: [3,4]
+    }
+  ];
+
+  const functions = [
+    {
+      label:   'CNC', 
+      value:   'CNC', 
+    },
+    {
+      label: 'Nesting', 
+      value: 'Nesting', 
+    },
+    {
+      label: 'Manual Cut', 
+      value: 'Manual Cut', 
+    },
+    {
+      label: 'Assembly', 
+      value: 'Assembly', 
+    },
+    {
+      label: 'Manager', 
+      value: 'Manager', 
+    },
+    {
+      label: 'Designer', 
+      value: 'Designer', 
+    },
+    {
+      label: 'Budgeting', 
+      value: 'Budgeting', 
+    },
+    {
+      value: 'Warehouse',
+      label:  'Warehouse'
+    }
+];
 
   return (
     <Grid component='main'>
@@ -224,7 +263,20 @@ const EditUser = ({ ...props }) => {
             <div className='filterContainer2'>
               <MyInput
                 required
-                label={'Nome'}
+                label={'Primeiro Nome'}
+                error={errorMessageName}
+                placeholder='Escrever nome'
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setErrorMessageName('');
+                }}
+              />
+            </div>
+            <div className='filterContainer2'>
+              <MyInput
+                required
+                label={'Ultimo Nome'}
                 error={errorMessageName}
                 placeholder='Escrever nome'
                 value={name}
@@ -249,7 +301,7 @@ const EditUser = ({ ...props }) => {
                 type='email'
               />
             </div>
-            <div className='filterContainer2'>
+            {/* <div className='filterContainer2'>
               <MyInput
                 required
                 label={'Telefone'}
@@ -276,9 +328,9 @@ const EditUser = ({ ...props }) => {
                 options={countries}
 
               />
-            </div>
-            <div className='filterContainer2'>
-              {/* <MyInput
+            </div> */}
+            {/* <div className='filterContainer2'>
+               <MyInput
                 required
                 label={'Telemovel'}
                 error={errorMessageTelemovel}
@@ -289,7 +341,7 @@ const EditUser = ({ ...props }) => {
                   setErrorMessageTelemovel('');
                 }}
                 type='number'
-              /> */}
+              />
               <PhoneInput
                 required
                 label='Telemovel'
@@ -301,11 +353,11 @@ const EditUser = ({ ...props }) => {
                   // setErrorMessageTelemovel('');
                 }}
               />
-            </div>
+            </div> */}
             <div className='filterContainer2'>
               <Select
-                label='Perfil'
-                options={profiles}
+                label='Função'
+                options={functions}
                 optionLabel='descricao'
                 fullWidth
                 value={perfil}
@@ -319,7 +371,7 @@ const EditUser = ({ ...props }) => {
                 {errorMessagePerfil ? `${errorMessagePerfil}` : null}
               </a>
             </div>
-            <div className='filterContainer2'>
+            {/* <div className='filterContainer2'>
 
               <MyInput
                 required
@@ -335,14 +387,13 @@ const EditUser = ({ ...props }) => {
               <a style={{ color: 'var(--red)', fontSize: 'small' }}>
                 {errorMessageMorada ? `${errorMessageMorada}` : null}
               </a>
-            </div>
+            </div> */}
             <div className='filterContainer2'>
               <Select
-                label='País'
-                options={countries}
+                label='Turno'
+                options={shifts}
                 value={pais}
-                optionLabel='descricao'
-                optionValue='codigo'
+                required
                 onChange={(e) => setPais(e.target.value)}
               />
 
@@ -350,7 +401,7 @@ const EditUser = ({ ...props }) => {
                 {errorMessagePais ? `${errorMessagePais}` : null}
               </a>
             </div>
-            <div className='filterContainer2'>
+            {/* <div className='filterContainer2'>
               <InputLabel htmlFor='email'>Observações</InputLabel>
 
               <TextareaAutosize
@@ -359,7 +410,7 @@ const EditUser = ({ ...props }) => {
                 value={obs}
                 onChange={(e) => setObs(e.target.value)}
               />
-            </div>
+            </div> */}
           </div>
           <Box id='pad' style={{ flex: 1 }} bgcolor={"lightGray.main"} className={styles.clientContainer}>
             <a id='align' className='headerTitleSm'>

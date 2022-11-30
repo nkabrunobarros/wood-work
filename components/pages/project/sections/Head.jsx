@@ -31,7 +31,7 @@ const Head = (props) => {
               />
             </Box>
           </Box>
-          {internalPOV && (
+          {internalPOV ? (
               <Grid container md={12}>
                 <Grid md={4} container>
                   <Grid md={12} sm={6}>
@@ -60,7 +60,8 @@ const Head = (props) => {
                   />
                 </Grid>
               </Grid>
-          )}
+          ) : <>
+          </>}
         </Box></>;
 };
 

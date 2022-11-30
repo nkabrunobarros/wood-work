@@ -1,13 +1,12 @@
-import { Box, ButtonGroup, Grid, IconButton, InputLabel, TextField, TextareaAutosize, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Box, ButtonGroup, Grid, IconButton, InputLabel, TextField, TextareaAutosize, Tooltip, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 //  PropTypes
-import { Info, PackagePlus, RefreshCw, User, UserPlus } from "lucide-react";
+import { RefreshCw, User, UserPlus } from "lucide-react";
 import PropTypes from 'prop-types';
 import routes from "../../../../navigation/routes";
 //  Page Component Styles
 import styles from '../../../../styles/NewOrder.module.css';
-import MySelect from "../../../inputs/select";
 
 //  Actions
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -65,7 +64,7 @@ const ClientTab = (props) => {
                 </Grid>
               </Grid>
               <Grid container item sm={12} xs={12} >
-                <MySelect
+                {/* <MySelect
                   error={client.error}
                   label={'Cliente'}
                   required
@@ -83,11 +82,45 @@ const ClientTab = (props) => {
                       <Info color="var(--primary)" strokeWidth={1} />
                     </Tooltip>
                   }
+                /> */}
+
+            <InputLabel htmlFor='email'>Cliente</InputLabel>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              options={clients}
+              getOptionLabel={(option) => option.legalName?.value}
+              getOptionValue={(option) => option.id}
+              onChange={(e, value) =>{
+                onClientChange(value);
+              }}
+              renderOption={(props, option) => {
+                return (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    {option.legalName.value}
+                  </Box>
+                );
+              }}
+              renderInput={(params) => (
+                <>
+                <InputLabel htmlFor='email' color='error' sx={{ color: 'var(--red)'}}>{client.error}</InputLabel>
+                <TextField
+                  error={client.error}
+                  value={client.value}
+                  {...params}
+                  placeholder="Escrever Nome Cliente"
+                  inputProps={{
+                    ...params.inputProps,
+                    autoComplete: 'new-password', // disable autocomplete and autofill
+                  }}
                 />
+                  </>
+               )}
+              />
               </Grid>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Grid container item sm={12} xs={12} >
-                  <InputLabel htmlFor='email'>Data Inicio</InputLabel>
+                  <InputLabel htmlFor='email'>Data de criação de orçamento</InputLabel>
                   <DesktopDatePicker
                     required
                     error={true}
@@ -98,8 +131,7 @@ const ClientTab = (props) => {
                   />
                 </Grid>
                 <Grid container item sm={12} xs={12} >
-                  {/* <MyInput label={'Data Termino'} type='date' value={endAt} onChange={(e) => setEndAt(e.target.value)} error={errorEndAt}/> */}
-                  <InputLabel htmlFor='email'>Data Termino</InputLabel>
+                  <InputLabel htmlFor='email'>Data de entrega de orçamento</InputLabel>
                   <DesktopDatePicker
                     required
                     inputFormat="DD.MM.YYYY"
@@ -144,23 +176,23 @@ const ClientTab = (props) => {
                     <Typography color='lightTextSm.black' >
                       {clients.find(ele => ele.id === client.value)?.telephone?.value}</Typography>
                   </Grid>
-                  <Grid item md={6} p={1}>
+                  {/* <Grid item md={6} p={1}>
                     <Typography color='lightTextSm.main'>Pessoa de Contacto</Typography>
                     <Typography color='lightTextSm.black' >
                       {clients.find(ele => ele.id === client.value)?.contact?.value}</Typography>
-                  </Grid>
+                  </Grid> */}
                   <Grid item md={6} p={1}>
                     <Typography color='lightTextSm.main'>Contacto</Typography>
                     <Typography color='lightTextSm.black' >
                       {clients.find(ele => ele.id === client.value)?.telephone?.value}</Typography>
                   </Grid>
                   <Grid item md={6} p={1}>
-                    <Typography color='lightTextSm.main'>Observações</Typography>
+                    <Typography color='lightTextSm.main'>Observações sobre o cliente</Typography>
                     <Typography color='lightTextSm.black' >
                       {clients.find(ele => ele.id === client.value)?.obs?.value}</Typography>
                   </Grid>
                 </Grid>
-                <Grid bgcolor={"lightGray.main"} className={styles.clientContainer} container md={6} sx={{ height: 'fit-content', padding: 3 }} >
+                {/* <Grid bgcolor={"lightGray.main"} className={styles.clientContainer} container md={6} sx={{ height: 'fit-content', padding: 3 }} >
                   <Grid container item p={1}>
                     <Grid item xs={12}>
                       <Typography id='align' item color='lightTextSm.main'>
@@ -194,7 +226,7 @@ const ClientTab = (props) => {
                       <Typography item color='lightTextSm.black' >{clients.find(ele => ele.id === client.value)?.otherData?.value}</Typography>
                     </Grid>
                   </Grid>
-                </Grid>
+                </Grid> */}
               </>
             }
           </Grid>

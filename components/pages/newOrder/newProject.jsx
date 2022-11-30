@@ -42,6 +42,7 @@ import Loader from '../../loader/loader';
 import { useDropzone } from 'react-dropzone';
 
 //  Device "Detector"
+import moment from 'moment';
 import { isMobile } from 'react-device-detect';
 import TabPanel from '../../tapPanel/TabPanel';
 import BudgetTab from './Tabs/budgetTab';
@@ -65,7 +66,7 @@ const NewOrder = ({ ...props }) => {
   const [endAt, setEndAt] = useState();
   const [uploadedFiles, setUploadedFiles] = useState();
   const [activeStep, setActiveStep] = useState(0);
-  const [budgetTabIndex, setBudgetTabIndex] = useState(0);
+  const [budgetTabIndex, setBudgetTabIndex] = useState(1);
   const theme = useTheme();
 
   const onDrop = useCallback(acceptedFiles => {
@@ -78,13 +79,15 @@ const NewOrder = ({ ...props }) => {
   const [newBudgetData, setNewBudgetData] = useState({
     name: {value: '', error: '' },
     amount: { value: '',error: '' },
+    price: {value: '', error: '' },
     category: {value: '',error: ''}
   });
 
   const [chosenBudget, setChosenBudget] = useState({
     id: {value: '', error: '' },
     amount: {value: '', error: '' },
-    category: {value: '', error: '' }
+    category: {value: '', error: '' },
+    price: {value: '', error: '' },
   });
 
   const [budget, setBudget] = useState();
@@ -103,7 +106,7 @@ const NewOrder = ({ ...props }) => {
   function onClientChange (props) {
     const data = {...client};
 
-    data.value = props;
+    data.value = props?.id || ' ';
     data.error = '';
     setClient(data);
   }
@@ -199,7 +202,7 @@ const NewOrder = ({ ...props }) => {
         !hasErrors && setBudget(budgetTabIndex === 0 ? 
           {id: chosenBudget.id.value,amount: chosenBudget.amount.value, category: chosenBudget.category.value}
           : 
-          {name: newBudgetData.name.value,amount: newBudgetData.amount.value, category: newBudgetData.category.value}
+          {name: newBudgetData.name.value,amount: newBudgetData.amount.value, category: newBudgetData.category.value, price: newBudgetData.price.value}
           );
 
         break;
@@ -253,16 +256,36 @@ const NewOrder = ({ ...props }) => {
        id: (budget.id + Math.random()) || `urn:ngsi-ld:Budget:${budget.name.replace(' ', '_').toUpperCase()}`,
         type: "Budget",
         name: {
-            "type": "Property",
+            type: "Property",
             value: budget?.id?.replace('urn:ngsi-ld:Budget:', '') || budget?.name
         },
         amount: {
-            "type": "Property",
+            type: "Property",
+            value: budget.amount
+        },
+        price: {
+            type: "Property",
             value: budget.amount
         },
         aprovedDate: {
-            "type": "Property",
+            type: "Property",
             value: ""
+        },
+        budgetCreated: {
+            type: "Property",
+            value: moment(startAt).format('DD/MM/YYYY')
+          },
+        budgetDelivered: {
+          type: "Property",
+          value: moment(endAt).format('DD/MM/YYYY')
+        },
+        obs: {
+            type: "Property",
+            value: obs
+        },
+        createdAt: {
+          type: "Property",
+          value: moment(Date.now()).format('DD/MM/YYYY') 
         },
         image: {
             type: "Property",
@@ -313,11 +336,11 @@ const NewOrder = ({ ...props }) => {
   const successModalProps = {
     open: successOpen,
     handleClose: ClearAll,
-    message:`Encomenda Criada com sucesso, que deseja fazer agora?`,
+    message:`Orçamento criado com sucesso, que deseja fazer agora?`,
     icon:'Verified',
     iconType:'success',
-    okTxt:'Ver Encomenda',
-    cancelTxt:'Criar nova Encomenda',
+    okTxt:'Ver orçamento',
+    cancelTxt:'Criar novo orçamento',
   };
 
   return (
@@ -330,7 +353,7 @@ const NewOrder = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => CreateOrder()}
-        message={`Está prestes a criar uma encomenda, tem certeza que quer continuar?`}
+        message={`Está prestes a criar um orçamento, tem certeza que quer continuar?`}
         icon='AlertOctagon'
       />
       {processing && <Loader center={true} backdrop />}

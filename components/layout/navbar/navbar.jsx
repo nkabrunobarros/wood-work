@@ -23,7 +23,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
       <AppBar position='sticky' sx={{ backgroundColor: 'default.sides' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex' }}>
-            <Box className={styles.logos}>
+            <Box className={styles.logos} sx={{ p: 1}}>
               <Image
                 src={companyLogo}
                 layout='responsive'

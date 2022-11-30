@@ -7,9 +7,15 @@ import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 
 //  Styles
+import { useRouter } from 'next/router';
+import routes from '../../navigation/routes';
 import styles from '../../styles/components/infoCard.module.css';
 
+
 const InfoCard = ({ title, icon, amount, color }) => {
+  const path = useRouter();
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+
   const style = {
     color: `${color}`,
   };
@@ -19,7 +25,7 @@ const InfoCard = ({ title, icon, amount, color }) => {
       <Grid container item md={2}>{icon}</Grid>
       <Grid container item md={10} className='fullCenter'>
         <Grid><Typography variant='md' className={styles.cardTitle}>{title}</Typography></Grid>
-        <Grid><Typography variant='xxl'>{amount} Projetos</Typography></Grid>
+        <Grid><Typography variant='xxl'>{amount} {isInternalPage ? 'Projetos' : 'Encomendas'}</Typography></Grid>
       </Grid>
     </Grid>
   );

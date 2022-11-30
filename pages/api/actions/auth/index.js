@@ -147,8 +147,9 @@ export async function me(data) {
 export async function logout() {
     const userType = JSON.parse(localStorage.getItem('user')).profile.object.type;
 
-    localStorage.removeItem('user');
     destroyCookie(null, 'auth_token');
+
+    // localStorage.removeItem('user');
 
     if (userType === 'client') Router.push(routes.public.signIn);
     else Router.push(routes.public.signInInternal);

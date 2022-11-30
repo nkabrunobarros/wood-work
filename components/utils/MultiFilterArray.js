@@ -4,7 +4,7 @@ function MultiFilterArray(array, filters) {
 
   return array.filter((item) => {
     return filterKeys.every(
-      (key) => !!~String(item[key]).indexOf(filters[key])
+      (key) => !!~String(item[key.toLowerCase()]).indexOf(filters[key.toLowerCase()])
     );
   });
 }

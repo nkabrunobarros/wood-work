@@ -112,22 +112,22 @@ const newWorker = ({ ...props }) => {
       type: 'email',
       required: true
     },
-    {
-      id: 'taxId',
-      label: 'Tax Id',
-      value: '',
-      error: '',
-      required: true,
-      type: 'number'
-    },
-    {
-      id: 'ssnId',
-      label: 'Numero Segurança Social',
-      value: '',
-      error: '',
-      required: true,
-      type: 'number'
-    },
+    // {
+    //   id: 'taxId',
+    //   label: 'Tax Id',
+    //   value: '',
+    //   error: '',
+    //   required: true,
+    //   type: 'number'
+    // },
+    // {
+    //   id: 'ssnId',
+    //   label: 'Numero Segurança Social',
+    //   value: '',
+    //   error: '',
+    //   required: false,
+    //   type: 'number'
+    // },
     {
       id: 'functionPerformed',
       label: 'Função',
@@ -148,16 +148,16 @@ const newWorker = ({ ...props }) => {
       optLabel: 'label',
       optValue: 'value'
     },
-    {
-      id: 'hasOrganization',
-      label: 'Organização',
-      value: organizations[0].id,
-      options: organizations,
-      optLabel: 'legalName',
-      error: '',
-      required: true,
-      tooltip: ''
-    },
+    // {
+    //   id: 'hasOrganization',
+    //   label: 'Organização',
+    //   value: organizations[0].id,
+    //   options: organizations,
+    //   optLabel: 'legalName',
+    //   error: '',
+    //   required: true,
+    //   tooltip: ''
+    // },
     // {
     //   id: 'assemblyFor',
     //   label: 'Montagem',
@@ -165,22 +165,22 @@ const newWorker = ({ ...props }) => {
     //   error: '',
     //   required: false
     // },
-    {
-      id: 'cellphone',
-      label: 'Telemovel',
-      value: '',
-      error: '',
-      type: 'phone',
-      required: false
-    },
-    {
-      id: 'phone',
-      label: 'Telephone',
-      value: '',
-      error: '',
-      type: 'phone',
-      required: false
-    },
+    // {
+    //   id: 'cellphone',
+    //   label: 'Telemovel',
+    //   value: '',
+    //   error: '',
+    //   type: 'phone',
+    //   required: false
+    // },
+    // {
+    //   id: 'phone',
+    //   label: 'Telephone',
+    //   value: '',
+    //   error: '',
+    //   type: 'phone',
+    //   required: false
+    // },
     {
       id: 'password',
       label: 'Senha',
@@ -189,14 +189,14 @@ const newWorker = ({ ...props }) => {
       type: 'password',
       required: true
     },
-    {
-      id: 'obs',
-      label: 'Observações',
-      value: '',
-      error: '',
-      type: 'area',
-      required: false
-    },
+    // {
+    //   id: 'obs',
+    //   label: 'Observações',
+    //   value: '',
+    //   error: '',
+    //   type: 'area',
+    //   required: false
+    // },
 
   ]
   );
@@ -207,11 +207,15 @@ const newWorker = ({ ...props }) => {
     setProcessing(true);
 
     const builtWorker = {
-      id: 'urn:ngsi-ld:Worker:112',
+      id: `urn:ngsi-ld:Worker:${Math.random() * 10000}`,
       type: 'Worker',
       active: {
         type : 'Property',
         value: 'True',
+      },
+      hasOrganization: {
+        type: 'Relationship',
+        object: organizations[0].id
       },
       "@context": [
         "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
@@ -240,10 +244,11 @@ const newWorker = ({ ...props }) => {
     try {
       await WorkerActions.createWorker(builtWorker)
       .then(() => {
-        setSuccessOpen(true);
+        // setSuccessOpen(true);
+        Router.push(routes.private.internal.workers);
       })
       .catch((err) => {
-        if (err.response.status === 409) toast.warning('Este Worker já existe');
+        if (err.response.status === 409) toast.warning('Este utilizador já existe');
         else toast.error('Algo aconteceu. Por favor tente mais tarde.');
       });
     }
@@ -325,7 +330,7 @@ const newWorker = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => CreateWorker()}
-        message='Está prestes a criar um novo worker, tem certeza que quer continuar?'
+        message='Está prestes a criar um novo utlizador, tem certeza que quer continuar?'
         icon='AlertOctagon'
       />
       {processing && <Loader center={true} backdrop />}
@@ -334,11 +339,11 @@ const newWorker = ({ ...props }) => {
         open={successOpen}
         handleClose={() => ClearFields()}
         onConfirm={() => Router.push(`${routes.private.internal.workers}`)}
-        message={`Worker criado com sucesso, que deseja fazer a agora?`}
+        message={`Utilizador criado com sucesso, que deseja fazer a agora?`}
         icon='Verified'
         iconType='success'
-        okTxt='Ver Worker'
-        cancelTxt='Criar novo Worker'
+        okTxt='Ver Utilizador'
+        cancelTxt='Criar novo utilizador'
       />
 
       <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -402,11 +407,11 @@ const newWorker = ({ ...props }) => {
 
               if (field.type === 'password' && field.required) 
                 return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
+                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Enviar senha por email" />
                     :
                     <MyInput
                       label={
-                        <Tooltip title='Trocar para senha autogerada'>
+                        <Tooltip title='Trocar para enviar senha por email'>
                           <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
                         </Tooltip>
                       }

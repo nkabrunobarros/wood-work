@@ -7,11 +7,12 @@ import stylesMessage from '../../../styles/Messages.module.css';
 import styles from '../../../styles/Order.module.css';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
-import IsInternal from '../../utils/IsInternal';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 
+import { useRouter } from 'next/router';
+import routes from '../../../navigation/routes';
 import Notification from '../../dialogs/Notification';
 import Docs from './sections/Docs';
 import DocsClient from './sections/DocsClient';
@@ -21,8 +22,9 @@ import Production from './sections/Production';
 
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
-  const internalPOV = !IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
   const [refresh, setRefresh] = useState(new Date());
+  const path = useRouter();
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>
@@ -35,11 +37,11 @@ const Order = ({ ...props }) => {
       </Content>
       {/* Produção section */}
       <Content>
-        <Production {...props} open={internalPOV} />
+         <Production {...props} open={isInternalPage} /> 
       </Content>
       {/* Docs */}
       <Content>
-        <Docs open={internalPOV}  styles={styles} onNewFolder={setRefresh} {...props}  />
+        <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props}  />
       </Content>
       {/* Messages */}
       <Content>
@@ -47,7 +49,7 @@ const Order = ({ ...props }) => {
       </Content>
       {/* Docs Cliente */}
       <Content id={refresh}>
-        <DocsClient styles={styles} {...props} />
+        <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
       </Content>
     </Grid >
   );

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Grid, Tabs, Typography } from "@mui/material";
 import React from "react";
 
 //  PropTypes
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 //  Page Component Styles
 
 //  Actions
+import CurrencyInput from "../../../inputs/CurrencyInput";
 import MyInput from "../../../inputs/myInput";
 import MySelect from "../../../inputs/select";
 import TabPanel from "../../../tapPanel/TabPanel";
@@ -26,26 +27,26 @@ const BudgetTab = (props) => {
 
     const { uploadedFiles, setUploadedFiles} = props.docs;
 
-    function a11yProps(index) {
-        return {
-          id: `tab-${index}`,
-          'aria-controls': `tabpanel-${index}`,
-        };
-      }
+    // function a11yProps(index) {
+    //     return {
+    //       id: `tab-${index}`,
+    //       'aria-controls': `tabpanel-${index}`,
+    //     };
+    //   }
     
 
     return (
         <Grid container>
-            <Grid container md={6} sx={{ borderRight: '1px solid', borderColor:'divider' }}>
+              <Grid container md={6} sx={{ borderRight: '1px solid', borderColor:'divider', paddingBottom: '1rem' }}>
                   <Box container sx={{ width: '100%' }}>
                     <Grid container md={12}>
                       <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Typography variant='xl' sx={{  borderBottom: 1, borderColor: 'divider'}}>Budget</Typography>
+                        <Typography variant='xl' sx={{  borderBottom: 1, borderColor: 'divider'}}></Typography>
                       </Grid>
                       <Grid container md={12}>
                         <Tabs value={currentTab} sx={{ width: '100%'}} onChange={(e, newValue) => onTabChange(newValue)} aria-label="basic tabs example">
-                          <Tab sx={{ width: '100%'}} {...a11yProps(0)} label="Já existente"></Tab>
-                          <Tab sx={{ width: '100%'}} {...a11yProps(1)} label="Novo"></Tab>
+                          {/* <Tab sx={{ width: '100%'}} {...a11yProps(0)} label="Já existente"></Tab>
+                          <Tab sx={{ width: '100%'}} {...a11yProps(1)} label="Novo"></Tab> */}
                         </Tabs>
                       </Grid>
                     </Grid>
@@ -68,7 +69,7 @@ const BudgetTab = (props) => {
                         </Grid>
                         <Grid container md={6} p={1}>
                             <MyInput
-                              label='Quantidade'
+                              label='Preço'
                               required
                               value={chosenBudget.amount.value}
                               error={chosenBudget.amount.error}
@@ -104,17 +105,6 @@ const BudgetTab = (props) => {
                               onChange={(e) => onNewBudgetChange(e.target)}
                             />
                         </Grid>
-
-                        <Grid container md={6} p={1}>
-                          <MyInput
-                            label='Quantidade'
-                            type='number'
-                            name='amount'
-                            value={newBudgetData.amount.value}
-                              error={newBudgetData.amount.error}
-                              onChange={(e) => onNewBudgetChange(e.target)}
-                            />
-                        </Grid>
                         <Grid container md={6} p={1}>
                             <MyInput
                               label='Categoria'
@@ -125,26 +115,47 @@ const BudgetTab = (props) => {
                               onChange={(e) => onNewBudgetChange(e.target)}
                              />
                         </Grid>
+                        <Grid container md={6} p={1}>
+                          <MyInput
+                            label='Quantidade'
+                            type='number'
+                            name='amount'
+                            required
+                            value={newBudgetData.amount.value}
+                              error={newBudgetData.amount.error}
+                              onChange={(e) => onNewBudgetChange(e.target)}
+                            />
+                        </Grid>
+                        <Grid container md={6} p={1}>
+                          <CurrencyInput
+                            label='Preço'
+                            name='price'
+                            required
+                            value={newBudgetData.price.value}
+                              error={newBudgetData.price.error}
+                              onChange={(e) => onNewBudgetChange(e.target)}
+                            />
+                        </Grid>
                       </Grid>
                     </TabPanel>
                   </Box>
                 </Grid>
-                <Grid container md={6} sx={{ borderLeft: '1px solid',  borderColor:'divider'  }}>
-                  <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant='xl'  sx={{  borderBottom: 1, borderColor: 'divider'}}>Documentos</Typography>
-                  </Grid>
-                  <Grid container md={12} className='fullCenter' {...getRootProps()}>
-                    <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
-                       {/* eslint-disable-next-line react/no-unknown-property */}
-                      <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => setUploadedFiles(e.target.files)} />
-                      {
-                        isDragActive ?
-                          <p>Drop...</p> :
-                          <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Arraste para carregar ficheiros'}</p>
-                      }
-                    </Box>
-                  </Grid>
+              <Grid container md={6} sx={{ borderLeft: '1px solid',  borderColor:'divider', paddingBottom: '1rem'  }}>
+                <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant='xl'  sx={{  borderBottom: 1, borderColor: 'divider'}}></Typography>
                 </Grid>
+                <Grid container md={12} className='fullCenter' {...getRootProps()}>
+                  <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
+                      {/* eslint-disable-next-line react/no-unknown-property */}
+                    <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => setUploadedFiles(e.target.files)} />
+                    {
+                      isDragActive ?
+                        <p>Drop...</p> :
+                        <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Arraste para carregar ficheiros'}</p>
+                    }
+                  </Box>
+                </Grid>
+              </Grid>
         </Grid>
     );
   };

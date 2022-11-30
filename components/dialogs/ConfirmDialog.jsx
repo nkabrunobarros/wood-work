@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { QuestionMark } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -10,12 +11,11 @@ import {
   Divider,
   Typography
 } from '@mui/material';
-import * as icons from 'lucide-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, iconType, okTxt, cancelTxt }) => {
-  const Icon = icons[icon || 'XCircle'];
+  // const Icon = icons[icon || 'XCircle'];
   const style = {};
 
   switch (iconType) {
@@ -30,7 +30,7 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
       break;
 
     default:
-      style.color = 'var(--yellow)';
+      style.color = 'var(--primary)';
 
       break;
   }
@@ -48,7 +48,7 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
       <Divider />
       <DialogContent>
         <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Icon size={80} strokeWidth={1} style={style} />
+          <QuestionMark  sx={{ fontSize: '80px'}} fontSize={'80px'} strokeWidth={1} style={style} />
         </Box>
 
         <DialogContentText id='alert-dialog-description'>
@@ -59,7 +59,7 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
       </DialogContent>
       <DialogActions>
         <Button onClick={onConfirm} autoFocus>
-          <Typography color="link.main">{okTxt || 'Concordo'}</Typography>
+          <Typography color="link.main">{okTxt || 'Confirmar'}</Typography>
         </Button>
         <Button onClick={handleClose} sx={{ color: 'var(--gray)' }}>{cancelTxt || 'Cancelar'}</Button>
       </DialogActions>

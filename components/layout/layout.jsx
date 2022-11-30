@@ -45,7 +45,7 @@ async function Test(pageProps) {
   if (token) {
     const decodedToken = jwt.decode(token);
 
-    if (moment(new Date(0).setUTCSeconds(decodedToken.exp)) > moment()) {
+    if (moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment()) {
       //  case token is valid still
       if (pageProps.loggedUser) {
         // case it gets here, has token and user on pageProps
@@ -64,7 +64,7 @@ async function Test(pageProps) {
         return true;
       }
     } else {
-      //  case token is invalid
+      //  case token is invalidpath
     }
 
   } else {

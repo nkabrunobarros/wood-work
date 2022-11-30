@@ -103,7 +103,8 @@ const FilterItem = (data, item, col) => {
 
       case 2: {
         switch (col) {
-          case 'name': return <Typography color="link.main" className="link" >{item[col2[0]][col2[1]]}</Typography>;
+          case 'orderBy.object': return <Typography variant="md">{item[col2[0]][col2[1]].replace('urn:ngsi-ld:Owner:', '')}</Typography>;
+          case 'belongsTo.object': return <Typography variant="md">{item[col2[0]][col2[1]].replace('urn:ngsi-ld:Owner:', '')}</Typography>;
 
           case 'status.value': {
             switch (item.status.value.toLowerCase()) {
@@ -113,12 +114,12 @@ const FilterItem = (data, item, col) => {
             }
           }
 
-          case 'statusClient.value': {
-            switch (item.statusClient.value.toLowerCase()) {
+          case 'estado.value': {
+            switch (item.estado.value.toLowerCase()) {
               case 'espera confirmação': return <Typography variant='md' className="blankBalloon">Espera Confirmação</Typography>;
               case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
               case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
-              case 'em transporte': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Em transporte</Typography></Tooltip>;
+              case 'em transporte': return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em transporte</Typography></Tooltip>;
               case 'entregue': return <Tooltip title={`${item.status}`}><Typography variant='md' className="successBalloon">Entregue</Typography></Tooltip>;
               // default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
             }
