@@ -52,7 +52,7 @@ const Footer = () => {
         paddingRight: '1rem',
       }}
     >
-      <Grid  container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{disply: 'flex', alignItems: 'center', maxHeight: '45px', justifyContent: isPublicPage && 'center'}}>
+      <Grid  container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{display: 'flex', alignItems: 'center', maxHeight: '45px', justifyContent: isPublicPage && 'center'}}>
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || Router.route === '/' || Router.route === '/signin' ? <Copyright /> : <Image
           placeholder='blur'
           priority
@@ -60,7 +60,7 @@ const Footer = () => {
           layout='intrinsic'
         />}
       </Grid>
-      <Grid container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{ height: 'fit-content',textAlign: 'end', display: 'flex', justifyContent: !isPublicPage ? 'end': 'center' }} >
+      <Grid container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{  height: 'fit-content',textAlign: 'end', display: 'flex', justifyContent: !isPublicPage ? 'end': 'center'}} >
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || Router.route === '/' || Router.route === '/signin' ? <Image
           placeholder='blur'
           priority
