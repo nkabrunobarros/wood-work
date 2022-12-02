@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { QuestionMark } from '@mui/icons-material';
 import {
   Box,
@@ -14,7 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, iconType, okTxt, cancelTxt }) => {
+const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, iconType, okTxt, cancelTxt, inputs }) => {
   // const Icon = icons[icon || 'XCircle'];
   const style = {};
 
@@ -52,10 +51,13 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
         </Box>
 
         <DialogContentText id='alert-dialog-description'>
-          {message
+          <Typography variant='md'>
+            {message
             ? `${message}`
             : 'A ação que está a fazer é irreversivel, tem certeza que quer continuar?'}
+            </Typography>
         </DialogContentText>
+        {inputs}
       </DialogContent>
       <DialogActions>
         <Button onClick={onConfirm} autoFocus>
@@ -70,6 +72,14 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, icon, ico
 ConfirmDialog.propTypes = {
   open: PropTypes.any,
   handleClose: PropTypes.any,
+  onConfirm: PropTypes.any,
+   message: PropTypes.any,
+   title: PropTypes.any,
+   icon: PropTypes.any,
+   iconType: PropTypes.any,
+   okTxt: PropTypes.any,
+   cancelTxt: PropTypes.any,
+  inputs: PropTypes.any,
 };
 
 export default ConfirmDialog;

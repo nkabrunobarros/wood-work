@@ -17,7 +17,7 @@ const Head = (props) => {
     return <>
       <Box id='pad'>
           <Box style={{ display: 'flex', marginBottom: '1rem' }}>
-            <Typography className='headerTitleXl'>Encomenda {order.name.value}</Typography>
+            <Typography className='headerTitleXl'> {internalPOV ? 'Projeto' : 'Encomenda'} {order.name.value}</Typography>
             <Box style={{ marginLeft: 'auto' }}>
               <PrimaryBtn
                 hidden={!internalPOV}

@@ -173,6 +173,12 @@ const NewOrder = ({ ...props }) => {
             hasErrors = true;
           }
 
+          if (chosenBudget.price.value === '')
+          {
+            data.price.error = 'Campo Obrigatório';
+            hasErrors = true;
+          }
+
           setChosenBudget(data);
         } else {
           const data = {...newBudgetData};
@@ -192,6 +198,12 @@ const NewOrder = ({ ...props }) => {
           if (newBudgetData.category.value === '')
           {
             data.category.error = 'Campo Obrigatório';
+            hasErrors = true;
+          }
+
+          if (chosenBudget.price.value === '')
+          {
+            data.price.error = 'Campo Obrigatório';
             hasErrors = true;
           }
 

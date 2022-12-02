@@ -6,13 +6,13 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  PropTypes
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PropTypes from 'prop-types';
 
 //  Material Ui
 import {
   Box, ButtonGroup, Chip, Grid,
-  IconButton,
-  Paper,
+  IconButton, Paper,
   Popover,
   Skeleton,
   Switch,
@@ -24,7 +24,9 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Tooltip
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
 
 //  Icons
@@ -50,6 +52,7 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
+import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import moment from 'moment/moment';
 import CanDo from '../utils/CanDo';
 
@@ -156,7 +159,7 @@ const AdvancedTable = ({
     try {
       await BudgetActions.updateBudget(builtBudget).then(async() => {
         setConfirmDialogOpen(false);
-        toast.success('Encomenda Confirmada. Passou para produção');
+        toast.success('Orçamento adjudicado. Passou para produção');
         setFilteredItems(filteredItems.filter( ele => ele !== thisRow));
 
         //  TODO: FIX OWNER UPDATE
@@ -218,7 +221,7 @@ const AdvancedTable = ({
 
         const config = {
           method: 'post',
-          url: 'http://woodwork4.ddns.net/api//ngsi-ld/v1/entities/',
+          url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities/',
           headers: { 
             'Content-Type': 'application/ld+json', 
             'Fiware-Service': 'woodwork40'
@@ -488,6 +491,19 @@ const AdvancedTable = ({
         message={'Está prestes a registar a adjudicação do orçamento!'}
         icon='Check'
         iconType='success'
+        inputs={
+        <Box sx={{ display: 'flex' ,alignItems: 'center'}}>
+          	<Typography variant='md'>Escolha a data de entrega de projeto</Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                required
+                inputFormat="DD.MM.YYYY"
+                onChange={(e) => console.log(e)}
+                renderInput={(params) => <TextField style={{ border: '1px solid red !important' }} label={'hi'} error  {...params} />}
+                />            
+              </LocalizationProvider>
+        </Box>
+        }
       />
       
       <Notification />
@@ -513,7 +529,9 @@ const AdvancedTable = ({
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={'Mostrar'}
-                // labelDisplayedRows={() => {return { from:'', to:'', count:'', page:'' };}}
+                labelDisplayedRows={({ count, from, to }) => {
+                  return `${from} - ${to} de ${count}`;
+                }}
               />
               <Box>
                 <Tooltip title='Filtrar tabela'>

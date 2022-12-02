@@ -1,9 +1,30 @@
 /* eslint-disable react/prop-types */
 // Node modules
 import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, Tooltip } from '@mui/material';
+import axios from 'axios';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
+
+export const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
+  const { ...other } = props;
+
+  return <NumericFormat
+    {...other}
+    getInputRef={ref}
+    // style={{ textAlign: 'start' }}
+    suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
+    decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
+    decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
+    thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
+  />;
+
+});
+
+NumberFormatCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 const PhoneInput = ({
   disabled,
@@ -20,34 +41,22 @@ const PhoneInput = ({
   id,
   style,
   placeholder,
-  options,
   tooltip,
 }) => {
 
+  const [countries, setCountries] = useState();
+  const [selected, setSelected] = useState('PT');
 
-  const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
-    const { ...other } = props;
+  useEffect(() => {
+    const test = async () => {
+      await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
+    };
 
-    return <NumericFormat
-      {...other}
-      getInputRef={ref}
-      // style={{ textAlign: 'start' }}
-      value={value}
-      onChange={onChange}
-      suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX}
-      decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE}
-      decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
-      thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR}
-    />;
+  test();
+  },[]);
 
-  });
 
-  NumberFormatCustom.propTypes = {
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
-  return (
+  return countries && (
     <Box sx={{ width: '100%'}}>
       {variant !== 'standard' && (
         <Tooltip title={tooltip || ''} >
@@ -79,27 +88,26 @@ const PhoneInput = ({
           name={name}
           inputProps={{
             inputComponent: NumberFormatCustom,
-            maxlength: 9,
           }}
           helperText={`${value?.length}/20`}
           startAdornment={
             <InputAdornment position={"start"}>
-              <Select aria-selected='PT' value='PT' onChange={() => console.log('')}>
-                {options
+              <Select aria-selected={selected} value={selected} onChange={(e) => setSelected(e.target.value)}>
+                {countries
                   .map((opt, i) => (
-                    <MenuItem key={i} value={opt.codigo}>
+                    <MenuItem key={i} value={opt.cca2}>
                       <Box
                         sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                       >
-                        {!!opt.codigo &&
+                        {!!opt.cca2 &&
                           <img
                             loading='lazy'
                             width='20'
-                            src={`https://flagcdn.com/w20/${opt.codigo.toLowerCase()}.png`}
-                            srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
+                            src={`https://flagcdn.com/w20/${opt.cca2.toLowerCase()}.png`}
+                            srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
                             alt=''
                           />}
-                        +351
+                         {opt.idd.root}{opt.idd.suffixes}
                       </Box>
                     </MenuItem>
                   ))}
