@@ -7,51 +7,66 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../../styles/SignIn.module.css';
 import Footer from '../../layout/footer/footer';
 
 //  Navigation
 import { ChevronLeft } from 'lucide-react';
 // import Image from 'next/image';
+import Image from 'next/image';
 import Router from 'next/router';
 import routes from '../../../navigation/routes';
-import * as UserActions from '../../../pages/api/actions/user';
-// import backgroundImgTerms from '../../../public/Consentimento.png';
-// import backgroundImgTos from '../../../public/tos.png';
+import * as ClientsActions from '../../../pages/api/actions/client';
+import backgroundImgTerms from '../../../public/Consentimento.png';
+import backgroundImgTos from '../../../public/tos.png';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [windowWidth, setWindowHeight] = useState();
   // eslint-disable-next-line react/prop-types
   const { readOnly } = props;
-  let user = props.loggedUser;
 
-  if (!user && typeof window !== 'undefined') user = JSON.parse(localStorage.getItem('user'));
+  if (typeof window !== 'undefined') {
+    useEffect(() => {
+      setWindowHeight(window.innerWidth);
+    }, [window.innerWidth]);
 
-  const handleSubmit = async () => {
+  }
+
+  const listenToResize = () => {
+    setWindowHeight(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', listenToResize);
+
+    return () => window.removeEventListener('resize', listenToResize);
+  }, []);
+
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     // const data = new FormData(event.currentTarget);
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    const newUser = {
+
+    const newUser = [{
       id: user.id,
-      email: user.email,
-      ativo: true,
-      nome: name,
-      taxId: user.taxId,
-      telefone: user.telephone,
-      morada: user.address,
-      postalCode: user.postalCode,
-      codigoPais: user.pais.codigo,
-      idPerfil: user.perfil.id,
-      obs: user.obs,
-      tos: true,
-      buysTo: user.buysTo,
+      type: user.type,
+      tos: {type: 'Property', value: 'True'},
+      "@context": [
+        "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+      ]
+    }];
 
-    };
 
     try {
-      await UserActions.saveUser(newUser).then((response) => {
-        if (response.data.payload.tos) Router.push(routes.private.orders);
+      await ClientsActions.updateClient(newUser).then(() => {
+        Router.push(routes.private.projects);
       });
     } catch (err) { console.log(err); }
   };
@@ -59,7 +74,7 @@ const Terms = ({ ...props }) => {
   return (
     <Grid container component='main' sx={{ height: '100%', width: '100%' }}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7}>
+      {windowWidth > 600 &&<Grid item xs={0} sm={6} md={7}>
         <div
           style={{
             position: 'absolute',
@@ -69,12 +84,12 @@ const Terms = ({ ...props }) => {
             height: '100%',
           }}
         >
-          {/* <Image
+           <Image
             src={readOnly ? backgroundImgTerms : backgroundImgTos}
             layout='fill'
             placeholder="blur"
             priority
-          /> */}
+          />
         </div>
         <Box
           className={styles.logo}
@@ -96,7 +111,7 @@ const Terms = ({ ...props }) => {
             ></div>
           </div>
         </Box>
-      </Grid>
+      </Grid> }
       <Grid item xs={12} sm={6} md={5} component={Paper} elevation={24} square>
         {readOnly ? (
           <div

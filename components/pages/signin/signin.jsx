@@ -37,10 +37,6 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
-import IsInternal from '../../utils/IsInternal';
-
-
-
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
 
@@ -49,7 +45,7 @@ const SignIn = (props) => {
     login, 
     me,
     loginSuccessRoute,
-    loginSuccessRouteTerm,
+    loginSuccessRouteTerms,
     forgotPasswordRoute } = props;
 
   const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' :'bruno.barros@nka.pt');
@@ -111,7 +107,6 @@ const SignIn = (props) => {
 
       await me({ ...res?.data }).then((resultMe) => { 
         const user = resultMe?.data[0];
-
 
         user.profile = {};
         user.profile.type = 'Profile';
@@ -218,16 +213,21 @@ const SignIn = (props) => {
             
         };
 
+        if (user.type === 'Owner' && user.tos === undefined) user.tos = {type: 'Property', value: 'False'};
+
         localStorage.setItem("user", JSON.stringify(user));
         // Success
         ToastSet(loadingNotification, 'A entrar', 'success');
-      setLoading(false);
+        setLoading(false);
 
-       if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
-       else {
-         if (client && user.tos === false) router.push(loginSuccessRouteTerm);
-         else router.push(loginSuccessRoute);
-       }
+        if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
+        else router.push(loginSuccessRoute);
+
+      //   if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
+      //   else {
+      //    if (client && user.tos !== 'True') router.push(loginSuccessRouteTerm);
+      //    else router.push(loginSuccessRoute);
+      //  }
       });
 
     });
@@ -405,7 +405,7 @@ SignIn.propTypes = {
   client: PropTypes.bool, 
   loginSuccessRoute: PropTypes.string,
   forgotPasswordRoute: PropTypes.string,
-  loginSuccessRouteTerm: PropTypes.string,
+  loginSuccessRouteTerms: PropTypes.string,
 };
 
 export default SignIn;
