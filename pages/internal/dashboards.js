@@ -5,15 +5,15 @@ import Loader from '../../components/loader/loader';
 import DashboardScreen from '../../components/pages/dashboard/dashboard';
 import routes from '../../navigation/routes';
 import * as ClientsActions from '../../pages/api/actions/client';
-import * as OrdersActions from '../../pages/api/actions/order';
-import * as ProductsActions from '../../pages/api/actions/product';
+// import * as ProductsActions from '../../pages/api/actions/product';
+import * as ProjectsActions from '../../pages/api/actions/project';
 
 const DashBoards = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [ordersInfo, setOrdersInfo] = useState();
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState([]);
 
 
   useEffect(() => {
@@ -25,43 +25,43 @@ const DashBoards = ({ ...pageProps }) => {
         concluded: 0,
       };
 
-      await OrdersActions.ordersProduction().then(async (response) => {
+      await ProjectsActions.projects().then(async (response) => {
 
-        response.data.payload.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split("/").reverse().join("-"))) - Date.parse(new Date(b.createdAt?.split("/").reverse().join("-")))).map(async (ord) => {
-          switch (ord.order.status.toLowerCase()) {
-            case 'em orçamentação':
-              counts.budgeting++;
+        response.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split("/").reverse().join("-"))) - Date.parse(new Date(b.createdAt?.split("/").reverse().join("-")))).map(async (ord) => {
+          // switch (ord.order.status.toLowerCase()) {
+          //   case 'em orçamentação':
+          //     counts.budgeting++;
 
-              break;
+          //     break;
 
-            case 'em desenho':
-              counts.drawing++;
+          //   case 'em desenho':
+          //     counts.drawing++;
 
-              break;
+          //     break;
 
-            case 'em produçao':
-              counts.production++;
+          //   case 'em produçao':
+          //     counts.production++;
 
-              break;
-            case 'concluida':
-              counts.concluded++;
+          //     break;
+          //   case 'concluida':
+          //     counts.concluded++;
 
-              break;
+          //     break;
 
-            default:
-              break;
-          }
+          //   default:
+          //     break;
+          // }
           // await StockActions.stock({ id: ord.product.id }).then((res) => {
           //   response.data.payload.data[i].stock = res.data.payload.amount
           // })
         });
 
-        setOrders(response.data.payload.data);
+        setOrders(response.data);
         setOrdersInfo(counts);
       });
 
       await ClientsActions.clients().then((response) => setClients(response.data));
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
+      // await ProductsActions.products().then((response) => setProducts(response.data.payload.data).catch(() => setProducts([])));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -79,14 +79,14 @@ const DashBoards = ({ ...pageProps }) => {
 
 
     orders.map((order) => {
-      if (!arrDates.find(ele => moment(ele).format('DD/MM/YYYY') === moment(order.createdAt).format('DD/MM/YYYY'))) arrDates.push(order.order.createdAt);
+      if (!arrDates.find(ele => moment(ele).format('DD/MM/YYYY') === moment(order?.createdAt).format('DD/MM/YYYY'))) arrDates.push(order?.createdAt);
     });
 
     const arrValues = [];
     const arrValuesProdsPerDay = [];
 
     arrDates.map((date) => {
-      const res = orders.filter((order) => moment(order.order.createdAt).format('DD/MM/YYYY') === moment(date).format('DD/MM/YYYY'));
+      const res = orders.filter((order) => moment(order?.order?.createdAt).format('DD/MM/YYYY') === moment(date).format('DD/MM/YYYY'));
       let thisAmount = 0;
 
       res.map((ord) => { thisAmount += ord.amount; });

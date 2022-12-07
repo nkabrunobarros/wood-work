@@ -1,4 +1,5 @@
 //  PropTypes
+import { Typography } from "@mui/material";
 import { Eye } from "lucide-react";
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -11,7 +12,7 @@ const Production = (props) => {
     return open && <>
        <div id='pad'>
               <div style={{ display: 'flex', marginBottom: '1rem' }}>
-                <a className='headerTitle'>Produção</a>
+                <Typography variant='title'>Produção</Typography>
                 <div style={{ marginLeft: 'auto' }}>
                   <PrimaryBtn
                     icon={
@@ -41,7 +42,6 @@ Production.propTypes = {
     productionDetail: PropTypes.array,
     headCellsProductionDetail: PropTypes.array,
     headCellsUpperProductionDetail: PropTypes.array
-
 };
 
 export default Production;

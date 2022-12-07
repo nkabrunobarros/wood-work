@@ -280,7 +280,7 @@ const SignIn = (props) => {
           layout='responsive'
           placeholder='blur'
           />
-        </Box>
+      </Box>
       {windowWidth > 600 &&
         <Grid className={styles.sidePanel} item xs={0} sm={6} md={7}>
          <Box
@@ -315,7 +315,7 @@ const SignIn = (props) => {
             width: '100%'
           }}
         >
-          <Typography variant='md' color={'primary'}  sx={{fontWeight: 600}}>
+          <Typography variant='md' color={'primary'}  sx={{ fontWeight: 600 }}>
             {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>
           {/* TODO: imagem de logo da mofreita aqui */}

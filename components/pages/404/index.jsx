@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import React from 'react';
 import styles from '../../../styles/404.module.css';
 
@@ -33,8 +34,7 @@ const notFoundPage = () => {
             </p>
           </div>
           <div className={styles.error__nav}>
-            <a href="/internal/orders
-          " className={styles.enav__link}>
+            <a  onClick={() => Router.back()}className={styles.enav__link}>
               Voltar
             </a>
           </div>

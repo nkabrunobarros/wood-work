@@ -52,6 +52,7 @@ function MessagesStyles({ ...props }) {
             borderRadius: '8px',
             margin: '.5rem',
             color: theme === 'light' ? (sender ? 'white' : 'black') : 'white',
+            width: '100%',
         },
         writeMessageInput: {
             maxHeight: '40px',

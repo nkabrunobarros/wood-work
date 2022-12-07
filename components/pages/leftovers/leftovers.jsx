@@ -13,10 +13,10 @@ const Leftovers = () => {
     const camera = React.useRef(null);
     const [currentPanel, setCurrentPanel] = useState(-1);
     const loggedUser = JSON.parse(localStorage.getItem('user'));
-    const [clock, setClock] = useState();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [heightModal, setHeightModal] = useState(false);
     const [height, setHeight] = useState();
+    const [clock, setClock] = useState();
 
     useEffect(() => {
         setInterval(() => {

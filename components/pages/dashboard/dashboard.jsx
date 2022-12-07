@@ -3,86 +3,24 @@
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
 // import "nka-gantt-task-react/dist/index.css";
-import React, { useCallback, useState } from 'react';
-
-
 import {
-  Box, Button, Card,
-  CardContent, Collapse, Typography
+  Box, Card,
+  CardContent, Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { AreaChart, Datepicker } from "@tremor/react";
+import '@tremor/react/dist/esm/tremor.css';
 import { PackageCheck } from 'lucide-react';
+import React from 'react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 // import Chart from 'react-apexcharts';
-import axios from 'axios';
 import dynamic from 'next/dynamic';
 // import { Gantt } from 'nka-gantt-task-react';
-import { useDropzone } from 'react-dropzone';
-import Content from '../../content/content';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 
 // const MyDataGrid = dynamic(() => import('../../datagrid/DataGrid'), { ssr: false })
-
-
-async function test() {
-  // const axios = require('axios');
-
-
-  // const config = {
-  //   method: 'get',
-  //   url: 'http://193.136.195.33:1026/ngsi-ld/v1/entities?type=Owner&q=email=="ConstreaLda28@gmail.com"&options=sysAttrs',
-  //   headers: {
-  //     'Fiware-Service': 'woodwork40',
-  //     'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"'
-  //     'Access-Control-Allow-Origin': '*',
-  //     'mode': 'no-cors',
-  //   }
-  // };
-
-  // axios(config)
-  //   .then(function (response) {
-  //     console.log(JSON.stringify(response.data));
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-
-
-  // const config = {
-  //   method: 'get',
-  //   url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities?type=Organization',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
-  //     'Fiware-Service': 'woodwork40'
-  //   }
-  // };
-
-
-  const config = {
-    headers: { 
-      'Content-Type': 'application/json', 
-    'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>', 
-    'Fiware-Service': 'woodwork40'
-    }
-  };
-
-  try {
-
-    await axios.get('http://woodwork4.ddns.net/api/ngsi-ld/v1/entities?type=Organization',  config );
-  } catch (err) {
-    console.log(err);
-  }
-  // axios(config)
-  //   .then(function (response) {
-  //     console.log(JSON.stringify(response.data));
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-}
 
 const OrdersScreen = ({ ...props }) => {
   const { breadcrumbsPath, ordersGraph, ordersDonut } = props;
@@ -219,50 +157,50 @@ const OrdersScreen = ({ ...props }) => {
     }
   };
 
-  const [uploadedFiles, setUploadedFiles] = useState();
+  // const [uploadedFiles, setUploadedFiles] = useState();
 
-  const onDrop = useCallback(acceptedFiles => {
-    // Do something with the files
-    setUploadedFiles(acceptedFiles);
-    alert("Hello! I am an alert box!!");
-  }, []);
+  // const onDrop = useCallback(acceptedFiles => {
+  //   // Do something with the files
+  //   setUploadedFiles(acceptedFiles);
+  //   alert("Hello! I am an alert box!!");
+  // }, []);
 
-  const [activeRow, setActiveRow] = useState(1);
+  // const [activeRow, setActiveRow] = useState(1);
 
-  const Row = ({ data }) => {
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true });
+  // const Row = ({ data }) => {
+  //   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true });
 
-    return (
-      <Grid {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
-        <Grid  {...getRootProps()} onClick={() => setActiveRow(activeRow !== data.index && data.index)} container md={12} p={1} sx={{ minHeight: '50px', cursor: 'pointer', background: isDragActive ? 'lightblue' : 'purple' }}  >
-          <Grid md={6}>
-            {!isDragActive ? data.name : 'Drop files here'}
-          </Grid>
-          <Grid md={6}>
-            {data.createdAt}
-          </Grid>
-          <Grid md={12}>
-            <Collapse in={data.active}>
-              {data.files.map((file, i) => (
-                <Grid key={100 + i} container md={12} sx={{ minHeight: '50px', background: 'lightblue' }}>
+  //   return (
+  //     <Grid {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
+  //       <Grid  {...getRootProps()} onClick={() => setActiveRow(activeRow !== data.index && data.index)} container md={12} p={1} sx={{ minHeight: '50px', cursor: 'pointer', background: isDragActive ? 'lightblue' : 'purple' }}  >
+  //         <Grid md={6}>
+  //           {!isDragActive ? data.name : 'Drop files here'}
+  //         </Grid>
+  //         <Grid md={6}>
+  //           {data.createdAt}
+  //         </Grid>
+  //         <Grid md={12}>
+  //           <Collapse in={data.active}>
+  //             {data.files.map((file, i) => (
+  //               <Grid key={100 + i} container md={12} sx={{ minHeight: '50px', background: 'lightblue' }}>
 
-                  <Grid md={6}>
-                    {file}
-                  </Grid>
-                  <Grid md={6}>
-                    {file}
-                  </Grid>
-                </Grid>
-              ))}
-            </Collapse>
-          </Grid>
+  //                 <Grid md={6}>
+  //                   {file}
+  //                 </Grid>
+  //                 <Grid md={6}>
+  //                   {file}
+  //                 </Grid>
+  //               </Grid>
+  //             ))}
+  //           </Collapse>
+  //         </Grid>
 
-        </Grid>
-        <input {...getInputProps()} type='file' hidden multiple webkitdirectory="" onChange={(e) => console.log(e.target.files)} />
-      </Grid>
+  //       </Grid>
+  //       <input {...getInputProps()} type='file' hidden multiple webkitdirectory="" onChange={(e) => console.log(e.target.files)} />
+  //     </Grid>
 
-    );
-  };
+  //   );
+  // };
 
   // const tasks = [
   //   {
@@ -286,110 +224,166 @@ const OrdersScreen = ({ ...props }) => {
   //     styles: { progressColor: '#ffbb54', progressSelectedColor: '#ff9e0d' },
   //   },
   // ];
+  const chartdata = [
+    {
+      date: "Jan 22",
+      SemiAnalysis: 2890,
+      "The Pragmatic Engineer": 2338,
+    },
+    {
+      date: "Feb 22",
+      SemiAnalysis: 2756,
+      "The Pragmatic Engineer": 2103,
+    },
+    {
+      date: "Mar 22",
+      SemiAnalysis: 3322,
+      "The Pragmatic Engineer": 2194,
+    },
+    {
+      date: "Apr 22",
+      SemiAnalysis: 3470,
+      "The Pragmatic Engineer": 2108,
+    },
+    {
+      date: "May 22",
+      SemiAnalysis: 3475,
+      "The Pragmatic Engineer": 1812,
+    },
+    {
+      date: "Jun 22",
+      SemiAnalysis: 3129,
+      "The Pragmatic Engineer": 1726,
+    },
+  ];
+  
+  const dataFormatter = (number) => {
+    return "$ " + Intl.NumberFormat("us").format(number).toString();
+  };
 
   return (
     <Grid component='main'>
-      {/* Breadcrumbs */}
+    {/* Breadcrumbs */}
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
-      <Content>
-        <Button onClick={() => test()}>test query</Button>
-      </Content>
-      {/* <Gantt
-        tasks={tasks}
-        onClick={(e) => console.log(e)}
-      /> */}
-      <Content>
+      <Grid container md={12}>
+        <Grid container md={6}>
+          <Card fullWidth sx={{ width: '100%'}}>
+            <h5>Area Chart lib</h5>
+            <AreaChart
+            data={chartdata}
+            categories={["SemiAnalysis", "The Pragmatic Engineer"]}
+            dataKey="date"
+            height="h-72"
+            colors={["indigo", "cyan"]}
+            valueFormatter={dataFormatter}
+            marginTop="mt-4"
+          />
+        </Card>
+       
 
-        <Box>
-          <Grid container>
-            {[...Array(2)].map((x, i) => <Row key={i} data={{ name: `folder ${i + 1}`, createdAt: `${i + 1}/03/2022`, files: ['1', '2'], active: i === activeRow, index: i }} />)}
+          {/* <Box>
+            <Grid container>
+              {[...Array(2)].map((x, i) => <Row key={i} data={{ name: `folder ${i + 1}`, createdAt: `${i + 1}/03/2022`, files: ['1', '2'], active: i === activeRow, index: i }} />)}
+            </Grid>
+          </Box> */}
+        </Grid>
+        <Grid container md={6}>
+          <Card fullWidth sx={{ width: '100%'}}>
+
+            <h5>Datepicker</h5>
+            <Datepicker
+              placeholder="Escolher..."
+              enableRelativeDates={true}
+              color="var(--primary)"
+              handleSelect={(startDate, endDate) => console.log(startDate, endDate)}
+              />
+          </Card>
+        </Grid>
+        <Grid container md={12} p={2}>
+          <Grid item md={12}>
+              <h5>Cards</h5>
           </Grid>
-
-        </Box>
-
-
-
-      </Content>
-      <Grid container p={2}>
-        <Grid item md={3} p={1}>
-          <Card sx={{ background: 'var(--primary-gradient)' }}>
-            <CardContent>
-              <Grid container>
-                <Grid id='align' md={4} item>
-                  <PackageCheck size={40} color='white' />
+          <Grid item md={3} p={1}>
+            <Card sx={{ background: 'var(--primary-gradient)' }}>
+              <CardContent>
+                <Grid container>
+                  <Grid id='align' md={4} item>
+                    <PackageCheck size={40} color='white' />
+                  </Grid>
+                  <Grid id='align' md={8} item>
+                    <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
+                  </Grid>
                 </Grid>
-                <Grid id='align' md={8} item>
-                  <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={3} p={1}>
+            <Card sx={{ background: 'var(--green-gradient)' }}>
+              <CardContent>
+                <Grid container>
+                  <Grid id='align' md={4} item>
+                    <PackageCheck size={40} color='white' />
+                  </Grid>
+                  <Grid id='align' md={8} item>
+                    <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={3} p={1}>
+            <Card sx={{ background: 'var(--orange-gradient)' }}>
+              <CardContent>
+                <Grid container>
+                  <Grid id='align' md={4} item>
+                    <PackageCheck size={40} color='white' />
+                  </Grid>
+                  <Grid id='align' md={8} item>
+                    <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={3} p={1}>
+            <Card sx={{ background: 'var(--primary-dark-gradient)' }}>
+              <CardContent>
+                <Grid container>
+                  <Grid id='align' md={4} item>
+                    <PackageCheck size={40} color='white' />
+                  </Grid>
+                  <Grid id='align' md={8} item>
+                    <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item md={3} p={1}>
-          <Card sx={{ background: 'var(--green-gradient)' }}>
-            <CardContent>
-              <Grid container>
-                <Grid id='align' md={4} item>
-                  <PackageCheck size={40} color='white' />
-                </Grid>
-                <Grid id='align' md={8} item>
-                  <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item md={3} p={1}>
-          <Card sx={{ background: 'var(--orange-gradient)' }}>
-            <CardContent>
-              <Grid container>
-                <Grid id='align' md={4} item>
-                  <PackageCheck size={40} color='white' />
-                </Grid>
-                <Grid id='align' md={8} item>
-                  <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item md={3} p={1}>
-          <Card sx={{ background: 'var(--primary-dark-gradient)' }}>
-            <CardContent>
-              <Grid container>
-                <Grid id='align' md={4} item>
-                  <PackageCheck size={40} color='white' />
-                </Grid>
-                <Grid id='align' md={8} item>
-                  <Typography sx={{ color: 'var(--white)' }}>Text will be here</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container p={2} md={12}>
-        <Grid container item md={4} p={2}>
-          <Card sx={{ width: '100%' }}>
-            <Box sx={{ paddingLeft: '1rem' }}>
-              <Typography sx={{ color: 'var(--primary)' }}>Encomendas</Typography>
-            </Box>
-            <CardContent>
-              <Chart options={ordersGraph.options} series={ordersGraph.series} style={{ width: '100%' }} />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid container item md={4} p={2}>
-          <Chart options={options} series={options.series} style={{ width: '100%' }} />
-        </Grid>
-        <Grid container item md={4} p={2}>
-          <Chart options={options2} series={options2.series} style={{ width: '100%' }} />
-        </Grid>
-        <Grid container item md={4} p={2}>
-          <Chart options={ordersDonut} type='donut' series={ordersDonut.series} style={{ width: '100%' }} />
+        <Grid container p={2} md={12}>
+          <Grid container item md={4} p={2}>
+            <Card sx={{ width: '100%' }}>
+              <Box sx={{ paddingLeft: '1rem' }}>
+                <Typography sx={{ color: 'var(--primary)' }}>Encomendas</Typography>
+              </Box>
+              <CardContent>
+                <Chart options={ordersGraph.options} series={ordersGraph.series} style={{ width: '100%' }} />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid container item md={4} p={2}>
+            <Chart options={options} series={options.series} style={{ width: '100%' }} />
+          </Grid>
+          <Grid container item md={4} p={2}>
+            <Chart options={options2} series={options2.series} style={{ width: '100%' }} />
+          </Grid>
+          <Grid container item md={4} p={2}>
+            <Chart options={ordersDonut} type='donut' series={ordersDonut.series} style={{ width: '100%' }} />
+          </Grid>
         </Grid>
       </Grid>
+
     </Grid>
   );
 };

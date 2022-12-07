@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 import FactoryGroundScreen from '../../components/pages/factoryGround/factoryGround';
 import routes from '../../navigation/routes';
+import * as ProjectsActions from '../api/actions/project';
 
 const SignIn = () => {
-    // const [loaded, setLoaded] = useState(true);
-    const loaded = true;
+    const [loaded, setLoaded] = useState(true);
+    const [projects, setProjects] = useState();
+
+    useEffect(() => {
+        async function getData() {
+            await ProjectsActions.projects().then((response) => setProjects(response.data));
+        }
+
+        Promise.all([getData()]).then(() => setLoaded(true));
+    }, []);
 
     if (loaded) {
 
@@ -126,7 +135,8 @@ const SignIn = () => {
         const props = {
             headCells,
             headCellsUpper,
-            breadcrumbsPath
+            breadcrumbsPath,
+            projects
         };
 
 

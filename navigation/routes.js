@@ -17,11 +17,12 @@ const routes = {
       projectsSimilar: '/internal/projects-similar',
       projects: '/internal/projects',
       project: '/internal/project/',
+      budget: '/internal/budget/',
       newProject: '/internal/new-project',
       editProject: '/internal/edit-project/',
 
       messages: '/internal/messages',
-      profile: '/internal/profile/',
+      profile: '/internal/account',
       error: '/404',
 
       leftovers: '/internal/leftovers',
@@ -35,7 +36,8 @@ const routes = {
     tos: '/tos',
     projects: '/projects',
     project: '/project/',
-    profile: '/profile/',
+    budget: '/budget/',
+    profile: '/account',
     messages: '/messages',
     error: '/404',
   },

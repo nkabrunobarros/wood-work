@@ -308,8 +308,6 @@ const AdvancedTable = ({
       onRequestSort(event, property);
     };
 
-
-
     return (
       <TableHead>
         {headCellsUpper ? (
@@ -471,7 +469,6 @@ const AdvancedTable = ({
     if (filters) {
       const filtered = MultiFilterArray(rows, filters);
 
-      console.log(filters);
       setFilteredItems(filtered);
     }
   }, [filters]);
@@ -661,8 +658,8 @@ const AdvancedTable = ({
                                 ) : (
                                   <Box
                                     onClick={() =>
-                                      clickRoute
-                                      && Router.push(`${clickRoute}${row[actionId || 'id']}`)
+                                      clickRoute && Router.route === routes.private.projects && row.id.includes('urn:ngsi-ld:Budget:')
+                                      ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`) : Router.push(`${clickRoute}${row[actionId || 'id']}`)
                                     }
                                     color={index === 0 && 'primary.main'}
                                     sx={{ cursor: clickRoute && 'pointer'}}

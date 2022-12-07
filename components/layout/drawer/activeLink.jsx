@@ -47,7 +47,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.factoryLevel}`,
   ];
 
-  const profilePages = [`${routes.private.profile}[Id]`];
+  const profilePages = [`${routes.private.profile}[Id]`,`${routes.private.internal.profile}[Id]`];
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 
@@ -61,7 +61,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
 
   if (workersPages.includes(path.route)) currentSection = 'Utilizadores';
 
-  if (profilePages.includes(path.route)) currentSection = 'Perfil';
+  if (profilePages.includes(path.route)) currentSection = 'Conta';
 
   if (messagesPages.includes(path.route)) currentSection = 'Mensagens';
 

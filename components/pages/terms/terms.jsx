@@ -8,11 +8,12 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
+import * as authActions from '../../../pages/api/actions/auth';
 import styles from '../../../styles/SignIn.module.css';
 import Footer from '../../layout/footer/footer';
 
 //  Navigation
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, LogOut } from 'lucide-react';
 // import Image from 'next/image';
 import Image from 'next/image';
 import Router from 'next/router';
@@ -113,14 +114,8 @@ const Terms = ({ ...props }) => {
         </Box>
       </Grid> }
       <Grid item xs={12} sm={6} md={5} component={Paper} elevation={24} square>
-        {readOnly ? (
-          <div
-            style={{
-              position: 'absolute',
-              marginTop: '2rem',
-              marginLeft: '2rem',
-            }}
-          >
+        {readOnly && (
+          <div >
             <Button
               onClick={() => Router.back()}
               style={{ textTransform: 'none', color: 'inherit' }}
@@ -129,10 +124,9 @@ const Terms = ({ ...props }) => {
               <a>Voltar</a>
             </Button>
           </div>
-        ) : null}
+        )}
         <Box
           sx={{
-            my: '10%',
             mx: '15%',
             display: 'flex',
             flexDirection: 'column',
@@ -154,7 +148,7 @@ const Terms = ({ ...props }) => {
             Bem-vindo ao Portal de Cliente WW4.0. Estes termos e condições
             definem as regras e regulamentos para a utilização do Website do
             Portal de Cliente WW4.0. Portal de Cliente WW4.0 encontra-se
-            localizada em: www.site.pt. Ao aceder a este site, presumimos que
+            localizada em: ww40.nka.pt. Ao aceder a este site, presumimos que
             aceita estes termos e condições na totalidade. Não continue a
             utilizar o site do Portal de Cliente WW4.0 se não aceitar todos os
             termos e serviços referidos nesta página. A terminologia seguinte
@@ -174,7 +168,7 @@ const Terms = ({ ...props }) => {
             terminologia acima ou outras palavras no singular, plural, em
             maiúscula/minúscula e/ou ele/ela ou eles/elas são tomados como
             intermutáveis e, portanto, referem-se ao mesmo. Cookies Utilizamos
-            cookies. Ao usar o site da (Nome da Loja) consente a utilização de
+            cookies. Ao usar o site da WoodWork 4.0 consente a utilização de
             cookies de acordo com a política de privacidade do Portal de Cliente
             WW4.0. A maioria dos sites interativos de hoje em dia usam cookies
             que nos permitem recuperar os detalhes do utilizador para cada
@@ -182,16 +176,16 @@ const Terms = ({ ...props }) => {
             permitir a funcionalidade desta área e facilitar a utilização dos
             visitantes. Alguns dos nossos afiliados / parceiros publicitários
             podem também usar cookies. Licença Excetuando referência em
-            contrário, a (Nome da Loja) e/ou os seus licenciantes são
+            contrário, a WoodWork 4.0 e/ou os seus licenciantes são
             proprietários dos direitos de propriedade intelectual para todo o
             material no Portal de Cliente WW4.0. Todos os direitos de
             propriedade intelectual são reservados. Pode visualizar e/ou
-            imprimir páginas de (Adicionar URL) para o seu uso pessoal, sujeito
+            imprimir páginas de ww40.nka.pt/ para o seu uso pessoal, sujeito
             às restrições definidas nestes termos e condições. Não deve:
-            Republicar material de (Adicionar URL). Vender, alugar ou
-            sub-licenciar material de (Adicionar URL). Reproduzir, duplicar ou
-            copiar material de (Adicionar URL). Redistribuir conteúdo de (Nome
-            da Loja) (a não ser que o conteúdo seja feito especificamente para
+            Republicar material de ww40.nka.pt. Vender, alugar ou
+            sub-licenciar material de ww40.nka.pt. Reproduzir, duplicar ou
+            copiar material de ww40.nka.pt. Redistribuir conteúdo de WoodWork 4.0
+            (a não ser que o conteúdo seja feito especificamente para
             redistribuição). Aviso No limite máximo permitido pela lei
             aplicável, excluímos todas as representações, garantias e condições
             relacionadas com o nosso site e com a utilização deste site
@@ -238,9 +232,18 @@ const Terms = ({ ...props }) => {
                 fullWidth
                 variant='contained'
                 disabled={!acceptedTerms}
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 1 }}
               >
-                Entrar
+                Aceitar
+              </Button>
+              <Button
+                type='submit'
+                fullWidth
+                onClick={() => {
+                  authActions.logout();
+                }}
+              >
+                <LogOut strokeWidth='1' size={20} />Cancelar
               </Button>
             </Box>
           )}

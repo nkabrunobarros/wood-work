@@ -3,27 +3,11 @@ import { AppBar, Box, Card, CardActions, CardContent, Dialog, Grid, IconButton, 
 import { Edit2, X } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import ProjectCard from '../../cards/ProjectCard';
-import Content from '../../content/content';
 import MomentJsConfig from '../../utils/MomentJsConfig';
-
-export const ClockTime = ()  => {
-    const [clock, setClock] = useState();
-
-    useEffect(() => {
-        setInterval(() => {
-            const date = new Date();
-
-            setClock(date);
-        }, 1000);
-    }, []);
-
-    return moment(clock).format('HH:mm:ss');
-};
+import { ClockTime } from './factoryGround';
 
 export const ProjectDetails = (props) => {
     const {setChosenProject, chosenProject, headCellsUpper, headCells, activeRow , setActiveRow } = props;
@@ -213,36 +197,3 @@ export const ProjectDetails = (props) => {
 
 </Dialog >;
 };
-
-const FactoryGround = ({ ...props }) => {
-    const {  breadcrumbsPath, projects } = props;
-    const [activeRow, setActiveRow] = useState(0);
-    const [chosenProject, setChosenProject] = useState();
-
-    return <>
-      {chosenProject && 
-      <ProjectDetails 
-        {...props} 
-        activeRow={activeRow} 
-            chosenProject={chosenProject}
-        setActiveRow={setActiveRow} setChosenProject={setChosenProject} />
-         }
-        <CustomBreadcrumbs path={breadcrumbsPath} /> 
-        <Content>
-            <Grid container md={12}  >
-                <Grid container md={12} p={1} >
-                    <Typography variant='title'>Escolha Projeto</Typography>  
-                </Grid>
-                {projects?.map((proj, i) => 
-                    <Grid key={i} container md={3} sm={6} xs={12} p={1} >
-                        <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
-                    </Grid>
-                )}
-
-            </Grid>
-        </Content>
-    </>;
-};
-
-
-export default FactoryGround;

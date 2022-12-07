@@ -5,7 +5,7 @@ import React from 'react';
 import Loader from '../../components/loader/loader';
 
 //  Page Component
-import ProfileScreen from '../../components/pages/profile/profile';
+import AccountScreen from '../../components/pages/account/account';
 
 //  Proptypes
 import PropTypes from 'prop-types';
@@ -16,35 +16,34 @@ import routes from '../../navigation/routes';
 //  Services
 
 
-const Profile = () => {
+const Account = ({ ...pageProps }) => {
   let loaded = false;
   const user = JSON.parse(localStorage.getItem('user'));
-  // const router = useRouter()
-  // const id = router.query.Id
 
   if (user) loaded = true;
 
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: `Perfil`,
+        title: `Conta`,
         href: `${routes.private.internal.user}`,
       },
     ];
 
     const props = {
       user,
-      breadcrumbsPath
+      breadcrumbsPath,
+      pageProps
     };
 
-    return loaded && <ProfileScreen {...props} />;
+    return loaded && <AccountScreen {...props} />;
   } else return <Loader center={true} />;
 
 };
 
-Profile.propTypes = {
+Account.propTypes = {
   users: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
 };
 
-export default Profile;
+export default Account;

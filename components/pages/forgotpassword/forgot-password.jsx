@@ -8,17 +8,37 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { ChevronLeft } from 'lucide-react';
 import Router from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 
 //  PropTypes
+import Image from 'next/image';
 import PropTypes from 'prop-types';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const ForgotPassword = (props) => {
   const { client, signinRoute } = props;
+  const [windowWidth, setWindowHeight] = useState();
+
+  if (typeof window !== 'undefined') {
+    useEffect(() => {
+      setWindowHeight(window.innerWidth);
+    }, [window.innerWidth]);
+
+  }
+
+  const listenToResize = () => {
+    setWindowHeight(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', listenToResize);
+
+    return () => window.removeEventListener('resize', listenToResize);
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -44,7 +64,16 @@ const ForgotPassword = (props) => {
     <Grid container component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
       <Notification />
-      <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
+      <Box
+        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+        >
+        <Image
+          src={companyLogo}
+          layout='responsive'
+          placeholder='blur'
+          />
+      </Box>
+      {windowWidth > 600 && <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
         <Box
           className={styles.logo}
           sx={{
@@ -61,7 +90,7 @@ const ForgotPassword = (props) => {
             ></div>
           </div>
         </Box>
-      </Grid>
+      </Grid> }
       <Grid item xs={12} sm={8} md={5} component={Paper} square>
         <Box
           sx={{
@@ -72,13 +101,14 @@ const ForgotPassword = (props) => {
             alignItems: 'start',
           }}
         >
-          <Typography color={'primary'}>{client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}</Typography>
+          <Typography variant='md' color={'primary'}  sx={{ fontWeight: 600 }}>
+            {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
+          </Typography>
           <Typography component='h2' variant='h3'>
-            Esqueceu a Senha?
+            Recuperar senha
           </Typography>
           <Typography variant='h7'>
-            Insira o seu endereço de email e verifique a sua caixa de correio
-            pelas instruções redifinir a senha
+            Introduza o endereço de email. Irá receber um email para alterar a senha.
           </Typography>
           <Box
             component='form'

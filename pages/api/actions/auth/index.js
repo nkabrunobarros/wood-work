@@ -93,7 +93,6 @@ export async function me(data) {
     const decoded = jwt.decode(data.token);
 
     if (data?.type?.toLowerCase() === 'worker') {
-
         const config = {
             method: 'get',
             url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET,
@@ -114,18 +113,6 @@ export async function me(data) {
         return res;
     }
     else {
-        // const client = await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
-        //     {
-        //         query: querys.CLIENT,
-        //         data: { id: decoded.id }
-        //     },
-        //     config
-        // );
-
-        // return client;
-
-        const { auth_token: token } = parseCookies();
-
         const config = {
             method: 'get',
             url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET + '?id=urn:ngsi-ld:Owner:geral',
@@ -145,13 +132,13 @@ export async function me(data) {
 }
 
 export async function logout() {
-    const userType = JSON.parse(localStorage.getItem('user')).profile.object.type;
+    const userType = JSON.parse(localStorage.getItem('user'))?.type;
 
     destroyCookie(null, 'auth_token');
 
     // localStorage.removeItem('user');
 
-    if (userType === 'client') Router.push(routes.public.signIn);
+    if (userType === 'Owner' || userType === undefined) Router.push(routes.public.signIn);
     else Router.push(routes.public.signInInternal);
 }
 

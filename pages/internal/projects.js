@@ -37,6 +37,7 @@ const Projects = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const detailPage = routes.private.internal.project;
   const editPage = routes.private.internal.editProject;
+  const detailPageBudgetTab = routes.private.internal.budget;
 
   function calcState(value) {
     if (value.status.value !== 'finished') return value.status.value;
@@ -75,7 +76,6 @@ const Projects = ({ ...pageProps }) => {
               response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
               response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
               response.data[index].Estado = calcState(response.data[index]);
-              console.log(response.data[index].Estado);
 
               switch (calcState(response.data[index])) {
                 case 'waiting':
@@ -231,6 +231,8 @@ const Projects = ({ ...pageProps }) => {
       },
     ];
 
+    console.log(budgets);
+
     const headCellsProjects = [
       {
         id: 'name.value',
@@ -291,6 +293,7 @@ const Projects = ({ ...pageProps }) => {
       editPage,
       pageProps,
       products,
+      detailPageBudgetTab,
       categories,
       budgets,
       headCellsBudget,

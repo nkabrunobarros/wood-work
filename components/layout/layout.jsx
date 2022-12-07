@@ -26,7 +26,7 @@ import moment from 'moment';
 import { parseCookies } from 'nookies';
 import Footer from './footer/footer';
 
-// Pages without layout (sidebar || navbar (these have footer inbued in the page)  )
+// Pages without layout (sidebar || navbar (these have footer imbued in the page)  )
 const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.signInInternal}`,
@@ -36,6 +36,7 @@ const noLayoutScreens = [
   `${routes.public.resetPasswordInternal}`,
   `${routes.private.terms}`,
   `${routes.private.tos}`,
+  `${routes.private.error}`,
 ];
 
 async function Test(pageProps) {
@@ -76,18 +77,17 @@ async function Test(pageProps) {
 
 const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const path = useRouter();
   const [loaded, setLoaded] = useState(false);
-  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const [isVisible, setIsVisible] = useState(false);
+  const path = useRouter();
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+  let footerPos = '';
 
   if (typeof window !== "undefined") pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
-
 
   const listenToScroll = () => {
     const heightToHideFrom = 500;
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-
 
     if (winScroll > heightToHideFrom) {
       !isVisible && setIsVisible(true);
@@ -120,12 +120,20 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     setMobileOpen(!mobileOpen);
   }
 
+  
   // let imAllowed;
   if (loaded) {
     // imAllowed = !!pageProps.loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
 
     if (noLayoutScreens.includes(path.route)) return children;
 
+    if (typeof window !== 'undefined' && document.getElementById("appMainContainer") !== undefined)
+    {
+      const element = document.getElementById("appMainContainer");
+  
+      if (window.innerHeight < element?.scrollHeight) footerPos = 'fixed';
+    }
+  
     return  (
       <React.Fragment>
         <CssBaseline />
@@ -190,7 +198,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   
         </Box>
         <Box style={{ width: '100%' }}>
-           <Footer {...pageProps} />
+           <Footer {...pageProps} footerPos={footerPos}/>
         </Box>
       </React.Fragment>);
   } else return  <Loader center={true} />;

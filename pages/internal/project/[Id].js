@@ -12,9 +12,6 @@ import OrderScreen from '../../../components/pages/project/project';
 import routes from '../../../navigation/routes';
 
 //  Services
-// import * as FilesActions from '../../../pages/api/actions/file';
-// import * as FolderActions from '../../../pages/api/actions/folder';
-// import * as OrdersActions from '../../../pages/api/actions/order';
 import * as ClientsActions from '../../api/actions/client';
 import * as ExpeditionsActions from '../../api/actions/expedition';
 import * as ProjectsActions from '../../api/actions/project';

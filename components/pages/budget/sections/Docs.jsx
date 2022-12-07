@@ -1,11 +1,10 @@
 //  PropTypes
-import { Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import { FilePlus, FileText, Folder, FolderPlus, Info } from 'lucide-react';
+import { Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { FilePlus, FileText, Folder, FolderPlus, Info, X } from 'lucide-react';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import * as FileActions from '../../../../pages/api/actions/file';
 import * as FolderActions from '../../../../pages/api/actions/folder';
-
 import PrimaryBtn from "../../../buttons/primaryBtn";
 import UploadImagesModal from '../../../modals/UploadImages';
 import Row from '../Row/Row';
@@ -24,7 +23,7 @@ const Docs = (props) => {
 
     const { 
         pageProps,
-        order,
+        budget,
         open, 
         styles ,
         onNewFolder,
@@ -34,7 +33,7 @@ const Docs = (props) => {
     async function onImagesUpload() {
 
         await FolderActions
-          .folders({ id: order.id })
+          .folders({ id: budget.id })
           .then(async (res) => {
     
             res.data.payload.data.map(async (fold, i) => {
@@ -63,13 +62,17 @@ const Docs = (props) => {
     
           return;
         }
-    
+
         const builtFolder = {
           name: newFolder.value,
-          orderDetailId: order.id
+          orderDetailId: budget.id
         };
     
-        await FolderActions
+        setFolders([...folders, {...builtFolder, files: [] ,id: Math.random()}]);
+        setNewFolder({value: '', error: ''});
+        onNewFolder(new Date());
+
+        false && await FolderActions
           .saveFolder(builtFolder)
           .then((response) => {
             response.data.payload.files = [];
@@ -82,18 +85,20 @@ const Docs = (props) => {
         setCreatingFolder(false);
       }
 
+      const [hoverDrop, setHoverDrop] = useState(false);
+
         return open && <>
-            <UploadImagesModal open={docsModal} folders={folders.filter(ele => ele.name !== order.id)} orderId={folders[activeFolder]?.id} {...pageProps} onClose={() => onImagesUpload()} />
-            <div className={styles.docsMain}>
-              <div className={styles.tableContainer}>
-                <div id='align' style={{ display: 'flex', padding: '24px' }}>
-                  <div style={{ flex: 1 }}>
+            <UploadImagesModal open={docsModal} folders={folders.filter(ele => ele.name !== budget.id)} orderId={folders[activeFolder]?.id} {...pageProps} onClose={() => onImagesUpload()} />
+            <Box className={styles.docsMain} >
+              <Box className={styles.tableContainer} onMouseLeave={() =>setHoverDrop(false)} onMouseEnter={() =>setHoverDrop(true)} sx={{ background: hoverDrop && 'var(--greenLight)'}}>
+                <Box id='align' style={{ display: 'flex', padding: '24px' }} bgcolor={"default.main"}>
+                  <Box style={{ flex: 1 }}>
                     <Typography variant='title'>Documentos</Typography>
-                  </div>
-                  <div className='flex'>
+                  </Box>
+                  <Box className='flex'>
                     {!creatingFolder ?
                       <PrimaryBtn
-                        disabled={!folders.filter(ele => !(ele.name === order.id))[0]}
+                        disabled={!folders.filter(ele => !(ele.name === budget.id))[0]}
                         text='Carregar'
                         onClick={() => setDocsModal(true)}
                         icon={
@@ -104,7 +109,7 @@ const Docs = (props) => {
                         }
                       />
                       :
-                      <div id='align'>
+                      <Box id='align'>
                         <span style={{ paddingRight: '.5rem' }}>Nome</span>
                         <TextField
                           error={!!newFolder.error}
@@ -123,9 +128,9 @@ const Docs = (props) => {
                           }}
                           variant='standard'
                         />
-                      </div>
+                      </Box>
                     }
-                    <div>
+                    <Box>
                       <PrimaryBtn
                         light
                         text='Criar Pasta'
@@ -137,9 +142,23 @@ const Docs = (props) => {
                           />
                         }
                       />
-                    </div>
-                  </div>
-                </div>
+                      {creatingFolder && <IconButton onClick={() => {
+                        setCreatingFolder(false);
+
+                        setNewFolder({
+                          value: '',
+                          error: ''
+                      });
+                      }}>
+                         <X
+                            strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                            size={pageProps.globalVars.iconSize}
+                            color='var(--red)'
+                          />
+                        </IconButton> }
+                    </Box>
+                  </Box>
+                </Box>
 
                 <TableContainer component={Paper}>
                   <Table aria-label='collapsible table'>
@@ -150,9 +169,9 @@ const Docs = (props) => {
                         <TableCell>Ações</TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
-                      {folders && folders.filter(ele => !(ele.name === order.id)).map((row, i) => (
-                        <Row key={i} row={row} index={i} onRowClick={setActiveFolder} />
+                    <TableBody >
+                      {folders && folders.filter(ele => !(ele.name === budget.id)).map((row, i) => (
+                        <Row key={i} row={row} setActiveFolder={setActiveFolder} index={i} {...props} styles={styles} onRowClick={setActiveFolder} />
                       ))}
                       {!folders && <>
                         <TableCell></TableCell>
@@ -162,7 +181,7 @@ const Docs = (props) => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-              </div>
+              </Box>
               <Box className={styles.infoContainer}>
                 <Typography className='headerTitleSm'>{folders[activeFolder]?.name}</Typography>
                 <Grid container md={12} bgcolor={"lightGray.main"} className={styles.innerInfoContainer}>
@@ -216,13 +235,13 @@ const Docs = (props) => {
                   </Grid>
                 </Grid>
               </Box>
-            </div>
+            </Box>
         </>;
 };
 
 Docs.propTypes = {
     pageProps: PropTypes.any,
-    order: PropTypes.any,
+    budget: PropTypes.any,
     styles: PropTypes.object,
     folders: PropTypes.array,
     open: PropTypes.bool,

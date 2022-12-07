@@ -110,10 +110,10 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
           </Box>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
             <ListItemText
-              primary={loggedUser && (loggedUser.nome?.value || loggedUser.legalName?.value)}
+              primary={loggedUser && (loggedUser.givenName?.value + ' ' + loggedUser.familyName?.value || loggedUser.legalName?.value)}
               secondary={
                 <a style={{ color: '#FFFFFF', fontSize: 'small' }}>
-                  {loggedUser && loggedUser.email.value}
+                  {loggedUser.email.value}
                 </a>
               }
             />
@@ -152,7 +152,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
             </React.Fragment>
           ))}
           {/* Definições */}
-          <MenuItem sx={{ padding: '0', display:'none' }}>
+          <MenuItem sx={{ padding: '0' }}>
             <Box
               style={{
                 width: '100%',
@@ -234,12 +234,12 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
 
                   <ActiveLink
                     handleDrawerToggle={handleDrawerToggle}
-                    href={IsInternal(pageProps.loggedUser.profile.object.description) ? `${routes.private.internal.profile}${loggedUser.id}` : `${routes.private.profile}${loggedUser.id}`}
-                    page={'Perfil'}
+                    href={IsInternal(pageProps.loggedUser.profile.object.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
+                    page={'Conta'}
                   >
                     <User strokeWidth='1' size={20} color='white' />{' '}
-                    <div className='spacerBox' />
-                    Perfil
+                    <div style={{ paddingRight: '.5rem' }} />
+                    Conta
                   </ActiveLink>
                 </MenuItem>
                 <MenuItem sx={{ padding: '0' }}>
@@ -250,7 +250,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
                     }}
                   >
                     <LogOut strokeWidth='1' size={20} />
-                    <div className='spacerBox' /> Sair
+                    <div style={{ paddingRight: '.5rem' }} /> Sair
                   </a>
                 </MenuItem>
               </>

@@ -31,18 +31,17 @@ function Copyright(props) {
   );
 }
 
-const Footer = () => {
+const Footer = (props) => {
+  const {footerPos} = props;
   const isPublicPage = Object.values(routes.public).includes(Router.route.replace('[Id]', ''));
 
   return typeof window !== 'undefined' && (
     <Grid
       container
-      
       bgcolor={"default.main"}
-      md={isPublicPage ? 5 : 12}
+      md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 5 : 12}
       style={{
-        // position: !isPublicPage &&'fixed',
-        position: 'fixed',
+        position: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'fixed' : footerPos,
         width: '100%',
         bottom: 0,
         borderTop: '1px solid var(--grayEdges)',
@@ -52,16 +51,16 @@ const Footer = () => {
         paddingRight: '1rem',
       }}
     >
-      <Grid  container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{display: 'flex', alignItems: 'center', maxHeight: '45px', justifyContent: isPublicPage && 'center'}}>
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || Router.route === '/' || Router.route === '/signin' ? <Copyright /> : <Image
+      <Grid  container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{display: 'flex', alignItems: 'center',  justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null}}>
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage ? <Copyright /> : <Image
           placeholder='blur'
           priority
           src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
           layout='intrinsic'
         />}
       </Grid>
-      <Grid container md={Router.route === '/' || Router.route === '/signin' ? 12 : 6} sm={12} sx={{  height: 'fit-content',textAlign: 'end', display: 'flex', justifyContent: !isPublicPage ? 'end': 'center'}} >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || Router.route === '/' || Router.route === '/signin' ? <Image
+      <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{  height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos'  ? 'center': 'end'}} >
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage ? <Image
           placeholder='blur'
           priority
           src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}

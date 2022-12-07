@@ -13,14 +13,14 @@ import UploadImagesModal from '../../../modals/UploadImages';
 import GetFileSize from '../../../utils/GetFileSize';
 
 const DocsClient = (props) => {
-    const { pageProps, styles, headCellsDocs, order, isInternalPage } = props;
+    const { pageProps, styles, headCellsDocs, budget, isInternalPage } = props;
     const [activeRow, setActiveRow] = useState();
     const [docsModalClient, setDocsModalClient] = useState(false);
     const [folders, setFolders] = useState(props.folders);
 
     async function onImagesUpload() {
         await FolderActions
-          .folders({ id: order.id })
+          .folders({ id: budget.id })
           .then(async (res) => {
     
             res.data.payload.data.map(async (fold, i) => {
@@ -51,7 +51,7 @@ const DocsClient = (props) => {
       }
     
     return <>
-          <UploadImagesModal open={docsModalClient} client folders={folders} {...pageProps} orderId={order.id} onClose={() => onImagesUpload()} />
+          <UploadImagesModal open={docsModalClient} client folders={folders} {...pageProps} orderId={budget.id} onClose={() => onImagesUpload()} />
 
             <Box className={styles.docsMain}>
                 <div className={styles.tableContainer}>
@@ -75,7 +75,7 @@ const DocsClient = (props) => {
                     </div>
                     </div>
                     <AdvancedTable headCells={headCellsDocs} rows={[]}>
-                    {folders.find(ele => ele.name === order.id)?.files[0]?.map((doc, i) => (
+                    {folders.find(ele => ele.name === budget.id)?.files[0]?.map((doc, i) => (
                         <TableRow
                         key={i}
                         style={{
@@ -201,7 +201,7 @@ DocsClient.propTypes = {
     styles: PropTypes.any,
     pageProps: PropTypes.any,
     headCellsDocs: PropTypes.array,
-    order: PropTypes.object,
+    budget: PropTypes.object,
     isInternalPage: PropTypes.bool,
 };
 

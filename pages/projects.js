@@ -54,7 +54,6 @@ const Orders = ({ ...pageProps }) => {
 
       await ProductsActions.products().then((response) => setProducts(response.data.payload.data)).catch(() => setProducts([]));
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data)).catch(() => setCategories([]));
-      await ClientsActions.clients().then((response) => setClients(response.data));
 
       await BudgetsActions.myBudgets().then((response) => {
 
@@ -62,54 +61,68 @@ const Orders = ({ ...pageProps }) => {
           id: item.id,
           category: { ...item.category },
           name: { ...item.name },
+          Nome: item.name.value,
           amount: { ...item.amount },
           statusClient: { type: 'Property', value: 'Espera Confirmação' },
+          Estado: 'Espera Confirmação',
         }));
       });
 
-      await ExpeditionActions.expeditions().then(async (expResponse) => {
-        //  Get projects and build
-        await ProjectsActions.myProjects().then((response) => {
-          response.data.map((proj, index) => {
-            response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
-            response.data[index].Cliente = proj.orderBy.object;
-            response.data[index].Numero = proj.id;
-            response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
+      await ClientsActions.clients().then(async (responseClients) => {
+        setClients(responseClients.data);
 
-            test.push({
-              id: response.data[index].id,
-              category: { ...response.data[index].category },
-              name: { ...response.data[index].name },
-              amount: { ...response.data[index].amount },
-              statusClient: { type: 'Property', value: calcState(response.data[index]) },
+        await ExpeditionActions.expeditions().then(async (expResponse) => {
+          //  Get projects and build
+          await ProjectsActions.myProjects().then((response) => {
+            response.data.map((proj, index) => {
+              const thisClient = responseClients.data.find(ele => ele.id === proj.orderBy.object);
+
+              response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
+              response.data[index].Cliente = proj.orderBy.object;
+              response.data[index].Nome = proj.name.value;
+              response.data[index].telemovel = thisClient?.telephone.value;
+              // response.data[index].Producao = proj.status.value;
+              response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
+              response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
+              response.data[index].Estado = calcState(response.data[index]);
+              response.data[index].statusClient = {};
+              response.data[index].statusClient.value = calcState(response.data[index]);
+              test.push(response.data[index]);
+
+              // test.push({
+              //   id: response.data[index].id,
+              //   category: { ...response.data[index].category },
+              //   name: { ...response.data[index].name },
+              //   amount: { ...response.data[index].amount },
+              //   statusClient: { type: 'Property', value: calcState(response.data[index]) },
+              // });
+
+              switch (proj.status.value.toLowerCase()) {
+                case 'waiting':
+                  counts.budgeting++;
+
+                  break;
+                case 'em desenho':
+                  counts.drawing++;
+
+                  break;
+                case 'working':
+                  counts.production++;
+
+                  break;
+                case 'finished':
+                  counts.concluded++;
+
+                  break;
+              }
             });
 
-            switch (proj.status.value.toLowerCase()) {
-              case 'waiting':
-                counts.budgeting++;
-
-                break;
-              case 'em desenho':
-                counts.drawing++;
-
-                break;
-              case 'working':
-                counts.production++;
-
-                break;
-              case 'finished':
-                counts.concluded++;
-
-                break;
-            }
+            console.log(test);
+            setProjects(test);
+            setPanelsInfo(counts);
           });
-
-          setProjects(test);
-          setPanelsInfo(counts);
-
         });
       });
-
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -163,7 +176,7 @@ const Orders = ({ ...pageProps }) => {
       },
       {
         num: 4,
-        title: 'Em Montagem e Testes',
+        title: 'Em Montagem',
         amount: panelsInfo.concluded,
         icon: <AlertOctagon
           size={pageProps.globalVars.iconSizeXl}
@@ -196,7 +209,7 @@ const Orders = ({ ...pageProps }) => {
         id: 'statusClient.value',
         numeric: false,
         disablePadding: false,
-        label: 'Produção',
+        label: 'Estado',
       },
     ];
 

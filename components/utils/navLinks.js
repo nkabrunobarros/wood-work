@@ -79,6 +79,6 @@ export const navLinks = [
     id: 'dashboards',
     url: routes.private.internal.dashboards,
     icon: <LayoutDashboard strokeWidth='1' size={20} />,
-    allowed: 'dashboardss',
+    allowed: 'dashboards',
   },
 ];

@@ -3,8 +3,12 @@ function MultiFilterArray(array, filters) {
 
 
   return array.filter((item) => {
+
     return filterKeys.every(
-      (key) => !!~String(item[key.toLowerCase()]).indexOf(filters[key.toLowerCase()])
+      (key) => {
+        if (String(item[key]).toLowerCase().includes(filters[key].toLowerCase())) return item;
+        // return !!~String(item[key.toLowerCase()]).indexOf(filters[key.toLowerCase()]);
+      }
     );
   });
 }

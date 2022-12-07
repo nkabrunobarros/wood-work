@@ -39,7 +39,6 @@ const ProjectsScreen = ({ ...props }) => {
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
-
   const {
     breadcrumbsPath,
     detailPage,
@@ -49,7 +48,8 @@ const ProjectsScreen = ({ ...props }) => {
     budgets,
     headCellsBudget,
     headCellsProjects,
-    projects
+    projects,
+    detailPageBudgetTab
   } = props;
 
   const router = useRouter();
@@ -81,11 +81,11 @@ const ProjectsScreen = ({ ...props }) => {
       Nome: number,
       Cliente: client,
       // categoria: category,
-      // Estado: producao,
+      Estado: producao,
       telemovel: telephone
     });
 
-  }, [number, client, category, product, telephone]);
+  }, [number, producao, client, category, product, telephone]);
   
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -144,7 +144,7 @@ const ProjectsScreen = ({ ...props }) => {
         <Grid id='pad' md={12} container>
           <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
-            <InputLabel htmlFor='email'>Nome projeto</InputLabel>
+            <InputLabel htmlFor='email'>Nome {isInternalPage ? 'projeto' : 'Encomenda'} </InputLabel>
             <OutlinedInput
               fullWidth
               id='name'
@@ -155,7 +155,7 @@ const ProjectsScreen = ({ ...props }) => {
               onChange={(e) => setNumber(e.target.value)}
             />
           </Grid>
-          <Grid container item md={3} sm={6} xs={12} p={1}>
+          {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
             <InputLabel htmlFor='email'>Cliente</InputLabel>
             <Autocomplete
               fullWidth
@@ -188,7 +188,7 @@ const ProjectsScreen = ({ ...props }) => {
               
               
             />
-          </Grid>
+          </Grid>}
           <Grid container item md={3} sm={6} xs={12} p={1}>
             <Select
               label='Estado'
@@ -196,6 +196,10 @@ const ProjectsScreen = ({ ...props }) => {
               value={producao}
               onChange={(e) => setProducao(e.target.value)}
               options={[
+                {
+                  id: 'Espera Confirmação',
+                  label: 'Espera Confirmação'
+                },
                 {
                   id: 'waiting',
                   label: 'Não Iniciada'
@@ -223,9 +227,9 @@ const ProjectsScreen = ({ ...props }) => {
               ]}
             />
           </Grid>
-          <Grid container item md={3} sm={6} xs={12} p={1}>
+          {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
               <MyInput label='Número telefone' value={telephone} onChange={(e) => setTelephone(e.target.value)} />
-          </Grid>
+          </Grid>}
           <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
             <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
           </Grid>
@@ -268,7 +272,7 @@ const ProjectsScreen = ({ ...props }) => {
             rows={budgets.filter( ele => ele.aprovedDate?.value === '')}
             headCells={headCellsBudget}
             filters={filters}
-            clickRoute={detailPage}
+            clickRoute={detailPageBudgetTab}
             editRoute={editPage}
           />
         </TabPanel>}
@@ -284,6 +288,7 @@ ProjectsScreen.propTypes = {
   breadcrumbsPath: PropTypes.array,
   clients: PropTypes.array,
   detailPage: PropTypes.string,
+  detailPageBudgetTab: PropTypes.string,
   editPage: PropTypes.string,
   cards: PropTypes.arrayOf(PropTypes.object),
   headCells: PropTypes.array,

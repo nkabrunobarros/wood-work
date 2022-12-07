@@ -52,14 +52,14 @@ const Profile = ({ ...props }) => {
     }
   }
 
-    function displayShift (value) {
-      switch (JSON.stringify(value)) {
-        case '[1,2]': return 'Manhã';
-        case '[2,3]': return 'Tarde';
-        case '[3,4]': return 'Noite';
-        default: return 'Nenhum';
-      }
+  function displayShift (value) {
+    switch (JSON.stringify(value)) {
+      case '[1,2]': return 'Manhã';
+      case '[2,3]': return 'Tarde';
+      case '[3,4]': return 'Noite';
+      default: return 'Nenhum';
     }
+  }
 
   return (
     <Grid component='main'>
@@ -134,7 +134,6 @@ const Profile = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Estado </Typography>
                     <Typography item>
                       <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
-                        {console.log(user?.active?.value)}
                         {user?.active?.value === 'True' ? 'Ativo' : user?.active?.value === undefined ? 'Ativo': 'Desativado'}
                       </a>
                     </Typography>

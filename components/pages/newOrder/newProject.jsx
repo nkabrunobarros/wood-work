@@ -138,6 +138,8 @@ const NewOrder = ({ ...props }) => {
   function ValidateData() {
     let hasErrors = false;
 
+    console.log(newBudgetData);
+
     switch (activeStep) {
       case 0:
         if (client.value === ' ') {
@@ -201,7 +203,7 @@ const NewOrder = ({ ...props }) => {
             hasErrors = true;
           }
 
-          if (chosenBudget.price.value === '')
+          if (newBudgetData.price.value === '')
           {
             data.price.error = 'Campo Obrigatório';
             hasErrors = true;
@@ -306,6 +308,10 @@ const NewOrder = ({ ...props }) => {
         category: {
             type: "Property",
             value: budget.category || ''
+        },
+        status: {
+            type: "Property",
+            value: ''
         },
         belongsTo: {
             "type": "Relationship",

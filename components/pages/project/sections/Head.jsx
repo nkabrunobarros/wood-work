@@ -38,7 +38,8 @@ const Head = (props) => {
                     <Box  style={{ width: 'fit-content'}}>
                       <Typography color={"lightTextSm.main"} >Cliente</Typography>
                       <Tooltip title='Ver cliente'>
-                        <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank"  rel="noreferrer" > 
+                        <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" > 
+                        {console.log(order)}
                           <Typography color={"primary.main"}>{order.orderBy?.object?.legalName?.value}</Typography>
                         </a>
                       </Tooltip>
