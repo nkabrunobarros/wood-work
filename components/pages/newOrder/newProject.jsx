@@ -45,6 +45,7 @@ import { useDropzone } from 'react-dropzone';
 import moment from 'moment';
 import { isMobile } from 'react-device-detect';
 import TabPanel from '../../tapPanel/TabPanel';
+import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import BudgetTab from './Tabs/budgetTab';
 import ClientTab from './Tabs/clientTab';
 import FinalizeTab from './Tabs/finalizeTab';
@@ -71,7 +72,9 @@ const NewOrder = ({ ...props }) => {
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
-    setUploadedFiles(acceptedFiles);
+    const obj = ConvertFilesToObj(acceptedFiles);
+
+    setUploadedFiles(obj);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: false });
@@ -137,8 +140,6 @@ const NewOrder = ({ ...props }) => {
 
   function ValidateData() {
     let hasErrors = false;
-
-    console.log(newBudgetData);
 
     switch (activeStep) {
       case 0:

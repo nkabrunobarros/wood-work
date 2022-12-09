@@ -99,6 +99,7 @@ function ConvertFilesToObj(files) {
 
     });
 
+    console.log(obj);
 
     return obj;
 }
