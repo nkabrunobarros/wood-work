@@ -1,5 +1,5 @@
 // Node modules
-import { AppBar, Box, IconButton, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -12,7 +12,7 @@ import styles from '../../../styles/components/navbar.module.css';
 const Navbar = ({ openDrawer, ...pageProps }) => {
   // const [theme, setTheme] = useState('light');
   const open = Boolean();
-
+  const loggedUser = JSON.parse(localStorage.getItem('user'));
   // function toggleThemeHere() {
   //   // const res = toggleTheme()
   //   setTheme(toggleTheme());
@@ -23,7 +23,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
       <AppBar position='sticky' sx={{ backgroundColor: 'default.sides' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex' }}>
-            <Box className={styles.logos} sx={{ p: 1}}>
+            <Box className={styles.logos} sx={{ p: 1 }}>
               <Image
                 src={companyLogo}
                 layout='responsive'
@@ -49,12 +49,18 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
               </Tooltip>
             </Box>
           </Box>
-          <Box className={styles.logos} sx={{ marginRight: '2rem' }}>
-            <Image
-              src={woodWorkyLogo}
-              layout='responsive'
-              placeholder='blur'
-            />
+          <Box id='align'>
+            <Box pr={3}>
+              <Typography variant='md'>{loggedUser.givenName?.value + ' ' + loggedUser.familyName?.value || loggedUser.legalName?.value}</Typography>
+            </Box>
+
+            <Box className={styles.logos} sx={{ marginRight: '2rem' }}>
+              <Image
+                src={woodWorkyLogo}
+                layout='responsive'
+                placeholder='blur'
+              />
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>

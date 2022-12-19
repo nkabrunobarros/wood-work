@@ -9,7 +9,6 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'standard',
-    "prettier"
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -21,7 +20,11 @@ module.exports = {
   plugins: ['react'],
 
   rules: {
-    'semi': [2, 'always'],
+    'consistent-return': 2,
+    indent: [1, 2],
+    'no-else-return': 1,
+    semi: [1, 'always'],
+    'space-unary-ops': 2,
     'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
     'no-undef': ['error'],
     'comma-dangle': ['error', 'only-multiline'],

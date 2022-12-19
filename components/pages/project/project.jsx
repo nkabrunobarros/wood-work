@@ -37,11 +37,11 @@ const Order = ({ ...props }) => {
       </Content>
       {/* Produção section */}
       <Content>
-         <Production {...props} open={isInternalPage} /> 
+        <Production {...props} open={isInternalPage} />
       </Content>
       {/* Docs */}
       <Content>
-        <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props}  />
+        <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
       </Content>
       {/* Messages */}
       <Content>

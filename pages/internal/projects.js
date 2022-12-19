@@ -22,7 +22,7 @@ import * as ClientsActions from '../api/actions/client';
 import * as ExpeditionActions from '../api/actions/expedition';
 import * as ProjectsActions from '../api/actions/project';
 //  Icons
-import { Layers, LayoutTemplate, PackagePlus, Settings, Truck } from 'lucide-react';
+import { Check, Layers, LayoutTemplate, PackagePlus, Settings, Truck } from 'lucide-react';
 
 const Projects = ({ ...pageProps }) => {
   // const [products, setProducts] = useState();
@@ -43,7 +43,8 @@ const Projects = ({ ...pageProps }) => {
     if (value.status.value !== 'finished') return value.status.value;
     else if (value.expedition.object.deliveryFlag.value) return 'Entregue';
     else if (!value.expedition.object.deliveryFlag.value && value.expedition.object.expeditionTime) return 'em transporte';
-    else return 'finished';
+
+    return 'finished';
   }
 
   useEffect(() => {
@@ -56,71 +57,78 @@ const Projects = ({ ...pageProps }) => {
         concluded: 0,
       };
 
-
       // await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
       // await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
       await ClientsActions.clients().then(async (responseClients) => {
         setClients(responseClients.data);
 
-        await ExpeditionActions.expeditions().then(async (expResponse) => {
-          //  Get projects and build
-          await ProjectsActions.projects().then((response) => {
-            response.data.map((proj, index) => {
-              const thisClient = responseClients.data.find(ele => ele.id === proj.orderBy.object);
+        await BudgetsActions.allBudgets().then(async (budgetResponse) => {
+          setBudgets(budgetResponse.data.filter((e) => e.aprovedDate?.value === ''));
 
-              response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
-              response.data[index].Cliente = proj.orderBy.object;
-              response.data[index].Nome = proj.name.value;
-              response.data[index].telemovel = thisClient?.telephone.value;
-              // response.data[index].Producao = proj.status.value;
-              response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
-              response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
-              response.data[index].Estado = calcState(response.data[index]);
+          await ExpeditionActions.expeditions().then(async (expResponse) => {
+            //  Get projects and build
+            await ProjectsActions.projects().then((response) => {
+              response.data.map(async (proj, index) => {
+                if (proj.budgetId) response.data[index].budgetId.object = budgetResponse.data.find((e) => e.id === proj.budgetId.object);
 
-              switch (calcState(response.data[index])) {
-                case 'waiting':
-                  counts.budgeting++;
+                const thisClient = !proj.budgetId ? responseClients.data.find(ele => ele.id === proj.orderBy?.object) : responseClients.data.find(ele => ele.id === response.data[index].budgetId?.object?.belongsTo?.object);
 
-                  break;
+                if (thisClient === undefined) {
+                  return;
+                }
 
-                case 'em desenho':
-                  counts.drawing++;
+                //  TO REMOVE after DB cleanup
+                response.data[index].orderBy = { object: thisClient?.id };
+                response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
+                response.data[index].Cliente = proj.orderBy?.object;
+                response.data[index].Nome = proj.name.value;
+                response.data[index].telemovel = thisClient?.telephone.value;
+                // response.data[index].Producao = proj.status.value;
+                response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
+                response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
+                response.data[index].Estado = calcState(response.data[index]);
 
-                  break;
+                switch (calcState(response.data[index])) {
+                  case 'waiting':
+                    counts.budgeting++;
 
-                case 'working':
-                  counts.production++;
+                    break;
 
-                  break;
-                case 'finished':
-                  counts.concluded++;
+                  case 'em desenho':
+                    counts.drawing++;
 
-                  break;
-                case 'em transporte':
-                  counts.expedition++;
+                    break;
 
-                  break;
+                  case 'working':
+                    counts.production++;
 
-                default:
-                  break;
-              }
+                    break;
+                  case 'finished':
+                    counts.concluded++;
+
+                    break;
+                  case 'em transporte':
+                    counts.expedition++;
+
+                    break;
+
+                  default:
+                    break;
+                }
+              });
+
+              setProjects(response.data);
+              setPanelsInfo(counts);
             });
-
-            setProjects(response.data);
-            setPanelsInfo(counts);
-
           });
         });
       });
-
-      await BudgetsActions.budgets().then((response) => setBudgets(response.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
-
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
@@ -190,6 +198,18 @@ const Projects = ({ ...pageProps }) => {
         ),
         color: 'var(--yellow)',
       },
+      {
+        num: 5,
+        title: 'Terminados',
+        amount: panelsInfo.expedition,
+        icon: (
+          <Check
+            size={pageProps.globalVars.iconSizeXl}
+            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--green)',
+      },
     ];
 
     const headCellsBudget = [
@@ -230,8 +250,6 @@ const Projects = ({ ...pageProps }) => {
         label: 'Ações',
       },
     ];
-
-    console.log(budgets);
 
     const headCellsProjects = [
       {
@@ -302,7 +320,9 @@ const Projects = ({ ...pageProps }) => {
     };
 
     return <ProjectsScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
+
+  return <Loader center={true} />;
 };
 
 Projects.propTypes = {

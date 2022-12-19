@@ -1,6 +1,6 @@
-import axios from "axios";
-import jwt from "jsonwebtoken";
-import { parseCookies } from "nookies";
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get All Projects
@@ -13,7 +13,7 @@ export async function projects() {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -35,7 +35,7 @@ export async function project(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -56,7 +56,7 @@ export async function myProjects() {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -69,7 +69,7 @@ export async function myProjects() {
 }
 
 //  Create Project
-export async function saveProject(data) {
+export async function saveProject (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -96,7 +96,7 @@ export async function updateProject(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     data,

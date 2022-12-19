@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-case-declarations */
@@ -6,7 +7,6 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  PropTypes
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PropTypes from 'prop-types';
 
 //  Material Ui
@@ -23,9 +23,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
-  TextField,
-  Tooltip,
+  TableSortLabel, Tooltip,
   Typography
 } from '@mui/material';
 
@@ -52,7 +50,8 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { Datepicker } from '@tremor/react';
+import axios from 'axios';
 import moment from 'moment/moment';
 import CanDo from '../utils/CanDo';
 
@@ -99,37 +98,34 @@ const AdvancedTable = ({
     };
 
     const getWhatDisplaying = () => {
-
       switch (Router.route) {
-        case routes.private.internal.projects: 
-          setDisplaying('projects');
+      case routes.private.internal.projects:
+        setDisplaying('projects');
 
-          break;
-        case routes.private.internal.projectsSimilar: 
-          setDisplaying('projects');
-          setDialogMessage( 'Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?');
+        break;
+      case routes.private.internal.projectsSimilar:
+        setDisplaying('projects');
+        setDialogMessage('Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?');
 
-          break;
-        case routes.private.internal.stocks: 
-          setDisplaying('stocks');
+        break;
+      case routes.private.internal.stocks:
+        setDisplaying('stocks');
 
-          break;
-        case routes.private.internal.clients: 
-          setDisplaying('clients');
-          setDialogMessage('Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?');
+        break;
+      case routes.private.internal.clients:
+        setDisplaying('clients');
+        setDialogMessage('Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?');
 
-          break;
-        case routes.private.internal.workers: 
-          setDisplaying('workers');
-          setDialogMessage( 'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?');
+        break;
+      case routes.private.internal.workers:
+        setDisplaying('workers');
+        setDialogMessage('Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?');
 
-          break;
+        break;
       }
     };
 
-
-    function RebuildHeadCellsWithFilterState() {
-
+    function RebuildHeadCellsWithFilterState () {
       cellsFilter.map((cell, i) => {
         const oldState = cellsFilter;
         const newState = cellsFilter[i];
@@ -141,119 +137,119 @@ const AdvancedTable = ({
     }
 
     Promise.all([getData(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => setLoaded(true));
-
   }, []);
 
-  async function onConfirmItem() {
+  async function onConfirmItem () {
     const thisRow = rows.find(r => r.id === deleteItemId);
 
     const builtBudget = [{
       id: deleteItemId,
-      type:'Budget',
+      type: 'Budget',
       aprovedDate: {
-          type: "Property",
-          value: moment().format('DD/MM/YYYY HH:MM')
+        type: 'Property',
+        value: moment().format('DD/MM/YYYY')
       },
+      status: {
+        type: 'Property',
+        value: 'adjudicated'
+      }
     }];
 
     try {
-      await BudgetActions.updateBudget(builtBudget).then(async() => {
+      await BudgetActions.updateBudget(builtBudget).then(async () => {
         setConfirmDialogOpen(false);
-        toast.success('Orçamento adjudicado. Passou para produção');
-        setFilteredItems(filteredItems.filter( ele => ele !== thisRow));
+        setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
+
+        debugger;
 
         //  TODO: FIX OWNER UPDATE
-        if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined  )
-        {
-          // const builtClient = [{
-          //   id: thisRow.belongsTo.object,
-          //   type: 'Owner',
-          //   ownerType: {
-          //       type: 'Property',
-          //       value: 'buyer'
-          //   },
-          // }];
-
+        if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined) {
           const builtProject = {
-            id: "urn:ngsi-ld:Project:" + thisRow.name.value + Math.random(),
-            type: "Project",
+            id: 'urn:ngsi-ld:Project:' + thisRow.name.value,
+            type: 'Project',
             name: {
-                type: "Property",
-                value:  thisRow.name.value
+              type: 'Property',
+              value: thisRow.name.value
             },
-            category: {
-                type: "Property",
-                value:  thisRow.category.value
-            },
+            // category: {
+            //   type: 'Property',
+            //   value: thisRow.category.value
+            // },
             status: {
-               type: "Property",
-                value: "waiting"
+              type: 'Property',
+              value: 'in drawing'
             },
-            producedBy: {
-                type: "Relationship",
-                object: ["urn:ngsi-ld:Worker:1","urn:ngsi-ld:Worker:2","urn:ngsi-ld:Worker:3","urn:ngsi-ld:Worker:4","urn:ngsi-ld:Worker:5","urn:ngsi-ld:Worker:6","urn:ngsi-ld:Worker:7","urn:ngsi-ld:Worker:8","urn:ngsi-ld:Worker:9","urn:ngsi-ld:Worker:10","urn:ngsi-ld:Worker:11","urn:ngsi-ld:Worker:12","urn:ngsi-ld:Worker:13"]
+            budgetId: {
+              type: 'Relationship',
+              object: thisRow.id
             },
-            orderBy: {
-               type: "Relationship",
-                object:  thisRow.belongsTo.object
-            },
+            // producedBy: {
+            //   type: 'Relationship',
+            //   object: ['urn:ngsi-ld:Worker:1', 'urn:ngsi-ld:Worker:2', 'urn:ngsi-ld:Worker:3', 'urn:ngsi-ld:Worker:4', 'urn:ngsi-ld:Worker:5', 'urn:ngsi-ld:Worker:6', 'urn:ngsi-ld:Worker:7', 'urn:ngsi-ld:Worker:8', 'urn:ngsi-ld:Worker:9', 'urn:ngsi-ld:Worker:10', 'urn:ngsi-ld:Worker:11', 'urn:ngsi-ld:Worker:12', 'urn:ngsi-ld:Worker:13']
+            // },
+            // orderBy: {
+            //   type: 'Relationship',
+            //   object: thisRow.belongsTo.object
+            // },
             assemblyBy: {
-                type: "Relationship",
-                object: ["urn:ngsi-ld:Worker:10"]
+              type: 'Relationship',
+              object: ['urn:ngsi-ld:Worker:10']
             },
-            image: {
-                type: "Property",
-                value: "urn:ngsi-ld:image:project:MC_MUEBLETV_A"
-            },
+            // image: {
+            //   type: 'Property',
+            //   value: 'urn:ngsi-ld:image:project:MC_MUEBLETV_A'
+            // },
             amount: {
               type: 'Property',
               value: thisRow.amount.value || 0
             },
             expedition: {
-                type: "Relationship",
-                object: "urn:ngsi-ld:expedition:" + thisRow.name.value
+              type: 'Relationship',
+              object: 'urn:ngsi-ld:expedition:' + thisRow.name.value
             },
-            "@context": [
-                "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
-                "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+            '@context': [
+              'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+              'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
             ]
-        };
+          };
 
-        const config = {
-          method: 'post',
-          url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities/',
-          headers: { 
-            'Content-Type': 'application/ld+json', 
-            'Fiware-Service': 'woodwork40'
-          },
-          data: builtProject
-        };
+          const config = {
+            method: 'post',
+            url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities/',
+            headers: {
+              'Content-Type': 'application/ld+json',
+              'Fiware-Service': 'woodwork40'
+            },
+            data: builtProject
+          };
 
-        const axios = require('axios');
+          const axios = require('axios');
 
-        axios(config)
-        .then(() => {
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+          axios(config)
+            .then(() => {
+              toast.success('Orçamento adjudicado. Passou para produção');
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
 
           // await ClientsActions.updateClient(builtClient).then(async () => {
 
           // }).catch((err) => console.log(err));
         } else console.log('did not find  the owner');
       });
-    } catch (err) {toast.error('Algo aconteceu. Por favor tente mais tarde');}
+    } catch (err) { toast.error('Algo aconteceu. Por favor tente mais tarde'); }
   }
 
-  function onDeleteClick(row) {
+  function onDeleteClick (row) {
     setDialogOpen(true);
+    console.log(row);
 
     if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
-        else setDeleteItemId(row.id);
+    else setDeleteItemId(row.id);
   }
 
-  function OnFilterChange(i) {
+  function OnFilterChange (i) {
     const oldState = cellsFilter;
     const newState = cellsFilter[i];
 
@@ -263,7 +259,7 @@ const AdvancedTable = ({
     setRefresh(new Date());
   }
 
-  function showAllHeaders() {
+  function showAllHeaders () {
     cellsFilter.map((cell, i) => {
       const oldState = cellsFilter;
       const newState = cellsFilter[i];
@@ -275,33 +271,83 @@ const AdvancedTable = ({
     });
   }
 
-  async function onDeleteItem() {
+  async function onDeleteItem () {
     const thisRow = rows.find(r => r.id === deleteItemId);
 
     try {
       switch (Router.route) {
-        case routes.private.internal.workers:
-            await WorkerActions.deleteWorker({id: deleteItemId })
-            .then(() => toast.success('Worker removido com sucesso!'));
+      case routes.private.internal.workers:
+        await WorkerActions.deleteWorker({ id: deleteItemId })
+          .then(() => toast.success('Worker removido com sucesso!'));
 
-          break;
+        break;
 
-        case routes.private.internal.clients:
-            await ClientsActions.deleteClient({id: deleteItemId })
-            .then(() => toast.success('Cliente removido com sucesso!'));
+      case routes.private.internal.clients:
+        // const built = [
+        //   {
+        //     id: deleteItemId,
+        //     type: 'Owner',
+        //     active: {
+        //       type: 'Property',
+        //       value: 'False'
+        //     },
+        //     '@context': [
+        //       'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld', 'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
 
-          break;
-        }
+        //     ]
+        //   }
+        // ];
 
-      setFilteredItems(filteredItems.filter( ele => ele !== thisRow));
+        // await ClientsActions.updateClient({ data: built })
+        //   .then(() => toast.success('Cliente removido com sucesso!'));
+        console.log(deleteItemId);
+
+        const data = JSON.stringify([
+          {
+            id: deleteItemId,
+            type: 'Owner',
+            active: {
+              type: 'Property',
+              value: 'False'
+            },
+            '@context': [
+              'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld',
+              'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+            ]
+          }
+        ]);
+
+        const config = {
+          method: 'post',
+          url: 'http://woodwork4.ddns.net/api//ngsi-ld/v1//entityOperations/update?options=replace',
+          headers: {
+            'Content-Type': 'application/ld+json',
+            'Fiware-Service': 'woodwork40'
+          },
+          data
+        };
+
+        axios(config)
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        break;
+      }
+
+      setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
       setDialogOpen(false);
-    } catch {
+    } catch (err) {
+      console.log(err);
       toast.error('Algo inesperado aconteceu. Se o problema persistir, contacte o responsavel.');
       setDialogOpen(false);
     }
   }
 
-  function EnhancedTableHead(props) {
+  function EnhancedTableHead (props) {
     const { order, orderBy, onRequestSort } = props;
 
     const createSortHandler = (property) => (event) => {
@@ -310,39 +356,41 @@ const AdvancedTable = ({
 
     return (
       <TableHead>
-        {headCellsUpper ? (
-          <>
-            {headCellsUpper.map((headCell) => (
-              <TableCell
-                colSpan={headCell.span}
-                key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === headCell.id ? order : false}
-                color={'palette.background.default'}
-                sx={{
-                  borderRight: headCell.borderRight
-                    ? '1px solid var(--grayEdges)'
-                    : null,
-                  borderLeft: headCell.borderLeft
-                    ? '1px solid var(--grayEdges)'
-                    : null,
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {loaded ?
-                    <>
-                      {headCell.label}
-                      {orderBy === headCell.id ? <Box component='span'></Box> : null}
-                    </> :
-                    <Skeleton animation="wave" width='100%' />
-                  }
-                </div>
-              </TableCell>
-            )
-            )}
-          </>
-        ) : null
+        {headCellsUpper
+          ? (
+            <>
+              {headCellsUpper.map((headCell) => (
+                <TableCell
+                  colSpan={headCell.span}
+                  key={headCell.id}
+                  align={headCell.numeric ? 'right' : 'left'}
+                  padding={headCell.disablePadding ? 'none' : 'normal'}
+                  sortDirection={orderBy === headCell.id ? order : false}
+                  color={'palette.background.default'}
+                  sx={{
+                    borderRight: headCell.borderRight
+                      ? '1px solid var(--grayEdges)'
+                      : null,
+                    borderLeft: headCell.borderLeft
+                      ? '1px solid var(--grayEdges)'
+                      : null,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {loaded
+                      ? <>
+                        {headCell.label}
+                        {orderBy === headCell.id ? <Box component='span'></Box> : null}
+                      </>
+                      : <Skeleton animation="wave" width='100%' />
+                    }
+                  </div>
+                </TableCell>
+              )
+              )}
+            </>
+          )
+          : null
         }
 
         <TableRow >
@@ -369,13 +417,12 @@ const AdvancedTable = ({
                 onClick={createSortHandler(headCell.id)}
                 sx={{ width: '100%', height: '100%' }}
               >
-                {loaded ?
-                  <>
+                {loaded
+                  ? <>
                     {headCell.label}
                     {orderBy === headCell.id ? <Box component='span'></Box> : null}
                   </>
-                  :
-                  <Skeleton animation="wave" width='100%' />
+                  : <Skeleton animation="wave" width='100%' />
                 }
               </TableSortLabel>
             </TableCell>;
@@ -433,7 +480,7 @@ const AdvancedTable = ({
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  function descendingComparator(a, b, orderBy) {
+  function descendingComparator (a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
     }
@@ -445,20 +492,20 @@ const AdvancedTable = ({
     return 0;
   }
 
-  function getComparator(order, orderBy) {
+  function getComparator (order, orderBy) {
     return order === 'desc'
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
 
-  function stableSort(array, comparator) {
+  function stableSort (array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
 
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
 
-      if (order !== 0)  return order;
-      
+      if (order !== 0) return order;
+
       return a[1] - b[1];
     });
 
@@ -474,7 +521,7 @@ const AdvancedTable = ({
   }, [filters]);
 
   return (
-    <Box  sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
@@ -489,20 +536,20 @@ const AdvancedTable = ({
         icon='Check'
         iconType='success'
         inputs={
-        <Box sx={{ display: 'flex' ,alignItems: 'center'}}>
-          	<Typography variant='md'>Escolha a data de entrega de projeto</Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DesktopDatePicker
-                required
-                inputFormat="DD.MM.YYYY"
-                onChange={(e) => console.log(e)}
-                renderInput={(params) => <TextField style={{ border: '1px solid red !important' }} label={'hi'} error  {...params} />}
-                />            
-              </LocalizationProvider>
-        </Box>
+          <Box>
+            <Typography variant='subtitle'>Escolha a data de entrega de projeto</Typography>
+            <Datepicker
+              placeholder="Escolher..."
+              enableRelativeDates={false}
+              color="var(--primary)"
+              minDate={moment().subtract(1, 'days')._d}
+              defaultStartDate={ new Date(2022, 12, 17)}
+              handleSelect={(startDate, endDate) => console.log(startDate, endDate)}
+            />
+          </Box>
         }
       />
-      
+
       <Notification />
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Box className='tableChips'>
@@ -512,34 +559,35 @@ const AdvancedTable = ({
             })}
 
           </Box>
-          {noPagination ? null : loaded ?
-            <>
-              <TablePagination
-                showFirstButton
-                showLastButton
-                component='div'
-                sx={{ marginLeft: 'auto' }}
-                rowsPerPageOptions={[5, 10, 25]}
-                count={filteredItems ? filteredItems?.length : rows?.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={'Mostrar'}
-                labelDisplayedRows={({ count, from, to }) => {
-                  return `${from} - ${to} de ${count}`;
-                }}
-              />
-              <Box>
-                <Tooltip title='Filtrar tabela'>
-                  <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
-                    <Filter size={20} strokeWidth={1.5} />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </>
-            :
-            <Skeleton animation="wave" width='100%' />
+          {noPagination
+            ? null
+            : loaded
+              ? <>
+                <TablePagination
+                  showFirstButton
+                  showLastButton
+                  component='div'
+                  sx={{ marginLeft: 'auto' }}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  count={filteredItems ? filteredItems?.length : rows?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  labelRowsPerPage={'Mostrar'}
+                  labelDisplayedRows={({ count, from, to }) => {
+                    return `${from} - ${to} de ${count}`;
+                  }}
+                />
+                <Box>
+                  <Tooltip title='Filtrar tabela'>
+                    <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
+                      <Filter size={20} strokeWidth={1.5} />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </>
+              : <Skeleton animation="wave" width='100%' />
           }
           <Popover
             open={Boolean(anchorEl)}
@@ -606,14 +654,15 @@ const AdvancedTable = ({
                               borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
                             }}
                           >
-                            {loaded ?
-                              <>
-                                {headCell.id === 'actions' || headCell.id === 'actionsConf' ? (
-                                  <ButtonGroup color='link.main'>
-                                   
-                                    {headCell.id !== 'actionsConf' ? 
-                                    <>
-                                     {CanDo(['WRITE', displaying]) &&
+                            {loaded
+                              ? <>
+                                {headCell.id === 'actions' || headCell.id === 'actionsConf'
+                                  ? (
+                                    <ButtonGroup color='link.main'>
+
+                                      {headCell.id !== 'actionsConf'
+                                        ? <>
+                                          {CanDo(['WRITE', displaying]) &&
                                       <Tooltip title={'Editar'}>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
@@ -622,55 +671,56 @@ const AdvancedTable = ({
                                           />
                                         </IconButton>
                                       </Tooltip>}
-                                    </> 
-                                    :
-                                      <>
-                                        {CanDo(['WRITE', displaying]) &&
+                                        </>
+                                        : <>
+                                          {CanDo(['WRITE', displaying]) &&
                                         <>
-                                        <Tooltip title={'Adjudicar orçamento'}>
-                                          <IconButton onClick={() =>{
-                                             setConfirmDialogOpen(true);
-                                             setDeleteItemId(row.id);
-                                             }} >
-                                            <CheckCircleOutline color={'success'} />
-                                          </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={'Duplicar orçamento'}>
-                                          <IconButton onClick={() =>{
-                                             setConfirmDialogOpen(true);
-                                             setDeleteItemId(row.id);
-                                             }} >
-                                            <Copy size={20} strokeWidth={1.5} color={'#225ee8'}/>
-                                          </IconButton>
-                                        </Tooltip>
-                                        
+                                          <Tooltip title={'Adjudicar orçamento'}>
+                                            <IconButton onClick={() => {
+                                              setConfirmDialogOpen(true);
+                                              setDeleteItemId(row.id);
+                                            }} >
+                                              <CheckCircleOutline color={'success'} />
+                                            </IconButton>
+                                          </Tooltip>
+                                          <Tooltip title={'Duplicar orçamento'}>
+                                            <IconButton onClick={() => {
+                                              setConfirmDialogOpen(true);
+                                              setDeleteItemId(row.id);
+                                            }} >
+                                              <Copy size={20} strokeWidth={1.5} color={'#225ee8'}/>
+                                            </IconButton>
+                                          </Tooltip>
+
                                         </>}
-                                    </>
-                                    }
-                                    {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover'}>
-                                      <IconButton onClick={() => onDeleteClick(true)} >
-                                        <DeleteOutline
-                                          color={'primary'}
-                                        />
-                                      </IconButton>
-                                    </Tooltip>}
-                                  </ButtonGroup>
-                                ) : (
-                                  <Box
-                                    onClick={() =>
-                                      clickRoute && Router.route === routes.private.projects && row.id.includes('urn:ngsi-ld:Budget:')
-                                      ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`) : Router.push(`${clickRoute}${row[actionId || 'id']}`)
-                                    }
-                                    color={index === 0 && 'primary.main'}
-                                    sx={{ cursor: clickRoute && 'pointer'}}
-                                  >
-                                    {FilterItem(
-                                      data,
-                                      row,
-                                      headCell.id
-                                    )}
-                                  </Box>
-                                )}
+                                        </>
+                                      }
+                                      {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover'}>
+                                        <IconButton onClick={() => onDeleteClick(row)} >
+                                          <DeleteOutline
+                                            color={'primary'}
+                                          />
+                                        </IconButton>
+                                      </Tooltip>}
+                                    </ButtonGroup>
+                                  )
+                                  : (
+                                    <Box
+                                      onClick={() =>
+                                        clickRoute && Router.route === routes.private.projects && row.id.includes('urn:ngsi-ld:Budget:')
+                                          ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`)
+                                          : Router.push(`${clickRoute}${row[actionId || 'id']}`)
+                                      }
+                                      color={index === 0 && 'primary.main'}
+                                      sx={{ cursor: clickRoute && 'pointer' }}
+                                    >
+                                      {FilterItem(
+                                        data,
+                                        row,
+                                        headCell.id
+                                      )}
+                                    </Box>
+                                  )}
                               </>
                               : <Skeleton animation="wave" width='100%' />}
                           </TableCell>;
@@ -691,18 +741,5 @@ const AdvancedTable = ({
     </Box >
   );
 };
-
-AdvancedTable.propTypes = {
-  children: PropTypes.any,
-  rows: PropTypes.array,
-  headCells: PropTypes.array,
-  headCellsUpper: PropTypes.array,
-  clickRoute: PropTypes.string,
-  actionId: PropTypes.string,
-  noPagination: PropTypes.bool,
-  editRoute: PropTypes.string,
-  filters: PropTypes.object,
-};
-
 
 export default AdvancedTable;

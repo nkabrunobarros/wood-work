@@ -8,7 +8,7 @@ import {
   CardContent, Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { AreaChart, Datepicker } from "@tremor/react";
+import { AreaChart, Datepicker } from '@tremor/react';
 import '@tremor/react/dist/esm/tremor.css';
 import { PackageCheck } from 'lucide-react';
 import React from 'react';
@@ -16,9 +16,9 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 // import Chart from 'react-apexcharts';
 import dynamic from 'next/dynamic';
 // import { Gantt } from 'nka-gantt-task-react';
+import TransferList from '../../transferList/transferList';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
 
 // const MyDataGrid = dynamic(() => import('../../datagrid/DataGrid'), { ssr: false })
 
@@ -69,7 +69,7 @@ const OrdersScreen = ({ ...props }) => {
     tooltip: {
       y: {
         formatter: function (val) {
-          return "$ " + val + " thousands";
+          return '$ ' + val + ' thousands';
         }
       }
     }
@@ -95,19 +95,19 @@ const OrdersScreen = ({ ...props }) => {
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return val + "%";
+        return val + '%';
       },
       offsetY: -20,
       style: {
         fontSize: '12px',
-        colors: ["#304758"]
+        colors: ['#304758']
       }
     },
     stroke: {
       curve: 'smooth'
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       position: 'top',
       axisBorder: {
         show: false
@@ -141,7 +141,7 @@ const OrdersScreen = ({ ...props }) => {
       labels: {
         show: false,
         formatter: function (val) {
-          return val + "%";
+          return val + '%';
         }
       }
 
@@ -226,61 +226,60 @@ const OrdersScreen = ({ ...props }) => {
   // ];
   const chartdata = [
     {
-      date: "Jan 22",
+      date: 'Jan 22',
       SemiAnalysis: 2890,
-      "The Pragmatic Engineer": 2338,
+      'The Pragmatic Engineer': 2338,
     },
     {
-      date: "Feb 22",
+      date: 'Feb 22',
       SemiAnalysis: 2756,
-      "The Pragmatic Engineer": 2103,
+      'The Pragmatic Engineer': 2103,
     },
     {
-      date: "Mar 22",
+      date: 'Mar 22',
       SemiAnalysis: 3322,
-      "The Pragmatic Engineer": 2194,
+      'The Pragmatic Engineer': 2194,
     },
     {
-      date: "Apr 22",
+      date: 'Apr 22',
       SemiAnalysis: 3470,
-      "The Pragmatic Engineer": 2108,
+      'The Pragmatic Engineer': 2108,
     },
     {
-      date: "May 22",
+      date: 'May 22',
       SemiAnalysis: 3475,
-      "The Pragmatic Engineer": 1812,
+      'The Pragmatic Engineer': 1812,
     },
     {
-      date: "Jun 22",
+      date: 'Jun 22',
       SemiAnalysis: 3129,
-      "The Pragmatic Engineer": 1726,
+      'The Pragmatic Engineer': 1726,
     },
   ];
-  
+
   const dataFormatter = (number) => {
-    return "$ " + Intl.NumberFormat("us").format(number).toString();
+    return '$ ' + Intl.NumberFormat('us').format(number).toString();
   };
 
   return (
     <Grid component='main'>
-    {/* Breadcrumbs */}
+      {/* Breadcrumbs */}
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Grid container md={12}>
         <Grid container md={6}>
-          <Card fullWidth sx={{ width: '100%'}}>
+          <Card fullWidth sx={{ width: '100%' }}>
             <h5>Area Chart lib</h5>
             <AreaChart
-            data={chartdata}
-            categories={["SemiAnalysis", "The Pragmatic Engineer"]}
-            dataKey="date"
-            height="h-72"
-            colors={["indigo", "cyan"]}
-            valueFormatter={dataFormatter}
-            marginTop="mt-4"
-          />
-        </Card>
-       
+              data={chartdata}
+              categories={['SemiAnalysis', 'The Pragmatic Engineer']}
+              dataKey="date"
+              height="h-72"
+              colors={['indigo', 'cyan']}
+              valueFormatter={dataFormatter}
+              marginTop="mt-4"
+            />
+          </Card>
 
           {/* <Box>
             <Grid container>
@@ -289,7 +288,7 @@ const OrdersScreen = ({ ...props }) => {
           </Box> */}
         </Grid>
         <Grid container md={6}>
-          <Card fullWidth sx={{ width: '100%'}}>
+          <Card fullWidth sx={{ width: '100%' }}>
 
             <h5>Datepicker</h5>
             <Datepicker
@@ -297,12 +296,12 @@ const OrdersScreen = ({ ...props }) => {
               enableRelativeDates={true}
               color="var(--primary)"
               handleSelect={(startDate, endDate) => console.log(startDate, endDate)}
-              />
+            />
           </Card>
         </Grid>
         <Grid container md={12} p={2}>
           <Grid item md={12}>
-              <h5>Cards</h5>
+            <h5>Cards</h5>
           </Grid>
           <Grid item md={3} p={1}>
             <Card sx={{ background: 'var(--primary-gradient)' }}>
@@ -382,11 +381,13 @@ const OrdersScreen = ({ ...props }) => {
             <Chart options={ordersDonut} type='donut' series={ordersDonut.series} style={{ width: '100%' }} />
           </Grid>
         </Grid>
+        <Grid container md={4}>
+          <TransferList />
+        </Grid>
       </Grid>
 
     </Grid>
   );
 };
-
 
 export default OrdersScreen;

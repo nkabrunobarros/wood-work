@@ -12,7 +12,7 @@ import logosFooterDark from '../../../public/Fundos-Europeus_dark_mode.png';
 import IsInternal from '../../utils/IsInternal';
 
 // Pages without layout (sidebar + navbar + footer)
-function Copyright(props) {
+function Copyright (props) {
   return (
     <Box
       color='text.secondary'
@@ -32,16 +32,17 @@ function Copyright(props) {
 }
 
 const Footer = (props) => {
-  const {footerPos} = props;
+  const { footerPos } = props;
   const isPublicPage = Object.values(routes.public).includes(Router.route.replace('[Id]', ''));
 
   return typeof window !== 'undefined' && (
     <Grid
       container
-      bgcolor={"default.main"}
+      bgcolor={'default.main'}
       md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 5 : 12}
       style={{
-        position: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'fixed' : footerPos,
+        position: 'fixed',
+        // position: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'fixed' : footerPos,
         width: '100%',
         bottom: 0,
         borderTop: '1px solid var(--grayEdges)',
@@ -51,22 +52,25 @@ const Footer = (props) => {
         paddingRight: '1rem',
       }}
     >
-      <Grid  container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{display: 'flex', alignItems: 'center',  justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null}}>
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage ? <Copyright /> : <Image
-          placeholder='blur'
-          priority
-          src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
-          layout='intrinsic'
-        />}
+      <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null }}>
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage
+          ? <Copyright />
+          : <Image
+            placeholder='blur'
+            priority
+            src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
+            layout='intrinsic'
+          />}
       </Grid>
-      <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{  height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos'  ? 'center': 'end'}} >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage ? <Image
-          placeholder='blur'
-          priority
-          src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
-          layout='intrinsic'
-        /> :
-          <a
+      <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : 'end' }} >
+        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile?.object?.description || '') || isPublicPage
+          ? <Image
+            placeholder='blur'
+            priority
+            src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
+            layout='intrinsic'
+          />
+          : <a
             className='link'
             style={{ color: 'inherit' }}
             onClick={() => Router.push(routes.private.tos)}
@@ -75,7 +79,6 @@ const Footer = (props) => {
       </Grid>
     </Grid >
   );
-
 };
 
 Footer.propTypes = {

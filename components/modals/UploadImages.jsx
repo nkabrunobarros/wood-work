@@ -1,17 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from "@mui/material";
-import { X, XCircle } from "lucide-react";
-import React, { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { toast } from "react-toastify";
+import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from '@mui/material';
+import { X, XCircle } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { toast } from 'react-toastify';
 import * as FileActions from '../../pages/api/actions/file';
 import * as FolderActions from '../../pages/api/actions/folder';
-import PrimaryBtn from "../buttons/primaryBtn";
-import MyInput from "../inputs/myInput";
-import Select from "../inputs/select";
-import GetFileSize from "../utils/GetFileSize";
-import IsInternal from "../utils/IsInternal";
+import PrimaryBtn from '../buttons/primaryBtn';
+import MyInput from '../inputs/myInput';
+import Select from '../inputs/select';
+import GetFileSize from '../utils/GetFileSize';
+import IsInternal from '../utils/IsInternal';
 
 const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pageProps }) => {
   const [newImages, setNewImages] = useState();
@@ -21,9 +21,9 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
   const [uploading, setUploading] = useState(false);
   const [errorFolder, setErrorFolder] = useState('');
 
-  function getBase64(file) {
+  function getBase64 (file) {
     return new Promise(resolve => {
-      let baseURL = "";
+      let baseURL = '';
       // Make new FileReader
       const reader = new FileReader();
 
@@ -38,12 +38,10 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
         // console.log(baseURL);
         resolve(baseURL);
       };
-
     });
   }
 
-
-  async function handleModalImageUpload(e) {
+  async function handleModalImageUpload (e) {
     const arr = [];
 
     console.log(e);
@@ -59,14 +57,12 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
         .catch(err => {
           console.log(err);
         });
-
     }
 
     setNewImages(arr);
   }
 
-  async function handleSaveImages() {
-
+  async function handleSaveImages () {
     if (!selectedFolder && !client) {
       setErrorFolder('Campo Obrigatório');
 
@@ -96,7 +92,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
       newImages.map(async (file) => {
         const builtFile = {
           descricao: newImageDescription,
-          url: "",
+          url: '',
           data: file.base64,
           filename: file.name,
           filesize: JSON.stringify(file.size),
@@ -111,12 +107,11 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
       });
 
       onClose();
-
     } else {
       newImages.map(async (file) => {
         const builtFile = {
           descricao: newImageDescription,
-          url: "",
+          url: '',
           data: file.base64,
           filename: file.name,
           filesize: JSON.stringify(file.size),
@@ -151,7 +146,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return <Modal open={open} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <Box bgcolor={"default.main"} sx={{ maxWidth: '600px', padding: '1rem', borderRadius: '8px', boxShadow: '0px 0px 20px -6px #5A5A5A' }}>
+    <Box bgcolor={'default.main'} sx={{ maxWidth: '600px', padding: '1rem', borderRadius: '8px', boxShadow: '0px 0px 20px -6px #5A5A5A' }}>
       <Grid container>
         <Grid container md={12} sx={{ display: 'flex' }}>
           <Box sx={{ marginLeft: 'auto' }}>
@@ -187,17 +182,18 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
             />
             <span style={{ fontSize: 'small' }}>Tamanho Maximo 1 MB</span>
           </Grid>
-          {folders && !client && IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description) ? <Grid md={6} p={1}>
-            <Select
-              required
-              label='Pasta'
-              error={errorFolder}
-              value={selectedFolder}
-              onChange={(e) => setSelectedFolder(e.target.value)}
-              optionLabel={'name'}
-              options={folders}
-            />
-          </Grid>
+          {folders && !client && IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description)
+            ? <Grid md={6} p={1}>
+              <Select
+                required
+                label='Pasta'
+                error={errorFolder}
+                value={selectedFolder}
+                onChange={(e) => setSelectedFolder(e.target.value)}
+                optionLabel={'name'}
+                options={folders}
+              />
+            </Grid>
             : null}
         </Grid>
 
@@ -227,9 +223,9 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
           <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
             <input {...getInputProps()} type='file' hidden multiple webkitdirectory="" onChange={(e) => handleModalImageUpload(e)} />
             {
-              isDragActive ?
-                <p>Drop...</p> :
-                <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Arraste ou clique para carregar ficheiros'}</p>
+              isDragActive
+                ? <p>Drop...</p>
+                : <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Arraste ou clique para carregar ficheiros'}</p>
             }
           </Box>
         </Grid>
@@ -248,7 +244,6 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
       </Grid>
     </Box>
   </Modal>;
-
 };
 
 export default UploadImagesModal;

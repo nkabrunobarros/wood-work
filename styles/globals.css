@@ -126,6 +126,15 @@ a {
   white-space: nowrap !important;
 }
 
+.infoBalloon {
+  color: var(--babyblue);
+  background: rgba(27, 145, 231, 0.20);
+  border: 1px solid var(--babyblue);
+  padding: 0.5rem;
+  border-radius: 50px;
+  white-space: nowrap !important;
+}
+
 .dot {
   height: 8px;
   width: 8px;

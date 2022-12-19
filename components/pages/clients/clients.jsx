@@ -49,7 +49,6 @@ const Clients = ({ ...props }) => {
     setProfilesFilter('');
   };
 
-
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
@@ -127,8 +126,7 @@ const Clients = ({ ...props }) => {
         </div>
 
         <AdvancedTable
-          rows={items}
-          // rows={items.filter((item) => item.active?.value === 'True' && item)}
+          rows={items.filter((item) => item.active?.value === 'True' && item)}
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}

@@ -128,27 +128,29 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
         <Box className='scrollableZone'>
           {navLinks.map((item, i) => (
             <React.Fragment key={i}>
-              {loggedUser ? (
-                <React.Fragment key={i * 100}>
-                  {loggedUser.profile.object.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === loggedUser.profile.object.description.toLowerCase()) && ele.action === 'READ')
-                    &&
+              {loggedUser
+                ? (
+                  <React.Fragment key={i * 100}>
+                    {loggedUser.profile.object.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === loggedUser.profile.object.description.toLowerCase()) && ele.action === 'READ') &&
                     IsInternal(pageProps.loggedUser.profile.object.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
-                    ? (
-                      <MenuItem id={item.id} sx={{ padding: '0' }}>
-                        <ActiveLink
-                          key={i}
-                          href={item.url}
-                          handleDrawerToggle={handleDrawerToggle}
-                          page={item.title}
-                        >
-                          {item.icon}
-                          <div style={{ paddingRight: '.5rem' }} />
-                          {item.title}
-                        </ActiveLink>
-                      </MenuItem>
-                    ) : null}
-                </React.Fragment>
-              ) : null}
+                      ? (
+                        <MenuItem id={item.id} sx={{ padding: '0' }}>
+                          <ActiveLink
+                            key={i}
+                            href={item.url}
+                            handleDrawerToggle={handleDrawerToggle}
+                            page={item.title}
+                          >
+                            {item.icon}
+                            <div style={{ paddingRight: '.5rem' }} />
+                            {item.title}
+                          </ActiveLink>
+                        </MenuItem>
+                      )
+                      : null}
+                  </React.Fragment>
+                )
+                : null}
             </React.Fragment>
           ))}
           {/* Definições */}
@@ -173,7 +175,6 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
               </Box>
               {settingsOpen ? <ChevronUp strokeWidth='1' size={20} /> : <ChevronDown strokeWidth='1' size={20} />}
 
-
             </Box>
           </MenuItem>
           <Collapse in={settingsOpen} sx={{ backgroundColor: localStorage.getItem('theme') === 'light' ? 'primary.light' : '#121212' }}>
@@ -193,7 +194,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
               <Box sx={{ width: '100%', marginLeft: '1rem' }} >
                 <Box >
                   <Tooltip title='Ajusta o aspeto da aplicação para reduzir o brilho excessivo e para descansares os olhos.'>
-                    <a  style={{ color: 'white' }} >Modo Escuro</a>
+                    <a style={{ color: 'white' }} >Modo Escuro</a>
                   </Tooltip>
                   <Switch checked={localStorage.getItem('theme') === 'dark'} onClick={toggleTheme} />
                   {localStorage.getItem('theme') === 'light' ? <Sun color='yellow' size={16} /> : <Moon color={'white'} size={16} />}
@@ -223,38 +224,40 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
             </Collapse>
           </Collapse>
           <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
-            {loggedUser ? (
-              <>
-                <Divider
-                  color='white'
-                  width='100%'
-                  style={{ marginTop: '1rem', marginBottom: '1rem' }}
-                />
-                <MenuItem sx={{ padding: '0' }}>
+            {loggedUser
+              ? (
+                <>
+                  <Divider
+                    color='white'
+                    width='100%'
+                    style={{ marginTop: '1rem', marginBottom: '1rem' }}
+                  />
+                  <MenuItem sx={{ padding: '0' }}>
 
-                  <ActiveLink
-                    handleDrawerToggle={handleDrawerToggle}
-                    href={IsInternal(pageProps.loggedUser.profile.object.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
-                    page={'Conta'}
-                  >
-                    <User strokeWidth='1' size={20} color='white' />{' '}
-                    <div style={{ paddingRight: '.5rem' }} />
+                    <ActiveLink
+                      handleDrawerToggle={handleDrawerToggle}
+                      href={IsInternal(pageProps.loggedUser.profile.object.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
+                      page={'Conta'}
+                    >
+                      <User strokeWidth='1' size={20} color='white' />{' '}
+                      <div style={{ paddingRight: '.5rem' }} />
                     Conta
-                  </ActiveLink>
-                </MenuItem>
-                <MenuItem sx={{ padding: '0' }}>
-                  <a
-                    className={styles.navItemContainer}
-                    onClick={() => {
-                      authActions.logout();
-                    }}
-                  >
-                    <LogOut strokeWidth='1' size={20} />
-                    <div style={{ paddingRight: '.5rem' }} /> Sair
-                  </a>
-                </MenuItem>
-              </>
-            ) : null}
+                    </ActiveLink>
+                  </MenuItem>
+                  <MenuItem sx={{ padding: '0' }}>
+                    <a
+                      className={styles.navItemContainer}
+                      onClick={() => {
+                        authActions.logout();
+                      }}
+                    >
+                      <LogOut strokeWidth='1' size={20} />
+                      <div style={{ paddingRight: '.5rem' }} /> Sair
+                    </a>
+                  </MenuItem>
+                </>
+              )
+              : null}
           </div>
         </Box>
       </Box>

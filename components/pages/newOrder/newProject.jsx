@@ -1,23 +1,15 @@
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 //  Nodes
 import Router from 'next/router';
 import React, { useCallback, useState } from 'react';
 
 //  Material Ui
-import {
-  Box, ButtonGroup, Grid, Step, StepLabel, Stepper, Typography
-} from '@mui/material';
+import { ButtonGroup, Grid, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useTheme } from 'styled-components';
 
 //  Icons
-import { ArrowLeft, ArrowRight, Save, X } from 'lucide-react';
-
-//  Stepper pages
-import SwipeableViews from 'react-swipeable-views';
-
-
+import { Save, X } from 'lucide-react';
 
 //  Actions
 import * as BudgetActions from '../../../pages/api/actions/budget';
@@ -43,32 +35,17 @@ import { useDropzone } from 'react-dropzone';
 
 //  Device "Detector"
 import moment from 'moment';
-import { isMobile } from 'react-device-detect';
-import TabPanel from '../../tapPanel/TabPanel';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
-import BudgetTab from './Tabs/budgetTab';
 import ClientTab from './Tabs/clientTab';
-import FinalizeTab from './Tabs/finalizeTab';
-
+import ProductTab from './Tabs/productTab';
+import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, budgets } = props;
-
-  const [client, setClient] = useState({
-    value: " ",
-    error: ''
-  });
-
-  const [obs, setObs] = useState('');
+  const { breadcrumbsPath, pageProps, budgets, clients } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [startAt, setStartAt] = useState();
-  const [endAt, setEndAt] = useState();
   const [uploadedFiles, setUploadedFiles] = useState();
-  const [activeStep, setActiveStep] = useState(0);
-  const [budgetTabIndex, setBudgetTabIndex] = useState(1);
-  const theme = useTheme();
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -79,287 +56,197 @@ const NewOrder = ({ ...props }) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: false });
 
-  const [newBudgetData, setNewBudgetData] = useState({
-    name: {value: '', error: '' },
-    amount: { value: '',error: '' },
-    price: {value: '', error: '' },
-    category: {value: '',error: ''}
+  const [budgetData, setBudgetData] = useState({
+    obs: { value: '', type: 'area' },
+    amount: { value: '', error: '' },
+    price: { value: '', error: '' },
+    category: { value: '', error: '' },
+    name: { value: '', error: '', required: true },
+    client: { value: '', error: '', required: true },
+    dateRequest: { value: '', error: '', required: true, type: 'date' },
+    dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
+    dateDeliveryProject: { value: '', error: '', required: true, type: 'date' },
+    streetAddress: { value: '', error: '', required: true },
+    postalCode: { value: '', error: '', required: true },
+    addressLocality: { value: '', error: '', required: true },
+    addressRegion: { value: '', error: '', required: true },
+    addressCountry: { value: '', error: '', required: true },
+
   });
-
-  const [chosenBudget, setChosenBudget] = useState({
-    id: {value: '', error: '' },
-    amount: {value: '', error: '' },
-    category: {value: '', error: '' },
-    price: {value: '', error: '' },
-  });
-
-  const [budget, setBudget] = useState();
-
-  const [inputFields, setInputFields] = useState([
-    { prod: '', amount: 1, errorProd: '', files: [] }
-  ]);
-
-  //  New Order Steps
-  const steps = [ 'Cliente', 'Orçamento', 'Finalizar'];
-
-  function onTabChange(props) {
-    setBudgetTabIndex(props);
-  }
-
-  function onClientChange (props) {
-    const data = {...client};
-
-    data.value = props?.id || ' ';
-    data.error = '';
-    setClient(data);
-  }
 
   function onBudgetChange (props) {
-      const data = {...chosenBudget};
+    const data = { ...budgetData };
 
-      data[props.name].value = props.value;
-      data[props.name].error = '';
+    if (data[props.name]?.type === 'date') {
+      const date = moment(props.value);
 
-      if (props.name === 'id') {
-        data.amount.value = budgets.find(ele => ele.id === props.value)?.amount?.value  || '';
-        data.amount.error =  '';
-        data.category.value = budgets.find(ele => ele.id === props.value)?.category?.value || '';
-        data.category.error =  '';
+      if (date.isValid()) {
+        data[props.name].error = '';
+      } else {
+        data[props.name].error = 'Data Invalida';
       }
+    } else data[props.name].error = '';
 
-      setChosenBudget(data);
-  }
+    if (props.name === 'category') {
+      if (data[props.name].value === '' || data.name.value === '') data.name.value = props.value + data.name.value;
+      else data.name.value = data.name.value.replace(data.category.value, props.value);
 
-  function onNewBudgetChange (props) {
-    const data = {...newBudgetData};
+      data.name.error = '';
+    }
+
+    if (props.name === 'client') {
+      const client = clients.find(ele => ele.id === props.value);
+
+      data.postalCode.error = '';
+      data.streetAddress.error = '';
+      data.postalCode.value = client.address?.value?.postalCode;
+      data.streetAddress.value = client.address?.value?.streetAddress || '';
+      data.addressLocality.value = client.address?.value?.addressLocality;
+      data.addressRegion.value = client.address?.value?.addressRegion;
+      data.addressCountry.value = client.address?.value?.addressCountry;
+    }
 
     data[props.name].value = props.value;
-    data[props.name].error = '';
-    setNewBudgetData(data);
+    setBudgetData(data);
   }
 
-  function ValidateData() {
+  function ValidateData () {
     let hasErrors = false;
+    const data = { ...budgetData };
 
-    switch (activeStep) {
-      case 0:
-        if (client.value === ' ') {
-          const data = {...client};
-    
-          data.error = 'Campo Obrigatório';
-          setClient(data);
-          hasErrors = true;
+    Object.keys(budgetData).map((prop) => {
+      if (data[prop].value !== '' && data[prop].value !== undefined && data[prop].required) {
+        if (data[prop]?.type === 'date') {
+          const date = moment(data[prop].value);
+
+          if (date.isValid()) data[prop].error = '';
+          else {
+            data[prop].error = 'Data Invalida';
+            hasErrors = true;
+          }
         }
 
-        break;
-        
-      case 1: {
-        if (budgetTabIndex === 0)
-        {
-          const data = {...chosenBudget};
-
-          if (chosenBudget.id.value === '')
-          {
-            data.id.error = 'Campo Obrigatório';
-            hasErrors = true;
-          }
-  
-          if (chosenBudget.amount.value === '')
-          {
-            data.amount.error = 'Campo Obrigatório';
+        if (prop === 'name') {
+          if (budgets.find((element) => element.name.value.toLowerCase() === data[prop].value.toLowerCase()) !== undefined) {
+            data[prop].error = 'Nome já usado';
             hasErrors = true;
           }
 
-          if (chosenBudget.category.value === '')
-          {
-            data.category.error = 'Campo Obrigatório';
+          if (data[prop].value === data.category.value) {
+            data[prop].error = 'Nome mal estruturado';
             hasErrors = true;
           }
-
-          if (chosenBudget.price.value === '')
-          {
-            data.price.error = 'Campo Obrigatório';
-            hasErrors = true;
-          }
-
-          setChosenBudget(data);
-        } else {
-          const data = {...newBudgetData};
-
-          if (newBudgetData.name.value === '')
-          {
-            data.name.error = 'Campo Obrigatório';
-            hasErrors = true;
-          }
-
-          if (newBudgetData.amount.value === '')
-          {
-            data.amount.error = 'Campo Obrigatório';
-            hasErrors = true;
-          }
-
-          if (newBudgetData.category.value === '')
-          {
-            data.category.error = 'Campo Obrigatório';
-            hasErrors = true;
-          }
-
-          if (newBudgetData.price.value === '')
-          {
-            data.price.error = 'Campo Obrigatório';
-            hasErrors = true;
-          }
-
-          setNewBudgetData(data);
         }
-
-        //  Build final Budget based on index
-        !hasErrors && setBudget(budgetTabIndex === 0 ? 
-          {id: chosenBudget.id.value,amount: chosenBudget.amount.value, category: chosenBudget.category.value}
-          : 
-          {name: newBudgetData.name.value,amount: newBudgetData.amount.value, category: newBudgetData.category.value, price: newBudgetData.price.value}
-          );
-
-        break;
+      } else if (data[prop].required) {
+        data[prop].error = 'Campo Obrigatório';
+        hasErrors = true;
       }
-    //  No need for default
-    }
+    });
 
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
+      setBudgetData(data);
 
       return !hasErrors;
     }
-    else if (activeStep === steps.length - 1) setDialogOpen(true);
-    else return !hasErrors;
+
+    setDialogOpen(true);
+
+    return !hasErrors;
   }
 
-  async function CreateOrder() {
+  async function CreateOrder () {
     setProcessing(true);
 
-    const a = false;
+    const built = {
+      id: (budgetData.id + Math.random()) || `urn:ngsi-ld:Budget:${budgetData.name.value.replace(/ /g, '_').toUpperCase()}`,
+      type: 'Budget',
+      name: {
+        type: 'Property',
+        value: budgetData?.name.value
+      },
+      amount: {
+        type: 'Property',
+        value: budgetData.amount.value
+      },
+      price: {
+        type: 'Property',
+        value: budgetData.price.value.replace(/ /g, '').replace(/€/g, '')
+      },
+      aprovedDate: {
+        type: 'Property',
+        value: ''
+      },
+      dateRequest: {
+        type: 'Property',
+        value: moment(budgetData.dateRequest.value).format('DD/MM/YYYY')
+      },
+      dateAgreedDelivery: {
+        type: 'Property',
+        value: moment(budgetData.dateAgreedDelivery.value).format('DD/MM/YYYY')
+      },
+      dateDeliveryProject: {
+        type: 'Property',
+        value: moment(budgetData.dateDeliveryProject.value).format('DD/MM/YYYY')
+      },
+      obs: {
+        type: 'Property',
+        value: budgetData.obs.value
+      },
+      createdAt: {
+        type: 'Property',
+        value: moment(Date.now()).format('DD/MM/YYYY')
+      },
+      image: {
+        type: 'Property',
+        value: 'urn:ngsi-ld:Image:Budget:MC_MUEBLETV_A'
+      },
+      category: {
+        type: 'Property',
+        value: budgetData.category.value || ''
+      },
+      status: {
+        type: 'Property',
+        value: budgetData.category.value && budgetData.amount.value && budgetData.price.value ? 'waiting adjudication' : 'waiting budget'
+      },
+      belongsTo: {
+        type: 'Relationship',
+        object: budgetData.client.value
+      },
+      deliveryAddress: {
+        type: 'Property',
+        value: {
+          postalCode: budgetData.postalCode.value,
+          streetAddress: budgetData.streetAddress.value,
+          addressLocality: budgetData.addressLocality.value,
+          addressRegion: budgetData.addressRegion.value,
+          addressCountry: budgetData.addressCountry.value,
+        }
+      },
 
-    if (a)
-    {
-  
-      // try {
-      //   await OrdersActions.saveOrder(builtOrder).then((response) => {
-      //     inputFields.map(async (input) => {
-      //       const buildOrderDetail = {
-      //         productId: input.prod,
-      //         orderId: response.data.payload.id,
-      //         status: 'not started',
-      //         amount: input.amount,
-      //         completed: 0,
-      //       };
-  
-      //       await OrdersActions.saveOrderDetails(buildOrderDetail);
-      //     });
-  
-      //     setNewestOrder(response.data.payload);
-      //     setSuccessOpen(true);
-  
-      //   });
-      // } catch (err) {
-      //   toast.error('Algo Aconteceu');
-      // }
-  
-
-
-    } else {
-      const built = {
-       id: (budget.id + Math.random()) || `urn:ngsi-ld:Budget:${budget.name.replace(' ', '_').toUpperCase()}`,
-        type: "Budget",
-        name: {
-            type: "Property",
-            value: budget?.id?.replace('urn:ngsi-ld:Budget:', '') || budget?.name
-        },
-        amount: {
-            type: "Property",
-            value: budget.amount
-        },
-        price: {
-            type: "Property",
-            value: budget.amount
-        },
-        aprovedDate: {
-            type: "Property",
-            value: ""
-        },
-        budgetCreated: {
-            type: "Property",
-            value: moment(startAt).format('DD/MM/YYYY')
-          },
-        budgetDelivered: {
-          type: "Property",
-          value: moment(endAt).format('DD/MM/YYYY')
-        },
-        obs: {
-            type: "Property",
-            value: obs
-        },
-        createdAt: {
-          type: "Property",
-          value: moment(Date.now()).format('DD/MM/YYYY') 
-        },
-        image: {
-            type: "Property",
-            value: "urn:ngsi-ld:Image:Budget:MC_MUEBLETV_A"
-        },
-        category: {
-            type: "Property",
-            value: budget.category || ''
-        },
-        status: {
-            type: "Property",
-            value: ''
-        },
-        belongsTo: {
-            "type": "Relationship",
-            object: client.value
-        },
-        "@context": [
-            "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-        ]
+      '@context': [
+        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+      ]
     };
 
     await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
-    }
-
     setProcessing(false);
     setDialogOpen(false);
   }
-  
-  function ClearAll() {
+
+  function ClearAll () {
     setSuccessOpen(false);
-    setClient();
-    setStartAt(Date.now());
-    setEndAt(Date.now());
-    setObs(" ");
-    setInputFields([{ prod: '', amount: 1, errorProd: '', files: [] }]);
   }
-
-  const handleNextStep = () => {
-    ValidateData() && setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBackStep = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStepChange = (index) => {
-    setActiveStep(index);
-  };
 
   const successModalProps = {
     open: successOpen,
     handleClose: ClearAll,
-    message:`Orçamento criado com sucesso, que deseja fazer agora?`,
-    icon:'Verified',
-    iconType:'success',
-    okTxt:'Ver orçamento',
-    cancelTxt:'Criar novo orçamento',
+    message: 'Orçamento criado com sucesso, que deseja fazer agora?',
+    icon: 'Verified',
+    iconType: 'success',
+    okTxt: 'Ver orçamento',
+    cancelTxt: 'Criar novo orçamento',
   };
 
   return (
@@ -372,107 +259,60 @@ const NewOrder = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => CreateOrder()}
-        message={`Está prestes a criar um orçamento, tem certeza que quer continuar?`}
+        message={'Está prestes a criar um orçamento, tem certeza que quer continuar?'}
         icon='AlertOctagon'
       />
       {processing && <Loader center={true} backdrop />}
       {/* What do do after Create Modal */}
-      <ConfirmDialog  
-        {...successModalProps}
-        // onConfirm={() => Router.push({
-        //   pathname: routes.private.internal.orders,
-        //   query: { order: newestOrder.id }
-        // })}
-      />
+      <ConfirmDialog {...successModalProps} />
       <Content>
         <Grid container md={12} sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-          <Grid container md={3}>
-            <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title}</Typography>
+          <Grid container md={10} sm={10} xs={12}>
+            <Typography variant='titlexxl'>{breadcrumbsPath[1].title}</Typography>
           </Grid >
-          <Grid container md={6} className='fullCenter'>
-            <Box sx={{ width: '100%' }}>
-              <Stepper activeStep={activeStep} orientation={isMobile ? "vertical" : 'horizontal'}>
-                {steps.map((label) => 
-                (<Step key={label} >
-                    <StepLabel>{label}</StepLabel>
-                  </Step>) )}
-              </Stepper>
-            </Box>
-          </Grid>
-          <Grid container md={3}>
-            <Box sx={{ marginLeft: 'auto' }}>
-              <ButtonGroup>
-                <PrimaryBtn
-                  onClick={() => handleBackStep()}
-                  disabled={activeStep === 0}
-                  text={'Anterior'}
-                  icon={ <ArrowLeft size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
-                />
-                <PrimaryBtn
-                  text='Cancelar'
-                  icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
-                  light
-                  onClick={() => Router.back()}
-                />
-                <PrimaryBtn
-                  onClick={() => activeStep === steps.length - 1 ? ValidateData() : handleNextStep()}
-                  text={activeStep === steps.length - 1 ? 'Guardar' : 'Seguinte'}
-                  icon={
-                    activeStep === steps.length - 1 ?
-                      <Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />
-                      :
-                      <ArrowRight size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />
-                  }
-                />
-              </ButtonGroup>
-            </Box>
+          <Grid container md={2} sm={2} xs={12} justifyContent='end'>
+            <ButtonGroup>
+              <PrimaryBtn
+                text='Cancelar'
+                icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
+                light
+                onClick={() => Router.back()}
+              />
+              <PrimaryBtn
+                onClick={() => ValidateData()}
+                text={'Guardar'}
+                icon={ <Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
+              />
+            </ButtonGroup>
           </Grid>
         </Grid>
-        <Box sx={{ width: '100%' }}>
-          {/* Carrousel Component */}
-          <SwipeableViews
-            axis={theme?.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={activeStep}
-            onChangeIndex={handleStepChange}
-          >
-            {/* Cliente Tab */}
-            <TabPanel value={activeStep} index={0}>
-              <ClientTab {...props} 
-                client={client}
-                onClientChange={onClientChange}
-                startAt={startAt}
-                onStartAtChange={setStartAt}
-                endAt={endAt}
-                onEndAtChange={setEndAt}
-                obs={obs}
-                onObsChange={setObs}
-                onProcessing={setProcessing}
-              />
-            </TabPanel>
-            {/* Budget Tab */}
-            <TabPanel value={activeStep} index={1}>
-              <BudgetTab {...props}
-                dragDrop={{getRootProps, getInputProps, isDragActive}}
-                newBudgetData={newBudgetData}
-                chosenBudget={chosenBudget}
-                onBudgetChange={onBudgetChange}
-                onNewBudgetChange={onNewBudgetChange}
-                docs={{uploadedFiles, setUploadedFiles }}
-                currentTab={budgetTabIndex}
-                onTabChange={onTabChange}
-              />
-            </TabPanel>
-            {/* Finalize Tab */}
-            <TabPanel value={activeStep} index={2}>
-              <FinalizeTab 
-                {...props}
-                inputFields={inputFields}
-                client={client}
-                budget={budget}
-              />
-            </TabPanel>
-          </SwipeableViews>
-        </Box>
+        <Grid container sx={{ width: '100%' }}>
+          <Grid container md={3.5}>
+            <ClientTab {...props}
+              client={budgetData.client}
+              onClientChange={onBudgetChange}
+              onProcessing={setProcessing}
+              noDetail
+            />
+          </Grid>
+          <Grid container md={5}>
+            <ProductTab {...props}
+              dragDrop={{ getRootProps, getInputProps, isDragActive }}
+              budgetData={budgetData}
+              onBudgetChange={onBudgetChange}
+              docs={{ uploadedFiles, setUploadedFiles }}
+              noDrop
+            />
+          </Grid>
+          <Grid container md={3.5}>
+            <RequestTab {...props}
+              onProcessing={setProcessing}
+              budgetData={budgetData}
+              onBudgetChange={onBudgetChange}
+              noDetail
+            />
+          </Grid>
+        </Grid>
       </Content>
     </Grid >
   );

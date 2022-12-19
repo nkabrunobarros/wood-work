@@ -13,39 +13,38 @@ import DocsClient from './sections/DocsClient';
 import Head from './sections/Head';
 import Messages from './sections/Messages';
 
-
 const BudgetPage = (props) => {
-    const { breadcrumbsPath } = props;
-    const [refresh, setRefresh] = useState();
-    const path = useRouter();
-    const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
-    
-    return (
-        <Grid component='main'>
-            <CssBaseline />
-            {/* Breadcrumbs */}
-            <CustomBreadcrumbs path={breadcrumbsPath} />
-            <Content>
-                <Head {...props} isInternalPage={isInternalPage}/>
-            </Content>
-            {/* Docs */}
-            <Content>
-                <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props}  />
-            </Content>
-            {/* Messages */}
-            <Content>
-                <Messages stylesMessage={stylesMessage}{...props} />
-            </Content>
-            {/* Docs Cliente */}
-            <Content id={refresh}>
-                <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
-            </Content>
-                </Grid>
-    );
+  const { breadcrumbsPath } = props;
+  const [refresh, setRefresh] = useState();
+  const path = useRouter();
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+
+  return (
+    <Grid component='main'>
+      <CssBaseline />
+      {/* Breadcrumbs */}
+      <CustomBreadcrumbs path={breadcrumbsPath} />
+      <Content>
+        <Head {...props} isInternalPage={isInternalPage}/>
+      </Content>
+      {/* Docs */}
+      <Content>
+        <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
+      </Content>
+      {/* Messages */}
+      <Content>
+        <Messages stylesMessage={stylesMessage}{...props} />
+      </Content>
+      {/* Docs Cliente */}
+      <Content id={refresh}>
+        <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
+      </Content>
+    </Grid>
+  );
 };
 
 BudgetPage.propTypes = {
-    breadcrumbsPath: PropTypes.array
+  breadcrumbsPath: PropTypes.array
 };
 
 export default BudgetPage;

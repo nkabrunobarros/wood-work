@@ -39,20 +39,20 @@ const newWorker = ({ ...props }) => {
   const [generatePassword, setGeneratePassword] = useState(true);
   // const [newestWorker, setNewestWorker] = useState();
 
-  const shifts = [
-    {
-      label: 'Manhã',
-      value: [1,2]
-    },
-    {
-      label: 'Tarde',
-      value: [2,3]
-    },
-    {
-      label: 'Noite',
-      value: [3,4]
-    }
-  ];
+  // const shifts = [
+  //   {
+  //     label: 'Manhã',
+  //     value: [1,2]
+  //   },
+  //   {
+  //     label: 'Tarde',
+  //     value: [2,3]
+  //   },
+  //   {
+  //     label: 'Noite',
+  //     value: [3,4]
+  //   }
+  // ];
 
   const functions = [
     {
@@ -138,16 +138,16 @@ const newWorker = ({ ...props }) => {
       optLabel: 'label',
       optValue: 'value'
     },
-    {
-      id: 'workerShift',
-      label: 'Turno',
-      value: '',
-      error: '',
-      required: true,
-      options: shifts,
-      optLabel: 'label',
-      optValue: 'value'
-    },
+    // {
+    //   id: 'workerShift',
+    //   label: 'Turno',
+    //   value: '',
+    //   error: '',
+    //   required: true,
+    //   options: shifts,
+    //   optLabel: 'label',
+    //   optValue: 'value'
+    // },
     // {
     //   id: 'hasOrganization',
     //   label: 'Organização',
@@ -448,149 +448,6 @@ const newWorker = ({ ...props }) => {
             </Grid>
           </Grid>
         </Box>
-        {/* <div className='flex'>
-          <div style={{ flex: 1 }}>
-            <a id='pad' className='lightTextSm'>
-              <User size={20} strokeWidth='1' /> Dados de Utilizador
-            </a>
-            <div id='pad' className='filters'>
-              <div className='filterContainer4'>
-                <MyInput
-                  required
-                  label='Nome'
-                  value={name}
-                  error={errorMessageName}
-                  placeholder='Escrever Nome'
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    setErrorMessageName('');
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-                <MyInput
-                  required
-                  label='Email'
-                  value={email}
-                  error={errorMessageEmail}
-                  placeholder='Escrever Email'
-                  type='email'
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setErrorMessageEmail('');
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-                <PhoneInput
-                  label='Telefone'
-                  type='number'
-                  error={errorMessageTelefone}
-                  options={countries}
-                  value={telefone}
-                  onChange={(e) => {
-                    setTelefone(e.target.value);
-                    setErrorMessageTelefone('');
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-                <PhoneInput
-                  label='Telemovel'
-                  type='number'
-                  error={errorMessageTelemovel}
-                  options={countries}
-                  value={telemovel}
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    setTelemovel(e.target.value);
-                    setErrorMessageTelemovel('');
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-
-                <Select
-                  error={errorMessagePerfil}
-                  label={'Perfil'}
-                  required
-                  fullWidth
-                  options={profiles}
-                  value={perfil}
-                  optionLabel='descricao'
-                  optionValue='id'
-                  onChange={(e) => {
-                    setErrorMessagePerfil();
-                    setPerfil(e.target.value);
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-                <MyInput
-                  label='Cidade'
-                  required
-                  value={cidade}
-                  error={errorMessageCidade}
-                  placeholder='Escrever Cidade'
-                  onChange={(e) => {
-                    setCidade(e.target.value);
-                    setErrorMessageCidade('');
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-                <Select
-                  error={errorMessagePais}
-                  label={'País'}
-                  required
-                  fullWidth
-                  options={countries}
-                  optionValue={'codigo'}
-                  optionLabel="descricao"
-                  value={perfil}
-                  onChange={(e) => {
-                    setErrorMessagePais();
-                    setPais(e.target.value);
-                  }}
-                />
-              </div>
-              <div className='filterContainer4'>
-                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Gerar Senha" />
-                  :
-                  <MyInput
-                    label={<Tooltip title='Trocar para senha autogerada'>
-                      <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
-                    </Tooltip>}
-                    required
-                    value={password}
-                    error={errorMessagePassword}
-                    placeholder='Escrever Senha'
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      setErrorMessagePassword('');
-                    }}
-                  />
-                }
-
-              </div>
-
-              <div className='filterContainer4'>
-                <InputLabel htmlFor='email'>Observações</InputLabel>
-                <TextareaAutosize
-                  placeholder='Escrever observações'
-                  className={styles.textarea}
-                  value={obs}
-                  onChange={(e) => setObs(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex' }}>
-          <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-            {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
-          </Button>
-        </div> */}
       </Content>
     </Grid>
   );

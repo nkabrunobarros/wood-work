@@ -12,6 +12,7 @@ import OrderScreen from '../../../components/pages/project/project';
 import routes from '../../../navigation/routes';
 
 //  Services
+import * as BudgetsActions from '../../api/actions/budget';
 import * as ClientsActions from '../../api/actions/client';
 import * as ExpeditionsActions from '../../api/actions/expedition';
 import * as ProjectsActions from '../../api/actions/project';
@@ -26,15 +27,24 @@ const Order = ({ ...pageProps }) => {
       await ProjectsActions.project({ id: router.query.Id }).then(async (res) => {
         const thisOrder = res.data[0];
 
-        await ClientsActions.client({ id: thisOrder.orderBy.object }).then(async (clientRes) => {
-          thisOrder.orderBy.object = clientRes.data[0];
-        });
+        await BudgetsActions.budget({ id: thisOrder.budgetId?.object || thisOrder.orderBy?.object }).then(async (resBudget) => {
+          debugger;
 
-        await ExpeditionsActions.expedition({ id: thisOrder.expedition.object }).then(async (expeditionRes) => {
-          thisOrder.expedition.object = expeditionRes.data[0];
-        });
+          thisOrder.budgetId.object = resBudget.data[0];
+          console.log(resBudget);
 
-        setOrder(thisOrder);
+          await ClientsActions.client({ id: resBudget.data[0]?.belongsTo?.object }).then(async (clientRes) => {
+            debugger;
+
+            thisOrder.orderBy = { object: clientRes.data[0] };
+          });
+
+          await ExpeditionsActions.expedition({ id: thisOrder.expedition.object }).then(async (expeditionRes) => {
+            thisOrder.expedition.object = expeditionRes.data[0];
+          });
+
+          setOrder(thisOrder);
+        });
       });
     };
 
@@ -254,8 +264,9 @@ const Order = ({ ...pageProps }) => {
     };
 
     return <OrderScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
 
+  return <Loader center={true} />;
 };
 
 export default Order;

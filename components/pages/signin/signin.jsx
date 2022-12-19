@@ -40,15 +40,16 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
 
-  const { 
-    client, 
-    login, 
+  const {
+    client,
+    login,
     me,
     loginSuccessRoute,
     loginSuccessRouteTerms,
-    forgotPasswordRoute } = props;
+    forgotPasswordRoute
+  } = props;
 
-  const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' :'bruno.barros@nka.pt');
+  const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
   const [password, setPassword] = useState('ChangeMe');
   const [loading, setLoading] = useState(false);
   const [emailErrors, setEmailErrors] = useState();
@@ -61,7 +62,6 @@ const SignIn = (props) => {
     useEffect(() => {
       setWindowHeight(window.innerWidth);
     }, [window.innerWidth]);
-
   }
 
   const listenToResize = () => {
@@ -85,10 +85,8 @@ const SignIn = (props) => {
     if (email === '') errors.email = 'Email é obrigatório';
     else if (!EmailValidation(email)) errors.email = 'Email mal estruturado';
 
-
     if (password === '') errors.password = 'Senha é obrigatório';
     else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres';
-
 
     if (errors.password || errors.email) {
       setSenhaErrors(errors.password);
@@ -99,148 +97,145 @@ const SignIn = (props) => {
 
     setLoading(true);
 
-  const loadingNotification = toast.loading('');
+    const loadingNotification = toast.loading('');
 
-  try {
-    await login({email, password}).then(async (res) => {
-      res.data.token !== undefined && setCookie(undefined, 'auth_token', res.data.token);
+    try {
+      await login({ email, password }).then(async (res) => {
+        res.data.token !== undefined && setCookie(undefined, 'auth_token', res.data.token);
 
-      await me({ ...res?.data }).then((resultMe) => { 
-        const user = resultMe?.data[0];
+        await me({ ...res?.data }).then((resultMe) => {
+          const user = resultMe?.data[0];
 
-        user.profile = {};
-        user.profile.type = 'Profile';
+          user.profile = {};
+          user.profile.type = 'Profile';
 
-        user.profile.object = {
-             description: Router.route === '/' ? 'client' : 'Admin',
-             type: Router.route === '/' ? 'client' :'internal',
-             permissions: [
-               {idPerfil:'123456789', subject: 'workers', action: 'READ'},
-               {idPerfil:'123456789', subject: 'workers', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'workers', action: 'DELETE'},
-      
-               //  DashboardsScreen
-               {idPerfil:'123456789', subject: 'dashboards', action: 'READ'},
-      
-               //  FactoryScreen
-               {idPerfil:'123456789', subject: 'factoryLevel', action: 'READ'},
+          user.profile.object = {
+            description: Router.route === '/' ? 'client' : 'Admin',
+            type: Router.route === '/' ? 'client' : 'internal',
+            permissions: [
+              { idPerfil: '123456789', subject: 'workers', action: 'READ' },
+              { idPerfil: '123456789', subject: 'workers', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'workers', action: 'DELETE' },
 
-               //  leftoversScreen
-               {idPerfil:'123456789', subject: 'leftovers', action: 'READ'},
-      
-               //  Ficheiros
-               {idPerfil:'123456789', subject: 'ficheiros', action: 'READ'},
-               {idPerfil:'123456789', subject: 'ficheiros', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'ficheiros', action: 'DELETE'},
-      
-               //  perfis
-               {idPerfil:'123456789', subject: 'perfis', action: 'READ'},
-               {idPerfil:'123456789', subject: 'perfis', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'perfis', action: 'DELETE'},
-      
-               //  Ficheiros
-               {idPerfil:'123456789', subject: 'messages', action: 'READ'},
-               {idPerfil:'123456789', subject: 'messages', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'messages', action: 'DELETE'},
-      
-               //  profiles
-               {idPerfil:'123456789', subject: 'profiles', action: 'READ'},
-               {idPerfil:'123456789', subject: 'profiles', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'profiles', action: 'DELETE'},
-      
-               //  Unidades
-               {idPerfil:'123456789', subject: 'unidades', action: 'READ'},
-               {idPerfil:'123456789', subject: 'unidades', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'unidades', action: 'DELETE'},
-      
-               //  ConversaoUnidades
-               {idPerfil:'123456789', subject: 'conversaounidades', action: 'READ'},
-               {idPerfil:'123456789', subject: 'conversaounidades', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'conversaounidades', action: 'DELETE'},
-      
-               //  Moedas
-               {idPerfil:'123456789', subject: 'moedas', action: 'READ'},
-               {idPerfil:'123456789', subject: 'moedas', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'moedas', action: 'DELETE'},
-      
-               //  projects
-               {idPerfil:'123456789', subject: 'projects', action: 'READ'},
-               {idPerfil:'123456789', subject: 'projects', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'projects', action: 'DELETE'},
-      
-               //  Clients
-               {idPerfil:'123456789', subject: 'clients', action: 'READ'},
-               {idPerfil:'123456789', subject: 'clients', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'clients', action: 'DELETE'},
-      
-               //  Stocks
-               {idPerfil:'123456789', subject: 'stocks', action: 'READ'},
-               {idPerfil:'123456789', subject: 'stocks', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'stocks', action: 'DELETE'},
-      
-               //  Products
-               {idPerfil:'123456789', subject: 'products', action: 'READ'},
-               {idPerfil:'123456789', subject: 'products', action: 'WRITE'},
-               {idPerfil:'123456789', subject: 'products', action: 'DELETE'},
-      
-               //  Client
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ'},
-      
-               //  profiles
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'profiles', action: 'READ'},
-      
-               //  Unidades
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'unidades', action: 'READ'},
-      
-               //  ConversaoUnidades
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'conversaounidades', action: 'READ'},
-      
-               //  Moedas
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'moedas', action: 'READ'},
-      
-               //  projects
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'projects', action: 'READ'},
-      
-               //  Clients
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ'},
-      
-               //  Stocks
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'stocks', action: 'READ'},
-      
-               //  Products
-               {idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'products', action: 'READ'},
-             ]
-            
-        };
+              //  DashboardsScreen
+              { idPerfil: '123456789', subject: 'dashboards', action: 'READ' },
 
-        if (user.type === 'Owner' && user.tos === undefined) user.tos = {type: 'Property', value: 'False'};
+              //  FactoryScreen
+              { idPerfil: '123456789', subject: 'factoryLevel', action: 'READ' },
 
-        localStorage.setItem("user", JSON.stringify(user));
-        // Success
-        ToastSet(loadingNotification, 'A entrar', 'success');
-        setLoading(false);
+              //  leftoversScreen
+              { idPerfil: '123456789', subject: 'leftovers', action: 'READ' },
 
-        if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
-        else router.push(loginSuccessRoute);
+              //  Ficheiros
+              { idPerfil: '123456789', subject: 'ficheiros', action: 'READ' },
+              { idPerfil: '123456789', subject: 'ficheiros', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'ficheiros', action: 'DELETE' },
 
-      //   if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
-      //   else {
-      //    if (client && user.tos !== 'True') router.push(loginSuccessRouteTerm);
-      //    else router.push(loginSuccessRoute);
-      //  }
+              //  perfis
+              { idPerfil: '123456789', subject: 'perfis', action: 'READ' },
+              { idPerfil: '123456789', subject: 'perfis', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'perfis', action: 'DELETE' },
+
+              //  Ficheiros
+              { idPerfil: '123456789', subject: 'messages', action: 'READ' },
+              { idPerfil: '123456789', subject: 'messages', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'messages', action: 'DELETE' },
+
+              //  profiles
+              { idPerfil: '123456789', subject: 'profiles', action: 'READ' },
+              { idPerfil: '123456789', subject: 'profiles', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'profiles', action: 'DELETE' },
+
+              //  Unidades
+              { idPerfil: '123456789', subject: 'unidades', action: 'READ' },
+              { idPerfil: '123456789', subject: 'unidades', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'unidades', action: 'DELETE' },
+
+              //  ConversaoUnidades
+              { idPerfil: '123456789', subject: 'conversaounidades', action: 'READ' },
+              { idPerfil: '123456789', subject: 'conversaounidades', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'conversaounidades', action: 'DELETE' },
+
+              //  Moedas
+              { idPerfil: '123456789', subject: 'moedas', action: 'READ' },
+              { idPerfil: '123456789', subject: 'moedas', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'moedas', action: 'DELETE' },
+
+              //  projects
+              { idPerfil: '123456789', subject: 'projects', action: 'READ' },
+              { idPerfil: '123456789', subject: 'projects', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'projects', action: 'DELETE' },
+
+              //  Clients
+              { idPerfil: '123456789', subject: 'clients', action: 'READ' },
+              { idPerfil: '123456789', subject: 'clients', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'clients', action: 'DELETE' },
+
+              //  Stocks
+              { idPerfil: '123456789', subject: 'stocks', action: 'READ' },
+              { idPerfil: '123456789', subject: 'stocks', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'stocks', action: 'DELETE' },
+
+              //  Products
+              { idPerfil: '123456789', subject: 'products', action: 'READ' },
+              { idPerfil: '123456789', subject: 'products', action: 'WRITE' },
+              { idPerfil: '123456789', subject: 'products', action: 'DELETE' },
+
+              //  Client
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
+
+              //  profiles
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'profiles', action: 'READ' },
+
+              //  Unidades
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'unidades', action: 'READ' },
+
+              //  ConversaoUnidades
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'conversaounidades', action: 'READ' },
+
+              //  Moedas
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'moedas', action: 'READ' },
+
+              //  projects
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'projects', action: 'READ' },
+
+              //  Clients
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
+
+              //  Stocks
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'stocks', action: 'READ' },
+
+              //  Products
+              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'products', action: 'READ' },
+            ]
+
+          };
+
+          if (user.type === 'Owner' && user.tos === undefined) user.tos = { type: 'Property', value: 'False' };
+
+          localStorage.setItem('user', JSON.stringify(user));
+          // Success
+          ToastSet(loadingNotification, 'A entrar', 'success');
+          setLoading(false);
+
+          if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
+          else router.push(loginSuccessRoute);
+
+          //   if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
+          //   else {
+          //    if (client && user.tos !== 'True') router.push(loginSuccessRouteTerm);
+          //    else router.push(loginSuccessRoute);
+          //  }
+        });
       });
-
-    });
-  } catch (err) {
+    } catch (err) {
       setLoading(false);
       console.log(err);
 
       if (!err.response?.data?.success && err.response?.data?.message === 'credenciais-invalidas') ToastSet(loadingNotification, 'Credenciais invalidas', 'error');
       else if (err.response?.data?.message === 'utilizador-inativo') ToastSet(loadingNotification, 'Conta Inativa', 'error');
       else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
-  }
-
-
+    }
   };
 
   return (
@@ -274,16 +269,16 @@ const SignIn = (props) => {
       </Dialog>
       <Box
         style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
-        >
+      >
         <Image
           src={companyLogo}
           layout='responsive'
           placeholder='blur'
-          />
+        />
       </Box>
       {windowWidth > 600 &&
         <Grid className={styles.sidePanel} item xs={0} sm={6} md={7}>
-         <Box
+          <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -295,7 +290,7 @@ const SignIn = (props) => {
             <div className={styles.logoImg}>
             </div>
           </Box>
-       
+
         </Grid>
       }
 
@@ -315,11 +310,11 @@ const SignIn = (props) => {
             width: '100%'
           }}
         >
-          <Typography variant='md' color={'primary'}  sx={{ fontWeight: 600 }}>
+          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
             {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>
           {/* TODO: imagem de logo da mofreita aqui */}
-       
+
           <Typography component='h1' variant='h2'>
             Login
           </Typography>
@@ -385,11 +380,13 @@ const SignIn = (props) => {
               disabled={loading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? (
-                <CircularProgress size={25} sx={{ color: 'white' }} />
-              ) : (
-                'Entrar'
-              )}
+              {loading
+                ? (
+                  <CircularProgress size={25} sx={{ color: 'white' }} />
+                )
+                : (
+                  'Entrar'
+                )}
             </Button>
           </Box>
         </Box>
@@ -401,8 +398,8 @@ const SignIn = (props) => {
 
 SignIn.propTypes = {
   me: PropTypes.func,
-  login: PropTypes.func, 
-  client: PropTypes.bool, 
+  login: PropTypes.func,
+  client: PropTypes.bool,
   loginSuccessRoute: PropTypes.string,
   forgotPasswordRoute: PropTypes.string,
   loginSuccessRouteTerms: PropTypes.string,

@@ -6,7 +6,7 @@ import styles from '../../../styles/components/navbar.module.css';
 
 import routes from '../../../navigation/routes';
 
-function ActiveLink({ children, href, handleDrawerToggle, page }) {
+function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const path = useRouter();
   const orderSimilarPages = [`${routes.private.internal.ordersSimilar}`];
   const messagesPages = [`${routes.private.messages}`];
@@ -16,6 +16,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.order}[Id]`,
     `${routes.private.internal.projects}`,
     `${routes.private.internal.project}[Id]`,
+    `${routes.private.internal.budget}[Id]`,
     `${routes.private.internal.newProject}`,
     `${routes.private.internal.editProject}[Id]`,
   ];
@@ -47,7 +48,7 @@ function ActiveLink({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.factoryLevel}`,
   ];
 
-  const profilePages = [`${routes.private.profile}[Id]`,`${routes.private.internal.profile}[Id]`];
+  const profilePages = [`${routes.private.profile}[Id]`, `${routes.private.internal.profile}[Id]`];
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 

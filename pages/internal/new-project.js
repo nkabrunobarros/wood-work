@@ -16,35 +16,24 @@ const NewOrder = ({ ...pageProps }) => {
     const getData = async () => {
       await ClientActions.clients().then((response) => setClients(response.data));
       await BudgetsActions.allBudgets().then((response) => setBudgets(response.data));
-
-      // await ProductsActions.products().then((response) => {
-      //   setProducts(response.data.payload.data);
-      //   // console.log(response.data.payload.data)
-
-      //   //   response.data.payload.data.map(async (ord, i) => {
-      //   //     try {
-      //   //       await StockActions.stock({ id: ord.id }).then((res) => {
-      //   //         response.data.payload.data[i].stock = res.data.payload.amount
-      //   //       })  
-
-      //   //     } catch (err) {
-      //   //       console.log('err')
-      //   //       response.data.payload.data[i].stock = null
-
-      //   //     }
-      //   // })
-
-      // });
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
-
   }, []);
+
+  const categories = [
+    { label: 'Cozinha', id: 'MC_' },
+    { label: 'Quarto', id: 'MQ_' },
+    { label: 'Banheiro', id: 'MB_' },
+    { label: 'Garagem', id: 'MG_' },
+    { label: 'Varanda', id: 'MV_' },
+    { label: 'Sala de estar', id: 'MS_' }
+  ];
 
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Orçamentos',
+        title: 'Projetos/Orçamentos',
         href: `${routes.private.internal.projects}`,
       },
       {
@@ -58,11 +47,13 @@ const NewOrder = ({ ...pageProps }) => {
       breadcrumbsPath,
       clients,
       budgets,
+      categories,
     };
 
     return <NewOrderScreen {...props} />;
+  }
 
-  } else return <Loader center={true} />;
+  return <Loader center={true} />;
 };
 
 export default NewOrder;

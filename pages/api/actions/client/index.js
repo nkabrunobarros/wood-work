@@ -1,5 +1,5 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get All Clients
@@ -12,7 +12,7 @@ export async function clients() {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -22,8 +22,6 @@ export async function clients() {
   };
 
   return await axios(config);
-
-
 }
 
 //  Get a Client
@@ -36,7 +34,7 @@ export async function client(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {

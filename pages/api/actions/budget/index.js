@@ -1,6 +1,6 @@
-import axios from "axios";
-import jwt from "jsonwebtoken";
-import { parseCookies } from "nookies";
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get Budgets
@@ -13,13 +13,13 @@ export async function budgets() {
         headers: {
             Authorization: token && `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         params: {
             type: 'Budget',
             limit: 100,
-            q: `aprovedDate==""`,
+            q: 'aprovedDate==""',
 
         }
 
@@ -38,7 +38,7 @@ export async function allBudgets() {
         headers: {
             Authorization: token && `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         params: {
@@ -61,7 +61,7 @@ export async function budget(data) {
         headers: {
             Authorization: token && `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         params: {
@@ -85,7 +85,7 @@ export async function myBudgets() {
         headers: {
             Authorization: token && `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         params: {
@@ -126,7 +126,7 @@ export async function updateBudget(data) {
         headers: {
             Authorization: token && `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         data,

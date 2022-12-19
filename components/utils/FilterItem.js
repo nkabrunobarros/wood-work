@@ -1,8 +1,8 @@
 /* eslint-disable no-fallthrough */
-import { Box, LinearProgress, Tooltip, Typography } from "@mui/material";
-import moment from "moment";
-import React from "react";
-import displayWithStyle from "./displayTextWithStyle";
+import { Box, LinearProgress, Tooltip, Typography } from '@mui/material';
+import moment from 'moment';
+import React from 'react';
+import displayWithStyle from './displayTextWithStyle';
 
 export function calcDesvio(desvio) {
   if (desvio < 0) return <Typography className="successBalloon">{desvio} horas</Typography>;
@@ -18,7 +18,6 @@ const FilterItem = (data, item, col) => {
       case 1: {
         switch (col2[0]) {
           case 'order_prod': {
-
             switch (item.order.status.toLowerCase()) {
               case 'em desenho': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
               case 'em orçamentação': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
@@ -28,7 +27,6 @@ const FilterItem = (data, item, col) => {
           }
 
           case 'order_prod_2': {
-
             switch (item.status.toLowerCase()) {
               case 'em desenho': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
               case 'em orçamentação': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
@@ -41,18 +39,18 @@ const FilterItem = (data, item, col) => {
           case 'endAt': return moment(item[col2[0]]).locale('pt').format('DD MMMM YYYY');
           case 'order_dispatch':
             if (item.order.status.toLowerCase() === 'concluida') return <Typography variant='md' className="successBalloon">Entregue</Typography>;
-            else return <Typography variant='md' className="errorBalloon">Não</Typography>;
+
+            return <Typography variant='md' className="errorBalloon">Não</Typography>;
 
           case 'order_dispatch_2':
             if (item.status.toLowerCase() === 'concluida') return <Typography variant='md' className="successBalloon">Entregue</Typography>;
-            else return <Typography variant='md' className="errorBalloon">Não</Typography>;
 
+            return <Typography variant='md' className="errorBalloon">Não</Typography>;
 
-          case "desvio2": return calcDesvio(item[`${col}`]);
-          case "desvio": return calcDesvio(item[`${col}`]);
+          case 'desvio2': return calcDesvio(item[`${col}`]);
+          case 'desvio': return calcDesvio(item[`${col}`]);
 
-          case "ord_amount": {
-
+          case 'ord_amount': {
             return <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box>
                 <Typography variant="body2" color="text.secondary">0</Typography>
@@ -66,11 +64,9 @@ const FilterItem = (data, item, col) => {
                 <Typography variant="body2" color="text.secondary">{item.amount}</Typography>
               </Box>
             </Box>;
-
           }
 
-          case "ord_amount_proj": {
-
+          case 'ord_amount_proj': {
             return <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box>
                 <Typography variant="body2" color="text.secondary">0</Typography>
@@ -84,26 +80,25 @@ const FilterItem = (data, item, col) => {
                 <Typography variant="body2" color="text.secondary">{item.amount?.value || 0}</Typography>
               </Box>
             </Box>;
-
           }
 
-          case "stock": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
-          else return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
+          case 'stock': if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
 
+            return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
 
-          case "amount": if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
-          else return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
+          case 'amount': if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
 
+            return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
 
           default: if (['giveName', 'nome', 'name', 'custo'].find(ele => ele === col2[0])) return <Typography variant='md' color="link.main" className="link" >{item[col2[0]]}</Typography>;
-          else return <Typography variant='md'>{item[col2[0]]}</Typography>;
 
+            return <Typography variant='md'>{item[col2[0]]}</Typography>;
         }
       }
 
       case 2: {
         switch (col) {
-          case 'orderBy.object': return <Typography variant="md">{item[col2[0]][col2[1]].replace('urn:ngsi-ld:Owner:', '')}</Typography>;
+          case 'orderBy.object': return <Typography variant="md">{item?.orderBy?.object?.replace('urn:ngsi-ld:Owner:', '')}</Typography>;
           case 'belongsTo.object': return <Typography variant="md">{item[col2[0]][col2[1]].replace('urn:ngsi-ld:Owner:', '')}</Typography>;
 
           case 'status.value': {
@@ -115,18 +110,18 @@ const FilterItem = (data, item, col) => {
           }
 
           case 'estado.value': {
-            switch (item.estado.value.toLowerCase()) {
+            switch (item?.estado?.value?.toLowerCase()) {
               case 'espera confirmação': return <Typography variant='md' className="blankBalloon">Espera Confirmação</Typography>;
               case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
               case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
               case 'em transporte': return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em transporte</Typography></Tooltip>;
               case 'entregue': return <Tooltip title={`${item.status}`}><Typography variant='md' className="successBalloon">Entregue</Typography></Tooltip>;
-              // default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+              case 'in drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
             }
           }
 
           case 'statusClient.value': {
-            switch (item.statusClient.value.toLowerCase()) {
+            switch (item?.statusClient?.value.toLowerCase()) {
               case 'espera confirmação': return <Typography variant='md' className="blankBalloon">Espera Confirmação</Typography>;
               case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
               case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
@@ -143,7 +138,6 @@ const FilterItem = (data, item, col) => {
       }
 
       case 3: {
-
         switch (col2[2]) {
           case 'name': return <Typography>{item[col2[0]][col2[1]][col2[2]]}{' '} [{item.product.category.code}]</Typography>;
 
@@ -151,14 +145,14 @@ const FilterItem = (data, item, col) => {
             return item[col2[0]] && item[col2[0]][col2[1]][col2[2]] ? <Typography variant='md'>{item[col2[0]][col2[1]][col2[2]]}</Typography> : <Typography variant='md'>Nan</Typography>;
           }
         }
-
       }
 
       case 4: {
         if (col === 'expedition.object.deliveryFlag.value') {
           if (item.expedition.object?.deliveryFlag.value === 0 && item.expedition?.object.expeditionTime?.value) return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em curso</Typography></Tooltip>;
           else if (item.expedition.object?.deliveryFlag.value === 1) return <Typography variant='md' className="successBalloon">Entrege</Typography>;
-          else return <Typography variant='md' className="errorBalloon">Não</Typography>;
+
+          return <Typography variant='md' className="errorBalloon">Não</Typography>;
         }
 
         return <Typography variant='md'>{item[col2[0]][col2[1]][col2[2]][col2[3]]}</Typography>;
@@ -166,11 +160,9 @@ const FilterItem = (data, item, col) => {
 
       default: return <Typography variant='md'>{displayWithStyle(item[col], col)}</Typography>;
     }
-  }
-  else if (col === undefined) {
+  } else if (col === undefined) {
     return <Typography variant='md'>{displayWithStyle(item, col)}</Typography>;
   }
-
 };
 
 export { FilterItem };

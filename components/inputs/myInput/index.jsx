@@ -25,19 +25,17 @@ const MyInput = ({
   id,
   tooltip,
 }) => {
-
-
-  return (<Box sx={{ width: '100%'}}>
+  return (<Box sx={{ width: '100%' }}>
     {variant !== 'standard' && (
-       <Tooltip title={tooltip || ''} >
+      <Tooltip title={tooltip || ''} >
 
-      <InputLabel htmlFor={label} >
-        {label}
-        {required &&
+        <InputLabel htmlFor={label} >
+          {label}
+          {required &&
           <Tooltip title='Obrigatório' >
             <span style={{ color: 'var(--red)' }}> *</span>
           </Tooltip>}
-      </InputLabel>
+        </InputLabel>
       </Tooltip>
 
     )}
@@ -54,14 +52,17 @@ const MyInput = ({
         required
         label={error}
         fullWidth={fullWidth}
+        InputProps={{ inputProps: { min: 0, max: 10 } }}
+
         sx={{
-           width: width || halfWidth && '50%',
+          // eslint-disable-next-line no-mixed-operators
+          width: width || halfWidth && '50%',
         }}
         rows={4}
         style={style}
         placeholder={placeholder || ''}
         endAdornment={!!adornmentIcon &&
-          <InputAdornment position={adornmentPos || "end"}>
+          <InputAdornment position={adornmentPos || 'end'}>
             <Tooltip title={iconTooltip || ''}>
               <IconButton component='label'
                 aria-label="toggle password visibility"
@@ -75,7 +76,6 @@ const MyInput = ({
       />
     </FormControl>
   </Box>);
-
 };
 
 export default MyInput;

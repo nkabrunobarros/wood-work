@@ -15,7 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import MyInput from "../../inputs/myInput";
+import MyInput from '../../inputs/myInput';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -74,9 +74,8 @@ const ProjectsScreen = ({ ...props }) => {
   };
 
   //  Triggers when a filter input changes
-  
+
   useEffect(() => {
-    
     setFilters({
       Nome: number,
       Cliente: client,
@@ -84,12 +83,11 @@ const ProjectsScreen = ({ ...props }) => {
       Estado: producao,
       telemovel: telephone
     });
-
   }, [number, producao, client, category, product, telephone]);
-  
-  function TabPanel(props) {
+
+  function TabPanel (props) {
     const { children, value, index, ...other } = props;
-  
+
     return (
       <Box
         role="tabpanel"
@@ -106,14 +104,14 @@ const ProjectsScreen = ({ ...props }) => {
       </Box>
     );
   }
-  
+
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
   };
 
-  function a11yProps(index) {
+  function a11yProps (index) {
     return {
       id: `tab-${index}`,
       'aria-controls': `tabpanel-${index}`,
@@ -144,7 +142,7 @@ const ProjectsScreen = ({ ...props }) => {
         <Grid id='pad' md={12} container>
           <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
-            <InputLabel htmlFor='email'>Nome {isInternalPage ? 'projeto' : 'Encomenda'} </InputLabel>
+            <InputLabel htmlFor='email'>Nome {/* isInternalPage ? 'projeto' : 'Encomenda' */} </InputLabel>
             <OutlinedInput
               fullWidth
               id='name'
@@ -163,7 +161,7 @@ const ProjectsScreen = ({ ...props }) => {
               options={clients}
               getOptionLabel={(option) => option.legalName?.value}
               getOptionValue={(option) => option.id}
-              onChange={(e, value) =>{
+              onChange={(e, value) => {
                 // eslint-disable-next-line react/prop-types
                 setClient(value?.id || '');
               }}
@@ -185,8 +183,7 @@ const ProjectsScreen = ({ ...props }) => {
                   }}
                 />
               )}
-              
-              
+
             />
           </Grid>}
           <Grid container item md={3} sm={6} xs={12} p={1}>
@@ -197,23 +194,31 @@ const ProjectsScreen = ({ ...props }) => {
               onChange={(e) => setProducao(e.target.value)}
               options={[
                 {
-                  id: 'Espera Confirmação',
-                  label: 'Espera Confirmação'
+                  id: 'waiting budget',
+                  label: 'Espera Orçamento'
                 },
                 {
-                  id: 'waiting',
-                  label: 'Não Iniciada'
+                  id: 'waiting adjudication',
+                  label: 'Espera Adjudicação'
                 },
                 {
-                  id: 'Iniciada',
-                  label: 'Iniciada'
+                  subheader: true,
+                  label: 'Produção'
                 },
                 {
-                  id: 'finished',
-                  label: 'Terminada'
+                  id: 'in drawing',
+                  label: 'Em Desenho'
                 },
                 {
-                  subheader:  true,
+                  id: 'in production',
+                  label: 'Em Produção'
+                },
+                {
+                  id: 'in testing',
+                  label: 'Em Montagem'
+                },
+                {
+                  subheader: true,
                   label: 'Distribuição'
                 },
                 {
@@ -221,14 +226,15 @@ const ProjectsScreen = ({ ...props }) => {
                   label: 'Em Transporte'
                 },
                 {
-                  id: 'delivered',
-                  label: 'Entregue'
+                  id: 'finished',
+                  label: 'Terminada'
                 },
+
               ]}
             />
           </Grid>
           {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
-              <MyInput label='Número telefone' value={telephone} onChange={(e) => setTelephone(e.target.value)} />
+            <MyInput label='Número telefone' value={telephone} onChange={(e) => setTelephone(e.target.value)} />
           </Grid>}
           <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
             <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
@@ -267,9 +273,9 @@ const ProjectsScreen = ({ ...props }) => {
           />
         </TabPanel>
         {/* Tab Budgets */}
-         {internalPOV && <TabPanel value={currentTab} index={1}>
+        {internalPOV && <TabPanel value={currentTab} index={1}>
           <AdvancedTable
-            rows={budgets.filter( ele => ele.aprovedDate?.value === '')}
+            rows={budgets.filter(ele => ele.aprovedDate?.value === '')}
             headCells={headCellsBudget}
             filters={filters}
             clickRoute={detailPageBudgetTab}

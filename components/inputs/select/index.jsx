@@ -21,20 +21,21 @@ const MySelect = ({
   id,
   tooltip,
 }) => {
-
   return (
-    <Box sx={{ width: '100%'}}>
-      {variant !== 'standard' && label ? (
-        <Tooltip title={tooltip || ''} >
-          <InputLabel htmlFor={label}>
-            {label}
-            {required &&
+    <Box sx={{ width: '100%' }}>
+      {variant !== 'standard' && label
+        ? (
+          <Tooltip title={tooltip || ''} >
+            <InputLabel htmlFor={label}>
+              {label}
+              {required &&
               <Tooltip title='Obrigatório' >
                 <span style={{ color: 'var(--red)' }}> *</span>
               </Tooltip>}
-          </InputLabel>
-        </Tooltip>
-      ) : null}
+            </InputLabel>
+          </Tooltip>
+        )
+        : null}
       <FormControl fullWidth>
         {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}
         <Select
@@ -56,20 +57,20 @@ const MySelect = ({
           </MenuItem>
           {options && options
             .map((opt, i) => (
-                <MenuItem disabled={opt.subheader} key={i} value={opt[optionValue]?.value ?  opt[optionValue].value : opt[optionValue] || opt.id}>
+              <MenuItem disabled={opt.subheader} key={i} value={opt[optionValue]?.value ? opt[optionValue].value : opt[optionValue] || opt.id}>
                 <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
                   {!!opt.codigo &&
                     <img
-                    loading='lazy'
+                      loading='lazy'
                       width='20'
                       src={`https://flagcdn.com/w20/${opt.codigo.toLowerCase()}.png`}
                       srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
                       alt=''
                     />}
-                  {opt[optionLabel]?.value ? opt[optionLabel].value : opt[optionLabel]  || opt.label || 'Empty'}
+                  {opt[optionLabel]?.value ? opt[optionLabel].value : opt[optionLabel] || opt.label || 'Empty'}
                 </Box>
-              </MenuItem>  
-             
+              </MenuItem>
+
             ))}
         </Select>
       </FormControl>
