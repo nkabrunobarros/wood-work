@@ -42,6 +42,7 @@ const MyInput = ({
     <FormControl fullWidth disabled={disabled}>
       {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
       <OutlinedInput
+        variant={variant}
         name={name}
         type={type || 'string'}
         multiline={type === 'area'}

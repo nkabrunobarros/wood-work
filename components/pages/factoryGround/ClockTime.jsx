@@ -1,16 +1,16 @@
-import moment from "moment";
-import { useEffect, useState } from "react";
+import moment from 'moment';
+import { useEffect, useState } from 'react';
 
-export const ClockTime = ()  => {
-    const [clock, setClock] = useState();
+export const ClockTime = () => {
+  const [clock, setClock] = useState();
 
-    useEffect(() => {
-        setInterval(() => {
-            const date = new Date();
+  useEffect(() => {
+    setInterval(() => {
+      const date = new Date();
 
-            setClock(date);
-        }, 1000);
-    }, []);
+      setClock(date);
+    }, 1000);
+  }, []);
 
-    return moment(clock).format('HH:mm:ss');
+  return moment(clock).format('HH:mm:ss');
 };

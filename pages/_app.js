@@ -29,7 +29,6 @@ import { destroyCookie, parseCookies } from 'nookies';
 import IsInternal from '../components/utils/IsInternal';
 import MuiTheme from './MuiTheme';
 
-
 const App = ({ Component, pageProps }) => {
   const [selectedTheme, setSelectedTheme] = useState('light');
   const [fontSize, setFontSize] = useState('md');
@@ -52,7 +51,6 @@ const App = ({ Component, pageProps }) => {
 
     return value;
   };
-
 
   useEffect(() => {
     const load = () => {
@@ -80,9 +78,7 @@ const App = ({ Component, pageProps }) => {
               else router.push(routes.private.terms);
             }
           }
-
-        }
-        else {
+        } else {
           destroyCookie('auth-token');
           router.push(routes.public.signIn);
         }
@@ -96,10 +92,10 @@ const App = ({ Component, pageProps }) => {
     load();
   }, []);
 
-
   return (
     <ThemeProvider theme={theme}>
       <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
         <title>Wood Work 4.0</title>
         <link rel='icon' href='/logo_bw_ww40_inv.png' />
       </Head>

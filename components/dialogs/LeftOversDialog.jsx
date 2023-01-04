@@ -7,38 +7,29 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
-  Grid, Typography
+  Grid, TextField, Typography
 } from '@mui/material';
 import * as icons from 'lucide-react';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import MyInput from '../inputs/myInput';
 
-const LeftOversDialog = ({ open, handleClose, onConfirm }) => {
+const LeftOversDialog = ({ open, handleClose, onConfirm, sizes, setSizes }) => {
   const [manually, setManualy] = useState(false);
 
-  const [sizes, setSizes] = useState(
-    { 
-      height:0,
-      width: 0,
-      lenght:0,
-     }
-  );
- 
-
-   function onSizesChange (e) {
+  function onSizesChange (e) {
     e.preventDefault();
 
-    const data = {...sizes};
+    const data = { ...sizes };
 
     data[e.target.name] = e.target.value;
     setSizes(data);
-   }
+  }
 
   return (
     <Dialog
       open={open}
       onClose={handleClose}
+      fullWidth
     >
       <DialogTitle color="link.main" id='alert-dialog-title' >
       Confirme os dados
@@ -49,17 +40,22 @@ const LeftOversDialog = ({ open, handleClose, onConfirm }) => {
           <icons.Check size={80} strokeWidth={1} color='green' />
         </Box>
         <DialogContentText id='alert-dialog-description'>
-          {!manually ? ' Estes dados estão corretos?' : 'Preencha os dados em cm' }
+          {!manually ? ' Estes tamanhos estão corretos?' : 'Preencha os dados em cm' }
         </DialogContentText>
-        <Box mb={1}>
-            {!manually ? <Typography variant='md'>Comprimento:  X, Largura:  X, Altura:  X</Typography>:
-            <Grid container>
-              <Grid container md={4} p={.5}><MyInput onChange={(e) => onSizesChange(e)} type='number' value={sizes.lenght} name="lenght" label="Comprimento" /></Grid>
-              <Grid container md={4} p={.5}><MyInput onChange={(e) => onSizesChange(e)} type='number' value={sizes.width}  name="width"  label="Largura"    /></Grid>
-              <Grid container md={4} p={.5}><MyInput onChange={(e) => onSizesChange(e)} type='number' value={sizes.height} name="height" label="Altura"    /></Grid>
-              <Grid container md={12} p={.5}><Typography variant='md'>Área total:  {sizes.height * sizes.width * sizes.lenght} cm</Typography></Grid>
+        <Box mt={1}>
+          <Grid container md={12}>
+            {/* Header */}
+            <Grid container md={12} sm={12} xs={12}>
+              <Grid container md={4} sm={4} xs={4} sx={{ padding: 1, border: '1px solid', borderColor: 'divider' }}><Box sx={{ textAlign: 'center', width: '100%' }}><Typography variant='subtitle'> Comprimento</Typography></Box></Grid>
+              <Grid container md={4} sm={4} xs={4} sx={{ padding: 1, border: '1px solid', borderColor: 'divider' }}><Box sx={{ textAlign: 'center', width: '100%' }}><Typography variant='subtitle'> Largura</Typography></Box></Grid>
+              <Grid container md={4} sm={4} xs={4} sx={{ padding: 1, border: '1px solid', borderColor: 'divider' }}><Box sx={{ textAlign: 'center', width: '100%' }}><Typography variant='subtitle'> Espessura</Typography></Box></Grid>
             </Grid>
-            }
+            <Grid container md={12} sm={12} xs={12}>
+              <Grid container md={4} sm={4} xs={4} sx={{ padding: 1, border: '1px solid', borderColor: 'divider' }}><Box sx={{ textAlign: 'center', width: '100%' }}><Typography variant='subtitle'> <TextField variant={'standard'} disabled={!manually} onChange={(e) => onSizesChange(e)} type='number' value={sizes.comp} name="comp" /></Typography></Box></Grid>
+              <Grid container md={4} sm={4} xs={4} sx={{ padding: 1, border: '1px solid', borderColor: 'divider' }}><Box sx={{ textAlign: 'center', width: '100%' }}><Typography variant='subtitle'> <TextField variant={'standard'} disabled={!manually} onChange={(e) => onSizesChange(e)} type='number' value={sizes.larg} name="larg" /></Typography></Box></Grid>
+              <Grid container md={4} sm={4} xs={4} sx={{ padding: 1, border: '1px solid', borderColor: 'divider' }}><Box sx={{ textAlign: 'center', width: '100%' }}><Typography variant='subtitle'> <TextField variant={'standard'} disabled={!manually} onChange={(e) => onSizesChange(e)} type='number' value={sizes.esp} name="esp" /></Typography></Box></Grid>
+            </Grid>
+          </Grid>
         </Box>
 
       </DialogContent>
@@ -67,16 +63,10 @@ const LeftOversDialog = ({ open, handleClose, onConfirm }) => {
         <Button onClick={() => {
           onConfirm(sizes);
           setManualy(false);
-
-          setSizes({ 
-            height:0,
-            width: 0,
-            lenght:0,
-           });
         }} autoFocus>
           <Typography color="link.main">Concordo</Typography>
         </Button>
-        <Button onClick={() => setManualy(true)} autoFocus sx={{display: manually && 'none'}}>
+        <Button onClick={() => setManualy(true)} autoFocus sx={{ display: manually && 'none' }}>
           <Typography color="link.main">Colocar Manualmente</Typography>
         </Button>
         <Button onClick={handleClose} sx={{ color: 'var(--gray)' }}>Cancelar</Button>
@@ -89,6 +79,9 @@ LeftOversDialog.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
   onConfirm: PropTypes.func,
+  sizes: PropTypes.object,
+  setSizes: PropTypes.func,
+  props: PropTypes.any,
 };
 
 export default LeftOversDialog;

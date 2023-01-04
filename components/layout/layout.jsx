@@ -39,7 +39,7 @@ const noLayoutScreens = [
   `${routes.private.error}`,
 ];
 
-async function Test(pageProps) {
+async function Test (pageProps) {
   const { auth_token: token } = parseCookies();
 
   // Case token is valid
@@ -52,28 +52,24 @@ async function Test(pageProps) {
         // case it gets here, has token and user on pageProps
         return true;
       }
-      else {
-        const u = JSON.parse(localStorage.getItem('user'));
 
-        pageProps.loggedUser = u;
+      const u = JSON.parse(localStorage.getItem('user'));
 
-        const resUser = await authActions.me({ token });
+      pageProps.loggedUser = u;
 
-        localStorage.setItem("user", JSON.stringify(resUser.data[0]));
-        pageProps.loggedUser = resUser.data[0];
+      const resUser = await authActions.me({ token });
 
-        return true;
-      }
-    } else {
-      //  case token is invalidpath
+      localStorage.setItem('user', JSON.stringify(resUser.data[0]));
+      pageProps.loggedUser = resUser.data[0];
+
+      return true;
     }
-
+    //  case token is invalidpath
   } else {
     // Case no token at all on cookie && its not a public page
     if (!Object.values(routes.public).includes(Router.route.replace('[Id]', ''))) authActions.logout();
   }
 }
-
 
 const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -83,7 +79,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   let footerPos = '';
 
-  if (typeof window !== "undefined") pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
+  if (typeof window !== 'undefined') pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
 
   const listenToScroll = () => {
     const heightToHideFrom = 500;
@@ -103,10 +99,9 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-
   useEffect(() => {
-    async function load() {
-      // check cookie 
+    async function load () {
+      // check cookie
       const isLoaded = await Test(pageProps);
 
       pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -116,25 +111,23 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     Promise.all([load()]).then(() => setLoaded(true));
   }, []);
 
-  function handleDrawerToggle() {
+  function handleDrawerToggle () {
     setMobileOpen(!mobileOpen);
   }
 
-  
   // let imAllowed;
   if (loaded) {
     // imAllowed = !!pageProps.loggedUser?.perfil.permissoes.find(ele => ele.sujeito === navLinks.find(ele => ele.url === path.route)?.allowed);
 
     if (noLayoutScreens.includes(path.route)) return children;
 
-    if (typeof window !== 'undefined' && document.getElementById("appMainContainer") !== undefined)
-    {
-      const element = document.getElementById("appMainContainer");
-  
+    if (typeof window !== 'undefined' && document.getElementById('appMainContainer') !== undefined) {
+      const element = document.getElementById('appMainContainer');
+
       if (window.innerHeight < element?.scrollHeight) footerPos = 'fixed';
     }
-  
-    return  (
+
+    return (
       <React.Fragment>
         <CssBaseline />
         <Navbar openDrawer={handleDrawerToggle} toggleTheme={toggleTheme} {...pageProps} />
@@ -148,23 +141,23 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
           />
         </Hidden>
         <Box id="appMainContainer" >
-          {IsInternal(pageProps.loggedUser?.profile.object.description) === isInternalPage 
-          // && imAllowed 
-          ? <>
-            {children}
-            {isVisible && (
-              <Box className={styles.floatingBtnContainer} style={{ position: 'fixed', bottom: '10%', right: '5%' }}>
-                <Fab
-                  aria-label="like"
-                  size={'medium'}
-                  color={'primary'}
-                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-                >
-                  <ChevronUp color="white" />
-                </Fab>
-              </Box>
-            )}
-          </>
+          {IsInternal(pageProps.loggedUser?.profile.object.description) === isInternalPage
+          // && imAllowed
+            ? <>
+              {children}
+              {isVisible && (
+                <Box className={styles.floatingBtnContainer} style={{ position: 'fixed', bottom: '10%', right: '5%' }}>
+                  <Fab
+                    aria-label="like"
+                    size={'medium'}
+                    color={'primary'}
+                    onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+                  >
+                    <ChevronUp color="white" />
+                  </Fab>
+                </Box>
+              )}
+            </>
             : <>
               <Box className={styles.main} target="_blank" rel="noreferrer">
                 <header className={styles.topheader}></header>
@@ -195,13 +188,15 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
                   </Box>
                 </section>
               </Box></>}
-  
+
         </Box>
         <Box style={{ width: '100%' }}>
-           <Footer {...pageProps} footerPos={footerPos}/>
+          <Footer {...pageProps} footerPos={footerPos}/>
         </Box>
       </React.Fragment>);
-  } else return  <Loader center={true} />;
+  }
+
+  return <Loader center={true} />;
 };
 
 Layout.propTypes = {

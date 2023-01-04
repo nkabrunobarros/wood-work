@@ -4,40 +4,43 @@ import LeftOversScreen from '../../components/pages/leftovers/leftovers';
 
 const LeftOvers = () => {
     const loaded = true;
-    // const [loaded, setLoaded] = useState(true);
-    // useEffect(() => {
-    //     async function test() {
 
+    const parts = [
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 10', comp: 400, larg: 338.5, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 10', comp: 400, larg: 338.5, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 326.5, larg: 184.5, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 326.5, larg: 184.5, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 406, larg: 207, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 406, larg: 207, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 326.5, larg: 184.5, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 326.5, larg: 184.5, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 406, larg: 207, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Biscuit Nude 36W 16', comp: 406, larg: 207, esp: 16 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'AG L Marmol Hades 19 CNC', comp: 2400, larg: 926, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'HDF 19 ', comp: 540, larg: 70, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'HDF 19 ', comp: 940, larg: 70, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'HDF 19 ', comp: 540, larg: 70, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19', comp: 2394, larg: 560, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 2400, larg: 566, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 1716, larg: 466, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 268, larg: 444, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 268, larg: 444, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 1678, larg: 444, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 400, larg: 283, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 400, larg: 283, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 444, larg: 287, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 444, larg: 287, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 924, larg: 283, esp: 19 },
+        { image: 'https://images.unsplash.com/photo-1591195853095-f1681b00e29c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d29vZCUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&w=1000&q=80', material: 'MDF Folheado Carv 19 CNC', comp: 907, larg: 76, esp: 19 },
+    ];
 
-    //         const axios = require('axios');
+    const props = {
+        parts
+    };
 
-    //         const config = {
-    //             method: 'get',
-    //             url: 'http://193.136.195.33:1026/ngsi-ld/v1/entities?type=Part&q=belongsTo=="urn:ngsi-ld:Project:MC_MUEBLETV_A"&options=sysAttrs&options=keyValues&q=sort=="Painel"',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
-    //                 'Fiware-Service': 'woodwork40'
-    //             }
-    //         };
+    if (loaded) return <LeftOversScreen {...props} />;
 
-    //         axios(config)
-    //             .then(function (response) {
-    //                 console.log(JSON.stringify(response.data));
-    //             })
-    //             .catch(function (error) {
-    //                 console.log(error);
-    //             });
-
-
-
-    //     }
-
-    //     test();
-    // }, []);
-
-    if (loaded) return <LeftOversScreen />;
-    else return <Loader center={true} />;
+    return <Loader center={true} />;
 };
 
 export default LeftOvers;

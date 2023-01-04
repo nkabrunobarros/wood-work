@@ -17,7 +17,6 @@ const SignIn = () => {
     }, []);
 
     if (loaded) {
-
         const headCellsUpper = [
             {
                 id: 'amountProduced',
@@ -146,9 +145,10 @@ const SignIn = () => {
             projects
         };
 
-
         return <FactoryGroundScreen {...props} />;
-    } else return <Loader center={true} />;
+    }
+
+    return <Loader center={true} />;
 };
 
 export default SignIn;

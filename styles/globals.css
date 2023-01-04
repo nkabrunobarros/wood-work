@@ -461,7 +461,7 @@ a {
 }
 
 .breathingBackgroundWarning {
-  animation: 1s infinite alternate ease-out breathing-color--dark;
+  animation: 2s infinite alternate ease-out breathing-color--dark;
   cursor: pointer;
 }
 
@@ -469,6 +469,7 @@ a {
   from {}
 
   to {
-    background-color: #e6b000;
+    background-color: #8ccdff;
+    /* background-color: #e6b000; */
   }
 }

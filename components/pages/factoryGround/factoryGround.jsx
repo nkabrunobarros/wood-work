@@ -4,24 +4,17 @@ import { AppBar, Box, Card, CardActions, CardContent, Dialog, Grid, IconButton, 
 import { Check, CheckCircle, Edit2, Play, X } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import ProjectCard from '../../cards/ProjectCard';
 import Content from '../../content/content';
 import MomentJsConfig from '../../utils/MomentJsConfig';
+import { ClockTime } from './ClockTime';
 
-export const ClockTime = () => {
-  const [clock, setClock] = useState();
-
-  useEffect(() => {
-    setInterval(() => {
-      setClock(new Date());
-    }, 1000);
-  }, []);
-
-  return moment(clock).format('HH:mm:ss');
-};
+export const Transition = React.forwardRef(function Transition (props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const StartBtn = (props) => {
   return (
@@ -181,10 +174,6 @@ export const ProjectDetails = (props) => {
     //  Trocar o field desta row para done
     //  Caso seja a ultima operação, InProduction: done
   }
-
-  const Transition = React.forwardRef(function Transition (props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
   return <Dialog
     fullScreen
