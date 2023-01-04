@@ -30,7 +30,7 @@ import { XCircle } from 'lucide-react';
 //  Utils
 import EmailValidation from '../../utils/EmailValidation';
 
-import { setCookie } from 'nookies';
+import { destroyCookie, setCookie } from 'nookies';
 //  PropTypes
 import Image from 'next/image';
 import PropTypes from 'prop-types';
@@ -106,126 +106,133 @@ const SignIn = (props) => {
         await me({ ...res?.data }).then((resultMe) => {
           const user = resultMe?.data[0];
 
-          user.profile = {};
-          user.profile.type = 'Profile';
+          if (user.active?.value?.toLowerCase() === 'false') {
+            ToastSet(loadingNotification, 'Conta Inativa', 'error');
+            setDialogOpen(true);
+            setLoading(false);
+            destroyCookie(null, 'auth_token');
+          } else {
+            user.profile = {};
+            user.profile.type = 'Profile';
 
-          user.profile.object = {
-            description: Router.route === '/' ? 'client' : 'Admin',
-            type: Router.route === '/' ? 'client' : 'internal',
-            permissions: [
-              { idPerfil: '123456789', subject: 'workers', action: 'READ' },
-              { idPerfil: '123456789', subject: 'workers', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'workers', action: 'DELETE' },
+            user.profile.object = {
+              description: Router.route === '/' ? 'client' : 'Admin',
+              type: Router.route === '/' ? 'client' : 'internal',
+              permissions: [
+                { idPerfil: '123456789', subject: 'workers', action: 'READ' },
+                { idPerfil: '123456789', subject: 'workers', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'workers', action: 'DELETE' },
 
-              //  DashboardsScreen
-              { idPerfil: '123456789', subject: 'dashboards', action: 'READ' },
+                //  DashboardsScreen
+                { idPerfil: '123456789', subject: 'dashboards', action: 'READ' },
 
-              //  FactoryScreen
-              { idPerfil: '123456789', subject: 'factoryLevel', action: 'READ' },
+                //  FactoryScreen
+                { idPerfil: '123456789', subject: 'factoryLevel', action: 'READ' },
 
-              //  leftoversScreen
-              { idPerfil: '123456789', subject: 'leftovers', action: 'READ' },
+                //  leftoversScreen
+                { idPerfil: '123456789', subject: 'leftovers', action: 'READ' },
 
-              //  Ficheiros
-              { idPerfil: '123456789', subject: 'ficheiros', action: 'READ' },
-              { idPerfil: '123456789', subject: 'ficheiros', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'ficheiros', action: 'DELETE' },
+                //  Ficheiros
+                { idPerfil: '123456789', subject: 'ficheiros', action: 'READ' },
+                { idPerfil: '123456789', subject: 'ficheiros', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'ficheiros', action: 'DELETE' },
 
-              //  perfis
-              { idPerfil: '123456789', subject: 'perfis', action: 'READ' },
-              { idPerfil: '123456789', subject: 'perfis', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'perfis', action: 'DELETE' },
+                //  perfis
+                { idPerfil: '123456789', subject: 'perfis', action: 'READ' },
+                { idPerfil: '123456789', subject: 'perfis', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'perfis', action: 'DELETE' },
 
-              //  Ficheiros
-              { idPerfil: '123456789', subject: 'messages', action: 'READ' },
-              { idPerfil: '123456789', subject: 'messages', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'messages', action: 'DELETE' },
+                //  Ficheiros
+                { idPerfil: '123456789', subject: 'messages', action: 'READ' },
+                { idPerfil: '123456789', subject: 'messages', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'messages', action: 'DELETE' },
 
-              //  profiles
-              { idPerfil: '123456789', subject: 'profiles', action: 'READ' },
-              { idPerfil: '123456789', subject: 'profiles', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'profiles', action: 'DELETE' },
+                //  profiles
+                { idPerfil: '123456789', subject: 'profiles', action: 'READ' },
+                { idPerfil: '123456789', subject: 'profiles', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'profiles', action: 'DELETE' },
 
-              //  Unidades
-              { idPerfil: '123456789', subject: 'unidades', action: 'READ' },
-              { idPerfil: '123456789', subject: 'unidades', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'unidades', action: 'DELETE' },
+                //  Unidades
+                { idPerfil: '123456789', subject: 'unidades', action: 'READ' },
+                { idPerfil: '123456789', subject: 'unidades', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'unidades', action: 'DELETE' },
 
-              //  ConversaoUnidades
-              { idPerfil: '123456789', subject: 'conversaounidades', action: 'READ' },
-              { idPerfil: '123456789', subject: 'conversaounidades', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'conversaounidades', action: 'DELETE' },
+                //  ConversaoUnidades
+                { idPerfil: '123456789', subject: 'conversaounidades', action: 'READ' },
+                { idPerfil: '123456789', subject: 'conversaounidades', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'conversaounidades', action: 'DELETE' },
 
-              //  Moedas
-              { idPerfil: '123456789', subject: 'moedas', action: 'READ' },
-              { idPerfil: '123456789', subject: 'moedas', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'moedas', action: 'DELETE' },
+                //  Moedas
+                { idPerfil: '123456789', subject: 'moedas', action: 'READ' },
+                { idPerfil: '123456789', subject: 'moedas', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'moedas', action: 'DELETE' },
 
-              //  projects
-              { idPerfil: '123456789', subject: 'projects', action: 'READ' },
-              { idPerfil: '123456789', subject: 'projects', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'projects', action: 'DELETE' },
+                //  projects
+                { idPerfil: '123456789', subject: 'projects', action: 'READ' },
+                { idPerfil: '123456789', subject: 'projects', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'projects', action: 'DELETE' },
 
-              //  Clients
-              { idPerfil: '123456789', subject: 'clients', action: 'READ' },
-              { idPerfil: '123456789', subject: 'clients', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'clients', action: 'DELETE' },
+                //  Clients
+                { idPerfil: '123456789', subject: 'clients', action: 'READ' },
+                { idPerfil: '123456789', subject: 'clients', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'clients', action: 'DELETE' },
 
-              //  Stocks
-              { idPerfil: '123456789', subject: 'stocks', action: 'READ' },
-              { idPerfil: '123456789', subject: 'stocks', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'stocks', action: 'DELETE' },
+                //  Stocks
+                { idPerfil: '123456789', subject: 'stocks', action: 'READ' },
+                { idPerfil: '123456789', subject: 'stocks', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'stocks', action: 'DELETE' },
 
-              //  Products
-              { idPerfil: '123456789', subject: 'products', action: 'READ' },
-              { idPerfil: '123456789', subject: 'products', action: 'WRITE' },
-              { idPerfil: '123456789', subject: 'products', action: 'DELETE' },
+                //  Products
+                { idPerfil: '123456789', subject: 'products', action: 'READ' },
+                { idPerfil: '123456789', subject: 'products', action: 'WRITE' },
+                { idPerfil: '123456789', subject: 'products', action: 'DELETE' },
 
-              //  Client
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
+                //  Client
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
 
-              //  profiles
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'profiles', action: 'READ' },
+                //  profiles
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'profiles', action: 'READ' },
 
-              //  Unidades
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'unidades', action: 'READ' },
+                //  Unidades
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'unidades', action: 'READ' },
 
-              //  ConversaoUnidades
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'conversaounidades', action: 'READ' },
+                //  ConversaoUnidades
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'conversaounidades', action: 'READ' },
 
-              //  Moedas
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'moedas', action: 'READ' },
+                //  Moedas
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'moedas', action: 'READ' },
 
-              //  projects
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'projects', action: 'READ' },
+                //  projects
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'projects', action: 'READ' },
 
-              //  Clients
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
+                //  Clients
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
 
-              //  Stocks
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'stocks', action: 'READ' },
+                //  Stocks
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'stocks', action: 'READ' },
 
-              //  Products
-              { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'products', action: 'READ' },
-            ]
+                //  Products
+                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'products', action: 'READ' },
+              ]
 
-          };
+            };
 
-          if (user.type === 'Owner' && user.tos === undefined) user.tos = { type: 'Property', value: 'False' };
+            if (user.type === 'Owner' && user.tos === undefined) user.tos = { type: 'Property', value: 'False' };
 
-          localStorage.setItem('user', JSON.stringify(user));
-          // Success
-          ToastSet(loadingNotification, 'A entrar', 'success');
-          setLoading(false);
+            localStorage.setItem('user', JSON.stringify(user));
+            // Success
+            ToastSet(loadingNotification, 'A entrar', 'success');
+            setLoading(false);
 
-          if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
-          else router.push(loginSuccessRoute);
+            if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
+            else router.push(loginSuccessRoute);
 
-          //   if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
-          //   else {
-          //    if (client && user.tos !== 'True') router.push(loginSuccessRouteTerm);
-          //    else router.push(loginSuccessRoute);
-          //  }
+            //   if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
+            //   else {
+            //    if (client && user.tos !== 'True') router.push(loginSuccessRouteTerm);
+            //    else router.push(loginSuccessRoute);
+            //  }
+          }
         });
       });
     } catch (err) {

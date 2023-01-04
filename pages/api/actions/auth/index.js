@@ -1,14 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import moment from "moment";
-import Router from "next/router";
-import { destroyCookie, parseCookies } from "nookies";
-import routes from "../../../../navigation/routes";
+import moment from 'moment';
+import Router from 'next/router';
+import { destroyCookie, parseCookies } from 'nookies';
+import routes from '../../../../navigation/routes';
 
-import { methods } from "../methods";
+import { methods } from '../methods';
 
 export async function login(data) {
-
     // return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
     //     {
     //         query: querys.LOGIN,
@@ -22,12 +21,11 @@ export async function login(data) {
     // );
     const config = {
         method: 'get',
-        url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET
-        // + `?type=Worker&q=email==%22${data.email}%22&q=password==%22${data.password}%22`
-        ,
+        url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET, // + `?type=Worker&q=email==%22${data.email}%22&q=password==%22${data.password}%22`
+
         headers: {
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         params: {
@@ -39,7 +37,6 @@ export async function login(data) {
 
     const res = await axios(config);
     const user = res.data.find(ele => ele.email?.value === data.email && ele.password?.value === data.password);
-
 
     const toEncode = {
         id: user.id,
@@ -54,12 +51,11 @@ export async function login(data) {
 export async function loginClient(data) {
     const config = {
         method: 'get',
-        url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET
-        //  + `?type=Owner&q=email=="${data.email}"&q=password=="${data.password}"`
-        ,
+        url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET, //  + `?type=Owner&q=email=="${data.email}"&q=password=="${data.password}"`
+
         headers: {
             'Content-Type': 'application/json',
-            'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
             'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
         },
         params: {
@@ -79,13 +75,11 @@ export async function loginClient(data) {
         const token = jwt.sign(toEncode, 'secret');
 
         if (user) return { data: { token, type: 'Owner' } };
-        else return { data: {}, success: false, message: 'User not found' };
-
-    }).catch(() => {
 
         return { data: {}, success: false, message: 'User not found' };
+    }).catch(() => {
+        return { data: {}, success: false, message: 'User not found' };
     });
-
 }
 
 export async function me(data) {
@@ -99,7 +93,7 @@ export async function me(data) {
             headers: {
                 Authorization: token && `Bearer ${token}`,
                 'Content-Type': 'application/json',
-                'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+                Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
                 'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
             },
             params: {
@@ -112,23 +106,23 @@ export async function me(data) {
 
         return res;
     }
-    else {
-        const config = {
-            method: 'get',
-            url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET + '?id=urn:ngsi-ld:Owner:geral',
-            headers: {
-                Authorization: token && `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
-                'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
-            },
-            params: {
-            }
-        };
 
-        return await axios(config);
-    }
+    const config = {
+        method: 'get',
+        url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET,
+        headers: {
+            Authorization: token && `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+            'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+        },
+        params: {
+            id: decoded.id
 
+        }
+    };
+
+    return await axios(config);
 }
 
 export async function logout() {
@@ -141,4 +135,3 @@ export async function logout() {
     if (userType === 'Owner' || userType === undefined) Router.push(routes.public.signIn);
     else Router.push(routes.public.signInInternal);
 }
-

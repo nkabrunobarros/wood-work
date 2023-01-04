@@ -265,7 +265,7 @@ const ProjectsScreen = ({ ...props }) => {
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
           <AdvancedTable
-            rows={projects}
+            rows={projects.filter(ele => ele.status.value.toLowerCase() !== 'canceled')}
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}
@@ -275,7 +275,7 @@ const ProjectsScreen = ({ ...props }) => {
         {/* Tab Budgets */}
         {internalPOV && <TabPanel value={currentTab} index={1}>
           <AdvancedTable
-            rows={budgets.filter(ele => ele.aprovedDate?.value === '')}
+            rows={budgets.filter(ele => ele.aprovedDate?.value === '' && ele.status.value.toLowerCase() !== 'canceled')}
             headCells={headCellsBudget}
             filters={filters}
             clickRoute={detailPageBudgetTab}

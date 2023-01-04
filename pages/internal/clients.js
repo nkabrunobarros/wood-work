@@ -76,6 +76,8 @@ const Clients = ({ ...pageProps }) => {
 
     const items = clients;
 
+    console.log(items);
+
     const props = {
       items,
       breadcrumbsPath,
@@ -87,10 +89,10 @@ const Clients = ({ ...pageProps }) => {
       pageProps
     };
 
-
     return <ClientsScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
 
+  return <Loader center={true} />;
 };
 
 Clients.propTypes = {

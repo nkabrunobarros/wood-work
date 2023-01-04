@@ -53,6 +53,7 @@ import routes from '../../navigation/routes';
 import { Datepicker } from '@tremor/react';
 import axios from 'axios';
 import moment from 'moment/moment';
+import { methods } from '../../pages/api/actions/methods';
 import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
@@ -243,7 +244,6 @@ const AdvancedTable = ({
 
   function onDeleteClick (row) {
     setDialogOpen(true);
-    console.log(row);
 
     if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
     else setDeleteItemId(row.id);
@@ -283,24 +283,6 @@ const AdvancedTable = ({
         break;
 
       case routes.private.internal.clients:
-        // const built = [
-        //   {
-        //     id: deleteItemId,
-        //     type: 'Owner',
-        //     active: {
-        //       type: 'Property',
-        //       value: 'False'
-        //     },
-        //     '@context': [
-        //       'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld', 'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-
-        //     ]
-        //   }
-        // ];
-
-        // await ClientsActions.updateClient({ data: built })
-        //   .then(() => toast.success('Cliente removido com sucesso!'));
-        console.log(deleteItemId);
 
         const data = JSON.stringify([
           {
@@ -319,10 +301,10 @@ const AdvancedTable = ({
 
         const config = {
           method: 'post',
-          url: 'http://woodwork4.ddns.net/api//ngsi-ld/v1//entityOperations/update?options=replace',
+          url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.UPDATE + '?options=replace',
           headers: {
             'Content-Type': 'application/ld+json',
-            'Fiware-Service': 'woodwork40'
+            'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
           },
           data
         };
@@ -330,6 +312,44 @@ const AdvancedTable = ({
         axios(config)
           .then(function (response) {
             console.log(JSON.stringify(response.data));
+            toast.success('Cliente removido com sucesso!');
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        break;
+
+      case routes.private.internal.projects: {
+        const data = JSON.stringify([
+          {
+            id: deleteItemId,
+            type: deleteItemId.includes('Budget') ? 'Budget' : 'Project',
+            status: {
+              type: 'Property',
+              value: 'Canceled'
+            },
+            '@context': [
+              'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld',
+              'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+            ]
+          }
+        ]);
+
+        const config = {
+          method: 'post',
+          url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.UPDATE + '?options=replace',
+          headers: {
+            'Content-Type': 'application/ld+json',
+            'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+          },
+          data
+        };
+
+        axios(config)
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            toast.success('Budget cancelado com sucesso!');
           })
           .catch(function (error) {
             console.log(error);
@@ -337,11 +357,11 @@ const AdvancedTable = ({
 
         break;
       }
+      }
 
       setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
       setDialogOpen(false);
     } catch (err) {
-      console.log(err);
       toast.error('Algo inesperado aconteceu. Se o problema persistir, contacte o responsavel.');
       setDialogOpen(false);
     }

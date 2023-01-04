@@ -1,7 +1,6 @@
-import moment from "moment";
+import moment from 'moment';
 
 function MomentJsConfig() {
-
     const config = moment.locale('pt', {
         months: 'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro'.split('_'),
         monthsShort: 'jan._fev._mar_abr._mai_jun_jul._ago_set._out._nov._dec.'.split('_'),
@@ -61,12 +60,11 @@ function MomentJsConfig() {
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4  // Used to determine first week of the year.
+            doy: 4 // Used to determine first week of the year.
         }
     });
 
     return config;
-
 }
 
 export default MomentJsConfig;
