@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const FinishBtn = (props) => {
-  return (
+  return !props.detailOnly && (
     <IconButton onClick={() => props.onFinish(props)} >
       <Tooltip title={'Terminar'} >
         <CheckCircle color='green' />
@@ -16,4 +16,5 @@ export const FinishBtn = (props) => {
 
 FinishBtn.propTypes = {
   onFinish: PropTypes.func.isRequired,
+  detailOnly: PropTypes.bool
 };

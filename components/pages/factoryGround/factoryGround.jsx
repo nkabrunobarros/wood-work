@@ -19,7 +19,10 @@ const FactoryGround = ({ ...props }) => {
       open={chosenProject}
       activeRow={activeRow}
       chosenProject={chosenProject}
-      setActiveRow={setActiveRow} setChosenProject={setChosenProject} />
+      setActiveRow={setActiveRow}
+      setChosenProject={setChosenProject}
+      onClose={setChosenProject}
+    />
     <CustomBreadcrumbs path={breadcrumbsPath} />
     <Content>
       <Grid container md={12} >

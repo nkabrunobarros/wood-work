@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const StartBtn = (props) => {
-  return (
+  return !props.detailOnly && (
     <IconButton onClick={() => props.onStart(props)} >
       <Tooltip title={props.msg || 'Iniciar'} >
         <Play />
@@ -16,5 +16,6 @@ export const StartBtn = (props) => {
 
 StartBtn.propTypes = {
   msg: PropTypes.string,
+  detailOnly: PropTypes.bool,
   onStart: PropTypes.func.isRequired,
 };

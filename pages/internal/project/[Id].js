@@ -6,10 +6,12 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../../components/loader/loader';
 
 //  Page Component
-import OrderScreen from '../../../components/pages/project/project';
 
 //  Navigation
 import routes from '../../../navigation/routes';
+
+//  Page Component
+import OrderScreen from '../../../components/pages/project/project';
 
 //  Services
 import * as BudgetsActions from '../../api/actions/budget';
@@ -23,6 +25,66 @@ const Order = ({ ...pageProps }) => {
   const [order, setOrder] = useState();
   const router = useRouter();
   const [workers, setWorkers] = useState();
+  const [productionDetail, setProductionDetail] = useState();
+
+  //  Dummy
+  const productionDetailRes = [
+    {
+      id: 'MC_MUEBLETV_A1_PAINEL3_NEST',
+      operation: 'nest',
+      machineId: '123 nest',
+      workerId: 'urn:ngsi-ld:Worker:112',
+      startedAt: '2023-01-05T14:34:46.279Z',
+      partId: 'MC_MUEBLETV_A1_PAINEL3',
+    },
+    {
+      id: 'MC_MUEBLETV_A2_CIMA_NEST',
+      operation: 'nest',
+      machineId: '123 nest',
+      workerId: 'urn:ngsi-ld:Worker:112',
+      startedAt: '2023-01-05T14:34:48.718Z',
+      partId: 'MC_MUEBLETV_A2_CIMA',
+      endedAt: '2023-01-05T14:34:49.755Z',
+    },
+    {
+      id: 'MC_MUEBLETV_A2_CIMA_CNC',
+      operation: 'cnc',
+      machineId: '123 cnc',
+      workerId: 'urn:ngsi-ld:Worker:112',
+      startedAt: '2023-01-05T14:34:50.275Z',
+      partId: 'MC_MUEBLETV_A2_CIMA',
+    },
+  ];
+
+  //  Dummy
+  const projectParts = [
+    { ref: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 1, nest: false, cnc: false, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 2, nest: false, cnc: false, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 3, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_DIR_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 4, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_DIR_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 5, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_DIR_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 6, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 7, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 8, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 9, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 10, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A1_PAINEL2', material: 'AG L Marmol Hades 19 CNC', qtd: 1, comp: 2400, larg: 926, esp: 19, tag: 11, nest: false, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_1', material: 'HDF 19 ', qtd: 8, comp: 540, larg: 70, esp: 19, tag: 12, nest: false, cnc: false, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_2', material: 'HDF 19 ', qtd: 8, comp: 940, larg: 70, esp: 19, tag: 13, nest: false, cnc: false, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_3', material: 'HDF 19 ', qtd: 8, comp: 540, larg: 70, esp: 19, tag: 14, nest: false, cnc: false, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A1_PAINEL1', material: 'MDF Folheado Carv 19', qtd: 1, comp: 2394, larg: 560, esp: 19, tag: 15, nest: true, cnc: false, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A1_PAINEL3', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 2400, larg: 566, esp: 19, tag: 16, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_CIMA', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1716, larg: 466, esp: 19, tag: 17, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_DIV_DIR', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 268, larg: 444, esp: 19, tag: 18, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_DIV_ESQ', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 268, larg: 444, esp: 19, tag: 19, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_FUNDO', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1678, larg: 444, esp: 19, tag: 20, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_DIR_FRENTE', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 400, larg: 283, esp: 19, tag: 21, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FRENTE', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 400, larg: 283, esp: 19, tag: 22, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_LAT_DIR', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 444, larg: 287, esp: 19, tag: 23, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_LAT_ESQ', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 444, larg: 287, esp: 19, tag: 24, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_PORTA_BASC', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 924, larg: 283, esp: 19, tag: 25, nest: true, cnc: true, obs: '', inProduction: false },
+    { ref: 'MC_MUEBLETV_A2_RIPA_TRAS', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 907, larg: 76, esp: 19, tag: 26, nest: true, cnc: false, obs: '', inProduction: false },
+  ];
 
   useEffect(() => {
     const getData = async () => {
@@ -45,6 +107,21 @@ const Order = ({ ...pageProps }) => {
       });
 
       await WorkerActions.workers().then(async (workersRes) => setWorkers(workersRes.data));
+
+      //  Build production Detail
+      const builtLogs = [];
+
+      productionDetailRes.map((log) => {
+        console.log(log);
+
+        const a = log;
+
+        a.part = projectParts.find((p) => p.ref === log.partId);
+        console.log(log);
+        builtLogs.push(log);
+      });
+
+      setProductionDetail(builtLogs);
     };
 
     Promise.all([getData()])
@@ -247,45 +324,6 @@ const Order = ({ ...pageProps }) => {
     //   }
     // ];
 
-    const productionDetail = [
-      {
-        startedAt: '2023-01-05T11:03:28.603Z',
-        ref: 'MC_MUEBLETV_A1_PAINEL1',
-        material: 'MDF Folheado Carv 19',
-        tag: 15,
-        inProduction: true,
-        nestStarted: '2023-01-05T11:03:28.603Z',
-        nestUsed: 'ab2',
-        nestWorker: 'urn:ngsi-ld:Worker:112',
-      },
-      {
-        startedAt: '2023-01-05T12:14:18.454Z',
-        ref: 'MC_MUEBLETV_A1_PAINEL3',
-        material: 'MDF Folheado Carv 19 CNC',
-        tag: 16,
-        inProduction: true,
-        nestStarted: '2023-01-05T11:03:18.454Z',
-        nestUsed: 'ab2',
-        nestWorker: 'urn:ngsi-ld:Worker:112',
-      },
-      {
-        startedAt: '2023-01-05T12:25:20.844Z',
-        ref: 'MC_MUEBLETV_A2_CIMA',
-        material: 'MDF Folheado Carv 19 CNC',
-        tag: 17,
-        inProduction: true,
-        nestStarted: '2023-01-05T11:03:20.844Z',
-        nestUsed: 'ab2',
-        nestWorker: 'urn:ngsi-ld:Worker:112',
-        nestEnded: '2023-01-05T11:03:21.440Z',
-        endedAt: '2023-01-05T11:03:21.440Z',
-        cncWorker: 'urn:ngsi-ld:Worker:112',
-        cncUsed: 'ab1',
-        cncStarted: '2023-01-05T11:03:22.105Z',
-      },
-
-    ];
-
     const parts = [
       {
         id: 'part:A1_PAINEL3',
@@ -316,6 +354,7 @@ const Order = ({ ...pageProps }) => {
       headCellsDocs,
       orderDetail,
       pageProps,
+      projectParts,
       parts,
       workers,
       folders: [],

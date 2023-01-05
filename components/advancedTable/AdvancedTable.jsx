@@ -23,8 +23,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel, Tooltip,
-  Typography
+  TableSortLabel, Tooltip
 } from '@mui/material';
 
 //  Icons
@@ -50,7 +49,6 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
-import { Datepicker } from '@tremor/react';
 import axios from 'axios';
 import moment from 'moment/moment';
 import { methods } from '../../pages/api/actions/methods';
@@ -550,22 +548,9 @@ const AdvancedTable = ({
         open={confirmDialogOpen}
         handleClose={() => setConfirmDialogOpen(false)}
         onConfirm={() => onConfirmItem()}
-        message={'Está prestes a registar a adjudicação do orçamento!'}
+        message={'Está prestes a registar a adjudicação do orçamento! Quer continuar'}
         icon='Check'
         iconType='success'
-        inputs={
-          <Box>
-            <Typography variant='subtitle'>Escolha a data de entrega de projeto</Typography>
-            <Datepicker
-              placeholder="Escolher..."
-              enableRelativeDates={false}
-              color="var(--primary)"
-              minDate={moment().subtract(1, 'days')._d}
-              defaultStartDate={ new Date(2022, 12, 17)}
-              handleSelect={(startDate, endDate) => console.log(startDate, endDate)}
-            />
-          </Box>
-        }
       />
 
       <Notification />

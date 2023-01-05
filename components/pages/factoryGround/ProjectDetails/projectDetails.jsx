@@ -81,9 +81,10 @@ export const PartStatus = ({ part }) => {
 };
 
 const ProjectDetails = (props) => {
-  const { setChosenProject, chosenProject, headCells, activeRow, setActiveRow, open } = props;
+  const { chosenProject, activeRow, setActiveRow, open, onClose, detailOnly } = props;
   const me = JSON.parse(localStorage.getItem('user'));
   const [productionDetails, setProductionDetails] = useState({});
+  const [productionDetailsTest, setProductionDetailsTest] = useState(props.productionDetails || []);
 
   const [rows, setRows] = useState([
     { ref: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 1, nest: false, cnc: false, obs: '', inProduction: false },
@@ -159,6 +160,22 @@ const ProjectDetails = (props) => {
     }
 
     setProductionDetails(productionLog);
+
+    /// TESTES
+    const productionLogTest = [...productionDetailsTest];
+
+    if (productionLogTest[old[props.index].ref] === undefined) {
+      productionLogTest.push({
+        id: `${old[props.index].ref}_${props.field.toUpperCase()}`,
+        operation: props.field,
+        machineId: '123 ' + props.field,
+        workerId: me.id,
+        startedAt: new Date(),
+        partId: old[props.index].ref
+      });
+
+      setProductionDetailsTest(productionLogTest);
+    }
   }
 
   function onFinishPart (props) {
@@ -189,14 +206,18 @@ const ProjectDetails = (props) => {
     }
 
     setProductionDetails(productionLog);
-  }
 
-  console.log(JSON.stringify(productionDetails));
+    //  TESTES
+    const productionLogTest = [...productionDetailsTest];
+    const thisLog = productionLogTest.find(log => log.id === `${old[props.index].ref}_${props.field.toUpperCase()}`);
+
+    thisLog.endedAt = new Date();
+  }
 
   return open && <Dialog
     fullScreen
     open={!!chosenProject}
-    onClose={() => setChosenProject()}
+    onClose={() => onClose()}
     TransitionComponent={Transition}
     sx={{ display: !chosenProject && 'none' }}
   >
@@ -208,42 +229,42 @@ const ProjectDetails = (props) => {
               <IconButton
                 edge="start"
                 color="inherit"
-                onClick={() => setChosenProject()}
+                onClick={() => onClose()}
                 aria-label="close"
               >
                 <X />
               </IconButton>
-              <Image
-                src={companyLogo}
-                placeholder='blur'
-                width='75px'
-                height='75px'
-              />
+              <Box p={detailOnly && 1}>
+                <Image
+                  src={companyLogo}
+                  placeholder='blur'
+                  height={!detailOnly ? '75px' : '60px'}
+                  width={!detailOnly ? '75px' : '60px'}
+                />
+              </Box>
             </Box>
           </Grid>
-          <Grid container md={2.5} sm={2} xs={2} p={1} >
-            <Card sx={{ width: '100%' }}>
+          <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
+            {!detailOnly && <Card sx={{ width: '100%' }}>
               <CardContent className='fullCenter' sx={{ padding: 0.5 }}>
                 <Image
                   width='40px'
                   height='40px'
                   src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png' />
               </CardContent>
-              <CardActions >
+              <CardActions>
                 <Typography sx={{ textAlign: 'center', width: '100%' }}>{me?.givenName?.value} {me?.familyName?.value}</Typography>
               </CardActions>
-            </Card>
+            </Card>}
           </Grid>
           <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            <TopCard title='Projeto' textCenter >{chosenProject?.name?.value}</TopCard>
+            {!detailOnly && <TopCard title='Projeto' textCenter >{chosenProject?.name?.value}</TopCard>}
           </Grid>
           <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            <TopCard title='Maquina em uso' textCenter >
-              <Typography variant='h4'>CNC</Typography>
-            </TopCard>
+            {!detailOnly && <TopCard title='Maquina em uso' textCenter ><Typography variant='h4'>CNC</Typography> </TopCard> }
           </Grid>
           <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            <Card sx={{ width: '100%', height: '100%' }}>
+            {!detailOnly && <Card sx={{ width: '100%', height: '100%' }}>
               <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
                 <Typography variant='subtitle'>Data</Typography>
               </Box>
@@ -257,16 +278,19 @@ const ProjectDetails = (props) => {
                   </Grid>
                 </Grid>
               </CardContent>
-            </Card>
+            </Card>}
           </Grid>
           <Grid container md={1} sm={1} xs={1} p={1} >
             <Box className='fullCenter' sx={{ width: '100%' }}>
-              <Image
-                src={woodWorkyLogo}
-                placeholder='blur'
-                width='75px'
-                height='75px'
-              />
+
+              <Box p={detailOnly && 1}>
+                <Image
+                  src={woodWorkyLogo}
+                  placeholder='blur'
+                  height={!detailOnly ? '75px' : '60px'}
+                  width={!detailOnly ? '75px' : '60px'}
+                />
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -275,8 +299,19 @@ const ProjectDetails = (props) => {
     <Box sx={{ height: '100%', overflowX: 'scroll' }}>
       <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
         {/* Headers */}
-        <Grid container md={12} sm={12} xs={12} bgcolor={'lightGray.edges'}>
-          {headCells.map(headCell => { return <Grid {...cellProps} key={headCell.label}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><TableSortLabel active={false} direction='desc'> {headCell.label} </TableSortLabel></Box></Grid>; })}
+        <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+          {/* {headCells.map(headCell => { return <Grid {...cellProps} key={headCell.label}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><TableSortLabel active={false} direction='desc'> {headCell.label} </TableSortLabel></Box></Grid>; })} */}
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Ref. Peça </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Box></Grid>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Box></Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
@@ -290,17 +325,17 @@ const ProjectDetails = (props) => {
                   bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
                   onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
                 >
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[0].id] } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[1].id] } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[2].id] } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[3].id] } mm </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[4].id] } mm </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[5].id] } mm </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[6].id] } </Typography></Grid>
-                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} field={headCells[7].id} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} field={headCells[8].id} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} field={headCells[9].id} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part[headCells[10].id] } </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.ref } </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.qtd } </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.comp } mm </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.larg } mm </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.esp } mm </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
+                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} detailOnly={detailOnly} field={'nest'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} detailOnly={detailOnly} field={'cnc'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} detailOnly={detailOnly} field={'furoFace'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
                   <Grid {...cellProps} > <PartStatus part={part} /></Grid>
                 </Grid>
               );

@@ -3,8 +3,9 @@ import { Box, Grid, Typography } from '@mui/material';
 import { Eye } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import PrimaryBtn from '../../../buttons/primaryBtn';
+import ProjectDetails from '../../factoryGround/ProjectDetails/projectDetails';
 
 export const CurrentOperation = ({ part }) => {
   return part.cncWorker ? 'CNC' : 'Nesting';
@@ -24,7 +25,7 @@ export const TimeDetour = ({ part, parts }) => {
   const a = moment(part.startedAt);
   const b = moment();
   const currentPartBuildTime = a.diff(b, 'minutes') * -1;
-  const thisPartDetail = parts.find(ele => ele.name === part.ref.replace('MC_MUEBLETV_', ''));
+  const thisPartDetail = parts.find(ele => ele.name === part.part.ref.replace('MC_MUEBLETV_', ''));
 
   if (currentPartBuildTime < thisPartDetail.buildTime) return <Typography variant='md' className="successBalloon">+{thisPartDetail.buildTime - currentPartBuildTime} min</Typography>;
   else if (currentPartBuildTime === thisPartDetail.buildTime) return <Typography variant='md' className="warningBalloon"> 0 min</Typography>;
@@ -38,21 +39,15 @@ TimeDetour.propTypes = {
 };
 
 export const WorkerName = ({ part, workers }) => {
-  let worker;
-
-  if (part.cncWorker) worker = workers.find(worker => worker.id === part.cncWorker);
-  else worker = workers.find(worker => worker.id === part.nestWorker);
+  const worker = workers.find(worker => worker.id === part.workerId);
 
   return `${worker?.givenName?.value} ${worker?.familyName?.value}`;
 };
 
 const Production = (props) => {
-  const {
-    pageProps, productionDetail,
-    // headCellsProductionDetail, headCellsUpperProductionDetail,
-    open,
-    parts
-  } = props;
+  const { pageProps, productionDetail, open, parts } = props;
+  const [productionDetailModal, setProductionDetailModal] = useState(false);
+  const [activeRow, setActiveRow] = useState(false);
 
   const cellProps = {
     md: 1.5,
@@ -86,11 +81,22 @@ const Production = (props) => {
   ];
 
   return open && <>
+    <ProjectDetails
+      {...props}
+      open={productionDetailModal}
+      activeRow={activeRow}
+      chosenProject={props.order}
+      setActiveRow={setActiveRow}
+      onClose={setProductionDetailModal}
+      detailOnly
+      productionDetails={productionDetail}
+    />
     <Box id='pad'>
       <Box style={{ display: 'flex', marginBottom: '1rem' }}>
         <Typography variant='title'>Produção</Typography>
         <Box style={{ marginLeft: 'auto' }}>
           <PrimaryBtn
+            onClick={() => setProductionDetailModal(!productionDetailModal)}
             icon={
               <Eye
                 strokeWidth={pageProps.globalVars.iconStrokeWidth}
@@ -104,19 +110,19 @@ const Production = (props) => {
     </Box>
     <Box sx={{ width: '100%', overflow: 'scroll' }}>
       <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-        <Grid container md={12} sm={12} xs={12} bgcolor={'lightGray.edges'}>
+        <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[0].label}</Typography></Box></Grid>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[1].label}</Typography></Box></Grid>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[2].label}</Typography></Box></Grid>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[3].label}</Typography></Box></Grid>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[4].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[5].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[6].label}</Typography></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[5].label}</Typography></Box></Grid>
+          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[6].label}</Typography></Box></Grid>
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[7].label}</Typography></Box></Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12} >
           {productionDetail
-            .filter(ele => ele.inProduction === true)
+            .filter(ele => !ele.endedAt)
             .sort((a, b) => a.tag - b.tag)
             .map((part, rowIndex) => {
               return (
@@ -124,11 +130,11 @@ const Production = (props) => {
                   {...rowProps}
                   key={rowIndex}
                 >
-                  <Grid {...cellProps} > <Typography variant='sm'>{part.tag }</Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{part.ref.replace('MC_MUEBLETV_', '').replace('_', ' ') } </Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{part?.part?.tag }</Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{part?.part.ref.replace('MC_MUEBLETV_', '').replace('_', ' ') } </Typography></Grid>
                   <Grid {...cellProps} > <Typography variant='sm'> <CurrentOperation part={part} /> </Typography></Grid>
                   <Grid {...cellProps} > <Typography variant='sm'>{moment(part.startedAt).format('DD/MM/YYYY hh:mm') } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{parts.find(ele => ele.name === part.ref.replace('MC_MUEBLETV_', '')).buildTime || '?'} min</Typography></Grid>
+                  <Grid {...cellProps} > <Typography variant='sm'>{parts.find(ele => ele.name === part.part.ref.replace('MC_MUEBLETV_', '')).buildTime || '?'} min</Typography></Grid>
                   <Grid {...cellProps} > <Typography variant='sm'><PartDone part={part} /></Typography></Grid>
                   <Grid {...cellProps} > <Typography variant='sm'><TimeDetour {...props} part={part} /> </Typography></Grid>
                   <Grid {...cellProps} > <Typography variant='sm'><WorkerName {...props} part={part} /> </Typography></Grid>
