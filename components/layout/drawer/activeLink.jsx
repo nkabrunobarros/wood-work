@@ -8,7 +8,7 @@ import routes from '../../../navigation/routes';
 
 function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const path = useRouter();
-  const orderSimilarPages = [`${routes.private.internal.ordersSimilar}`];
+  const orderSimilarPages = [`${routes.private.internal.projectsSimilar}`];
   const messagesPages = [`${routes.private.messages}`];
 
   const projectsPages = [

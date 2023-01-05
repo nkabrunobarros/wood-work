@@ -5,13 +5,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const DoneBtn = (props) => {
-  return !props.detailOnly && (
-    <IconButton>
-      <Tooltip title={'Feito'} >
-        <Check color='green' />
-      </Tooltip>
-    </IconButton>
-  );
+  return !props.detailOnly
+    ? (
+      <IconButton>
+        <Tooltip title={'Feito'} >
+          <Check color='green' />
+        </Tooltip>
+      </IconButton>
+    )
+    : <Tooltip title='Completo'><Check color='green' /></Tooltip>;
 };
 
 DoneBtn.propTypes = {

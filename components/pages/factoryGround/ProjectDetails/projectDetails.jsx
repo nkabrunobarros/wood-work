@@ -86,7 +86,7 @@ const ProjectDetails = (props) => {
   const [productionDetails, setProductionDetails] = useState({});
   const [productionDetailsTest, setProductionDetailsTest] = useState(props.productionDetails || []);
 
-  const [rows, setRows] = useState([
+  const [projectParts, setProjectParts] = useState(props.projectParts || [
     { ref: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 1, nest: false, cnc: false, obs: '', inProduction: false },
     { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 2, nest: false, cnc: false, obs: '', inProduction: false },
     { ref: 'MC_MUEBLETV_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 3, nest: false, cnc: true, obs: '', inProduction: false },
@@ -136,10 +136,10 @@ const ProjectDetails = (props) => {
   };
 
   function onStartPart (props) {
-    const old = [...rows];
+    const old = [...projectParts];
 
     old[props.index].inProduction = true;
-    setRows(old);
+    setProjectParts(old);
 
     //  Add production Log
     const productionLog = { ...productionDetails };
@@ -179,7 +179,7 @@ const ProjectDetails = (props) => {
   }
 
   function onFinishPart (props) {
-    const old = [...rows];
+    const old = [...projectParts];
 
     old[props.index].inProduction = false;
     old[props.index][props.field] = 'done';
@@ -187,7 +187,7 @@ const ProjectDetails = (props) => {
     if (props.field === 'cnc') old[props.index].inProduction = 'done';
     else old[props.index].inProduction = false;
 
-    setRows(old);
+    setProjectParts(old);
 
     //  Update productionLogs
     const productionLog = { ...productionDetails };
@@ -263,26 +263,30 @@ const ProjectDetails = (props) => {
           <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
             {!detailOnly && <TopCard title='Maquina em uso' textCenter ><Typography variant='h4'>CNC</Typography> </TopCard> }
           </Grid>
-          <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            {!detailOnly && <Card sx={{ width: '100%', height: '100%' }}>
-              <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
-                <Typography variant='subtitle'>Data</Typography>
-              </Box>
-              <CardContent>
-                <Grid container md={12}>
-                  <Grid container md={12} sm={12} xs={12}>
-                    <Box sx={{ textAlign: 'center', width: '100%' }}>
-                      <Typography>{moment().format('dddd Do MMMM [de] YYYY')} <ClockTime /></Typography>
-                      {/* <Typography><ClockTime /></Typography> */}
-                    </Box>
+          <Grid container md={2.5} sm={2.5} xs={2.5} p={1}>
+            {!detailOnly
+              ? <Card sx={{ width: '100%', height: '100%' }}>
+                <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
+                  <Typography variant='subtitle'>Data</Typography>
+                </Box>
+                <CardContent>
+                  <Grid container md={12}>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Box sx={{ textAlign: 'center', width: '100%' }}>
+                        <Typography>{moment().format('dddd Do MMMM [de] YYYY')} <ClockTime /></Typography>
+                        {/* <Typography><ClockTime /></Typography> */}
+                      </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>}
+                </CardContent>
+              </Card>
+              : <Box pr={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' }}>
+                <Typography variant='md'>{me.givenName?.value + ' ' + me.familyName?.value || me.legalName?.value}</Typography>
+              </Box>
+            }
           </Grid>
           <Grid container md={1} sm={1} xs={1} p={1} >
             <Box className='fullCenter' sx={{ width: '100%' }}>
-
               <Box p={detailOnly && 1}>
                 <Image
                   src={woodWorkyLogo}
@@ -315,7 +319,7 @@ const ProjectDetails = (props) => {
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Box></Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
-          {rows
+          {projectParts
             .sort((a, b) => a.tag - b.tag)
             .map((part, rowIndex) => {
               return (
