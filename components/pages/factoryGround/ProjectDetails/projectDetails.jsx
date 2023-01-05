@@ -144,7 +144,9 @@ const ProjectDetails = (props) => {
     const productionLog = { ...productionDetails };
 
     //  If theres no log of this part yet
-    if (productionLog[old[props.index].ref] === undefined) productionLog[old[props.index].ref] = { startedAt: new Date(), ref: old[props.index].ref, material: old[props.index].material };
+    if (productionLog[old[props.index].ref] === undefined) productionLog[old[props.index].ref] = { startedAt: new Date(), ref: old[props.index].ref, material: old[props.index].material, tag: old[props.index].tag };
+
+    productionLog[old[props.index].ref].inProduction = true;
 
     if (props.field === 'cnc') {
       productionLog[old[props.index].ref].cncWorker = me.id;
@@ -173,7 +175,13 @@ const ProjectDetails = (props) => {
     //  Update productionLogs
     const productionLog = { ...productionDetails };
 
-    if (props.field === 'cnc') productionLog[old[props.index].ref].cncEnded = new Date();
+    productionLog[old[props.index].ref].inProduction = false;
+
+    if (props.field === 'cnc') {
+      productionLog[old[props.index].ref].cncEnded = new Date();
+
+      if (old[props.index].nest === false) productionLog[old[props.index].ref].endedAt = new Date();
+    }
 
     if (props.field === 'nest') {
       productionLog[old[props.index].ref].nestEnded = new Date();
@@ -182,6 +190,8 @@ const ProjectDetails = (props) => {
 
     setProductionDetails(productionLog);
   }
+
+  console.log(JSON.stringify(productionDetails));
 
   return open && <Dialog
     fullScreen
@@ -268,7 +278,6 @@ const ProjectDetails = (props) => {
         <Grid container md={12} sm={12} xs={12} bgcolor={'lightGray.edges'}>
           {headCells.map(headCell => { return <Grid {...cellProps} key={headCell.label}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><TableSortLabel active={false} direction='desc'> {headCell.label} </TableSortLabel></Box></Grid>; })}
           <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Box></Grid>
-          {console.log(headCells)}
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
           {rows

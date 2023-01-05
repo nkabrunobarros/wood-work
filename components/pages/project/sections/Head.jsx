@@ -12,8 +12,6 @@ const Head = (props) => {
   const { order, pageProps } = props;
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
-  console.log(order);
-
   const upperCells = {
     alignItems: 'center',
     justifyContent: 'center',

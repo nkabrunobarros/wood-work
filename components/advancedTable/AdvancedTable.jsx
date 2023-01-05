@@ -161,8 +161,6 @@ const AdvancedTable = ({
         setConfirmDialogOpen(false);
         setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
 
-        debugger;
-
         //  TODO: FIX OWNER UPDATE
         if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined) {
           const builtProject = {
@@ -760,6 +758,18 @@ const AdvancedTable = ({
       </Paper>
     </Box >
   );
+};
+
+AdvancedTable.propTypes = {
+  children: PropTypes.any,
+  rows: PropTypes.array,
+  headCells: PropTypes.array,
+  headCellsUpper: PropTypes.array,
+  clickRoute: PropTypes.string,
+  actionId: PropTypes.any,
+  noPagination: PropTypes.bool,
+  editRoute: PropTypes.string,
+  filters: PropTypes.object,
 };
 
 export default AdvancedTable;
