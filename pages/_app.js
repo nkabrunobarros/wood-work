@@ -27,6 +27,7 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
 import IsInternal from '../components/utils/IsInternal';
+import MomentJsConfig from '../components/utils/MomentJsConfig';
 import MuiTheme from './MuiTheme';
 
 const App = ({ Component, pageProps }) => {
@@ -35,6 +36,8 @@ const App = ({ Component, pageProps }) => {
   const { auth_token: token } = parseCookies();
   const theme = MuiTheme({ selectedTheme, fontSize });
   const router = useRouter();
+
+  moment.locale(MomentJsConfig());
 
   const toggleTheme = () => {
     const desiredTheme = selectedTheme === 'light' ? 'dark' : 'light';

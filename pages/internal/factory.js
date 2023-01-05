@@ -123,12 +123,6 @@ const SignIn = () => {
                 disablePadding: false,
                 label: 'Obs.',
             },
-            {
-                id: 'actions',
-                numeric: true,
-                disablePadding: false,
-                label: 'Ações',
-            },
         ];
 
         const breadcrumbsPath = [

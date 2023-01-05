@@ -3,6 +3,8 @@ import { X } from 'lucide-react';
 import React from 'react';
 import PartCard from '../../../cards/PartCard';
 import { Transition } from '../../factoryGround/factoryGround';
+//  PropTypes
+import PropTypes from 'prop-types';
 
 const PartModal = (props) => {
   const { open, onClose, parts, onSubmit } = props;
@@ -43,6 +45,13 @@ const PartModal = (props) => {
       </Grid>
     </Box>
   </Dialog>;
+};
+
+PartModal.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  parts: PropTypes.array,
+  onSubmit: PropTypes.func
 };
 
 export default PartModal;

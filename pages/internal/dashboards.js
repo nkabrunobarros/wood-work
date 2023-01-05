@@ -15,7 +15,6 @@ const DashBoards = ({ ...pageProps }) => {
   const [clients, setClients] = useState();
   const [products, setProducts] = useState([]);
 
-
   useEffect(() => {
     const getData = async () => {
       const counts = {
@@ -26,8 +25,7 @@ const DashBoards = ({ ...pageProps }) => {
       };
 
       await ProjectsActions.projects().then(async (response) => {
-
-        response.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split("/").reverse().join("-"))) - Date.parse(new Date(b.createdAt?.split("/").reverse().join("-")))).map(async (ord) => {
+        response.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split('/').reverse().join('-'))) - Date.parse(new Date(b.createdAt?.split('/').reverse().join('-')))).map(async (ord) => {
           // switch (ord.order.status.toLowerCase()) {
           //   case 'em orçamentação':
           //     counts.budgeting++;
@@ -77,7 +75,6 @@ const DashBoards = ({ ...pageProps }) => {
 
     const arrDates = [];
 
-
     orders.map((order) => {
       if (!arrDates.find(ele => moment(ele).format('DD/MM/YYYY') === moment(order?.createdAt).format('DD/MM/YYYY'))) arrDates.push(order?.createdAt);
     });
@@ -93,7 +90,6 @@ const DashBoards = ({ ...pageProps }) => {
       arrValues.push((Object.keys(res).length));
       arrValuesProdsPerDay.push(thisAmount);
     });
-
 
     const ordersDonut = {
 
@@ -117,7 +113,7 @@ const DashBoards = ({ ...pageProps }) => {
       },
       legend: {
         formatter: function (val, opts) {
-          return val + " - " + opts.w.globals.series[opts.seriesIndex];
+          return val + ' - ' + opts.w.globals.series[opts.seriesIndex];
         }
       },
       title: {
@@ -147,7 +143,7 @@ const DashBoards = ({ ...pageProps }) => {
       ],
       options: {
         fill: {
-          type: "gradient",
+          type: 'gradient',
           gradient: {
             shadeIntensity: 1,
             opacityFrom: 0.7,
@@ -190,8 +186,9 @@ const DashBoards = ({ ...pageProps }) => {
     };
 
     return loaded && <DashboardScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
 
+  return <Loader center={true} />;
 };
 
 DashBoards.propTypes = {
