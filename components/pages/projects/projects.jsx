@@ -64,6 +64,8 @@ const ProjectsScreen = ({ ...props }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
+  console.log(filters);
+
   const ClearFilters = () => {
     setProduct('');
     setNumber('');
@@ -84,6 +86,13 @@ const ProjectsScreen = ({ ...props }) => {
       telemovel: telephone
     });
   }, [number, producao, client, category, product, telephone]);
+
+  useEffect(() => {
+    setNumber(filters.Nome || '');
+    setClient(filters.Cliente || '');
+    setProducao(filters.Estado || '');
+    setTelephone(filters.telemovel || '');
+  }, [filters]);
 
   function TabPanel (props) {
     const { children, value, index, ...other } = props;
@@ -168,7 +177,7 @@ const ProjectsScreen = ({ ...props }) => {
               renderOption={(props, option) => {
                 return (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    {option.legalName.value}
+                    {option?.legalName?.value}
                   </Box>
                 );
               }}
@@ -270,6 +279,7 @@ const ProjectsScreen = ({ ...props }) => {
             filters={filters}
             clickRoute={detailPage}
             editRoute={editPage}
+            setFilters={setFilters}
           />
         </TabPanel>
         {/* Tab Budgets */}

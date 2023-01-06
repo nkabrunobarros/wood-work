@@ -536,7 +536,7 @@ const AdvancedTable = ({
   useEffect(() => {
     if (filters) {
       const filtered = MultiFilterArray(rows, filters);
-      const keys = Object.keys(rangeFilters);
+      const keys = Object.keys(rangeFilters || {});
 
       const fitleredTest = filtered.filter((row) => {
         return keys.every((key) => {
@@ -586,10 +586,10 @@ const AdvancedTable = ({
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Box className='tableChips'>
           <Box>
-            {Object.keys(filters)?.map((x, i) => {
+            {Object.keys(filters || {})?.map((x, i) => {
               if (filters[x]) return <Chip key={i} label={x} onDelete={() => onFilterRemove(x)} />;
             })}
-            {Object.keys(rangeFilters)?.map((x, i) => {
+            {Object.keys(rangeFilters || {})?.map((x, i) => {
               if (JSON.stringify(rangeFilters[x].values) !== JSON.stringify([rangeFilters[x].min, rangeFilters[x].max])) return <Chip key={i} label={x} onDelete={() => onFilterSizeRemove(x)} />;
             })}
 
