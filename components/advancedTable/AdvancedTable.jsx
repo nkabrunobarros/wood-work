@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
@@ -64,6 +65,9 @@ const AdvancedTable = ({
   noPagination,
   editRoute,
   filters,
+  setFilters,
+  rangeFilters,
+  setRangeFilters
 }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
@@ -268,6 +272,7 @@ const AdvancedTable = ({
   }
 
   async function onDeleteItem () {
+    // eslint-disable-next-line react/prop-types
     const thisRow = rows.find(r => r.id === deleteItemId);
 
     try {
@@ -531,10 +536,34 @@ const AdvancedTable = ({
   useEffect(() => {
     if (filters) {
       const filtered = MultiFilterArray(rows, filters);
+      const keys = Object.keys(rangeFilters);
 
-      setFilteredItems(filtered);
+      const fitleredTest = filtered.filter((row) => {
+        return keys.every((key) => {
+          if (
+            row[key] >= rangeFilters[key].values[0] && row[key] <= rangeFilters[key].values[1]
+          ) return row;
+        });
+      }
+      );
+
+      setFilteredItems(fitleredTest);
     }
-  }, [filters]);
+  }, [filters, rangeFilters]);
+
+  function onFilterRemove (filterName) {
+    const filtersToWork = { ...filters };
+
+    delete filtersToWork[filterName];
+    setFilters(filtersToWork);
+  }
+
+  function onFilterSizeRemove (filterName) {
+    const rangeFiltersToWork = { ...rangeFilters };
+
+    rangeFiltersToWork[filterName].values = [rangeFiltersToWork[filterName].min, rangeFiltersToWork[filterName].max];
+    setRangeFilters(rangeFiltersToWork);
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -557,8 +586,11 @@ const AdvancedTable = ({
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Box className='tableChips'>
           <Box>
-            {Object.keys(filters || {}).map((x, i) => {
-              if (filters[x]) return <Chip key={i} label={x} onDelete={() => console.log('deleted')} />;
+            {Object.keys(filters)?.map((x, i) => {
+              if (filters[x]) return <Chip key={i} label={x} onDelete={() => onFilterRemove(x)} />;
+            })}
+            {Object.keys(rangeFilters)?.map((x, i) => {
+              if (JSON.stringify(rangeFilters[x].values) !== JSON.stringify([rangeFilters[x].min, rangeFilters[x].max])) return <Chip key={i} label={x} onDelete={() => onFilterSizeRemove(x)} />;
             })}
 
           </Box>
@@ -604,7 +636,7 @@ const AdvancedTable = ({
             <Box p={1}>
               <Grid container>
                 <Grid id={refresh}>
-                  <Grid id='align' container Item sx={{ borderBottom: '1px solid' }}>
+                  <Grid id='align' container Item sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                     <Switch checked={!cellsFilter.find(item => item.show === false)} onClick={() => showAllHeaders()} />Mostrar todas
                   </Grid>
                   {cellsFilter.map((headCell, i) => {
@@ -743,18 +775,6 @@ const AdvancedTable = ({
       </Paper>
     </Box >
   );
-};
-
-AdvancedTable.propTypes = {
-  children: PropTypes.any,
-  rows: PropTypes.array,
-  headCells: PropTypes.array,
-  headCellsUpper: PropTypes.array,
-  clickRoute: PropTypes.string,
-  actionId: PropTypes.any,
-  noPagination: PropTypes.bool,
-  editRoute: PropTypes.string,
-  filters: PropTypes.object,
 };
 
 export default AdvancedTable;

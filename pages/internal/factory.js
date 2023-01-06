@@ -4,12 +4,12 @@ import FactoryGroundScreen from '../../components/pages/factoryGround/factoryGro
 import routes from '../../navigation/routes';
 import * as ProjectsActions from '../api/actions/project';
 
-const SignIn = () => {
+const FactoryGround = () => {
     const [loaded, setLoaded] = useState(true);
     const [projects, setProjects] = useState();
 
     useEffect(() => {
-        async function getData() {
+        async function getData () {
             await ProjectsActions.projects().then((response) => setProjects(response.data));
         }
 
@@ -145,4 +145,4 @@ const SignIn = () => {
     return <Loader center={true} />;
 };
 
-export default SignIn;
+export default FactoryGround;
