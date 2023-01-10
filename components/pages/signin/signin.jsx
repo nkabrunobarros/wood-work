@@ -276,8 +276,9 @@ const SignIn = (props) => {
         style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
         <Image
+          width={windowWidth > 600 ? 80 : 50}
+          alt='Company Logo'
           src={companyLogo}
-          layout='responsive'
           placeholder='blur'
         />
       </Box>
@@ -318,7 +319,6 @@ const SignIn = (props) => {
           <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
             {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>
-          {/* TODO: imagem de logo da mofreita aqui */}
 
           <Typography component='h1' variant='h2'>
             Login

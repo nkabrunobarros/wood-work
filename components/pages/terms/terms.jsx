@@ -82,6 +82,7 @@ const Terms = ({ ...props }) => {
         >
           <Image
             src={readOnly ? backgroundImgTerms : backgroundImgTos}
+            alt='Background Image'
             layout='fill'
             placeholder="blur"
             priority

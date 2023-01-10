@@ -237,6 +237,7 @@ const ProjectDetails = (props) => {
               <Box p={detailOnly && 1}>
                 <Image
                   src={companyLogo}
+                  alt={'companyLogo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
                   width={!detailOnly ? 50 : 40}
@@ -249,6 +250,7 @@ const ProjectDetails = (props) => {
             {!detailOnly && <Card sx={{ width: '100%' }}>
               <CardContent className='fullCenter' sx={{ padding: 0.5 }}>
                 <Image
+                  alt='Project Card'
                   width={40}
                   height={40}
                   src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png' />
@@ -291,6 +293,7 @@ const ProjectDetails = (props) => {
               <Box p={detailOnly && 1}>
                 <Image
                   src={woodWorkyLogo}
+                  alt={'woodWork Logo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
                   width={!detailOnly ? 50 : 40}

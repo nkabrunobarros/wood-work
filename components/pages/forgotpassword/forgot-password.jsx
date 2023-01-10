@@ -67,8 +67,8 @@ const ForgotPassword = (props) => {
         style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
         <Image
+          alt='Background Image'
           src={companyLogo}
-          layout='responsive'
           placeholder='blur'
         />
       </Box>

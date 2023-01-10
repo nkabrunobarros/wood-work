@@ -21,3 +21,5 @@ Next Js(https://nextjs.org/)
 
 Lucide Icons(https://lucide.dev/)
 
+docker tag mofreita:1 registry.nka.pt/nka/mofreita:1
+docker push registry.nka.pt/nka/mofreita:1

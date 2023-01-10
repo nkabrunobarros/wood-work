@@ -98,22 +98,22 @@ const Orders = ({ ...pageProps }) => {
               // });
 
               switch (proj.status.value.toLowerCase()) {
-                case 'waiting':
-                  counts.budgeting++;
+              case 'waiting':
+                counts.budgeting++;
 
-                  break;
-                case 'em desenho':
-                  counts.drawing++;
+                break;
+              case 'em desenho':
+                counts.drawing++;
 
-                  break;
-                case 'working':
-                  counts.production++;
+                break;
+              case 'working':
+                counts.production++;
 
-                  break;
-                case 'finished':
-                  counts.concluded++;
+                break;
+              case 'finished':
+                counts.concluded++;
 
-                  break;
+                break;
               }
             });
 

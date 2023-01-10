@@ -55,15 +55,16 @@ const Footer = () => {
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage
           ? <Copyright />
           : <Image
+            alt='Footer Logo'
             placeholder='blur'
             priority
             src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
-            layout='intrinsic'
           />}
       </Grid>
       <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : 'end' }} >
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile?.object?.description || '') || isPublicPage
           ? <Image
+            alt='Footer Logo'
             placeholder='blur'
             priority
             src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}

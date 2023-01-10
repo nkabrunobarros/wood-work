@@ -26,7 +26,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
             <Box className={styles.logos} sx={{ p: 1 }}>
               <Image
                 src={companyLogo}
-                alt={'companyLogo'}
+                alt={'company Logo'}
                 width={50}
                 height={50}
                 placeholder='blur'
@@ -58,6 +58,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
             <Box className={styles.logos} >
               <Image
                 src={woodWorkyLogo}
+                alt={'App Logo'}
                 width={50}
                 height={50}
                 placeholder='blur'

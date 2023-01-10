@@ -99,6 +99,10 @@ const App = ({ Component, pageProps }) => {
     <ThemeProvider theme={theme}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta charSet="UTF-8" />
+        <meta name="description" content="Wood Work 4.0" />
+        <meta name="keywords" content="work, madeira, moveis, barato" />
+        <meta name="author" content="Bruno Barros" />
         <title>Wood Work 4.0</title>
         <link rel='icon' href='/logo_bw_ww40_inv.png' />
       </Head>

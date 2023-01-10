@@ -23,7 +23,7 @@ const Loader = ({ center, backdrop }) => {
 
   return <Backdrop
     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    open={backdrop}
+    open={backdrop || false}
   >
     <div style={style}>
       <div className={styles.bars5}>
