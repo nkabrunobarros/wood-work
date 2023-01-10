@@ -80,7 +80,7 @@ const Terms = ({ ...props }) => {
             height: '100%',
           }}
         >
-           <Image
+          <Image
             src={readOnly ? backgroundImgTerms : backgroundImgTos}
             layout='fill'
             placeholder="blur"

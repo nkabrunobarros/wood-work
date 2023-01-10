@@ -666,8 +666,6 @@ const AdvancedTable = ({
                     const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
-                    console.log(filteredItems);
-
                     return (
                       <TableRow
                         hover

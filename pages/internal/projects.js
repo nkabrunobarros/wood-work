@@ -69,7 +69,20 @@ const Projects = ({ ...pageProps }) => {
           setBudgets([...budgetResponse.data.filter((e) => e.aprovedDate?.value === '' && e.status.value.toLowerCase() !== 'canceled')].map((bud) => {
             bud.Estado = calcState(bud);
             bud.Nome = bud.name.value;
-            console.log(bud);
+
+            switch (bud.status.value) {
+              case 'waiting budget':
+                counts.waitingBudget++;
+
+                break;
+              case 'waiting adjudication':
+                counts.waitingAdjudication++;
+
+                break;
+
+              default:
+                break;
+            }
 
             return bud;
           }));
@@ -96,37 +109,38 @@ const Projects = ({ ...pageProps }) => {
                 response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
                 response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
                 response.data[index].Estado = calcState(response.data[index]);
+                console.log(response.data[index].status.value);
 
-                switch (calcState(response.data[index])) {
-                case 'waiting budget':
-                  counts.waitingBudget++;
+                switch (response.data[index].status.value) {
+                  case 'waiting budget':
+                    counts.waitingBudget++;
 
-                  break;
-                case 'waiting adjudication':
-                  counts.waitingAdjudication++;
+                    break;
+                  case 'waiting adjudication':
+                    counts.waitingAdjudication++;
 
-                  break;
+                    break;
 
-                case 'in drawing':
-                  counts.drawing++;
+                  case 'in drawing':
+                    counts.drawing++;
 
-                  break;
+                    break;
 
-                case 'production':
-                  counts.production++;
+                  case 'production':
+                    counts.production++;
 
-                  break;
-                case 'finished':
-                  counts.concluded++;
+                    break;
+                  case 'finished':
+                    counts.concluded++;
 
-                  break;
-                case 'em transporte':
-                  counts.expedition++;
+                    break;
+                  case 'em transporte':
+                    counts.expedition++;
 
-                  break;
+                    break;
 
-                default:
-                  break;
+                  default:
+                    break;
                 }
               });
 
@@ -153,8 +167,8 @@ const Projects = ({ ...pageProps }) => {
     const cards = [
       {
         num: 1,
-        title: 'Orçamentos por adjudicar',
-        amount: panelsInfo.budgeting,
+        title: 'Por adjudicar',
+        amount: panelsInfo.waitingAdjudication,
         icon: (
           <Layers
             size={pageProps.globalVars.iconSizeXl}

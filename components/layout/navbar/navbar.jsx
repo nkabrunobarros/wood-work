@@ -56,7 +56,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
               <Typography variant='md'>{loggedUser.givenName?.value + ' ' + loggedUser.familyName?.value || loggedUser.legalName?.value}</Typography>
             </Box>
             <Box className={styles.logos} >
-               <Image
+              <Image
                 src={woodWorkyLogo}
                 width={50}
                 height={50}
