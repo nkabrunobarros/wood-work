@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useEffect, useState } from 'react';
@@ -24,7 +25,6 @@ import hasData from '../../utils/hasData';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 
 // const MyDataGrid = dynamic(() => import('../../datagrid/DataGrid'), { ssr: false })
-
 
 const OrdersScreen = ({ ...props }) => {
   const {
@@ -112,11 +112,9 @@ const OrdersScreen = ({ ...props }) => {
 
   const DisplayBalloonFilter = (item, property, onRemove) => {
     if (hasData(item)) {
-      if (property === 'client')
-        item = clients.find((element) => element.id === item);
+      if (property === 'client') { item = clients.find((element) => element.id === item); }
 
-      if (property === 'product')
-        item = products.find((element) => element.id === item);
+      if (property === 'product') { item = products.find((element) => element.id === item); }
 
       return (
         <Chip
@@ -179,154 +177,156 @@ const OrdersScreen = ({ ...props }) => {
               fontSize: 'small',
             }}
           >
-            {modal ? (
-              <div className='filterPopupMain'>
-                <h2 className='black' style={{ marginLeft: '1rem' }}>
+            {modal
+              ? (
+                <div className='filterPopupMain'>
+                  <h2 className='black' style={{ marginLeft: '1rem' }}>
                   Filtros
-                  <Button sx={{ float: 'right' }} onClick={handleClick}>
-                    <X />
-                  </Button>
-                </h2>
-                <div
-                  style={{
-                    display: 'flex',
-                    flex: 1,
-                  }}
-                >
-                  <div className='filterPopupCol'>
-                    <Autocomplete
-                      disablePortal
-                      id='combo-box-demo'
-                      options={clients}
-                      getOptionLabel={(option) => option.legalName}
-                      onChange={(event, value) => onClientChange(value)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          variant='standard'
-                          value={client}
-                          onChange={(event) =>
-                            setClient(event.target.value)
-                          }
-                          placeholder='Cliente'
-                        />
-                      )}
-                    />
-                    <Autocomplete
-                      id='country-select-demo'
-                      options={woodTypes}
-                      autoHighlight
-                      value={woodType || null}
-                      onChange={(event, value) => onWoodTypeChange(value)}
-                      getOptionLabel={(option) => option.description}
-                      renderInput={(params) => (
-                        <TextField
-                          variant='standard'
-                          {...params}
-                          value={woodType}
-                          label='Tipo de Madeira'
-                        />
-                      )}
-                    />
-                    <TextField
-                      id='standard-basic'
-                      label='Tempo total'
-                      variant='standard'
-                      value={totalTime}
-                      onChange={(e) => setTotalTime(e.target.value)}
-                    />
-                    <TextField
-                      id='standard-basic'
-                      label='Nº de Encomenda'
-                      variant='standard'
-                      value={orderId}
-                      onChange={(e) => setOrderId(e.target.value)}
-                    />
-                  </div>
-                  <div className='filterPopupCol'>
-                    <Autocomplete
-                      disablePortal
-                      id='combo-box-demo'
-                      options={products}
-                      getOptionLabel={(option) => option.name}
-                      onChange={(event, value) => onProductChange(value)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          variant='standard'
-                          value={product}
-                          onChange={(event) =>
-                            setClient(event.target.value)
-                          }
-                          placeholder='Produto'
-                        />
-                      )}
-                    />
-                    <TextField
-                      id='standard-basic'
-                      label='Area total'
-                      variant='standard'
-                      value={totalArea}
-                      onChange={(e) => setTotalArea(e.target.value)}
-                    />
-                    <Box sx={{ display: 'flex' }}>
-                   
-                      <Box>
-                        <TextField
-                          label='Custo'
-                          variant='standard'
-                          value={cost}
-                          onChange={(e) => setCost(e.target.value)}
-                        />
+                    <Button sx={{ float: 'right' }} onClick={handleClick}>
+                      <X />
+                    </Button>
+                  </h2>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flex: 1,
+                    }}
+                  >
+                    <div className='filterPopupCol'>
+                      <Autocomplete
+                        disablePortal
+                        id='combo-box-demo'
+                        options={clients}
+                        getOptionLabel={(option) => option.legalName}
+                        onChange={(event, value) => onClientChange(value)}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            fullWidth
+                            variant='standard'
+                            value={client}
+                            onChange={(event) =>
+                              setClient(event.target.value)
+                            }
+                            placeholder='Cliente'
+                          />
+                        )}
+                      />
+                      <Autocomplete
+                        id='country-select-demo'
+                        options={woodTypes}
+                        autoHighlight
+                        value={woodType || null}
+                        onChange={(event, value) => onWoodTypeChange(value)}
+                        getOptionLabel={(option) => option.description}
+                        renderInput={(params) => (
+                          <TextField
+                            variant='standard'
+                            {...params}
+                            value={woodType}
+                            label='Tipo de Madeira'
+                          />
+                        )}
+                      />
+                      <TextField
+                        id='standard-basic'
+                        label='Tempo total'
+                        variant='standard'
+                        value={totalTime}
+                        onChange={(e) => setTotalTime(e.target.value)}
+                      />
+                      <TextField
+                        id='standard-basic'
+                        label='Nº de Encomenda'
+                        variant='standard'
+                        value={orderId}
+                        onChange={(e) => setOrderId(e.target.value)}
+                      />
+                    </div>
+                    <div className='filterPopupCol'>
+                      <Autocomplete
+                        disablePortal
+                        id='combo-box-demo'
+                        options={products}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(event, value) => onProductChange(value)}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            fullWidth
+                            variant='standard'
+                            value={product}
+                            onChange={(event) =>
+                              setClient(event.target.value)
+                            }
+                            placeholder='Produto'
+                          />
+                        )}
+                      />
+                      <TextField
+                        id='standard-basic'
+                        label='Area total'
+                        variant='standard'
+                        value={totalArea}
+                        onChange={(e) => setTotalArea(e.target.value)}
+                      />
+                      <Box sx={{ display: 'flex' }}>
 
+                        <Box>
+                          <TextField
+                            label='Custo'
+                            variant='standard'
+                            value={cost}
+                            onChange={(e) => setCost(e.target.value)}
+                          />
+
+                        </Box>
+                        <Box>
+                          <TextField
+                            value={costDenominator}
+                            select
+                            label='  '
+                            variant='standard'
+                            SelectProps={{ IconComponent: () => null }}
+                            onChange={(e) => setCostDenominator(e.target.value)}
+                          >
+                            <MenuItem value='equal'>{'='}</MenuItem>
+                            <MenuItem value='bigger'>{'=>'}</MenuItem>
+                            <MenuItem value='smaller'>{'<='}</MenuItem>
+                          </TextField>
+                        </Box>
                       </Box>
-                      <Box>
-                        <TextField
-                          value={costDenominator}
-                          select
-                          label='  '
-                          variant='standard'
-                          SelectProps={{ IconComponent: () => null }}
-                          onChange={(e) => setCostDenominator(e.target.value)}
-                        >
-                          <MenuItem value='equal'>{'='}</MenuItem>
-                          <MenuItem value='bigger'>{'=>'}</MenuItem>
-                          <MenuItem value='smaller'>{'<='}</MenuItem>
-                        </TextField>
-                      </Box>
-                    </Box>
-                    <Autocomplete
-                      id='country-select-demo'
-                      options={operations}
-                      autoHighlight
-                      onChange={(event, value) => onOperationChange(value)}
-                      value={operation || null}
-                      renderInput={(params) => (
-                        <TextField
-                          variant='standard'
-                          {...params}
-                          label='Operação'
-                          value={operation}
-                        />
-                      )}
-                    />
+                      <Autocomplete
+                        id='country-select-demo'
+                        options={operations}
+                        autoHighlight
+                        onChange={(event, value) => onOperationChange(value)}
+                        value={operation || null}
+                        renderInput={(params) => (
+                          <TextField
+                            variant='standard'
+                            {...params}
+                            label='Operação'
+                            value={operation}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div id='pad'>
+                    <ButtonGroup>
+                      <PrimaryBtn text='Aplicar Filtros' onClick={ApplyFilters} />
+                      <PrimaryBtn
+                        text='Redefinir'
+                        light
+                        noBorder
+                        onClick={ClearFilters}
+                      />
+                    </ButtonGroup>
                   </div>
                 </div>
-                <div id='pad'>
-                  <ButtonGroup>
-                    <PrimaryBtn text='Aplicar Filtros' onClick={ApplyFilters} />
-                    <PrimaryBtn
-                      text='Redefinir'
-                      light
-                      noBorder
-                      onClick={ClearFilters}
-                    />
-                  </ButtonGroup>
-                </div>
-              </div>
-            ) : null}
+              )
+              : null}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ marginLeft: 'auto' }}>

@@ -1,18 +1,19 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
-import querys from "../../querys";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
+import querys from '../../querys';
 
-export async function products(data) {
-    const { auth_token: token } = parseCookies();
+export async function products (data) {
+  const { auth_token: token } = parseCookies();
 
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
- 
-    return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
-      {
-          query: querys.PRODUCTS,
-          data
-      },
-      config
-  );}
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
+    {
+      query: querys.PRODUCTS,
+      data
+    },
+    config
+  );
+}

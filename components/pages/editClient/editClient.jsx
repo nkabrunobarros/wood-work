@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable array-callback-return */
 //  Nodes
 import axios from 'axios';
@@ -28,37 +29,32 @@ import Router from 'next/router';
 //  Styles
 import styles from '../../../styles/NewOrder.module.css';
 
-//  Utils
-
-
 //  FormGenerator
 import FormGenerator from '../../formGenerator';
 
 import * as ClientActions from '../../../pages/api/actions/client';
 
 //   TODO: FIX CLIENTE SAVE FUNCTION
-// TODO: 
-
+// TODO:
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps,organizations, client } = props;
+  const { breadcrumbsPath, pageProps, organizations, client } = props;
   // const [client, setClient] = useState(props.client);
   const [postalCodeInfo, setPostalCodeInfo] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
-  const processing= false;
+  const processing = false;
   // const [processing, setProcessing] = useState(false);
 
-  async function ValidatePostalCode(e) {
+  async function ValidatePostalCode (props) {
+    const data = [...inputFields];
+
     //  e brings the postal code string
-    if ( e === null && postalCodeInfo !== null) 
-    {
+    if (props === null && postalCodeInfo !== null) {
       setPostalCodeInfo();
 
-      const data = [...inputFields];
-
-      postalCodeInfo && data.map( (field, i) => {
+      postalCodeInfo && data.map((field, i) => {
         if (field.id === 'addressCountry') data[i].value = '';
 
         if (field.id === 'addressDistrict') data[i].value = '';
@@ -74,31 +70,35 @@ const EditClient = ({ ...props }) => {
     }
 
     try {
-      const res = await axios.get(`https://geoapi.pt/cp/${e}?json=1`);
+      const res = await axios.get(`https://geoapi.pt/cp/${props.value}?json=1`);
 
-      if (res.data) setPostalCodeInfo(res.data);
+      if (res.data) {
+        setPostalCodeInfo(res.data);
+        data[props.index].error = '';
+        setInputFields(data);
+      }
     } catch (error) {
-
-    // TODO: CATCH ERROR
-    toast.warning('Codigo Postal Invalido');
-     }
-
+      // TODO: CATCH ERROR
+      toast.warning('Codigo Postal Invalido');
+      data[props.index].error = 'Codigo Postal Invalido';
+      setInputFields(data);
+    }
   }
 
   const [inputFields, setInputFields] = useState(
     [
+      // {
+      //   id: 'legalName',
+      //   label: 'Nome legal',
+      //   value: client?.legalName?.value,
+      //   error: '',
+      //   required: true,
+      //   tooltip: ''
+      // },
       {
-        id: 'legalName',
-        label: 'Nome legal',
-        value: client?.legalName?.value,
-        error: '',
-        required: true,
-        tooltip: ''
-      },
-      {
-        id: 'givenName',
-        label: 'Primeiro nome',
-        value: client?.givenName?.value,
+        id: 'name',
+        label: 'Nome',
+        value: client?.name?.value,
         error: '',
         required: true,
         tooltip: ''
@@ -112,34 +112,15 @@ const EditClient = ({ ...props }) => {
         required: true,
         disabled: true,
       },
-      // {
-      //   id: 'cellphone',
-      //   label: 'Telemovel',
-      //   value: client?.telephone?.value,
-      //   error: '',
-      //   type: 'phone',
-      //   required: true,
-      //   tooltip: ''
-      // },
       {
         id: 'telephone',
         label: 'Telefone',
         value: client?.telephone?.value,
         error: '',
-        // type: 'phone',
+        type: 'phone',
         required: true,
         tooltip: ''
       },
-      // {
-      //   id: 'clientTypeInstitution',
-      //   label: 'Tipo Instituição',
-      //   // value: client?.clientTypeInstitution?.value,
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
-
       {
         id: 'hasOrganization',
         label: 'Organização',
@@ -162,9 +143,9 @@ const EditClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'streetAddres',
+        id: 'streetAddress',
         label: 'Rua',
-        value: '',
+        value: client?.address.value.streetAddress || client?.address.value.streetAddres,
         error: '',
         required: true,
         tooltip: ''
@@ -172,7 +153,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'addressCountry',
         label: 'País',
-        value: '',
+        value: client?.address.value.addressCountry,
         error: '',
         required: true,
         disabled: true,
@@ -181,25 +162,25 @@ const EditClient = ({ ...props }) => {
       {
         id: 'addressRegion',
         label: 'Concelho',
-        value: '',
+        value: client?.address.value.addressRegion,
         error: '',
         required: true,
         disabled: true,
         tooltip: 'Prencha o Codigo Postal'
       },
-      {
-        id: 'addressDistrict',
-        label: 'Distrito',
-        value: '',
-        error: '',
-        required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
-      },
+      // {
+      //   id: 'addressDistrict',
+      //   label: 'Distrito',
+      //   value: client?.address.value.addressDistrict,
+      //   error: '',
+      //   required: true,
+      //   disabled: true,
+      //   tooltip: 'Prencha o Codigo Postal'
+      // },
       {
         id: 'addressLocality',
         label: 'Localidade',
-        value: '',
+        value: client?.address.value.addressLocality,
         error: '',
         required: true,
         disabled: true,
@@ -208,7 +189,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'obs',
         label: 'Observações',
-        value: client?.obs?.value,
+        value: client?.obs?.value || '',
         type: 'area',
         error: '',
         required: false,
@@ -220,13 +201,13 @@ const EditClient = ({ ...props }) => {
   const [inputFields2, setInputFields2] = useState([
     {
       id: 'taxId',
-      label: 'taxId',
+      label: 'Número de Identificação Fiscal (Nif)',
       value: client?.taxId?.value,
       error: '',
       required: true,
       tooltip: ''
     },
-   
+
   ]);
 
   const handleFormChange = (i, e) => {
@@ -235,7 +216,6 @@ const EditClient = ({ ...props }) => {
     data[i].value = e.target.value;
     data[i].error = '';
     setInputFields(data);
-
   };
 
   const handleFormChange2 = (i, e) => {
@@ -244,28 +224,23 @@ const EditClient = ({ ...props }) => {
     data[i].value = e.target.value;
     data[i].error = '';
     setInputFields2(data);
-
   };
 
   useEffect(() => {
-
-    async function PostalCodeInfo() {
+    async function PostalCodeInfo () {
       try {
         const res = await axios.get(`https://geoapi.pt/cp/${inputFields2.find(ele => ele.id === 'postalCode').value}?json=1`);
 
-
         if (res.data) setPostalCodeInfo(res.data);
-
       } catch (error) {
         setPostalCodeInfo();
       }
     }
 
     PostalCodeInfo();
-
   }, [inputFields2.find(ele => ele.id === 'postalCode')?.value]);
 
-  function ValidateFields() {
+  function ValidateFields () {
     let hasErrors = false;
 
     inputFields.map((input, i) => {
@@ -278,7 +253,7 @@ const EditClient = ({ ...props }) => {
       } else if (!postalCodeInfo && input.id === 'postalCode') {
         data[i].error = 'Codigo Postal Invalido';
         hasErrors = true;
-      } else if (input.value?.length !== 9 && input.type === 'phone' && input.required) {
+      } else if ((input.value?.length !== 11 && input.value?.length !== 9) && input.type === 'phone' && input.required) {
         data[i].error = 'Número mal estruturado';
         hasErrors = true;
       }
@@ -313,46 +288,7 @@ const EditClient = ({ ...props }) => {
     setDialogOpen(true);
   }
 
-  // function handleSave() {
-  //   if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
-
-  //   if (!hasData(legalName)) setErrorMessageLegalName('Campo Obrigatório');
-
-  //   if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
-  //   else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido *');
-
-  //   if (!hasData(contactName))
-  //     setErrorMessageContact('Campo Obrigatório');
-
-  //   if (!hasData(telefone))
-  //     setErrorMessageTelefone('Campo Obrigatório');
-  //   else if (telefone < 100000000)
-  //     setErrorMessageTelefone('Number has to have 9 digits');
-
-  //   if (!hasData(address)) setErrorMessageAddress('Campo Obrigatório');
-
-  //   if (!hasData(postalCode)) setErrorMessagePostalCode('Campo Obrigatório');
-  //   else if (!hasData(postalCodeInfo)) setErrorMessagePostalCode('Codigo Postal Invalido');
-
-  //   if (!hasData(nif)) setErrorMessageNif('Campo Obrigatório');
-
-  //   if (
-  //     hasData(name) &&
-  //     hasData(legalName) &&
-  //     hasData(email) &&
-  //     EmailValidation(email) &&
-  //     hasData(contactName) &&
-  //     hasData(telefone) &&
-  //     hasData(address) &&
-  //     hasData(postalCodeInfo) &&
-  //     hasData(nif)
-  //   )
-  //     setDialogOpen(!dialogOpen);
-  // }
-
-
-  async function onConfirm() {
-
+  async function onConfirm () {
     const builtClient = {
       id: client.id,
       type: client.type,
@@ -367,8 +303,7 @@ const EditClient = ({ ...props }) => {
       if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
-      }
-      else {
+      } else {
         if (ele.type === 'password') ele.value = 'ChangeMe';
 
         builtClient[ele.id].type = 'Property';
@@ -385,8 +320,7 @@ const EditClient = ({ ...props }) => {
       if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
-      }
-      else {
+      } else {
         if (ele.type === 'password') ele.value = 'ChangeMe';
 
         builtClient[ele.id].type = 'Property';
@@ -394,68 +328,50 @@ const EditClient = ({ ...props }) => {
       }
     });
 
+    builtClient.telephone.value = builtClient.telephone.value.replace(/ /g, '');
+
+    builtClient.address = {
+      value: {
+        streetAddress: builtClient.streetAddress.value,
+        postalCode: builtClient.postalCode.value,
+        addressLocality: builtClient.addressLocality.value,
+        addressRegion: builtClient.addressRegion.value,
+        addressCountry: builtClient.addressCountry.value
+      },
+      type: 'Property'
+    };
+
+    //  Remove extra props
+    delete builtClient.streetAddres;
+    delete builtClient.addressCountry;
+    delete builtClient.addressRegion;
+    delete builtClient.addressLocality;
+    delete builtClient.addressDistrict;
+    delete builtClient.postalCode;
+
+    builtClient['@context'] = [
+      'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+      'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+    ];
+
     try {
       await ClientActions.updateClient(
         [builtClient]
       )
-        .then(() => toast.success('Atualizado.'))
+        .then(() => {
+          toast.success('Atualizado.');
+          setDialogOpen(false);
+        })
         .catch((err) => {
           if (err.response.status === 409) toast.warning('Este Cliente já existe');
           else toast.error('Algo aconteceu. Por favor tente mais tarde.');
         });
-    }
-    catch (e) { console.log(e); }
-
-    
-
-
-    // setDialogOpen(false);
-    // setProcessing(true);
-
-    // const builtClient = {
-    //   id: client.id,
-    //   giveName: name,
-    //   email,
-    //   legalName,
-    //   address,
-    //   status: client.status,
-    //   taxId: Number(nif),
-    //   telephone: Number(telefone),
-    //   buysTo: client.buysTo,
-    //   otherData,
-    //   contact: contactName,
-    //   postalCode,
-    //   obs
-    // };
-
-
-    // try {
-    //   await ClientService.saveClient(builtClient).then((response) => {
-    //     if (response.data.success === false && response.data.message === 'registo-ja-existe') toast.warning('Um Cliente ja existe com este email');
-    //     else if (!response.data.success) toast.error('Algo aconteceu');
-    //     else {
-    //       // success here
-    //       setProcessing(false);
-    //       setClient(response.data.payload);
-    //       toast.success('Cliente Atualizado');
-
-    //       setTimeout(() => {
-    //         Router.push(`${detailPage}${response.data.payload.id}`);
-    //       }, 500);
-    //     }
-    //   });
-    // } catch (e) { }
-
+    } catch (e) { console.log(e); }
   }
 
   const Item = styled(Paper)(() => ({
     padding: '.5rem',
   }));
-
-  // function RestoreData() {
-
-  //   toast.success('Dados Restaurados.');
-  // }
 
   return (
     <Grid component='main'>
@@ -503,10 +419,11 @@ const EditClient = ({ ...props }) => {
                 <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
               </Grid>
               <Grid item xs={6}>
-                <Item> {typeof postalCodeInfo?.Localidade === 'object' ?
-                  <>
+                <Item> {typeof postalCodeInfo?.Localidade === 'object'
+                  ? <>
                     {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
-                  </> : postalCodeInfo?.Localidade}</Item>
+                  </>
+                  : postalCodeInfo?.Localidade}</Item>
               </Grid>
             </Grid>
           </Grid>
@@ -539,7 +456,7 @@ const EditClient = ({ ...props }) => {
                 light
                 onClick={() => Router.back()}
               />
-                </ButtonGroup>
+            </ButtonGroup>
           </Box>
         </Box>
         <Grid container sx={{ padding: '24px' }}>
@@ -645,21 +562,21 @@ const EditClient = ({ ...props }) => {
                 <User
                   strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
                   size={pageProps.globalVars.iconSize}
-              />  
+                />
               Dados Gerais
               </Typography>
             </Grid>
             <FormGenerator
-            perRow={3}
-            fields={inputFields}
-            onFormChange={handleFormChange}
-            optionalData={{
-              postalCodeInfo,
-              ValidatePostalCode
-            }}
-          />
+              perRow={3}
+              fields={inputFields}
+              onFormChange={handleFormChange}
+              optionalData={{
+                postalCodeInfo,
+                ValidatePostalCode
+              }}
+            />
           </Grid>
-          <Grid item  md={4}  sm={4} xs={12} bgcolor={"lightGray.main"} className={styles.clientContainer}>
+          <Grid item md={4} sm={4} xs={12} bgcolor={'lightGray.main'} className={styles.clientContainer}>
             {/* <Grid container>
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <Typography id='align' item className='lightTextSm'>
@@ -727,14 +644,14 @@ const EditClient = ({ ...props }) => {
               </Grid>
             </Grid> */}
             <Grid container item sx={{ paddingRight: '.5rem' }}>
-                <Typography id='align' className='lightTextSm'>
-                  <Edit2
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                  />
+              <Typography id='align' className='lightTextSm'>
+                <Edit2
+                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
                   Dados de Faturação
-                </Typography>
-              </Grid>
+              </Typography>
+            </Grid>
             <FormGenerator
               perRow={1}
               fields={inputFields2}
@@ -742,7 +659,7 @@ const EditClient = ({ ...props }) => {
               optionalData={{
                 postalCodeInfo
               }}
-          />
+            />
           </Grid>
         </Grid>
         {/* <Box sx={{ display: 'flex' }}>

@@ -1,4 +1,4 @@
-function getKeywords() {
+function getKeywords () {
   const keywords = {
     errorKeywords: ['Não', 'Não Iniciada', 'Indisponível', 'Indisponível'],
     successKeywords: ['Entregue', 'Terminada', 'Disponível'],

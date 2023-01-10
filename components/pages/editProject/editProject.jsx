@@ -37,8 +37,7 @@ const EditProject = ({ ...props }) => {
   const [errorClient, setErrorClient] = useState('');
   // const [obs, setObs] = useState('');
 
-
-  async function Createproject() {
+  async function Createproject () {
     const builtproject = {
       productId: product,
       status: 'Em orçamentação',
@@ -52,17 +51,15 @@ const EditProject = ({ ...props }) => {
       await projectsActions.saveproject(builtproject).then(() => {
         setDialogOpen(false);
         setProcessing(false);
-
       });
     } catch (err) {
       toast.error('Algo Aconteceu');
       setProcessing(false);
       setDialogOpen(false);
-
     }
   }
 
-  function ClearAll() {
+  function ClearAll () {
     setClient();
     setProduct();
     // setObs("");
@@ -80,7 +77,7 @@ const EditProject = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => Createproject()}
-        message={`Está prestes a criar uma encomenda, tem certeza que quer continuar?`}
+        message={'Está prestes a criar uma encomenda, tem certeza que quer continuar?'}
         icon='AlertOctagon'
       />
       {processing && <Loader center={true} backdrop />}
@@ -171,9 +168,9 @@ const EditProject = ({ ...props }) => {
               </Grid>
             </Box>
           </Grid>
-          <Grid container md={4} spacing={1} sm={12} p={2} bgcolor={"lightGray.main"}
-          //  className={styles.clientContainer} 
-           >
+          <Grid container md={4} spacing={1} sm={12} p={2} bgcolor={'lightGray.main'}
+          //  className={styles.clientContainer}
+          >
             <Grid container item sm={12} xs={12} >
               <Typography id='align' className='headerTitleSm'>
                 <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Cliente

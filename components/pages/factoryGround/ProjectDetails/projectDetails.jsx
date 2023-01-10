@@ -238,8 +238,9 @@ const ProjectDetails = (props) => {
                 <Image
                   src={companyLogo}
                   placeholder='blur'
-                  height={!detailOnly ? '75px' : '60px'}
-                  width={!detailOnly ? '75px' : '60px'}
+                  height={!detailOnly ? 50 : 40}
+                  width={!detailOnly ? 50 : 40}
+                  loading='lazy'
                 />
               </Box>
             </Box>
@@ -248,8 +249,8 @@ const ProjectDetails = (props) => {
             {!detailOnly && <Card sx={{ width: '100%' }}>
               <CardContent className='fullCenter' sx={{ padding: 0.5 }}>
                 <Image
-                  width='40px'
-                  height='40px'
+                  width={40}
+                  height={40}
                   src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png' />
               </CardContent>
               <CardActions>
@@ -261,7 +262,7 @@ const ProjectDetails = (props) => {
             {!detailOnly && <TopCard title='Projeto' textCenter >{chosenProject?.name?.value}</TopCard>}
           </Grid>
           <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            {!detailOnly && <TopCard title='Maquina em uso' textCenter ><Typography variant='h4'>CNC</Typography> </TopCard> }
+            {!detailOnly && <TopCard title='Maquina em uso' textCenter ><Typography variant='h5'>CNC</Typography> </TopCard> }
           </Grid>
           <Grid container md={2.5} sm={2.5} xs={2.5} p={1}>
             {!detailOnly
@@ -291,8 +292,9 @@ const ProjectDetails = (props) => {
                 <Image
                   src={woodWorkyLogo}
                   placeholder='blur'
-                  height={!detailOnly ? '75px' : '60px'}
-                  width={!detailOnly ? '75px' : '60px'}
+                  height={!detailOnly ? 50 : 40}
+                  width={!detailOnly ? 50 : 40}
+                  loading='lazy'
                 />
               </Box>
             </Box>

@@ -30,12 +30,13 @@ const Clients = ({ ...pageProps }) => {
       await ClientsActions
         .clients()
         .then((res) => {
-          setClients(res.data);
-        });
+          setClients([...res.data].map(client => {
+            client.Nome = client.name?.value || client.givenName?.value;
+            console.log(client.Nome);
 
-      // await ProfileActions
-      //   .perfis()
-      //   .then((res) => setProfiles(res.data.payload.data));
+            return client;
+          }));
+        });
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -44,7 +45,7 @@ const Clients = ({ ...pageProps }) => {
   if (loaded) {
     const headCells = [
       {
-        id: 'legalName.value',
+        id: 'name.value',
         numeric: false,
         disablePadding: false,
         label: 'Nome',

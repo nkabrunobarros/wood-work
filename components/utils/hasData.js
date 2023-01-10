@@ -1,6 +1,7 @@
 const hasData = (item) => {
   if (item === '' || item === null || item === undefined) return false;
-  else return true;
+
+  return true;
 };
 
 export default hasData;

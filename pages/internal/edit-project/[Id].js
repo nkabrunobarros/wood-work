@@ -35,7 +35,6 @@ const EditProject = ({ ...pageProps }) => {
         .then((res) => setClients(res.data));
 
       await ProductsActions.products().then((response) => setProducts(response.data)).catch(() => setProducts([]));
-
     };
 
     Promise.all([getAll()]).then(() => setLoaded(true));
@@ -48,7 +47,7 @@ const EditProject = ({ ...pageProps }) => {
         href: `${routes.private.internal.projects}`,
       },
       {
-        title: `Editar Encomenda`,
+        title: 'Editar Encomenda',
         href: `${routes.private.internal.project}`,
       },
     ];
@@ -61,10 +60,10 @@ const EditProject = ({ ...pageProps }) => {
       products
     };
 
-
     return <EditProjectScreen {...props} />;
+  }
 
-  } else return <Loader center={true} />;
+  return <Loader center={true} />;
 };
 
 export default EditProject;

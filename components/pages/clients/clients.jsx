@@ -37,7 +37,7 @@ const Clients = ({ ...props }) => {
 
   useEffect(() => {
     setFilters({
-      legalName: nome,
+      Nome: nome,
       email,
       perfilId: profilesFilter
     });
@@ -62,8 +62,8 @@ const Clients = ({ ...props }) => {
               <Select
                 label={'Nome'}
                 options={items}
-                optionValue={'legalName'}
-                optionLabel={'legalName'}
+                optionValue={'Nome'}
+                optionLabel={'Nome'}
                 onChange={(event) => setNome(event.target.value)}
               />
             </div>
@@ -131,6 +131,7 @@ const Clients = ({ ...props }) => {
           clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
+          setFilters={setFilters}
         />
       </Content>
     </Grid>

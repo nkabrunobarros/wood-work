@@ -1,9 +1,9 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get All Consumables
-export async function consumables() {
+export async function consumables () {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -12,7 +12,7 @@ export async function consumables() {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -25,7 +25,7 @@ export async function consumables() {
 }
 
 //  Get a Consumable
-export async function consumable(data) {
+export async function consumable (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -34,7 +34,7 @@ export async function consumable(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -46,7 +46,7 @@ export async function consumable(data) {
 }
 
 //  Create Consumable
-export async function saveConsumable(data) {
+export async function saveConsumable (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -64,7 +64,7 @@ export async function saveConsumable(data) {
 }
 
 //  Update Consumable
-export async function updateConsumable(data) {
+export async function updateConsumable (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -73,7 +73,7 @@ export async function updateConsumable(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>; rel="http://www.w4.org/ns/json-ld#context"; type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     data,
@@ -86,7 +86,7 @@ export async function updateConsumable(data) {
 }
 
 //  Delete Consumable
-export async function deleteConsumable(data) {
+export async function deleteConsumable (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

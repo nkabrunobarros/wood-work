@@ -33,8 +33,6 @@ const EditClient = ({ ...pageProps }) => {
         .then((res) => setOrganizations(res.data));
     };
 
-
-
     Promise.all([getAll()]).then(() => setLoaded(true));
   }, []);
 
@@ -51,7 +49,7 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.client}${client.id}`,
       },
       {
-        title: `Editar Cliente`,
+        title: 'Editar Cliente',
         href: `${routes.private.internal.clients}`,
       },
     ];
@@ -63,7 +61,6 @@ const EditClient = ({ ...pageProps }) => {
       pageProps,
       organizations,
     };
-
 
     return <EditClientScreen {...props} />;
   }

@@ -10,7 +10,6 @@
 //       // Do something with the files
 //       // setNewImages(acceptedFiles);
 
-
 //       const obj = ConvertFilesToObj(acceptedFiles);
 
 //     console.log(obj);
@@ -64,7 +63,6 @@
 //             errors.push(err);
 //           }
 //         });
-
 
 //       } else {
 //         newImages.map(async (file) => {
@@ -123,7 +121,6 @@
 //             }} sx={{ color: 'var(--gray)' }}>Cancelar</Button>
 //           </DialogActions>
 //         </Dialog>
-
 
 //         <TableRow
 //           sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer' }}

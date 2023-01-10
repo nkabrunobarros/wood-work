@@ -20,7 +20,7 @@ const CustomBreadcrumbs = ({ path }) => {
 
   return (
     <Box
-      bgcolor={"default.main"}
+      bgcolor={'default.main'}
       style={{
         marginTop: '2rem',
         borderRadius: '8px',

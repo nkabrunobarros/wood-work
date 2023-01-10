@@ -20,7 +20,6 @@ import * as WoodTypeActions from '../api/actions/woodtype';
 
 //  Utils
 
-
 const OrdersSimilar = () => {
   //  Data States
   const [orders, setOrders] = useState();
@@ -60,7 +59,7 @@ const OrdersSimilar = () => {
             data[i].previstoAtual = 20;
             data[i].previsto2 = data[i]?.product?.craftTime;
             data[i].realizado2 = 2;
-            data[i].desvio2 = - 2;
+            data[i].desvio2 = -2;
           }
         );
 
@@ -72,7 +71,6 @@ const OrdersSimilar = () => {
   }, []);
 
   if (loaded) {
-
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
@@ -226,11 +224,11 @@ const OrdersSimilar = () => {
       headCells,
     };
 
-
     //  Verifies if all data as been loaded and set page to fully Loaded
     return <OrdersScreen {...props} />;
-  } else return <Loader center={true} />;
-};
+  }
 
+  return <Loader center={true} />;
+};
 
 export default OrdersSimilar;

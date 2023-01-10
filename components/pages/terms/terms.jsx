@@ -15,12 +15,11 @@ import Footer from '../../layout/footer/footer';
 
 //  Navigation
 import { ChevronLeft, LogOut } from 'lucide-react';
-// import Image from 'next/image';
 import Image from 'next/image';
 import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import * as ClientsActions from '../../../pages/api/actions/client';
-import backgroundImgTerms from '../../../public/Consentimento.png';
+import backgroundImgTerms from '../../../public/consentimento.png';
 import backgroundImgTos from '../../../public/tos.png';
 
 const Terms = ({ ...props }) => {
@@ -81,7 +80,7 @@ const Terms = ({ ...props }) => {
             height: '100%',
           }}
         >
-          <Image
+           <Image
             src={readOnly ? backgroundImgTerms : backgroundImgTos}
             layout='fill'
             placeholder="blur"

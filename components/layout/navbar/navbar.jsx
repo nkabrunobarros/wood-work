@@ -26,7 +26,9 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
             <Box className={styles.logos} sx={{ p: 1 }}>
               <Image
                 src={companyLogo}
-                layout='responsive'
+                alt={'companyLogo'}
+                width={50}
+                height={50}
                 placeholder='blur'
               />
             </Box>
@@ -49,16 +51,17 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
               </Tooltip>
             </Box>
           </Box>
-          <Box id='align'>
+          <Box id='align' justifyContent={'end'}>
             <Box pr={3}>
               <Typography variant='md'>{loggedUser.givenName?.value + ' ' + loggedUser.familyName?.value || loggedUser.legalName?.value}</Typography>
             </Box>
-
-            <Box className={styles.logos} sx={{ marginRight: '2rem' }}>
-              <Image
+            <Box className={styles.logos} >
+               <Image
                 src={woodWorkyLogo}
-                layout='responsive'
+                width={50}
+                height={50}
                 placeholder='blur'
+                loading='lazy'
               />
             </Box>
           </Box>

@@ -252,8 +252,6 @@ const SignIn = (props) => {
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title' sx={{ color: 'var(--primary)' }}>
           Conta Bloqueada

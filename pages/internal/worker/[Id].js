@@ -49,9 +49,9 @@ const User = ({ ...pageProps }) => {
     };
 
     return <UserScreen {...props} />;
+  }
 
-  } else return <Loader center={true} />;
-
+  return <Loader center={true} />;
 };
 
 export default User;

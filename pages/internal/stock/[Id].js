@@ -33,7 +33,6 @@ const Stock = () => {
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
-
   }, []);
 
   if (loaded) {
@@ -52,7 +51,6 @@ const Stock = () => {
       },
     ];
 
-
     stock.ordersCount = Object.keys(orders.filter(ele => ele.product.id === router.query.Id)).length;
 
     const props = {
@@ -60,7 +58,6 @@ const Stock = () => {
       stock,
       data,
     };
-
 
     return <StockScreen {...props} />;
   }

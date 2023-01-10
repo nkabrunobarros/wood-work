@@ -13,7 +13,8 @@ const DashBoards = ({ ...pageProps }) => {
   const [ordersInfo, setOrdersInfo] = useState();
   const [orders, setOrders] = useState();
   const [clients, setClients] = useState();
-  const [products, setProducts] = useState([]);
+  const products = [];
+  // const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -25,7 +26,7 @@ const DashBoards = ({ ...pageProps }) => {
       };
 
       await ProjectsActions.projects().then(async (response) => {
-        response.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split('/').reverse().join('-'))) - Date.parse(new Date(b.createdAt?.split('/').reverse().join('-')))).map(async (ord) => {
+        response.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split('/').reverse().join('-'))) - Date.parse(new Date(b.createdAt?.split('/').reverse().join('-')))).map(async () => {
           // switch (ord.order.status.toLowerCase()) {
           //   case 'em orçamentação':
           //     counts.budgeting++;

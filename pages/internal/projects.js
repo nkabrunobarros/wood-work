@@ -39,7 +39,7 @@ const Projects = ({ ...pageProps }) => {
   const editPage = routes.private.internal.editProject;
   const detailPageBudgetTab = routes.private.internal.budget;
 
-  function calcState(value) {
+  function calcState (value) {
     if (value.status.value !== 'finished') return value.status.value;
     else if (value.expedition.object.deliveryFlag.value) return 'Entregue';
     else if (!value.expedition.object.deliveryFlag.value && value.expedition.object.expeditionTime) return 'em transporte';
@@ -50,7 +50,8 @@ const Projects = ({ ...pageProps }) => {
   useEffect(() => {
     const getData = async () => {
       const counts = {
-        budgeting: 0,
+        waitingBudget: 0,
+        waitingAdjudication: 0,
         drawing: 0,
         production: 0,
         expedition: 0,
@@ -64,6 +65,14 @@ const Projects = ({ ...pageProps }) => {
 
         await BudgetsActions.allBudgets().then(async (budgetResponse) => {
           setBudgets(budgetResponse.data.filter((e) => e.aprovedDate?.value === ''));
+
+          setBudgets([...budgetResponse.data.filter((e) => e.aprovedDate?.value === '' && e.status.value.toLowerCase() !== 'canceled')].map((bud) => {
+            bud.Estado = calcState(bud);
+            bud.Nome = bud.name.value;
+            console.log(bud);
+
+            return bud;
+          }));
 
           await ExpeditionActions.expeditions().then(async (expResponse) => {
             //  Get projects and build
@@ -89,31 +98,35 @@ const Projects = ({ ...pageProps }) => {
                 response.data[index].Estado = calcState(response.data[index]);
 
                 switch (calcState(response.data[index])) {
-                  case 'waiting':
-                    counts.budgeting++;
+                case 'waiting budget':
+                  counts.waitingBudget++;
 
-                    break;
+                  break;
+                case 'waiting adjudication':
+                  counts.waitingAdjudication++;
 
-                  case 'em desenho':
-                    counts.drawing++;
+                  break;
 
-                    break;
+                case 'in drawing':
+                  counts.drawing++;
 
-                  case 'working':
-                    counts.production++;
+                  break;
 
-                    break;
-                  case 'finished':
-                    counts.concluded++;
+                case 'production':
+                  counts.production++;
 
-                    break;
-                  case 'em transporte':
-                    counts.expedition++;
+                  break;
+                case 'finished':
+                  counts.concluded++;
 
-                    break;
+                  break;
+                case 'em transporte':
+                  counts.expedition++;
 
-                  default:
-                    break;
+                  break;
+
+                default:
+                  break;
                 }
               });
 
@@ -242,6 +255,12 @@ const Projects = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Data criação',
+      },
+      {
+        id: 'status.value',
+        numeric: false,
+        disablePadding: false,
+        label: 'Estado',
       },
       {
         id: 'actionsConf',

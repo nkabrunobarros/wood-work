@@ -46,10 +46,7 @@ const displayWithStyle = (item, col, index) => {
   else if (item > 0 && (col === 'desvio' || col === 'desvio2')) return <Typography variant='md' className='errorBalloon'>{item} horas</Typography>;
   else if (item === 0 && (col === 'desvio' || col === 'desvio2')) return <Typography variant='md' className='warningBalloon'>{item} horas</Typography>;
 
-
-  if (resError !== undefined)
-    //  If match res is something else undefined && case undefined return default text
-    return <Typography variant='md' className='errorBalloon'>{item} </Typography>;
+  if (resError !== undefined) { return <Typography variant='md' className='errorBalloon'>{item} </Typography>; }
 
   if (resSuccess !== undefined) {
     return <Typography variant='md' className='successBalloon'>{item} </Typography>;

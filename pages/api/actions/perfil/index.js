@@ -1,8 +1,8 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
-import querys from "../../querys";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
+import querys from '../../querys';
 
-export async function perfis(data) {
+export async function perfis (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

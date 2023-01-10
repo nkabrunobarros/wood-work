@@ -6,22 +6,22 @@ import React, { useState } from 'react';
 import MessagesStyles from './MessagesStyles';
 
 export const ChatRow = (props) => {
-    const {chat, index, activeRow, windowWidth, onRowClick, isInternalPage} = props;
-    // const [anchorEl, setAnchorEl] = useState(null);
-    const [hovering, setHovering] = useState(false);
-    const theme = localStorage.getItem('theme');
-    const styles = MessagesStyles({ hovering, theme, activeRow: activeRow === index });
+  const { chat, index, activeRow, windowWidth, onRowClick, isInternalPage } = props;
+  // const [anchorEl, setAnchorEl] = useState(null);
+  const [hovering, setHovering] = useState(false);
+  const theme = localStorage.getItem('theme');
+  const styles = MessagesStyles({ hovering, theme, activeRow: activeRow === index });
 
-    return (
-      <Grid container md={12} p={1} sx={styles.conversationRow} onClick={() => onRowClick(index)} onMouseOver={() => setHovering(true)} onMouseOut={() => setHovering(false)}>
-        {/* <Grid md={2} container>
+  return (
+    <Grid container md={12} p={1} sx={styles.conversationRow} onClick={() => onRowClick(index)} onMouseOver={() => setHovering(true)} onMouseOut={() => setHovering(false)}>
+      {/* <Grid md={2} container>
           <Tooltip title={ (isInternalPage ? 'Projeto' : 'Encomenda') + ' ' + chat.orderId}>
             <Avatar width={'100%'} height={'100%'} sx={styles.avatar}>N</Avatar>
           </Tooltip>
         </Grid> */}
-        {windowWidth > 900 &&
+      {windowWidth > 900 &&
           <>
-            <Grid container md={12}   >
+            <Grid container md={12} >
               <Grid>
                 <Typography variant='md' color='primary.main'>{isInternalPage ? 'Projeto' : 'Encomenda'} {chat.orderId}</Typography>
               </Grid>
@@ -51,30 +51,29 @@ export const ChatRow = (props) => {
               </Menu>
             </Grid> */}
           </>
-        }
-      </Grid>
-    );
-  };
+      }
+    </Grid>
+  );
+};
 
-  ChatRow.propTypes = {
-    chat: PropTypes.object,
-    pageProps: PropTypes.object,
-    index: PropTypes.number,
-    activeRow: PropTypes.number,
-    windowWidth: PropTypes.number,
-    onRowClick: PropTypes.func,
-    isInternalPage: PropTypes.bool,
-  };
-
+ChatRow.propTypes = {
+  chat: PropTypes.object,
+  pageProps: PropTypes.object,
+  index: PropTypes.number,
+  activeRow: PropTypes.number,
+  windowWidth: PropTypes.number,
+  onRowClick: PropTypes.func,
+  isInternalPage: PropTypes.bool,
+};
 
 const ConversationsList = (props) => {
-    const { conversations } = props;
+  const { conversations } = props;
 
-    return conversations.map((ele, i) => <ChatRow  key={i} index={i} chat={ele} {...props} />);
+  return conversations.map((ele, i) => <ChatRow key={i} index={i} chat={ele} {...props} />);
 };
 
 ConversationsList.propTypes = {
-    conversations: PropTypes.arrayOf(PropTypes.object).isRequired,
+  conversations: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ConversationsList;

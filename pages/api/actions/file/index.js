@@ -1,8 +1,8 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
-import querys from "../../querys";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
+import querys from '../../querys';
 
-export async function files(data) {
+export async function files (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -12,13 +12,13 @@ export async function files(data) {
   return await axios.post(process.env.NEXT_PUBLIC_FRONT_API_URL,
     {
       query: querys.FILES,
-      data: data || { id: "" }
+      data: data || { id: '' }
     },
     config
   );
 }
 
-export async function saveFile(data) {
+export async function saveFile (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -34,7 +34,7 @@ export async function saveFile(data) {
   );
 }
 
-export async function removeFile(data) {
+export async function removeFile (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

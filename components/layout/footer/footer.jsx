@@ -31,8 +31,7 @@ function Copyright (props) {
   );
 }
 
-const Footer = (props) => {
-  const { footerPos } = props;
+const Footer = () => {
   const isPublicPage = Object.values(routes.public).includes(Router.route.replace('[Id]', ''));
 
   return typeof window !== 'undefined' && (

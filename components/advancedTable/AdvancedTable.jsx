@@ -163,7 +163,6 @@ const AdvancedTable = ({
         setConfirmDialogOpen(false);
         setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
 
-        //  TODO: FIX OWNER UPDATE
         if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined) {
           const builtProject = {
             id: 'urn:ngsi-ld:Project:' + thisRow.name.value,
@@ -547,6 +546,7 @@ const AdvancedTable = ({
       }
       );
 
+      console.log(fitleredTest);
       setFilteredItems(fitleredTest);
     }
   }, [filters, rangeFilters]);
@@ -666,6 +666,8 @@ const AdvancedTable = ({
                     const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
+                    console.log(filteredItems);
+
                     return (
                       <TableRow
                         hover
@@ -718,7 +720,7 @@ const AdvancedTable = ({
                                               <CheckCircleOutline color={'success'} />
                                             </IconButton>
                                           </Tooltip>
-                                          <Tooltip title={'Duplicar orçamento'}>
+                                          <Tooltip title={'Duplicar orçamento'} sx={{ display: row.status.value !== 'waiting adjudication' && 'none' }}>
                                             <IconButton onClick={() => {
                                               setConfirmDialogOpen(true);
                                               setDeleteItemId(row.id);

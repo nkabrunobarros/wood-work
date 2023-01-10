@@ -39,7 +39,6 @@ const EditWorker = ({ ...pageProps }) => {
         //   .perfis()
         //   .then((res) => setProfiles(res.data.payload.data));
       } catch (error) { }
-
     };
 
     Promise.all([getAll()]).then(() => setLoaded(true));
@@ -71,10 +70,10 @@ const EditWorker = ({ ...pageProps }) => {
       profiles,
     };
 
-
-
     return loaded && <EditWorkerScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
+
+  return <Loader center={true} />;
 };
 
 export default EditWorker;

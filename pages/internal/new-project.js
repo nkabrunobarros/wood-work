@@ -7,6 +7,15 @@ import * as BudgetsActions from '../api/actions/budget';
 import * as ClientActions from '../api/actions/client';
 // import * as ProductsActions from '../api/actions/product';
 
+export const categories = [
+  { label: 'Cozinha', id: 'MC_' },
+  { label: 'Quarto', id: 'MQ_' },
+  { label: 'Banheiro', id: 'MB_' },
+  { label: 'Garagem', id: 'MG_' },
+  { label: 'Varanda', id: 'MV_' },
+  { label: 'Sala de estar', id: 'MS_' }
+];
+
 const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [clients, setClients] = useState();
@@ -20,15 +29,6 @@ const NewOrder = ({ ...pageProps }) => {
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
-
-  const categories = [
-    { label: 'Cozinha', id: 'MC_' },
-    { label: 'Quarto', id: 'MQ_' },
-    { label: 'Banheiro', id: 'MB_' },
-    { label: 'Garagem', id: 'MG_' },
-    { label: 'Varanda', id: 'MV_' },
-    { label: 'Sala de estar', id: 'MS_' }
-  ];
 
   if (loaded) {
     const breadcrumbsPath = [

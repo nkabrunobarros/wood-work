@@ -78,13 +78,13 @@ const Messages = (props) => {
         <Grid container md={12} sm={12} sx={{ overflow: 'hidden', borderRadius: '8px' }}>
           <Grid container md={4} sm={1.5} xs={3}>
             <Grid md={12} sx={{ overflow: 'hidden', maxHeight: '70vh', minHeight: '70vh' }}>
-              <ConversationsToolbar windowWidth={windowWidth}  isInternalPage={isInternalPage} styles={styles} {...props} onSearch={setConversationFilter} />
-              <ConversationsList {...props}  isInternalPage={isInternalPage} conversations={conversations.filter( ele => ele.orderId.toString().includes(conversationFilter))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/>
+              <ConversationsToolbar windowWidth={windowWidth} isInternalPage={isInternalPage} styles={styles} {...props} onSearch={setConversationFilter} />
+              <ConversationsList {...props} isInternalPage={isInternalPage} conversations={conversations.filter(ele => ele.orderId.toString().includes(conversationFilter))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/>
             </Grid>
           </Grid>
           <Grid container md={8} sm={9} xs={9}>
             <Grid md={12} sx={{ overflow: 'scroll', maxHeight: '70vh', minHeight: '70vh' }}>
-              <ChatToolbar styles={styles} conversation={conversations[activeRow]} isInternalPage={isInternalPage} {...props} /> 
+              <ChatToolbar styles={styles} conversation={conversations[activeRow]} isInternalPage={isInternalPage} {...props} />
               <Chat conversation={conversations[activeRow]} theme={theme} />
             </Grid>
             <Grid container md={12}>
@@ -93,7 +93,7 @@ const Messages = (props) => {
                 setLoadMessage={setLoadMessage}
                 activeRow={activeRow}
                 styles={styles}
-                />
+              />
             </Grid>
           </Grid>
         </Grid>

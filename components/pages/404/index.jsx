@@ -3,9 +3,8 @@ import React from 'react';
 import styles from '../../../styles/404.module.css';
 
 const notFoundPage = () => {
-
   return (
-    <div className={styles.main}  target="_blank" rel="noreferrer">
+    <div className={styles.main} target="_blank" rel="noreferrer">
       <header className={styles.topheader}></header>
 
       <div>
@@ -14,7 +13,7 @@ const notFoundPage = () => {
         <div className={styles.starfourth}></div>
         <div className={styles.starfifth}></div>
       </div>
-      {/* 
+      {/*
     <div className={styles.lamp__wrap}>
       <div className={styles.lamp}>
         <div className={styles.cable}></div>
@@ -34,7 +33,7 @@ const notFoundPage = () => {
             </p>
           </div>
           <div className={styles.error__nav}>
-            <a  onClick={() => Router.back()}className={styles.enav__link}>
+            <a onClick={() => Router.back()}className={styles.enav__link}>
               Voltar
             </a>
           </div>

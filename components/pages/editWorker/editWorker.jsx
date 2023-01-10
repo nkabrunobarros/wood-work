@@ -63,7 +63,7 @@ const EditUser = ({ ...props }) => {
   const [backdrop, setBackdrop] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
 
-  function handleSave() {
+  function handleSave () {
     if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
 
     if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
@@ -72,7 +72,6 @@ const EditUser = ({ ...props }) => {
     //   setErrorMessageTelemovel('Campo Obrigatório');
     // else if (telemovel < 100000000)
     //   setErrorMessageTelemovel('Numero tem que ter 9 digitos');
-
 
     if (!hasData(pais)) setErrorMessagePais('Campo Obrigatório');
 
@@ -87,11 +86,10 @@ const EditUser = ({ ...props }) => {
       hasData(morada) &&
       hasData(pais) &&
       hasData(perfil)
-    )
-      setDialogOpen(!dialogOpen);
+    ) { setDialogOpen(!dialogOpen); }
   }
 
-  async function onConfirm() {
+  async function onConfirm () {
     setBackdrop(true);
     setDialogOpen(false);
 
@@ -108,7 +106,6 @@ const EditUser = ({ ...props }) => {
       obs,
       tos: user.tos,
     };
-
 
     try {
       await UserActions.saveUser(newUser).then((res) => {
@@ -154,52 +151,52 @@ const EditUser = ({ ...props }) => {
   const shifts = [
     {
       label: 'Manhã',
-      value: [1,2]
+      value: [1, 2]
     },
     {
       label: 'Tarde',
-      value: [2,3]
+      value: [2, 3]
     },
     {
       label: 'Noite',
-      value: [3,4]
+      value: [3, 4]
     }
   ];
 
   const functions = [
     {
-      label:   'CNC', 
-      value:   'CNC', 
+      label: 'CNC',
+      value: 'CNC',
     },
     {
-      label: 'Nesting', 
-      value: 'Nesting', 
+      label: 'Nesting',
+      value: 'Nesting',
     },
     {
-      label: 'Manual Cut', 
-      value: 'Manual Cut', 
+      label: 'Manual Cut',
+      value: 'Manual Cut',
     },
     {
-      label: 'Assembly', 
-      value: 'Assembly', 
+      label: 'Assembly',
+      value: 'Assembly',
     },
     {
-      label: 'Manager', 
-      value: 'Manager', 
+      label: 'Manager',
+      value: 'Manager',
     },
     {
-      label: 'Designer', 
-      value: 'Designer', 
+      label: 'Designer',
+      value: 'Designer',
     },
     {
-      label: 'Budgeting', 
-      value: 'Budgeting', 
+      label: 'Budgeting',
+      value: 'Budgeting',
     },
     {
       value: 'Warehouse',
-      label:  'Warehouse'
+      label: 'Warehouse'
     }
-];
+  ];
 
   return (
     <Grid component='main'>
@@ -412,7 +409,7 @@ const EditUser = ({ ...props }) => {
               />
             </div> */}
           </div>
-          <Box id='pad' style={{ flex: 1 }} bgcolor={"lightGray.main"} className={styles.clientContainer}>
+          <Box id='pad' style={{ flex: 1 }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
             <a id='align' className='headerTitleSm'>
               <Lock
                 strokeWidth={pageProps.globalVars.iconStrokeWidth}

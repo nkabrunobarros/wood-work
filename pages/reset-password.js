@@ -14,30 +14,30 @@ import Loader from '../components/loader/loader';
 import PageNotFound from '../components/pages/404';
 
 const ResetPassword = () => {
-    const router = useRouter();
-    const [token, setToken] = useState();
-    const [loaded, setLoaded] = useState(false);
+  const router = useRouter();
+  const [token, setToken] = useState();
+  const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
-        function checkToken() {
+  useEffect(() => {
+    function checkToken () {
+      //  TODO: validar o token recebido se existe na BD
+      // TODO: apenas se existir, é que se dá o state do token
+      setToken(router.query?.token);
+    }
 
-            //  TODO: validar o token recebido se existe na BD
-            // TODO: apenas se existir, é que se dá o state do token
-            setToken(router.query?.token);
-        }
+    Promise.all([checkToken()]).then(() => setLoaded(true));
+  }, []);
 
-        Promise.all([checkToken()]).then(() => setLoaded(true));
-    }, []);
+  if (loaded) {
+    const props = {
+      client: true,
+      token,
+    };
 
+    return token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
+  }
 
-    if (loaded) {
-        const props = {
-            client: true,
-            token,
-        };
-
-        return token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
-    } else return <Loader center={true} />;
+  return <Loader center={true} />;
 };
 
 ResetPassword.propTypes = {

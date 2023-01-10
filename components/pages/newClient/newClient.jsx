@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
 //  Nodes
@@ -373,9 +374,9 @@ const NewClient = ({ ...props }) => {
     }, 500);
   };
 
-  async function ValidatePostalCode (e) {
+  async function ValidatePostalCode (props) {
     //  e brings the postal code string
-    if (e === null && postalCodeInfo !== null) {
+    if (props === null && postalCodeInfo !== null) {
       setPostalCodeInfo();
 
       const data = [...inputFields];
@@ -396,7 +397,7 @@ const NewClient = ({ ...props }) => {
     }
 
     try {
-      const res = await axios.get(`https://geoapi.pt/cp/${e}?json=1`);
+      const res = await axios.get(`https://geoapi.pt/cp/${props.value}?json=1`);
 
       if (res.data) setPostalCodeInfo(res.data);
     } catch (error) {
@@ -513,8 +514,8 @@ const NewClient = ({ ...props }) => {
                   setActiveStep(1);
                 }}
               >
-                <User size={100} strokeWidth={1} />
-                <Typography variant='title'>Particular</Typography>
+                <User size={100} strokeWidth={1} color='white' />
+                <Typography variant='title' color='white'>Particular</Typography>
               </Card>
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={10} >
@@ -525,8 +526,8 @@ const NewClient = ({ ...props }) => {
                 }}
                 {...panelProps}
               >
-                <Building2 size={100} strokeWidth={1} />
-                <Typography variant='title'>Empresa</Typography>
+                <Building2 size={100} strokeWidth={1} color='white'/>
+                <Typography variant='title' color='white'>Empresa</Typography>
               </Card>
             </Grid>
           </Grid>

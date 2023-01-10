@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 import routes from '../../navigation/routes';
 import styles from '../../styles/components/infoCard.module.css';
 
-
 const InfoCard = ({ title, icon, amount, color }) => {
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
@@ -21,7 +20,7 @@ const InfoCard = ({ title, icon, amount, color }) => {
   };
 
   return (
-    <Grid bgcolor={"default.main"} md={12} className={styles.card} style={style}>
+    <Grid bgcolor={'default.main'} md={12} className={styles.card} style={style}>
       <Grid container item md={2}>{icon}</Grid>
       <Grid container item md={10} className='fullCenter'>
         <Grid><Typography variant='md' className={styles.cardTitle}>{title}</Typography></Grid>

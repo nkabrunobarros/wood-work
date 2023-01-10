@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import Calendar from '../calender';
 // (int) The current year
@@ -146,14 +147,14 @@ export default () => {
 
     return [prevMonthYear, zeroPad(prevMonth, 2), zeroPad(day, 2)];
   });
-    // Builds dates to be displayed from current month
+  // Builds dates to be displayed from current month
 
   const thisMonthDates = [...new Array(monthDays)].map((n, index) => {
     const day = index + 1;
 
     return [THIS_YEAR, zeroPad(THIS_MONTH, 2), zeroPad(day, 2)];
   });
-    // Builds dates to be displayed from next month
+  // Builds dates to be displayed from next month
 
   const nextMonthDates = [...new Array(daysFromNextMonth)].map((n, index) => {
     const day = index + 1;

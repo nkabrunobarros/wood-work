@@ -19,7 +19,8 @@ const Leftovers = (props) => {
   const [currentPanel, setCurrentPanel] = useState(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [heightModal, setHeightModal] = useState(false);
-  const [clock, setClock] = useState();
+  const clock = new Date();
+  // const [clock, setClock] = useState();
   const [partModal, setPartModal] = useState(false);
   const [partChosen, setPartChosen] = useState();
   const [querying, setQuerying] = useState(false);
@@ -30,7 +31,7 @@ const Leftovers = (props) => {
     comp: 0
   });
 
-  async function onConfirm (props) {
+  async function onConfirm () {
     //  Trás os 3 valores da peça
     // console.log(props);
 

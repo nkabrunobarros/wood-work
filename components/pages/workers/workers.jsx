@@ -67,7 +67,6 @@ const Workers = ({ ...props }) => {
           <div className='filters'>
             <div className='filterContainer'>
 
-
               <Select
                 label={'Nome'}
                 options={workers.filter((item) => item.active && item)}
@@ -157,7 +156,7 @@ const Workers = ({ ...props }) => {
           clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
-        /> 
+        />
       </Content>
     </Grid>
   );

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-function Decode(token) {
+function Decode (token) {
   const decoded = jwt.decode(JSON.parse(token), {
     complete: true,
   });

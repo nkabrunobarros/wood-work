@@ -28,7 +28,6 @@ import * as WorkerActions from '../../../pages/api/actions/worker';
 import Notification from '../../dialogs/Notification';
 import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
-
 const newWorker = ({ ...props }) => {
   const { breadcrumbsPath, countries, organizations } = props;
   //  Dialog
@@ -56,40 +55,40 @@ const newWorker = ({ ...props }) => {
 
   const functions = [
     {
-      label:   'CNC', 
-      value:   'CNC', 
+      label: 'CNC',
+      value: 'CNC',
     },
     {
-      label: 'Nesting', 
-      value: 'Nesting', 
+      label: 'Nesting',
+      value: 'Nesting',
     },
     {
-      label: 'Manual Cut', 
-      value: 'Manual Cut', 
+      label: 'Manual Cut',
+      value: 'Manual Cut',
     },
     {
-      label: 'Assembly', 
-      value: 'Assembly', 
+      label: 'Assembly',
+      value: 'Assembly',
     },
     {
-      label: 'Manager', 
-      value: 'Manager', 
+      label: 'Manager',
+      value: 'Manager',
     },
     {
-      label: 'Designer', 
-      value: 'Designer', 
+      label: 'Designer',
+      value: 'Designer',
     },
     {
-      label: 'Budgeting', 
-      value: 'Budgeting', 
+      label: 'Budgeting',
+      value: 'Budgeting',
     },
     {
       value: 'Warehouse',
-      label:  'Warehouse'
+      label: 'Warehouse'
     }
-];
+  ];
 
-  const [inputFields, setInputFields] = useState([ 
+  const [inputFields, setInputFields] = useState([
     {
       id: 'givenName',
       label: 'Primeiro Nome',
@@ -201,7 +200,7 @@ const newWorker = ({ ...props }) => {
   ]
   );
 
-  async function CreateWorker() {
+  async function CreateWorker () {
     setDialogOpen(false);
     //  open success modal && success toast
     setProcessing(true);
@@ -210,17 +209,17 @@ const newWorker = ({ ...props }) => {
       id: `urn:ngsi-ld:Worker:${Math.random() * 10000}`,
       type: 'Worker',
       active: {
-        type : 'Property',
+        type: 'Property',
         value: 'True',
       },
       hasOrganization: {
         type: 'Relationship',
         object: organizations[0].id
       },
-      "@context": [
-        "https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld",
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-    ]
+      '@context': [
+        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+      ]
     };
 
     inputFields.map((ele) => {
@@ -232,36 +231,34 @@ const newWorker = ({ ...props }) => {
       if (a) {
         // builtWorker[ele.id].type = 'Relationship';
         // builtWorker[ele.id].object = ele.value;
-      }
-      else {
-        if (ele.type === 'password')  ele.value = 'ChangeMe';
+      } else {
+        if (ele.type === 'password') ele.value = 'ChangeMe';
 
         builtWorker[ele.id].type = 'Property';
         builtWorker[ele.id].value = ele.value;
-        }
-    }); 
-    
+      }
+    });
+
     try {
       await WorkerActions.createWorker(builtWorker)
-      .then(() => {
+        .then(() => {
         // setSuccessOpen(true);
-        Router.push(routes.private.internal.workers);
-      })
-      .catch((err) => {
-        if (err.response.status === 409) toast.warning('Este utilizador já existe');
-        else toast.error('Algo aconteceu. Por favor tente mais tarde.');
-      });
+          Router.push(routes.private.internal.workers);
+        })
+        .catch((err) => {
+          if (err.response.status === 409) toast.warning('Este utilizador já existe');
+          else toast.error('Algo aconteceu. Por favor tente mais tarde.');
+        });
+    } catch (e) {
+      console.log(e);
     }
-     catch (e) {
-       console.log(e);
-     }
 
     setProcessing(false);
   }
 
   const ClearFields = () => {
     setCleaningInputs(true);
-    
+
     const data = [...inputFields];
 
     data.map((ele) => ele.value = '');
@@ -279,7 +276,6 @@ const newWorker = ({ ...props }) => {
     data[i].value = e.target.value;
     data[i].error = '';
     setInputFields(data);
-
   };
 
   function ValidateFields () {
@@ -289,10 +285,10 @@ const newWorker = ({ ...props }) => {
       const data = [...inputFields];
 
       if (input.type === 'password') {
-          if ( !generatePassword && input.value === '' ) {
-            data[i].error = 'Campo Óbrigatorio';
-            hasErrors = true;
-          }
+        if (!generatePassword && input.value === '') {
+          data[i].error = 'Campo Óbrigatorio';
+          hasErrors = true;
+        }
       } else if (input.required && input.value === '') {
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
@@ -307,10 +303,8 @@ const newWorker = ({ ...props }) => {
       }
 
       setInputFields(data);
-
     });
 
-    
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
 
@@ -318,7 +312,6 @@ const newWorker = ({ ...props }) => {
     }
 
     setDialogOpen(true);
-
   }
 
   return (
@@ -339,7 +332,7 @@ const newWorker = ({ ...props }) => {
         open={successOpen}
         handleClose={() => ClearFields()}
         onConfirm={() => Router.push(`${routes.private.internal.workers}`)}
-        message={`Utilizador criado com sucesso, que deseja fazer a agora?`}
+        message={'Utilizador criado com sucesso, que deseja fazer a agora?'}
         icon='Verified'
         iconType='success'
         okTxt='Ver Utilizador'
@@ -374,8 +367,8 @@ const newWorker = ({ ...props }) => {
           {/* Input Fields Generator */}
           <Grid container p={'12px'}>
             {inputFields.map((field, index) => {
-              if (field.options) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
+              if (field.options) {
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <Select
                     name={field.id}
                     label={field.label}
@@ -388,47 +381,50 @@ const newWorker = ({ ...props }) => {
                     optionValue={field.optValue}
                     optionLabel={field.optLabel}
                     placeholder={`Escrever ${field.label}`}
-                  /> 
+                  />
                 </Grid>;
+              }
 
-              if (field.type === 'phone' && field.required) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                <PhoneInput
-                  name={field.id}
-                  label={field.label}
-                  options={countries}
-                  required={field.required}
-                  value={field.value}
-                  placeholder={`Escrever ${field.label}`}
-                  error={field.error}
-                  onChange={(e) => handleFormChange(index, e)}
-                />
+              if (field.type === 'phone' && field.required) {
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <PhoneInput
+                    name={field.id}
+                    label={field.label}
+                    options={countries}
+                    required={field.required}
+                    value={field.value}
+                    placeholder={`Escrever ${field.label}`}
+                    error={field.error}
+                    onChange={(e) => handleFormChange(index, e)}
+                  />
                 </Grid>;
+              }
 
-              if (field.type === 'password' && field.required) 
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}> 
-                {generatePassword ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Enviar senha por email" />
-                    :
-                    <MyInput
+              if (field.type === 'password' && field.required) {
+                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  {generatePassword
+                    ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Enviar senha por email" />
+                    : <MyInput
                       label={
                         <Tooltip title='Trocar para enviar senha por email'>
                           <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
                         </Tooltip>
                       }
-                        name={field.id}
-                        required={field.required}
-                        value={field.value}
-                        error={field.error}
-                        type={field.type}
-                        placeholder={`Escrever ${field.label}`}
-                        onChange={(e) => handleFormChange(index, e)}
+                      name={field.id}
+                      required={field.required}
+                      value={field.value}
+                      error={field.error}
+                      type={field.type}
+                      placeholder={`Escrever ${field.label}`}
+                      onChange={(e) => handleFormChange(index, e)}
                     />
                   }
                 </Grid>;
+              }
 
-              //  Default case regular text input 
-              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem',paddingRight: '.5rem'}}>
-                <MyInput 
+              //  Default case regular text input
+              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
                   name={field.id}
                   label={field.label}
                   required={field.required}
@@ -437,9 +433,9 @@ const newWorker = ({ ...props }) => {
                   type={field.type && field.type}
                   onChange={(e) => handleFormChange(index, e)}
                   placeholder={`Escrever ${field.label}`}
-                  
+
                 />
-            </Grid>;
+              </Grid>;
             })}
             <Grid container md={12} >
               <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
@@ -452,6 +448,5 @@ const newWorker = ({ ...props }) => {
     </Grid>
   );
 };
-
 
 export default newWorker;

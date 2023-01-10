@@ -1,11 +1,37 @@
-FROM node:18.12.1-alpine3.15
+# Build Image
+FROM node:18.12.1-alpine3.15 AS DEPENDENCIES
+LABEL author="Bruno Barros bruno.barros@nka.pt"
 
-WORKDIR /app
-COPY . ./
+RUN apk add --no-cache libc6-compat
+WORKDIR /usr/src/app
+COPY package.json ./
+COPY yarn.lock ./
 
 RUN yarn
+
+FROM node:18.12.1-alpine3.15 AS BUILDER
+LABEL author="Bruno Barros bruno.barros@nka.pt"
+
+WORKDIR /usr/src/app
+COPY --from=DEPENDENCIES /usr/src/app/node_modules ./node_modules
+COPY . .
+
+ENV NODE_ENV production
 RUN yarn build
 
-EXPOSE 3000
+# Build production
+FROM node:18.12.1-alpine3.15 AS PRODUCTION
+LABEL author="Bruno Barros bruno.barros@nka.pt"
 
-CMD [ "yarn", "start" ]
+WORKDIR /usr/src/app
+
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+
+COPY --from=BUILDER /usr/src/app/.next/standalone ./standalone
+COPY --from=BUILDER /usr/src/app/public /usr/src/app/standalone/public
+COPY --from=BUILDER /usr/src/app/.next/static /usr/src/app/standalone/.next/static
+
+EXPOSE 3000
+ENV PORT 3000
+CMD ["node", "./standalone/server.js"]

@@ -28,25 +28,20 @@ const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, client, editRoute, pageProps } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  async function onDelete() {
+  async function onDelete () {
     const builtClient = {
       id: client?.id,
-      email: client?.email?.value,
-      giveName: client?.giveName?.value,
-      legalName: client?.legalName?.value,
-      // address: client?.address?.value,
-      status: false,
-      telephone: client?.telephone?.value,
-      buysTo: client?.organization.id?.value,
-      otherData: client?.otherData?.value,
-      obs: client?.obs?.value,
-      contact: client?.contact?.value,
-      taxId: client?.taxId?.value,
-      postalCode: client?.postalCode?.value,
+      type: client?.type,
+      active: false,
     };
 
+    builtClient['@context'] = [
+      'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+      'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+    ];
+
     try {
-      await ClientsActions.saveClient(builtClient).then(() => Router.push(routes.private.internal.clients));
+      await ClientsActions.updateClient([builtClient]).then(() => Router.push(routes.private.internal.clients));
     } catch (err) { }
   }
 
@@ -65,7 +60,7 @@ const EditClient = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
           <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-            <Typography item className='headerTitleXl'>{client?.legalName?.value}</Typography>
+            <Typography item className='headerTitleXl'>{client?.name?.value}</Typography>
             <Box sx={{ marginLeft: 'auto' }}>
               <ButtonGroup>
                 <PrimaryBtn
@@ -83,13 +78,13 @@ const EditClient = ({ ...props }) => {
                   onClick={() => setDialogOpen(true)}
                   icon={
                     <Trash
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                      size={pageProps.globalVars.iconSize}
                     />
                   }
                   light
-                  />
-                </ButtonGroup>
+                />
+              </ButtonGroup>
             </Box>
           </Box>
           <Grid id='clientPanel' container sx={{ padding: '24px' }}>
@@ -130,7 +125,7 @@ const EditClient = ({ ...props }) => {
               </Grid>
             </Grid>
             <Grid item xs={12} md={6} sm={6}>
-              <Grid container spacing={3} bgcolor={"lightGray.main"} className={styles.clientContainer}>
+              <Grid container spacing={3} bgcolor={'lightGray.main'} className={styles.clientContainer}>
                 <Grid container item>
                   <Grid item xs={12}>
                     <Typography id='align' item color='lightTextSm.main'>
@@ -147,13 +142,17 @@ const EditClient = ({ ...props }) => {
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Morada Fiscal</Typography>
                     <Typography item color='lightTextSm.black'>
-                      {client?.address?.value.streetAddres}
-                      </Typography>
+                      {client.address?.value?.streetAddress + ', '}
+                      {client.address?.value?.postalCode + ', '}
+                      {client.address?.value?.addressLocality + ', '}
+                      {client.address?.value?.addressRegion + ', '}
+                      {client.address?.value?.addressCountry}
+                    </Typography>
                   </Grid>
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Codigo Postal</Typography>
                     <Typography item color='lightTextSm.black' >
-                    {client?.address.value.postalCode}
+                      {client?.address.value.postalCode}
 
                     </Typography>
                   </Grid>

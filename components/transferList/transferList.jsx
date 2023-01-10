@@ -10,19 +10,19 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 
-function not(a, b) {
+function not (a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
 
-function intersection(a, b) {
+function intersection (a, b) {
   return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-function union(a, b) {
+function union (a, b) {
   return [...a, ...not(b, a)];
 }
 
-const TransferList = () =>   {
+const TransferList = () => {
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([0, 1, 2, 3]);
   const [right, setRight] = React.useState([4, 5, 6, 7]);
@@ -65,7 +65,7 @@ const TransferList = () =>   {
   };
 
   const customList = (title, items) => (
-    <Card sx={{ width: '100%'}}>
+    <Card sx={{ width: '100%' }}>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         avatar={

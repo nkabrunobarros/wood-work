@@ -99,13 +99,12 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
             onClick={handleDrawerToggle}>
             <X />
           </IconButton>
-          <Box style={{ width: '75px', height: '75px', margin: '1rem' }}>
+          <Box style={{ margin: '1rem' }}>
             <Image
               src={companyLogo}
-              style={{ margin: '1rem' }}
+              alt='company logo'
               width={75}
               height={75}
-              layout='fixed'
             />
           </Box>
           <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>

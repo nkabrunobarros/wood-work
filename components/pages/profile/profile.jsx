@@ -29,8 +29,7 @@ const Profile = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
 
-
-  async function DisableUser() {
+  async function DisableUser () {
     const userCpy = {
       id: user?.id,
       email: user?.email.value,
@@ -54,10 +53,10 @@ const Profile = ({ ...props }) => {
 
   function displayShift (value) {
     switch (JSON.stringify(value)) {
-      case '[1,2]': return 'Manhã';
-      case '[2,3]': return 'Tarde';
-      case '[3,4]': return 'Noite';
-      default: return 'Nenhum';
+    case '[1,2]': return 'Manhã';
+    case '[2,3]': return 'Tarde';
+    case '[3,4]': return 'Noite';
+    default: return 'Nenhum';
     }
   }
 
@@ -77,33 +76,35 @@ const Profile = ({ ...props }) => {
           <div style={{ flex: 1 }}>
             <a className='headerTitleXl'>{user?.givenName?.value || user?.legalName?.value}</a>
           </div>
-          {router.pathname === `${routes.private.profile}[Id]` ? null : (
-            <div className='flex'>
-              <div>
-                <PrimaryBtn text='Editar'
-                  onClick={() => Router.push(`${routes.private.internal.editUser}${user?.id}`)}
-                  icon={
-                    <Edit
-                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
-                    />
-                  } />
+          {router.pathname === `${routes.private.profile}[Id]`
+            ? null
+            : (
+              <div className='flex'>
+                <div>
+                  <PrimaryBtn text='Editar'
+                    onClick={() => Router.push(`${routes.private.internal.editUser}${user?.id}`)}
+                    icon={
+                      <Edit
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize}
+                      />
+                    } />
+                </div>
+                <div>
+                  <PrimaryBtn
+                    hidden={!CanDo(['delete', 'workers'])}
+                    onClick={() => setDialogOpen(true)}
+                    text='Apagar'
+                    icon={
+                      <Trash
+                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                        size={pageProps.globalVars.iconSize} />
+                    }
+                    light
+                  />
+                </div>
               </div>
-              <div>
-                <PrimaryBtn
-                  hidden={!CanDo(['delete','workers'])}
-                  onClick={() => setDialogOpen(true)}
-                  text='Apagar'
-                  icon={
-                    <Trash
-                      strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                      size={pageProps.globalVars.iconSize} />
-                  }
-                  light
-                />
-              </div>
-            </div>
-          )}
+            )}
         </div>
         <div id='pad'>
           <a
@@ -116,7 +117,7 @@ const Profile = ({ ...props }) => {
           <Grid container sx={12}>
             <Grid container sm={12} md={6}>
               <Grid container sx={12}>
-                <Grid xs={12} sm={6} container p={2} bgcolor={"lightGray.main"}>
+                <Grid xs={12} sm={6} container p={2} bgcolor={'lightGray.main'}>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Nome </Typography>
                     <Typography item color='lightTextSm.black'>{user?.givenName?.value || user?.legalName?.value}</Typography>
@@ -134,7 +135,7 @@ const Profile = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Estado </Typography>
                     <Typography item>
                       <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
-                        {user?.active?.value === 'True' ? 'Ativo' : user?.active?.value === undefined ? 'Ativo': 'Desativado'}
+                        {user?.active?.value === 'True' ? 'Ativo' : user?.active?.value === undefined ? 'Ativo' : 'Desativado'}
                       </a>
                     </Typography>
                   </Grid>

@@ -23,7 +23,7 @@ const ResetPassword = () => {
       value: '',
       error: '',
       required: true,
-      type:'password'
+      type: 'password'
     },
     {
       id: 'passwordConfirm',
@@ -31,11 +31,11 @@ const ResetPassword = () => {
       value: '',
       error: '',
       required: true,
-      type:'password'
+      type: 'password'
     }
   ]);
 
-  function ValidateData() {
+  function ValidateData () {
     let hasErrors = false;
 
     if (inputFields.length === 0) {
@@ -46,10 +46,9 @@ const ResetPassword = () => {
 
     // eslint-disable-next-line array-callback-return
     inputFields.map((input, i) => {
-        data[i].error = '';
+      data[i].error = '';
 
       if (input.value === '') {
-
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
       } else if (input.value.length < 6) {
@@ -70,40 +69,36 @@ const ResetPassword = () => {
     }
 
     return true;
-
-
   }
 
-  function handleSubmit(e) {
+  function handleSubmit (e) {
     e.preventDefault();
-      setSubmiting(true);
+    setSubmiting(true);
 
-      //  Validate form data
-      if ( ValidateData()) {
-        //  TODO: FAZER O PEDIDO DE RESET
-          // Reset Success
-          if (true) {
-            toast.success('Reseted');
-            setSubmiting(false);
-          }
-        } else {
-        //  Reset Fails
+    //  Validate form data
+    if (ValidateData()) {
+      //  TODO: FAZER O PEDIDO DE RESET
+      // Reset Success
+      if (true) {
+        toast.success('Reseted');
         setSubmiting(false);
       }
+    } else {
+      //  Reset Fails
+      setSubmiting(false);
+    }
   }
 
+  const handleFormChange = (i, e) => {
+    const data = [...inputFields];
 
-    const handleFormChange = (i, e) => {
-      const data = [...inputFields];
-  
-      data[i].value = e.target.value;
-      data[i].error = '';
-      setInputFields(data);
-  
-    };
+    data[i].value = e.target.value;
+    data[i].error = '';
+    setInputFields(data);
+  };
 
-   return ( 
-   <Grid container component='main' sx={{ height: '100vh' }}>
+  return (
+    <Grid container component='main' sx={{ height: '100vh' }}>
       <CssBaseline />
       <Notification />
       {submiting && <Loader center={true} backdrop />}
@@ -138,18 +133,18 @@ const ResetPassword = () => {
         >
           <Typography color={'primary'}>Portal WW4.0</Typography>
           <Typography component='h2' variant='h3'>
-            Redefinir senha da conta 
+            Redefinir senha da conta
           </Typography>
           <Box
             component='form'
             noValidate
             onSubmit={handleSubmit}
             sx={{ mt: 1, width: '100%' }}
-            >
+          >
             <Grid container>
               <FormGenerator fields={inputFields} perRow={1} onFormChange={handleFormChange} />
             </Grid>
-            <Grid container p={1}  className='fullCenter'>
+            <Grid container p={1} className='fullCenter'>
               <Button
                 fullWidth
                 type='submit'

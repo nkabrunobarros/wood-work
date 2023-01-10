@@ -7,29 +7,30 @@ import * as authActions from '../pages/api/actions/auth';
 import routes from '../navigation/routes';
 
 const SignIn = () => {
-    const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
-        setTimeout(() => {
-            setLoaded(true);
-        }, 500);
-    }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true);
+    }, 500);
+  }, []);
 
-    if (loaded) {
-        const loginSuccessRoute = routes.private.internal.projects;
-        const forgotPasswordRoute = routes.public.forgotPasswordInternal;
+  if (loaded) {
+    const loginSuccessRoute = routes.private.internal.projects;
+    const forgotPasswordRoute = routes.public.forgotPasswordInternal;
 
-        const props = {
+    const props = {
 
-            loginSuccessRoute,
-            login: authActions.login,
-            me: authActions.me,
-            forgotPasswordRoute
-        };
+      loginSuccessRoute,
+      login: authActions.login,
+      me: authActions.me,
+      forgotPasswordRoute
+    };
 
-        return <SignInScreen {...props} />;
-    } else return <Loader center={true} />;
+    return <SignInScreen {...props} />;
+  }
 
+  return <Loader center={true} />;
 };
 
 export default SignIn;

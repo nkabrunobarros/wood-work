@@ -32,10 +32,9 @@ const Stock = ({ ...props }) => {
             <Box className='spacer' />
             <Tooltip title={`${stock.amount} unidade(s)`}>
 
-              {stock.amount > 0 ?
-                <a className="successBalloon">Disponivel</a>
-                :
-                <a className="errorBalloon">Indisponivel</a>}
+              {stock.amount > 0
+                ? <a className="successBalloon">Disponivel</a>
+                : <a className="errorBalloon">Indisponivel</a>}
             </Tooltip>
           </Box>
           <Box style={{ display: 'flex' }}>
@@ -88,7 +87,7 @@ const Stock = ({ ...props }) => {
           </Grid>
           {/* Supplier info panel */}
           <Grid container md={6} xs={12}>
-            <Grid container bgcolor={"lightGray.main"} className={styles.supplierInfoContainer}>
+            <Grid container bgcolor={'lightGray.main'} className={styles.supplierInfoContainer}>
               <Grid container item md={12} p={1} id='align' className='lightTextSm'>
                 <PackagePlus style={{ marginRight: '1rem' }} size={20} />
                 Fornecedor(es)

@@ -3,7 +3,7 @@ import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get All Clients
-export async function clients() {
+export async function clients () {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -25,7 +25,7 @@ export async function clients() {
 }
 
 //  Get a Client
-export async function client(data) {
+export async function client (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -46,7 +46,7 @@ export async function client(data) {
 }
 
 //  Create Client
-export async function saveClient(data) {
+export async function saveClient (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -64,7 +64,7 @@ export async function saveClient(data) {
 }
 
 //  Update Client
-export async function updateClient(data) {
+export async function updateClient (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -85,7 +85,7 @@ export async function updateClient(data) {
 }
 
 //  Delete Client
-export async function deleteClient(data) {
+export async function deleteClient (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

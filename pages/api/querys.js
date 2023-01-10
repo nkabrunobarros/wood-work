@@ -477,7 +477,7 @@ const querys = {
     return: 'saveUtilizador',
     query: `mutation saveUtilizador ($input: UtilizadorInput!) {
         saveUtilizador (saveUtilizadorData: $input) {
-            id		
+            id
             email
             ativo
             nome

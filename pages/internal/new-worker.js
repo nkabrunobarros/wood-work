@@ -67,7 +67,9 @@ const NewOrder = () => {
     };
 
     return loaded && <NewWorkerScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
+
+  return <Loader center={true} />;
 };
 
 export default NewOrder;

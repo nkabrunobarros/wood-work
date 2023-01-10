@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { Button, Tooltip } from '@mui/material';
 
 const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id }) => {
-
   const style = {
     color: light ? 'palette.primary.main' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
@@ -17,7 +16,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
 
   return !hidden && (
     <Tooltip title={title || ''}>
-      <Button id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type}  style={style}  onClick={onClick} component='label'>
+      <Button id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label'>
         {icon}
         {text}
         {/* Children is for file Inputs */}

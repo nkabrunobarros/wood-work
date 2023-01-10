@@ -15,7 +15,6 @@ import routes from '../../navigation/routes';
 
 //  Services
 
-
 const Account = ({ ...pageProps }) => {
   let loaded = false;
   const user = JSON.parse(localStorage.getItem('user'));
@@ -25,7 +24,7 @@ const Account = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: `Conta`,
+        title: 'Conta',
         href: `${routes.private.internal.user}`,
       },
     ];
@@ -37,8 +36,9 @@ const Account = ({ ...pageProps }) => {
     };
 
     return loaded && <AccountScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
 
+  return <Loader center={true} />;
 };
 
 Account.propTypes = {

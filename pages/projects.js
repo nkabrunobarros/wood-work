@@ -34,11 +34,12 @@ const Orders = ({ ...pageProps }) => {
   const [projects, setProjects] = useState();
   const detailPage = routes.private.project;
 
-  function calcState(value) {
+  function calcState (value) {
     if (value.status.value !== 'finished') return value.status.value;
     else if (value.expedition.object.deliveryFlag.value) return 'Entregue';
     else if (!value.expedition.object.deliveryFlag.value && value.expedition.object.expeditionTime) return 'Em transporte';
-    else return 'finished';
+
+    return 'finished';
   }
 
   useEffect(() => {
@@ -56,7 +57,6 @@ const Orders = ({ ...pageProps }) => {
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data)).catch(() => setCategories([]));
 
       await BudgetsActions.myBudgets().then((response) => {
-
         response.data.map(item => test.push({
           id: item.id,
           category: { ...item.category },
@@ -98,22 +98,22 @@ const Orders = ({ ...pageProps }) => {
               // });
 
               switch (proj.status.value.toLowerCase()) {
-                case 'waiting':
-                  counts.budgeting++;
+              case 'waiting':
+                counts.budgeting++;
 
-                  break;
-                case 'em desenho':
-                  counts.drawing++;
+                break;
+              case 'em desenho':
+                counts.drawing++;
 
-                  break;
-                case 'working':
-                  counts.production++;
+                break;
+              case 'working':
+                counts.production++;
 
-                  break;
-                case 'finished':
-                  counts.concluded++;
+                break;
+              case 'finished':
+                counts.concluded++;
 
-                  break;
+                break;
               }
             });
 
@@ -180,8 +180,7 @@ const Orders = ({ ...pageProps }) => {
         amount: panelsInfo.concluded,
         icon: <AlertOctagon
           size={pageProps.globalVars.iconSizeXl}
-          strokeWidth={pageProps.globalVars.iconStrokeWidth} />
-        ,
+          strokeWidth={pageProps.globalVars.iconStrokeWidth} />,
         color: 'var(--babyblue)',
       },
     ];
@@ -227,7 +226,9 @@ const Orders = ({ ...pageProps }) => {
     };
 
     return <OrdersScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
+
+  return <Loader center={true} />;
 };
 
 Orders.propTypes = {

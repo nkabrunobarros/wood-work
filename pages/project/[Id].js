@@ -36,15 +36,12 @@ const Order = ({ ...pageProps }) => {
 
         setOrder(thisOrder);
       });
-
-
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
-
     // const headCellsUpperOrderDetail = [
     //   {
     //     id: 'deadline',
@@ -336,7 +333,9 @@ const Order = ({ ...pageProps }) => {
     };
 
     return <OrderScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
+
+  return <Loader center={true} />;
 };
 
 export default Order;

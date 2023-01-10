@@ -18,7 +18,8 @@ const Head = (props) => {
     padding: '.5rem',
     backgroundColor: '#F9F9F9',
     border: '1px solid',
-    borderColor: 'divider'
+    borderColor: 'divider',
+    textAlign: 'center'
   };
 
   const cells = {
@@ -27,10 +28,6 @@ const Head = (props) => {
     padding: '.5rem',
     border: '1px solid',
     borderColor: 'divider',
-  };
-
-  const text = {
-    textAlign: 'center'
   };
 
   return <>
@@ -79,22 +76,22 @@ const Head = (props) => {
                 <Grid container sx={{ ...upperCells }} md={4} sm={4} xs={4}>Produção</Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>Solicitação</Typography> </Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>Criação</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>Entrega Acordada</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>Entregue</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>Inicio</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' sx={{ ...text }}>Fim</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' sx={{ ...text }}>Quantidade</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Solicitação</Typography> </Grid>
+                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Criação</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Entregue</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Inicio</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' >Fim</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' >Quantidade</Typography></Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>{order?.budgetId.object.dateRequest?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>{order?.budgetId.object.dateCreation?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>{order?.budgetId.object.dateAgreedDelivery?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>{order?.budgetId.object.dateDelivery?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' sx={{ ...text }}>{order?.budgetId.object.aprovedDate?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' sx={{ ...text }}> ? </Typography></Grid>
-                <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' sx={{ ...text }}>{order?.budgetId?.object.amount?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId.object.dateRequest?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId.object.dateCreation?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId.object.dateAgreedDelivery?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId.object.dateDelivery?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId.object.aprovedDate?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' >{order?.budgetId.object.dateDeliveryProject?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
               </Grid>
             </Grid>
           </Grid>

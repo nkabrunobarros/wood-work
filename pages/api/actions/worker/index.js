@@ -1,9 +1,9 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get all workers
-export async function workers() {
+export async function workers () {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -12,7 +12,7 @@ export async function workers() {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -24,7 +24,7 @@ export async function workers() {
 }
 
 //  Get 1 worker
-export async function worker(data) {
+export async function worker (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -33,7 +33,7 @@ export async function worker(data) {
     headers: {
       Authorization: token && `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Link': '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
@@ -45,7 +45,7 @@ export async function worker(data) {
 }
 
 //  Create Worker
-export async function createWorker(data) {
+export async function createWorker (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -63,7 +63,7 @@ export async function createWorker(data) {
 }
 
 //  Update Worker
-export async function updateWorker(data) {
+export async function updateWorker (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -84,7 +84,7 @@ export async function updateWorker(data) {
 }
 
 //  Delete Worker
-export async function deleteWorker(data) {
+export async function deleteWorker (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

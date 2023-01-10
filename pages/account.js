@@ -15,7 +15,6 @@ import routes from '../navigation/routes';
 
 //  Services
 
-
 const Profile = () => {
   let loaded = false;
   const user = JSON.parse(localStorage.getItem('user'));
@@ -25,7 +24,7 @@ const Profile = () => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: `Conta`,
+        title: 'Conta',
         href: `${routes.private.internal.user}`,
       },
     ];
@@ -36,8 +35,9 @@ const Profile = () => {
     };
 
     return loaded && <ProfileScreen {...props} />;
-  } else return <Loader center={true} />;
+  }
 
+  return <Loader center={true} />;
 };
 
 Profile.propTypes = {

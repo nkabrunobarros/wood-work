@@ -4,13 +4,13 @@ import ForgotPasswordScreen from '../components/pages/forgotpassword/forgot-pass
 import routes from '../navigation/routes';
 
 const ForgotPassword = () => {
-    const signinRoute = routes.public.signInInternal;
+  const signinRoute = routes.public.signInInternal;
 
-    const props = {
-        signinRoute
-    };
+  const props = {
+    signinRoute
+  };
 
-    return <ForgotPasswordScreen  {...props} />;
+  return <ForgotPasswordScreen {...props} />;
 };
 
 ForgotPassword.propTypes = {

@@ -3,9 +3,13 @@ import React, { Fragment, useEffect, useState } from 'react';
 import calendar, { CALENDAR_MONTHS, WEEK_DAYS, getDateISO, getNextMonth, getPreviousMonth, isDate, isSameDay, isSameMonth } from '../helper/calendar';
 import * as Styled from '../styles';
 
-export default function Calendar ({ date, onDateChanged }) {
+export default function Calendar ({
+  date,
+  // onDateChanged
+}) {
   const [dateState, setDateState] = useState({ current: 0, month: 0, year: 0 });
-  const [today, setToday] = useState(new Date());
+  const today = new Date();
+  // const [today, setToday] = useState(new Date());
   let pressureTimer, pressureTimeout;
 
   const renderMonthAndYear = () => {
@@ -13,14 +17,14 @@ export default function Calendar ({ date, onDateChanged }) {
     // Resolve the month name from the CALENDAR_MONTHS object map
     const monthname = Object.keys(CALENDAR_MONTHS)[Math.max(0, Math.min(month - 1, 11))];
 
-    const gotoDate = (date) => (evt) => {
-      evt && evt.preventDefault();
+    // const gotoDate = (date) => (evt) => {
+    //   evt && evt.preventDefault();
 
-      const { current } = dateState;
+    //   const { current } = dateState;
 
-      !(current && isSameDay(date, current)) && addDateToState(date);
-      onDateChanged(date);
-    };
+    //   !(current && isSameDay(date, current)) && addDateToState(date);
+    //   onDateChanged(date);
+    // };
 
     const gotoPreviousMonth = () => {
       const { month, year } = dateState;
@@ -176,9 +180,6 @@ export default function Calendar ({ date, onDateChanged }) {
 
   const getCalendarDates = () => {
     const { current, month, year } = dateState;
-
-    debugger;
-
     const calendarMonth = month || current + 1;
     const calendarYear = year || current;
 

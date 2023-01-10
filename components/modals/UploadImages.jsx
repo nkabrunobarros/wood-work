@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from '@mui/material';

@@ -4,7 +4,7 @@ import { parseCookies } from 'nookies';
 import { methods } from '../methods';
 
 //  Get All Projects
-export async function projects() {
+export async function projects () {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -26,7 +26,7 @@ export async function projects() {
 }
 
 //  Get a Project
-export async function project(data) {
+export async function project (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -47,7 +47,7 @@ export async function project(data) {
 }
 
 //  Get my Project
-export async function myProjects() {
+export async function myProjects () {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -87,7 +87,7 @@ export async function saveProject (data) {
 }
 
 //  Update Project
-export async function updateProject(data) {
+export async function updateProject (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -109,7 +109,7 @@ export async function updateProject(data) {
 }
 
 //  Delete Project
-export async function deleteProject(data) {
+export async function deleteProject (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

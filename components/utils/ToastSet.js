@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-function ToastSet( id, message, type ) {
+function ToastSet (id, message, type) {
   return toast.update(id, {
     render: message,
     type,

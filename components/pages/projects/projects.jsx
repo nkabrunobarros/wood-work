@@ -64,8 +64,6 @@ const ProjectsScreen = ({ ...props }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
-  console.log(filters);
-
   const ClearFilters = () => {
     setProduct('');
     setNumber('');
@@ -290,6 +288,7 @@ const ProjectsScreen = ({ ...props }) => {
             filters={filters}
             clickRoute={detailPageBudgetTab}
             editRoute={editPage}
+            setFilters={setFilters}
           />
         </TabPanel>}
       </Content>

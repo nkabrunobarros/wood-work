@@ -1,8 +1,8 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
-import querys from "../../querys";
+import axios from 'axios';
+import { parseCookies } from 'nookies';
+import querys from '../../querys';
 
-export async function users(data) {
+export async function users (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -18,7 +18,7 @@ export async function users(data) {
   );
 }
 
-export async function userById(data) {
+export async function userById (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {
@@ -34,7 +34,7 @@ export async function userById(data) {
   );
 }
 
-export async function saveUser(data) {
+export async function saveUser (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

@@ -27,7 +27,6 @@ const ForgotPassword = (props) => {
     useEffect(() => {
       setWindowHeight(window.innerWidth);
     }, [window.innerWidth]);
-
   }
 
   const listenToResize = () => {
@@ -43,8 +42,8 @@ const ForgotPassword = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const USER_ID = `service_kqtxrtc`;
-    const TEMPLATE_ID = `template_6nvzzrx`;
+    const USER_ID = 'service_kqtxrtc';
+    const TEMPLATE_ID = 'template_6nvzzrx';
 
     //  TODO: separar o email de cliente e de colaborador com url's corretos
     emailjs
@@ -66,12 +65,12 @@ const ForgotPassword = (props) => {
       <Notification />
       <Box
         style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
-        >
+      >
         <Image
           src={companyLogo}
           layout='responsive'
           placeholder='blur'
-          />
+        />
       </Box>
       {windowWidth > 600 && <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
         <Box
@@ -101,7 +100,7 @@ const ForgotPassword = (props) => {
             alignItems: 'start',
           }}
         >
-          <Typography variant='md' color={'primary'}  sx={{ fontWeight: 600 }}>
+          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
             {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>
           <Typography component='h2' variant='h3'>

@@ -32,7 +32,6 @@ const Workers = () => {
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
-
   }, []);
 
   if (loaded) {
@@ -112,11 +111,10 @@ const Workers = () => {
       headCellsWorkers,
     };
 
-
     return <WorkersScreen {...props} />;
+  }
 
-  } else return <Loader center={true} />;
+  return <Loader center={true} />;
 };
-
 
 export default Workers;

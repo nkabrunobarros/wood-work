@@ -49,8 +49,9 @@ const NewOrder = ({ ...pageProps }) => {
     };
 
     return <NewClientScreen {...props} />;
+  }
 
-  } else return <Loader center={true} />;
+  return <Loader center={true} />;
 };
 
 export default NewOrder;

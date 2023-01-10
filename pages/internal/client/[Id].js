@@ -41,7 +41,7 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
       {
-        title: `${client.legalName.value}`,
+        title: `${client?.name?.value}`,
         href: `${routes.private.internal.clients}`,
       },
     ];
@@ -53,9 +53,10 @@ const EditClient = ({ ...pageProps }) => {
       pageProps
     };
 
+    return <ClientScreen {...props} />;
+  }
 
-    return loaded && <ClientScreen {...props} />;
-  } else return <Loader center={true} />;
+  return <Loader center={true} />;
 };
 
 EditClient.PropTypes = {

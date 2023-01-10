@@ -1,6 +1,7 @@
-import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
 //  PropTypes
+import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { FilterItem } from '../utils/FilterItem';
 
@@ -12,12 +13,14 @@ const ProjectCard = (props) => {
       sx={{ width: '100%', cursor: 'pointer' }}
       onClick={() => setChosenProject(proj)}
     >
-      <CardMedia
-        component="img"
-        alt="green iguana"
-        height="140"
-        image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWduz08L8XnC7ISakSkmJCa5v9HPpVIFIjXuz1tLnaK8i3Q9dmEl1pUCyOW2UGZUvEC5g&usqp=CAU"
-      />
+      <Box className='fullCenter'>
+        <Image
+          alt="green iguana"
+          height={140}
+          width={140}
+          src="https://cdn.pixabay.com/photo/2014/12/21/23/43/table-575911_960_720.png"
+        />
+      </Box>
       <CardContent>
         <Grid container sx={{ width: '100%' }}>
           <Grid container md={6} sm={6} xs={6} p={1}>
