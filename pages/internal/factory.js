@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../components/loader/loader';
 import FactoryGroundScreen from '../../components/pages/factoryGround/factoryGround';
 import routes from '../../navigation/routes';
+import * as BudgetsActions from '../api/actions/budget';
 import * as ProjectsActions from '../api/actions/project';
 
 const FactoryGround = () => {
@@ -10,7 +11,15 @@ const FactoryGround = () => {
 
   useEffect(() => {
     async function getData () {
-      await ProjectsActions.projects().then((response) => setProjects(response.data));
+      await BudgetsActions.allBudgets().then(async (budResponse) => {
+        await ProjectsActions.productionProjects().then((response) => {
+          setProjects([...response.data].map((project) => {
+            project.budgetId = [...budResponse.data].find(bud => bud.id === project?.budgetId?.object);
+
+            return project;
+          }));
+        });
+      });
     }
 
     Promise.all([getData()]).then(() => setLoaded(true));

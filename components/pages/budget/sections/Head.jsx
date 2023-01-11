@@ -53,7 +53,6 @@ const Head = (props) => {
       category: { value: category.value, type: 'Property' },
       status: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
-
     };
 
     try {
@@ -95,7 +94,7 @@ const Head = (props) => {
         },
         status: {
           type: 'Property',
-          value: 'in drawing'
+          value: 'drawing'
         },
         budgetId: {
           type: 'Relationship',
@@ -153,15 +152,15 @@ const Head = (props) => {
               <Box id='align'>
                 <Typography variant='title'> {breadcrumbsPath[1].title}</Typography>
                 {isInternalPage &&
-          <Box pl={2}>
-            {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
-            {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
-          </Box>}
+            <Box pl={2}>
+              {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
+              {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
+            </Box>}
               </Box>
             </Grid>
             <Grid container md={3} sm={3} xs={3} justifyContent='end'>
               <PrimaryBtn
-                hidden={!(budget.status.value !== 'adjudicated' && budget.status.value !== 'canceled')}
+                hidden={!(budget.status.value !== 'adjudicated' && budget.status.value !== 'canceled' && isInternalPage)}
                 text={budget.status.value === 'waiting adjudication' ? 'Adjudicar orçamento' : 'Entregar orçamento'}
                 onClick={() => budget.status.value === 'waiting budget' ? setDeliverModal(!deliverModal) : setAdjudicateModal(!adjudicateModal)}
                 icon={

@@ -114,20 +114,20 @@ const Orders = ({ ...pageProps }) => {
 
                 break;
 
-              case 'in drawing':
+              case 'drawing':
                 counts.drawing++;
 
                 break;
 
-              case 'in production':
+              case 'production':
                 counts.production++;
 
                 break;
-              case 'in transport':
+              case 'transport':
                 counts.expedition++;
 
                 break;
-              case 'in testing':
+              case 'testing':
                 counts.testing++;
 
                 break;

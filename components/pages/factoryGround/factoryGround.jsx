@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 
 import CustomBreadcrumbs from '../../breadcrumbs';
 import ProjectCard from '../../cards/ProjectCard';
-import Content from '../../content/content';
 import ProjectDetails from './ProjectDetails/projectDetails';
 
 const FactoryGround = ({ ...props }) => {
@@ -24,18 +23,16 @@ const FactoryGround = ({ ...props }) => {
       onClose={setChosenProject}
     />
     <CustomBreadcrumbs path={breadcrumbsPath} />
-    <Content>
-      <Grid container md={12} >
-        <Grid container md={12} p={1} >
-          <Typography variant='title'>Escolha Projeto</Typography>
-        </Grid>
-        {projects?.map((proj, i) =>
-          <Grid key={i} container md={3} sm={6} xs={12} p={1} >
-            <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
-          </Grid>
-        )}
+    <Grid container md={12} >
+      <Grid container md={12} p={1} >
+        <Typography variant='title'>Escolha Projeto</Typography>
       </Grid>
-    </Content>
+      {projects?.map((proj, i) =>
+        <Grid key={i} container md={3} sm={6} xs={12} p={1} >
+          <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
+        </Grid>
+      )}
+    </Grid>
   </>;
 };
 

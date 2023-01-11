@@ -119,20 +119,20 @@ const Projects = ({ ...pageProps }) => {
 
                   break;
 
-                case 'in drawing':
+                case 'drawing':
                   counts.drawing++;
 
                   break;
 
-                case 'in production':
+                case 'production':
                   counts.production++;
 
                   break;
-                case 'in transport':
+                case 'transport':
                   counts.expedition++;
 
                   break;
-                case 'in testing':
+                case 'testing':
                   counts.testing++;
 
                   break;
@@ -230,7 +230,7 @@ const Projects = ({ ...pageProps }) => {
       {
         num: 5,
         title: 'Terminados',
-        amount: panelsInfo.expedition,
+        amount: panelsInfo.concluded,
         icon: (
           <Check
             size={pageProps.globalVars.iconSizeXl}

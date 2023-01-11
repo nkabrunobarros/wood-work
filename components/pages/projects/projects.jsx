@@ -5,7 +5,9 @@ import React, { useEffect, useState } from 'react';
 //  Material UI
 import {
   Autocomplete,
-  Box, Grid,
+  Box,
+  Button,
+  Grid,
   InputLabel, OutlinedInput,
   Tab,
   Tabs,
@@ -32,6 +34,7 @@ import CanDo from '../../utils/CanDo';
 
 //  Navigation
 import routes from '../../../navigation/routes';
+import * as ProjectActions from '../../../pages/api/actions/project';
 import IsInternal from '../../utils/IsInternal';
 
 const ProjectsScreen = ({ ...props }) => {
@@ -51,6 +54,8 @@ const ProjectsScreen = ({ ...props }) => {
     detailPageBudgetTab
   } = props;
 
+  console.log(projects);
+
   const router = useRouter();
   //  States
   const [number, setNumber] = useState(router.query.order || '');
@@ -62,6 +67,21 @@ const ProjectsScreen = ({ ...props }) => {
   const [product, setProduct] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
+
+  async function fixAll () {
+    // eslint-disable-next-line consistent-return, array-callback-return
+    const updatedOrders = projects.map((ord) => {
+      if (ord.orderBy?.object) {
+        return {
+          id: ord.id,
+          type: ord.type,
+          status: { type: 'Property', value: ord.status?.value.replace('in ', '') }
+        };
+      }
+    });
+
+    await ProjectActions.updateProject(updatedOrders.filter(ord => ord !== undefined)).then(() => {}).catch(() => console.log('failed '));
+  }
 
   const ClearFilters = () => {
     setProduct('');
@@ -126,6 +146,7 @@ const ProjectsScreen = ({ ...props }) => {
 
   return (
     <Grid component='main'>
+      <Button onClick={() => fixAll()}>fix</Button>
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -212,15 +233,15 @@ const ProjectsScreen = ({ ...props }) => {
                   label: 'Produção'
                 },
                 {
-                  id: 'in drawing',
+                  id: 'drawing',
                   label: 'Em Desenho'
                 },
                 {
-                  id: 'in production',
+                  id: 'production',
                   label: 'Em Produção'
                 },
                 {
-                  id: 'in testing',
+                  id: 'testing',
                   label: 'Em Montagem'
                 },
                 {
@@ -228,7 +249,7 @@ const ProjectsScreen = ({ ...props }) => {
                   label: 'Distribuição'
                 },
                 {
-                  id: 'in transport',
+                  id: 'transport',
                   label: 'Em Transporte'
                 },
                 {

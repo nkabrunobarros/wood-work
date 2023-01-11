@@ -177,7 +177,7 @@ const AdvancedTable = ({
             // },
             status: {
               type: 'Property',
-              value: 'in drawing'
+              value: 'drawing'
             },
             budgetId: {
               type: 'Relationship',

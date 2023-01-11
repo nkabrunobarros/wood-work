@@ -12,13 +12,17 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const messagesPages = [`${routes.private.messages}`];
 
   const projectsPages = [
-    `${routes.private.orders}`,
-    `${routes.private.order}[Id]`,
     `${routes.private.internal.projects}`,
     `${routes.private.internal.project}[Id]`,
     `${routes.private.internal.budget}[Id]`,
     `${routes.private.internal.newProject}`,
     `${routes.private.internal.editProject}[Id]`,
+  ];
+
+  const ordersPages = [
+    `${routes.private.projects}`,
+    `${routes.private.project}[Id]`,
+    `${routes.private.budget}[Id]`,
   ];
 
   const stockPages = [
@@ -51,6 +55,8 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const profilePages = [`${routes.private.profile}[Id]`, `${routes.private.internal.profile}[Id]`];
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
+
+  if (ordersPages.includes(path.route)) currentSection = 'Encomendas';
 
   if (projectsPages.includes(path.route)) currentSection = 'Projetos/Orçamentos';
 

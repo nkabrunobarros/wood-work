@@ -3,7 +3,6 @@ import React from 'react';
 //  PropTypes
 import Image from 'next/image';
 import PropTypes from 'prop-types';
-import { FilterItem } from '../utils/FilterItem';
 
 const ProjectCard = (props) => {
   const { setChosenProject, proj } = props;
@@ -14,9 +13,9 @@ const ProjectCard = (props) => {
         sx={{ width: '100%', cursor: 'pointer' }}
         onClick={() => setChosenProject(proj)}
       >
-        <Box className='fullCenter'>
+        <Box className='fullCenter' sx={{ boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.1)' }}>
           <Image
-            alt="green iguana"
+            alt="project image"
             height={140}
             width={140}
             src="https://cdn.pixabay.com/photo/2014/12/21/23/43/table-575911_960_720.png"
@@ -31,17 +30,17 @@ const ProjectCard = (props) => {
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} justifyContent='end'>
               <Typography variant="md" component="div">
-                {FilterItem([{}], proj, 'status.value')}
+                <Typography className='warningBalloon'>Em produção</Typography>
               </Typography>
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} >
               <Typography variant="md">
-                            Qtd: {proj.amount?.value}
+                Qtd: {proj.amount?.value}
               </Typography>
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} justifyContent='end'>
               <Typography variant="md">
-                            Feito: 0 / {proj.amount?.value}
+                Feito: 0 / {proj.amount?.value}
               </Typography></Grid>
           </Grid>
 

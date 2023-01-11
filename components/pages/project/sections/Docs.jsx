@@ -27,7 +27,7 @@ const Docs = (props) => {
     order,
     open,
     styles,
-    onNewFolder,
+    // onNewFolder,
 
   } = props;
 
@@ -50,31 +50,35 @@ const Docs = (props) => {
   }
 
   async function handleCreateFolder () {
-    if (!newFolder.value) {
-      const old = newFolder;
+    if (!newFolder.value) setNewFolder({ ...newFolder, error: 'Não pode ser vazio' });
+    else {
+      // const builtFolder = {
+      //   name: newFolder.value,
+      //   orderDetailId: order.id
+      // };
 
-      old.error = 'Não pode ser vazio';
-      setNewFolder(old);
+      // await FolderActions
+      //   .saveFolder(builtFolder)
+      //   .then((response) => {
+      //     response.data.payload.files = [];
+      //     setFolders([...folders, response.data.payload]);
+      //     setNewFolder({ value: '', error: '' });
+      //     onNewFolder(new Date());
+      //   })
+      //   .catch((err) => console.log(err));
+      const folds = [...folders];
 
-      return;
+      folds.push({
+        id: Math.random(),
+        name: newFolder.value,
+        orderDetailId: order.id,
+        files: []
+      });
+
+      setFolders(folds);
+      setCreatingFolder(false);
+      setNewFolder({ value: '', error: '' });
     }
-
-    const builtFolder = {
-      name: newFolder.value,
-      orderDetailId: order.id
-    };
-
-    await FolderActions
-      .saveFolder(builtFolder)
-      .then((response) => {
-        response.data.payload.files = [];
-        setFolders([...folders, response.data.payload]);
-        setNewFolder({ value: '', error: '' });
-        onNewFolder(new Date());
-      })
-      .catch((err) => console.log(err));
-
-    setCreatingFolder(false);
   }
 
   return open && <>
@@ -145,8 +149,8 @@ const Docs = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {folders && folders.filter(ele => !(ele.name === order.id)).map((row, i) => (
-                <Row key={i} row={row} index={i} onRowClick={setActiveFolder} />
+              {folders && folders?.filter(ele => !(ele.name === order.id))?.map((row, i) => (
+                <Row key={i} row={row} index={i} onRowClick={() => setActiveFolder()} styles={styles} {...props} />
               ))}
               {!folders && <>
                 <TableCell></TableCell>

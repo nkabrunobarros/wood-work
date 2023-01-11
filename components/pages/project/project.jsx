@@ -38,7 +38,7 @@ const Order = ({ ...props }) => {
       </Content>
       {/* Produção section */}
       <Content>
-        <Production {...props} open={isInternalPage && order.status.value !== 'in drawing'} />
+        <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
       </Content>
       {/* Docs */}
       <Content>

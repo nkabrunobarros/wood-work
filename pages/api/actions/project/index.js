@@ -70,6 +70,30 @@ export async function myProjects () {
   return await axios(config);
 }
 
+//  Get my Project
+export async function productionProjects () {
+  const { auth_token: token } = parseCookies();
+
+  const config = {
+    method: 'get',
+    url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.GET,
+    headers: {
+      Authorization: token && `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld>;type="application/ld+json"',
+      'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+    },
+    params: {
+      // q: `status=="${jwt.decode(token).id}"`,
+      q: 'status=="production"',
+      type: 'Project',
+      limit: 200
+    }
+  };
+
+  return await axios(config);
+}
+
 //  Create Project
 export async function saveProject (data) {
   const { auth_token: token } = parseCookies();

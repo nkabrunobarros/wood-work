@@ -213,6 +213,10 @@ const NewOrder = ({ ...props }) => {
         type: 'Relationship',
         object: budgetData.client.value
       },
+      dateDelivery: {
+        type: 'Property',
+        value: budgetData.category.value && budgetData.amount.value && budgetData.price.value ? budgetData.dateDelivery.value : ''
+      },
       deliveryAddress: {
         type: 'Property',
         value: {
