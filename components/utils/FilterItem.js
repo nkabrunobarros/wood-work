@@ -118,11 +118,8 @@ const FilterItem = (data, item, col) => {
 
       case 'estado.value': {
         switch (item?.estado?.value?.toLowerCase()) {
-        case 'espera confirmação': return <Typography variant='md' className="blankBalloon">Espera Confirmação</Typography>;
         case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
-        case 'em transporte': return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em transporte</Typography></Tooltip>;
-        case 'entregue': return <Tooltip title={`${item.status}`}><Typography variant='md' className="successBalloon">Entregue</Typography></Tooltip>;
         case 'in drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
         case 'in production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'in testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
@@ -132,12 +129,14 @@ const FilterItem = (data, item, col) => {
 
       case 'statusClient.value': {
         switch (item?.statusClient?.value.toLowerCase()) {
-        case 'espera confirmação': return <Typography variant='md' className="blankBalloon">Espera Confirmação</Typography>;
+        case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
+        case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
         case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
-        case 'em transporte': return <Tooltip title={'Expedida dia ' + item.expedition.object.expeditionTime?.value || ''}><Typography variant='md' className="warningBalloon">Em transporte</Typography></Tooltip>;
-        case 'entregue': return <Tooltip title={`${item.status}`}><Typography variant='md' className="successBalloon">Entregue</Typography></Tooltip>;
-              // default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+        case 'in drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
+        case 'in production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
+        case 'in testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
+        case 'in transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
         }
       }
 

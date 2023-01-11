@@ -34,21 +34,16 @@ const Orders = ({ ...pageProps }) => {
   const [projects, setProjects] = useState();
   const detailPage = routes.private.project;
 
-  function calcState (value) {
-    if (value.status.value !== 'finished') return value.status.value;
-    else if (value.expedition.object.deliveryFlag.value) return 'Entregue';
-    else if (!value.expedition.object.deliveryFlag.value && value.expedition.object.expeditionTime) return 'Em transporte';
-
-    return 'finished';
-  }
-
   useEffect(() => {
     const getData = async () => {
       const counts = {
-        budgeting: 0,
+        waitingBudget: 0,
+        waitingAdjudication: 0,
         drawing: 0,
         production: 0,
+        expedition: 0,
         concluded: 0,
+        testing: 0,
       };
 
       const test = [];
@@ -57,15 +52,33 @@ const Orders = ({ ...pageProps }) => {
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data)).catch(() => setCategories([]));
 
       await BudgetsActions.myBudgets().then((response) => {
-        response.data.map(item => test.push({
-          id: item.id,
-          category: { ...item.category },
-          name: { ...item.name },
-          Nome: item.name.value,
-          amount: { ...item.amount },
-          statusClient: { type: 'Property', value: 'Espera Confirmação' },
-          Estado: 'Espera Confirmação',
-        }));
+        console.log(response);
+
+        response.data.map(item => {
+          switch (item.status.value) {
+          case 'waiting budget':
+            counts.waitingBudget++;
+
+            break;
+          case 'waiting adjudication':
+            counts.waitingAdjudication++;
+
+            break;
+
+          default:
+            break;
+          }
+
+          test.push({
+            id: item.id,
+            category: { ...item.category },
+            name: { ...item.name },
+            Nome: item.name.value,
+            amount: { ...item.amount },
+            statusClient: { type: 'Property', value: item.status.value },
+            Estado: 'Espera Confirmação',
+          });
+        });
       });
 
       await ClientsActions.clients().then(async (responseClients) => {
@@ -74,6 +87,8 @@ const Orders = ({ ...pageProps }) => {
         await ExpeditionActions.expeditions().then(async (expResponse) => {
           //  Get projects and build
           await ProjectsActions.myProjects().then((response) => {
+            console.log(response);
+
             response.data.map((proj, index) => {
               const thisClient = responseClients.data.find(ele => ele.id === proj.orderBy.object);
 
@@ -83,31 +98,37 @@ const Orders = ({ ...pageProps }) => {
               response.data[index].telemovel = thisClient?.telephone.value;
               // response.data[index].Producao = proj.status.value;
               response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
-              response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
-              response.data[index].Estado = calcState(response.data[index]);
+              response.data[index].estado = { type: 'Property', value: response.data[index].status.value };
+              response.data[index].Estado = response.data[index].status.value;
               response.data[index].statusClient = {};
-              response.data[index].statusClient.value = calcState(response.data[index]);
+              response.data[index].statusClient.value = response.data[index].status.value;
               test.push(response.data[index]);
 
-              // test.push({
-              //   id: response.data[index].id,
-              //   category: { ...response.data[index].category },
-              //   name: { ...response.data[index].name },
-              //   amount: { ...response.data[index].amount },
-              //   statusClient: { type: 'Property', value: calcState(response.data[index]) },
-              // });
-
               switch (proj.status.value.toLowerCase()) {
-              case 'waiting':
-                counts.budgeting++;
+              case 'waiting budget':
+                counts.waitingBudget++;
 
                 break;
-              case 'em desenho':
+              case 'waiting adjudication':
+                counts.waitingAdjudication++;
+
+                break;
+
+              case 'in drawing':
                 counts.drawing++;
 
                 break;
-              case 'working':
+
+              case 'in production':
                 counts.production++;
+
+                break;
+              case 'in transport':
+                counts.expedition++;
+
+                break;
+              case 'in testing':
+                counts.testing++;
 
                 break;
               case 'finished':
@@ -117,7 +138,6 @@ const Orders = ({ ...pageProps }) => {
               }
             });
 
-            console.log(test);
             setProjects(test);
             setPanelsInfo(counts);
           });
@@ -141,7 +161,7 @@ const Orders = ({ ...pageProps }) => {
       {
         num: 1,
         title: 'Em Orçamentação',
-        amount: panelsInfo.budgeting,
+        amount: panelsInfo.waitingBudget,
         icon: (
           <PackageCheck
             size={pageProps.globalVars.iconSizeXl}
@@ -177,7 +197,7 @@ const Orders = ({ ...pageProps }) => {
       {
         num: 4,
         title: 'Em Montagem',
-        amount: panelsInfo.concluded,
+        amount: panelsInfo.testing,
         icon: <AlertOctagon
           size={pageProps.globalVars.iconSizeXl}
           strokeWidth={pageProps.globalVars.iconStrokeWidth} />,

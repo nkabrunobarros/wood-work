@@ -5,8 +5,7 @@ import React, { useEffect, useState } from 'react';
 //  Material UI
 import {
   Autocomplete,
-  Box,
-  Grid,
+  Box, Grid,
   InputLabel, OutlinedInput,
   Tab,
   Tabs,
@@ -272,7 +271,7 @@ const ProjectsScreen = ({ ...props }) => {
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
           <AdvancedTable
-            rows={projects.filter(ele => ele.status.value.toLowerCase() !== 'canceled')}
+            rows={projects.filter(ele => ele?.status?.value?.toLowerCase() !== 'canceled')}
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}

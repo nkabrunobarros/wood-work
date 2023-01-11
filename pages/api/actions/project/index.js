@@ -62,7 +62,8 @@ export async function myProjects () {
     },
     params: {
       q: `orderBy=="${jwt.decode(token).id}"`,
-      type: 'Project'
+      type: 'Project',
+      limit: 200
     }
   };
 

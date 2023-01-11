@@ -11,10 +11,10 @@ import DeliverBudgetModal from './modals/DeliverBudgetModal';
 
 //  Actions
 import moment from 'moment';
+import Router from 'next/router';
 import { toast } from 'react-toastify';
 import * as BudgetActions from '../../../../pages/api/actions/budget';
 import ToastSet from '../../../utils/ToastSet';
-import Router from 'next/router';
 
 const Head = (props) => {
   const { breadcrumbsPath, isInternalPage, pageProps } = props;
@@ -85,6 +85,10 @@ const Head = (props) => {
       const builtProject = {
         id: 'urn:ngsi-ld:Project:' + budget.name.value,
         type: 'Project',
+        orderBy: {
+          type: 'Relationship',
+          object: budget.belongsTo?.object
+        },
         name: {
           type: 'Property',
           value: budget.name.value
@@ -129,7 +133,7 @@ const Head = (props) => {
 
       axios(config)
         .then(() => {
-          Router.push(routes.private.internal.project + builtProject.id)
+          Router.push(routes.private.internal.project + builtProject.id);
           toast.success('Orçamento adjudicado. Passou para produção');
         })
         .catch(function (error) {

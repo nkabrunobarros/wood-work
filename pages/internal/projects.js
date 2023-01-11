@@ -56,6 +56,7 @@ const Projects = ({ ...pageProps }) => {
         production: 0,
         expedition: 0,
         concluded: 0,
+        testing: 0,
       };
 
       // await ProductsActions.products().then((response) => setProducts(response.data.payload.data));
@@ -69,17 +70,17 @@ const Projects = ({ ...pageProps }) => {
             bud.Nome = bud.name.value;
 
             switch (bud.status.value) {
-              case 'waiting budget':
-                counts.waitingBudget++;
+            case 'waiting budget':
+              counts.waitingBudget++;
 
-                break;
-              case 'waiting adjudication':
-                counts.waitingAdjudication++;
+              break;
+            case 'waiting adjudication':
+              counts.waitingAdjudication++;
 
-                break;
+              break;
 
-              default:
-                break;
+            default:
+              break;
             }
 
             return bud;
@@ -107,38 +108,41 @@ const Projects = ({ ...pageProps }) => {
                 response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
                 response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
                 response.data[index].Estado = calcState(response.data[index]);
-                console.log(response.data[index].status.value);
 
                 switch (response.data[index].status.value) {
-                  case 'waiting budget':
-                    counts.waitingBudget++;
+                case 'waiting budget':
+                  counts.waitingBudget++;
 
-                    break;
-                  case 'waiting adjudication':
-                    counts.waitingAdjudication++;
+                  break;
+                case 'waiting adjudication':
+                  counts.waitingAdjudication++;
 
-                    break;
+                  break;
 
-                  case 'in drawing':
-                    counts.drawing++;
+                case 'in drawing':
+                  counts.drawing++;
 
-                    break;
+                  break;
 
-                  case 'production':
-                    counts.production++;
+                case 'in production':
+                  counts.production++;
 
-                    break;
-                  case 'finished':
-                    counts.concluded++;
+                  break;
+                case 'in transport':
+                  counts.expedition++;
 
-                    break;
-                  case 'em transporte':
-                    counts.expedition++;
+                  break;
+                case 'in testing':
+                  counts.testing++;
 
-                    break;
+                  break;
+                case 'finished':
+                  counts.concluded++;
 
-                  default:
-                    break;
+                  break;
+
+                default:
+                  break;
                 }
               });
 
@@ -202,7 +206,7 @@ const Projects = ({ ...pageProps }) => {
       {
         num: 4,
         title: 'Em Montagem',
-        amount: panelsInfo.concluded,
+        amount: panelsInfo.testing,
         icon: (
           <Settings
             size={pageProps.globalVars.iconSizeXl}
