@@ -229,7 +229,7 @@ const ProjectsScreen = ({ ...props }) => {
                   label: 'Distribuição'
                 },
                 {
-                  id: 'em transporte',
+                  id: 'in transport',
                   label: 'Em Transporte'
                 },
                 {

@@ -17,7 +17,8 @@ export async function projects () {
       'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
     },
     params: {
-      type: 'Project'
+      type: 'Project',
+      limit: 200
     }
 
   };

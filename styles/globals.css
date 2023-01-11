@@ -12,6 +12,7 @@
   --green: #0b9e23;
   --greenLight: #e8fcf1;
   --orange: #e98609;
+  --orangeLight: #ffc8857b;
   --babyblue: #1b91e7;
   --grayBG: #f9f9f9;
   --grayEdges: #e7e8e9;
@@ -99,9 +100,9 @@ a {
 }
 
 .warningBalloon {
-  color: var(--yellow);
-  background: var(--yellowLight);
-  border: 1px solid var(--yellow);
+  color: var(--orange);
+  background: var(--orangeLight);
+  border: 1px solid var(--orange);
   padding: 0.5rem;
   border-radius: 50px;
   white-space: nowrap !important;
@@ -130,6 +131,15 @@ a {
   color: var(--babyblue);
   background: rgba(27, 145, 231, 0.20);
   border: 1px solid var(--babyblue);
+  padding: 0.5rem;
+  border-radius: 50px;
+  white-space: nowrap !important;
+}
+
+.alertBalloon {
+  color: var(--yellow);
+  background: var(--yellowLight);
+  border: 1px solid var(--yellow);
   padding: 0.5rem;
   border-radius: 50px;
   white-space: nowrap !important;

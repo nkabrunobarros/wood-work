@@ -64,24 +64,22 @@ const Projects = ({ ...pageProps }) => {
         setClients(responseClients.data);
 
         await BudgetsActions.allBudgets().then(async (budgetResponse) => {
-          setBudgets(budgetResponse.data.filter((e) => e.aprovedDate?.value === ''));
-
           setBudgets([...budgetResponse.data.filter((e) => e.aprovedDate?.value === '' && e.status.value.toLowerCase() !== 'canceled')].map((bud) => {
             bud.Estado = calcState(bud);
             bud.Nome = bud.name.value;
 
             switch (bud.status.value) {
-            case 'waiting budget':
-              counts.waitingBudget++;
+              case 'waiting budget':
+                counts.waitingBudget++;
 
-              break;
-            case 'waiting adjudication':
-              counts.waitingAdjudication++;
+                break;
+              case 'waiting adjudication':
+                counts.waitingAdjudication++;
 
-              break;
+                break;
 
-            default:
-              break;
+              default:
+                break;
             }
 
             return bud;
@@ -112,35 +110,35 @@ const Projects = ({ ...pageProps }) => {
                 console.log(response.data[index].status.value);
 
                 switch (response.data[index].status.value) {
-                case 'waiting budget':
-                  counts.waitingBudget++;
+                  case 'waiting budget':
+                    counts.waitingBudget++;
 
-                  break;
-                case 'waiting adjudication':
-                  counts.waitingAdjudication++;
+                    break;
+                  case 'waiting adjudication':
+                    counts.waitingAdjudication++;
 
-                  break;
+                    break;
 
-                case 'in drawing':
-                  counts.drawing++;
+                  case 'in drawing':
+                    counts.drawing++;
 
-                  break;
+                    break;
 
-                case 'production':
-                  counts.production++;
+                  case 'production':
+                    counts.production++;
 
-                  break;
-                case 'finished':
-                  counts.concluded++;
+                    break;
+                  case 'finished':
+                    counts.concluded++;
 
-                  break;
-                case 'em transporte':
-                  counts.expedition++;
+                    break;
+                  case 'em transporte':
+                    counts.expedition++;
 
-                  break;
+                    break;
 
-                default:
-                  break;
+                  default:
+                    break;
                 }
               });
 

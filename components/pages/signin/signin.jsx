@@ -8,7 +8,7 @@ import {
   Box,
   Button,
   Checkbox,
-  CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid, InputLabel, Paper, TextField, Typography
+  CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid, Paper, Typography
 } from '@mui/material';
 
 //  Styles
@@ -82,10 +82,10 @@ const SignIn = (props) => {
       password: ''
     };
 
-    if (email === '') errors.email = 'Email é obrigatório';
+    if (email === '') errors.email = 'Campo obrigatório';
     else if (!EmailValidation(email)) errors.email = 'Email mal estruturado';
 
-    if (password === '') errors.password = 'Senha é obrigatório';
+    if (password === '') errors.password = 'Campo obrigatório';
     else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres';
 
     if (errors.password || errors.email) {
@@ -99,8 +99,8 @@ const SignIn = (props) => {
 
     const loadingNotification = toast.loading('');
 
-    try {
-      await login({ email, password }).then(async (res) => {
+    await login({ email, password }).then(async (res) => {
+      if (res.status !== 404) {
         res.data.token !== undefined && setCookie(undefined, 'auth_token', res.data.token);
 
         await me({ ...res?.data }).then((resultMe) => {
@@ -226,23 +226,16 @@ const SignIn = (props) => {
 
             if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
             else router.push(loginSuccessRoute);
-
-            //   if (IsInternal(user.profile.object.description)) router.push(loginSuccessRoute);
-            //   else {
-            //    if (client && user.tos !== 'True') router.push(loginSuccessRouteTerm);
-            //    else router.push(loginSuccessRoute);
-            //  }
           }
         });
-      });
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
+      } else {
+        setLoading(false);
 
-      if (!err.response?.data?.success && err.response?.data?.message === 'credenciais-invalidas') ToastSet(loadingNotification, 'Credenciais invalidas', 'error');
-      else if (err.response?.data?.message === 'utilizador-inativo') ToastSet(loadingNotification, 'Conta Inativa', 'error');
-      else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
-    }
+        if (!res.response?.data?.success && res.response?.data?.message === 'credenciais-invalidas') ToastSet(loadingNotification, 'Credenciais invalidas', 'error');
+        else if (res.response?.data?.message === 'utilizador-inativo') ToastSet(loadingNotification, 'Conta Inativa', 'error');
+        else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
+      }
+    });
   };
 
   return (
@@ -296,7 +289,6 @@ const SignIn = (props) => {
             <div className={styles.logoImg}>
             </div>
           </Box>
-
         </Grid>
       }
 
@@ -329,25 +321,18 @@ const SignIn = (props) => {
             onSubmit={handleSubmit}
             sx={{ mt: 1, width: '100%' }}
           >
-            <InputLabel htmlFor='email'>Endereço de Email</InputLabel>
-
-            <TextField
-              required
-              fullWidth
+            <MyInput
               id='email'
-              value={email}
+              label='Endereço de Email'
               onChange={(e) => {
                 if (emailErrors) setEmailErrors('');
 
                 setEmail(e.target.value);
               }
               }
-              type='email'
+              value={email}
+              error={emailErrors}
               name='email'
-              autoComplete='email'
-              autoFocus
-              error={!!emailErrors}
-              label={emailErrors || ''}
             />
             <MyInput
               id='password'

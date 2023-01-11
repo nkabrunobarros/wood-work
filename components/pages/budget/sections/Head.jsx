@@ -14,6 +14,7 @@ import moment from 'moment';
 import { toast } from 'react-toastify';
 import * as BudgetActions from '../../../../pages/api/actions/budget';
 import ToastSet from '../../../utils/ToastSet';
+import Router from 'next/router';
 
 const Head = (props) => {
   const { breadcrumbsPath, isInternalPage, pageProps } = props;
@@ -128,6 +129,7 @@ const Head = (props) => {
 
       axios(config)
         .then(() => {
+          Router.push(routes.private.internal.project + builtProject.id)
           toast.success('Orçamento adjudicado. Passou para produção');
         })
         .catch(function (error) {

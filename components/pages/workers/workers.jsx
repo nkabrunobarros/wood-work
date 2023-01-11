@@ -37,16 +37,16 @@ const Workers = ({ ...props }) => {
   const [profilesFilter, setProfilesFilter] = useState('');
 
   const [filters, setFilters] = useState({
-    nome,
-    email,
-    idPerfil: profilesFilter,
+    Nome: nome,
+    Email: email,
+    Perfil: profilesFilter,
   });
 
   useEffect(() => {
     setFilters({
-      nome,
-      email,
-      idPerfil: profilesFilter,
+      Nome: nome,
+      Email: email,
+      Perfil: profilesFilter,
     });
   }, [nome, email, profilesFilter]);
 
@@ -66,7 +66,6 @@ const Workers = ({ ...props }) => {
           <a className='headerTitleSm'>Filtros</a>
           <div className='filters'>
             <div className='filterContainer'>
-
               <Select
                 label={'Nome'}
                 options={workers.filter((item) => item.active && item)}
@@ -95,8 +94,8 @@ const Workers = ({ ...props }) => {
                   label='Perfil'
                   options={profiles}
                   value={profilesFilter}
-                  optionLabel='descricao'
-                  optionValue='id'
+                  optionLabel='label'
+                  optionValue='value'
                   onChange={(e) => setProfilesFilter(e.target.value)}
                 />
               }
@@ -156,6 +155,7 @@ const Workers = ({ ...props }) => {
           clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
+          setFilters={setFilters}
         />
       </Content>
     </Grid>

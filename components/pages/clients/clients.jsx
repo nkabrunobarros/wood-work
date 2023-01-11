@@ -38,10 +38,15 @@ const Clients = ({ ...props }) => {
   useEffect(() => {
     setFilters({
       Nome: nome,
-      email,
+      Email: email,
       perfilId: profilesFilter
     });
   }, [nome, email, profiles, profilesFilter]);
+
+  useEffect(() => {
+    setEmail(filters.Email || '');
+    setNome(filters.Nome || '');
+  }, [filters]);
 
   const ClearFilters = () => {
     setNome('');

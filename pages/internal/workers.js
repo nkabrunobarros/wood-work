@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 //  Custom Components
 import Loader from '../../components/loader/loader';
+import { functions } from '../../components/pages/newWorker/newWorker';
 import WorkersScreen from '../../components/pages/workers/workers';
 
 //  Navigation
@@ -18,23 +19,27 @@ const Workers = () => {
   const [loaded, setLoaded] = useState(false);
   const [workers, setWorkers] = useState();
   // const [profiles, setProfiles] = useState();
-  const profiles = [];
+  const profiles = functions;
 
   useEffect(() => {
     const getData = async () => {
       await WorkerActions
         .workers()
-        .then((res) => setWorkers(res.data));
+        .then((res) => setWorkers([...res.data].map((worker) => {
+          worker.Nome = worker.givenName?.value;
+          worker.Email = worker.email?.value;
+          worker.Perfil = worker.functionPerformed?.value;
 
-      // await ProfileActions
-      //   .perfis()
-      //   .then((res) => setProfiles(res.data.payload.data));
+          return worker;
+        })));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
+    console.log(workers);
+
     const breadcrumbsPath = [
       {
         title: 'Utilizadores',

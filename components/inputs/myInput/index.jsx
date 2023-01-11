@@ -29,7 +29,7 @@ const MyInput = ({
     {variant !== 'standard' && (
       <Tooltip title={tooltip || ''} >
 
-        <InputLabel htmlFor={label} >
+        <InputLabel htmlFor={'ID-' + label} id={'ID-' + label} >
           {label}
           {required &&
           <Tooltip title='Obrigatório' >
@@ -40,13 +40,14 @@ const MyInput = ({
 
     )}
     <FormControl fullWidth disabled={disabled}>
-      {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
+      {!!error && <InputLabel error={!!error} id={'ID-' + label}>{error}</InputLabel>}
       <OutlinedInput
+        aria-labelledby={'ID-' + label}
         variant={variant}
         name={name}
         type={type || 'string'}
         multiline={type === 'area'}
-        id={id}
+        id={id || 'ID-' + label}
         error={error}
         value={value}
         onChange={onChange}

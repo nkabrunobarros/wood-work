@@ -99,11 +99,11 @@ const NewOrder = ({ ...props }) => {
 
       data.postalCode.error = '';
       data.streetAddress.error = '';
-      data.postalCode.value = client.address?.value?.postalCode;
-      data.streetAddress.value = client.address?.value?.streetAddress || '';
-      data.addressLocality.value = client.address?.value?.addressLocality;
-      data.addressRegion.value = client.address?.value?.addressRegion;
-      data.addressCountry.value = client.address?.value?.addressCountry;
+      data.postalCode.value = client?.address?.value?.postalCode;
+      data.streetAddress.value = client?.address?.value?.streetAddress || '';
+      data.addressLocality.value = client?.address?.value?.addressLocality;
+      data.addressRegion.value = client?.address?.value?.addressRegion;
+      data.addressCountry.value = client?.address?.value?.addressCountry;
     }
 
     data[props.name].value = props.value;

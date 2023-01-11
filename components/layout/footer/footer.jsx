@@ -68,13 +68,12 @@ const Footer = () => {
             placeholder='blur'
             priority
             src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
-            layout='intrinsic'
           />
           : <a
             className='link'
             style={{ color: 'inherit' }}
             onClick={() => Router.push(routes.private.tos)}
-          >  Termos e Condições | Política de Privacidade </a>
+          > Termos e Condições | Política de Privacidade </a>
         }
       </Grid>
     </Grid >

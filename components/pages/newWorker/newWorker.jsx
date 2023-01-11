@@ -28,6 +28,41 @@ import * as WorkerActions from '../../../pages/api/actions/worker';
 import Notification from '../../dialogs/Notification';
 import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
+export const functions = [
+  {
+    label: 'CNC',
+    value: 'CNC',
+  },
+  {
+    label: 'Nesting',
+    value: 'Nesting',
+  },
+  {
+    label: 'Manual Cut',
+    value: 'Manual Cut',
+  },
+  {
+    label: 'Assembly',
+    value: 'Assembly',
+  },
+  {
+    label: 'Manager',
+    value: 'Manager',
+  },
+  {
+    label: 'Designer',
+    value: 'Designer',
+  },
+  {
+    label: 'Budgeting',
+    value: 'Budgeting',
+  },
+  {
+    value: 'Warehouse',
+    label: 'Warehouse'
+  }
+];
+
 const newWorker = ({ ...props }) => {
   const { breadcrumbsPath, countries, organizations } = props;
   //  Dialog
@@ -52,41 +87,6 @@ const newWorker = ({ ...props }) => {
   //     value: [3,4]
   //   }
   // ];
-
-  const functions = [
-    {
-      label: 'CNC',
-      value: 'CNC',
-    },
-    {
-      label: 'Nesting',
-      value: 'Nesting',
-    },
-    {
-      label: 'Manual Cut',
-      value: 'Manual Cut',
-    },
-    {
-      label: 'Assembly',
-      value: 'Assembly',
-    },
-    {
-      label: 'Manager',
-      value: 'Manager',
-    },
-    {
-      label: 'Designer',
-      value: 'Designer',
-    },
-    {
-      label: 'Budgeting',
-      value: 'Budgeting',
-    },
-    {
-      value: 'Warehouse',
-      label: 'Warehouse'
-    }
-  ];
 
   const [inputFields, setInputFields] = useState([
     {

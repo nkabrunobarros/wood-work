@@ -347,8 +347,7 @@ const AdvancedTable = ({
         };
 
         axios(config)
-          .then(function (response) {
-            console.log(JSON.stringify(response.data));
+          .then(function () {
             toast.success('Budget cancelado com sucesso!');
           })
           .catch(function (error) {
@@ -546,7 +545,6 @@ const AdvancedTable = ({
       }
       );
 
-      console.log(fitleredTest);
       setFilteredItems(fitleredTest);
     }
   }, [filters, rangeFilters]);

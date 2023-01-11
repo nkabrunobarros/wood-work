@@ -22,6 +22,7 @@ import Production from './sections/Production';
 
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
+  const [order, setOrder] = useState(props.order);
   const [refresh, setRefresh] = useState(new Date());
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
@@ -33,11 +34,11 @@ const Order = ({ ...props }) => {
       <CustomBreadcrumbs path={breadcrumbsPath} />
       {/* Page Header */}
       <Content id={refresh}>
-        <Head {...props} />
+        <Head {...props} order={order} setOrder={setOrder}/>
       </Content>
       {/* Produção section */}
       <Content>
-        <Production {...props} open={isInternalPage} />
+        <Production {...props} open={isInternalPage && order.status.value !== 'in drawing'} />
       </Content>
       {/* Docs */}
       <Content>
@@ -57,6 +58,7 @@ const Order = ({ ...props }) => {
 
 Order.propTypes = {
   breadcrumbsPath: PropTypes.array,
+  order: PropTypes.object,
 };
 
 export default Order;

@@ -1,5 +1,5 @@
 //  PropTypes
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Grow, Typography } from '@mui/material';
 import { Eye } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -91,61 +91,65 @@ const Production = (props) => {
       detailOnly
       productionDetails={productionDetail}
     />
-    <Box id='pad'>
-      <Box style={{ display: 'flex', marginBottom: '1rem' }}>
-        <Typography variant='title'>Produção</Typography>
-        <Box style={{ marginLeft: 'auto' }}>
-          <PrimaryBtn
-            onClick={() => setProductionDetailModal(!productionDetailModal)}
-            icon={
-              <Eye
-                strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+    <Grow in={open}>
+      <Box>
+        <Box id='pad'>
+          <Box style={{ display: 'flex', marginBottom: '1rem' }}>
+            <Typography variant='title'>Produção</Typography>
+            <Box style={{ marginLeft: 'auto' }}>
+              <PrimaryBtn
+                onClick={() => setProductionDetailModal(!productionDetailModal)}
+                icon={
+                  <Eye
+                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
+                }
+                text='Ver detalhes'
               />
-            }
-            text='Ver detalhes'
-          />
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ width: '100%', overflow: 'scroll' }}>
+          <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+            <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[0].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[1].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[2].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[3].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[4].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[5].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[6].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[7].label}</Typography></Box></Grid>
+            </Grid>
+            <Grid container md={12} sm={12} xs={12} >
+              {productionDetail
+                .filter(ele => !ele.endedAt)
+                .sort((a, b) => a.tag - b.tag)
+                .map((part, rowIndex) => {
+                  return (
+                    <Grid
+                      {...rowProps}
+                      key={rowIndex}
+                    >
+                      <Grid {...cellProps} > <Typography variant='sm'>{part?.part?.tag }</Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'>{part?.part.ref.replace('MC_MUEBLETV_', '').replace('_', ' ') } </Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'> <CurrentOperation part={part} /> </Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'>{moment(part.startedAt).format('DD/MM/YYYY hh:mm') } </Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'>{parts.find(ele => ele.name === part.part.ref.replace('MC_MUEBLETV_', '')).buildTime || '?'} min</Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'><PartDone part={part} /></Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'><TimeDetour {...props} part={part} /> </Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'><WorkerName {...props} part={part} /> </Typography></Grid>
+                      {/* <Grid {...cellProps} > <Typography variant='sm'>{part.nestWorker || part.cncWorker } </Typography></Grid> */}
+                    </Grid>
+                  );
+                })}
+            </Grid>
+          </Grid>
+
         </Box>
       </Box>
-    </Box>
-    <Box sx={{ width: '100%', overflow: 'scroll' }}>
-      <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-        <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[0].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[1].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[2].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[3].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[4].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[5].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[6].label}</Typography></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[7].label}</Typography></Box></Grid>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12} >
-          {productionDetail
-            .filter(ele => !ele.endedAt)
-            .sort((a, b) => a.tag - b.tag)
-            .map((part, rowIndex) => {
-              return (
-                <Grid
-                  {...rowProps}
-                  key={rowIndex}
-                >
-                  <Grid {...cellProps} > <Typography variant='sm'>{part?.part?.tag }</Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{part?.part.ref.replace('MC_MUEBLETV_', '').replace('_', ' ') } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'> <CurrentOperation part={part} /> </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{moment(part.startedAt).format('DD/MM/YYYY hh:mm') } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{parts.find(ele => ele.name === part.part.ref.replace('MC_MUEBLETV_', '')).buildTime || '?'} min</Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'><PartDone part={part} /></Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'><TimeDetour {...props} part={part} /> </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'><WorkerName {...props} part={part} /> </Typography></Grid>
-                  {/* <Grid {...cellProps} > <Typography variant='sm'>{part.nestWorker || part.cncWorker } </Typography></Grid> */}
-                </Grid>
-              );
-            })}
-        </Grid>
-      </Grid>
-
-    </Box>
+    </Grow>
 
   </>;
 };

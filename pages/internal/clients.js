@@ -32,7 +32,7 @@ const Clients = ({ ...pageProps }) => {
         .then((res) => {
           setClients([...res.data].map(client => {
             client.Nome = client.name?.value || client.givenName?.value;
-            console.log(client.Nome);
+            client.Email = client.email?.value;
 
             return client;
           }));

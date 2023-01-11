@@ -30,22 +30,24 @@ export async function login (data) {
     },
     params: {
       type: 'Worker',
-      // q: "email==%22bruno.barros@nka.pt%22&q=password==%22ChangeMe%22"
-      // q: `email==%22${data.email}%22&q=password==%22${data.password}%22`
     }
   };
 
   const res = await axios(config);
   const user = res.data.find(ele => ele.email?.value === data.email && ele.password?.value === data.password);
 
-  const toEncode = {
-    id: user.id,
-    iat: 1516239022
-  };
+  if (user) {
+    const toEncode = {
+      id: user?.id,
+      iat: 1516239022
+    };
 
-  const encoded = jwt.sign(toEncode, 'secret');
+    const encoded = jwt.sign(toEncode, 'secret');
 
-  return { data: { token: encoded, type: 'Worker' } };
+    return { data: { token: encoded, type: 'Worker' } };
+  }
+
+  return { response: { data: { success: false, message: 'credenciais-invalidas' }, type: 'Worker' }, status: 404 };
 }
 
 export async function loginClient (data) {
