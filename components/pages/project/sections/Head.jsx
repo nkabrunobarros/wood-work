@@ -159,9 +159,9 @@ const Head = (props) => {
           <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
         </Grid>
+
       </Grid>
     </Grid>
-
   </Box>;
 };
 

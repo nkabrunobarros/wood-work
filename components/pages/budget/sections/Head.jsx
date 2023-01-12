@@ -1,26 +1,64 @@
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 //  PropTypes
 import { CheckCircleOutline } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import routes from '../../../../navigation/routes';
-import { categories } from '../../../../pages/internal/new-project';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 import AdjudicateBudgetModal from './modals/AdjudicateBudgetModal';
 import DeliverBudgetModal from './modals/DeliverBudgetModal';
 
 //  Actions
+import { Save } from 'lucide-react';
 import moment from 'moment';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import * as BudgetActions from '../../../../pages/api/actions/budget';
+import Notification from '../../../dialogs/Notification';
+import CurrencyInput from '../../../inputs/CurrencyInput';
+import MySelect from '../../../inputs/select';
 import ToastSet from '../../../utils/ToastSet';
 
+export const EditableCell = (props) => {
+  const { active, onDoubleClick, value, type, name, options, onChange } = props;
+
+  return <>
+    {!active
+      ? <Tooltip title='Dois cliques para editar' sx={{ cursor: 'pointer' }}>
+        <Typography variant='sm' onDoubleClick={() => onDoubleClick(name)}>
+          {value
+            ? <>
+              {name === 'category' ? <>{options.find(ele => ele.id === value)?.label}</> : value + (type === 'currency' ? ' €' : '')}
+            </>
+            : 'Não definido'}
+        </Typography>
+      </Tooltip>
+      : <>
+        {type === 'currency' && <CurrencyInput variant='standard' value={value} name={name} onChange={onChange} />}
+        {type === 'select' && <MySelect variant='standard' value={value} name={name} options={options} onChange={onChange} /> }
+        {(type === 'number' || type === undefined || type === '') && <TextField variant='standard' value={value} name={name} type={type || 'text'} onChange={onChange} /> }
+      </>
+    }</>;
+};
+
+EditableCell.propTypes = {
+  active: PropTypes.bool,
+  onDoubleClick: PropTypes.func,
+  value: PropTypes.any,
+  type: PropTypes.string,
+  name: PropTypes.string,
+  options: PropTypes.arrayOf(PropTypes.object),
+  onChange: PropTypes.func
+};
+
 const Head = (props) => {
-  const { breadcrumbsPath, isInternalPage, pageProps } = props;
+  const { breadcrumbsPath, isInternalPage, pageProps, categories } = props;
   const [deliverModal, setDeliverModal] = useState(false);
   const [adjudicateModal, setAdjudicateModal] = useState(false);
-  const [budget, setBudget] = useState(props.budget);
+  const [old, setOld] = useState({ ...props.budget });
+  // const old = { ...props.budget };
+  const [budget, setBudget] = useState({ ...props.budget });
+  const [activeFields, setActiveFields] = useState({ price: false, amount: false, category: false });
 
   const upperCells = {
     alignItems: 'center',
@@ -40,7 +78,36 @@ const Head = (props) => {
     borderColor: 'divider'
   };
 
+  console.log('old:  ' + old.amount.value);
+  console.log('budget:  ' + budget.amount.value);
+
   //  Updates Budget
+  async function handleUpdate () {
+    const loading = toast.loading();
+
+    const builtBudget = [{
+      id: budget.id,
+      type: 'Budget',
+      price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
+      amount: { type: 'Property', value: budget.amount.value },
+      category: { type: 'Property', value: budget.category.value },
+    }];
+
+    await BudgetActions.updateBudget(builtBudget)
+      .then(() => {
+        ToastSet(loading, 'Orçamento alterado!', 'success');
+        setActiveFields({ price: false, amount: false, category: false });
+
+        setBudget({
+          ...budget,
+          price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
+          amount: { type: 'Property', value: budget.amount.value },
+          category: { type: 'Property', value: budget.category.value }
+        });
+      })
+      .catch(() => ToastSet(loading, 'Orçamento não alterado. Se o problema persistir, contacte a gerencia.', 'error'));
+  }
+
   async function handleConfirmation ({ amount, obs, price, category }) {
     const processing = toast.loading('');
 
@@ -68,14 +135,8 @@ const Head = (props) => {
     const builtBudget = [{
       id: budget.id,
       type: 'Budget',
-      aprovedDate: {
-        type: 'Property',
-        value: moment().format('DD/MM/YYYY')
-      },
-      status: {
-        type: 'Property',
-        value: 'adjudicated'
-      }
+      aprovedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
+      status: { type: 'Property', value: 'adjudicated' }
     }];
 
     await BudgetActions.updateBudget(builtBudget).then(async () => {
@@ -121,10 +182,7 @@ const Head = (props) => {
       const config = {
         method: 'post',
         url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities/',
-        headers: {
-          'Content-Type': 'application/ld+json',
-          'Fiware-Service': 'woodwork40'
-        },
+        headers: { 'Content-Type': 'application/ld+json', 'Fiware-Service': 'woodwork40' },
         data: builtProject
       };
 
@@ -141,24 +199,63 @@ const Head = (props) => {
     });
   }
 
+  function onCellDoubleClick (props) {
+    setActiveFields({ ...activeFields, [props]: true });
+  }
+
+  function onFieldChange ({ target }) {
+    const bud = { ...budget };
+
+    bud[target.name].value = target.value;
+    setBudget(bud);
+  }
+
   return (
     <>
+      <Notification />
       <DeliverBudgetModal {...props} open={deliverModal} handleClose={() => setDeliverModal(false)} onConfirm={handleConfirmation} />
       <AdjudicateBudgetModal {...props} open={adjudicateModal} handleClose={() => setAdjudicateModal(false)} onConfirm={handleAdjudication} />
       <Box id='pad'>
         <Box container >
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
-            <Grid container md={9} sm={9} xs={9}>
+            <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
                 <Typography variant='title'> {breadcrumbsPath[1].title}</Typography>
                 {isInternalPage &&
-            <Box pl={2}>
-              {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
-              {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
-            </Box>}
+                  <Box pl={2}>
+                    {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
+                    {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
+                  </Box>
+                }
               </Box>
             </Grid>
-            <Grid container md={3} sm={3} xs={3} justifyContent='end'>
+            <Grid container md={6} sm={6} xs={6} justifyContent='end' alignItems={'center'}>
+              <PrimaryBtn
+                breathing
+                hidden={!(JSON.stringify(props.budget) !== JSON.stringify(budget) && isInternalPage)}
+                text={'Guardar alterações'}
+                onClick={handleUpdate}
+                icon={
+                  <Save
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
+                }
+                sx={{ mr: 1 }}
+              />
+              <PrimaryBtn
+                breathing
+                hidden={!(JSON.stringify(old) !== JSON.stringify(budget) && isInternalPage)}
+                text={'Guardar alterações OLD'}
+                onClick={handleUpdate}
+                icon={
+                  <Save
+                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
+                    size={pageProps.globalVars.iconSize}
+                  />
+                }
+                sx={{ mr: 1 }}
+              />
               <PrimaryBtn
                 hidden={!(budget.status.value !== 'adjudicated' && budget.status.value !== 'canceled' && isInternalPage)}
                 text={budget.status.value === 'waiting adjudication' ? 'Adjudicar orçamento' : 'Entregar orçamento'}
@@ -207,15 +304,20 @@ const Head = (props) => {
                 <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Quantidade</Typography></Grid>
                 <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Valor</Typography></Grid>
               </Grid>
-              {console.log(budget)}
               <Grid container md={12} sm={12} xs={12}>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateRequest?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateCreation?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateDeliveryProject?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{budget?.category?.value ? categories.find(ele => ele.id === budget?.category?.value)?.label : 'Não definido'}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{budget?.amount?.value ? budget?.amount?.value : 'Não definido'}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm'>{budget?.price?.value ? budget?.price?.value + ' €' : 'Não definido'}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
+                  <EditableCell active={activeFields.category} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
+                </Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
+                  <EditableCell active={activeFields.amount} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
+                </Grid>
+                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
+                  <EditableCell active={activeFields.price} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -231,6 +333,7 @@ Head.propTypes = {
   budget: PropTypes.object,
   isInternalPage: PropTypes.bool,
   pageProps: PropTypes.object,
+  categories: PropTypes.array,
 };
 
 export default Head;

@@ -5,9 +5,7 @@ import React, { useEffect, useState } from 'react';
 //  Material UI
 import {
   Autocomplete,
-  Box,
-  Button,
-  Grid,
+  Box, Grid,
   InputLabel, OutlinedInput,
   Tab,
   Tabs,
@@ -34,7 +32,7 @@ import CanDo from '../../utils/CanDo';
 
 //  Navigation
 import routes from '../../../navigation/routes';
-import * as ProjectActions from '../../../pages/api/actions/project';
+// import * as ProjectActions from '../../../pages/api/actions/project';
 import IsInternal from '../../utils/IsInternal';
 
 const ProjectsScreen = ({ ...props }) => {
@@ -68,20 +66,20 @@ const ProjectsScreen = ({ ...props }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
-  async function fixAll () {
-    // eslint-disable-next-line consistent-return, array-callback-return
-    const updatedOrders = projects.map((ord) => {
-      if (ord.orderBy?.object) {
-        return {
-          id: ord.id,
-          type: ord.type,
-          status: { type: 'Property', value: ord.status?.value.replace('in ', '') }
-        };
-      }
-    });
+  // async function fixAll () {
+  //   // eslint-disable-next-line consistent-return, array-callback-return
+  //   const updatedOrders = projects.map((ord) => {
+  //     if (ord.orderBy?.object) {
+  //       return {
+  //         id: ord.id,
+  //         type: ord.type,
+  //         status: { type: 'Property', value: ord.status?.value.replace('in ', '') }
+  //       };
+  //     }
+  //   });
 
-    await ProjectActions.updateProject(updatedOrders.filter(ord => ord !== undefined)).then(() => {}).catch(() => console.log('failed '));
-  }
+  //   await ProjectActions.updateProject(updatedOrders.filter(ord => ord !== undefined)).then(() => {}).catch(() => console.log('failed '));
+  // }
 
   const ClearFilters = () => {
     setProduct('');
@@ -146,7 +144,7 @@ const ProjectsScreen = ({ ...props }) => {
 
   return (
     <Grid component='main'>
-      <Button onClick={() => fixAll()}>fix</Button>
+      {/* <Button onClick={() => fixAll()}>fix</Button> */}
       <CssBaseline />
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />

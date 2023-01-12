@@ -139,7 +139,7 @@ const Budget = ({ ...pageProps }) => {
 
     const props = {
       breadcrumbsPath,
-      budget,
+      budget: { ...budget },
       folders,
       pageProps,
       headCellsDocs,

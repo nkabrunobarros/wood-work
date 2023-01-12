@@ -189,7 +189,6 @@ const Stock = ({ ...props }) => {
           setFilters={setFilters}
           rangeFilters={sizesFilter}
           setRangeFilters={setSizesFilter}
-          actionId='productId'
         />
       </Content>
     </Grid>

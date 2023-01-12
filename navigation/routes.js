@@ -12,7 +12,8 @@ const routes = {
       editWorker: '/internal/edit-worker/',
 
       stocks: '/internal/stocks',
-      stockId: '/internal/stock/',
+      stock: '/internal/stock/',
+      editStock: '/internal/edit-stock/',
 
       projectsSimilar: '/internal/projects-similar',
       projects: '/internal/projects',

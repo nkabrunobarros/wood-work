@@ -13,6 +13,25 @@ import PropTypes from 'prop-types';
 //  Navigation
 import routes from '../../navigation/routes';
 
+export const dummyStocks = [
+  { id: 'AG L Biscuit Nude 36W 10', warehouse: '4', material: 'AG L Biscuit Nude 36W 10 ', qtd: 2, comp: 400, larg: 338.5, esp: 10 },
+  { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 326.5, larg: 184.5, esp: 16 },
+  { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 406, larg: 207.5, esp: 16 },
+  { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 326.5, larg: 184.5, esp: 16 },
+  { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 406, larg: 207.5, esp: 16 },
+  { id: 'AG L Marmol Hades 19 CNC', warehouse: '4', material: 'AG L Marmol Hades 19 CNC', qtd: 1, comp: 2400, larg: 926, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 2400, larg: 566, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1716, larg: 466, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 2, comp: 268, larg: 444, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1678, larg: 444, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 2, comp: 400, larg: 283, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 2, comp: 444, larg: 287, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 924, larg: 283, esp: 19 },
+  { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 907, larg: 76, esp: 19 },
+  { id: 'MDF Folheado Carv 19', warehouse: '4', material: 'MDF Folheado Carv 19', qtd: 1, comp: 2394, larg: 560, esp: 19 },
+  { warehouse: '4', material: 'HDF 19 ', qtd: 24, comp: 540, larg: 70, esp: 19 },
+];
+
 const Stock = () => {
   const [loaded, setLoaded] = useState(false);
   const [stocks, setStocks] = useState();
@@ -21,25 +40,6 @@ const Stock = () => {
   //  Data Fetching
   useEffect(() => {
     const getData = async () => {
-      const dummyStocks = [
-        { warehouse: '4', material: 'AG L Biscuit Nude 36W 10 ', qtd: 2, comp: 400, larg: 338.5, esp: 10 },
-        { warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 326.5, larg: 184.5, esp: 16 },
-        { warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 406, larg: 207.5, esp: 16 },
-        { warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 326.5, larg: 184.5, esp: 16 },
-        { warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 2, comp: 406, larg: 207.5, esp: 16 },
-        { warehouse: '4', material: 'AG L Marmol Hades 19 CNC', qtd: 1, comp: 2400, larg: 926, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 2400, larg: 566, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1716, larg: 466, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 2, comp: 268, larg: 444, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1678, larg: 444, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 2, comp: 400, larg: 283, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 2, comp: 444, larg: 287, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 924, larg: 283, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 907, larg: 76, esp: 19 },
-        { warehouse: '4', material: 'MDF Folheado Carv 19', qtd: 1, comp: 2394, larg: 560, esp: 19 },
-        { warehouse: '4', material: 'HDF 19 ', qtd: 24, comp: 540, larg: 70, esp: 19 },
-      ];
-
       setStocks(dummyStocks);
 
       setFiltersSizes({
@@ -107,7 +107,7 @@ const Stock = () => {
       },
     ];
 
-    const detailPage = routes.private.internal.stockId;
+    const detailPage = routes.private.internal.stock;
 
     const props = {
       breadcrumbsPath,

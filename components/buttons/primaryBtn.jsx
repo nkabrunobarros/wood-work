@@ -3,9 +3,9 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Button, Tooltip } from '@mui/material';
+import { Button, Grow, Tooltip } from '@mui/material';
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing }) => {
   const style = {
     color: light ? 'palette.primary.main' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
@@ -15,14 +15,16 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
   };
 
   return !hidden && (
-    <Tooltip title={title || ''}>
-      <Button id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
-        {icon}
-        {text}
-        {/* Children is for file Inputs */}
-        {children}
-      </Button>
-    </Tooltip>
+    <Grow in={true}>
+      <Tooltip title={title || ''}>
+        <Button className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
+          {icon}
+          {text}
+          {/* Children is for file Inputs */}
+          {children}
+        </Button>
+      </Tooltip>
+    </Grow>
   );
 };
 
@@ -30,6 +32,7 @@ PrimaryBtn.propTypes = {
   text: PropTypes.string,
   icon: PropTypes.any,
   light: PropTypes.bool,
+  breathing: PropTypes.bool,
   fullWidth: PropTypes.bool,
   hidden: PropTypes.bool,
   color: PropTypes.string,

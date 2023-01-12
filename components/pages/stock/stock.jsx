@@ -10,12 +10,12 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
 import { Box, ButtonGroup, Divider, Tooltip, Typography } from '@mui/material';
-import { Router } from 'next/router';
+import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
 
 const Stock = ({ ...props }) => {
-  const { stock, breadcrumbsPath } = props;
+  const { stock, breadcrumbsPath, pageProps } = props;
 
   return (
     <Grid component='main'>
@@ -28,19 +28,19 @@ const Stock = ({ ...props }) => {
           style={{ display: 'flex', alignItems: 'center' }}
         >
           <Box id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{stock.product.name}</a>
+            <a className='headerTitleXl'>{stock.material}</a>
             <Box className='spacer' />
-            <Tooltip title={`${stock.amount} unidade(s)`}>
+            <Tooltip title={`${stock?.qtd} unidade(s)`}>
 
-              {stock.amount > 0
+              {stock?.qtd > 0
                 ? <a className="successBalloon">Disponivel</a>
                 : <a className="errorBalloon">Indisponivel</a>}
             </Tooltip>
           </Box>
           <Box style={{ display: 'flex' }}>
             <ButtonGroup>
-              <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.ed)} icon={<Edit strokeWidth='1' />} />
-              <PrimaryBtn text='Apagar' icon={<Trash strokeWidth='1' />} light />
+              <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock.id)} icon={<Edit strokeWidth='1' />} />
+              <PrimaryBtn text='Apagar' icon={<Trash strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} />} light />
             </ButtonGroup>
           </Box>
         </Box>
@@ -49,38 +49,38 @@ const Stock = ({ ...props }) => {
           <Grid container md={6} xs={12}>
             <Grid container md={6} xs={6}>
               <Grid item xs={12}>
-                <Typography item color='lightTextSm.main'>Código</Typography>
-                <Typography item color='lightTextSm.black'>{stock.product.code}</Typography>
-              </Grid>
-            </Grid>
-            <Grid container md={6} xs={6}>
-              <Grid item xs={12}>
-                <Typography item color='lightTextSm.main'>Encomendas</Typography>
-                <Typography item color='lightTextSm.black'>{stock.ordersCount}</Typography>
+                <Typography item color='lightTextSm.main'>Referencia</Typography>
+                <Typography item color='lightTextSm.black'>{stock?.material.replace(/ /g, '_')}</Typography>
               </Grid>
             </Grid>
             <Grid container md={6} xs={6}>
               <Grid item xs={12}>
                 <Typography item color='lightTextSm.main'>Quantidade disponivel</Typography>
-                <Typography item color='lightTextSm.black'>{stock.amount}</Typography>
+                <Typography item color='lightTextSm.black'>{stock?.qtd}</Typography>
               </Grid>
             </Grid>
             <Grid container md={6} xs={6}>
               <Grid item xs={12}>
-                <Typography item color='lightTextSm.main'>Código</Typography>
-                <Typography item color='lightTextSm.black'>{stock.product.code}</Typography>
+                <Typography item color='lightTextSm.main'>Armazem</Typography>
+                <Typography item color='lightTextSm.black'>{stock?.warehouse}</Typography>
               </Grid>
             </Grid>
             <Grid container md={6} xs={6}>
               <Grid item xs={12}>
-                <Typography item color='lightTextSm.main'>Categoria</Typography>
-                <Typography item color='lightTextSm.black'>{stock.product.category.name}</Typography>
+                <Typography item color='lightTextSm.main'>Comprimento</Typography>
+                <Typography item color='lightTextSm.black'>{stock?.comp} mm</Typography>
               </Grid>
             </Grid>
             <Grid container md={6} xs={6}>
               <Grid item xs={12}>
-                <Typography item color='lightTextSm.main'>Quantidade disponivel</Typography>
-                <Typography item color='lightTextSm.black'>{stock.amount}</Typography>
+                <Typography item color='lightTextSm.main'>Largura</Typography>
+                <Typography item color='lightTextSm.black'>{stock?.larg} mm</Typography>
+              </Grid>
+            </Grid>
+            <Grid container md={6} xs={6}>
+              <Grid item xs={12}>
+                <Typography item color='lightTextSm.main'>Espessura</Typography>
+                <Typography item color='lightTextSm.black'>{stock?.esp} mm </Typography>
                 {console.log(stock)}
               </Grid>
             </Grid>

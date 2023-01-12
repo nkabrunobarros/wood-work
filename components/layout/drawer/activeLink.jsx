@@ -27,7 +27,8 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
 
   const stockPages = [
     `${routes.private.internal.stocks}`,
-    `${routes.private.internal.stockId}[Id]`,
+    `${routes.private.internal.stock}[Id]`,
+    `${routes.private.internal.editStock}[Id]`,
   ];
 
   const clientsPages = [

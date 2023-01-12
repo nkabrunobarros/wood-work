@@ -39,6 +39,7 @@ const MySelect = ({
       <FormControl fullWidth>
         {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}
         <Select
+          variant={variant}
           error={!!error}
           label={error}
           required={required}
