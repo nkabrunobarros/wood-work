@@ -55,8 +55,7 @@ const Head = (props) => {
   const { breadcrumbsPath, isInternalPage, pageProps, categories } = props;
   const [deliverModal, setDeliverModal] = useState(false);
   const [adjudicateModal, setAdjudicateModal] = useState(false);
-  const [old, setOld] = useState({ ...props.budget });
-  // const old = { ...props.budget };
+  const [old, setOld] = useState(JSON.parse(JSON.stringify({ ...props.budget })));
   const [budget, setBudget] = useState({ ...props.budget });
   const [activeFields, setActiveFields] = useState({ price: false, amount: false, category: false });
 
@@ -78,9 +77,6 @@ const Head = (props) => {
     borderColor: 'divider'
   };
 
-  console.log('old:  ' + old.amount.value);
-  console.log('budget:  ' + budget.amount.value);
-
   //  Updates Budget
   async function handleUpdate () {
     const loading = toast.loading();
@@ -98,7 +94,7 @@ const Head = (props) => {
         ToastSet(loading, 'Orçamento alterado!', 'success');
         setActiveFields({ price: false, amount: false, category: false });
 
-        setBudget({
+        setOld({
           ...budget,
           price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
           amount: { type: 'Property', value: budget.amount.value },
@@ -232,21 +228,8 @@ const Head = (props) => {
             <Grid container md={6} sm={6} xs={6} justifyContent='end' alignItems={'center'}>
               <PrimaryBtn
                 breathing
-                hidden={!(JSON.stringify(props.budget) !== JSON.stringify(budget) && isInternalPage)}
-                text={'Guardar alterações'}
-                onClick={handleUpdate}
-                icon={
-                  <Save
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
-                  />
-                }
-                sx={{ mr: 1 }}
-              />
-              <PrimaryBtn
-                breathing
                 hidden={!(JSON.stringify(old) !== JSON.stringify(budget) && isInternalPage)}
-                text={'Guardar alterações OLD'}
+                text={'Guardar alterações'}
                 onClick={handleUpdate}
                 icon={
                   <Save
