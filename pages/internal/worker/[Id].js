@@ -24,7 +24,7 @@ const User = ({ ...pageProps }) => {
     const getData = async () => {
       await WorkerActions
         .worker({ id })
-        .then((res) => setUser(res.data[0]));
+        .then((res) => { setUser(res.data[0]); console.log(res); });
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -37,7 +37,7 @@ const User = ({ ...pageProps }) => {
         href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${user.givenName.value}`,
+        title: `${user.name.value}`,
         href: `${routes.private.internal.worker}`,
       },
     ];

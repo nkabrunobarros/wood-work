@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { parseCookies } from 'nookies';
 import querys from '../../querys';
+import { methods } from '../methods';
 
 export async function users (data) {
   const { auth_token: token } = parseCookies();
@@ -48,4 +49,25 @@ export async function saveUser (data) {
     },
     config
   );
+}
+
+//  Update Client
+export async function updateClient (data) {
+  const { auth_token: token } = parseCookies();
+
+  const config = {
+    method: 'post',
+    url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.UPDATE,
+    headers: {
+      Authorization: token && `Bearer ${token}`,
+      'Content-Type': 'application/ld+json',
+      'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
+    },
+    data,
+    params: {
+      options: 'replace'
+    }
+  };
+
+  return await axios(config);
 }

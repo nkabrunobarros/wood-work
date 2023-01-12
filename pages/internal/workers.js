@@ -76,7 +76,7 @@ const Workers = () => {
 
     const headCellsWorkers = [
       {
-        id: 'givenName.value',
+        id: 'name.value',
         numeric: false,
         disablePadding: false,
         label: 'Nome',

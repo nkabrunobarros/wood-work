@@ -30,14 +30,6 @@ const EditWorker = ({ ...pageProps }) => {
         await workerActions
           .worker({ id: router.query.Id })
           .then((res) => setUser(res.data[0]));
-
-        // await CountryActions
-        //   .countries()
-        //   .then((res) => setCountries(res.data.payload.data));
-
-        // await ProfileActions
-        //   .perfis()
-        //   .then((res) => setProfiles(res.data.payload.data));
       } catch (error) { }
     };
 
@@ -50,11 +42,11 @@ const EditWorker = ({ ...pageProps }) => {
     const breadcrumbsPath = [
       {
         title: 'Utilizadores',
-        href: `${routes.private.internal.users}`,
+        href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${user.givenName.value}`,
-        href: `${routes.private.internal.user}${user.id}`,
+        title: `${user?.name?.value}`,
+        href: `${routes.private.internal.worker}${user.id}`,
       },
       {
         title: 'Editar Utilizador',

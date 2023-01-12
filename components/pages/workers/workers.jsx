@@ -11,12 +11,14 @@ import Select from '../../inputs/select';
 
 //  PropTypes
 import {
+  Button,
   InputLabel,
   OutlinedInput
 } from '@mui/material';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import routes from '../../../navigation/routes';
+import * as WorkerActions from '../../../pages/api/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import CanDo from '../../utils/CanDo';
 
@@ -56,10 +58,38 @@ const Workers = ({ ...props }) => {
     setProfilesFilter('');
   };
 
+  async function Fix () {
+    const fixedWorkers = [...workers].map((worker) => {
+      worker.name = worker.givenName.value + ' ' + worker.familyName.value;
+      delete worker.Email;
+      delete worker.Nome;
+      delete worker.Perfil;
+
+      return {
+        id: worker.id,
+        name: { type: 'Property', value: worker.givenName.value + ' ' + worker.familyName.value },
+        type: 'Worker',
+        '@context': [
+          'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+          'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+        ]
+      };
+    });
+
+    await WorkerActions.updateWorker(fixedWorkers)
+      .then(() => console.log('success'))
+      .catch(() => console.log('error'));
+
+    console.log(fixedWorkers);
+  }
+
+  console.log(workers);
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
+      <Button onClick={() => Fix()}>fix</Button>
       {/* Filters */}
       <Content>
         <div id='pad'>

@@ -3,7 +3,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
-import { Tooltip, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
   Edit,
@@ -72,25 +72,25 @@ const Profile = ({ ...props }) => {
       />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
-        <div id='pad' style={{ display: 'flex' }}>
-          <div style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{user?.givenName?.value || user?.legalName?.value}</a>
-          </div>
+        <Box id='pad' style={{ display: 'flex' }}>
+          <Box style={{ flex: 1 }}>
+            <a className='headerTitleXl'>{user?.name?.value}</a>
+          </Box>
           {router.pathname === `${routes.private.profile}[Id]`
             ? null
             : (
-              <div className='flex'>
-                <div>
+              <Box className='flex'>
+                <Box>
                   <PrimaryBtn text='Editar'
-                    onClick={() => Router.push(`${routes.private.internal.editUser}${user?.id}`)}
+                    onClick={() => Router.push(`${routes.private.internal.editWorker}${user?.id}`)}
                     icon={
                       <Edit
                         strokeWidth={pageProps.globalVars.iconStrokeWidth}
                         size={pageProps.globalVars.iconSize}
                       />
                     } />
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <PrimaryBtn
                     hidden={!CanDo(['delete', 'workers'])}
                     onClick={() => setDialogOpen(true)}
@@ -102,11 +102,11 @@ const Profile = ({ ...props }) => {
                     }
                     light
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
             )}
-        </div>
-        <div id='pad'>
+        </Box>
+        <Box id='pad'>
           <a
             id='align'
             className='lightText bold'
@@ -117,14 +117,14 @@ const Profile = ({ ...props }) => {
           <Grid container sx={12}>
             <Grid container sm={12} md={6}>
               <Grid container sx={12}>
-                <Grid xs={12} sm={6} container p={2} bgcolor={'lightGray.main'}>
+                <Grid md={6} sm={6} xs={12} container p={2} spacing={2} bgcolor={'lightGray.main'}>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Nome </Typography>
-                    <Typography item color='lightTextSm.black'>{user?.givenName?.value || user?.legalName?.value}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.name?.value}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description || user.functionPerformed.value}</Typography>
                   </Grid>
                   {user?.workerShift?.value && <Grid item xs={12}>
                     {/* Only applies to workers */}
@@ -140,7 +140,7 @@ const Profile = ({ ...props }) => {
                     </Typography>
                   </Grid>
                 </Grid>
-                <Grid xs={12} sm={6} container p={2} spacing={2}>
+                <Grid md={6} sm={6} xs={12} container p={2} spacing={2}>
                   <Grid container item>
                     <Tooltip title='Email'>
                       <a href={`mailto:${user?.email?.value}`}>
@@ -153,12 +153,12 @@ const Profile = ({ ...props }) => {
                   </Grid>
                   <Grid container item>
                     <Tooltip title='telemovel'>
-                      <a href={`tel:${user?.telemovel?.value}`}>
+                      <a href={`tel:${user?.cellphone?.value}`}>
                         <Smartphone className='primaryIcon' size={22} />
                       </a>
                     </Tooltip>
                     <span>
-                      {user?.telemovel?.value}
+                      {user?.cellphone?.value}
                     </span>
                   </Grid>
                   <Grid container item>
@@ -168,26 +168,30 @@ const Profile = ({ ...props }) => {
                       </a>
                     </Tooltip>
                     <span>
-                      {user?.telefone?.value}
+                      {user?.phone?.value || user?.cellphone?.value}
                     </span>
                   </Grid>
-                  <Grid container item>
-                    <Tooltip title='Morada'>
-                      <Map className='primaryIcon' size={22} />
-                    </Tooltip>
-                    <span>
-                      {/* {user?.address} */}
-                    </span>
-                  </Grid>
-                  <Grid container item>
-                    <Tooltip title='Pais'>
-                      <Flag className='primaryIcon' size={22} />
-                    </Tooltip>
-                    <span>
-                      {/* {user?.pais.descricao || ''} */}
+                  {user?.address &&
+                  <>
+                    <Grid container item>
+                      <Tooltip title='Morada'>
+                        <Map className='primaryIcon' size={22} />
+                      </Tooltip>
+                      <span>
+                        {/* {user?.address} */}
+                      </span>
+                    </Grid>
+                    <Grid container item>
+                      <Tooltip title='Pais'>
+                        <Flag className='primaryIcon' size={22} />
+                      </Tooltip>
+                      <span>
+                        {/* {user?.pais.descricao || ''} */}
                       pais
-                    </span>
-                  </Grid>
+                      </span>
+                    </Grid>
+                  </>
+                  }
                 </Grid>
               </Grid>
             </Grid>
@@ -204,7 +208,7 @@ const Profile = ({ ...props }) => {
             </Grid>
           }
 
-        </div>
+        </Box>
       </Content>
     </Grid>
   );

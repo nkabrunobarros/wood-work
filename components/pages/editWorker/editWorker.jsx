@@ -6,9 +6,7 @@ import React, { useState } from 'react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
-import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import MyInput from '../../inputs/myInput';
-import Loader from '../../loader/loader';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -21,7 +19,6 @@ import { Lock, Save, User, X } from 'lucide-react';
 
 //  Material UI
 import {
-  Backdrop,
   Box,
   Button,
   CircularProgress,
@@ -31,201 +28,106 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 
 //  Utlis
-import EmailValidation from '../../utils/EmailValidation';
-import hasData from '../../utils/hasData';
+import ToastSet from '../../utils/ToastSet';
 
 //  Navigation
-import { toast } from 'react-toastify';
-import * as UserActions from '../../../pages/api/actions/user';
+import * as WorkerActions from '../../../pages/api/actions/worker';
 import Notification from '../../dialogs/Notification';
-import Select from '../../inputs/select';
+// import PhoneInput from '../../inputs/phoneInput/PhoneInput';
+import { toast } from 'react-toastify';
+import MySelect from '../../inputs/select';
+import { functions } from '../newWorker/newWorker';
 
 const EditUser = ({ ...props }) => {
-  const { breadcrumbsPath, user, pageProps } = props;
-  const [name, setName] = useState(user.givenName?.value);
-  const [email, setEmail] = useState(user.email?.value);
-  const [telefone, setTelefone] = useState(user.telefone?.value);
-  const [telemovel, setTelemovel] = useState(user.telemovel?.value);
-  const [pais, setPais] = useState(user.paisCodigo?.value);
-  const [morada, setMorada] = useState(user.address?.object?.streetAddres);
-  const [obs, setObs] = useState(user.obs?.value);
-  const [active, setActive] = useState(user.active?.value);
-  const [perfil, setPerfil] = useState(user.profile?.object.id);
-  //  Errors states
-  const [errorMessageName, setErrorMessageName] = useState('');
-  const [errorMessageEmail, setErrorMessageEmail] = useState('');
-  // const [errorMessageTelemovel, setErrorMessageTelemovel] = useState('');
-  const [errorMessagePais, setErrorMessagePais] = useState('');
-  const [errorMessagePerfil, setErrorMessagePerfil] = useState('');
-  //  Dialog
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { breadcrumbsPath, pageProps } = props;
+
+  const [user, setUser] = useState({
+    name: { value: props.user?.name?.value, error: '' },
+    email: { value: props.user?.email?.value, error: '' },
+    functionPerformed: { value: props.user?.functionPerformed?.value, error: '' },
+    // functionPerformed: { value: props.user?.functionPerformed?.value, error: '' },
+  });
+
   //  Snackbar Notification
-  const [backdrop, setBackdrop] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
 
-  function handleSave () {
-    if (!hasData(name)) setErrorMessageName('Campo Obrigatório');
+  function Validate () {
+    const thisUser = { ...user };
+    let errors = false;
 
-    if (!hasData(email)) setErrorMessageEmail('Campo Obrigatório');
-    else if (!EmailValidation(email)) setErrorMessageEmail('Email invalido');
-    // if (!hasData(telemovel))
-    //   setErrorMessageTelemovel('Campo Obrigatório');
-    // else if (telemovel < 100000000)
-    //   setErrorMessageTelemovel('Numero tem que ter 9 digitos');
+    // eslint-disable-next-line array-callback-return
+    Object.keys(thisUser).map(key => {
+      if (thisUser[key].value === '' || thisUser[key].value === undefined) { thisUser[key].error = 'Campo obrigatorio'; errors = true; }
+    });
 
-    if (!hasData(pais)) setErrorMessagePais('Campo Obrigatório');
-
-    if (!hasData(perfil)) setErrorMessagePerfil('Campo Obrigatório');
-
-    if (
-      hasData(name) &&
-      hasData(email) &&
-      EmailValidation(email) &&
-      hasData(telefone) &&
-      hasData(telemovel) &&
-      hasData(morada) &&
-      hasData(pais) &&
-      hasData(perfil)
-    ) { setDialogOpen(!dialogOpen); }
+    setUser(thisUser);
+    !errors && handleUpdate();
   }
 
-  async function onConfirm () {
-    setBackdrop(true);
-    setDialogOpen(false);
+  async function handleUpdate () {
+    const loading = toast.loading('');
 
-    const newUser = {
-      id: user.id,
-      email,
-      ativo: active,
-      nome: name,
-      telemovel,
-      telefone,
-      morada,
-      paisCodigo: pais,
-      idPerfil: perfil,
-      obs,
-      tos: user.tos,
-    };
+    const builtWorker = [{
+      id: props.user.id,
+      type: 'Worker',
+      name: { type: 'Property', value: user.name.value },
+      functionPerformed: { type: 'Property', value: user.functionPerformed.value },
+      '@context': [
+        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld',
+        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+      ]
+    }];
 
-    try {
-      await UserActions.saveUser(newUser).then((res) => {
-        console.log(res);
-        setName(res.data.payload.nome);
-        setActive(res.data.payload.ativo);
-        setEmail(res.data.payload.email);
-        setTelefone(res.data.payload.telefone);
-        setTelemovel(res.data.payload.telemovel);
-        setPerfil(res.data.payload.idPerfil);
-        setMorada(res.data.payload.morada);
-        setPais(res.data.payload.paisCodigo);
-        setObs(res.data.payload.obs);
-        setBackdrop(false);
-        toast.success('Utilizador Atualizado.');
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    await WorkerActions.updateWorker(builtWorker)
+      .then(() => ToastSet(loading, 'Utilizador atualizado.', 'success'))
+      .catch(() => ToastSet(loading, 'Atualização falhou.', 'error'));
   }
 
   const ClearFields = () => {
-    setName(user.nome);
-    setActive(user.ativo);
-    setEmail(user.email);
-    setTelefone(user.telefone);
-    setTelemovel(user.telemovel);
-    setPerfil(user.idPerfil);
-    setMorada(user.morada);
-    setPais(user.paisCodigo);
-    setObs('');
-    setErrorMessageName('');
-    setErrorMessageEmail('');
-    // setErrorMessageTelemovel('');
-    setErrorMessagePerfil('');
-    setErrorMessagePais('');
-
     setTimeout(() => {
       setCleaningInputs(false);
     }, 500);
   };
 
-  const shifts = [
-    {
-      label: 'Manhã',
-      value: [1, 2]
-    },
-    {
-      label: 'Tarde',
-      value: [2, 3]
-    },
-    {
-      label: 'Noite',
-      value: [3, 4]
-    }
-  ];
+  // const shifts = [
+  //   {
+  //     label: 'Manhã',
+  //     value: [1, 2]
+  //   },
+  //   {
+  //     label: 'Tarde',
+  //     value: [2, 3]
+  //   },
+  //   {
+  //     label: 'Noite',
+  //     value: [3, 4]
+  //   }
+  // ];
 
-  const functions = [
-    {
-      label: 'CNC',
-      value: 'CNC',
-    },
-    {
-      label: 'Nesting',
-      value: 'Nesting',
-    },
-    {
-      label: 'Manual Cut',
-      value: 'Manual Cut',
-    },
-    {
-      label: 'Assembly',
-      value: 'Assembly',
-    },
-    {
-      label: 'Manager',
-      value: 'Manager',
-    },
-    {
-      label: 'Designer',
-      value: 'Designer',
-    },
-    {
-      label: 'Budgeting',
-      value: 'Budgeting',
-    },
-    {
-      value: 'Warehouse',
-      label: 'Warehouse'
-    }
-  ];
+  function onFieldChange ({ target }) {
+    const user2 = { ...user };
+
+    if (!user2[target.name])user2[target.name] = {};
+
+    user2[target.name] = { value: target.value, error: '' };
+    setUser(user2);
+  }
 
   return (
     <Grid component='main'>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Notification />
-      <ConfirmDialog
-        open={dialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        onConfirm={() => onConfirm()}
-        message={`Está prestes a editar utilizador ${user.nome}, tem certeza que quer continuar?`}
-      />
-
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={backdrop}
-      >
-        <Loader />
-      </Backdrop>
       <Content>
-        <div
+        <Box
           id='pad'
           className='flex'
           style={{ display: 'flex', alignItems: 'center' }}
         >
-          <div id='align' style={{ flex: 1 }}>
+          <Box id='align' style={{ flex: 1 }}>
             <a className='headerTitleXl'>{breadcrumbsPath[1].title} </a>
-          </div>
-          <div style={{ display: 'flex' }}>
+          </Box>
+          <Box style={{ display: 'flex' }}>
             <PrimaryBtn
               text='Guardar'
               icon={
@@ -234,7 +136,7 @@ const EditUser = ({ ...props }) => {
                   size={pageProps.globalVars.iconSize}
                 />
               }
-              onClick={handleSave}
+              onClick={Validate}
             />
             <PrimaryBtn
               text='Cancelar'
@@ -247,219 +149,74 @@ const EditUser = ({ ...props }) => {
               light
               onClick={() => Router.back()}
             />
-          </div>
-        </div>
+          </Box>
+        </Box>
         <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
           <User
             strokeWidth={pageProps.globalVars.iconStrokeWidth}
             size={pageProps.globalVars.iconSize} />
           <span>Dados de Utilizador</span>
         </a>
-        <div className='flex'>
-          <div id='pad' style={{ flex: 2 }} className='filters'>
-            <div className='filterContainer2'>
-              <MyInput
-                required
-                label={'Primeiro Nome'}
-                error={errorMessageName}
-                placeholder='Escrever nome'
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setErrorMessageName('');
-                }}
-              />
-            </div>
-            <div className='filterContainer2'>
-              <MyInput
-                required
-                label={'Ultimo Nome'}
-                error={errorMessageName}
-                placeholder='Escrever nome'
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setErrorMessageName('');
-                }}
-              />
-            </div>
-            <div className='filterContainer2'>
-              <MyInput
-                disabled
-                required
-                label={'Email'}
-                error={errorMessageEmail}
-                placeholder='Escrever Email'
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setErrorMessageEmail('');
-                }}
-                type='email'
-              />
-            </div>
-            {/* <div className='filterContainer2'>
-              <MyInput
-                required
-                label={'Telefone'}
-                error={errorMessageTelefone}
-                placeholder='Escrever numero de telefone'
-                value={telefone}
-                onChange={(e) => {
-                  setTelefone(e.target.value);
-                  setErrorMessageTelefone('');
-                }}
-                type='number'
-              />
-              <PhoneInput
-                required
-                label={'Telefone'}
-                error={errorMessageTelefone}
-                placeholder='Escrever numero de telefone'
-                value={telefone}
-                onChange={(e) => {
-                  setTelefone(e.target.value);
-                  setErrorMessageTelefone('');
-                }}
-                type='number'
-                options={countries}
-
-              />
-            </div> */}
-            {/* <div className='filterContainer2'>
-               <MyInput
-                required
-                label={'Telemovel'}
-                error={errorMessageTelemovel}
-                placeholder='Escrever numero de telemovel'
-                value={telemovel}
-                onChange={(e) => {
-                  setTelemovel(e.target.value);
-                  setErrorMessageTelemovel('');
-                }}
-                type='number'
-              />
-              <PhoneInput
-                required
-                label='Telemovel'
-                type='number'
-                options={countries}
-                value={telemovel}
-                onChange={(e) => {
-                  setTelemovel(e.target.value);
-                  // setErrorMessageTelemovel('');
-                }}
-              />
-            </div> */}
-            <div className='filterContainer2'>
-              <Select
-                label='Função'
-                options={functions}
-                optionLabel='descricao'
-                fullWidth
-                value={perfil}
-                onChange={(e) => {
-                  setPerfil(e.target.value);
-                  setErrorMessagePerfil('');
-                }}
-              />
-
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessagePerfil ? `${errorMessagePerfil}` : null}
+        <Grid id='pad' container md={12} sm={12} xs={12}>
+          <Grid container md={8} sm={8} xs={12}>
+            <Grid container md={6} sm={6} xs={12} p={0.5}><MyInput label='Nome' name='name' onChange={(e) => onFieldChange(e)} value={user?.name?.value} error={user?.name?.error} /></Grid>
+            <Grid container md={6} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>
+            <Grid container md={6} sm={6} xs={12} p={0.5}><MySelect label='Função' name='functionPerformed' onChange={(e) => onFieldChange(e)} value={user?.functionPerformed?.value} error={user?.functionPerformed?.error} options={functions} optionLabel='label' optionValue={'value'} /></Grid>
+            {/* <Grid container md={6} sm={6} xs={12} p={0.5}><PhoneInput label='Telemovel' name='cellphone' onChange={(e) => onFieldChange(e)} value={user?.cellphone?.value} error={user?.cellphone?.error} /></Grid> */}
+          </Grid>
+          <Grid container md={4} sm={4} xs={12}>
+            <Box id='pad' style={{ flex: 1 }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
+              <a id='align' className='headerTitleSm'>
+                <Lock
+                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
+                  size={pageProps.globalVars.iconSize}
+                />
+                <span> Alterar Senha</span>
               </a>
-            </div>
-            {/* <div className='filterContainer2'>
-
-              <MyInput
-                required
-                label={'Morada'}
-                error={errorMessageMorada}
-                placeholder='Escrever morada'
-                value={morada}
-                onChange={(e) => {
-                  setMorada(e.target.value);
-                  setErrorMessageMorada('');
-                }}
-              />
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessageMorada ? `${errorMessageMorada}` : null}
-              </a>
-            </div> */}
-            <div className='filterContainer2'>
-              <Select
-                label='Turno'
-                options={shifts}
-                value={pais}
-                required
-                onChange={(e) => setPais(e.target.value)}
-              />
-
-              <a style={{ color: 'var(--red)', fontSize: 'small' }}>
-                {errorMessagePais ? `${errorMessagePais}` : null}
-              </a>
-            </div>
-            {/* <div className='filterContainer2'>
-              <InputLabel htmlFor='email'>Observações</InputLabel>
-
-              <TextareaAutosize
-                placeholder='Escrever observações'
-                className={styles.textarea}
-                value={obs}
-                onChange={(e) => setObs(e.target.value)}
-              />
-            </div> */}
-          </div>
-          <Box id='pad' style={{ flex: 1 }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
-            <a id='align' className='headerTitleSm'>
-              <Lock
-                strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                size={pageProps.globalVars.iconSize}
-              />
-              <span> Alterar Senha</span>
-            </a>
-            <div>
-              <InputLabel htmlFor='email'>Senha Antiga</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='nome'
-                name='nome'
-                type='password'
-                autoComplete='nome'
-                placeholder='Escrever password * '
-              />
-            </div>
-            <div>
-              <InputLabel htmlFor='email'>Senha Nova</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='nome'
-                name='nome'
-                type='password'
-                autoComplete='nome'
-                placeholder='Escrever password * '
-              />
-            </div>
-            <div>
-              <InputLabel htmlFor='email'>Confirmar Senha Nova</InputLabel>
-              <OutlinedInput
-                required
-                fullWidth
-                id='nome'
-                name='nome'
-                type='password'
-                autoComplete='nome'
-                placeholder='Escrever password * '
-              />
-            </div>
-          </Box>
-        </div>
-        <div style={{ display: 'flex' }}>
+              <Box>
+                <InputLabel >Senha Antiga</InputLabel>
+                <OutlinedInput
+                  required
+                  fullWidth
+                  id='nome'
+                  name='nome'
+                  type='password'
+                  autoComplete='nome'
+                  placeholder='Escrever password * '
+                />
+              </Box>
+              <Box>
+                <InputLabel >Senha Nova</InputLabel>
+                <OutlinedInput
+                  required
+                  fullWidth
+                  id='nome'
+                  name='nome'
+                  type='password'
+                  autoComplete='nome'
+                  placeholder='Escrever password * '
+                />
+              </Box>
+              <Box>
+                <InputLabel >Confirmar Senha Nova</InputLabel>
+                <OutlinedInput
+                  required
+                  fullWidth
+                  id='nome'
+                  name='nome'
+                  type='password'
+                  autoComplete='nome'
+                  placeholder='Escrever password * '
+                />
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+        <Box style={{ display: 'flex' }}>
           <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
             {cleaningInputs ? <CircularProgress size={26} /> : 'Restaurar'}
           </Button>
-        </div>
+        </Box>
       </Content>
     </Grid>
   );
