@@ -21,5 +21,9 @@ Next Js(https://nextjs.org/)
 
 Lucide Icons(https://lucide.dev/)
 
+## Build Image
+docker build -t mofreita:1 .
+
+## Export to Portainer
 docker tag mofreita:1 registry.nka.pt/nka/mofreita:1
 docker push registry.nka.pt/nka/mofreita:1

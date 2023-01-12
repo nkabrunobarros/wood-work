@@ -6,6 +6,7 @@ import BudgetScreen from '../../components/pages/budget/budget';
 import routes from '../../navigation/routes';
 import * as BudgetActions from '../api/actions/budget';
 import * as ClientsActions from '../api/actions/client';
+import { categories } from '../internal/new-project';
 
 const Budget = ({ ...pageProps }) => {
   const router = useRouter();
@@ -144,7 +145,8 @@ const Budget = ({ ...pageProps }) => {
       headCellsDocs,
       headCellsMessages,
       headCellsOrderDetail,
-      headCellsUpperOrderDetail
+      headCellsUpperOrderDetail,
+      categories
     };
 
     return <BudgetScreen {...props} />;

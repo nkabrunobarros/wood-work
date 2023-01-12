@@ -20,12 +20,12 @@ import MySelect from '../../../inputs/select';
 import ToastSet from '../../../utils/ToastSet';
 
 export const EditableCell = (props) => {
-  const { active, onDoubleClick, value, type, name, options, onChange } = props;
+  const { active, onDoubleClick, value, type, name, options, onChange, isInternalPage } = props;
 
   return <>
     {!active
-      ? <Tooltip title='Dois cliques para editar' sx={{ cursor: 'pointer' }}>
-        <Typography variant='sm' onDoubleClick={() => onDoubleClick(name)}>
+      ? <Tooltip title={isInternalPage ? 'Dois cliques para editar' : ''} sx={{ cursor: 'pointer' }}>
+        <Typography variant='sm' onDoubleClick={() => isInternalPage && onDoubleClick(name)}>
           {value
             ? <>
               {name === 'category' ? <>{options.find(ele => ele.id === value)?.label}</> : value + (type === 'currency' ? ' €' : '')}
@@ -43,6 +43,7 @@ export const EditableCell = (props) => {
 
 EditableCell.propTypes = {
   active: PropTypes.bool,
+  isInternalPage: PropTypes.bool,
   onDoubleClick: PropTypes.func,
   value: PropTypes.any,
   type: PropTypes.string,
@@ -293,13 +294,13 @@ const Head = (props) => {
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateDeliveryProject?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
-                  <EditableCell active={activeFields.category} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
+                  <EditableCell active={activeFields.category} isInternalPage={isInternalPage} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
                 </Grid>
                 <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
-                  <EditableCell active={activeFields.amount} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
+                  <EditableCell active={activeFields.amount} isInternalPage={isInternalPage} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
                 </Grid>
                 <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
-                  <EditableCell active={activeFields.price} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
+                  <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
                 </Grid>
               </Grid>
             </Grid>
