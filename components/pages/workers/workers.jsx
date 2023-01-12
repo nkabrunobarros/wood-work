@@ -79,17 +79,13 @@ const Workers = ({ ...props }) => {
     await WorkerActions.updateWorker(fixedWorkers)
       .then(() => console.log('success'))
       .catch(() => console.log('error'));
-
-    console.log(fixedWorkers);
   }
-
-  console.log(workers);
 
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
-      <Button onClick={() => Fix()}>fix</Button>
+      {false && <Button onClick={() => Fix()}>fix</Button>}
       {/* Filters */}
       <Content>
         <div id='pad'>
@@ -99,8 +95,8 @@ const Workers = ({ ...props }) => {
               <Select
                 label={'Nome'}
                 options={workers.filter((item) => item.active && item)}
-                optionValue={'givenName'}
-                optionLabel={'givenName'}
+                optionValue={'name'}
+                optionLabel={'name'}
                 onChange={(event) => setNome(event.target.value)}
               />
 

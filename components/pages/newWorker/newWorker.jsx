@@ -90,15 +90,8 @@ const newWorker = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState([
     {
-      id: 'givenName',
-      label: 'Primeiro Nome',
-      value: '',
-      error: '',
-      required: true
-    },
-    {
-      id: 'familyName',
-      label: 'Ultimo Nome',
+      id: 'name',
+      label: 'Nome',
       value: '',
       error: '',
       required: true

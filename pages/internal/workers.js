@@ -26,7 +26,7 @@ const Workers = () => {
       await WorkerActions
         .workers()
         .then((res) => setWorkers([...res.data].map((worker) => {
-          worker.Nome = worker.givenName?.value;
+          worker.Nome = worker.name?.value;
           worker.Email = worker.email?.value;
           worker.Perfil = worker.functionPerformed?.value;
 
