@@ -15,12 +15,12 @@ import ToastSet from '../../../utils/ToastSet';
 import FinishProjectModal from '../modal/finishProjectModal';
 
 const Head = (props) => {
-  const { order, pageProps, setOrder } = props;
+  const { order, pageProps, setOrder, finishProject } = props;
   const [changeToProdModal, setChangeToProdModal] = useState(false);
   const [changeToAssemblyModal, setChangeToAssemblyModal] = useState(false);
   const [changeToTransportModal, setChangeToTransportModal] = useState(false);
   const [changeToFinishedModal, setChangeToFinishedModal] = useState(false);
-  const [finishModal, setFinishModal] = useState(false);
+  const [finishModal, setFinishModal] = useState(finishProject === '1');
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
   const upperCells = {
@@ -58,7 +58,8 @@ const Head = (props) => {
         setChangeToProdModal(false);
         setChangeToAssemblyModal(false);
         setChangeToTransportModal(false);
-        ToastSet(processing, `Projeto passou a ${props === 'production' ? 'produção' : (props === 'testing' ? 'montagem' : 'transporte')}`, 'success');
+        setFinishModal(false);
+        ToastSet(processing, `Projeto passou a ${props === 'production' ? 'produção' : (props === 'testing' ? 'montagem' : (props === 'testing' ? 'transporte' : 'terminado'))}`, 'success');
       });
     } catch (err) { console.log(err); }
   }
@@ -192,6 +193,7 @@ const Head = (props) => {
 Head.propTypes = {
   pageProps: PropTypes.object,
   order: PropTypes.object,
+  finishProject: PropTypes.string,
   setOrder: PropTypes.func,
 };
 

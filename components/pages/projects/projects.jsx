@@ -217,6 +217,10 @@ const ProjectsScreen = ({ ...props }) => {
               onChange={(e) => setProducao(e.target.value)}
               options={[
                 {
+                  subheader: true,
+                  label: 'Orçamentos'
+                },
+                {
                   id: 'waiting budget',
                   label: 'Espera Orçamento'
                 },
@@ -226,7 +230,7 @@ const ProjectsScreen = ({ ...props }) => {
                 },
                 {
                   subheader: true,
-                  label: 'Produção'
+                  label: 'Projetos'
                 },
                 {
                   id: 'drawing',
@@ -239,10 +243,6 @@ const ProjectsScreen = ({ ...props }) => {
                 {
                   id: 'testing',
                   label: 'Em Montagem'
-                },
-                {
-                  subheader: true,
-                  label: 'Distribuição'
                 },
                 {
                   id: 'transport',

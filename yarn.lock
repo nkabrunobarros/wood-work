@@ -2482,6 +2482,11 @@ hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.1, hoist-non-react-
   dependencies:
     react-is "^16.7.0"
 
+html5-qrcode@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/html5-qrcode/-/html5-qrcode-2.3.4.tgz#7e2b4575a23b10ff5e26d2bf147c8027c1ece389"
+  integrity sha512-VPZrOTG8XR9HmIAhSSiGtJVPErZxKy/DuGc9cPQLburCWZEbvxQGJP9y4K4P+8vdalLtYB/vM5YP1BdWQKZ8jQ==
+
 http-errors@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/http-errors/-/http-errors-2.0.0.tgz"

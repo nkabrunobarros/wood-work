@@ -356,6 +356,7 @@ const Order = ({ ...pageProps }) => {
       parts,
       workers,
       folders: [],
+      finishProject: router.query.finishProject
     };
 
     return <OrderScreen {...props} />;

@@ -25,7 +25,7 @@ const FilterItem = (data, item, col) => {
         case 'em desenho': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'em orçamentação': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'em produção': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
-        default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+        default: return <Typography variant='md' className="successBalloon">Terminado</Typography>;
         }
       }
 
@@ -34,7 +34,7 @@ const FilterItem = (data, item, col) => {
         case 'em desenho': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'em orçamentação': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'em produção': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
-        default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+        default: return <Typography variant='md' className="successBalloon">Terminado</Typography>;
         }
       }
 
@@ -112,7 +112,7 @@ const FilterItem = (data, item, col) => {
         case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
 
-        default: return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+        default: return <Typography variant='md' className="successBalloon">Terminado</Typography>;
         }
       }
 
@@ -124,7 +124,7 @@ const FilterItem = (data, item, col) => {
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
         case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
-        case 'finished': return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+        case 'finished': return <Typography variant='md' className="successBalloon">Terminado</Typography>;
         }
       }
 
@@ -138,7 +138,7 @@ const FilterItem = (data, item, col) => {
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
         case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
-        case 'finished': return <Typography variant='md' className="successBalloon">Terminada</Typography>;
+        case 'finished': return <Typography variant='md' className="successBalloon">Terminado</Typography>;
         }
       }
 
