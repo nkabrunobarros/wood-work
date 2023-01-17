@@ -182,7 +182,7 @@ const Profile = ({ ...props }) => {
                       </span>
                     </Grid>
                     <Grid container item>
-                      <Tooltip title='Pais'>
+                      <Tooltip title='Morada'>
                         <Flag className='primaryIcon' size={22} />
                       </Tooltip>
                       <span>

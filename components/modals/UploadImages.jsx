@@ -34,9 +34,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
       // on reader load somthing...
       reader.onload = () => {
         // Make a fileInfo Object
-        // console.log("Called", reader);
         baseURL = reader.result;
-        // console.log(baseURL);
         resolve(baseURL);
       };
     });
@@ -44,8 +42,6 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
 
   async function handleModalImageUpload (e) {
     const arr = [];
-
-    console.log(e);
 
     for (let index = 0; index < Object.keys(e.target.files).length; index++) {
       const file = e.target.files[index];

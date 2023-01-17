@@ -1,15 +1,19 @@
-import { AppBar, ButtonGroup, IconButton, InputAdornment, Menu, MenuItem, OutlinedInput, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, ButtonGroup, IconButton, InputAdornment, Menu, MenuItem, OutlinedInput, Toolbar, Tooltip, Typography } from '@mui/material';
 import { Edit, HelpCircle, MoreHorizontal, Plus, Search, Settings } from 'lucide-react';
 import React, { useState } from 'react';
 //  PropTypes
 import PropTypes from 'prop-types';
 
 const ConversationsToolbar = (props) => {
-  const { windowWidth, styles, pageProps, onSearch } = props;
+  const { windowWidth, styles, pageProps, onSearch, isInternalPage } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   return (
     <AppBar position='static' sx={styles.appBars} >
+      <Toolbar sx={{ padding: '.5rem !important' }}>
+        <Typography pl={1} variant='title'> {isInternalPage ? 'Projetos/Orçamentos' : 'Pedidos' }</Typography>
+
+      </Toolbar>
       <Toolbar sx={{ padding: '.5rem !important' }}>
         {windowWidth > 900 && <OutlinedInput
           required
@@ -23,7 +27,7 @@ const ConversationsToolbar = (props) => {
             </InputAdornment>
           }
         />}
-        <ButtonGroup>
+        <ButtonGroup sx={{ display: 'none' }}>
           {windowWidth > 900 &&
               <Tooltip title='Nova Conversa'>
                 <IconButton>
@@ -60,6 +64,7 @@ ConversationsToolbar.propTypes = {
   windowWidth: PropTypes.number,
   styles: PropTypes.object,
   onSearch: PropTypes.func,
+  isInternalPage: PropTypes.bool,
 };
 
 export default ConversationsToolbar;

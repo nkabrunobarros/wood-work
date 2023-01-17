@@ -57,7 +57,7 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 
-  if (ordersPages.includes(path.route)) currentSection = 'Encomendas';
+  if (ordersPages.includes(path.route)) currentSection = 'Pedidos';
 
   if (projectsPages.includes(path.route)) currentSection = 'Projetos/Orçamentos';
 

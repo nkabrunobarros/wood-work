@@ -14,6 +14,8 @@ import moment from 'moment';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import * as BudgetActions from '../../../../pages/api/actions/budget';
+import * as ExpeditionActions from '../../../../pages/api/actions/expedition';
+import * as ProjectActions from '../../../../pages/api/actions/project';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
@@ -129,6 +131,11 @@ const Head = (props) => {
   }
 
   async function handleAdjudication () {
+    //  Steps for Project Creation
+    //  1 -> Update Budget
+    //  2 -> Create Project
+    //  3 -> Create Expedition
+
     const builtBudget = [{
       id: budget.id,
       type: 'Budget',
@@ -142,57 +149,46 @@ const Head = (props) => {
       const builtProject = {
         id: 'urn:ngsi-ld:Project:' + budget.name.value,
         type: 'Project',
-        orderBy: {
-          type: 'Relationship',
-          object: budget.belongsTo?.object
-        },
-        name: {
-          type: 'Property',
-          value: budget.name.value
-        },
-        status: {
-          type: 'Property',
-          value: 'drawing'
-        },
-        budgetId: {
-          type: 'Relationship',
-          object: budget.id
-        },
-        assemblyBy: {
-          type: 'Relationship',
-          object: ['urn:ngsi-ld:Worker:10']
-        },
-        amount: {
-          type: 'Property',
-          value: budget.amount.value.replace(/ /g, '').replace(/€/g, '')
-        },
-        expedition: {
-          type: 'Relationship',
-          object: 'urn:ngsi-ld:expedition:' + budget.name.value
-        },
+        orderBy: { type: 'Relationship', object: budget.belongsTo?.object.id },
+        name: { type: 'Property', value: budget.name.value },
+        status: { type: 'Property', value: 'drawing' },
+        budgetId: { type: 'Relationship', object: budget.id },
+        assemblyBy: { type: 'Relationship', object: [] },
+        amount: { type: 'Property', value: budget.amount.value.replace(/ /g, '').replace(/€/g, '') },
+        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:expedition:' + budget.name.value },
         '@context': [
           'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
           'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
         ]
       };
 
-      const config = {
-        method: 'post',
-        url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities/',
-        headers: { 'Content-Type': 'application/ld+json', 'Fiware-Service': 'woodwork40' },
-        data: builtProject
-      };
+      await ProjectActions.saveProject(builtProject).then(async () => {
+        const builtExpedition = {
+          id: 'urn:ngsi-ld:Expedition:' + budget.name.value,
+          type: 'Expedition',
+          expeditionTime: {
+            type: 'Property',
+            value: ''
+          },
+          deliveryFlag: {
+            type: 'Property',
+            value: 0
+          },
+          belongsTo: {
+            type: 'Relationship',
+            object: builtProject.id
+          },
+          '@context': [
+            'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
+            'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
+          ]
+        };
 
-      const axios = require('axios');
-
-      axios(config)
-        .then(() => {
-          Router.push(routes.private.internal.project + builtProject.id);
+        await ExpeditionActions.saveExpedition(builtExpedition).then(async () => {
           toast.success('Orçamento adjudicado. Passou para produção');
-        })
-        .catch(function (error) {
-          console.log(error);
+          Router.push(routes.private.internal.project + builtProject.id);
         });
+      });
     });
   }
 

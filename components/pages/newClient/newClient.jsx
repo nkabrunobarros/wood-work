@@ -125,7 +125,7 @@ const NewClient = ({ ...props }) => {
       // },
       {
         id: 'taxId',
-        label: 'Numero Contribuinte',
+        label: 'Numero Identificação Fiscal (Nif)',
         value: '',
         error: '',
         required: true,

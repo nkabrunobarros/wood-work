@@ -38,8 +38,6 @@ const Workers = () => {
   }, []);
 
   if (loaded) {
-    console.log(workers);
-
     const breadcrumbsPath = [
       {
         title: 'Utilizadores',

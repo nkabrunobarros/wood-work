@@ -10,10 +10,7 @@ import {
   Box,
   Collapse,
   Divider,
-  IconButton,
-  ListItemButton,
-  ListItemText,
-  MenuItem,
+  IconButton, MenuItem,
   SpeedDial,
   SpeedDialAction, SwipeableDrawer,
   Switch,
@@ -46,14 +43,14 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontSize, ...pageProps }) => {
   const theme = useTheme();
   const loggedUser = JSON.parse(localStorage.getItem('user'));
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
 
-  const handleClick = (event) => {
-    if (anchorEl === null) setAnchorEl(event.currentTarget);
-    else setAnchorEl(null);
-  };
+  // const handleClick = (event) => {
+  //   if (anchorEl === null) setAnchorEl(event.currentTarget);
+  //   else setAnchorEl(null);
+  // };
 
   const actions = [
     { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
@@ -107,16 +104,6 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
               height={75}
             />
           </Box>
-          <ListItemButton onClick={handleClick} sx={{ color: 'white' }}>
-            <ListItemText
-              primary={loggedUser && (loggedUser.givenName?.value + ' ' + loggedUser.familyName?.value || loggedUser.legalName?.value)}
-              secondary={
-                <a style={{ color: '#FFFFFF', fontSize: 'small' }}>
-                  {loggedUser.email.value}
-                </a>
-              }
-            />
-          </ListItemButton>
 
           <Divider
             color='white'
@@ -153,7 +140,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
             </React.Fragment>
           ))}
           {/* Definições */}
-          <MenuItem sx={{ padding: '0' }}>
+          <MenuItem sx={{ padding: '0', display: 'none' }}>
             <Box
               style={{
                 width: '100%',
@@ -248,6 +235,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
                       className={styles.navItemContainer}
                       onClick={() => {
                         authActions.logout();
+                        handleDrawerToggle();
                       }}
                     >
                       <LogOut strokeWidth='1' size={20} />

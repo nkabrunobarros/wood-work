@@ -22,6 +22,7 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 const ForgotPassword = (props) => {
   const { client, signinRoute } = props;
   const [windowWidth, setWindowHeight] = useState();
+  const [email, setEmail] = useState();
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
@@ -39,8 +40,11 @@ const ForgotPassword = (props) => {
     return () => window.removeEventListener('resize', listenToResize);
   }, []);
 
+  // eslint-disable-next-line consistent-return
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (!email) return toast.error('Prencher formulario');
 
     const USER_ID = 'service_kqtxrtc';
     const TEMPLATE_ID = 'template_6nvzzrx';
@@ -51,12 +55,16 @@ const ForgotPassword = (props) => {
       .then(
         (result) => {
           console.log(result);
-          toast.success('Sucesso!. Siga as instruções dadas no email para nova Senha');
+          setEmail();
+          toast.success('Sucesso! Siga as instruções que constam do email enviado.');
         },
-        (error) => {
-          toast.error('An error occurred, Please try again', error);
+        () => {
+          setEmail();
+          toast.error('Email não enviado.');
         }
       );
+
+    setEmail();
   };
 
   return (
@@ -66,11 +74,15 @@ const ForgotPassword = (props) => {
       <Box
         style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
-        <Image
-          alt='Background Image'
-          src={companyLogo}
-          placeholder='blur'
-        />
+        <a href='http://mofreita.com/' target='#'>
+          <Image
+            alt='Background Image'
+            src={companyLogo}
+            placeholder='blur'
+            width={windowWidth > 600 ? 80 : 50}
+
+          />
+        </a>
       </Box>
       {windowWidth > 600 && <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
         <Box
@@ -107,7 +119,7 @@ const ForgotPassword = (props) => {
             Recuperar senha
           </Typography>
           <Typography variant='h7'>
-            Introduza o endereço de email. Irá receber um email para alterar a senha.
+            Introduza o seu endereço de email. Irá receber um email para alterar a senha.
           </Typography>
           <Box
             component='form'
@@ -131,6 +143,8 @@ const ForgotPassword = (props) => {
               autoComplete='email'
               placeholder='email'
               autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Box mt={2}>
               <Button

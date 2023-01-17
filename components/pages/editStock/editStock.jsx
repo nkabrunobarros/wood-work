@@ -18,7 +18,7 @@ const EditStock = ({ ...props }) => {
   const [newStock, setNewStock] = useState(stock);
 
   function OnFieldChange (props) {
-    setNewStock({ ...newStock, [props.target.name]: props.target.value })
+    setNewStock({ ...newStock, [props.target.name]: props.target.value });
   }
 
   return (

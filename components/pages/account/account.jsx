@@ -2,7 +2,7 @@
 import { Tooltip, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import { Mail, User } from 'lucide-react';
+import { Mail, Map, Phone, User } from 'lucide-react';
 import React from 'react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
@@ -28,7 +28,7 @@ const Account = ({ ...props }) => {
       <Content>
         <Grid id='pad'>
           <Grid container md={12} sm={12} sx={12}>
-            <Typography className='headerTitleXl'>{user?.givenName?.value} {user?.familyName?.value}</Typography>
+            <Typography variant='title'>{user?.givenName?.value} {user?.familyName?.value}</Typography>
           </Grid>
           <Grid container md={12} sm={12} sx={12} pt={2}>
             <User /> Informações Gerais
@@ -42,17 +42,18 @@ const Account = ({ ...props }) => {
                       <Typography color='lightTextSm.main'>Nome:</Typography>
                     </Grid>
                     <Grid container md={3} sm={2} xs={2}>
-                      <Typography color='lightTextSm.black'>{user?.givenName?.value}</Typography>
+                      <Typography color='lightTextSm.black'>{user?.name?.value}</Typography>
                     </Grid>
                   </Grid>
                   <Grid item xs={12} pt={1} className='flex'>
                     <Grid container md={3} sm={2} xs={2}>
-                      <Typography color='lightTextSm.main'>Apelido:</Typography>
+                      <Typography color='lightTextSm.main'>Nif:</Typography>
                     </Grid>
                     <Grid container md={3} sm={2} xs={2}>
-                      <Typography color='lightTextSm.black'>{user?.familyName?.value}</Typography>
+                      <Typography color='lightTextSm.black'>{user?.taxId?.value}</Typography>
                     </Grid>
                   </Grid>
+                  {user.type === 'Worker' &&
                   <Grid item xs={12} pt={1} className='flex'>
                     <Grid container md={3} sm={2} xs={2}>
                       <Typography color='lightTextSm.main'>Turno:</Typography>
@@ -61,50 +62,51 @@ const Account = ({ ...props }) => {
                       <Typography item color='lightTextSm.black'>{displayShift(user?.workerShift?.value)}</Typography>
                     </Grid>
                   </Grid>
-                  {/* <Grid item xs={12}>
-                        <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                        <Typography item color='lightTextSm.black'>{user?.profile?.object?.description}</Typography>
-                      </Grid> */}
+                  }
                 </Grid>
                 <Grid xs={12} sm={6} container p={2} spacing={2}>
                   <Grid container item>
-                    <Tooltip title='Email'>
-                      <a href={`mailto:${user?.email?.value}`}>
-                        <Mail className='primaryIcon' size={22} />
-                      </a>
-                    </Tooltip>
-                    <span>
+                    <Grid className='fullCenter' container md={2} sm={2} xs={2} >
+
+                      <Tooltip title='Email'>
+                        <a href={`mailto:${user?.email?.value}`}>
+                          <Mail className='primaryIcon' size={22} />
+                        </a>
+                      </Tooltip>
+                    </Grid>
+                    <Grid alignItems={'center'} container md={10} sm={10} xs={10} >
                       {user?.email?.value}
-                    </span>
+                    </Grid>
                   </Grid>
-                  {/* <Grid container item>
-                        <Tooltip title='telemovel'>
-                          <a href={`tel:${user?.telemovel?.value}`}>
-                            <Smartphone className='primaryIcon' size={22} />
-                          </a>
-                        </Tooltip>
-                        <span>
-                          {user?.telemovel?.value}
-                        </span>
-                      </Grid>
-                      <Grid container item>
-                        <Tooltip title='Telefone'>
-                          <a href={`tel:${user?.telefone?.value}`}>
-                            <Phone className='primaryIcon' size={22} />
-                          </a>
-                        </Tooltip>
-                        <span>
-                          {user?.telefone?.value}
-                        </span>
-                      </Grid>
-                      <Grid container item>
-                        <Tooltip title='Pais'>
-                          <Flag className='primaryIcon' size={22} />
-                        </Tooltip>
-                        <span>
-                          pais
-                        </span>
-                      </Grid> */}
+                  <Grid container item>
+                    <Grid className='fullCenter' container md={2} sm={2} xs={2} >
+                      <Tooltip title='Contacto'>
+                        <a href={`tel:${user?.cellphone?.value}`}>
+                          <Phone className='primaryIcon' size={22} />
+                        </a>
+                      </Tooltip>
+
+                    </Grid>
+                    <Grid alignItems={'center'} container md={10} sm={10} xs={10} >
+                      {user?.cellphone?.value}
+                    </Grid>
+                  </Grid>
+                  <Grid container item>
+                    <Grid className='fullCenter' container md={2} sm={2} xs={2} >
+                      <Tooltip title='Morada'>
+                        <Map className='primaryIcon' size={22} />
+                      </Tooltip>
+                    </Grid>
+                    <Grid container md={10} sm={10} xs={10} >
+                      <Typography >
+                        {user.address?.value?.streetAddress + ', '}
+                        {user.address?.value?.postalCode + ', '}
+                        {user.address?.value?.addressLocality + ', '}
+                        {user.address?.value?.addressRegion + ', '}
+                        {user.address?.value?.addressCountry}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

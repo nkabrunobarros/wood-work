@@ -124,6 +124,7 @@ const FilterItem = (data, item, col) => {
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
         case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
+        case 'finished': return <Typography variant='md' className="successBalloon">Terminada</Typography>;
         }
       }
 
@@ -137,6 +138,7 @@ const FilterItem = (data, item, col) => {
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
         case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
+        case 'finished': return <Typography variant='md' className="successBalloon">Terminada</Typography>;
         }
       }
 

@@ -52,8 +52,6 @@ const Orders = ({ ...pageProps }) => {
       await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data)).catch(() => setCategories([]));
 
       await BudgetsActions.myBudgets().then((response) => {
-        console.log(response);
-
         response.data.map(item => {
           switch (item.status.value) {
           case 'waiting budget':
@@ -76,7 +74,8 @@ const Orders = ({ ...pageProps }) => {
             Nome: item.name.value,
             amount: { ...item.amount },
             statusClient: { type: 'Property', value: item.status.value },
-            Estado: 'Espera Confirmação',
+            Estado: item.status.value
+
           });
         });
       });

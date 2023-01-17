@@ -12,12 +12,15 @@ import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import IsInternal from '../../../utils/IsInternal';
 import ToastSet from '../../../utils/ToastSet';
+import FinishProjectModal from '../modal/finishProjectModal';
 
 const Head = (props) => {
   const { order, pageProps, setOrder } = props;
   const [changeToProdModal, setChangeToProdModal] = useState(false);
   const [changeToAssemblyModal, setChangeToAssemblyModal] = useState(false);
   const [changeToTransportModal, setChangeToTransportModal] = useState(false);
+  const [changeToFinishedModal, setChangeToFinishedModal] = useState(false);
+  const [finishModal, setFinishModal] = useState(false);
   const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
 
   const upperCells = {
@@ -46,12 +49,12 @@ const Head = (props) => {
     const updatedOrder = {
       id: order.id,
       type: order.type,
-      status: { value: `in ${props}`, type: 'Property' },
+      status: { value: `${props}`, type: 'Property' },
     };
 
     try {
       await ProjectActions.updateProject([updatedOrder]).then(() => {
-        setOrder({ ...order, status: { type: 'Property', value: `in ${props}` } });
+        setOrder({ ...order, status: { type: 'Property', value: `${props}` } });
         setChangeToProdModal(false);
         setChangeToAssemblyModal(false);
         setChangeToTransportModal(false);
@@ -60,8 +63,15 @@ const Head = (props) => {
     } catch (err) { console.log(err); }
   }
 
+  function onProjectScanned (props) {
+    console.log(props);
+    setChangeToFinishedModal(false);
+    setFinishModal(true);
+  }
+
   return <Box id='pad'>
     <Notification />
+    <FinishProjectModal open={changeToFinishedModal} handleClose={() => setChangeToFinishedModal(false)} onConfirm={(e) => onProjectScanned(e)} />
     <ConfirmDialog
       open={changeToProdModal}
       handleClose={() => setChangeToProdModal(false)}
@@ -80,6 +90,12 @@ const Head = (props) => {
       onConfirm={() => handleChangeToProd('transport')}
       message={'Está prestes a passar este projeto para transporte. Tem a certeza que quer continuar?'}
     />
+    <ConfirmDialog
+      open={finishModal}
+      handleClose={() => setFinishModal(false)}
+      onConfirm={() => handleChangeToProd('finished')}
+      message={'Está prestes a terminar este projeto. Tem a certeza que quer continuar?'}
+    />
     <Box style={{ display: 'flex', marginBottom: '1rem' }}>
       <Typography variant='title'> {internalPOV ? 'Projeto' : 'Encomenda'} {order.name.value}</Typography>
       <Box pl={2}>
@@ -87,6 +103,7 @@ const Head = (props) => {
         {order.status?.value === 'production' && <Typography className='warningBalloon'>Em produção</Typography>}
         {order.status?.value === 'testing' && <Typography className='infoBalloon'>Em montagem</Typography>}
         {order.status?.value === 'transport' && <Typography className='alertBalloon'>Em transporte</Typography>}
+        {order.status?.value === 'finished' && <Typography className='successBalloon'>Terminado</Typography>}
       </Box>
       <Box style={{ marginLeft: 'auto' }}>
         <PrimaryBtn
@@ -109,6 +126,13 @@ const Head = (props) => {
           text='Passar a transporte'
           onClick={() => setChangeToTransportModal(true) }
           hidden={!(internalPOV && order.status.value === 'testing')}
+          icon={ <Forward strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> }
+          sx={{ marginLeft: 1 }}
+        />
+        <PrimaryBtn
+          text='Terminar projeto'
+          onClick={() => setChangeToFinishedModal(true) }
+          hidden={!(internalPOV && order.status.value === 'transport')}
           icon={ <Forward strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 const NewMsgInput = (props) => {
-  const { windowWidth, styles, pageProps, setLoadMessage, conversations, setConversations, activeRow } = props;
+  const { windowWidth, styles, pageProps, setLoadMessage, setConversations, activeRow, chats } = props;
   const [newMessage, setNewMessage] = useState('');
   const [files, setFiles] = useState();
   const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -46,7 +46,7 @@ const NewMsgInput = (props) => {
 
     setLoadMessage(new Date());
 
-    const allConversations = conversations;
+    const allConversations = chats;
 
     if (files) {
       // eslint-disable-next-line array-callback-return
@@ -76,6 +76,8 @@ const NewMsgInput = (props) => {
         createdAt: moment().format(),
         type: 'text'
       };
+
+      if (allConversations[activeRow].messagesContent === undefined)allConversations[activeRow].messagesContent = [];
 
       allConversations[activeRow].messagesContent.push(newMessageStucture);
       setConversations(allConversations);
@@ -122,7 +124,7 @@ NewMsgInput.propTypes = {
   styles: PropTypes.object,
   pageProps: PropTypes.object,
   setLoadMessage: PropTypes.func,
-  conversations: PropTypes.array,
+  chats: PropTypes.array,
   setConversations: PropTypes.func,
   activeRow: PropTypes.number,
 };

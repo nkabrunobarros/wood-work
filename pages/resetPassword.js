@@ -16,13 +16,16 @@ import PageNotFound from '../components/pages/404';
 const ResetPassword = () => {
   const router = useRouter();
   const [token, setToken] = useState();
+  const [clientType, setClientType] = useState();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     function checkToken () {
+      console.log(router.query);
       //  TODO: validar o token recebido se existe na BD
       // TODO: apenas se existir, é que se dá o state do token
       setToken(router.query?.token);
+      setClientType(router.query?.type);
     }
 
     Promise.all([checkToken()]).then(() => setLoaded(true));
@@ -31,6 +34,7 @@ const ResetPassword = () => {
   if (loaded) {
     const props = {
       token,
+      clientType
     };
 
     return token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;

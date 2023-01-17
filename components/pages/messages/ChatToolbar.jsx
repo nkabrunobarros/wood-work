@@ -12,7 +12,13 @@ const ChatToolbar = (props) => {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {/* <Avatar sx={styles.avatar}>N</Avatar> */}
-          <Typography variant='md'>{isInternalPage ? 'Projeto' : 'Encomenda'} {conversation.orderId}</Typography>
+          <Typography variant='md'> {isInternalPage
+            ? conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
+            : conversation?.type === 'Project' ? 'Encomenda' : 'Orçamento'
+          }
+          {' '}
+          {conversation.orderId || conversation.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
+          </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <ButtonGroup>

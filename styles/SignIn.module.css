@@ -14,7 +14,8 @@
   background-position: center;
 }
 .sidePanelForgot {
-  background-image: url('../public/Recuperar_Password.jpg');
+  /* background-image: url('../public/Recuperar_Password.jpg'); */
+  background-image: url('../public/Log_In.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

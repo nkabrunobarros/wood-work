@@ -39,14 +39,6 @@ const Projects = ({ ...pageProps }) => {
   const editPage = routes.private.internal.editProject;
   const detailPageBudgetTab = routes.private.internal.budget;
 
-  function calcState (value) {
-    if (value.status.value !== 'finished') return value.status.value;
-    else if (value.expedition.object.deliveryFlag.value) return 'Entregue';
-    else if (!value.expedition.object.deliveryFlag.value && value.expedition.object.expeditionTime) return 'em transporte';
-
-    return 'finished';
-  }
-
   useEffect(() => {
     const getData = async () => {
       const counts = {
@@ -66,7 +58,7 @@ const Projects = ({ ...pageProps }) => {
 
         await BudgetsActions.allBudgets().then(async (budgetResponse) => {
           setBudgets([...budgetResponse.data.filter((e) => e.aprovedDate?.value === '' && e.status.value.toLowerCase() !== 'canceled')].map((bud) => {
-            bud.Estado = calcState(bud);
+            bud.Estado = bud.status.value;
             bud.Nome = bud.name.value;
 
             switch (bud.status.value) {
@@ -98,16 +90,16 @@ const Projects = ({ ...pageProps }) => {
                   return;
                 }
 
+                console.log(proj.expedition.object);
                 //  TO REMOVE after DB cleanup
                 response.data[index].orderBy = { object: thisClient?.id };
                 response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
                 response.data[index].Cliente = proj.orderBy?.object;
                 response.data[index].Nome = proj.name.value;
                 response.data[index].telemovel = thisClient?.telephone.value;
-                // response.data[index].Producao = proj.status.value;
                 response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
-                response.data[index].estado = { type: 'Property', value: calcState(response.data[index]) };
-                response.data[index].Estado = calcState(response.data[index]);
+                response.data[index].estado = { type: 'Property', value: response.data[index].status.value };
+                response.data[index].Estado = response.data[index].status.value;
 
                 switch (response.data[index].status.value) {
                 case 'waiting budget':

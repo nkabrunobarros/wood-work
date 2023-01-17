@@ -52,7 +52,7 @@ const Navbar = ({ openDrawer, ...pageProps }) => {
             </Box>
           </Box>
           <Box id='align' justifyContent={'end'}>
-            <Box pr={3}>{console.log(loggedUser)}
+            <Box pr={3}>
               <Typography variant='md'>{loggedUser.name?.value}</Typography>
             </Box>
             <Box className={styles.logos} >

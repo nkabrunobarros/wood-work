@@ -104,7 +104,6 @@ const Workers = ({ ...props }) => {
             <div className='filterContainer'>
               <InputLabel htmlFor='email'>Email</InputLabel>
               <OutlinedInput
-
                 fullWidth
                 id='email'
                 name='email'

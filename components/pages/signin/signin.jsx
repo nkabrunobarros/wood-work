@@ -35,6 +35,7 @@ import { destroyCookie, setCookie } from 'nookies';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const SignIn = (props) => {
@@ -268,12 +269,17 @@ const SignIn = (props) => {
       <Box
         style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
-        <Image
-          width={windowWidth > 600 ? 80 : 50}
-          alt='Company Logo'
-          src={companyLogo}
-          placeholder='blur'
-        />
+        <a
+          target='#'
+          href='http://mofreita.com/'
+        >
+          <Image
+            width={windowWidth > 600 ? 80 : 50}
+            alt='Company Logo'
+            src={companyLogo}
+            placeholder='blur'
+          />
+        </a>
       </Box>
       {windowWidth > 600 &&
         <Grid className={styles.sidePanel} item xs={0} sm={6} md={7}>
@@ -361,6 +367,13 @@ const SignIn = (props) => {
                 />
               </Grid>
             </Grid>
+            {client && <a
+              className='link'
+              style={{ color: 'inherit' }}
+              target='#'
+              onClick={() => Router.push(routes.private.tos)}
+            > Termos e Condições | Política de Privacidade </a>
+            }
             <Button
               id='submit'
               onClick={(e) => handleSubmit(e)}

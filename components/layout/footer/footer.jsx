@@ -54,26 +54,37 @@ const Footer = () => {
       <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null }}>
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage
           ? <Copyright />
-          : <Image
-            alt='Footer Logo'
-            placeholder='blur'
-            priority
-            src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
-          />}
+          : <a
+            target='#'
+            href={'http://mofreita.com/wp-content/uploads/2022/08/72593_ww4.0_modelo_pag_web_0_norte2020_v2.pdf'}>
+            <Image
+              alt='Footer Logo'
+              placeholder='blur'
+              priority
+              src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
+            />
+          </a>
+        }
       </Grid>
       <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : 'end' }} >
         {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile?.object?.description || '') || isPublicPage
-          ? <Image
-            alt='Footer Logo'
-            placeholder='blur'
-            priority
-            src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
-          />
-          : <a
-            className='link'
-            style={{ color: 'inherit' }}
-            onClick={() => Router.push(routes.private.tos)}
-          > Termos e Condições | Política de Privacidade </a>
+          ? <a
+            target='#'
+            href={'http://mofreita.com/wp-content/uploads/2022/08/72593_ww4.0_modelo_pag_web_0_norte2020_v2.pdf'}>
+
+            <Image
+              alt='Footer Logo'
+              placeholder='blur'
+              priority
+              src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
+            />
+          </a>
+          : <Copyright />
+          // <a
+          //   className='link'
+          //   style={{ color: 'inherit' }}
+          //   onClick={() => Router.push(routes.private.tos)}
+          // > Termos e Condições | Política de Privacidade </a>
         }
       </Grid>
     </Grid >

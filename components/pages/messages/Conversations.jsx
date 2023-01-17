@@ -1,5 +1,4 @@
 import { Grid, Typography } from '@mui/material';
-import moment from 'moment';
 //  PropTypes
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -13,43 +12,24 @@ export const ChatRow = (props) => {
   const styles = MessagesStyles({ hovering, theme, activeRow: activeRow === index });
 
   return (
-    <Grid container md={12} p={1} sx={styles.conversationRow} onClick={() => onRowClick(index)} onMouseOver={() => setHovering(true)} onMouseOut={() => setHovering(false)}>
-      {/* <Grid md={2} container>
-          <Tooltip title={ (isInternalPage ? 'Projeto' : 'Encomenda') + ' ' + chat.orderId}>
-            <Avatar width={'100%'} height={'100%'} sx={styles.avatar}>N</Avatar>
-          </Tooltip>
-        </Grid> */}
+    <Grid container md={12} p={1} sx={styles.conversationRow} onClick={() => onRowClick(index)} onMouseOver={() => setHovering(true)} onMouseOut={() => setHovering(false)} >
       {windowWidth > 900 &&
           <>
             <Grid container md={12} >
               <Grid>
-                <Typography variant='md' color='primary.main'>{isInternalPage ? 'Projeto' : 'Encomenda'} {chat.orderId}</Typography>
+                <Typography variant='md' color='primary.main'>
+                  {isInternalPage
+                    ? chat.type === 'Project' ? 'Projeto' : 'Orçamento'
+                    : chat.type === 'Project' ? 'Encomenda' : 'Orçamento'
+                  }
+                  {' '}
+                  {chat.orderId || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
+                </Typography>
               </Grid>
               <Grid>
-                <Typography variant='sm' color='lightTextSm.black' >{chat.message} <span>.</span> <Typography variant='xs' sx={styles.timeAgo}>{moment(chat.createdAt).fromNow()}</Typography></Typography>
+                {/* <Typography variant='sm' color='lightTextSm.black' >{chat.message} <span>.</span> <Typography variant='xs' sx={styles.timeAgo}>{chat.createdAt && moment(chat.createdAt).fromNow()}</Typography></Typography> */}
               </Grid>
             </Grid>
-            {/* <Grid container md={1} sm={0} className={styles.conversationRowMore}>
-              <IconButton
-                sx={styles.conversationRowMoreBtn}
-                aria-controls={anchorEl ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={anchorEl ? 'true' : undefined}
-                onClick={(e) => setAnchorEl(e.currentTarget)}>
-                <MoreHorizontal
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
-                />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={anchorEl}
-                onClose={() => setAnchorEl(null)}
-              >
-                <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><Typography>Fechar conversa</Typography></MenuItem>
-                <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><Typography>Apagar conversa</Typography></MenuItem>
-              </Menu>
-            </Grid> */}
           </>
       }
     </Grid>

@@ -9,6 +9,8 @@ import styles from '../../styles/components/navbar.module.css';
 import IsInternal from '../utils/IsInternal';
 
 const CustomBreadcrumbs = ({ path }) => {
+  const isInternalPage = Object.values(routes.private.internal).includes(Router.asPath.replace('[Id]', ''));
+
   const style = {
     color: 'var(--grayLight) !important',
     pointerEvents: 'all',
@@ -30,7 +32,7 @@ const CustomBreadcrumbs = ({ path }) => {
     >
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
         <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description) ? routes.private.internal.projects : routes.private.projects)}>
-          <Tooltip title='Ir para Projetos'>
+          <Tooltip title={ isInternalPage ? 'Ir para Projetos/Orçamentos' : 'Ir para Pedidos'}>
             <Home strokeWidth={1} size={18} />
           </Tooltip>
         </IconButton>

@@ -1,25 +1,51 @@
 /* eslint-disable no-constant-condition */
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
+import Image from 'next/image';
+import Router from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
-import FormGenerator from '../../formGenerator';
+// import FormGenerator from '../../formGenerator';
+import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Loader from '../../loader/loader';
 
-const ResetPassword = () => {
+const ResetPassword = (props) => {
+  // eslint-disable-next-line react/prop-types
+  const { clientType } = props;
   const [submiting, setSubmiting] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [windowWidth, setWindowHeight] = useState();
+
+  if (typeof window !== 'undefined') {
+    useEffect(() => {
+      setWindowHeight(window.innerWidth);
+    }, [window.innerWidth]);
+  }
+
+  const listenToResize = () => {
+    setWindowHeight(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', listenToResize);
+
+    return () => window.removeEventListener('resize', listenToResize);
+  }, []);
 
   const [inputFields, setInputFields] = useState([
     {
       id: 'password',
-      label: 'Senha',
+      label: 'Nova senha',
       value: '',
       error: '',
       required: true,
@@ -48,13 +74,13 @@ const ResetPassword = () => {
     inputFields.map((input, i) => {
       data[i].error = '';
 
-      if (input.value === '') {
+      if (i === 0 && input.value === '') {
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
-      } else if (input.value.length < 6) {
+      } else if (i === 0 && input.value.length < 6) {
         data[i].error = 'password tem que ser minimo 6 letras';
         hasErrors = true;
-      } else if (inputFields[0].value !== inputFields[1].value) {
+      } else if (i === 1 && !hasErrors && inputFields[0].value !== inputFields[1].value) {
         data[i].error = 'Senhas tem que ser iguais';
         hasErrors = true;
       }
@@ -63,7 +89,7 @@ const ResetPassword = () => {
     setInputFields(data);
 
     if (hasErrors) {
-      toast.error('Prencha todos os campos.');
+      toast.error('Verifique os erros no formulário."');
 
       return false;
     }
@@ -80,8 +106,9 @@ const ResetPassword = () => {
       //  TODO: FAZER O PEDIDO DE RESET
       // Reset Success
       if (true) {
-        toast.success('Reseted');
+        toast.success('Senha redefinida!');
         setSubmiting(false);
+        Router.push(clientType === '1' ? routes.public.signInInternal : routes.public.signIn);
       }
     } else {
       //  Reset Fails
@@ -102,7 +129,21 @@ const ResetPassword = () => {
       <CssBaseline />
       <Notification />
       {submiting && <Loader center={true} backdrop />}
-
+      <Box
+        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+      >
+        <a
+          target='#'
+          href='http://mofreita.com/'
+        >
+          <Image
+            width={windowWidth > 600 ? 80 : 50}
+            alt='Company Logo'
+            src={companyLogo}
+            placeholder='blur'
+          />
+        </a>
+      </Box>
       <Grid className={styles.sidePanelForgot} item xs={false} sm={4} md={7}>
         <Box
           className={styles.logo}
@@ -131,9 +172,9 @@ const ResetPassword = () => {
             alignItems: 'start',
           }}
         >
-          <Typography color={'primary'}>Portal WW4.0</Typography>
+          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {clientType === '1' ? 'Interno' : 'Cliente'} WW4.0</Typography>
           <Typography component='h2' variant='h3'>
-            Redefinir senha da conta
+            Redefinir senha
           </Typography>
           <Box
             component='form'
@@ -142,7 +183,37 @@ const ResetPassword = () => {
             sx={{ mt: 1, width: '100%' }}
           >
             <Grid container>
-              <FormGenerator fields={inputFields} perRow={1} onFormChange={handleFormChange} />
+              {/* <FormGenerator fields={inputFields} perRow={1} onFormChange={handleFormChange} /> */}
+              <Grid md={12} sm={12 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
+                  name={inputFields[0].id}
+                  label={inputFields[0].label}
+                  required={inputFields[0].required}
+                  value={inputFields[0].value}
+                  error={inputFields[0].error}
+                  placeholder={'Escrever nova Senha'}
+                  type={visible ? 'text' : 'password'}
+                  onChange={(e) => handleFormChange(0, e)}
+                  adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
+                  adornmentOnClick={() => setVisible(!visible)}
+                  iconTooltip={!visible && 'Mostrar senha'}
+                />
+              </Grid>
+              <Grid md={12} sm={12 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                <MyInput
+                  name={inputFields[1].id}
+                  label={inputFields[1].label}
+                  required={inputFields[1].required}
+                  value={inputFields[1].value}
+                  error={inputFields[1].error}
+                  placeholder={'Repita nova senha'}
+                  type={visible ? 'text' : 'password'}
+                  onChange={(e) => handleFormChange(1, e)}
+                  adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
+                  adornmentOnClick={() => setVisible(!visible)}
+                  iconTooltip={!visible && 'Mostrar Senha'}
+                />
+              </Grid>
             </Grid>
             <Grid container p={1} className='fullCenter'>
               <Button

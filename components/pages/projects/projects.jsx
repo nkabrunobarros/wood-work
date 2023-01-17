@@ -52,8 +52,6 @@ const ProjectsScreen = ({ ...props }) => {
     detailPageBudgetTab
   } = props;
 
-  console.log(projects);
-
   const router = useRouter();
   //  States
   const [number, setNumber] = useState(router.query.order || '');
@@ -286,7 +284,7 @@ const ProjectsScreen = ({ ...props }) => {
             </Tooltip>
           </Tabs>
         </Box> }
-
+        {console.log(projects)}
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
           <AdvancedTable

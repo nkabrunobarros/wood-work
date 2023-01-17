@@ -4,7 +4,7 @@ import routes from '../../navigation/routes';
 
 export const navLinks = [
   {
-    title: 'Encomendas',
+    title: 'Pedidos',
     id: 'projectsInternal',
     url: routes.private.projects,
     icon: <Archive strokeWidth='1' size={20} />,

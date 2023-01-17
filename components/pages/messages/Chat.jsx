@@ -78,7 +78,7 @@ const Chat = (props) => {
 
   return (
     <div id='messagesContainer'>
-      {conversation.messagesContent.map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)}
+      {conversation?.messagesContent?.map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)}
     </div>
   );
 };

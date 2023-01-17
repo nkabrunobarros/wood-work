@@ -23,6 +23,7 @@ import scrollToBottom from '../../utils/ScrollToBottom';
 import CustomBreadcrumbs from '../../breadcrumbs';
 
 //  Sections Components
+import { Box } from '@mui/material';
 import routes from '../../../navigation/routes';
 import Chat from './Chat';
 import ChatToolbar from './ChatToolbar';
@@ -33,7 +34,7 @@ import NewMsgInput from './NewMsgInput';
 
 const Messages = (props) => {
   const { breadcrumbsPath } = props;
-  const [conversations, setConversations] = useState(props.conversations);
+  const [chats, setChats] = useState(props.chats);
   const [activeRow, setActiveRow] = useState(0);
   const [loadMessage, setLoadMessage] = useState(new Date());
   const [windowWidth, setWindowHeight] = useState();
@@ -69,6 +70,8 @@ const Messages = (props) => {
     return () => window.removeEventListener('resize', listenToResize);
   }, []);
 
+  console.log(chats.filter(ele => ele.filterName.toString().includes(conversationFilter)));
+
   return (
     <Grid component='main'>
       <CssBaseline/>
@@ -76,20 +79,22 @@ const Messages = (props) => {
       <CustomBreadcrumbs path={breadcrumbsPath}/>
       <Content>
         <Grid container md={12} sm={12} sx={{ overflow: 'hidden', borderRadius: '8px' }}>
-          <Grid container md={4} sm={1.5} xs={3}>
-            <Grid md={12} sx={{ overflow: 'hidden', maxHeight: '70vh', minHeight: '70vh' }}>
+          <Grid container md={4} sm={1.5} xs={3} sx={{ borderRight: '1px solid', borderColor: 'divider' }}>
+            <Grid md={12} sx={{ maxHeight: '70vh', minHeight: '70vh' }}>
               <ConversationsToolbar windowWidth={windowWidth} isInternalPage={isInternalPage} styles={styles} {...props} onSearch={setConversationFilter} />
-              <ConversationsList {...props} isInternalPage={isInternalPage} conversations={conversations.filter(ele => ele.orderId.toString().includes(conversationFilter))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/>
+              <Box sx={{ overflow: 'scroll', maxHeight: '85%' }}>
+                <ConversationsList {...props} isInternalPage={isInternalPage} conversations={chats.filter(ele => ele.filterName.toLowerCase().toString().includes(conversationFilter.toLowerCase()))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/>
+              </Box>
             </Grid>
           </Grid>
           <Grid container md={8} sm={9} xs={9}>
             <Grid md={12} sx={{ overflow: 'scroll', maxHeight: '70vh', minHeight: '70vh' }}>
-              <ChatToolbar styles={styles} conversation={conversations[activeRow]} isInternalPage={isInternalPage} {...props} />
-              <Chat conversation={conversations[activeRow]} theme={theme} />
+              <ChatToolbar styles={styles} conversation={chats[activeRow]} isInternalPage={isInternalPage} {...props} />
+              <Chat conversation={chats[activeRow]} theme={theme} />
             </Grid>
             <Grid container md={12}>
               <NewMsgInput {...props}
-                setConversations={setConversations}
+                setConversations={setChats}
                 setLoadMessage={setLoadMessage}
                 activeRow={activeRow}
                 styles={styles}
@@ -104,7 +109,7 @@ const Messages = (props) => {
 
 Messages.propTypes = {
   breadcrumbsPath: PropTypes.any,
-  conversations: PropTypes.any,
+  chats: PropTypes.any,
 };
 
 export default Messages;
