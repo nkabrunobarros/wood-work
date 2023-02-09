@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 //  Nodes
 import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -33,9 +34,9 @@ import EmailValidation from '../../utils/EmailValidation';
 import { destroyCookie, setCookie } from 'nookies';
 //  PropTypes
 import Image from 'next/image';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
+import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const SignIn = (props) => {
@@ -113,114 +114,6 @@ const SignIn = (props) => {
             setLoading(false);
             destroyCookie(null, 'auth_token');
           } else {
-            user.profile = {};
-            user.profile.type = 'Profile';
-
-            user.profile.object = {
-              description: Router.route === '/' ? 'client' : 'Admin',
-              type: Router.route === '/' ? 'client' : 'internal',
-              permissions: [
-                { idPerfil: '123456789', subject: 'workers', action: 'READ' },
-                { idPerfil: '123456789', subject: 'workers', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'workers', action: 'DELETE' },
-
-                //  DashboardsScreen
-                { idPerfil: '123456789', subject: 'dashboards', action: 'READ' },
-
-                //  FactoryScreen
-                { idPerfil: '123456789', subject: 'factoryLevel', action: 'READ' },
-
-                //  leftoversScreen
-                { idPerfil: '123456789', subject: 'leftovers', action: 'READ' },
-
-                //  Ficheiros
-                { idPerfil: '123456789', subject: 'ficheiros', action: 'READ' },
-                { idPerfil: '123456789', subject: 'ficheiros', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'ficheiros', action: 'DELETE' },
-
-                //  perfis
-                { idPerfil: '123456789', subject: 'perfis', action: 'READ' },
-                { idPerfil: '123456789', subject: 'perfis', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'perfis', action: 'DELETE' },
-
-                //  Ficheiros
-                { idPerfil: '123456789', subject: 'messages', action: 'READ' },
-                { idPerfil: '123456789', subject: 'messages', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'messages', action: 'DELETE' },
-
-                //  profiles
-                { idPerfil: '123456789', subject: 'profiles', action: 'READ' },
-                { idPerfil: '123456789', subject: 'profiles', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'profiles', action: 'DELETE' },
-
-                //  Unidades
-                { idPerfil: '123456789', subject: 'unidades', action: 'READ' },
-                { idPerfil: '123456789', subject: 'unidades', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'unidades', action: 'DELETE' },
-
-                //  ConversaoUnidades
-                { idPerfil: '123456789', subject: 'conversaounidades', action: 'READ' },
-                { idPerfil: '123456789', subject: 'conversaounidades', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'conversaounidades', action: 'DELETE' },
-
-                //  Moedas
-                { idPerfil: '123456789', subject: 'moedas', action: 'READ' },
-                { idPerfil: '123456789', subject: 'moedas', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'moedas', action: 'DELETE' },
-
-                //  projects
-                { idPerfil: '123456789', subject: 'projects', action: 'READ' },
-                { idPerfil: '123456789', subject: 'projects', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'projects', action: 'DELETE' },
-
-                //  Clients
-                { idPerfil: '123456789', subject: 'clients', action: 'READ' },
-                { idPerfil: '123456789', subject: 'clients', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'clients', action: 'DELETE' },
-
-                //  Stocks
-                { idPerfil: '123456789', subject: 'stocks', action: 'READ' },
-                { idPerfil: '123456789', subject: 'stocks', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'stocks', action: 'DELETE' },
-
-                //  Products
-                { idPerfil: '123456789', subject: 'products', action: 'READ' },
-                { idPerfil: '123456789', subject: 'products', action: 'WRITE' },
-                { idPerfil: '123456789', subject: 'products', action: 'DELETE' },
-
-                //  Client
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
-
-                //  profiles
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'profiles', action: 'READ' },
-
-                //  Unidades
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'unidades', action: 'READ' },
-
-                //  ConversaoUnidades
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'conversaounidades', action: 'READ' },
-
-                //  Moedas
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'moedas', action: 'READ' },
-
-                //  projects
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'projects', action: 'READ' },
-
-                //  Clients
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
-
-                //  Stocks
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'stocks', action: 'READ' },
-
-                //  Products
-                { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'products', action: 'READ' },
-              ]
-
-            };
-
-            if (user.type === 'Owner' && user.tos === undefined) user.tos = { type: 'Property', value: 'False' };
-
-            localStorage.setItem('user', JSON.stringify(user));
             // Success
             ToastSet(loadingNotification, 'A entrar', 'success');
             setLoading(false);
@@ -238,6 +131,49 @@ const SignIn = (props) => {
       }
     });
   };
+
+  async function test () {
+    const loadingNotification = toast.loading('');
+
+    setLoading(true);
+
+    await authActions.loginTest({ username: 'bruno', password: '59CAyKMHfSLAtBt9' }).then((res) => {
+      ToastSet(loadingNotification, 'A entrar', 'success');
+
+      if (res.response) {
+        if (res.response.data.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas.', 'error');
+        else if (res.response.data.error_description === 'User inactive') {
+          ToastSet(loadingNotification, 'Conta inativa.', 'error');
+          setDialogOpen(true);
+        } else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
+      }
+    });
+
+    setLoading(false);
+  }
+
+  async function test2 () {
+    const axios = require('axios');
+
+    const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'http://woodwork4.ddns.net/ww4/api/v1/owner/?options=keyValues',
+      headers: {
+        'Fiware-Service': 'woodwork40',
+        Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/context/ww4zero.context.jsonld>; type="application/ld+json"',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IkQxUXRFVXRXN2F4RUhWMWdBZkpNM1lrd3ROcVp3MSJ9.tgTd0o_-wlwbdk18phvrnTEdiQNvKqH2lYq1TFmFfxk'
+      }
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
@@ -397,21 +333,15 @@ const SignIn = (props) => {
                   'Entrar'
                 )}
             </Button>
+            <Button onClick={() => test()} >test</Button>
+            <Button onClick={() => test2()} >test2</Button>
+
           </Box>
         </Box>
         <Footer />
       </Grid>
     </Grid>
   );
-};
-
-SignIn.propTypes = {
-  me: PropTypes.func,
-  login: PropTypes.func,
-  client: PropTypes.bool,
-  loginSuccessRoute: PropTypes.string,
-  forgotPasswordRoute: PropTypes.string,
-  loginSuccessRouteTerms: PropTypes.string,
 };
 
 export default SignIn;
