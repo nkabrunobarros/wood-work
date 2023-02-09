@@ -25,5 +25,5 @@ Lucide Icons(https://lucide.dev/)
 docker build -t mofreita:1 .
 
 ## Export to Portainer
-docker tag mofreita:1 registry.nka.pt/nka/mofreita:1
-docker push registry.nka.pt/nka/mofreita:1
+docker tag hubcollective:1 registry.nka.pt/nka/hubcollective:1
+docker push registry.nka.pt/nka/hubcollective:1

@@ -36,6 +36,7 @@ const noLayoutScreens = [
   `${routes.public.resetPasswordInternal}`,
   `${routes.private.terms}`,
   `${routes.private.tos}`,
+  `${routes.private.privacy}`,
   `${routes.private.error}`,
 ];
 

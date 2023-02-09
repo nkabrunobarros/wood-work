@@ -34,6 +34,7 @@ const routes = {
     },
     //  Pages shared
     terms: '/terms',
+    privacy: '/privacy',
     tos: '/tos',
     projects: '/projects',
     project: '/project/',

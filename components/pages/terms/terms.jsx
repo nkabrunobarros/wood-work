@@ -1,7 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable react/prop-types */
 //  Nodes
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControlLabel } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,13 +15,12 @@ import styles from '../../../styles/SignIn.module.css';
 import Footer from '../../layout/footer/footer';
 
 //  Navigation
-import { ChevronLeft, LogOut } from 'lucide-react';
+import { ChevronDown, ChevronLeft, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import * as ClientsActions from '../../../pages/api/actions/client';
-import backgroundImgTerms from '../../../public/consentimento.png';
-import backgroundImgTos from '../../../public/tos.png';
+import backgroundImg from '../../../public/Log_In.jpg';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -67,6 +67,12 @@ const Terms = ({ ...props }) => {
     } catch (err) { console.log(err); }
   };
 
+  const [expanded, setExpanded] = React.useState('panel1');
+
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
+
   return (
     <Grid container component='main' sx={{ height: '100%', width: '100%' }}>
       <CssBaseline />
@@ -81,7 +87,7 @@ const Terms = ({ ...props }) => {
           }}
         >
           <Image
-            src={readOnly ? backgroundImgTerms : backgroundImgTos}
+            src={backgroundImg}
             alt='Background Image'
             layout='fill'
             placeholder="blur"
@@ -123,7 +129,7 @@ const Terms = ({ ...props }) => {
         )}
         <Box
           sx={{
-            mx: '15%',
+            mx: '10%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'start',
@@ -131,152 +137,80 @@ const Terms = ({ ...props }) => {
         >
           <Typography color={'primary'}>Portal Cliente WW4.0</Typography>
           <Typography variant='titlexxl'>
-            Consentimento de Utilização
+            Termos e Condições
           </Typography>
-          {/* <Typography
-            variant='h7'
-            style={{
-              maxHeight: readOnly ? '68vh' : '50vh',
-              overflow: 'scroll',
-              overflowX: 'hidden',
-            }}
-          >
-            Bem-vindo ao Portal de Cliente WW4.0. Estes termos e condições
-            definem as regras e regulamentos para a utilização do Website do
-            Portal de Cliente WW4.0. Portal de Cliente WW4.0 encontra-se
-            localizada em: ww40.nka.pt. Ao aceder a este site, presumimos que
-            aceita estes termos e condições na totalidade. Não continue a
-            utilizar o site do Portal de Cliente WW4.0 se não aceitar todos os
-            termos e serviços referidos nesta página. A terminologia seguinte
-            aplica-se as estes Termos e Condições, Declaração de Privacidade e
-            Aviso de Isenção de Responsabilidade, assim como a todo e qualquer
-            Acordo: Cliente, Você e Seu referem-se a si, a pessoa que está a
-            aceder a este site para aceitar os termos e condições da Empresa. A
-            Empresa, Nós e Nosso, referem-se à nossa Empresa. Entidade,
-            Entidades, ou Nós, referem-se tanto ao Cliente como a nós, ou só ao
-            cliente ou a nós. Todos os termos referem-se à oferta, aceitação e
-            consideração do pagamento necessário para levar a cabo o processo da
-            nossa assistência ao Cliente da forma mais apropriada, seja através
-            de reuniões formais de duração fixa, ou qualquer outro meio, com o
-            objetivo expresso de cumprir as necessidades do Cliente no que diz
-            respeito ao fornecimento dos serviços/produtos da Empresa, de acordo
-            com, e sujeito à lei vigente de www.site. Qualquer uso da
-            terminologia acima ou outras palavras no singular, plural, em
-            maiúscula/minúscula e/ou ele/ela ou eles/elas são tomados como
-            intermutáveis e, portanto, referem-se ao mesmo. Cookies Utilizamos
-            cookies. Ao usar o site da WoodWork 4.0 consente a utilização de
-            cookies de acordo com a política de privacidade do Portal de Cliente
-            WW4.0. A maioria dos sites interativos de hoje em dia usam cookies
-            que nos permitem recuperar os detalhes do utilizador para cada
-            visita. As cookies são usadas em algumas áreas do nosso site para
-            permitir a funcionalidade desta área e facilitar a utilização dos
-            visitantes. Alguns dos nossos afiliados / parceiros publicitários
-            podem também usar cookies. Licença Excetuando referência em
-            contrário, a WoodWork 4.0 e/ou os seus licenciantes são
-            proprietários dos direitos de propriedade intelectual para todo o
-            material no Portal de Cliente WW4.0. Todos os direitos de
-            propriedade intelectual são reservados. Pode visualizar e/ou
-            imprimir páginas de ww40.nka.pt/ para o seu uso pessoal, sujeito
-            às restrições definidas nestes termos e condições. Não deve:
-            Republicar material de ww40.nka.pt. Vender, alugar ou
-            sub-licenciar material de ww40.nka.pt. Reproduzir, duplicar ou
-            copiar material de ww40.nka.pt. Redistribuir conteúdo de WoodWork 4.0
-            (a não ser que o conteúdo seja feito especificamente para
-            redistribuição). Aviso No limite máximo permitido pela lei
-            aplicável, excluímos todas as representações, garantias e condições
-            relacionadas com o nosso site e com a utilização deste site
-            (incluindo, sem limitação, qualquer garantia implícita na lei a
-            respeito de qualidade satisfatória, adequação ao propósito e/ou
-            utilização de cuidado e habilidade razoável). Nada neste aviso irá:
-            Limitar ou excluir a nossa ou a sua responsabilidade devido a morte
-            ou lesões pessoais resultantes de negligência. Limitar ou excluir a
-            nossa ou a sua responsabilidade por fraude ou declarações
-            fraudulentas. Limitar qualquer responsabilidade nossa ou sua de
-            qualquer forma que não seja permitida de acordo com a lei aplicável.
-            Ou excluir qualquer das nossas, ou das suas, responsabilidades que
-            não possam ser excluídas de acordo com a lei aplicável. As
-            limitações e exclusões de responsabilidade definidas nesta Secção e
-            em outros locais deste aviso: estão sujeitas ao parágrafo
-            precedente; e governam todas as responsabilidades de acordo com este
-            aviso ou em relação com a matéria em questão neste aviso, incluindo
-            responsabilidades que surjam em contrato, responsabilidade civil
-            (incluindo negligencia) e por qualquer quebra de dever estatutário.
-            Na medida em que o site, a informação e os serviços no site são
-            fornecidos sem qualquer custo, não seremos responsáveis por qualquer
-            perda ou dano de qualquer natureza.
-          </Typography> */}
 
           <Box style={{
             maxHeight: readOnly ? '68vh' : '50vh',
             overflow: 'scroll',
             overflowX: 'hidden',
           }}>
-            <h2><span style={{ color: 'rgb(68, 68, 68)' }}>Política Privacidade</span></h2>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>A sua privacidade é importante para nós. É política do Wood Work 4.0 respeitar
-        a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a
-              href="http://ww40.nka.pt/">Wood Work 4.0</a>, e outros sites que possuímos e operamos.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>Solicitamos informações pessoais apenas quando realmente precisamos delas para
-        lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento. Também
-        informamos por que estamos coletando e como será usado.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>Apenas retemos as informações coletadas pelo tempo necessário para fornecer o
-        serviço solicitado. Quando armazenamos dados, protegemos dentro de meios comercialmente aceitáveis ​​para evitar
-        perdas e roubos, bem como acesso, divulgação, cópia, uso ou modificação não autorizados.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>Não compartilhamos informações de identificação pessoal publicamente ou com
-        terceiros, exceto quando exigido por lei.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>O nosso site pode ter links para sites externos que não são operados por nós.
-        Esteja ciente de que não temos controle sobre o conteúdo e práticas desses sites e não podemos aceitar
-        responsabilidade por suas respectivas&nbsp;</span><a href="https://politicaprivacidade.com/"
-              style={{ backgroundColor: 'transparent', color: 'rgb(68, 68, 68)' }}>políticas de privacidade</a><span
-              style={{ color: 'rgb(68, 68, 68)' }}>.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>Você é livre para recusar a nossa solicitação de informações pessoais,
-        entendendo que talvez não possamos fornecer alguns dos serviços desejados.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>O uso continuado de nosso site será considerado como aceitação de nossas
-        práticas em torno de privacidade e informações pessoais. Se você tiver alguma dúvida sobre como lidamos com
-        dados do usuário e informações pessoais, entre em contacto connosco.</span></p>
-            <p></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>
-              <ul>
-                <li><span style={{ color: 'rgb(68, 68, 68)' }}>O serviço Google AdSense que usamos para veicular publicidade usa
-                    um cookie DoubleClick para veicular anúncios mais relevantes em toda a Web e limitar o número de
-                    vezes que um determinado anúncio é exibido para você.</span></li>
-                <li><span style={{ color: 'rgb(68, 68, 68)' }}>Para mais informações sobre o Google AdSense, consulte as FAQs
-                    oficiais sobre privacidade do Google AdSense.</span></li>
-                <li><span style={{ color: 'rgb(68, 68, 68)' }}>Utilizamos anúncios para compensar os custos de funcionamento
-                    deste site e fornecer financiamento para futuros desenvolvimentos. Os cookies de publicidade
-                    comportamental usados ​​por este site foram projetados para garantir que você forneça os anúncios
-                    mais relevantes sempre que possível, rastreando anonimamente seus interesses e apresentando coisas
-                    semelhantes que possam ser do seu interesse.</span></li>
-                <li><span style={{ color: 'rgb(68, 68, 68)' }}>Vários parceiros anunciam em nosso nome e os cookies de
-                    rastreamento de afiliados simplesmente nos permitem ver se nossos clientes acessaram o site através
-                    de um dos sites de nossos parceiros, para que possamos creditá-los adequadamente e, quando
-                    aplicável, permitir que nossos parceiros afiliados ofereçam qualquer promoção que pode fornecê-lo
-                    para fazer uma compra.</span></li>
-              </ul>
-              <p><br></br></p>
-            </span></p>
-            <h3><span style={{ color: 'rgb(68, 68, 68)' }}>Compromisso do Usuário</span></h3>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>O usuário se compromete a fazer uso adequado dos conteúdos e da informação que
-        o Wood Work 4.0 oferece no site e com caráter enunciativo, mas não limitativo:</span></p>
-            <ul>
-              <li><span style={{ color: 'rgb(68, 68, 68)' }}>A) Não se envolver em atividades que sejam ilegais ou contrárias à boa fé
-            a à ordem pública;</span></li>
-              <li><span style={{ color: 'rgb(68, 68, 68)' }}>B) Não difundir propaganda ou conteúdo de natureza racista, xenofóbica,
-              </span><span style={{ color: 'rgb(33, 37, 41)' }}><a href='https://apostasonline.guru/betano-apostas/' rel="nofollow noreferrer"
-                target='_BLANK'
-                style={{ color: 'inherit !important', textDecoration: 'none !important', fontSize: 'inherit !important' }}>betano</a></span><span
-                style={{ color: 'rgb(68, 68, 68)' }}> ou azar, qualquer tipo de pornografia ilegal, de apologia ao terrorismo ou
-            contra os direitos humanos;</span></li>
-              <li><span style={{ color: 'rgb(68, 68, 68)' }}>C) Não causar danos aos sistemas físicos (hardwares) e lógicos (softwares)
-            do Wood Work 4.0, de seus fornecedores ou terceiros, para introduzir ou disseminar vírus informáticos ou
-            quaisquer outros sistemas de hardware ou software que sejam capazes de causar danos anteriormente
-            mencionados.</span></li>
-            </ul>
-            <h3><span style={{ color: 'rgb(68, 68, 68)' }}>Mais informações</span></h3>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>Esperemos que esteja esclarecido e, como mencionado anteriormente, se houver
-        algo que você não tem certeza se precisa ou não, geralmente é mais seguro deixar os cookies ativados, caso
-        interaja com um dos recursos que você usa em nosso site.</span></p>
-            <p><span style={{ color: 'rgb(68, 68, 68)' }}>Esta política é efetiva a partir de&nbsp;16 December 2022 17:38</span></p>
-
+            <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>1. Termos</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>Ao acessar ao site <a href="http://ww40.nka.pt/">WoodWork4.0</a>, concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.</span></p>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')} >
+              <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" expandIcon={<ChevronDown />}>
+                <Typography>2. Uso de Licença</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site WoodWork4.0 , apenas para visualização transitória pessoal e não comercial. Esta é a concessão de uma licença, não uma transferência de título e, sob esta licença, você não pode:&nbsp;</span></p><ol><li><span style={{ color: 'rgb(68, 68, 68)' }}>modificar ou copiar os materiais;&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>usar os materiais para qualquer finalidade comercial ou para exibição pública (comercial ou não comercial);&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>tentar descompilar ou fazer engenharia reversa de qualquer software contido no site WoodWork4.0;&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>remover quaisquer direitos autorais ou outras notações de propriedade dos materiais; ou&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>transferir os materiais para outra pessoa ou 'espelhe' os materiais em qualquer outro servidor.</span></li></ol><p><span style={{ color: 'rgb(68, 68, 68)' }}>Esta licença será automaticamente rescindida se você violar alguma dessas restrições e poderá ser rescindida por WoodWork4.0 a qualquer momento. Ao encerrar a visualização desses materiais ou após o término desta licença, você deve apagar todos os materiais baixados em sua posse, seja em formato eletrónico ou impresso.</span></p>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')} >
+              <AccordionSummary aria-controls="panel3d-content" id="panel3d-header" expandIcon={<ChevronDown />}>
+                <Typography>3. Isenção de responsabilidade</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ol><li><span style={{ color: 'rgb(68, 68, 68)' }}>Os materiais no site da WoodWork4.0 são fornecidos 'como estão'. WoodWork4.0 não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>Além disso, o WoodWork4.0 não garante ou faz qualquer representação relativa à precisão, aos resultados prováveis ​​ou à confiabilidade do uso dos materiais em seu site ou de outra forma relacionado a esses materiais ou em sites vinculados a este site.</span></li></ol>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')} >
+              <AccordionSummary aria-controls="panel4d-content" id="panel4d-header" expandIcon={<ChevronDown />}>
+                <Typography>4. Limitações</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Em nenhum caso o WoodWork4.0 ou seus fornecedores serão responsáveis ​​por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em WoodWork4.0, mesmo que WoodWork4.0 ou um representante autorizado da WoodWork4.0 tenha sido notificado oralmente ou por escrito da possibilidade de tais danos. Como algumas jurisdições não permitem limitações em garantias implícitas, ou limitações de responsabilidade por danos conseqüentes ou incidentais, essas limitações podem não se aplicar a você.</span></p>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')} >
+              <AccordionSummary aria-controls="panel5d-content" id="panel5d-header" expandIcon={<ChevronDown />}>
+                <Typography>5. Precisão dos materiais</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Os materiais exibidos no site da WoodWork4.0 podem incluir erros técnicos, tipográficos ou fotográficos. WoodWork4.0 não garante que qualquer material em seu site seja preciso, completo ou atual. WoodWork4.0 pode fazer alterações nos materiais contidos em seu site a qualquer momento, sem aviso prévio. No entanto, WoodWork4.0 não se compromete a atualizar os materiais.</span></p>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel6'} onChange={handleChange('panel6')} >
+              <AccordionSummary aria-controls="panel6d-content" id="panel6d-header" expandIcon={<ChevronDown />}>
+                <Typography>6. Links</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>O WoodWork4.0 não analisou todos os sites vinculados ao seu site e não é responsável pelo conteúdo de nenhum site vinculado. A inclusão de qualquer link não implica endosso por WoodWork4.0 do site. O uso de qualquer site vinculado é por conta e risco do usuário.</span></p><p><br /></p>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel7'} onChange={handleChange('panel7')} >
+              <AccordionSummary aria-controls="panel7d-content" id="panel7d-header" expandIcon={<ChevronDown />}>
+                <Typography>Modificações</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>O WoodWork4.0 pode revisar estes termos de serviço do site a qualquer momento, sem aviso prévio. Ao usar este site, você concorda em ficar vinculado à versão atual desses termos de serviço.</span></p>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel8'} onChange={handleChange('panel8')} >
+              <AccordionSummary aria-controls="panel8d-content" id="panel8d-header" expandIcon={<ChevronDown />}>
+                <Typography>Lei aplicável</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Estes termos e condições são regidos e interpretados de acordo com as leis do WoodWork4.0 e você se submete irrevogavelmente à jurisdição exclusiva dos tribunais naquele estado ou localidade.</span></p>
+              </AccordionDetails>
+            </Accordion>
           </Box>
           {readOnly
             ? null

@@ -367,12 +367,18 @@ const SignIn = (props) => {
                 />
               </Grid>
             </Grid>
-            {client && <a
-              className='link'
-              style={{ color: 'inherit' }}
-              target='#'
-              onClick={() => Router.push(routes.private.tos)}
-            > Termos e Condições | Política de Privacidade </a>
+            {client &&
+            <Box display='flex'>
+              <a
+                target='#'
+                onClick={() => Router.push(routes.private.tos)}
+              > <Typography sx={{ cursor: 'pointer' }} color={'primary'}>Termos e Condições</Typography>  </a>
+              <Typography pr={1}pl={1}> | </Typography>
+              <a
+                target='#'
+                onClick={() => Router.push(routes.private.privacy)}
+              >  <Typography sx={{ cursor: 'pointer' }} color={'primary'}>Política de Privacidade</Typography> </a>
+            </Box>
             }
             <Button
               id='submit'
