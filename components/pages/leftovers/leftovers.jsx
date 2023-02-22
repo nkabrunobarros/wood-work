@@ -14,6 +14,8 @@ import HeightModal from './modals/HeightModal';
 import PartModal from './modals/PartModal';
 
 const Leftovers = (props) => {
+  console.log(props);
+
   const [imagesTaken, setImagesTaken] = useState();
   const camera = React.useRef(null);
   const [currentPanel, setCurrentPanel] = useState(-1);
@@ -33,7 +35,6 @@ const Leftovers = (props) => {
 
   async function onConfirm () {
     //  Trás os 3 valores da peça
-    // console.log(props);
 
     //  e has the manual sizes, verify if it brings them
     const loading = toast.loading('');

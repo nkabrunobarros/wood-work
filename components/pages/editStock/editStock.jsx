@@ -42,7 +42,7 @@ const EditStock = ({ ...props }) => {
                 : <a className="errorBalloon">Indisponivel</a>}
             </Tooltip>
           </Box>
-          <PrimaryBtn text='Guardar' icon={<Save strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} />} />
+          <PrimaryBtn text='Guardar' icon={<Save strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} />
         </Box>
         <Grid container id='pad' className='flex'>
           {/* Product Info panels */}

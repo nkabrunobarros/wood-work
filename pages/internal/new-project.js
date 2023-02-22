@@ -3,10 +3,11 @@ import Loader from '../../components/loader/loader';
 import NewOrderScreen from '../../components/pages/newOrder/newProject';
 import routes from '../../navigation/routes';
 
-import * as BudgetsActions from '../api/actions/budget';
-import * as ClientActions from '../api/actions/client';
 // import * as ProductsActions from '../api/actions/product';
-
+import { useDispatch, useSelector } from 'react-redux';
+import AuthData from '../../lib/AuthData';
+import * as budgetsActionsRedux from '../../store/actions/budget';
+import * as clientsActionsRedux from '../../store/actions/client';
 export const categories = [
   { label: 'Cozinha', id: 'MC_' },
   { label: 'Quarto', id: 'MQ_' },
@@ -17,14 +18,19 @@ export const categories = [
 ];
 
 const NewOrder = ({ ...pageProps }) => {
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
   const [loaded, setLoaded] = useState(false);
-  const [clients, setClients] = useState();
-  const [budgets, setBudgets] = useState();
+  const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
     const getData = async () => {
-      await ClientActions.clients().then((response) => setClients(response.data));
-      await BudgetsActions.allBudgets().then((response) => setBudgets(response.data));
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+
+      if (!reduxState.budgets.data) await getBudgets();
+
+      if (!reduxState.clients.data) await getClients();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -45,8 +51,8 @@ const NewOrder = ({ ...pageProps }) => {
     const props = {
       pageProps,
       breadcrumbsPath,
-      clients,
-      budgets,
+      budgets: reduxState.budgets.data,
+      clients: reduxState.clients.data,
       categories,
     };
 

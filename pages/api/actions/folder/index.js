@@ -18,7 +18,7 @@ export async function folders (data) {
   );
 }
 
-export async function fol (data) {
+export async function folder (data) {
   const { auth_token: token } = parseCookies();
 
   const config = {

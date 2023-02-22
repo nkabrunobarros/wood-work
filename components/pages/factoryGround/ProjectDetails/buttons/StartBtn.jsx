@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 export const StartBtn = (props) => {
   return !props.detailOnly
     ? (
-      <IconButton onClick={() => props.onStart(props)} >
+      <IconButton onClick={() => !props.msg && props.onStart(props)} >
         <Tooltip title={props.msg || 'Iniciar'} >
           <Play />
         </Tooltip>

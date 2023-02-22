@@ -64,8 +64,8 @@ const DocsClient = (props) => {
                 onClick={() => setDocsModalClient(true)}
                 icon={
                   <FilePlus
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
               />
@@ -90,8 +90,8 @@ const DocsClient = (props) => {
               <TableCell className='link'>
                 <Box id='align'>
                   <File
-                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                   {doc.filename}
                 </Box>
@@ -103,8 +103,8 @@ const DocsClient = (props) => {
                     <IconButton>
                       <Edit
                         className='link'
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
                       />
                     </IconButton>
                   </Tooltip>
@@ -112,8 +112,8 @@ const DocsClient = (props) => {
                     <IconButton onClick={() => deleteDoc(doc.id)}>
                       <Trash
                         className='link'
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
                       />
                     </IconButton>
                   </Tooltip>
@@ -125,8 +125,8 @@ const DocsClient = (props) => {
                     <Tooltip title='Ver Imagem'>
                       <IconButton>
                         <View className='link'
-                          strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                          size={pageProps.globalVars.iconSize}
+                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                          size={pageProps?.globalVars?.iconSize}
                         />
                       </IconButton>
                     </Tooltip>
@@ -145,8 +145,8 @@ const DocsClient = (props) => {
                         <a id='align' target='#'>
                           <Info
                             style={{ marginRight: '1rem' }}
-                            strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                            size={pageProps.globalVars.iconSize}
+                            strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                            size={pageProps?.globalVars?.iconSize}
                           />
                           <b>Informações</b>
                         </a>
@@ -161,8 +161,8 @@ const DocsClient = (props) => {
                           }}
                         >
                           <FileText
-                            strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
-                            size={pageProps.globalVars.iconSizeXxl}
+                            strokeWidth={pageProps?.globalVars?.iconXlStrokeWidth}
+                            size={pageProps?.globalVars?.iconSizeXxl}
                             stroke='#8793AB'
                           />
                           {GetFileSize(folders[activeRow]?.filesize)}
@@ -172,8 +172,8 @@ const DocsClient = (props) => {
                           <Grid container>
                             <Grid id='align' item sm={12}>
                               <FileText
-                                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                                size={pageProps.globalVars.iconSize}
+                                strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                                size={pageProps?.globalVars?.iconSize}
                                 style={{ marginRight: '1rem' }}
                               />
                               <Typography className='lightTextSm black' fontSize={'small'} >Propriedades</Typography>

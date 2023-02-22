@@ -28,7 +28,16 @@ import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
 import IsInternal from '../components/utils/IsInternal';
 import MomentJsConfig from '../components/utils/MomentJsConfig';
+import { storeWrapper } from '../store/store';
 import MuiTheme from './MuiTheme';
+
+export const initializeClientSideProps = async ({ Component, ctx }) => {
+  const pageProps = {
+    ...(Component.getInitialProps ? await Component.getInitialProps(ctx) : {}),
+  };
+
+  return { pageProps };
+};
 
 const App = ({ Component, pageProps }) => {
   const [selectedTheme, setSelectedTheme] = useState('light');
@@ -77,8 +86,9 @@ const App = ({ Component, pageProps }) => {
           if (isPublicPage && !!token) {
             if (IsInternal(pageProps.loggedUser?.profile.object.description)) router.push(routes.private.internal.projects);
             else {
-              if (pageProps.loggedUser?.tos) router.push(routes.private.projects);
-              else router.push(routes.private.terms);
+              // if (pageProps.loggedUser?.tos) router.push(routes.private.projects);
+              // else router.push(routes.private.terms);
+              router.push(routes.private.projects);
             }
           }
         } else {
@@ -113,7 +123,7 @@ const App = ({ Component, pageProps }) => {
   );
 };
 
-App.getInitialProps = async ({ Component, ctx }) => {
+App.getInitialProps = storeWrapper.getInitialAppProps((store) => async ({ Component, ctx }) => {
   const hasFullyLoaded = false;
 
   const globalVars = {
@@ -126,17 +136,21 @@ App.getInitialProps = async ({ Component, ctx }) => {
     iconSmStrokeWidth: 1.5,
   };
 
+  // Client-side-only code
+  if (typeof window !== 'undefined') {
+    return initializeClientSideProps({ Component, ctx, store });
+  }
+
+  // Ignore server side initialization for now
   const pageProps = {
-    ...(Component.getInitialProps
-      ? await Component.getInitialProps(ctx, hasFullyLoaded)
-      : {}),
+    ...(Component.getInitialProps ? await Component.getInitialProps(ctx, hasFullyLoaded) : {}),
   };
 
   pageProps.globalVars = globalVars;
   pageProps.hasFullyLoaded = hasFullyLoaded;
 
   return { pageProps };
-};
+});
 
 App.propTypes = {
   Component: PropTypes.func,
@@ -144,4 +158,4 @@ App.propTypes = {
   ctx: PropTypes.any,
 };
 
-export default App;
+export default storeWrapper.withRedux(App);

@@ -38,7 +38,6 @@ import { MultiFilterArray } from '../utils/MultiFilterArray';
 //  Services
 import * as BudgetActions from '../../pages/api/actions/budget';
 // import * as CategoriesActions from '../../pages/api/actions/category';
-import * as ClientsActions from '../../pages/api/actions/client';
 import * as WorkerActions from '../../pages/api/actions/worker';
 
 //  Dialogs
@@ -52,7 +51,9 @@ import routes from '../../navigation/routes';
 //  Utils
 import axios from 'axios';
 import moment from 'moment/moment';
+import { useDispatch, useSelector } from 'react-redux';
 import { methods } from '../../pages/api/actions/methods';
+import * as clientsActionsRedux from '../../store/actions/client';
 import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
@@ -85,16 +86,18 @@ const AdvancedTable = ({
   const [refresh, setRefresh] = useState(new Date());
   const [loaded, setLoaded] = useState(false);
   const [displaying, setDisplaying] = useState();
+  const dispatch = useDispatch();
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
+  const reduxState = useSelector((state) => state);
 
   useEffect(() => {
     const getData = async () => {
-      // const categories = await CategoriesActions.categories();
-      const clients = await ClientsActions.clients();
+      !reduxState.clients.data && await getClients();
 
       const allData = {
         categories: [],
         // categories: categories.data.payload.data,
-        clients: clients.data,
+        clients: reduxState.clients.data
       };
 
       setData(allData);
@@ -518,9 +521,9 @@ const AdvancedTable = ({
   }
 
   function stableSort (array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
+    const stabilizedThis = array?.map((el, index) => [el, index]);
 
-    stabilizedThis.sort((a, b) => {
+    stabilizedThis?.sort((a, b) => {
       const order = comparator(a[0], b[0]);
 
       if (order !== 0) return order;
@@ -528,7 +531,7 @@ const AdvancedTable = ({
       return a[1] - b[1];
     });
 
-    return stabilizedThis.map((el) => el[0]);
+    return stabilizedThis?.map((el) => el[0]);
   }
 
   useEffect(() => {
@@ -584,11 +587,11 @@ const AdvancedTable = ({
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Box className='tableChips'>
           <Box>
-            {Object.keys(filters || {})?.map((x, i) => {
-              if (filters[x]) return <Chip key={i} label={x} onDelete={() => onFilterRemove(x)} />;
+            {Object.keys(filters || {})?.map((x) => {
+              if (filters[x]) return <Chip key={x} label={x} onDelete={() => onFilterRemove(x)} />;
             })}
-            {Object.keys(rangeFilters || {})?.map((x, i) => {
-              if (JSON.stringify(rangeFilters[x].values) !== JSON.stringify([rangeFilters[x].min, rangeFilters[x].max])) return <Chip key={i} label={x} onDelete={() => onFilterSizeRemove(x)} />;
+            {Object.keys(rangeFilters || {})?.map((x) => {
+              if (JSON.stringify(rangeFilters[x].values) !== JSON.stringify([rangeFilters[x].min, rangeFilters[x].max])) return <Chip key={x} label={x} onDelete={() => onFilterSizeRemove(x)} />;
             })}
 
           </Box>
@@ -638,7 +641,7 @@ const AdvancedTable = ({
                     <Switch checked={!cellsFilter.find(item => item.show === false)} onClick={() => showAllHeaders()} />Mostrar todas
                   </Grid>
                   {cellsFilter.map((headCell, i) => {
-                    return <Grid id='align' container item key={i} >
+                    return <Grid id='align' container item key={headCell.label} >
                       <Switch checked={headCell.show} onClick={() => OnFilterChange(i)} />{headCell.label}
                     </Grid>;
                   })}
@@ -658,7 +661,7 @@ const AdvancedTable = ({
             />
             {children || (
               <TableBody>
-                {stableSort(filteredItems, getComparator(order, orderBy))
+                {(stableSort(filteredItems, getComparator(order, orderBy)) || [])
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.id);
@@ -671,7 +674,7 @@ const AdvancedTable = ({
                         role='checkbox'
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row.id}
                         selected={isItemSelected}
                       >
                         {cellsFilter.map((headCell, index) => {
@@ -695,7 +698,7 @@ const AdvancedTable = ({
 
                                       {headCell.id !== 'actionsConf'
                                         ? <>
-                                          {CanDo(['WRITE', displaying]) &&
+                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
                                       <Tooltip title={'Editar'}>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
@@ -706,7 +709,7 @@ const AdvancedTable = ({
                                       </Tooltip>}
                                         </>
                                         : <>
-                                          {CanDo(['WRITE', displaying]) &&
+                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
                                         <>
                                           <Tooltip title={'Adjudicar orçamento'}>
                                             <IconButton onClick={() => {
@@ -728,7 +731,7 @@ const AdvancedTable = ({
                                         </>}
                                         </>
                                       }
-                                      {CanDo(['DELETE', displaying]) && <Tooltip title={'Remover'}>
+                                      {CanDo(['DELETE', displaying, reduxState.auth.userPermissions]) && <Tooltip title={'Remover'}>
                                         <IconButton onClick={() => onDeleteClick(row)} >
                                           <DeleteOutline
                                             color={'primary'}

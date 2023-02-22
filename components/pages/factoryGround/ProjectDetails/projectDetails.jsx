@@ -5,6 +5,7 @@ import { Check, X } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import companyLogo from '../../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../../public/logo_bw_ww40_inv-big.png';
 import { Transition } from '../factoryGround';
@@ -82,9 +83,12 @@ export const PartStatus = ({ part }) => {
 
 const ProjectDetails = (props) => {
   const { chosenProject, activeRow, setActiveRow, open, onClose, detailOnly } = props;
-  const me = JSON.parse(localStorage.getItem('user'));
+  const reduxState = useSelector((state) => state);
+  const me = reduxState.auth.me;
   const [productionDetails, setProductionDetails] = useState({});
   const [productionDetailsTest, setProductionDetailsTest] = useState(props.productionDetails || []);
+
+  console.log(productionDetailsTest);
 
   const [projectParts, setProjectParts] = useState(props.projectParts || [
     { ref: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 1, nest: false, cnc: false, obs: '', inProduction: false },

@@ -1,101 +1,24 @@
 /* eslint-disable array-callback-return */
 function ConvertFilesToObj (files) {
-  const obj = {};
+  const folders = {};
 
-  files.map(ele => {
-    const path = ele.path.split('/');
+  for (const file of files) {
+    const pathSegments = file.path.split('/');
+    let currentFolder = folders;
 
-    path.shift();
-    path.pop();
+    for (let i = 1; i < pathSegments.length - 1; i++) {
+      const folderName = pathSegments[i];
 
-    switch (path.length) {
-    case 1: {
-      if (typeof obj[path[0].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')] = [];
-
-      obj[path[0].replace(' ', '_')].push(ele);
-
-      break;
+      currentFolder[folderName] = currentFolder[folderName] || {};
+      currentFolder = currentFolder[folderName];
     }
 
-    case 2: {
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] = [];
+    const fileName = pathSegments[pathSegments.length - 1];
 
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')].push(ele);
+    currentFolder[fileName] = file;
+  }
 
-      break;
-    }
-
-    case 3: {
-      if (typeof obj[path[0].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] = {};
-
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] = [];
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')].push(ele);
-
-      break;
-    }
-
-    case 4: {
-      if (typeof obj[path[0].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] = {};
-
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] = [];
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')].push(ele);
-
-      break;
-    }
-
-    case 5: {
-      if (typeof obj[path[0].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')] = {};
-
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')] = [];
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')].push(ele);
-
-      break;
-    }
-
-    case 6: {
-      if (typeof obj[path[0].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')] = {};
-
-      if (typeof obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')][path[5].replace(' ', '_')] === 'undefined') obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')][path[5].replace(' ', '_')] = {};
-
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')][path[5].replace(' ', '_')] = [];
-      obj[path[0].replace(' ', '_')][path[1].replace(' ', '_')][path[2].replace(' ', '_')][path[3].replace(' ', '_')][path[4].replace(' ', '_')][path[5].replace(' ', '_')].push(ele);
-
-      break;
-    }
-
-    default: {
-      console.log('untreated file');
-    }
-    }
-  });
-
-  console.log(obj);
-
-  return obj;
+  return folders;
 }
 
 export default ConvertFilesToObj;

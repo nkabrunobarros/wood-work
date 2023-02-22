@@ -1,15 +1,15 @@
-import { Box, Breadcrumbs, IconButton, Link, Tooltip, Typography } from '@mui/material';
+import { Box, Breadcrumbs, IconButton, Tooltip, Typography } from '@mui/material';
 import { ChevronRight, Home } from 'lucide-react';
+import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../navigation/routes';
 
 import styles from '../../styles/components/navbar.module.css';
-import IsInternal from '../utils/IsInternal';
 
 const CustomBreadcrumbs = ({ path }) => {
-  const isInternalPage = Object.values(routes.private.internal).includes(Router.asPath.replace('[Id]', ''));
+  const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
 
   const style = {
     color: 'var(--grayLight) !important',
@@ -31,7 +31,7 @@ const CustomBreadcrumbs = ({ path }) => {
       }}
     >
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
-        <IconButton onClick={() => Router.push(IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description) ? routes.private.internal.projects : routes.private.projects)}>
+        <IconButton onClick={() => Router.push(isInternalPage ? routes.private.internal.projects : routes.private.projects)}>
           <Tooltip title={ isInternalPage ? 'Ir para Projetos/Orçamentos' : 'Ir para Pedidos'}>
             <Home strokeWidth={1} size={18} />
           </Tooltip>
@@ -39,7 +39,8 @@ const CustomBreadcrumbs = ({ path }) => {
         {path.map((crumb, i) => (
           <Link
             key={i}
-            onClick={() => Router.push(crumb.href)}
+            // onClick={() => Router.push(crumb.href)}
+            href={crumb.href}
             className={styles.breadcrumb}
           >
             <Typography color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>

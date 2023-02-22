@@ -12,7 +12,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Save, X } from 'lucide-react';
 
 //  Actions
-import * as BudgetActions from '../../../pages/api/actions/budget';
 //  Page Component Styles
 
 //  Breadcrumbs Component
@@ -35,6 +34,8 @@ import { useDropzone } from 'react-dropzone';
 
 //  Device "Detector"
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import * as budgetsActionsRedux from '../../../store/actions/budget';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ClientTab from './Tabs/clientTab';
 import ProductTab from './Tabs/productTab';
@@ -46,6 +47,8 @@ const NewOrder = ({ ...props }) => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
+  const dispatch = useDispatch();
+  const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -71,7 +74,6 @@ const NewOrder = ({ ...props }) => {
     addressLocality: { value: '', error: '', required: true },
     addressRegion: { value: '', error: '', required: true },
     addressCountry: { value: '', error: '', required: true },
-
   });
 
   function onBudgetChange (props) {
@@ -158,7 +160,7 @@ const NewOrder = ({ ...props }) => {
   async function CreateOrder () {
     setProcessing(true);
 
-    const built = {
+    const data = {
       id: (budgetData.id + Math.random()) || `urn:ngsi-ld:Budget:${budgetData.name.value.replace(/ /g, '_').toUpperCase()}`,
       type: 'Budget',
       name: {
@@ -173,7 +175,7 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: budgetData.price.value.replace(/ /g, '').replace(/€/g, '')
       },
-      aprovedDate: {
+      approvedDate: {
         type: 'Property',
         value: ''
       },
@@ -193,10 +195,6 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: budgetData.obs.value
       },
-      createdAt: {
-        type: 'Property',
-        value: moment(Date.now()).format('DD/MM/YYYY')
-      },
       image: {
         type: 'Property',
         value: 'urn:ngsi-ld:Image:Budget:MC_MUEBLETV_A'
@@ -209,9 +207,13 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: budgetData.category.value && budgetData.amount.value && budgetData.price.value ? 'waiting adjudication' : 'waiting budget'
       },
-      belongsTo: {
+      orderBy: {
         type: 'Relationship',
         object: budgetData.client.value
+      },
+      belongsTo: {
+        type: 'Relationship',
+        object: `urn:ngsi-ld:Project:${budgetData.name.value.replace(/ /g, '_').toUpperCase()}`
       },
       dateDelivery: {
         type: 'Property',
@@ -227,14 +229,13 @@ const NewOrder = ({ ...props }) => {
           addressCountry: budgetData.addressCountry.value,
         }
       },
-
-      '@context': [
-        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-      ]
     };
 
-    await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
+    await newBudget(data).then(() => {
+      toast.success('Orçamento Criado!');
+    }).catch((err) => console.log(err));
+
+    // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
     setProcessing(false);
     setDialogOpen(false);
   }
@@ -278,14 +279,14 @@ const NewOrder = ({ ...props }) => {
             <ButtonGroup>
               <PrimaryBtn
                 text='Cancelar'
-                icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
+                icon={<X size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
                 light
                 onClick={() => Router.back()}
               />
               <PrimaryBtn
                 onClick={() => ValidateData()}
                 text={'Guardar'}
-                icon={ <Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
+                icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
               />
             </ButtonGroup>
           </Grid>

@@ -1,6 +1,7 @@
 //  PropTypes
-import { Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import { FilePlus, FileText, Folder, FolderPlus, Info, X } from 'lucide-react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus, Info, X } from 'lucide-react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import * as FileActions from '../../../../pages/api/actions/file';
@@ -82,11 +83,54 @@ const Docs = (props) => {
 
   const [hoverDrop, setHoverDrop] = useState(false);
 
+  function renderAccordionFolders (folders, parentId = null) {
+    return folders
+      .filter((folder) => folder.parent_folder === parentId)
+      .map((folder) => (
+        <Accordion key={folder.id} sx={{ padding: 0, margin: 0, boxShadow: 'none' }}>
+          <AccordionSummary expandIcon={<ChevronDown />} >
+            <Grid container bgcolor={'default.main'}>
+              <Grid container md={6} sm={6} xs={6}>
+
+                <div id='align' style={{ color: 'var(--primary)' }}>
+                  {open
+                    ? (
+                      <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
+                    )
+                    : (
+                      <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
+                    )}
+                </div>
+
+                <Typography>{folder.folder_name}</Typography>
+              </Grid>
+              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
+            </Grid>
+          </AccordionSummary>
+          <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
+            {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
+            {folder.files.map((file) => (
+              <Box key={file.id} display='flex' alignItems={'center'} p={1}>
+                <FileText
+                  strokeWidth='1'
+                  style={{ marginRight: '1rem' }}
+                />
+                <Typography>{file.file_name + file.file_type}</Typography>
+              </Box>
+            ))}
+            <Box bgcolor='lightGray.secondary'>
+              {renderAccordionFolders(folders, folder.id)}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      ));
+  }
+
   return open && <>
     <UploadImagesModal open={docsModal} folders={folders.filter(ele => ele.name !== budget.id)} orderId={folders[activeFolder]?.id} {...pageProps} onClose={() => onImagesUpload()} />
     <Box className={styles.docsMain} >
       <Box className={styles.tableContainer} onMouseLeave={() => setHoverDrop(false)} onMouseEnter={() => setHoverDrop(true)} sx={{ background: hoverDrop && 'var(--greenLight)' }}>
-        <Box id='align' style={{ display: 'flex', padding: '24px' }} bgcolor={'default.main'}>
+        <Box id='align' style={{ display: 'flex', padding: '24px' }} bgcolor={'lightGray.main'}>
           <Box style={{ flex: 1 }}>
             <Typography variant='title'>Documentos</Typography>
           </Box>
@@ -98,8 +142,8 @@ const Docs = (props) => {
                 onClick={() => setDocsModal(true)}
                 icon={
                   <FilePlus
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
               />
@@ -131,8 +175,8 @@ const Docs = (props) => {
                 onClick={() => !creatingFolder ? setCreatingFolder(true) : handleCreateFolder()}
                 icon={
                   <FolderPlus
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
               />
@@ -145,8 +189,8 @@ const Docs = (props) => {
                 });
               }}>
                 <X
-                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                   color='var(--red)'
                 />
               </IconButton> }
@@ -157,14 +201,13 @@ const Docs = (props) => {
         <TableContainer component={Paper}>
           <Table aria-label='collapsible table'>
             <TableHead aria-label='sticky table'>
-              <TableRow>
-                <TableCell width={!!folders && '70%'}>Nome</TableCell>
-                <TableCell width={!!folders && '30%'}>Data</TableCell>
-                <TableCell>Ações</TableCell>
-              </TableRow>
+              <Grid container p={2} bgcolor='lightgray.main'>
+                <Grid container md={6} sm={6} xs={6}>Nome</Grid>
+                <Grid container md={6} sm={6} xs={6} justifyContent='center'>Data</Grid>
+              </Grid>
             </TableHead>
             <TableBody >
-              {folders && folders.filter(ele => !(ele.name === budget.id)).map((row, i) => (
+              {folders && false && folders.filter(ele => !(ele.name === budget.id)).map((row, i) => (
                 <Row key={i} row={row} setActiveFolder={setActiveFolder} index={i} {...props} styles={styles} onRowClick={setActiveFolder} />
               ))}
               {!folders && <>
@@ -172,6 +215,7 @@ const Docs = (props) => {
                 <TableRow sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><span>Sem pastas, <a className='link' onClick={() => setCreatingFolder(true)}>Crie uma</a></span></TableRow>
                 <TableCell></TableCell>
               </>}
+              {renderAccordionFolders(folders)}
             </TableBody>
           </Table>
         </TableContainer>
@@ -183,8 +227,8 @@ const Docs = (props) => {
             <Grid md={2}>
               <Info
                 style={{ marginRight: '1rem' }}
-                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                size={pageProps?.globalVars?.iconSize}
               />
             </Grid>
             <Grid md={10}>Informações</Grid>
@@ -201,8 +245,8 @@ const Docs = (props) => {
                 width: '100%',
               }}>
               <Folder
-                strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
-                size={pageProps.globalVars.iconSizeXxl}
+                strokeWidth={pageProps?.globalVars?.iconXlStrokeWidth}
+                size={pageProps?.globalVars?.iconSizeXxl}
                 stroke='#8793AB'
                 fill='#E7E8E9'
               />
@@ -213,8 +257,8 @@ const Docs = (props) => {
             <Grid md={2}>
               <FileText
                 style={{ marginRight: '1rem' }}
-                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                size={pageProps?.globalVars?.iconSize}
               />
             </Grid>
             <Grid md={10}>Propriedades</Grid>
@@ -229,6 +273,7 @@ const Docs = (props) => {
           </Grid>
         </Grid>
       </Box>
+
     </Box>
   </>;
 };

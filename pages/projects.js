@@ -163,8 +163,8 @@ const Orders = ({ ...pageProps }) => {
         amount: panelsInfo.waitingBudget,
         icon: (
           <PackageCheck
-            size={pageProps.globalVars.iconSizeXl}
-            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSizeXl}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
         color: 'var(--primary)',
@@ -175,8 +175,8 @@ const Orders = ({ ...pageProps }) => {
         amount: panelsInfo.drawing,
         icon: (
           <LayoutTemplate
-            size={pageProps.globalVars.iconSizeXl}
-            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSizeXl}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
         color: 'var(--green)',
@@ -187,8 +187,8 @@ const Orders = ({ ...pageProps }) => {
         amount: panelsInfo.production,
         icon: (
           <Layers
-            size={pageProps.globalVars.iconSizeXl}
-            strokeWidth={pageProps.globalVars.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSizeXl}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
         color: 'var(--orange)',
@@ -198,8 +198,8 @@ const Orders = ({ ...pageProps }) => {
         title: 'Em Montagem',
         amount: panelsInfo.testing,
         icon: <AlertOctagon
-          size={pageProps.globalVars.iconSizeXl}
-          strokeWidth={pageProps.globalVars.iconStrokeWidth} />,
+          size={pageProps?.globalVars?.iconSizeXl}
+          strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />,
         color: 'var(--babyblue)',
       },
     ];

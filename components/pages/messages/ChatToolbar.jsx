@@ -25,15 +25,15 @@ const ChatToolbar = (props) => {
             <Tooltip title="Ajuda">
               <IconButton>
                 <HelpCircle
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                 />
               </IconButton>
             </Tooltip>
             <Tooltip title="Atualizar">
               <IconButton>
-                <RefreshCw strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}/>
+                <RefreshCw strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}/>
               </IconButton>
             </Tooltip>
           </ButtonGroup>

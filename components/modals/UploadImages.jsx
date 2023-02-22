@@ -5,6 +5,7 @@ import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Moda
 import { X, XCircle } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as FileActions from '../../pages/api/actions/file';
 import * as FolderActions from '../../pages/api/actions/folder';
@@ -21,6 +22,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
   const [selectedFolder, setSelectedFolder] = useState(orderId);
   const [uploading, setUploading] = useState(false);
   const [errorFolder, setErrorFolder] = useState('');
+  const userPermissions = useSelector((state) => state.auth.userPermissions);
 
   function getBase64 (file) {
     return new Promise(resolve => {
@@ -135,8 +137,30 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
 
   const [uploadedFiles, setUploadedFiles] = useState();
 
+  function separateFilesByFolder (files) {
+    const folders = {};
+
+    for (const file of files) {
+      const pathSegments = file.path.split('/');
+      let currentFolder = folders;
+
+      for (let i = 1; i < pathSegments.length - 1; i++) {
+        const folderName = pathSegments[i];
+
+        currentFolder[folderName] = currentFolder[folderName] || {};
+        currentFolder = currentFolder[folderName];
+      }
+
+      const fileName = pathSegments[pathSegments.length - 1];
+
+      currentFolder[fileName] = file;
+    }
+
+    return folders;
+  }
+
   const onDrop = useCallback(acceptedFiles => {
-    // Do something with the files
+    console.log(separateFilesByFolder(acceptedFiles));
     setUploadedFiles(acceptedFiles);
   }, []);
 
@@ -153,8 +177,8 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
               onClose(false);
             }}>
               <X
-                strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                size={pageProps?.globalVars?.iconSize}
               />
             </IconButton>
           </Box>
@@ -169,8 +193,8 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
               // adornmentIcon={
               //   <>
               //     <ImagePlus
-              //       strokeWidth={pageProps.globalVars.iconStrokeWidth}
-              //       size={pageProps.globalVars.iconSize}
+              //       strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+              //       size={pageProps?.globalVars?.iconSize}
               //     />
               //     <input multiple type='file' accept='image/*,.pdf' name='file' hidden onChange={(e) => handleModalImageUpload(e)} />
               //   </>
@@ -179,7 +203,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
             />
             <span style={{ fontSize: 'small' }}>Tamanho Maximo 1 MB</span>
           </Grid>
-          {folders && !client && IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description)
+          {folders && !client && IsInternal(userPermissions.description)
             ? <Grid md={6} p={1}>
               <Select
                 required

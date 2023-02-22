@@ -22,9 +22,11 @@ import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
 import EmailValidation from '../../utils/EmailValidation';
 
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as WorkerActions from '../../../pages/api/actions/worker';
+import * as workersActionsRedux from '../../../store/actions/worker';
 import Notification from '../../dialogs/Notification';
 import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 
@@ -64,178 +66,111 @@ export const functions = [
 ];
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, countries, organizations } = props;
+  const { breadcrumbsPath, countries, organizations, permissions } = props;
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
-  // const [newestWorker, setNewestWorker] = useState();
-
-  // const shifts = [
-  //   {
-  //     label: 'Manhã',
-  //     value: [1,2]
-  //   },
-  //   {
-  //     label: 'Tarde',
-  //     value: [2,3]
-  //   },
-  //   {
-  //     label: 'Noite',
-  //     value: [3,4]
-  //   }
-  // ];
 
   const [inputFields, setInputFields] = useState([
     {
-      id: 'name',
-      label: 'Nome',
+      id: 'user.username',
+      label: 'Nome Utilizador',
       value: '',
       error: '',
-      required: true
+      required: true,
+      tooltip: 'Dado utilizado para login.',
     },
     {
-      id: 'email',
+      id: 'user.first_name',
+      label: 'Primeiro Nome',
+      value: '',
+      error: '',
+      required: true,
+      tooltip: ''
+    },
+    {
+      id: 'user.last_name',
+      label: 'Ultimo Nome',
+      value: '',
+      error: '',
+      required: true,
+      tooltip: ''
+    },
+    {
+      id: 'user.email',
       label: 'Email',
       value: '',
       error: '',
       type: 'email',
       required: true
     },
-    // {
-    //   id: 'taxId',
-    //   label: 'Tax Id',
-    //   value: '',
-    //   error: '',
-    //   required: true,
-    //   type: 'number'
-    // },
-    // {
-    //   id: 'ssnId',
-    //   label: 'Numero Segurança Social',
-    //   value: '',
-    //   error: '',
-    //   required: false,
-    //   type: 'number'
-    // },
     {
       id: 'functionPerformed',
       label: 'Função',
       value: '',
       error: '',
       required: true,
-      options: functions,
-      optLabel: 'label',
-      optValue: 'value'
+      options: permissions,
+      optLabel: 'name',
+      optValue: 'id'
     },
-    // {
-    //   id: 'workerShift',
-    //   label: 'Turno',
-    //   value: '',
-    //   error: '',
-    //   required: true,
-    //   options: shifts,
-    //   optLabel: 'label',
-    //   optValue: 'value'
-    // },
-    // {
-    //   id: 'hasOrganization',
-    //   label: 'Organização',
-    //   value: organizations[0].id,
-    //   options: organizations,
-    //   optLabel: 'legalName',
-    //   error: '',
-    //   required: true,
-    //   tooltip: ''
-    // },
-    // {
-    //   id: 'assemblyFor',
-    //   label: 'Montagem',
-    //   value: 'urn:ngsi-ld:Project:MC_MuebleTv_A',
-    //   error: '',
-    //   required: false
-    // },
-    // {
-    //   id: 'cellphone',
-    //   label: 'Telemovel',
-    //   value: '',
-    //   error: '',
-    //   type: 'phone',
-    //   required: false
-    // },
-    // {
-    //   id: 'phone',
-    //   label: 'Telephone',
-    //   value: '',
-    //   error: '',
-    //   type: 'phone',
-    //   required: false
-    // },
     {
-      id: 'password',
+      id: 'hasOrganization',
+      label: 'Organização',
+      value: organizations[0].id,
+      options: organizations,
+      optLabel: 'legalName',
+      error: '',
+      required: true,
+      tooltip: ''
+    },
+    {
+      id: 'user.password',
       label: 'Senha',
       value: '',
       error: '',
       type: 'password',
       required: true
     },
-    // {
-    //   id: 'obs',
-    //   label: 'Observações',
-    //   value: '',
-    //   error: '',
-    //   type: 'area',
-    //   required: false
-    // },
-
   ]
   );
 
+  const dispatch = useDispatch();
+  const newWorker = (data) => dispatch(workersActionsRedux.newWorker(data));
+
   async function CreateWorker () {
-    setDialogOpen(false);
     //  open success modal && success toast
+    setDialogOpen(false);
     setProcessing(true);
 
     const builtWorker = {
-      id: `urn:ngsi-ld:Worker:${Math.random() * 10000}`,
-      type: 'Worker',
-      active: {
-        type: 'Property',
-        value: 'True',
-      },
-      hasOrganization: {
-        type: 'Relationship',
-        object: organizations[0].id
-      },
-      '@context': [
-        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-      ]
+      active: true,
+      performanceRole: 2,
     };
 
     inputFields.map((ele) => {
       builtWorker[ele.id] = {};
 
-      const a = false;
+      if (ele.type === 'password') ele.value = 'ChangeMe';
 
-      // if (ele.options) {
-      if (a) {
-        // builtWorker[ele.id].type = 'Relationship';
-        // builtWorker[ele.id].object = ele.value;
-      } else {
-        if (ele.type === 'password') ele.value = 'ChangeMe';
-
-        builtWorker[ele.id].type = 'Property';
-        builtWorker[ele.id].value = ele.value;
-      }
+      builtWorker[ele.id] = ele.value;
     });
 
+    builtWorker['user.password_confirm'] = builtWorker['user.password'];
+    builtWorker.hasOrganization = builtWorker.hasOrganization.replace('urn:ngsi-ld:Organization:', '');
+
+    const qs = require('qs');
+    const data = qs.stringify({ ...builtWorker });
+
+    await newWorker(data).then(() => setSuccessOpen(true))
+      .catch((err) => onError(err));
+
     try {
-      await WorkerActions.createWorker(builtWorker)
+      false && await WorkerActions.createWorker(builtWorker)
         .then(() => {
-        // setSuccessOpen(true);
           Router.push(routes.private.internal.workers);
         })
         .catch((err) => {
@@ -247,6 +182,29 @@ const newWorker = ({ ...props }) => {
     }
 
     setProcessing(false);
+  }
+
+  function onError (err) {
+    const errorKeys = Object.keys(err.response.data);
+
+    inputFields.map((input, i) => {
+      const { id } = input;
+      const [errorKey, errorValue] = id.split('.');
+
+      if (errorKeys.includes(errorKey)) {
+        const errorObj = err.response.data[errorKey];
+
+        if (errorObj[errorValue]) {
+          const data = [...inputFields];
+
+          data[i].error = errorObj[errorValue][0];
+          setInputFields(data);
+        }
+      }
+    });
+
+    if (err.response.status === 400) toast.warning('Erros no formulario.');
+    else toast.error('Algo aconteceu. Por favor tente mais tarde.');
   }
 
   const ClearFields = () => {

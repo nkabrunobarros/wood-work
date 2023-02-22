@@ -12,10 +12,11 @@ import DeliverBudgetModal from './modals/DeliverBudgetModal';
 import { Save } from 'lucide-react';
 import moment from 'moment';
 import Router from 'next/router';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import * as BudgetActions from '../../../../pages/api/actions/budget';
-import * as ExpeditionActions from '../../../../pages/api/actions/expedition';
-import * as ProjectActions from '../../../../pages/api/actions/project';
+import * as budgetsActionsRedux from '../../../../store/actions/budget';
+import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
+import * as projectsActionsRedux from '../../../../store/actions/project';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
@@ -61,6 +62,10 @@ const Head = (props) => {
   const [old, setOld] = useState(JSON.parse(JSON.stringify({ ...props.budget })));
   const [budget, setBudget] = useState({ ...props.budget });
   const [activeFields, setActiveFields] = useState({ price: false, amount: false, category: false });
+  const dispatch = useDispatch();
+  const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
+  const newExpedition = (data) => dispatch(expeditionsActionsRedux.newExpedition(data));
+  const newProject = (data) => dispatch(projectsActionsRedux.newProject(data));
 
   const upperCells = {
     alignItems: 'center',
@@ -84,7 +89,7 @@ const Head = (props) => {
   async function handleUpdate () {
     const loading = toast.loading();
 
-    const builtBudget = [{
+    const data = [{
       id: budget.id,
       type: 'Budget',
       price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
@@ -92,7 +97,7 @@ const Head = (props) => {
       category: { type: 'Property', value: budget.category.value },
     }];
 
-    await BudgetActions.updateBudget(builtBudget)
+    await updateBudget(data)
       .then(() => {
         ToastSet(loading, 'Orçamento alterado!', 'success');
         setActiveFields({ price: false, amount: false, category: false });
@@ -110,7 +115,7 @@ const Head = (props) => {
   async function handleConfirmation ({ amount, obs, price, category }) {
     const processing = toast.loading('');
 
-    const updatedBudget = {
+    const data = {
       id: budget.id,
       type: budget.type,
       amount: { value: amount.value, type: 'Property' },
@@ -121,13 +126,11 @@ const Head = (props) => {
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
     };
 
-    try {
-      await BudgetActions.updateBudget([updatedBudget]).then(() => {
-        setBudget(updatedBudget);
-        setDeliverModal(false);
-        ToastSet(processing, 'Orçamento entregue', 'success');
-      });
-    } catch (err) { console.log(err); }
+    await updateBudget(data).then(() => {
+      setBudget({ ...data, id: old.id });
+      setDeliverModal(false);
+      ToastSet(processing, 'Orçamento entregue', 'success');
+    }).catch((err) => console.log(err));
   }
 
   async function handleAdjudication () {
@@ -135,61 +138,51 @@ const Head = (props) => {
     //  1 -> Update Budget
     //  2 -> Create Project
     //  3 -> Create Expedition
-
-    const builtBudget = [{
-      id: budget.id,
-      type: 'Budget',
-      aprovedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
-      status: { type: 'Property', value: 'adjudicated' }
-    }];
-
-    await BudgetActions.updateBudget(builtBudget).then(async () => {
-      setAdjudicateModal(false);
-
-      const builtProject = {
-        id: 'urn:ngsi-ld:Project:' + budget.name.value,
-        type: 'Project',
-        orderBy: { type: 'Relationship', object: budget.belongsTo?.object.id },
-        name: { type: 'Property', value: budget.name.value },
-        status: { type: 'Property', value: 'drawing' },
-        budgetId: { type: 'Relationship', object: budget.id },
-        assemblyBy: { type: 'Relationship', object: [] },
-        amount: { type: 'Property', value: budget.amount.value.replace(/ /g, '').replace(/€/g, '') },
-        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:expedition:' + budget.name.value },
-        '@context': [
-          'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-          'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-        ]
-      };
-
-      await ProjectActions.saveProject(builtProject).then(async () => {
-        const builtExpedition = {
-          id: 'urn:ngsi-ld:Expedition:' + budget.name.value,
-          type: 'Expedition',
-          expeditionTime: {
-            type: 'Property',
-            value: ''
-          },
-          deliveryFlag: {
-            type: 'Property',
-            value: 0
-          },
-          belongsTo: {
-            type: 'Relationship',
-            object: builtProject.id
-          },
-          '@context': [
-            'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-            'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-          ]
-        };
-
-        await ExpeditionActions.saveExpedition(builtExpedition).then(async () => {
-          toast.success('Orçamento adjudicado. Passou para produção');
-          Router.push(routes.private.internal.project + builtProject.id);
-        });
-      });
+    await newExpedition({
+      id: 'urn:ngsi-ld:Expedition:' + budget.name.value,
+      type: 'Expedition',
+      expeditionTime: {
+        type: 'Property',
+        value: ''
+      },
+      deliveryFlag: {
+        type: 'Property',
+        value: 0
+      },
+      orderBy: {
+        type: 'Relationship',
+        object: budget.orderBy?.object.id
+      }
     });
+
+    const projRes = await newProject({
+      id: 'urn:ngsi-ld:Project:' + budget.name.value.replace(/ /g, ''),
+      type: 'Project',
+      orderBy: { type: 'Relationship', object: budget.orderBy?.object.id },
+      name: { type: 'Property', value: budget.name.value },
+      status: { type: 'Property', value: 'drawing' },
+      budgetId: { type: 'Relationship', object: budget.id },
+      assemblyBy: { type: 'Relationship', object: ['urn:ngsi-ld:Worker:'] },
+      amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
+      expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + budget.name.value },
+      category: {
+        type: 'Property',
+        value: budget.category?.value
+      }
+    });
+
+    await updateBudget(
+      {
+        id: budget.id,
+        type: 'Budget',
+        approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
+        status: { type: 'Property', value: 'adjudicated' }
+      }
+    ).then((res) => console.log(res)).catch((err) => console.log(err));
+
+    setAdjudicateModal(false);
+    toast.success('Orçamento adjudicado! Passou para produção');
+    Router.push(routes.private.internal.project + projRes.data.id);
   }
 
   function onCellDoubleClick (props) {
@@ -230,20 +223,20 @@ const Head = (props) => {
                 onClick={handleUpdate}
                 icon={
                   <Save
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
                 sx={{ mr: 1 }}
               />
               <PrimaryBtn
-                hidden={!(budget.status.value !== 'adjudicated' && budget.status.value !== 'canceled' && isInternalPage)}
+                // hidden={!(budget.status.value !== 'adjudicated' && budget.status.value !== 'canceled' && isInternalPage)}
                 text={budget.status.value === 'waiting adjudication' ? 'Adjudicar orçamento' : 'Entregar orçamento'}
                 onClick={() => budget.status.value === 'waiting budget' ? setDeliverModal(!deliverModal) : setAdjudicateModal(!adjudicateModal)}
                 icon={
                   <CheckCircleOutline
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
               />
@@ -256,8 +249,8 @@ const Head = (props) => {
                   <Box>
                     <Typography color={'lightTextSm.main'}>Cliente</Typography>
                     <Tooltip title='Ver cliente'>
-                      <a href={routes.private.internal.client + budget.belongsTo?.object?.id} target="_blank" rel="noreferrer" >
-                        <Typography color={'primary.main'}>{budget.belongsTo?.object?.legalName?.value || 'Cliente aqui'}</Typography>
+                      <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                        <Typography color={'primary.main'}>{budget.orderBy?.object?.legalName?.value || 'Cliente aqui'}</Typography>
                       </a>
                     </Tooltip>
                   </Box>
@@ -286,7 +279,7 @@ const Head = (props) => {
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateRequest?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateCreation?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateDeliveryProject?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>

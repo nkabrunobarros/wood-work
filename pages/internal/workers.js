@@ -1,43 +1,39 @@
 //  Nodes
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 //  Custom Components
 import Loader from '../../components/loader/loader';
 import { functions } from '../../components/pages/newWorker/newWorker';
 import WorkersScreen from '../../components/pages/workers/workers';
+import AuthData from '../../lib/AuthData';
 
 //  Navigation
 import routes from '../../navigation/routes';
+import * as workersActionsRedux from '../../store/actions/worker';
+import * as permissionsActionsRedux from '../../store/actions/permission';
 
 //  Proptypes
 
-//  Services
-// import * as ProfileActions from '../api/actions/perfil';
-import * as WorkerActions from '../api/actions/worker';
-
 const Workers = () => {
   const [loaded, setLoaded] = useState(false);
-  const [workers, setWorkers] = useState();
-  // const [profiles, setProfiles] = useState();
   const profiles = functions;
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getWorkers = (data) => dispatch(workersActionsRedux.workers(data));
+  const getPermissions = (data) => dispatch(permissionsActionsRedux.permissions(data));
 
   useEffect(() => {
     const getData = async () => {
-      await WorkerActions
-        .workers()
-        .then((res) => setWorkers([...res.data].map((worker) => {
-          worker.Nome = worker.name?.value;
-          worker.Email = worker.email?.value;
-          worker.Perfil = worker.functionPerformed?.value;
-
-          return worker;
-        })));
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+      !reduxState.workers.data && await getWorkers();
+      !reduxState.permissions.data && await getPermissions();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
-  if (loaded) {
+  if (loaded && reduxState.workers.data) {
     const breadcrumbsPath = [
       {
         title: 'Utilizadores',
@@ -74,7 +70,7 @@ const Workers = () => {
 
     const headCellsWorkers = [
       {
-        id: 'name.value',
+        id: 'Nome',
         numeric: false,
         disablePadding: false,
         label: 'Nome',
@@ -110,7 +106,15 @@ const Workers = () => {
       detailRoute,
       headCells,
       newRoute,
-      workers,
+      workers: reduxState.workers?.data.map((worker) => {
+        const worker2 = { ...worker };
+
+        worker2.Nome = worker.givenName?.value + ' ' + worker.familyName?.value;
+        worker2.Email = worker.email?.value;
+        worker2.Perfil = worker.functionPerformed?.value;
+
+        return worker2;
+      }),
       headCellsWorkers,
     };
 

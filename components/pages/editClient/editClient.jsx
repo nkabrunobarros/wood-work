@@ -439,8 +439,8 @@ const EditClient = ({ ...props }) => {
                 text='Guardar'
                 icon={
                   <Save
-                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
                 onClick={ValidateFields}
@@ -449,8 +449,8 @@ const EditClient = ({ ...props }) => {
                 text='Cancelar'
                 icon={
                   <X
-                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
                 light
@@ -465,8 +465,8 @@ const EditClient = ({ ...props }) => {
               <Grid container item>
                 <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                   <Typography id='align' item className='lightTextSm'><User
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />  Dados Gerais</Typography>
                 </Grid>
               </Grid>
@@ -560,8 +560,8 @@ const EditClient = ({ ...props }) => {
             <Grid item xs={12} md={6} sx={{ paddingRight: '.5rem' }}>
               <Typography id='align' item className='lightTextSm'>
                 <User
-                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                 />
               Dados Gerais
               </Typography>
@@ -581,8 +581,8 @@ const EditClient = ({ ...props }) => {
               <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
                 <Typography id='align' item className='lightTextSm'>
                   <Edit2
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                   Dados de Faturação
                 </Typography>
@@ -646,8 +646,8 @@ const EditClient = ({ ...props }) => {
             <Grid container item sx={{ paddingRight: '.5rem' }}>
               <Typography id='align' className='lightTextSm'>
                 <Edit2
-                  strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                 />
                   Dados de Faturação
               </Typography>

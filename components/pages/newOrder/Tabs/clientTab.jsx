@@ -38,19 +38,19 @@ const ClientTab = (props) => {
           <Grid container item md={12} sm={12} xs={12} >
             <Grid container md={9} sm={9} xs={9}>
               <Typography id='align' className='headerTitleSm'>
-                <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Cliente
+                <User size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Cliente
               </Typography>
             </Grid>
             <Grid container md={3} sm={3} xs={3}>
               <ButtonGroup>
                 <Tooltip title='Atualizar lista de Clientes'>
                   <IconButton onClick={() => getClients()}>
-                    <RefreshCw size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />
+                    <RefreshCw size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title='Novo Cliente'>
                   <IconButton href={routes.private.internal.newClient} target='#'>
-                    <UserPlus size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />
+                    <UserPlus size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />
                   </IconButton>
                 </Tooltip>
               </ButtonGroup>

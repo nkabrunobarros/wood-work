@@ -97,8 +97,8 @@ const Docs = (props) => {
                 onClick={() => setDocsModal(true)}
                 icon={
                   <FilePlus
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
               />
@@ -130,8 +130,8 @@ const Docs = (props) => {
                 onClick={() => !creatingFolder ? setCreatingFolder(true) : handleCreateFolder()}
                 icon={
                   <FolderPlus
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 }
               />
@@ -168,8 +168,8 @@ const Docs = (props) => {
             <Grid md={2}>
               <Info
                 style={{ marginRight: '1rem' }}
-                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                size={pageProps?.globalVars?.iconSize}
               />
             </Grid>
             <Grid md={10}>Informações</Grid>
@@ -186,8 +186,8 @@ const Docs = (props) => {
                 width: '100%',
               }}>
               <Folder
-                strokeWidth={pageProps.globalVars.iconXlStrokeWidth}
-                size={pageProps.globalVars.iconSizeXxl}
+                strokeWidth={pageProps?.globalVars?.iconXlStrokeWidth}
+                size={pageProps?.globalVars?.iconSizeXxl}
                 stroke='#8793AB'
                 fill='#E7E8E9'
               />
@@ -198,8 +198,8 @@ const Docs = (props) => {
             <Grid md={2}>
               <FileText
                 style={{ marginRight: '1rem' }}
-                strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                size={pageProps?.globalVars?.iconSize}
               />
             </Grid>
             <Grid md={10}>Propriedades</Grid>

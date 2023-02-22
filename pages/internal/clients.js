@@ -15,28 +15,25 @@ import PropTypes from 'prop-types';
 
 //  Services
 // import countryService from '../../services/countries/country-service';
-import * as ClientsActions from '../../pages/api/actions/client';
+import { useDispatch, useSelector } from 'react-redux';
 // import * as ProfileActions from '../../pages/api/actions/perfil';
+import AuthData from '../../lib/AuthData';
+import * as clientsActionsRedux from '../../store/actions/client';
 
 const Clients = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [clients, setClients] = useState();
   // const [profiles, setProfiles] = useState();
   const profiles = [];
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   // const profiles = []
   useEffect(() => {
     const getData = async () => {
-      await ClientsActions
-        .clients()
-        .then((res) => {
-          setClients([...res.data].map(client => {
-            client.Nome = client.name?.value || client.givenName?.value;
-            client.Email = client.email?.value;
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
-            return client;
-          }));
-        });
+      if (!reduxState.clients.data) await getClients();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -45,7 +42,7 @@ const Clients = ({ ...pageProps }) => {
   if (loaded) {
     const headCells = [
       {
-        id: 'name.value',
+        id: 'Nome',
         numeric: false,
         disablePadding: false,
         label: 'Nome',
@@ -75,12 +72,15 @@ const Clients = ({ ...pageProps }) => {
       },
     ];
 
-    const items = clients;
-
-    console.log(items);
-
     const props = {
-      items,
+      items: [...reduxState.clients?.data].map(client => {
+        const client2 = { ...client };
+
+        client2.Nome = client.name?.value || client.givenName?.value;
+        client2.Email = client.email?.value;
+
+        return client2;
+      }),
       breadcrumbsPath,
       profiles,
       editRoute,

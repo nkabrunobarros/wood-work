@@ -25,8 +25,9 @@ import * as ClientsActions from '../../../pages/api/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, client, editRoute, pageProps } = props;
+  const { breadcrumbsPath, editRoute, pageProps } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
+  const client = { ...props.client };
 
   async function onDelete () {
     const builtClient = {
@@ -45,8 +46,6 @@ const EditClient = ({ ...props }) => {
     } catch (err) { }
   }
 
-  console.log(client);
-
   return (
     <>
       <ConfirmDialog
@@ -60,15 +59,15 @@ const EditClient = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
           <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-            <Typography item className='headerTitleXl'>{client?.name?.value}</Typography>
+            <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
             <Box sx={{ marginLeft: 'auto' }}>
               <ButtonGroup>
                 <PrimaryBtn
                   text='Editar'
                   icon={
                     <Edit
-                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                      size={pageProps?.globalVars?.iconSize}
                     />
                   }
                   onClick={() => Router.push(`${editRoute}${client?.id}`)}
@@ -78,8 +77,8 @@ const EditClient = ({ ...props }) => {
                   onClick={() => setDialogOpen(true)}
                   icon={
                     <Trash
-                      strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                      size={pageProps.globalVars.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                      size={pageProps?.globalVars?.iconSize}
                     />
                   }
                   light
@@ -92,8 +91,8 @@ const EditClient = ({ ...props }) => {
               <Grid container spacing={3} >
                 <Grid container item>
                   <Typography id='align' item color='lightTextSm.main'><User
-                    strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />  Dados Gerais</Typography>
                 </Grid>
                 <Grid container item>
@@ -130,8 +129,8 @@ const EditClient = ({ ...props }) => {
                   <Grid item xs={12}>
                     <Typography id='align' item color='lightTextSm.main'>
                       <PackagePlus
-                        strokeWidth={pageProps.globalVars.iconSmStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
                       />
                       Dados de Faturação
                     </Typography>
@@ -152,8 +151,7 @@ const EditClient = ({ ...props }) => {
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Codigo Postal</Typography>
                     <Typography item color='lightTextSm.black' >
-                      {client?.address.value.postalCode}
-
+                      {client?.address?.value?.postalCode}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -15,18 +15,35 @@ import routes from '../../../navigation/routes';
 import OrderScreen from '../../../components/pages/project/project';
 
 //  Services
-import * as BudgetsActions from '../../api/actions/budget';
-import * as ClientsActions from '../../api/actions/client';
-import * as ExpeditionsActions from '../../api/actions/expedition';
-import * as ProjectsActions from '../../api/actions/project';
-import * as WorkerActions from '../../api/actions/worker';
+// import * as BudgetsActions from '../../api/actions/budget';
+// import * as ClientsActions from '../../api/actions/client';
+// import * as ExpeditionsActions from '../../api/actions/expedition';
+// import * as ProjectsActions from '../../api/actions/project';
+// import * as WorkerActions from '../../api/actions/worker';
+
+import { useDispatch, useSelector } from 'react-redux';
+import AuthData from '../../../lib/AuthData';
+import * as budgetsActionsRedux from '../../../store/actions/budget';
+import * as clientsActionsRedux from '../../../store/actions/client';
+import * as expeditionsActionsRedux from '../../../store/actions/expedition';
+import * as filesActionsRedux from '../../../store/actions/file';
+import * as foldersActionsRedux from '../../../store/actions/folder';
+import * as projectsActionsRedux from '../../../store/actions/project';
 
 const Order = ({ ...pageProps }) => {
-  const [loaded, setLoaded] = useState(false);
-  const [order, setOrder] = useState();
+  const reduxState = useSelector((state) => state);
   const router = useRouter();
-  const [workers, setWorkers] = useState();
+  const [loaded, setLoaded] = useState(false);
   const [productionDetail, setProductionDetail] = useState();
+  const [folders, setFolders] = useState([]);
+  const dispatch = useDispatch();
+  const getProject = (data) => dispatch(projectsActionsRedux.project(data));
+  const setDisplayedProject = (data) => dispatch(projectsActionsRedux.setDisplayedProject(data));
+  const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
+  const getExpedition = (data) => dispatch(expeditionsActionsRedux.expedition(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
 
   //  Dummy
   const productionDetailRes = [
@@ -89,26 +106,12 @@ const Order = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      await ProjectsActions.project({ id: router.query.Id }).then(async (res) => {
-        const thisOrder = res.data[0];
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
-        await BudgetsActions.budget({ id: thisOrder.budgetId?.object || thisOrder.orderBy?.object }).then(async (resBudget) => {
-          thisOrder.budgetId.object = resBudget.data[0];
-
-          await ClientsActions.client({ id: resBudget.data[0]?.belongsTo?.object }).then(async (clientRes) => {
-            thisOrder.orderBy = { object: clientRes.data[0] };
-          });
-
-          await ExpeditionsActions.expedition({ id: thisOrder.expedition.object }).then(async (expeditionRes) => {
-            thisOrder.expedition.object = expeditionRes.data[0];
-          });
-
-          setOrder(thisOrder);
-        });
-      });
-
-      await WorkerActions.workers().then(async (workersRes) => setWorkers(workersRes.data));
-
+      const project = (await getProject(router.query.Id)).data;
+      const expedition = (await getExpedition(project.expedition.object)).data;
+      const budget = (await getBudget(project.budgetId.object)).data;
+      const client = (await getClient(project.orderBy.object)).data;
       //  Build production Detail
       const builtLogs = [];
 
@@ -120,13 +123,40 @@ const Order = ({ ...pageProps }) => {
       });
 
       setProductionDetail(builtLogs);
+
+      const thisOrder = JSON.parse(JSON.stringify({ ...project }));
+
+      thisOrder.budgetId.object = budget;
+      thisOrder.orderBy.object = client;
+      // thisOrder.orderBy = { object: clients.find(c => c.id === thisOrder.budgetId.object.orderBy?.object) };
+      thisOrder.expedition = expedition;
+
+      // thisOrder.expedition.object = expeditions.find(e => e.id === thisOrder.expedition.object);
+      getFolders().then(async (res) => {
+        const builtFolders = [];
+        const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
+
+        res.data.results.map((folder) => {
+          const folder2 = { ...folder };
+
+          folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
+          builtFolders.push(folder2);
+        });
+
+        setFolders(builtFolders);
+      });
+
+      setDisplayedProject(thisOrder);
     };
 
     Promise.all([getData()])
       .then(() => setLoaded(true));
   }, []);
 
-  if (loaded) {
+  if (loaded &&
+    reduxState.projects.displayedProject
+
+  ) {
     const headCellsUpperOrderDetail = [
       {
         id: 'deadline',
@@ -152,7 +182,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${order?.amount?.value} Un`,
+        label: `Quantidade Encomendada: ${reduxState.projects.displayedProject?.amount?.value} Un`,
         span: 1,
       },
     ];
@@ -227,7 +257,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Produzida: ${order?.completed || 0} Un`,
+        label: `Quantidade Produzida: ${reduxState.projects.displayedProject?.completed || 0} Un`,
         span: 4,
       },
       {
@@ -236,7 +266,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: `Quantidade Encomendada: ${order?.amount?.value} Un`,
+        label: `Quantidade Encomendada: ${reduxState.projects.displayedProject?.amount?.value} Un`,
         span: 1,
       },
       {
@@ -293,34 +323,10 @@ const Order = ({ ...pageProps }) => {
         href: `${routes.private.internal.projects}`,
       },
       {
-        title: `Projeto ${order.name.value}`,
+        title: `Projeto ${reduxState.projects.displayedProject?.name?.value}`,
         href: `${routes.private.internal.project}`,
       },
     ];
-
-    const orderDetail = [
-      {
-        id: Math.random(),
-        startAt: order?.order?.startAt,
-        real: '06 abril 2022',
-        start: '17 março 2022',
-        endAt: order?.order?.endAt,
-        time: `${order?.product?.craftTime * order?.amount} H`,
-      },
-    ];
-
-    // const productionDetail = [
-    //   {
-    //     operacao: order?.status,
-    //     previsto1: `${order?.product?.craftTime * order?.amount} H`,
-    //     realizado1: `${18} H`,
-    //     desvio: (order?.product?.craftTime * order?.amount) - 18,
-    //     previstoAtual: 20,
-    //     previsto2: order?.product?.craftTime,
-    //     realizado2: 2,
-    //     desvio2: -2
-    //   }
-    // ];
 
     const parts = [
       {
@@ -341,7 +347,7 @@ const Order = ({ ...pageProps }) => {
     ];
 
     const props = {
-      order,
+      order: reduxState.projects.displayedProject,
       breadcrumbsPath,
       headCellsUpperProductionDetail,
       headCellsProductionDetail,
@@ -350,12 +356,11 @@ const Order = ({ ...pageProps }) => {
       headCellsMessages,
       productionDetail,
       headCellsDocs,
-      orderDetail,
       pageProps,
       projectParts,
       parts,
-      workers,
-      folders: [],
+      workers: [],
+      folders,
       finishProject: router.query.finishProject
     };
 

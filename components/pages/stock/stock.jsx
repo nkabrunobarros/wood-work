@@ -40,7 +40,7 @@ const Stock = ({ ...props }) => {
           <Box style={{ display: 'flex' }}>
             <ButtonGroup>
               <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock.id)} icon={<Edit strokeWidth='1' />} />
-              <PrimaryBtn text='Apagar' icon={<Trash strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} />} light />
+              <PrimaryBtn text='Apagar' icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} light />
             </ButtonGroup>
           </Box>
         </Box>

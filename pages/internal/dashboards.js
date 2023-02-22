@@ -1,72 +1,35 @@
 /* eslint-disable array-callback-return */
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import DashboardScreen from '../../components/pages/dashboard/dashboard';
+import AuthData from '../../lib/AuthData';
 import routes from '../../navigation/routes';
-import * as ClientsActions from '../../pages/api/actions/client';
 // import * as ProductsActions from '../../pages/api/actions/product';
-import * as ProjectsActions from '../../pages/api/actions/project';
+//  Actions
+import * as clientsActionsRedux from '../../store/actions/client';
+import * as permissionsActionsRedux from '../../store/actions/permission';
 
 const DashBoards = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [ordersInfo, setOrdersInfo] = useState();
-  const [orders, setOrders] = useState();
-  const [clients, setClients] = useState();
-  const products = [];
-  // const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getPermissions = (data) => dispatch(permissionsActionsRedux.permissions(data));
+  const getResources = (data) => dispatch(permissionsActionsRedux.resources(data));
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
     const getData = async () => {
-      const counts = {
-        budgeting: 0,
-        drawing: 0,
-        production: 0,
-        concluded: 0,
-      };
-
-      await ProjectsActions.projects().then(async (response) => {
-        response.data.sort((a, b) => Date.parse(new Date(a.createdAt?.split('/').reverse().join('-'))) - Date.parse(new Date(b.createdAt?.split('/').reverse().join('-')))).map(async () => {
-          // switch (ord.order.status.toLowerCase()) {
-          //   case 'em orçamentação':
-          //     counts.budgeting++;
-
-          //     break;
-
-          //   case 'em desenho':
-          //     counts.drawing++;
-
-          //     break;
-
-          //   case 'em produçao':
-          //     counts.production++;
-
-          //     break;
-          //   case 'concluida':
-          //     counts.concluded++;
-
-          //     break;
-
-          //   default:
-          //     break;
-          // }
-          // await StockActions.stock({ id: ord.product.id }).then((res) => {
-          //   response.data.payload.data[i].stock = res.data.payload.amount
-          // })
-        });
-
-        setOrders(response.data);
-        setOrdersInfo(counts);
-      });
-
-      await ClientsActions.clients().then((response) => setClients(response.data));
-      // await ProductsActions.products().then((response) => setProducts(response.data.payload.data).catch(() => setProducts([])));
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+      !reduxState.permissions.data && await getPermissions();
+      !reduxState.permissions.resources && await getResources();
+      !reduxState.clients.data && await getClients();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
-  if (loaded && typeof window !== 'undefined') {
+  if (loaded && typeof window !== 'undefined' && reduxState.clients.data && reduxState.permissions.data) {
     const breadcrumbsPath = [
       {
         title: 'Painel de Controlo',
@@ -74,119 +37,56 @@ const DashBoards = ({ ...pageProps }) => {
       }
     ];
 
-    const arrDates = [];
+    const test = reduxState.permissions.resources.map(resource => { return resource.name.replace('add_', '').replace('view_', '').replace('change_', '').replace('delete_', ''); });
 
-    orders.map((order) => {
-      if (!arrDates.find(ele => moment(ele).format('DD/MM/YYYY') === moment(order?.createdAt).format('DD/MM/YYYY'))) arrDates.push(order?.createdAt);
+    function removeDuplicates (arr) {
+      return arr.filter((item, index) => arr.indexOf(item) === index);
+    }
+
+    const resources = removeDuplicates(test.map(word => {
+      if (word.endsWith('s')) {
+        return word.slice(0, -1); // remove last character if it's "s"
+      }
+
+      return word;
+    }));
+
+    const permissionsBuilt = reduxState.permissions.data.map((item) => {
+      const perm = { ...item };
+
+      perm.resources = {};
+      perm.pagesAccess = {};
+
+      reduxState.permissions.resources.map((reso) => {
+        if (reso.name.includes('access_')) perm.pagesAccess[reso.name.replace('access_', '')] = !!reduxState.permissions.resources.find((ele) => ele.name === reso.name);
+      });
+
+      resources.map((reso) => {
+        if (!reso.includes('access_')) {
+          perm.resources[reso] = {
+            get: !!reduxState.permissions.resources.find((ele) => ele.name === `view_${reso}`),
+            post: !!reduxState.permissions.resources.find((ele) => ele.name === `add_${reso}`),
+            patch: !!reduxState.permissions.resources.find((ele) => ele.name === `change_${reso}`),
+            delete: !!reduxState.permissions.resources.find((ele) => ele.name === `delete_${reso}`),
+          };
+        }
+      });
+
+      return perm;
     });
-
-    const arrValues = [];
-    const arrValuesProdsPerDay = [];
-
-    arrDates.map((date) => {
-      const res = orders.filter((order) => moment(order?.order?.createdAt).format('DD/MM/YYYY') === moment(date).format('DD/MM/YYYY'));
-      let thisAmount = 0;
-
-      res.map((ord) => { thisAmount += ord.amount; });
-      arrValues.push((Object.keys(res).length));
-      arrValuesProdsPerDay.push(thisAmount);
-    });
-
-    const ordersDonut = {
-
-      series: [ordersInfo.budgeting, ordersInfo.drawing, ordersInfo.production, ordersInfo.concluded],
-      labels: ['Em Orçamentação', 'Em Desenho', 'Em Produção', 'Concluida'],
-      chart: {
-        width: 380,
-        type: 'donut',
-      },
-      plotOptions: {
-        pie: {
-          startAngle: -90,
-          endAngle: 270
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      fill: {
-        type: 'gradient',
-      },
-      legend: {
-        formatter: function (val, opts) {
-          return val + ' - ' + opts.w.globals.series[opts.seriesIndex];
-        }
-      },
-      title: {
-        text: 'Gradient Donut with custom Start-angle'
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
-    };
-
-    const ordersGraph = {
-      series: [{
-        name: 'Encomendas Cliente',
-        data: arrValues
-      }, {
-        name: 'Total Produtos Encomendados',
-        data: arrValuesProdsPerDay
-      },
-      ],
-      options: {
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shadeIntensity: 1,
-            opacityFrom: 0.7,
-            opacityTo: 0.9,
-            stops: [0, 50, 100]
-          }
-        },
-        chart: {
-          height: 350,
-          type: 'area'
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: arrDates
-        },
-        tooltip: {
-          x: {
-            format: 'dd/MM/yy'
-          },
-        },
-      },
-
-    };
 
     const props = {
       breadcrumbsPath,
       pageProps,
-      ordersInfo,
-      orders,
-      ordersGraph,
-      ordersDonut,
-      clients,
-      products
+      clients: reduxState.clients.data,
+      permissions: permissionsBuilt,
+      resources: resources.filter(ele => !ele.includes('access_')),
+      acessSections: removeDuplicates(test).filter((reso) => reso.includes('access_'))
     };
 
-    return loaded && <DashboardScreen {...props} />;
+    console.log(props);
+
+    return <DashboardScreen {...props} />;
   }
 
   return <Loader center={true} />;

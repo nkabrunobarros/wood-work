@@ -24,9 +24,9 @@ import { Box, CssBaseline, Fab, Hidden, Tooltip } from '@mui/material';
 import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
+import { useSelector } from 'react-redux';
 import Footer from './footer/footer';
 
-// Pages without layout (sidebar || navbar (these have footer imbued in the page)  )
 const noLayoutScreens = [
   `${routes.public.signIn}`,
   `${routes.public.signInInternal}`,
@@ -67,7 +67,6 @@ async function Test (pageProps) {
     }
     //  case token is invalidpath
   } else {
-    // Case no token at all on cookie && its not a public page
     if (!Object.values(routes.public).includes(Router.route.replace('[Id]', ''))) authActions.logout();
   }
 }
@@ -76,11 +75,11 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const drawerOpen = useSelector((state) => state.appStates.drawerOpen);
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   let footerPos = '';
-
-  if (typeof window !== 'undefined') pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
+  const permissions = useSelector((state) => state.auth.userPermissions);
 
   const listenToScroll = () => {
     const heightToHideFrom = 500;
@@ -136,13 +135,13 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
           <DrawerMobile
             toggleFontSize={toggleFontSize}
             toggleTheme={toggleTheme}
-            mobileOpen={mobileOpen}
+            mobileOpen={drawerOpen}
             handleDrawerToggle={handleDrawerToggle}
             {...pageProps}
           />
         </Hidden>
         <Box id="appMainContainer" >
-          {IsInternal(pageProps.loggedUser?.profile.object.description) === isInternalPage
+          {IsInternal(permissions?.description) === isInternalPage
           // && imAllowed
             ? <>
               {children}

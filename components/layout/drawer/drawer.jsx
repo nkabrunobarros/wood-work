@@ -2,7 +2,7 @@
 //  Nodes
 import { useTheme } from '@emotion/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import IsInternal from '../../utils/IsInternal';
 
 //  Material UI
@@ -36,21 +36,30 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
+import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
+import Auth from '../../../lib/AuthData';
+import * as appStatesActions from '../../../store/actions/appState';
 
-const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontSize, ...pageProps }) => {
+const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontSize }) => {
   const theme = useTheme();
-  const loggedUser = JSON.parse(localStorage.getItem('user'));
+  const loggedUser = useSelector((state) => state.auth.me);
+  const userPermissions = useSelector((state) => state.auth.userPermissions);
   // const [anchorEl, setAnchorEl] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
+  const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
+  const dispatch = useDispatch();
 
-  // const handleClick = (event) => {
-  //   if (anchorEl === null) setAnchorEl(event.currentTarget);
-  //   else setAnchorEl(null);
-  // };
+  useEffect(() => {
+    async function getData () {
+      Auth(dispatch);
+    }
+
+    Promise.all([getData()]);
+  }, []);
 
   const actions = [
     { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
@@ -58,18 +67,17 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
     { icon: <Typography variant='md'>T</Typography>, name: 'Normal', value: 'md' },
     { icon: <Typography variant='xl'>T</Typography>, name: 'Grande', value: 'xl' },
     { icon: <Typography variant='xxl'>T</Typography>, name: 'Maior', value: 'xxl' },
-
   ];
 
-  return loggedUser && (
+  return loggedUser && userPermissions && (
     <SwipeableDrawer
       disableSwipeToOpen={false}
-      onOpen={handleDrawerToggle}
+      onOpen={() => toggleDrawer()}
       swipeAreaWidth={20}
       variant='temporary'
       anchor={theme.direction === 'rtl' ? 'right' : 'left'}
       open={mobileOpen}
-      onClose={handleDrawerToggle}
+      onClose={() => toggleDrawer()}
       ModalProps={{
         keepMounted: true, // Better open performance on mobile.
       }}
@@ -117,14 +125,14 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
               {loggedUser
                 ? (
                   <React.Fragment key={i * 100}>
-                    {loggedUser.profile.object.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === loggedUser.profile.object.description.toLowerCase()) && ele.action === 'READ') &&
-                    IsInternal(pageProps.loggedUser.profile.object.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
+                    {userPermissions?.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === userPermissions?.description.toLowerCase()) && ele.action === 'READ') &&
+                    IsInternal(userPermissions?.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
                       ? (
                         <MenuItem id={item.id} sx={{ padding: '0' }}>
                           <ActiveLink
                             key={i}
                             href={item.url}
-                            handleDrawerToggle={handleDrawerToggle}
+                            handleDrawerToggle={toggleDrawer}
                             page={item.title}
                           >
                             {item.icon}
@@ -222,7 +230,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
 
                     <ActiveLink
                       handleDrawerToggle={handleDrawerToggle}
-                      href={IsInternal(pageProps.loggedUser.profile.object.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
+                      href={IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
                       page={'Conta'}
                     >
                       <User strokeWidth='1' size={20} color='white' />{' '}

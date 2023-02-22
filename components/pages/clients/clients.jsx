@@ -129,9 +129,8 @@ const Clients = ({ ...props }) => {
             </div>
           </div>
         </div>
-
         <AdvancedTable
-          rows={items.filter((item) => item.active?.value === 'True' && item)}
+          rows={items.filter((item) => item.active?.value && item)}
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}

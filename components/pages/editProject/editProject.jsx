@@ -91,10 +91,10 @@ const EditProject = ({ ...props }) => {
 
               <PrimaryBtn
                 text='Guardar'
-                icon={<Save size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />} />
+                icon={<Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />} />
               <PrimaryBtn
                 text='Cancelar'
-                icon={<X size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} />}
+                icon={<X size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
                 light
                 onClick={() => Router.back()}
               />
@@ -107,7 +107,7 @@ const EditProject = ({ ...props }) => {
               <Grid container spacing={1} sm={12} xs={12}>
                 <Grid container item md={12} sm={12} xs={12}>
                   <Typography id='align' className='headerTitleSm'>
-                    <Package size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Produto
+                    <Package size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Dados do Produto
                   </Typography>
                 </Grid>
                 <Grid container item md={6} sm={12} xs={12}>
@@ -173,7 +173,7 @@ const EditProject = ({ ...props }) => {
           >
             <Grid container item sm={12} xs={12} >
               <Typography id='align' className='headerTitleSm'>
-                <User size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Dados do Cliente
+                <User size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Dados do Cliente
               </Typography>
             </Grid>
             <Grid container item sm={12} xs={12} >

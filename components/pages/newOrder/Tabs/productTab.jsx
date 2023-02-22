@@ -31,7 +31,7 @@ const ProductTab = (props) => {
           <Grid container md={12}>
             <Grid container md={9}>
               <Typography id='align' className='headerTitleSm'>
-                <Package size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Produto
+                <Package size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Produto
               </Typography>
             </Grid>
           </Grid>

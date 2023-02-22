@@ -1,34 +1,58 @@
 //  Page Component
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/loader/loader';
 import BudgetScreen from '../../../components/pages/budget/budget';
+import AuthData from '../../../lib/AuthData';
 import routes from '../../../navigation/routes';
-import * as BudgetActions from '../../api/actions/budget';
-import * as ClientsActions from '../../api/actions/client';
+import * as budgetsActionsRedux from '../../../store/actions/budget';
+import * as clientsActionsRedux from '../../../store/actions/client';
+import * as filesActionsRedux from '../../../store/actions/file';
+import * as foldersActionsRedux from '../../../store/actions/folder';
 import { categories } from '../new-project';
 
 const Budget = ({ ...pageProps }) => {
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [budget, setBudget] = useState();
   const [loaded, setLoaded] = useState(false);
-  const folders = [];
+  const [folders, setFolders] = useState([]);
+  const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
+  const setDisplayingBudget = (data) => dispatch(budgetsActionsRedux.setDisplayingBudget(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
 
   useEffect(() => {
     const getData = async () => {
-      await BudgetActions.budget({ id: router.query.Id }).then(async (res) => {
-        const thisBudget = res.data[0];
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
-        await ClientsActions.client({ id: thisBudget.belongsTo.object }).then(async (clientRes) => {
-          thisBudget.belongsTo.object = clientRes.data[0];
+      const budget = (await getBudget(router.query.Id)).data;
+      const client = (await getClient(budget.orderBy.object)).data;
+      const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
+
+      thisBudget.orderBy.object = client;
+      setBudget(thisBudget);
+      setDisplayingBudget(thisBudget);
+
+      await getFolders().then(async (res) => {
+        const builtFolders = [];
+        const resFiles = await getFiles(router.query.Id);
+
+        res.data.results.map((folder) => {
+          const folder2 = { ...folder };
+
+          folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
+          builtFolders.push(folder2);
         });
 
-        setBudget(thisBudget);
+        setFolders(builtFolders);
       });
     };
 
-    Promise.all([getData()])
-      .then(() => setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {

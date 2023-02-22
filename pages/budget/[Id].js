@@ -1,21 +1,28 @@
 //  Page Component
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import BudgetScreen from '../../components/pages/budget/budget';
 import routes from '../../navigation/routes';
+import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as BudgetActions from '../api/actions/budget';
 import * as ClientsActions from '../api/actions/client';
 import { categories } from '../internal/new-project';
 
 const Budget = ({ ...pageProps }) => {
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [budget, setBudget] = useState();
   const [loaded, setLoaded] = useState(false);
   const folders = [];
+  const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
 
   useEffect(() => {
     const getData = async () => {
+      if (!reduxState.budgets.data) await getBudgets();
+
       await BudgetActions.budget({ id: router.query.Id }).then(async (res) => {
         const thisBudget = res.data[0];
 

@@ -21,11 +21,25 @@ const Loader = ({ center, backdrop }) => {
     };
   }
 
-  return <Backdrop
-    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    open={backdrop || false}
-  >
-    <div style={style}>
+  return backdrop
+    ? <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}
+      >
+        <div style={style}>
+          <div className={styles.bars5}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+      </Backdrop>
+    </>
+    : <div style={style}>
       <div className={styles.bars5}>
         <span></span>
         <span></span>
@@ -33,9 +47,7 @@ const Loader = ({ center, backdrop }) => {
         <span></span>
         <span></span>
       </div>
-    </div>
-
-  </Backdrop>;
+    </div>;
 };
 
 Loader.propTypes = {

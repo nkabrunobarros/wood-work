@@ -132,8 +132,8 @@ const EditUser = ({ ...props }) => {
               text='Guardar'
               icon={
                 <Save
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                 />
               }
               onClick={Validate}
@@ -142,8 +142,8 @@ const EditUser = ({ ...props }) => {
               text='Cancelar'
               icon={
                 <X
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                 />
               }
               light
@@ -153,8 +153,8 @@ const EditUser = ({ ...props }) => {
         </Box>
         <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
           <User
-            strokeWidth={pageProps.globalVars.iconStrokeWidth}
-            size={pageProps.globalVars.iconSize} />
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSize} />
           <span>Dados de Utilizador</span>
         </a>
         <Grid id='pad' container md={12} sm={12} xs={12}>
@@ -168,8 +168,8 @@ const EditUser = ({ ...props }) => {
             <Box id='pad' style={{ flex: 1 }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
               <a id='align' className='headerTitleSm'>
                 <Lock
-                  strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                  size={pageProps.globalVars.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
                 />
                 <span> Alterar Senha</span>
               </a>

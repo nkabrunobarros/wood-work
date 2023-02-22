@@ -32,8 +32,8 @@ const ConversationsToolbar = (props) => {
               <Tooltip title='Nova Conversa'>
                 <IconButton>
                   <Plus
-                    strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                    size={pageProps.globalVars.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
                   />
                 </IconButton>
               </Tooltip>
@@ -47,12 +47,12 @@ const ConversationsToolbar = (props) => {
           open={anchorEl}
           onClose={() => setAnchorEl(null)}
         >
-          {windowWidth < 900 && <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><Edit strokeWidth={pageProps.globalVars.iconStrokeWidth}
-            size={pageProps.globalVars.iconSize}/>Nova conversa</MenuItem>}
-          <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><HelpCircle strokeWidth={pageProps.globalVars.iconStrokeWidth}
-            size={pageProps.globalVars.iconSize}/>Ajuda</MenuItem>
-          <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><Settings strokeWidth={pageProps.globalVars.iconStrokeWidth}
-            size={pageProps.globalVars.iconSize}/>Preferencias</MenuItem>
+          {windowWidth < 900 && <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><Edit strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSize}/>Nova conversa</MenuItem>}
+          <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><HelpCircle strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSize}/>Ajuda</MenuItem>
+          <MenuItem onClose={() => setAnchorEl(null)} onClick={() => setAnchorEl(null)}><Settings strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            size={pageProps?.globalVars?.iconSize}/>Preferencias</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

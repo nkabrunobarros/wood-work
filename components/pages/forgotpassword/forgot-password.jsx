@@ -1,6 +1,6 @@
+/* eslint-disable consistent-return */
 //  Nodes
-import emailjs from '@emailjs/browser';
-import { Button, OutlinedInput } from '@mui/material';
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -17,12 +17,17 @@ import Footer from '../../layout/footer/footer';
 //  PropTypes
 import Image from 'next/image';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import * as emailActionsRedux from '../../../store/actions/email';
+import MyInput from '../../inputs/myInput';
 
 const ForgotPassword = (props) => {
   const { client, signinRoute } = props;
   const [windowWidth, setWindowHeight] = useState();
   const [email, setEmail] = useState();
+  const dispatch = useDispatch();
+  const sendResetEmail = (data) => dispatch(emailActionsRedux.resetPassword(data));
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
@@ -40,31 +45,23 @@ const ForgotPassword = (props) => {
     return () => window.removeEventListener('resize', listenToResize);
   }, []);
 
-  // eslint-disable-next-line consistent-return
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const FormData = require('form-data');
+    const data = new FormData();
+
+    data.append('email', email);
 
     if (!email) return toast.error('Prencher formulario');
 
-    const USER_ID = 'service_kqtxrtc';
-    const TEMPLATE_ID = 'template_6nvzzrx';
-
-    //  TODO: separar o email de cliente e de colaborador com url's corretos
-    emailjs
-      .sendForm(USER_ID, TEMPLATE_ID, event.currentTarget, 'HtyN6X3l4PFTtFQSI')
-      .then(
-        (result) => {
-          console.log(result);
-          setEmail();
-          toast.success('Sucesso! Siga as instruções que constam do email enviado.');
-        },
-        () => {
-          setEmail();
-          toast.error('Email não enviado.');
-        }
-      );
-
-    setEmail();
+    await sendResetEmail(data).then(() => {
+      setEmail('');
+      toast.success('Sucesso! Siga as instruções que constam do email enviado.');
+    }).catch(() => {
+      setEmail('');
+      toast.error('Email não enviado.');
+    });
   };
 
   return (
@@ -127,15 +124,8 @@ const ForgotPassword = (props) => {
             onSubmit={handleSubmit}
             sx={{ mt: 1, width: '100%' }}
           >
-            <OutlinedInput
-              type='hidden'
-              id='name'
-              name='name'
-              autoComplete='name'
-              value={'Bruno Barros'}
-              autoFocus
-            />
-            <OutlinedInput
+            <MyInput
+              label={'Email'}
               required
               fullWidth
               id='email'

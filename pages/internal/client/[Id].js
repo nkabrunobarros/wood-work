@@ -15,21 +15,27 @@ import routes from '../../../navigation/routes';
 import PropTypes from 'prop-types';
 
 //  Services
-import * as ClientActions from '../../../pages/api/actions/client';
+import { useDispatch, useSelector } from 'react-redux';
+import * as clientsActionsRedux from '../../../store/actions/client';
+import AuthData from '../../../lib/AuthData';
 
 const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [client, setClient] = useState();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
+  const setDisplayedClient = (data) => dispatch(clientsActionsRedux.setDisplayedClient(data));
 
   useEffect(() => {
-    const getAll = async () => {
-      await ClientActions
-        .client({ id: router.query.Id })
-        .then((res) => setClient(res.data[0]));
+    const getData = async () => {
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+
+      if (!reduxState.clients.displayedClient) await getClient(router.query.Id).then((res) => console.log(res));
+      else if (reduxState.clients.data) setDisplayedClient(reduxState.clients.data.find(ele => ele.id === router.query.Id));
     };
 
-    Promise.all([getAll()]).then(() => setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
@@ -41,13 +47,13 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
       {
-        title: `${client?.name?.value}`,
+        title: `${reduxState.clients.displayedClient?.givenName?.value + ' ' + reduxState.clients.displayedClient?.familyName?.value}`,
         href: `${routes.private.internal.clients}`,
       },
     ];
 
     const props = {
-      client,
+      client: JSON.parse(JSON.stringify({ ...reduxState.clients.displayedClient })),
       breadcrumbsPath,
       editRoute,
       pageProps

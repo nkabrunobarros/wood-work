@@ -211,10 +211,10 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
             type={field.type && field.type}
             onChange={(e) => {
               onFormChange(index, e);
-              field.id === 'postalCode' && ValidatePostalCode(null);
+              (field.id === 'postalCode' || field.id === 'address.postalCode') && ValidatePostalCode(null);
             }}
             placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-            adornmentIcon={field.id === 'postalCode' &&
+            adornmentIcon={(field.id === 'postalCode' || field.id === 'address.postalCode') &&
               <>
                 {postalCodeInfo
                   ? <Tooltip title='Detalhes Codigo Postal' >

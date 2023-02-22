@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import NewClientScreen from '../../components/pages/newClient/newClient';
 import routes from '../../navigation/routes';
 
 //  Actions
-import * as OrganizationActions from '../../pages/api/actions/organization';
+import * as OrganizationsActionsRedux from '../../store/actions/organization';
 // import * as ProfileActions from '../../pages/api/actions/perfil';
+import AuthData from '../../lib/AuthData';
 
 const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   // const [profiles, setProfiles] = useState();
-  const [organizations, setOrganizations] = useState();
   const profiles = [];
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getOrganizations = (data) => dispatch(OrganizationsActionsRedux.organizations(data));
 
   useEffect(() => {
     const getData = async () => {
-      try {
-        // await ProfileActions
-        //   .perfis()
-        //   .then((res) => setProfiles(res.data.payload.data));
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
-        await OrganizationActions
-          .organizations()
-          .then((res) => setOrganizations(res.data));
-      } catch (error) { }
+      if (!reduxState.organizations.data) await getOrganizations();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -45,7 +43,7 @@ const NewOrder = ({ ...pageProps }) => {
       breadcrumbsPath,
       pageProps,
       profiles,
-      organizations,
+      organizations: reduxState.organizations.data,
     };
 
     return <NewClientScreen {...props} />;

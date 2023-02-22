@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import routes from '../../../navigation/routes';
 import * as WorkerActions from '../../../pages/api/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
@@ -33,6 +34,7 @@ const Workers = ({ ...props }) => {
     headCellsWorkers,
   } = props;
 
+  const userPermissions = useSelector((state) => state.auth.userPermissions);
   //  States
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -95,8 +97,8 @@ const Workers = ({ ...props }) => {
               <Select
                 label={'Nome'}
                 options={workers.filter((item) => item.active && item)}
-                optionValue={'name'}
-                optionLabel={'name'}
+                optionValue={'Nome'}
+                optionLabel={'Nome'}
                 onChange={(event) => setNome(event.target.value)}
               />
 
@@ -160,7 +162,7 @@ const Workers = ({ ...props }) => {
           >
             <div>
               <PrimaryBtn
-                hidden={!CanDo(['write', 'workers'])}
+                hidden={!CanDo(['write', 'workers', userPermissions])}
                 text='Adicionar'
                 onClick={() => Router.push(`${newRoute}`)}
               />

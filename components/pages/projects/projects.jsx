@@ -6,8 +6,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Autocomplete,
   Box, Grid,
-  InputLabel, OutlinedInput,
-  Tab,
+  InputLabel, Tab,
   Tabs,
   TextField,
   Tooltip,
@@ -33,9 +32,9 @@ import CanDo from '../../utils/CanDo';
 //  Navigation
 import routes from '../../../navigation/routes';
 // import * as ProjectActions from '../../../pages/api/actions/project';
-import IsInternal from '../../utils/IsInternal';
+import { useSelector } from 'react-redux';
 
-const ProjectsScreen = ({ ...props }) => {
+const ProjectsScreen = (props) => {
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
@@ -62,22 +61,7 @@ const ProjectsScreen = ({ ...props }) => {
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
-  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
-
-  // async function fixAll () {
-  //   // eslint-disable-next-line consistent-return, array-callback-return
-  //   const updatedOrders = projects.map((ord) => {
-  //     if (ord.orderBy?.object) {
-  //       return {
-  //         id: ord.id,
-  //         type: ord.type,
-  //         status: { type: 'Property', value: ord.status?.value.replace('in ', '') }
-  //       };
-  //     }
-  //   });
-
-  //   await ProjectActions.updateProject(updatedOrders.filter(ord => ord !== undefined)).then(() => {}).catch(() => console.log('failed '));
-  // }
+  const userPermissions = useSelector((state) => state.auth.userPermissions);
 
   const ClearFilters = () => {
     setProduct('');
@@ -94,7 +78,6 @@ const ProjectsScreen = ({ ...props }) => {
     setFilters({
       Nome: number,
       Cliente: client,
-      // categoria: category,
       Estado: producao,
       telemovel: telephone
     });
@@ -107,22 +90,10 @@ const ProjectsScreen = ({ ...props }) => {
     setTelephone(filters.telemovel || '');
   }, [filters]);
 
-  function TabPanel (props) {
-    const { children, value, index, ...other } = props;
-
+  function TabPanel ({ children, value, index }) {
     return (
-      <Box
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box >
-            <Typography>{children}</Typography>
-          </Box>
-        )}
+      <Box hidden={value !== index}>
+        {value === index && <Box>{children}</Box>}
       </Box>
     );
   }
@@ -151,7 +122,6 @@ const ProjectsScreen = ({ ...props }) => {
         {cards.map((card) => (
           <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
             <InfoCard
-              key={card.num}
               amount={card.amount}
               color={card.color}
               icon={card.icon}
@@ -165,9 +135,9 @@ const ProjectsScreen = ({ ...props }) => {
         <Grid id='pad' md={12} container>
           <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
-            <InputLabel htmlFor='email'>Nome {/* isInternalPage ? 'projeto' : 'Encomenda' */} </InputLabel>
-            <OutlinedInput
+            <MyInput
               fullWidth
+              label='name'
               id='name'
               name='name'
               autoComplete='name'
@@ -269,12 +239,12 @@ const ProjectsScreen = ({ ...props }) => {
         <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
           <PrimaryBtn
-            hidden={!CanDo(['write', 'projects']) || !isInternalPage}
+            hidden={!CanDo(['write', 'projects', userPermissions]) || !isInternalPage}
             text='Adicionar orçamento'
             onClick={() => Router.push(routes.private.internal.newProject)}
           />
         </Box>
-        {internalPOV && <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        {isInternalPage && <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)} aria-label="basic tabs example">
             <Tooltip title='Confirmadas'>
               <Tab label="Projetos" {...a11yProps(0)} />
@@ -284,11 +254,10 @@ const ProjectsScreen = ({ ...props }) => {
             </Tooltip>
           </Tabs>
         </Box> }
-        {console.log(projects)}
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
           <AdvancedTable
-            rows={projects.filter(ele => ele?.status?.value?.toLowerCase() !== 'canceled')}
+            rows={projects?.filter(ele => ele?.status?.value?.toLowerCase() !== 'canceled')}
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}
@@ -297,9 +266,9 @@ const ProjectsScreen = ({ ...props }) => {
           />
         </TabPanel>
         {/* Tab Budgets */}
-        {internalPOV && <TabPanel value={currentTab} index={1}>
+        {isInternalPage && <TabPanel value={currentTab} index={1}>
           <AdvancedTable
-            rows={budgets.filter(ele => ele.aprovedDate?.value === '' && ele.status.value.toLowerCase() !== 'canceled')}
+            rows={budgets?.filter(ele => ele.approvedDate?.value === '' && ele.status.value.toLowerCase() !== 'canceled')}
             headCells={headCellsBudget}
             filters={filters}
             clickRoute={detailPageBudgetTab}
@@ -313,8 +282,6 @@ const ProjectsScreen = ({ ...props }) => {
 };
 
 ProjectsScreen.propTypes = {
-  products: PropTypes.array,
-  categories: PropTypes.array,
   panelsInfo: PropTypes.object,
   breadcrumbsPath: PropTypes.array,
   clients: PropTypes.array,

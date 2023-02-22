@@ -1,5 +1,6 @@
 //  Nodes
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 //  Preloader
 import Loader from '../../components/loader/loader';
@@ -13,64 +14,31 @@ import OrdersScreen from '../../components/pages/ordersSimilar/projects-similar'
 import routes from '../../navigation/routes';
 
 //  Services
-import * as ClientsActions from '../api/actions/client';
-import * as ProductsActions from '../api/actions/product';
-import * as ProjectsActions from '../api/actions/project';
-import * as WoodTypeActions from '../api/actions/woodtype';
+import AuthData from '../../lib/AuthData';
+import * as clientsActionsRedux from '../../store/actions/client';
+import * as projectsActionsRedux from '../../store/actions/project';
 
 //  Utils
 
 const OrdersSimilar = () => {
   //  Data States
-  const [orders, setOrders] = useState();
-  const [clients, setClients] = useState();
-  const [products, setProducts] = useState();
-  const [woodTypes, setWoodTypes] = useState();
   const [loaded, setLoaded] = useState(false);
+  const reduxState = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
-    const getAll = async () => {
-      await ProductsActions
-        .products()
-        .then((res) => setProducts(res.data))
-        .catch(() => setProducts([]));
+    async function getData () {
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+      !reduxState.projects.data && getProjects();
+      !reduxState.clients.data && getClients();
+    }
 
-      await ClientsActions.clients()
-        .then((res) => setClients(res.data))
-        .catch(() => setClients([]));
-
-      await WoodTypeActions
-        .woodTypes()
-        .then((res) => setWoodTypes(res.data.payload.data))
-        .catch(() => setWoodTypes([]));
-
-      await ProjectsActions.projects().then((res) => {
-        const data = res.data;
-
-        //  Calc desvios
-        data.map(
-          // eslint-disable-next-line array-callback-return
-          (item, i) => {
-            // data[i].desvio = formatNum(item.previsto, item.realizado)
-            data[i].operacao = data[i].status.value;
-            data[i].previsto1 = `${data[i]?.product?.craftTime * data[i]?.amount} H`;
-            data[i].realizado1 = `${18} horas`;
-            data[i].desvio = (data[i]?.product?.craftTime * data[i]?.amount) - 18;
-            data[i].previstoAtual = 20;
-            data[i].previsto2 = data[i]?.product?.craftTime;
-            data[i].realizado2 = 2;
-            data[i].desvio2 = -2;
-          }
-        );
-
-        setOrders(data);
-      });
-    };
-
-    Promise.all([getAll()]).then(() => setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
-  if (loaded) {
+  if (loaded && reduxState.projects.data) {
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
@@ -207,22 +175,38 @@ const OrdersSimilar = () => {
       },
     ];
 
-    //  Convert main listing items to items var for coherence amongst pages
-    const items = orders;
-
     //  Page Props
     const props = {
-      items,
+      items: [...reduxState.projects.data]?.map(
+        // eslint-disable-next-line array-callback-return
+        (item) => {
+          const item2 = { ...item };
+
+          // data[i].desvio = formatNum(item.previsto, item.realizado)
+          item2.operacao = item.status.value;
+          item2.previsto1 = `${item?.product?.craftTime * item?.amount} H`;
+          item2.realizado1 = `${18} horas`;
+          item2.desvio = (item?.product?.craftTime * item?.amount) - 18;
+          item2.previstoAtual = 20;
+          item2.previsto2 = item?.product?.craftTime;
+          item2.realizado2 = 2;
+          item2.desvio2 = -2;
+
+          return item2;
+        }
+      ),
       breadcrumbsPath,
       detailPage,
       editPage,
-      clients,
-      woodTypes,
-      products,
+      clients: [],
+      woodTypes: [],
+      products: [],
       operations,
       headCellsUpper,
       headCells,
     };
+
+    console.log(props);
 
     //  Verifies if all data as been loaded and set page to fully Loaded
     return <OrdersScreen {...props} />;

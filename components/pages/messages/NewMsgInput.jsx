@@ -104,8 +104,8 @@ const NewMsgInput = (props) => {
             {files && <Chip label={`${files.length} anexo(s)`} onDelete={() => setFiles()}/>}
             <IconButton component='label'>
               <ImagePlus
-                strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                size={pageProps.globalVars.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                size={pageProps?.globalVars?.iconSize}
               />
               <input multiple type='file' accept='image/*,.pdf' name='file' hidden onChange={(e) => onFileInput(e)}/>
             </IconButton>

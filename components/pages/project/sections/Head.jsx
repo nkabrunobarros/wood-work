@@ -4,13 +4,15 @@ import PrimaryBtn from '../../../buttons/primaryBtn';
 
 //  PropTypes
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import moment from 'moment';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../../navigation/routes';
-import * as ProjectActions from '../../../../pages/api/actions/project';
+import * as projectsActionsRedux from '../../../../store/actions/project';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
-import IsInternal from '../../../utils/IsInternal';
 import ToastSet from '../../../utils/ToastSet';
 import FinishProjectModal from '../modal/finishProjectModal';
 
@@ -21,7 +23,10 @@ const Head = (props) => {
   const [changeToTransportModal, setChangeToTransportModal] = useState(false);
   const [changeToFinishedModal, setChangeToFinishedModal] = useState(false);
   const [finishModal, setFinishModal] = useState(finishProject === '1');
-  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
+  const path = useRouter();
+  const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+  const dispatch = useDispatch();
+  const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
 
   const upperCells = {
     alignItems: 'center',
@@ -46,14 +51,12 @@ const Head = (props) => {
 
     const processing = toast.loading('');
 
-    const updatedOrder = {
-      id: order.id,
-      type: order.type,
-      status: { value: `${props}`, type: 'Property' },
-    };
-
     try {
-      await ProjectActions.updateProject([updatedOrder]).then(() => {
+      await updateProject({
+        id: order.id,
+        type: order.type,
+        status: { value: `${props}`, type: 'Property' }
+      }).then(() => {
         setOrder({ ...order, status: { type: 'Property', value: `${props}` } });
         setChangeToProdModal(false);
         setChangeToAssemblyModal(false);
@@ -110,31 +113,31 @@ const Head = (props) => {
         <PrimaryBtn
           text='Gerar Etiquetas'
           hidden={!(internalPOV && order.status.value === 'production')}
-          icon={ <Tag strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> } />
+          icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />
         <PrimaryBtn
           text='Passar a produção'
           onClick={() => setChangeToProdModal(true) }
           hidden={!(internalPOV && order.status.value === 'drawing')}
-          icon={ <Forward strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> } />
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />
         <PrimaryBtn
           text='Passar a montagem'
           onClick={() => setChangeToAssemblyModal(true) }
           hidden={!(internalPOV && order.status.value === 'production')}
-          icon={ <Forward strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
           text='Passar a transporte'
           onClick={() => setChangeToTransportModal(true) }
           hidden={!(internalPOV && order.status.value === 'testing')}
-          icon={ <Forward strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
           text='Terminar projeto'
           onClick={() => setChangeToFinishedModal(true) }
           hidden={!(internalPOV && order.status.value === 'transport')}
-          icon={ <Forward strokeWidth={pageProps.globalVars.iconStrokeWidth} size={pageProps.globalVars.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
       </Box>
@@ -175,16 +178,15 @@ const Head = (props) => {
           <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' >Fim</Typography></Grid>
           <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' >Quantidade</Typography></Grid>
         </Grid>
-        <Grid container md={12} sm={12} xs={12}>
+        <Grid container md={12} sm={12} xs={12}>{console.log(order)}
           <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.dateRequest?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.dateCreation?.value}</Typography></Grid>
+          <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{moment(order?.budgetId?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.dateAgreedDelivery?.value}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.dateDelivery?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.aprovedDate?.value}</Typography></Grid>
+          <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={1} sm={1} xs={1}><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
         </Grid>
-
       </Grid>
     </Grid>
   </Box>;

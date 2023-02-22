@@ -29,36 +29,39 @@ import Footer from '../../layout/footer/footer';
 import { XCircle } from 'lucide-react';
 
 //  Utils
-import EmailValidation from '../../utils/EmailValidation';
 
 import { destroyCookie, setCookie } from 'nookies';
 //  PropTypes
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
-import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import * as authActionsRedux from '../../../store/actions/auth';
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
 
   const {
     client,
-    login,
-    me,
     loginSuccessRoute,
-    loginSuccessRouteTerms,
+    // loginSuccessRouteTerms,
     forgotPasswordRoute
   } = props;
 
-  const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
-  const [password, setPassword] = useState('ChangeMe');
+  const [username, setUsername] = useState(Router.route === '/' ? 'jacqueline' : 'admin');
+  // const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
+  const [password, setPassword] = useState(Router.route === '/' ? '59CAyKMHfSLAtBt9' : 'zo5JhUY7xzgg5Jk');
   const [loading, setLoading] = useState(false);
-  const [emailErrors, setEmailErrors] = useState();
+  const [usernameErrors, setUsernameErrors] = useState();
+  // const [emailErrors, setEmailErrors] = useState();
   const [senhaErrors, setSenhaErrors] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
   const [windowWidth, setWindowHeight] = useState();
+  const dispatch = useDispatch();
+  const loginRedux = (data) => dispatch(authActionsRedux.login(data));
+  const me2 = (data) => dispatch(authActionsRedux.me(data));
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
@@ -84,15 +87,14 @@ const SignIn = (props) => {
       password: ''
     };
 
-    if (email === '') errors.email = 'Campo obrigatório';
-    else if (!EmailValidation(email)) errors.email = 'Email mal estruturado';
+    if (username === '') errors.email = 'Campo obrigatório';
 
     if (password === '') errors.password = 'Campo obrigatório';
     else if (password.length < 6) errors.password = 'Senha tem que ter minimo 6 caracteres';
 
-    if (errors.password || errors.email) {
+    if (errors.password || errors.username) {
       setSenhaErrors(errors.password);
-      setEmailErrors(errors.email);
+      setUsernameErrors(errors.username);
 
       return;
     }
@@ -101,79 +103,28 @@ const SignIn = (props) => {
 
     const loadingNotification = toast.loading('');
 
-    await login({ email, password }).then(async (res) => {
-      if (res.status !== 404) {
-        res.data.token !== undefined && setCookie(undefined, 'auth_token', res.data.token);
+    await loginRedux({ username, password }).then(async (res) => {
+      setCookie(undefined, 'auth_token', res.data.access_token);
 
-        await me({ ...res?.data }).then((resultMe) => {
-          const user = resultMe?.data[0];
+      await me2(res.data.access_token).then((res) => {
+        const user = res?.data;
 
-          if (user.active?.value?.toLowerCase() === 'false') {
-            ToastSet(loadingNotification, 'Conta Inativa', 'error');
-            setDialogOpen(true);
-            setLoading(false);
-            destroyCookie(null, 'auth_token');
-          } else {
-            // Success
-            ToastSet(loadingNotification, 'A entrar', 'success');
-            setLoading(false);
-
-            if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
-            else router.push(loginSuccessRoute);
-          }
-        });
-      } else {
-        setLoading(false);
-
-        if (!res.response?.data?.success && res.response?.data?.message === 'credenciais-invalidas') ToastSet(loadingNotification, 'Credenciais invalidas', 'error');
-        else if (res.response?.data?.message === 'utilizador-inativo') ToastSet(loadingNotification, 'Conta Inativa', 'error');
-        else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
-      }
+        if (!user.is_active) {
+          ToastSet(loadingNotification, 'Conta Inativa', 'error');
+          setDialogOpen(true);
+          setLoading(false);
+          destroyCookie(null, 'auth_token');
+        } else {
+          // Success
+          ToastSet(loadingNotification, 'A entrar', 'success');
+          setLoading(false);
+          // if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
+          // else router.push(loginSuccessRoute);
+          router.push(loginSuccessRoute);
+        }
+      }).catch((err) => console.log(err));
     });
   };
-
-  async function test () {
-    const loadingNotification = toast.loading('');
-
-    setLoading(true);
-
-    await authActions.loginTest({ username: 'bruno', password: '59CAyKMHfSLAtBt9' }).then((res) => {
-      ToastSet(loadingNotification, 'A entrar', 'success');
-
-      if (res.response) {
-        if (res.response.data.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas.', 'error');
-        else if (res.response.data.error_description === 'User inactive') {
-          ToastSet(loadingNotification, 'Conta inativa.', 'error');
-          setDialogOpen(true);
-        } else ToastSet(loadingNotification, 'Algo Inesperado aconteceu, por favor tente mais tarde', 'error');
-      }
-    });
-
-    setLoading(false);
-  }
-
-  async function test2 () {
-    const axios = require('axios');
-
-    const config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: 'http://woodwork4.ddns.net/ww4/api/v1/owner/?options=keyValues',
-      headers: {
-        'Fiware-Service': 'woodwork40',
-        Link: '<https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/context/ww4zero.context.jsonld>; type="application/ld+json"',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IkQxUXRFVXRXN2F4RUhWMWdBZkpNM1lrd3ROcVp3MSJ9.tgTd0o_-wlwbdk18phvrnTEdiQNvKqH2lYq1TFmFfxk'
-      }
-    };
-
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
@@ -263,7 +214,7 @@ const SignIn = (props) => {
             onSubmit={handleSubmit}
             sx={{ mt: 1, width: '100%' }}
           >
-            <MyInput
+            {/* <MyInput
               id='email'
               label='Endereço de Email'
               onChange={(e) => {
@@ -274,6 +225,19 @@ const SignIn = (props) => {
               }
               value={email}
               error={emailErrors}
+              name='email'
+            /> */}
+            <MyInput
+              id='email'
+              label='Nome de Utilizador'
+              onChange={(e) => {
+                if (usernameErrors) setUsernameErrors('');
+
+                setUsername(e.target.value);
+              }
+              }
+              value={username}
+              error={usernameErrors}
               name='email'
             />
             <MyInput
@@ -333,9 +297,6 @@ const SignIn = (props) => {
                   'Entrar'
                 )}
             </Button>
-            <Button onClick={() => test()} >test</Button>
-            <Button onClick={() => test2()} >test2</Button>
-
           </Box>
         </Box>
         <Footer />

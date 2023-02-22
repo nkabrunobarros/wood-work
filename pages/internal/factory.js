@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import FactoryGroundScreen from '../../components/pages/factoryGround/factoryGround';
+import AuthData from '../../lib/AuthData';
 import routes from '../../navigation/routes';
-import * as BudgetsActions from '../api/actions/budget';
-import * as ProjectsActions from '../api/actions/project';
+import * as projectsActionsRedux from '../../store/actions/project';
 
 const FactoryGround = () => {
   const [loaded, setLoaded] = useState(true);
-  const [projects, setProjects] = useState();
+  const reduxState = useSelector((state) => state);
+  const getProjects = (data) => dispatch(projectsActionsRedux.projectsInProduction(data));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getData () {
-      await BudgetsActions.allBudgets().then(async (budResponse) => {
-        await ProjectsActions.productionProjects().then((response) => {
-          setProjects([...response.data].map((project) => {
-            project.budgetId = [...budResponse.data].find(bud => bud.id === project?.budgetId?.object);
-
-            return project;
-          }));
-        });
-      });
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+      !reduxState.projects.inProduction && getProjects();
     }
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
-  if (loaded) {
+  if (loaded && reduxState.projects.inProduction) {
     const headCellsUpper = [
       {
         id: 'amountProduced',
@@ -145,7 +141,7 @@ const FactoryGround = () => {
       headCells,
       headCellsUpper,
       breadcrumbsPath,
-      projects
+      projects: [...reduxState.projects.inProduction]
     };
 
     return <FactoryGroundScreen {...props} />;

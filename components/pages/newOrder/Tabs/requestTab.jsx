@@ -28,7 +28,7 @@ const RequestTab = (props) => {
           <Grid container item sm={12} xs={12} >
             <Grid container md={12}>
               <Typography id='align' className='headerTitleSm'>
-                <Calendar size={pageProps.globalVars.iconSize} strokeWidth={pageProps.globalVars.iconStrokeWidth} /> Pedido
+                <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Pedido
               </Typography>
             </Grid>
           </Grid>

@@ -1,6 +1,13 @@
 /* eslint-disable react/prop-types */
-// Node modules
-import { Box, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Tooltip } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Tooltip
+} from '@mui/material';
 import React from 'react';
 
 const MyInput = ({
@@ -14,40 +21,41 @@ const MyInput = ({
   width,
   halfWidth,
   error,
-  type,
+  type = 'string',
   placeholder,
   adornmentIcon,
   adornmentOnClick,
-  adornmentPos,
+  adornmentPos = 'end',
   style,
   iconTooltip,
   name,
-  id,
+  id = `ID-${label}`,
   tooltip,
-}) => {
-  return (<Box sx={{ width: '100%' }}>
+}) => (
+  <Box sx={{ width: '100%' }}>
     {variant !== 'standard' && (
-      <Tooltip title={tooltip || ''} >
-
-        <InputLabel htmlFor={'ID-' + label} id={'ID-' + label} >
+      <Tooltip title={tooltip || ''}>
+        <InputLabel htmlFor={id} id={id}>
           {label}
-          {required &&
-          <Tooltip title='Obrigatório' >
-            <span style={{ color: 'var(--red)' }}> *</span>
-          </Tooltip>}
+          {required
+            ? (
+              <Tooltip title='Obrigatório'>
+                <span style={{ color: 'var(--red)' }}> *</span>
+              </Tooltip>
+            )
+            : null}
         </InputLabel>
       </Tooltip>
-
     )}
     <FormControl fullWidth disabled={disabled}>
-      {!!error && <InputLabel error={!!error} id={'ID-' + label}>{error}</InputLabel>}
+      {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}
       <OutlinedInput
-        aria-labelledby={'ID-' + label}
+        aria-labelledby={id}
         variant={variant}
         name={name}
-        type={type || 'string'}
+        type={type}
         multiline={type === 'area'}
-        id={id || 'ID-' + label}
+        id={id}
         error={error}
         value={value}
         onChange={onChange}
@@ -55,29 +63,42 @@ const MyInput = ({
         label={error}
         fullWidth={fullWidth}
         InputProps={{ inputProps: { min: 0, max: 10 } }}
-
         sx={{
-          // eslint-disable-next-line no-mixed-operators
-          width: width || halfWidth && '50%',
+          width: width || (halfWidth && '50%'),
         }}
         rows={4}
         style={style}
         placeholder={placeholder || ''}
-        endAdornment={!!adornmentIcon &&
-          <InputAdornment position={adornmentPos || 'end'}>
-            <Tooltip title={iconTooltip || ''}>
-              <IconButton component='label'
-                aria-label="toggle password visibility"
-                onClick={adornmentOnClick || null}
-                edge="end">
-                {adornmentIcon}
-              </IconButton>
-            </Tooltip>
+        endAdornment={adornmentIcon && (
+          <InputAdornment position={adornmentPos}>
+            {iconTooltip
+              ? (
+                <Tooltip title={iconTooltip}>
+                  <IconButton
+                    component='label'
+                    aria-label='toggle password visibility'
+                    onClick={adornmentOnClick}
+                    edge='end'
+                  >
+                    {adornmentIcon}
+                  </IconButton>
+                </Tooltip>
+              )
+              : (
+                <IconButton
+                  component='label'
+                  aria-label='toggle password visibility'
+                  onClick={adornmentOnClick}
+                  edge='end'
+                >
+                  {adornmentIcon}
+                </IconButton>
+              )}
           </InputAdornment>
-        }
+        )}
       />
     </FormControl>
-  </Box>);
-};
+  </Box>
+);
 
 export default MyInput;

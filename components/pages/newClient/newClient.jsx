@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import React, { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid';
-import * as ClientActions from '../../../pages/api/actions/client';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
@@ -24,6 +23,7 @@ import SwipeableViews from 'react-swipeable-views';
 import { toast } from 'react-toastify';
 import styled, { useTheme } from 'styled-components';
 import routes from '../../../navigation/routes';
+import * as clientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
@@ -32,14 +32,16 @@ import EmailValidation from '../../utils/EmailValidation';
 
 //  PropTypes
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 const NewClient = ({ ...props }) => {
   const {
-    breadcrumbsPath, pageProps,
-    organizations,
+    breadcrumbsPath, pageProps
     // profiles
   } = props;
 
+  const dispatch = useDispatch();
+  const newClient = (data) => dispatch(clientsActionsRedux.newClient(data));
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   //  Errors states
@@ -54,41 +56,40 @@ const NewClient = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState(
     [
-      // {
-      //   id: 'Nome Legal',
-      //   label: 'Nome Legal',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: '',
-      //   hidden: selectTypeInstituition === 'particular'
-      // },
-      // {
-      //   id: 'givenName',
-      //   label: 'Primeiro Nome',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
-      // {
-      //   id: 'familyName',
-      //   label: 'Ultimo Nome',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
       {
-        id: 'name',
-        label: 'Nome',
+        id: 'user.username',
+        label: 'Nome Utilizador',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: 'Dado utilizado para login.',
+      },
+      {
+        id: 'user.first_name',
+        label: 'Primeiro Nome',
         value: '',
         error: '',
         required: true,
         tooltip: ''
       },
       {
-        id: 'email',
+        id: 'user.last_name',
+        label: 'Ultimo Nome',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      // {
+      //   id: 'name',
+      //   label: 'Nome',
+      //   value: '',
+      //   error: '',
+      //   required: true,
+      //   tooltip: ''
+      // },
+      {
+        id: 'user.email',
         type: 'email',
         label: 'Email',
         value: '',
@@ -96,9 +97,18 @@ const NewClient = ({ ...props }) => {
         required: true,
         tooltip: ''
       },
+      {
+        id: 'isCompany',
+        label: 'Email',
+        value: selectTypeInstituition === 'empresa',
+        error: '',
+        required: true,
+        tooltip: '',
+        hidden: true,
+      },
       // {
-      //   id: 'cellphone',
-      //   label: 'Telemovel',
+      //   id: 'telephone',
+      //   label: 'Telefone',
       //   value: '',
       //   error: '',
       //   type: 'phone',
@@ -106,43 +116,15 @@ const NewClient = ({ ...props }) => {
       //   tooltip: ''
       // },
       {
-        id: 'telephone',
-        label: 'Telefone',
-        value: '',
-        error: '',
-        type: 'phone',
-        required: true,
-        tooltip: ''
-      },
-      // {
-      //   id: 'clientTypeInstitution',
-      //   label: 'Tipo Instituição',
-      //   value: selectTypeInstituition,
-      //   error: '',
-      //   required: true,
-      //   tooltip: '',
-      //   hidden: true
-      // },
-      {
-        id: 'taxId',
+        id: 'vat',
         label: 'Numero Identificação Fiscal (Nif)',
         value: '',
         error: '',
         required: true,
         tooltip: ''
       },
-      // {
-      //   id: 'hasOrganization',
-      //   label: 'Organização',
-      //   value: organizations[0].id,
-      //   options: organizations,
-      //   optLabel: 'legalName',
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
       {
-        id: 'streetAddress',
+        id: 'address.streetAddress',
         label: 'Rua',
         value: '',
         error: '',
@@ -150,7 +132,7 @@ const NewClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'postalCode',
+        id: 'address.postalCode',
         label: 'Codigo Postal',
         value: '',
         error: '',
@@ -158,7 +140,7 @@ const NewClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'addressLocality',
+        id: 'address.addressLocality',
         label: 'Localidade',
         value: '',
         error: '',
@@ -167,7 +149,7 @@ const NewClient = ({ ...props }) => {
         tooltip: 'Prencha o Codigo Postal'
       },
       {
-        id: 'addressRegion',
+        id: 'address.addressRegion',
         label: 'Concelho',
         value: '',
         error: '',
@@ -176,7 +158,7 @@ const NewClient = ({ ...props }) => {
         tooltip: 'Prencha o Codigo Postal'
       },
       {
-        id: 'addressDistrict',
+        id: 'address.addressDistrict',
         label: 'Distrito',
         value: '',
         error: '',
@@ -185,7 +167,7 @@ const NewClient = ({ ...props }) => {
         tooltip: 'Prencha o Codigo Postal'
       },
       {
-        id: 'addressCountry',
+        id: 'address.addressCountry',
         label: 'País',
         value: '',
         error: '',
@@ -207,7 +189,7 @@ const NewClient = ({ ...props }) => {
         tooltip: 'Isto ainda nao está aplicado no fireware.'
       },
       {
-        id: 'password',
+        id: 'user.password',
         label: 'Senha',
         value: '',
         error: '',
@@ -223,15 +205,15 @@ const NewClient = ({ ...props }) => {
       const data = [...inputFields];
 
       postalCodeInfo && data.map((field, i) => {
-        if (field.id === 'postalCode') { data[i].error = ''; }
+        if (field.id === 'address.postalCode') { data[i].error = ''; }
 
-        if (field.id === 'addressCountry') { data[i].value = 'Portugal'; data[i].error = ''; }
+        if (field.id === 'address.addressCountry') { data[i].value = 'PT'; data[i].error = ''; }
 
-        if (field.id === 'addressDistrict') { data[i].value = postalCodeInfo.Distrito; data[i].error = ''; }
+        if (field.id === 'address.addressDistrict') { data[i].value = postalCodeInfo.Distrito; data[i].error = ''; }
 
-        if (field.id === 'addressRegion') { data[i].value = postalCodeInfo.Concelho; data[i].error = ''; }
+        if (field.id === 'address.addressRegion') { data[i].value = postalCodeInfo.Concelho; data[i].error = ''; }
 
-        if (field.id === 'addressLocality' && typeof postalCodeInfo.Localidade !== 'object') { data[i].value = postalCodeInfo.Localidade; data[i].error = ''; }
+        if (field.id === 'address.addressLocality' && typeof postalCodeInfo.Localidade !== 'object') { data[i].value = postalCodeInfo.Localidade; data[i].error = ''; }
       });
 
       setInputFields(data);
@@ -239,8 +221,6 @@ const NewClient = ({ ...props }) => {
 
     FillAddressFields();
   }, [postalCodeInfo]);
-
-  console.log(selectTypeInstituition);
 
   function ValidateFields () {
     let hasErrors = false;
@@ -256,8 +236,6 @@ const NewClient = ({ ...props }) => {
       } else if (input.required && input.value === '') {
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
-        console.log('failing at ' + input.id);
-        console.log(input.value);
         // Case it reaches here, validates specifiq fields and value structure
       } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
         data[i].error = 'Email mal estruturado';
@@ -265,10 +243,10 @@ const NewClient = ({ ...props }) => {
       } else if (!postalCodeInfo && input.id === 'postalCode') {
         data[i].error = 'Codigo Postal Invalido';
         hasErrors = true;
-      } else if (input.value.replace(/ /g, '').length !== 9 && input.type === 'phone' && input.required) {
+      } else if (String(input.value).replace(/ /g, '').length !== 9 && input.type === 'phone' && input.required) {
         data[i].error = 'Número mal estruturado';
         hasErrors = true;
-      }
+      } else data[i].error = '';
 
       setInputFields(data);
     });
@@ -283,84 +261,56 @@ const NewClient = ({ ...props }) => {
   }
 
   async function handleSave () {
-    const builtClient = {
-      id: `urn:ngsi-ld:Owner:${inputFields.find(ele => ele.id === 'taxId').value.replace(/ /g, '')}`,
-      type: 'Owner',
-      active: {
-        type: 'Property',
-        value: 'True',
-      },
+    const qs = require('qs');
 
-      tos: {
-        type: 'Property',
-        value: ''
-      },
-      hasOrganization: {
-        type: 'Relationship',
-        object: organizations[0].id,
-      },
-      '@context': [
-        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-      ]
+    const builtClient2 = {
+      active: true,
+      tos: false,
     };
 
     inputFields.map((ele) => {
-      builtClient[ele.id] = {};
+      builtClient2[ele.id] = {};
 
-      const a = false;
+      if (ele.type === 'password') ele.value = 'ChangeMe';
 
-      // if (ele.options) {
-      if (a) {
-        // builtWorker[ele.id].type = 'Relationship';
-        // builtWorker[ele.id].object = ele.value;
-      } else {
-        if (ele.type === 'password') ele.value = 'ChangeMe';
-
-        builtClient[ele.id].type = 'Property';
-        builtClient[ele.id].value = ele.value;
-      }
+      builtClient2[ele.id] = ele.value;
     });
 
-    //  FIX: remove this when type is in fireware
-    // delete builtClient.clientType;
-    //  Build address
+    builtClient2.country = builtClient2['address.addressCountry'];
+    builtClient2['user.password_confirm'] = builtClient2['user.password'];
+    builtClient2['delivery_address.addressCountry'] = builtClient2['address.addressCountry'];
+    builtClient2['delivery_address.addressDistrict'] = builtClient2['address.addressDistrict'];
+    builtClient2['delivery_address.addressLocality'] = builtClient2['address.addressLocality'];
+    builtClient2['delivery_address.addressRegion'] = builtClient2['address.addressRegion'];
+    builtClient2['delivery_address.postalCode'] = builtClient2['address.postalCode'];
+    builtClient2['delivery_address.streetAddress'] = builtClient2['address.streetAddress'];
 
-    builtClient.clientTypeInstitution = {
-      type: 'Property',
-      value: selectTypeInstituition
-    };
+    const data = qs.stringify({ ...builtClient2 });
 
-    builtClient.address = {};
-    builtClient.address.type = 'Property';
-
-    builtClient.address.value = {
-      streetAddress: builtClient.streetAddress.value,
-      postalCode: builtClient.postalCode.value,
-      addressLocality: builtClient.addressLocality.value,
-      addressRegion: builtClient.addressRegion.value,
-      addressCountry: builtClient.addressCountry.value
-    };
-
-    builtClient.addressDelivery = { ...builtClient.address };
-    //  Remove extra props
-    delete builtClient.streetAddres;
-    delete builtClient.addressCountry;
-    delete builtClient.addressRegion;
-    delete builtClient.addressLocality;
-    delete builtClient.addressDistrict;
-    delete builtClient.postalCode;
-
-    try {
-      await ClientActions.saveClient(builtClient)
-        .then(() => setSuccessOpen(true))
-        .catch((err) => {
-          if (err.response.status === 409) toast.warning('Este Cliente já existe');
-          else toast.error('Algo aconteceu. Por favor tente mais tarde.');
-        });
-    } catch (e) { console.log(e); }
+    await newClient(data).then(() => setSuccessOpen(true))
+      .catch((err) => onError(err));
 
     setDialogOpen(false);
+  }
+
+  function onError (err) {
+    const errorKeys = Object.keys(err.response.data);
+
+    inputFields.map((input, i) => {
+      const data = [...inputFields];
+      const split = input.id.split('.');
+
+      if (errorKeys.includes(split[0])) {
+        Object.keys(err.response.data[split[0]]).map((key, index) => {
+          if (Object.keys(err.response.data[split[0]])[index] === split[1]) data[i].error = err.response.data[split[0]][Object.keys(err.response.data[split[0]])[index]][0];
+        });
+      }
+
+      setInputFields(data);
+    });
+
+    if (err.response.status === 400) toast.warning('Erros no formulario.');
+    else toast.error('Algo aconteceu. Por favor tente mais tarde.');
   }
 
   const ClearFields = () => {
@@ -543,8 +493,8 @@ const NewClient = ({ ...props }) => {
                     text='Guardar'
                     icon={
                       <Save
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
                       />
                     }
                     onClick={ValidateFields}
@@ -553,8 +503,8 @@ const NewClient = ({ ...props }) => {
                     text='Cancelar'
                     icon={
                       <X
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
                       />
                     }
                     light

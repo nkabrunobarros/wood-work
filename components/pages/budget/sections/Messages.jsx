@@ -1,15 +1,15 @@
 import { Avatar, Grid, Typography } from '@mui/material';
 import { MessageSquare } from 'lucide-react';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../../../navigation/routes';
 import PrimaryBtn from '../../../buttons/primaryBtn';
-import IsInternal from '../../../utils/IsInternal';
 
 const Messages = (props) => {
   const { pageProps, stylesMessage } = props;
-  const internalPOV = IsInternal(JSON.parse(localStorage.getItem('user')).profile.object.description);
+  const path = useRouter();
+  const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
   return <>
     <div
@@ -26,8 +26,8 @@ const Messages = (props) => {
         <PrimaryBtn
           icon={
             <MessageSquare
-              strokeWidth={pageProps.globalVars.iconStrokeWidth}
-              size={pageProps.globalVars.iconSize}
+              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+              size={pageProps?.globalVars?.iconSize}
             />
           }
           text={'Criar Nova'}

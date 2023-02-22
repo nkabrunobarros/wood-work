@@ -16,6 +16,7 @@ import {
   User
 } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import routes from '../../../navigation/routes';
 import * as UserActions from '../../../pages/api/actions/user';
 import CustomBreadcrumbs from '../../breadcrumbs';
@@ -28,6 +29,7 @@ const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
+  const auth = useSelector((state) => state.auth);
 
   async function DisableUser () {
     const userCpy = {
@@ -74,7 +76,7 @@ const Profile = ({ ...props }) => {
       <Content>
         <Box id='pad' style={{ display: 'flex' }}>
           <Box style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{user?.name?.value}</a>
+            <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
           </Box>
           {router.pathname === `${routes.private.profile}[Id]`
             ? null
@@ -85,20 +87,20 @@ const Profile = ({ ...props }) => {
                     onClick={() => Router.push(`${routes.private.internal.editWorker}${user?.id}`)}
                     icon={
                       <Edit
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
                       />
                     } />
                 </Box>
                 <Box>
                   <PrimaryBtn
-                    hidden={!CanDo(['delete', 'workers'])}
+                    hidden={!CanDo(['delete', 'workers', auth.userPermissions])}
                     onClick={() => setDialogOpen(true)}
                     text='Apagar'
                     icon={
                       <Trash
-                        strokeWidth={pageProps.globalVars.iconStrokeWidth}
-                        size={pageProps.globalVars.iconSize} />
+                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize} />
                     }
                     light
                   />
@@ -120,11 +122,11 @@ const Profile = ({ ...props }) => {
                 <Grid md={6} sm={6} xs={12} container p={2} spacing={2} bgcolor={'lightGray.main'}>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Nome </Typography>
-                    <Typography item color='lightTextSm.black'>{user?.name?.value}</Typography>
+                    <Typography item color='lightTextSm.black'>{breadcrumbsPath[1].title}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description || user.functionPerformed.value}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description || user?.functionPerformed?.value}</Typography>
                   </Grid>
                   {user?.workerShift?.value && <Grid item xs={12}>
                     {/* Only applies to workers */}

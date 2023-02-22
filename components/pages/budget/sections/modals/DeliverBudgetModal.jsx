@@ -10,9 +10,9 @@ import MySelect from '../../../../inputs/select';
 const DeliverBudgetModal = (props) => {
   const { open, onConfirm, handleClose, budget, categories } = props;
   const [category, setCategory] = useState({ value: budget.category.value, error: '' });
-  const [price, setPrice] = useState({ value: budget.price.value, error: '' });
+  const [price, setPrice] = useState({ value: budget.price?.value, error: '' });
   const [amount, setAmount] = useState({ value: budget.amount.value, error: '' });
-  const [obs, setObs] = useState({ value: budget.obs.value, error: '' });
+  const [obs, setObs] = useState({ value: budget.obs?.value, error: '' });
 
   function validateData () {
     let errors = false;

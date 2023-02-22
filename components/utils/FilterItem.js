@@ -3,6 +3,7 @@
 import { Box, LinearProgress, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
+import { categories } from '../../pages/internal/new-project';
 import displayWithStyle from './displayTextWithStyle';
 
 export function calcDesvio (desvio) {
@@ -85,6 +86,20 @@ const FilterItem = (data, item, col) => {
         </Box>;
       }
 
+      case 'Estado': {
+        switch (item?.Estado?.toLowerCase()) {
+        case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
+        case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
+        case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
+        case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
+        case 'drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
+        case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
+        case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
+        case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
+        case 'finished': return <Typography variant='md' className="successBalloon">Terminado</Typography>;
+        }
+      }
+
       case 'stock': if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
 
         return <Typography variant='md' className="errorBalloon">Indisponivel</Typography>;
@@ -101,8 +116,11 @@ const FilterItem = (data, item, col) => {
 
     case 2: {
       switch (col) {
-      case 'orderBy.object': return <Typography variant="md">{item?.orderBy?.object?.replace('urn:ngsi-ld:Owner:', '')}</Typography>;
+      case 'orderBy.object': return <Typography variant="md">
+        {data.clients.find(ele => ele.id === item?.orderBy?.object)?.givenName?.value}
+      </Typography>;
       case 'belongsTo.object': return <Typography variant="md">{item[col2[0]][col2[1]].replace('urn:ngsi-ld:Owner:', '')}</Typography>;
+      case 'category.value': return <Typography variant="md">{categories.find(c => c.id === item[col2[0]][col2[1]])?.label || item[col2[0]][col2[1]]}</Typography>;
 
       case 'status.value': {
         switch (item.status.value.toLowerCase()) {
@@ -113,18 +131,6 @@ const FilterItem = (data, item, col) => {
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
 
         default: return <Typography variant='md' className="successBalloon">Terminado</Typography>;
-        }
-      }
-
-      case 'estado.value': {
-        switch (item?.estado?.value?.toLowerCase()) {
-        case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
-        case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
-        case 'drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
-        case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
-        case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
-        case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
-        case 'finished': return <Typography variant='md' className="successBalloon">Terminado</Typography>;
         }
       }
 
