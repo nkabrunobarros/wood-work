@@ -8,6 +8,10 @@ export const BUDGETS_REQUEST = 'BUDGETS_REQUEST';
 export const BUDGETS_FAIL = 'BUDGETS_FAIL';
 export const BUDGETS_SUCCESS = 'BUDGETS_SUCCESS';
 
+export const BUDGET_REQUEST = 'BUDGET_REQUEST';
+export const BUDGET_FAIL = 'BUDGET_FAIL';
+export const BUDGET_SUCCESS = 'BUDGET_SUCCESS';
+
 export const NEW_BUDGET_REQUEST = 'NEW_BUDGET_REQUEST';
 export const NEW_BUDGET_FAIL = 'NEW_BUDGET_FAIL';
 export const NEW_BUDGET_SUCCESS = 'NEW_BUDGET_SUCCESS';
@@ -69,7 +73,7 @@ export const budget = (data) => {
         options: 'sysAttrs',
       }
     },
-    types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],
+    types: [BUDGET_REQUEST, BUDGET_SUCCESS, BUDGET_FAIL],
   });
 };
 

@@ -35,7 +35,7 @@ const Order = ({ ...pageProps }) => {
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [productionDetail, setProductionDetail] = useState();
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState();
   const dispatch = useDispatch();
   const getProject = (data) => dispatch(projectsActionsRedux.project(data));
   const setDisplayedProject = (data) => dispatch(projectsActionsRedux.setDisplayedProject(data));
@@ -112,6 +112,21 @@ const Order = ({ ...pageProps }) => {
       const expedition = (await getExpedition(project.expedition.object)).data;
       const budget = (await getBudget(project.budgetId.object)).data;
       const client = (await getClient(project.orderBy.object)).data;
+
+      getFolders().then(async (res) => {
+        const builtFolders = [];
+        const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
+
+        res.data.results.map((folder) => {
+          const folder2 = { ...folder };
+
+          folder2.files = resFiles.data.results.filter((file) => file.budget === project.budgetId.object && file.folder === folder.id);
+          builtFolders.push(folder2);
+        });
+
+        setFolders(builtFolders);
+      });
+
       //  Build production Detail
       const builtLogs = [];
 
@@ -128,24 +143,7 @@ const Order = ({ ...pageProps }) => {
 
       thisOrder.budgetId.object = budget;
       thisOrder.orderBy.object = client;
-      // thisOrder.orderBy = { object: clients.find(c => c.id === thisOrder.budgetId.object.orderBy?.object) };
       thisOrder.expedition = expedition;
-
-      // thisOrder.expedition.object = expeditions.find(e => e.id === thisOrder.expedition.object);
-      getFolders().then(async (res) => {
-        const builtFolders = [];
-        const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
-
-        res.data.results.map((folder) => {
-          const folder2 = { ...folder };
-
-          folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
-          builtFolders.push(folder2);
-        });
-
-        setFolders(builtFolders);
-      });
-
       setDisplayedProject(thisOrder);
     };
 
@@ -154,7 +152,7 @@ const Order = ({ ...pageProps }) => {
   }, []);
 
   if (loaded &&
-    reduxState.projects.displayedProject
+    reduxState.projects.displayedProject && folders
 
   ) {
     const headCellsUpperOrderDetail = [

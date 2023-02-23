@@ -127,7 +127,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
       if (window.innerHeight < element?.scrollHeight) footerPos = 'fixed';
     }
 
-    return (
+    return loaded && (
       <React.Fragment>
         <CssBaseline />
         <Navbar openDrawer={handleDrawerToggle} toggleTheme={toggleTheme} {...pageProps} />
@@ -142,7 +142,6 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
         </Hidden>
         <Box id="appMainContainer" >
           {IsInternal(permissions?.description) === isInternalPage
-          // && imAllowed
             ? <>
               {children}
               {isVisible && (
@@ -158,7 +157,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
                 </Box>
               )}
             </>
-            : <>
+            : loaded && <>
               <Box className={styles.main} target="_blank" rel="noreferrer">
                 <header className={styles.topheader}></header>
                 <Box>
@@ -187,13 +186,15 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
                     </Box>
                   </Box>
                 </section>
-              </Box></>}
+              </Box>
+            </>}
 
         </Box>
         <Box style={{ width: '100%' }}>
           <Footer {...pageProps} footerPos={footerPos}/>
         </Box>
-      </React.Fragment>);
+      </React.Fragment>
+    );
   }
 
   return <Loader center={true} />;

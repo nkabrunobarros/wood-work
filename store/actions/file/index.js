@@ -8,4 +8,5 @@ export {
   files,
   budgetFiles,
   newFile,
+  batchFiles
 } from './file';

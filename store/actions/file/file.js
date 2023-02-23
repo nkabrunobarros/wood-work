@@ -50,6 +50,21 @@ export const newFile = (data) => {
   });
 };
 
+export const batchFiles = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'POST',
+      url: getApiURL(endpoints.FILESBATCH),
+    },
+    types: [NEW_FILE_REQUEST, NEW_FILE_SUCCESS, NEW_FILE_FAIL],
+  });
+};
+
 export const file = (data) => {
   const { auth_token: userToken } = parseCookies();
 

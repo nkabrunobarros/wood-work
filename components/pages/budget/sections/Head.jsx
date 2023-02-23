@@ -14,8 +14,11 @@ import moment from 'moment';
 import Router from 'next/router';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import * as assemblysActionsRedux from '../../../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../../../store/actions/budget';
+import * as consumablesActionsRedux from '../../../../store/actions/consumable';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
+import * as partsActionsRedux from '../../../../store/actions/part';
 import * as projectsActionsRedux from '../../../../store/actions/project';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
@@ -66,6 +69,9 @@ const Head = (props) => {
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const newExpedition = (data) => dispatch(expeditionsActionsRedux.newExpedition(data));
   const newProject = (data) => dispatch(projectsActionsRedux.newProject(data));
+  const newAssembly = (data) => dispatch(assemblysActionsRedux.newAssembly(data));
+  const newConsumable = (data) => dispatch(consumablesActionsRedux.newConsumable(data));
+  const newPart = (data) => dispatch(partsActionsRedux.newPart(data));
 
   const upperCells = {
     alignItems: 'center',
@@ -138,6 +144,9 @@ const Head = (props) => {
     //  1 -> Update Budget
     //  2 -> Create Project
     //  3 -> Create Expedition
+    //  4 -> Create Parts
+    //  5 -> Create Consumables
+    //  6 -> Create Assembly
     await newExpedition({
       id: 'urn:ngsi-ld:Expedition:' + budget.name.value,
       type: 'Expedition',
@@ -171,6 +180,154 @@ const Head = (props) => {
       }
     });
 
+    await newAssembly({
+      id: 'urn:ngsi-ld:Assembly:' + budget.name.value,
+      type: 'Assembly',
+      startTime: {
+        type: 'Property',
+        value: ''
+      },
+      finishTime: {
+        type: 'Property',
+        value: ''
+      },
+      statusAssembly: {
+        type: 'Property',
+        value: 1
+      },
+      belongsTo: {
+        type: 'Relationship',
+        object: projRes.data.id
+      },
+      orderBy: {
+        type: 'Relationship',
+        object: budget.orderBy?.object.id
+      }
+    });
+
+    await newPart({
+      id: 'urn:ngsi-ld:Part:' + budget.name.value + '_0',
+      type: 'Part',
+      partName: {
+        type: 'Property',
+        value: '0'
+      },
+      sort: {
+        type: 'Property',
+        value: '0'
+      },
+      material: {
+        type: 'Property',
+        value: '0'
+      },
+      amount: {
+        type: 'Property',
+        value: 0
+      },
+      length: {
+        type: 'Property',
+        value: 0
+      },
+      width: {
+        type: 'Property',
+        value: 0
+      },
+      thickness: {
+        type: 'Property',
+        value: 0
+      },
+      weight: {
+        type: 'Property',
+        value: 0
+      },
+      tag: {
+        type: 'Property',
+        value: '0'
+      },
+      nestingFlag: {
+        type: 'Property',
+        value: false
+      },
+      cncFlag: {
+        type: 'Property',
+        value: true
+      },
+      f2: {
+        type: 'Property',
+        value: 0
+      },
+      f3: {
+        type: 'Property',
+        value: 0
+      },
+      f4: {
+        type: 'Property',
+        value: 0
+      },
+      f5: {
+        type: 'Property',
+        value: 0
+      },
+      orla2: {
+        type: 'Property',
+        value: false
+      },
+      orla3: {
+        type: 'Property',
+        value: false
+      },
+      orla4: {
+        type: 'Property',
+        value: false
+      },
+      orla5: {
+        type: 'Property',
+        value: false
+      },
+      obs: {
+        type: 'Property',
+        value: ''
+      },
+      belongsTo: {
+        type: 'Relationship',
+        object: projRes.data.id
+      },
+      image: {
+        type: 'Property',
+        value: 'urn:ngsi-ld:Image:Part:' + budget.name.value + '_0',
+
+      },
+      orderBy: { type: 'Relationship', object: budget.orderBy?.object.id },
+
+    });
+
+    await newConsumable({
+      id: 'urn:ngsi-ld:Consumable:' + budget.name.value + '_0',
+      type: 'Consumable',
+      name: {
+        type: 'Property',
+        value: ''
+      },
+      amount: {
+        type: 'Property',
+        value: 0
+      },
+      status: {
+        type: 'Property',
+        value: 1
+      },
+      image: {
+        type: 'Property',
+        value: 'urn:ngsi-ld:Image:' + projRes.data.id
+      },
+      belongsTo: {
+        type: 'Relationship',
+        object: projRes.data.id
+      },
+      orderBy: { type: 'Relationship', object: budget.orderBy?.object.id },
+
+    });
+
     await updateBudget(
       {
         id: budget.id,
@@ -178,7 +335,7 @@ const Head = (props) => {
         approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
         status: { type: 'Property', value: 'adjudicated' }
       }
-    ).then((res) => console.log(res)).catch((err) => console.log(err));
+    );
 
     setAdjudicateModal(false);
     toast.success('Orçamento adjudicado! Passou para produção');

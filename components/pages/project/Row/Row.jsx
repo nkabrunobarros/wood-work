@@ -182,7 +182,7 @@ const Row = (props) => {
           >
             <Table sx={{ padding: 0, margin: 0, maxHeight: '400px', overflow: 'scroll' }}>
               <Box sx={{ maxHeight: '400px', overflow: 'scroll' }}>
-                {row.files[0] && row.files[0].map((file) => (
+                {row.files[0] && row.files[0]?.map((file) => (
                   <TableRow key={file.id} fullWidth style={{ backgroundColor: '#F1FBFF' }}>
                     <TableCell width='70%'>
                       <div id='align' style={{ color: 'var(--primary)' }}>

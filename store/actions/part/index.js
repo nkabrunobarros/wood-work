@@ -2,5 +2,10 @@ export {
   PARTS_REQUEST,
   PARTS_FAIL,
   PARTS_SUCCESS,
+  NEW_PART_REQUEST,
+  NEW_PART_FAIL,
+  NEW_PART_SUCCESS,
   parts,
+  newPart,
+  projectParts,
 } from './part';

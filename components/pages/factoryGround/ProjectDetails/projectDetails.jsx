@@ -1,13 +1,18 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { AppBar, Box, Card, CardActions, CardContent, Dialog, Grid, IconButton, TableSortLabel, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Card, CardActions, CardContent, Dialog, Grid, Grow, IconButton, Tab, TableSortLabel, Tabs, Toolbar, Typography } from '@mui/material';
 import { Check, X } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import companyLogo from '../../../../public/Logotipo_Vetorizado.png';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import lenghtanyLogo from '../../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../../public/logo_bw_ww40_inv-big.png';
+import * as consumablesActionsRedux from '../../../../store/actions/consumable';
+import * as partsActionsRedux from '../../../../store/actions/part';
+import Loader from '../../../loader/loader';
+import TabPanel from '../../dashboard/TabPanel';
 import { Transition } from '../factoryGround';
 import { DoneBtn } from './buttons/DoneBtn';
 import { FinishBtn } from './buttons/FinishBtn';
@@ -16,45 +21,119 @@ import { ClockTime } from './clock/ClockTime';
 
 export const OperationState = (props) => {
   const { part, field } = props;
+  const isNest = field === 'nestingFlag';
+  const isCnc = field === 'cncFlag';
+  const isorla = field === 'orla';
+  const isFuroFace = field === 'f';
 
-  if (part[field]) {
-    switch (field) {
-    case 'nest' : {
-    //  Case to Start
-      if (part.nest === true && part.inProduction === false) return <StartBtn {...props} />;
+  if (!part[field]) {
+    return null;
+  }
 
-      //  Case to finish
-      if (part.nest === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-      //  Case done
-      if (part.nest === 'done') return <DoneBtn {...props} />;
-
-      break;
+  if (isNest) {
+    if (part.nestingFlag === true && part.inProduction === false) {
+      return <StartBtn {...props} />;
     }
 
-    case 'cnc' : {
-    //  Case to Start & nest not done
-      if (part.nest === true && part.cnc === true && part.inProduction === true) return <StartBtn {...props} msg={'Tem que acabar Nesting 1º'} />;
-
-      if (part.nest === false && part.cnc === true && part.inProduction === false) return <StartBtn {...props} />;
-
-      //  Case to Start & nest not done
-      if (part.nest === true && part.cnc && part.inProduction === false) return <StartBtn {...props} msg={'Tem que fazer Nesting 1º'} />;
-
-      //  Case to Start
-      if (part.nest === 'done' && part.cnc === true && part.inProduction === false) return <StartBtn {...props} />;
-
-      //  Case to Finish
-      if (part.nest === 'done' && part.cnc === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-      //  Case to Finish
-      if (part.nest === false && part.cnc === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-      //  Case cnc and nesting done
-      if (part.cnc === 'done' && (part.inProduction === false || part.inProduction === 'done')) return <DoneBtn {...props} />;
+    if (part.nestingFlag === true && part.inProduction === true) {
+      return <FinishBtn {...props} />;
     }
+
+    if (part.nestingFlag === 'done') {
+      return <DoneBtn {...props} />;
     }
   }
+
+  if (isCnc) {
+    if (part.cncFlag === 'done' && (part.inProduction || part.inProduction === 'done')) {
+      return <DoneBtn {...props} />;
+    }
+
+    if (part.cncFlag === 'done' && (part.inProduction === false || part.inProduction === 'done')) {
+      return <DoneBtn {...props} />;
+    }
+
+    if (part.nestingFlag === false && part.cncFlag === true && part.inProduction === false) {
+      return <StartBtn {...props} />;
+    }
+
+    if (part.nestingFlag === true && part.cncFlag && part.inProduction === false) {
+      return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
+    }
+
+    if (part.nestingFlag === 'done' && part.cncFlag === true && part.inProduction === false) {
+      return <StartBtn {...props} />;
+    }
+
+    if (part.nestingFlag === true && part.cncFlag === true && part.inProduction === true) {
+      return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
+    }
+
+    if (part.nestingFlag === 'done' && part.cncFlag === true && part.inProduction === true) {
+      return <FinishBtn {...props} />;
+    }
+
+    if (part.nestingFlag === false && part.cncFlag === true && part.inProduction === true) {
+      return <FinishBtn {...props} />;
+    }
+  }
+
+  if (isorla) {
+    //  case nestingFlag and cncFlag true and not done
+    if (part.nestingFlag === true || part.cncFlag === true) return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
+
+    if (!part.nestingFlag && !part.cncFlag && part.orla === true && part.inProduction === false) return <StartBtn {...props} />;
+
+    if (!part.nestingFlag && !part.cncFlag && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (!part.nestingFlag && !part.cncFlag && part.orla === 'done') return <DoneBtn {...props} />;
+
+    //  case nestingFlag is done or not needed and cncFlag is done or not needed
+    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === true && part.inProduction === false) return <StartBtn {...props} />;
+
+    if (part.nestingFlag === 'done' && !part.cncFlag && part.orla && part.inProduction === false) return <StartBtn {...props} />;
+
+    if (!part.nestingFlag && part.cncFlag === 'done' && part.orla === true && part.inProduction === false) return <StartBtn {...props} />;
+
+    if (!part.nestingFlag && part.cncFlag === 'done' && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (!part.nestingFlag && part.cncFlag === 'done' && part.orla === 'done') return <DoneBtn {...props} />;
+
+    if (part.nestingFlag === 'done' && !part.cncFlag && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === 'done') return <DoneBtn {...props} />;
+
+    if (part.nestingFlag === 'done' && !part.cncFlag && part.orla === 'done') return <DoneBtn {...props} />;
+  }
+
+  if (isFuroFace) {
+    //  case nestingFlag and cncFlag true and not done
+    if (part.nestingFlag === true || part.cncFlag === true || part.orla === true) return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
+
+    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === 'done' && !part.inProduction) return <StartBtn {...props} />;
+
+    if (part.nestingFlag === false && part.cncFlag === 'done' && part.orla === 'done' && !part.inProduction) return <StartBtn {...props} />;
+
+    if (part.nestingFlag === false && part.cncFlag === false && part.orla === 'done' && !part.inProduction) return <StartBtn {...props} />;
+
+    if (part.nestingFlag === false && part.cncFlag === false && part.orla === false && !part.inProduction) return <StartBtn {...props} />;
+
+    //
+    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === 'done' && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (part.nestingFlag === false && part.cncFlag === 'done' && part.orla === 'done' && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (part.nestingFlag === false && part.cncFlag === false && part.orla === 'done' && part.inProduction === true) return <FinishBtn {...props} />;
+
+    if (part.nestingFlag === false && part.cncFlag === false && part.orla === false && part.inProduction === true) return <FinishBtn {...props} />;
+
+    //
+    if (part.f === 'done') return <DoneBtn {...props} />;
+  }
+
+  return null;
 };
 
 export const TopCard = (props) => {
@@ -85,44 +164,86 @@ const ProjectDetails = (props) => {
   const { chosenProject, activeRow, setActiveRow, open, onClose, detailOnly } = props;
   const reduxState = useSelector((state) => state);
   const me = reduxState.auth.me;
+  const [consumables, setConsumables] = useState();
   const [productionDetails, setProductionDetails] = useState({});
   const [productionDetailsTest, setProductionDetailsTest] = useState(props.productionDetails || []);
+  const [fullyLoaded, setFullyLoaded] = useState(false);
+  const dispatch = useDispatch();
+  const getParts = (data) => dispatch(partsActionsRedux.projectParts(data));
+  const getConsumables = (data) => dispatch(consumablesActionsRedux.projectConsumables(data));
 
-  console.log(productionDetailsTest);
+  useEffect(() => {
+    async function load () {
+      await getParts(chosenProject.id).then((res) => {
+        const built = res.data.map((part) => {
+          const part2 = { ...part };
+
+          Object.keys(part2).map((key) => {
+            part2[key] = part2[key].type === 'Property' ? part2[key].value : (part2[key].type === 'Relationship' ? part2[key].object : part2[key]);
+          });
+
+          part2.inProduction = false;
+          part2.f = !!(part2.f2 || part2.f3 || part2.f4 || part2.f5);
+          part2.orla = !!(part2.orla2 || part2.orla3 || part2.orla4 || part2.orla5);
+
+          return part2;
+        });
+
+        setProjectParts(built);
+      });
+
+      await getConsumables(chosenProject.id).then((res) => {
+        const built = res.data.map((consu) => {
+          const consu2 = { ...consu };
+
+          Object.keys(consu2).map((key) => {
+            consu2[key] = consu2[key].type === 'Property' ? consu2[key].value : (consu2[key].type === 'Relationship' ? consu2[key].object : consu2[key]);
+          });
+
+          return consu2;
+        });
+
+        setConsumables(built);
+      });
+    }
+
+    load();
+    Promise.all([load()]).then(() => setFullyLoaded(true));
+  }, []);
 
   const [projectParts, setProjectParts] = useState(props.projectParts || [
-    { ref: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 1, nest: false, cnc: false, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', qtd: 1, comp: 400, larg: 338.5, esp: 10, tag: 2, nest: false, cnc: false, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 3, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_DIR_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 4, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_DIR_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 5, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_DIR_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 6, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 7, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 326.5, larg: 184.5, esp: 16, tag: 8, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 9, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', qtd: 1, comp: 406, larg: 207.5, esp: 16, tag: 10, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A1_PAINEL2', material: 'AG L Marmol Hades 19 CNC', qtd: 1, comp: 2400, larg: 926, esp: 19, tag: 11, nest: false, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_1', material: 'HDF 19 ', qtd: 8, comp: 540, larg: 70, esp: 19, tag: 12, nest: false, cnc: false, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_2', material: 'HDF 19 ', qtd: 8, comp: 940, larg: 70, esp: 19, tag: 13, nest: false, cnc: false, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_3', material: 'HDF 19 ', qtd: 8, comp: 540, larg: 70, esp: 19, tag: 14, nest: false, cnc: false, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A1_PAINEL1', material: 'MDF Folheado Carv 19', qtd: 1, comp: 2394, larg: 560, esp: 19, tag: 15, nest: true, cnc: false, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A1_PAINEL3', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 2400, larg: 566, esp: 19, tag: 16, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_CIMA', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1716, larg: 466, esp: 19, tag: 17, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_DIV_DIR', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 268, larg: 444, esp: 19, tag: 18, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_DIV_ESQ', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 268, larg: 444, esp: 19, tag: 19, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_FUNDO', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 1678, larg: 444, esp: 19, tag: 20, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_DIR_FRENTE', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 400, larg: 283, esp: 19, tag: 21, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_GAV_ESQ_FRENTE', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 400, larg: 283, esp: 19, tag: 22, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_LAT_DIR', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 444, larg: 287, esp: 19, tag: 23, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_LAT_ESQ', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 444, larg: 287, esp: 19, tag: 24, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_PORTA_BASC', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 924, larg: 283, esp: 19, tag: 25, nest: true, cnc: true, obs: '', inProduction: false },
-    { ref: 'MC_MUEBLETV_A2_RIPA_TRAS', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 907, larg: 76, esp: 19, tag: 26, nest: true, cnc: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 1, nestingFlag: true, cncFlag: true, orla: true, f: true, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 2, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 3, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_DIR_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 4, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_DIR_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 5, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_DIR_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 6, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_ESQ_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 7, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_ESQ_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 8, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_ESQ_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 9, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_ESQ_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 10, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A1_PAINEL2', material: 'AG L Marmol Hades 19 CNC', amount: 1, lenght: 2400, width: 926, thickness: 19, tag: 11, nestingFlag: false, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_1', material: 'HDF 19 ', amount: 8, lenght: 540, width: 70, thickness: 19, tag: 12, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_2', material: 'HDF 19 ', amount: 8, lenght: 940, width: 70, thickness: 19, tag: 13, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A1_RIPAS_SUP_ME_3', material: 'HDF 19 ', amount: 8, lenght: 540, width: 70, thickness: 19, tag: 14, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A1_PAINEL1', material: 'MDF Folheado Carv 19', amount: 1, lenght: 2394, width: 560, thickness: 19, tag: 15, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A1_PAINEL3', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 2400, width: 566, thickness: 19, tag: 16, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_CIMA', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 1716, width: 466, thickness: 19, tag: 17, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_DIV_DIR', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 268, width: 444, thickness: 19, tag: 18, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_DIV_ESQ', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 268, width: 444, thickness: 19, tag: 19, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_FUNDO', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 1678, width: 444, thickness: 19, tag: 20, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_DIR_FRENTE', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 400, width: 283, thickness: 19, tag: 21, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_GAV_ESQ_FRENTE', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 400, width: 283, thickness: 19, tag: 22, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_LAT_DIR', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 444, width: 287, thickness: 19, tag: 23, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_LAT_ESQ', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 444, width: 287, thickness: 19, tag: 24, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_PORTA_BASC', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 924, width: 283, thickness: 19, tag: 25, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
+    { partName: 'MC_MUEBLETV_A2_RIPA_TRAS', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 907, width: 76, thickness: 19, tag: 26, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
   ]);
 
   const cellProps = {
-    md: 1,
-    sm: 1,
-    xs: 1,
+    md: 0.85,
+    sm: 0.85,
+    xs: 0.85,
     paddingTop: '1rem',
     paddingBottom: '1rem',
     className: 'fullCenter',
@@ -140,46 +261,78 @@ const ProjectDetails = (props) => {
   };
 
   function onStartPart (props) {
+    const { field, index } = props;
     const old = [...projectParts];
+    const part = old[index];
 
-    old[props.index].inProduction = true;
+    // Set inProduction flag
+    part.inProduction = true;
     setProjectParts(old);
 
-    //  Add production Log
+    // Add production Log
     const productionLog = { ...productionDetails };
 
-    //  If theres no log of this part yet
-    if (productionLog[old[props.index].ref] === undefined) productionLog[old[props.index].ref] = { startedAt: new Date(), ref: old[props.index].ref, material: old[props.index].material, tag: old[props.index].tag };
+    if (!productionLog[part.partName]) {
+      productionLog[part.partName] = {
+        startedAt: new Date(),
+        ref: part.partName,
+        material: part.material,
+        tag: part.tag
+      };
+    }
 
-    productionLog[old[props.index].ref].inProduction = true;
+    productionLog[part.partName].inProduction = true;
 
-    if (props.field === 'cnc') {
-      productionLog[old[props.index].ref].cncWorker = me.id;
-      productionLog[old[props.index].ref].cncUsed = 'ab1';
-      productionLog[old[props.index].ref].cncStarted = new Date();
-    } else if (props.field === 'nest') {
-      productionLog[old[props.index].ref].nestStarted = new Date();
-      productionLog[old[props.index].ref].nestUsed = 'ab2';
-      productionLog[old[props.index].ref].nestWorker = me.id;
+    switch (field) {
+    case 'cncFlag':
+      productionLog[part.partName].cncFlagWorker = me.id;
+      productionLog[part.partName].cncFlagUsed = 'ab1';
+      productionLog[part.partName].cncFlagStarted = new Date();
+      part.isCnc = true;
+
+      break;
+    case 'nestingFlag':
+      productionLog[part.partName].nestingFlagWorker = me.id;
+      productionLog[part.partName].nestingFlagUsed = 'ab2';
+      productionLog[part.partName].nestingFlagStarted = new Date();
+      part.isNest = true;
+
+      break;
+    case 'orla':
+      productionLog[part.partName].orlaWorker = me.id;
+      productionLog[part.partName].orlaUsed = 'ab3';
+      productionLog[part.partName].orlaStarted = new Date();
+      part.isorla = true;
+
+      break;
+    case 'f':
+      productionLog[part.partName].furoFaceWorker = me.id;
+      productionLog[part.partName].furoFaceUsed = 'ab4';
+      productionLog[part.partName].furoFaceStarted = new Date();
+      part.isFuroFace = true;
+
+      break;
+    default:
+      break;
     }
 
     setProductionDetails(productionLog);
 
-    /// TESTES
+    // Add production log test
     const productionLogTest = [...productionDetailsTest];
 
-    if (productionLogTest[old[props.index].ref] === undefined) {
+    if (!productionLogTest.find((log) => log.partId === part.partName && log.operation === field)) {
       productionLogTest.push({
-        id: `${old[props.index].ref}_${props.field.toUpperCase()}`,
-        operation: props.field,
-        machineId: '123 ' + props.field,
+        id: `${part.partName}_${field.toUpperCase()}`,
+        operation: field,
+        machineId: '123 ' + field,
         workerId: me.id,
         startedAt: new Date(),
-        partId: old[props.index].ref
+        partId: part.partName
       });
-
-      setProductionDetailsTest(productionLogTest);
     }
+
+    setProductionDetailsTest(productionLogTest);
   }
 
   function onFinishPart (props) {
@@ -188,34 +341,66 @@ const ProjectDetails = (props) => {
     old[props.index].inProduction = false;
     old[props.index][props.field] = 'done';
 
-    if (props.field === 'cnc') old[props.index].inProduction = 'done';
-    else old[props.index].inProduction = false;
+    // Update productionLogs
+    const productionLog = { ...productionDetails };
+    const log = productionLog[old[props.index].partName];
+
+    log.inProduction = false;
+
+    if (props.field === 'cncFlag') {
+      if (!old[props.index].orla && !old[props.index].f)old[props.index].inProduction = 'done';
+
+      log.cncFlagEnded = new Date();
+
+      if (old[props.index].nestingFlag === false && old[props.index].orla === false && old[props.index].f === false) {
+        log.endedAt = new Date();
+      }
+    } else if (props.field === 'nestingFlag') {
+      if (!old[props.index].orla && !old[props.index].cncFlag && !old[props.index].f)old[props.index].inProduction = 'done';
+
+      log.nestingFlagEnded = new Date();
+
+      if (old[props.index].orla === false && old[props.index].f === false) {
+        log.endedAt = new Date();
+      }
+    } else if (props.field === 'orla') {
+      if (!old[props.index].f)old[props.index].inProduction = 'done';
+
+      log.orlaEnded = new Date();
+
+      if (old[props.index].f === false) {
+        log.endedAt = new Date();
+      }
+    } else if (props.field === 'f') {
+      old[props.index].inProduction = 'done';
+      log.furoFaceEnded = new Date();
+      log.endedAt = new Date();
+    }
 
     setProjectParts(old);
-
-    //  Update productionLogs
-    const productionLog = { ...productionDetails };
-
-    productionLog[old[props.index].ref].inProduction = false;
-
-    if (props.field === 'cnc') {
-      productionLog[old[props.index].ref].cncEnded = new Date();
-
-      if (old[props.index].nest === false) productionLog[old[props.index].ref].endedAt = new Date();
-    }
-
-    if (props.field === 'nest') {
-      productionLog[old[props.index].ref].nestEnded = new Date();
-      productionLog[old[props.index].ref].endedAt = new Date();
-    }
-
     setProductionDetails(productionLog);
 
-    //  TESTES
+    // TESTES
     const productionLogTest = [...productionDetailsTest];
-    const thisLog = productionLogTest.find(log => log.id === `${old[props.index].ref}_${props.field.toUpperCase()}`);
+
+    const thisLog = productionLogTest.find(
+      (log) => log.id === `${old[props.index].partName}_${props.field.toUpperCase()}`
+    );
 
     thisLog.endedAt = new Date();
+  }
+
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  function a11yProps (index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
   }
 
   return open && <Dialog
@@ -225,7 +410,7 @@ const ProjectDetails = (props) => {
     TransitionComponent={Transition}
     sx={{ display: !chosenProject && 'none' }}
   >
-    <AppBar position='sticky' component="nav" sx={{ backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)' }}>
+    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)' }}>
       <Toolbar>
         <Grid container>
           <Grid container md={1} sm={1} xs={1} p={1} >
@@ -240,8 +425,8 @@ const ProjectDetails = (props) => {
               </IconButton>
               <Box p={detailOnly && 1}>
                 <Image
-                  src={companyLogo}
-                  alt={'companyLogo'}
+                  src={lenghtanyLogo}
+                  alt={'lenghtanyLogo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
                   width={!detailOnly ? 50 : 40}
@@ -309,53 +494,102 @@ const ProjectDetails = (props) => {
         </Grid>
       </Toolbar>
     </AppBar>
-    <Box sx={{ height: '100%', overflowX: 'scroll' }}>
-      <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-        {/* Headers */}
-        <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-          {/* {headCells.map(headCell => { return <Grid {...cellProps} key={headCell.label}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><TableSortLabel active={false} direction='desc'> {headCell.label} </TableSortLabel></Box></Grid>; })} */}
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Ref. Peça </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Box></Grid>
-          <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Box></Grid>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12}>
-          {projectParts
-            .sort((a, b) => a.tag - b.tag)
-            .map((part, rowIndex) => {
-              return (
-                <Grid
-                  {...rowProps}
-                  key={rowIndex}
-                  bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
-                  onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
-                >
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.ref } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.qtd } </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.comp } mm </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.larg } mm </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.esp } mm </Typography></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
-                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} detailOnly={detailOnly} field={'nest'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} detailOnly={detailOnly} field={'cnc'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                  <Grid {...cellProps} > <OperationState part={part} index={rowIndex} detailOnly={detailOnly} field={'furoFace'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                  <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
-                  <Grid {...cellProps} > <PartStatus part={part} /></Grid>
+    {fullyLoaded
+      ? <Box>
+        <Tabs value={value} onChange={handleChange} sx={{ width: '100%' }}>
+          <Tab label="Produção" {...a11yProps(0)} sx={{ width: '100%' }}/>
+          <Tab label="Acessorios" {...a11yProps(1)} sx={{ width: '100%' }}/>
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          <Grow in={true}>
+            <Box sx={{ height: '100%', overflowX: 'scroll' }}>
+              <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+                {/* Headers */}
+                <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Peso  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>orla  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Box></Grid>
                 </Grid>
-              );
-            })}
-        </Grid>
-      </Grid>
-    </Box>
+                <Grid container md={12} sm={12} xs={12}>
+                  {projectParts
+                    .sort((a, b) => a.tag - b.tag)
+                    .map((part, rowIndex) => {
+                      return (
+                        <Grid
+                          {...rowProps}
+                          key={rowIndex}
+                          bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
+                          onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
+                        >
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.partName.replace(/_/g, ' ') } </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } mm </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
+                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                          <Grid {...cellProps} > <PartStatus part={part} /></Grid>
+                        </Grid>
+                      );
+                    })}
+                </Grid>
+              </Grid>
+            </Box>
+          </Grow>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Grow in={true}>
+            <Box sx={{ height: '100%', overflowX: 'scroll' }}>
+              <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+                {/* Headers */}
+                <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
+                </Grid>
+                <Grid container md={12} sm={12} xs={12}>
+                  {console.log(consumables)}
+                  {consumables
+                    .map((part, rowIndex) => {
+                      return (
+                        <Grid
+                          {...rowProps}
+                          key={rowIndex}
+                          bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
+                          onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
+                        >
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.name.replace(/_/g, ' ') } </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                        </Grid>
+                      );
+                    })}
+                </Grid>
+              </Grid>
+            </Box>
+          </Grow>
+        </TabPanel>
+      </Box>
+
+      : <Loader center={true} />
+    }
   </Dialog >;
 };
 

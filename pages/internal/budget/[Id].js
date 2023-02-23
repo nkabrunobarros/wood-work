@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 //  Page Component
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';

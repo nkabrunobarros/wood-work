@@ -13,7 +13,7 @@ const FactoryGround = ({ ...props }) => {
   const [chosenProject, setChosenProject] = useState();
 
   return <>
-    <ProjectDetails
+    {chosenProject && <ProjectDetails
       {...props}
       open={chosenProject}
       activeRow={activeRow}
@@ -21,7 +21,7 @@ const FactoryGround = ({ ...props }) => {
       setActiveRow={setActiveRow}
       setChosenProject={setChosenProject}
       onClose={setChosenProject}
-    />
+    />}
     <CustomBreadcrumbs path={breadcrumbsPath} />
     <Grid container md={12} >
       <Grid container md={12} p={1} >

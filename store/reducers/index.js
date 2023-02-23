@@ -8,6 +8,7 @@ import clients from './clients';
 import emails from './emails';
 import expeditions from './expeditions';
 import folders from './folders';
+import machines from './machines';
 import organizations from './organizations';
 import parts from './parts';
 import permissions from './permissions';
@@ -27,6 +28,7 @@ const appReducer = combineReducers({
   parts,
   emails,
   folders,
+  machines,
 });
 
 const rootReducer = (state, action) => {

@@ -6,8 +6,8 @@ import AuthData from '../../lib/AuthData';
 import * as partsActionsRedux from '../../store/actions/part';
 
 const LeftOvers = () => {
-  const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
+  const dispatch = useDispatch();
   const getParts = (data) => dispatch(partsActionsRedux.parts(data));
   const [loaded, setLoaded] = useState(false);
 

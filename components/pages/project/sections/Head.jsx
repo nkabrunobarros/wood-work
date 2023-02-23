@@ -68,7 +68,6 @@ const Head = (props) => {
   }
 
   function onProjectScanned (props) {
-    console.log(props);
     setChangeToFinishedModal(false);
     setFinishModal(true);
   }
@@ -178,7 +177,7 @@ const Head = (props) => {
           <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' >Fim</Typography></Grid>
           <Grid container sx={{ ...upperCells }} md={1} sm={1} xs={1}><Typography variant='sm' >Quantidade</Typography></Grid>
         </Grid>
-        <Grid container md={12} sm={12} xs={12}>{console.log(order)}
+        <Grid container md={12} sm={12} xs={12}>
           <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.dateRequest?.value}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{moment(order?.budgetId?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}><Typography variant='sm' >{order?.budgetId?.object?.dateAgreedDelivery?.value}</Typography></Grid>

@@ -36,9 +36,11 @@ const RequestTab = (props) => {
             <Grid container item sm={12} xs={12} >
               <InputLabel>
                 Data
-                {budgetData.dateRequest.required && <Tooltip title='Obrigatório' >
+                {budgetData.dateRequest.required &&
+                <Tooltip title='Obrigatório' >
                   <span style={{ color: 'var(--red)' }}> *</span>
-                </Tooltip>}
+                </Tooltip>
+                }
               </InputLabel>
 
               <DesktopDatePicker

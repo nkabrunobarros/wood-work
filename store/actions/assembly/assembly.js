@@ -4,14 +4,14 @@ import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
 
-export const PARTS_REQUEST = 'PARTS_REQUEST';
-export const PARTS_FAIL = 'PARTS_FAIL';
-export const PARTS_SUCCESS = 'PARTS_SUCCESS';
-export const NEW_PART_REQUEST = 'NEW_PART_REQUEST';
-export const NEW_PART_FAIL = 'NEW_PART_FAIL';
-export const NEW_PART_SUCCESS = 'NEW_PART_SUCCESS';
+export const ASSEMBLYS_REQUEST = 'ASSEMBLYS_REQUEST';
+export const ASSEMBLYS_FAIL = 'ASSEMBLYS_FAIL';
+export const ASSEMBLYS_SUCCESS = 'ASSEMBLYS_SUCCESS';
+export const NEW_ASSEMBLY_REQUEST = 'NEW_ASSEMBLY_REQUEST';
+export const NEW_ASSEMBLY_FAIL = 'NEW_ASSEMBLY_FAIL';
+export const NEW_ASSEMBLY_SUCCESS = 'NEW_ASSEMBLY_SUCCESS';
 
-export const parts = (data) => {
+export const assemblys = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -20,13 +20,13 @@ export const parts = (data) => {
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.ASSEMBLYS),
     },
-    types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
+    types: [ASSEMBLYS_REQUEST, ASSEMBLYS_SUCCESS, ASSEMBLYS_FAIL],
   });
 };
 
-export const projectParts = (data) => {
+export const assembly = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -35,16 +35,16 @@ export const projectParts = (data) => {
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.ASSEMBLYS),
       params: {
         q: `belongsTo=="${data}"`,
       }
     },
-    types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
+    types: [ASSEMBLYS_REQUEST, ASSEMBLYS_SUCCESS, ASSEMBLYS_FAIL],
   });
 };
 
-export const newPart = (data) => {
+export const newAssembly = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -53,8 +53,8 @@ export const newPart = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'POST',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.ASSEMBLYS),
     },
-    types: [NEW_PART_REQUEST, NEW_PART_SUCCESS, NEW_PART_FAIL],
+    types: [NEW_ASSEMBLY_REQUEST, NEW_ASSEMBLY_SUCCESS, NEW_ASSEMBLY_FAIL],
   });
 };

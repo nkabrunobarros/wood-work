@@ -90,7 +90,7 @@ const Docs = (props) => {
         <Accordion key={folder.id} sx={{ padding: 0, margin: 0, boxShadow: 'none' }}>
           <AccordionSummary expandIcon={<ChevronDown />} >
             <Grid container bgcolor={'default.main'}>
-              <Grid container md={6} sm={6} xs={6}>
+              <Grid container md={6} sm={6} xs={6} alignItems='center'>
 
                 <div id='align' style={{ color: 'var(--primary)' }}>
                   {open

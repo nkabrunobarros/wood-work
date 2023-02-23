@@ -18,6 +18,11 @@ const endpoints = {
   EMAILS: 'accounts/reset-password.',
   FOLDERS: 'storages/folder/',
   FILES: 'storages/file/',
+  FILESBATCH: 'storages/file/batch_files/',
+  CONSUMABLES: 'consumable/',
+  ASSEMBLYS: 'assembly/',
+  MACHINES: 'machine/',
+
 };
 
 export default endpoints;
