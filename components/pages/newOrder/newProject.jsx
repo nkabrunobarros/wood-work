@@ -34,8 +34,10 @@ import { useDropzone } from 'react-dropzone';
 
 //  Device "Detector"
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
+import * as foldersActionsRedux from '../../../store/actions/folder';
+
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ClientTab from './Tabs/clientTab';
 import ProductTab from './Tabs/productTab';
@@ -49,6 +51,9 @@ const NewOrder = ({ ...props }) => {
   const [uploadedFiles, setUploadedFiles] = useState();
   const dispatch = useDispatch();
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
+  const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
+  const reduxState = useSelector((state) => state);
+  const me = reduxState.auth.me;
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -234,6 +239,12 @@ const NewOrder = ({ ...props }) => {
     await newBudget(data).then(() => {
       toast.success('Orçamento Criado!');
     }).catch((err) => console.log(err));
+
+    await newFolder({
+      folder_name: `urn:ngsi-ld:Folder:${budgetData.name.value.replace(/ /g, '_').toUpperCase()}`,
+      parent_folder: null,
+      user: me.id
+    });
 
     // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
     setProcessing(false);

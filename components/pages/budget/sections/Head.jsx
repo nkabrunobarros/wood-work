@@ -328,6 +328,8 @@ const Head = (props) => {
 
     });
 
+
+
     await updateBudget(
       {
         id: budget.id,

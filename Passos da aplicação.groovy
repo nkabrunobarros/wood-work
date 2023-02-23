@@ -15,6 +15,7 @@ Passos da aplicação
     belongsTo(project "urn:ngsi-ld:Project: + name orçamento")
     orderBy ( "urn:ngsi-ld:Owner:_nome cliente_" )
     category (null ou category do "projeto")
+    1.1-> Criação de folder base do projeto para o cliente fazer upload ao ficheiros dele
 2-> Entrega de orçamento
     price ( preço )
     status ( waiting adjudication)
@@ -68,6 +69,3 @@ Passos da aplicação
 8-> Entra em Finished
     status ("finished")
     expedition.deliveryFlag (1)
-
-
-

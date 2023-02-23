@@ -37,7 +37,7 @@ const BudgetPage = (props) => {
       </Content>
       {/* Docs Cliente */}
       <Content id={refresh}>
-        {false && <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />}
+        <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
       </Content>
     </Grid>
   );
