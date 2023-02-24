@@ -1,34 +1,48 @@
 //  PropTypes
-import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus, Info, X } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import * as FileActions from '../../../../pages/api/actions/file';
 import * as FolderActions from '../../../../pages/api/actions/folder';
+import * as filesActionsRedux from '../../../../store/actions/file';
+import * as foldersActionsRedux from '../../../../store/actions/folder';
 import PrimaryBtn from '../../../buttons/primaryBtn';
+import ConfirmDialog from '../../../dialogs/ConfirmDialog';
+import Notification from '../../../dialogs/Notification';
+import MySelect from '../../../inputs/select';
 import UploadImagesModal from '../../../modals/UploadImages';
 import Row from '../Row/Row';
 
 const Docs = (props) => {
   const [creatingFolder, setCreatingFolder] = useState(false);
+  const [activeFolder, setActiveFolder] = useState(0);
+  const [newFiles, setNewFiles] = useState();
+  const [uploadFolder, setUploadFolder] = useState();
+  const [confirmUploadModal, setConfirmUploadModal] = useState(false);
+  const reduxState = useSelector((state) => state);
+  const me = reduxState.auth.me;
 
-  const [newFolder, setNewFolder] = useState({
+  const [newFolderName, setNewFolderName] = useState({
     value: '',
     error: ''
   });
 
+  const newFolder = (data) => dispatch(foldersActionsRedux.newFolderName(data));
+  const dispatch = useDispatch();
+  const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const [docsModal, setDocsModal] = useState(false);
   const [folders, setFolders] = useState(props.folders);
-  const [activeFolder, setActiveFolder] = useState(0);
 
   const {
     pageProps,
     budget,
     open,
     styles,
-    onNewFolder,
-
   } = props;
 
   async function onImagesUpload () {
@@ -50,63 +64,58 @@ const Docs = (props) => {
   }
 
   async function handleCreateFolder () {
-    if (!newFolder.value) {
-      const old = newFolder;
+    if (!newFolderName.value) setNewFolderName({ ...newFolderName, error: 'Não pode ser vazio' });
+    else {
+      await newFolder({
+        folder_name: newFolderName.value,
+        parent_folder: null,
+        user: me.id,
+      }).then((res) => {
+        const folds = [...folders];
 
-      old.error = 'Não pode ser vazio';
-      setNewFolder(old);
-
-      return;
+        folds.push(res.data);
+        setCreatingFolder(false);
+        setNewFolderName({ value: '', error: '' });
+        setFolders(folds);
+      });
     }
-
-    const builtFolder = {
-      name: newFolder.value,
-      orderDetailId: budget.id
-    };
-
-    setFolders([...folders, { ...builtFolder, files: [], id: Math.random() }]);
-    setNewFolder({ value: '', error: '' });
-    onNewFolder(new Date());
-
-    false && await FolderActions
-      .saveFolder(builtFolder)
-      .then((response) => {
-        response.data.payload.files = [];
-        setFolders([...folders, response.data.payload]);
-        setNewFolder({ value: '', error: '' });
-        onNewFolder(new Date());
-      })
-      .catch((err) => console.log(err));
-
-    setCreatingFolder(false);
   }
 
   const [hoverDrop, setHoverDrop] = useState(false);
+
+  const onDrop = useCallback((acceptedFiles) => {
+    setNewFiles(acceptedFiles);
+    setConfirmUploadModal(true);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true });
 
   function renderAccordionFolders (folders, parentId = null) {
     return folders
       .filter((folder) => folder.parent_folder === parentId)
       .map((folder) => (
-        <Accordion key={folder.id} sx={{ padding: 0, margin: 0, boxShadow: 'none' }}>
-          <AccordionSummary expandIcon={<ChevronDown />} >
-            <Grid container bgcolor={'default.main'}>
-              <Grid container md={6} sm={6} xs={6} alignItems='center'>
-
-                <div id='align' style={{ color: 'var(--primary)' }}>
-                  {open
-                    ? (
-                      <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
-                    )
-                    : (
-                      <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
-                    )}
-                </div>
-
-                <Typography>{folder.folder_name}</Typography>
+        <Accordion key={folder.id} {...getRootProps()} sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
+          <Tooltip title='Arrastar ficheiros para esta pasta' {...getRootProps()}>
+            <AccordionSummary expandIcon={<ChevronDown />} >
+              <Grid container bgcolor={'default.main'} >
+                <Grid container md={6} sm={6} xs={6} alignItems='center'>
+                  <div id='align' style={{ color: 'var(--primary)' }} >
+                    {open
+                      ? (
+                        <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
+                      )
+                      : (
+                        <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
+                      )}
+                  </div>
+                  <Typography>{!isDragActive ? folder.folder_name : 'Carregar ficheiros para esta pasta'} </Typography>
+                </Grid>
+                <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
               </Grid>
-              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
-            </Grid>
-          </AccordionSummary>
+
+            </AccordionSummary>
+          </Tooltip>
+          <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('aqui')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
             {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
             {folder.files.map((file) => (
@@ -115,7 +124,9 @@ const Docs = (props) => {
                   strokeWidth='1'
                   style={{ marginRight: '1rem' }}
                 />
-                <Typography>{file.file_name + file.file_type}</Typography>
+                <Tooltip title='Clique para abrir este ficheiro.'>
+                  <Typography><a target='#' href={file.file}>{file.file_name + file.file_type}</a></Typography>
+                </Tooltip>
               </Box>
             ))}
             <Box bgcolor='lightGray.secondary'>
@@ -123,11 +134,43 @@ const Docs = (props) => {
             </Box>
           </AccordionDetails>
         </Accordion>
+
       ));
+  }
+
+  async function handleFilesUpload () {
+    const FormData = require('form-data');
+    const data = new FormData();
+
+    data.append('folder', uploadFolder);
+    newFiles.map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
+    data.append('budget', budget.id);
+
+    try {
+      await uploadFiles(data).then(() => toast.success('Ficheiros carregados.'));
+    } catch (error) {
+      toast.error(error);
+    }
+
+    setConfirmUploadModal(false);
+    setnewFolderName({ value: '', error: '' });
   }
 
   return open && <>
     <UploadImagesModal open={docsModal} folders={folders.filter(ele => ele.name !== budget.id)} orderId={folders[activeFolder]?.id} {...pageProps} onClose={() => onImagesUpload()} />
+
+    <Notification />
+    <ConfirmDialog
+      open={confirmUploadModal}
+      handleClose={() => setConfirmUploadModal(false)}
+      onConfirm={() => handleFilesUpload()}
+      message={'Carregados ' + newFiles?.length + ' ficheiros. Em que pasta deseja os guardar?' }
+      icon='Check'
+      iconType='success'
+      inputs={<Box>
+        <MySelect label='Escolha a pasta destino' options={folders} optionLabel='folder_name' onChange={(e) => setUploadFolder(e.target.value)} />
+      </Box>}
+    />
     <Box className={styles.docsMain} >
       <Box className={styles.tableContainer} onMouseLeave={() => setHoverDrop(false)} onMouseEnter={() => setHoverDrop(true)} sx={{ background: hoverDrop && 'var(--greenLight)' }}>
         <Box id='align' style={{ display: 'flex', padding: '24px' }} bgcolor={'lightGray.main'}>
@@ -150,16 +193,16 @@ const Docs = (props) => {
               : <Box id='align'>
                 <span style={{ paddingRight: '.5rem' }}>Nome</span>
                 <TextField
-                  error={!!newFolder.error}
-                  label={newFolder.error}
+                  error={!!newFolderName.error}
+                  label={newFolderName.error}
                   inputProps={{
                     maxlength: 20
                   }}
-                  helperText={`${newFolder.value.length}/20`}
+                  helperText={`${newFolderName.value.length}/20`}
 
-                  value={newFolder.value}
+                  value={newFolderName.value}
                   onChange={(e) => {
-                    setNewFolder({
+                    setNewFolderName({
                       value: e.target.value,
                       error: ''
                     });
@@ -183,7 +226,7 @@ const Docs = (props) => {
               {creatingFolder && <IconButton onClick={() => {
                 setCreatingFolder(false);
 
-                setNewFolder({
+                setNewFolderName({
                   value: '',
                   error: ''
                 });
@@ -215,7 +258,9 @@ const Docs = (props) => {
                 <TableRow sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><span>Sem pastas, <a className='link' onClick={() => setCreatingFolder(true)}>Crie uma</a></span></TableRow>
                 <TableCell></TableCell>
               </>}
-              {renderAccordionFolders(folders)}
+              <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
+                {renderAccordionFolders(folders)}
+              </Box>
             </TableBody>
           </Table>
         </TableContainer>
@@ -285,7 +330,6 @@ Docs.propTypes = {
   folders: PropTypes.array,
   open: PropTypes.bool,
   activeFolder: PropTypes.number,
-  onNewFolder: PropTypes.func,
   onImagesUpload: PropTypes.func,
 
 };

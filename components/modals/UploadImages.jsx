@@ -6,11 +6,7 @@ import { X, XCircle } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import * as FileActions from '../../pages/api/actions/file';
-import * as FolderActions from '../../pages/api/actions/folder';
 import PrimaryBtn from '../buttons/primaryBtn';
-import MyInput from '../inputs/myInput';
 import Select from '../inputs/select';
 import GetFileSize from '../utils/GetFileSize';
 import IsInternal from '../utils/IsInternal';
@@ -62,78 +58,81 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
   }
 
   async function handleSaveImages () {
-    if (!selectedFolder && !client) {
-      setErrorFolder('Campo Obrigatório');
 
-      return toast.warning('Escolha uma pasta');
-    }
-
-    if (!newImages) return toast.warning('Sem imagens escolhidas');
-
-    setUploading(true);
-
-    const errors = [];
-
-    //  If client folder does not existe, create it (folder name === orderId)
-    if (client && folders.find(ele => ele.name === orderId) === undefined) {
-      const builtFolder = {
-        name: orderId,
-        orderDetailId: orderId
-      };
-
-      const newFolder = await FolderActions
-        .saveFolder(builtFolder)
-        .catch((err) => console.log(err));
-
-      newFolder.data.payload.files = [];
-      // setFolders([...folders, newFolder.data.payload]);
-
-      newImages.map(async (file) => {
-        const builtFile = {
-          descricao: newImageDescription,
-          url: '',
-          data: file.base64,
-          filename: file.name,
-          filesize: JSON.stringify(file.size),
-          folderId: newFolder.id,
-        };
-
-        try {
-          await FileActions.saveFile(builtFile).then((res) => console.log(res));
-        } catch (err) {
-          errors.push(err);
-        }
-      });
-
-      onClose();
-    } else {
-      newImages.map(async (file) => {
-        const builtFile = {
-          descricao: newImageDescription,
-          url: '',
-          data: file.base64,
-          filename: file.name,
-          filesize: JSON.stringify(file.size),
-          folderId: selectedFolder,
-        };
-
-        try {
-          await FileActions.saveFile(builtFile).then((res) => console.log(res));
-        } catch (err) {
-          errors.push(err);
-        }
-      });
-
-      onClose();
-    }
-
-    if (errors[0]) toast.error('Algo aconteceu');
-    else toast.success('Ficheiros carregados!');
-
-    setNewImages();
-    setUploading(false);
-    onClose();
   }
+  // async function handleSaveImages () {
+  //   if (!selectedFolder && !client) {
+  //     setErrorFolder('Campo Obrigatório');
+
+  //     return toast.warning('Escolha uma pasta');
+  //   }
+
+  //   if (!newImages) return toast.warning('Sem imagens escolhidas');
+
+  //   setUploading(true);
+
+  //   const errors = [];
+
+  //   //  If client folder does not existe, create it (folder name === orderId)
+  //   if (client && folders.find(ele => ele.name === orderId) === undefined) {
+  //     const builtFolder = {
+  //       name: orderId,
+  //       orderDetailId: orderId
+  //     };
+
+  //     const newFolder = await FolderActions
+  //       .saveFolder(builtFolder)
+  //       .catch((err) => console.log(err));
+
+  //     newFolder.data.payload.files = [];
+  //     // setFolders([...folders, newFolder.data.payload]);
+
+  //     newImages.map(async (file) => {
+  //       const builtFile = {
+  //         descricao: newImageDescription,
+  //         url: '',
+  //         data: file.base64,
+  //         filename: file.name,
+  //         filesize: JSON.stringify(file.size),
+  //         folderId: newFolder.id,
+  //       };
+
+  //       try {
+  //         await FileActions.saveFile(builtFile).then((res) => console.log(res));
+  //       } catch (err) {
+  //         errors.push(err);
+  //       }
+  //     });
+
+  //     onClose();
+  //   } else {
+  //     newImages.map(async (file) => {
+  //       const builtFile = {
+  //         descricao: newImageDescription,
+  //         url: '',
+  //         data: file.base64,
+  //         filename: file.name,
+  //         filesize: JSON.stringify(file.size),
+  //         folderId: selectedFolder,
+  //       };
+
+  //       try {
+  //         await FileActions.saveFile(builtFile).then((res) => console.log(res));
+  //       } catch (err) {
+  //         errors.push(err);
+  //       }
+  //     });
+
+  //     onClose();
+  //   }
+
+  //   if (errors[0]) toast.error('Algo aconteceu');
+  //   else toast.success('Ficheiros carregados!');
+
+  //   setNewImages();
+  //   setUploading(false);
+  //   onClose();
+  // }
 
   const [uploadedFiles, setUploadedFiles] = useState();
 
@@ -160,7 +159,6 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
   }
 
   const onDrop = useCallback(acceptedFiles => {
-    console.log(separateFilesByFolder(acceptedFiles));
     setUploadedFiles(acceptedFiles);
   }, []);
 
@@ -184,25 +182,6 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
           </Box>
         </Grid>
         <Grid container md={12} sx={{ width: '100%' }}>
-          <Grid p={1} md={folders[0] && 6} sx={{ width: '100%' }}>
-            <MyInput
-              placeholder='Descricão.'
-              value={newImageDescription}
-              onChange={(e) => setNewImageDescription(e.target.value)}
-              // iconTooltip='jpeg / png / pdf'
-              // adornmentIcon={
-              //   <>
-              //     <ImagePlus
-              //       strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-              //       size={pageProps?.globalVars?.iconSize}
-              //     />
-              //     <input multiple type='file' accept='image/*,.pdf' name='file' hidden onChange={(e) => handleModalImageUpload(e)} />
-              //   </>
-              // }
-              label='Descrição'
-            />
-            <span style={{ fontSize: 'small' }}>Tamanho Maximo 1 MB</span>
-          </Grid>
           {folders && !client && IsInternal(userPermissions.description)
             ? <Grid md={6} p={1}>
               <Select
@@ -253,7 +232,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
         <Grid md={12} sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', width: '100%' }}>
             <Box style={{ marginLeft: 'auto' }}>
-              <PrimaryBtn disabled={uploading || newImages?.find(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE)} text={uploading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'Guardar'} onClick={() => handleSaveImages()} />
+              <PrimaryBtn disabled={uploading} text={uploading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'Guardar'} onClick={() => handleSaveImages()} />
               <PrimaryBtn light text={'Cancelar'} onClick={() => {
                 setNewImages();
                 setNewImageDescription('');

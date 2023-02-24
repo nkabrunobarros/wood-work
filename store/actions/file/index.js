@@ -6,6 +6,7 @@ export {
   NEW_FILE_FAIL,
   NEW_FILE_SUCCESS,
   files,
+  file,
   budgetFiles,
   newFile,
   batchFiles
