@@ -14,13 +14,6 @@ import routes from '../../../navigation/routes';
 //  Page Component
 import OrderScreen from '../../../components/pages/project/project';
 
-//  Services
-// import * as BudgetsActions from '../../api/actions/budget';
-// import * as ClientsActions from '../../api/actions/client';
-// import * as ExpeditionsActions from '../../api/actions/expedition';
-// import * as ProjectsActions from '../../api/actions/project';
-// import * as WorkerActions from '../../api/actions/worker';
-
 import { useDispatch, useSelector } from 'react-redux';
 import AuthData from '../../../lib/AuthData';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
@@ -153,7 +146,6 @@ const Order = ({ ...pageProps }) => {
 
   if (loaded &&
     reduxState.projects.displayedProject && folders
-
   ) {
     const headCellsUpperOrderDetail = [
       {

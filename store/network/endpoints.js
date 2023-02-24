@@ -22,7 +22,7 @@ const endpoints = {
   CONSUMABLES: 'consumable/',
   ASSEMBLYS: 'assembly/',
   MACHINES: 'machine/',
-
+  MESSAGES: 'chat/message/',
 };
 
 export default endpoints;

@@ -539,7 +539,7 @@ const AdvancedTable = ({
       const filtered = MultiFilterArray(rows, filters);
       const keys = Object.keys(rangeFilters || {});
 
-      const fitleredTest = filtered.filter((row) => {
+      const filteredTest = filtered.filter((row) => {
         return keys.every((key) => {
           if (
             row[key] >= rangeFilters[key].values[0] && row[key] <= rangeFilters[key].values[1]
@@ -548,7 +548,8 @@ const AdvancedTable = ({
       }
       );
 
-      setFilteredItems(fitleredTest);
+      console.log(filteredTest);
+      setFilteredItems(filteredTest);
     }
   }, [filters, rangeFilters]);
 
@@ -661,7 +662,7 @@ const AdvancedTable = ({
             />
             {children || (
               <TableBody>
-                {(stableSort(filteredItems, getComparator(order, orderBy)) || [])
+                {(stableSort(filteredItems, getComparator(order, orderBy)))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.id);
@@ -677,7 +678,8 @@ const AdvancedTable = ({
                         key={row.id}
                         selected={isItemSelected}
                       >
-                        {cellsFilter.map((headCell, index) => {
+
+                        {cellsFilter.map((headCell, index2) => {
                           return headCell.show && <TableCell
                             id={labelId}
                             key={headCell.id}
@@ -747,7 +749,7 @@ const AdvancedTable = ({
                                           ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`)
                                           : Router.push(`${clickRoute}${row[actionId || 'id']}`)
                                       }
-                                      color={index === 0 && 'primary.main'}
+                                      color={index2 === 0 && 'primary.main'}
                                       sx={{ cursor: clickRoute && 'pointer' }}
                                     >
                                       {FilterItem(

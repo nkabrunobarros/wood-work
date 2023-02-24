@@ -8,57 +8,47 @@ import MessagesScreen from '../../components/pages/messages/messages';
 
 import PropTypes from 'prop-types';
 import routes from '../../navigation/routes';
-
 //  Page Component
 
 //  Data services
-import * as BudgetsActions from '../api/actions/budget';
-import * as ExpeditionActions from '../api/actions/expedition';
-import * as ProjectsActions from '../api/actions/project';
+import * as budgetsActionsRedux from '../../store/actions/budget';
+import * as projectsActionsRedux from '../../store/actions/project';
+
+import { useDispatch, useSelector } from 'react-redux';
 
 const Messages = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [chats, setChats] = useState();
+  const dispatch = useDispatch();
+  const [merged, setMerged] = useState();
+  const reduxState = useSelector((state) => state);
+  const getProjects = (data) => dispatch(projectsActionsRedux.activeProjects(data));
+  const getBudgets = (data) => dispatch(budgetsActionsRedux.activebudgets(data));
+  const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
 
   useEffect(() => {
-    async function load () {
-      const test = [];
+    async function load() {
+      const projects = await getProjects();
 
-      await BudgetsActions.budgets().then((response) => {
-        // eslint-disable-next-line array-callback-return
-        response.data.map(item => {
-          test.push({
-            filterName: item.name.value,
-            id: item.id,
-            category: { ...item.category },
-            name: { ...item.name },
-            Nome: item.name.value,
-            amount: { ...item.amount },
-            statusClient: { type: 'Property', value: item.status.value },
-            Estado: 'Espera Confirmação',
-            messages: [],
-          });
+      projects.data.map(async (project) => {
+        const proj = { ...project };
+
+        await getBudget(project.budgetId.object).then((res) => {
+          proj.budgetId = res.data;
+          proj.name = { value: res.data.name.value };
         });
       });
 
-      await ExpeditionActions.expeditions().then(async (expResponse) => {
-        //  Get projects and build
-        await ProjectsActions.projects().then((response) => {
-          console.log(response);
+      const budgetsRes = await getBudgets();
 
-          // eslint-disable-next-line array-callback-return
-          response.data.filter(ele => ele.status.value !== 'finished')
-            .map((proj, index) => {
-              // const thisClient = responseClients.data.find(ele => ele.id === proj.orderBy.object);
-              response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
-              response.data[index].messages = [];
-              response.data[index].filterName = proj.name.value;
-              test.push(response.data[index]);
-            });
+      const budgets = budgetsRes.data.map((budget) => {
+        const bud = { ...budget };
 
-          setChats(test);
-        });
+        bud.name = { ...bud.name, value: bud.name.value };
+
+        return bud;
       });
+
+      setMerged([...projects.data, ...budgets]);
     }
 
     Promise.all([load()]).then(() => setLoaded(true));
@@ -152,7 +142,13 @@ const Messages = ({ ...pageProps }) => {
       headCellsMessages,
       conversations,
       pageProps,
-      chats
+      chats: [...merged].map((item) => {
+        const item2 = { ...item };
+
+        item2.filterName = item.name.value.replace(/_/g, ' ');
+
+        return item2;
+      }),
     };
 
     return <MessagesScreen {...props} />;

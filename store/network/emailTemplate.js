@@ -249,15 +249,6 @@ function emailTemplate (props) {
                         <tr>
                           <td align="left"
                             style="font-size:0px;padding:10px 25px;padding-top:15px;padding-bottom:0px;word-break:break-word;">
-                            <div
-                              style="font-family:Arial, sans-serif;font-size:13px;letter-spacing:normal;line-height:1;text-align:left;color:#000000;">
-                              <p style="text-align: left; margin: 10px 0; margin-top: 10px;"><span
-                                  style="font-size:18px;letter-spacing:normal;text-align:left;color:#5e6977;font-family:Arial;line-height:22px;">Cheers</span>
-                              </p>
-                              <p style="text-align: left; margin: 10px 0; margin-bottom: 10px;"><span
-                                  style="font-size:18px;letter-spacing:normal;text-align:left;color:#5e6977;font-family:Arial;line-height:22px;">From
-                                  your friends at the OpsHub.</span></p>
-                            </div>
                           </td>
                         </tr>
                       </tbody>

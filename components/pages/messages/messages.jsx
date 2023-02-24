@@ -70,8 +70,6 @@ const Messages = (props) => {
     return () => window.removeEventListener('resize', listenToResize);
   }, []);
 
-  console.log(chats.filter(ele => ele.filterName.toString().includes(conversationFilter)));
-
   return (
     <Grid component='main'>
       <CssBaseline/>
@@ -84,16 +82,21 @@ const Messages = (props) => {
               <ConversationsToolbar windowWidth={windowWidth} isInternalPage={isInternalPage} styles={styles} {...props} onSearch={setConversationFilter} />
               <Box sx={{ overflow: 'scroll', maxHeight: '85%' }}>
                 <ConversationsList {...props} isInternalPage={isInternalPage} conversations={chats.filter(ele => ele.filterName.toLowerCase().toString().includes(conversationFilter.toLowerCase()))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/>
+                {/* <ConversationsList {...props} isInternalPage={isInternalPage} conversations={chats.filter(ele => ele.filterName.toLowerCase().toString().includes(conversationFilter.toLowerCase()))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/> */}
               </Box>
             </Grid>
           </Grid>
           <Grid container md={8} sm={9} xs={9}>
             <Grid md={12} sx={{ overflow: 'scroll', maxHeight: '70vh', minHeight: '70vh' }}>
               <ChatToolbar styles={styles} conversation={chats[activeRow]} isInternalPage={isInternalPage} {...props} />
-              <Chat conversation={chats[activeRow]} theme={theme} />
+              {/* <ChatToolbar styles={styles} conversation={chats[activeRow]} isInternalPage={isInternalPage} {...props} /> */}
+              <Chat {...props} chats={chats} conversation={chats[activeRow]} theme={theme} activeRow={activeRow} setConversations={setChats}/>
+              {/* <Chat conversation={chats[activeRow]} theme={theme} /> */}
             </Grid>
             <Grid container md={12}>
               <NewMsgInput {...props}
+                chats={chats}
+                conversation={chats[activeRow]}
                 setConversations={setChats}
                 setLoadMessage={setLoadMessage}
                 activeRow={activeRow}

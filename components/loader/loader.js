@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Backdrop } from '@mui/material';
 import styles from '../../styles/components/loader.module.css';
 
-const Loader = ({ center, backdrop }) => {
+const Loader = ({ center, backdrop, noPos }) => {
   let style = {};
 
   if (center) {
@@ -40,7 +40,7 @@ const Loader = ({ center, backdrop }) => {
       </Backdrop>
     </>
     : <div style={style}>
-      <div className={styles.bars5}>
+      <div className={styles.bars5} style={{ position: noPos && 'relative' }}>
         <span></span>
         <span></span>
         <span></span>

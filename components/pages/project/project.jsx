@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 
 import { useRouter } from 'next/router';
 import routes from '../../../navigation/routes';
+
 import Notification from '../../dialogs/Notification';
 import Docs from './sections/Docs';
 import DocsClient from './sections/DocsClient';

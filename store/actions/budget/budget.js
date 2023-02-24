@@ -35,6 +35,26 @@ export const activebudgets = (data) => {
       params: {
         options: 'sysAttrs',
         q: 'status!="adjudicated"&status!="canceled"',
+        limit: 200
+      }
+    },
+    types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],
+  });
+};
+
+export const myBudgets = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    data,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: getApiURL(endpoints.BUDGETS),
+      params: {
+        options: 'sysAttrs',
+        q: 'status!="adjudicated"&status!="canceled"',
       }
     },
     types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],
@@ -53,6 +73,8 @@ export const budgets = (data) => {
       url: getApiURL(endpoints.BUDGETS),
       params: {
         options: 'sysAttrs',
+        limit: 200
+
       }
     },
     types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],

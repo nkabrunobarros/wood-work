@@ -24,6 +24,7 @@
     "@mui/x-date-pickers": "^5.0.0-alpha.4",
     "@reduxjs/toolkit": "^1.8.1",
     "@tremor/react": "^1.2.3",
+    "@turf/turf": "^6.5.0",
     "apexcharts": "^3.35.5",
     "axios": "^0.27.2",
     "eslint": ">=5.16.0",

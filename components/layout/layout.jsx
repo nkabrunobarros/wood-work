@@ -24,7 +24,8 @@ import { Box, CssBaseline, Fab, Hidden, Tooltip } from '@mui/material';
 import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import AuthData from '../../lib/AuthData';
 import Footer from './footer/footer';
 
 const noLayoutScreens = [
@@ -80,6 +81,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   let footerPos = '';
   const permissions = useSelector((state) => state.auth.userPermissions);
+  const reduxState = useSelector((state) => state);
 
   const listenToScroll = () => {
     const heightToHideFrom = 500;
@@ -99,8 +101,13 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     async function load () {
+      (!reduxState.auth.me || !reduxState.auth.userPermissions) && await AuthData(dispatch);
+      console.log('loaded on layout');
+
       // check cookie
       const isLoaded = await Test(pageProps);
 

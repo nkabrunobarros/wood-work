@@ -23,7 +23,7 @@ export const ChatRow = (props) => {
                     : chat.type === 'Project' ? 'Encomenda' : 'Orçamento'
                   }
                   {' '}
-                  {chat.orderId || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
+                  {chat.filterName || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
                 </Typography>
               </Grid>
               <Grid>

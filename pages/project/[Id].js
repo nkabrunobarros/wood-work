@@ -1,6 +1,7 @@
 //  Nodes
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 //  Preloader
 import Loader from '../../components/loader/loader';
@@ -12,94 +13,72 @@ import routes from '../../navigation/routes';
 //  Navigation
 
 //  Services
-import * as BudgetsActions from '../api/actions/budget';
-import * as ClientsActions from '../api/actions/client';
-import * as ExpeditionsActions from '../api/actions/expedition';
-import * as ProjectsActions from '../api/actions/project';
-import * as WorkerActions from '../api/actions/worker';
+import * as budgetsActionsRedux from '../../store/actions/budget';
+import * as clientsActionsRedux from '../../store/actions/client';
+import * as expeditionsActionsRedux from '../../store/actions/expedition';
+import * as filesActionsRedux from '../../store/actions/file';
+import * as foldersActionsRedux from '../../store/actions/folder';
+import * as projectsActionsRedux from '../../store/actions/project';
 
 const Order = ({ ...pageProps }) => {
+  const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
-  const [order, setOrder] = useState();
-  const [workers, setWorkers] = useState();
+  const dispatch = useDispatch();
+  const getProject = (data) => dispatch(projectsActionsRedux.project(data));
+  const setDisplayedProject = (data) => dispatch(projectsActionsRedux.setDisplayedProject(data));
+  const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
+  const getExpedition = (data) => dispatch(expeditionsActionsRedux.expedition(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const [folders, setFolders] = useState();
 
   useEffect(() => {
     const getData = async () => {
-      await ProjectsActions.project({ id: router.query.Id }).then(async (res) => {
-        const thisOrder = res.data[0];
+      const project = (await getProject(router.query.Id)).data;
+      const expedition = (await getExpedition(project.expedition.object)).data;
+      const budget = (await getBudget(project.budgetId.object)).data;
+      const client = (await getClient(project.orderBy.object)).data;
 
-        await BudgetsActions.budget({ id: thisOrder.budgetId?.object || thisOrder.orderBy?.object }).then(async (resBudget) => {
-          thisOrder.budgetId.object = resBudget.data[0];
+      getFolders().then(async (res) => {
+        const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
 
-          await ClientsActions.client({ id: resBudget.data[0]?.belongsTo?.object }).then(async (clientRes) => {
-            thisOrder.orderBy = { object: clientRes.data[0] };
-          });
+        // eslint-disable-next-line array-callback-return
+        const builtFolders = res.data.results.map((folder) => {
+          const folder2 = { ...folder };
 
-          await ExpeditionsActions.expedition({ id: thisOrder.expedition.object }).then(async (expeditionRes) => {
-            thisOrder.expedition.object = expeditionRes.data[0];
-          });
+          folder2.files = resFiles.data.results.filter((file) => file.budget === project.budgetId.object && file.folder === folder.id);
+          // builtFolders.push(folder2);
 
-          setOrder(thisOrder);
+          return folder2;
         });
+
+        setFolders(builtFolders);
       });
 
-      await WorkerActions.workers().then(async (workersRes) => setWorkers(workersRes.data));
+      const thisOrder = JSON.parse(JSON.stringify({ ...project }));
+
+      thisOrder.budgetId.object = budget;
+      thisOrder.orderBy.object = client;
+      thisOrder.expedition = expedition;
+      setDisplayedProject(thisOrder);
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
-  if (loaded) {
+  if (loaded &&
+    reduxState.projects.displayedProject && folders
+  ) {
     const breadcrumbsPath = [
       {
         title: 'Encomendas',
         href: `${routes.private.projects}`,
       },
       {
-        title: `Encomenda Nº ${order.name.value}`,
+        title: `Encomenda Nº ${reduxState.projects.displayedProject?.name?.value}`,
         href: `${routes.private.internal.project}`,
-      },
-    ];
-
-    const orderDetail = [
-      {
-        id: Math.random(),
-        startAt: order?.order?.startAt,
-        real: '06 abril 2022',
-        start: '17 março 2022',
-        endAt: order?.order?.endAt,
-        time: `${order?.product?.craftTime * order?.amount} H`,
-      },
-    ];
-
-    const headCellsUpperOrderDetail = [
-      {
-        id: 'deadline',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: false,
-        borderRight: false,
-        label: 'Data de Entrega',
-        span: 2,
-      },
-      {
-        id: 'production',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: true,
-        borderRight: true,
-        label: 'Produção',
-        span: 2,
-      },
-      {
-        id: 'amount',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: false,
-        borderRight: false,
-        label: `Quantidade Encomendada: ${order?.amount?.value} Un`,
-        span: 1,
       },
     ];
 
@@ -129,43 +108,6 @@ const Order = ({ ...pageProps }) => {
       },
     ];
 
-    const headCellsProductionDetail = [
-      {
-        id: 'operacao.value',
-        label: 'Operação',
-      },
-      {
-        id: 'previsto1.value',
-        label: 'Previsto',
-      },
-      {
-        id: 'realizado1.value',
-        label: 'Realizado',
-      },
-      {
-        id: 'desvio',
-        label: 'Desvio',
-      },
-      {
-        id: 'previstoAtual.value',
-        label: 'Previsto (Atual)',
-        borderLeft: true,
-        borderRight: true,
-      },
-      {
-        id: 'previsto2.value',
-        label: 'Previsto',
-      },
-      {
-        id: 'realizado2.value',
-        label: 'Realizado',
-      },
-      {
-        id: 'desvio2.value',
-        label: 'Desvio',
-      },
-    ];
-
     const headCellsUpperProductionDetail = [
       {
         id: 'amountDone',
@@ -173,7 +115,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Produzida: ${order?.completed || 0} Un`,
+        label: `Quantidade Produzida: ${reduxState.projects.displayedProject?.completed || 0} Un`,
         span: 4,
       },
       {
@@ -182,7 +124,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: `Quantidade Encomendada: ${order?.amount?.value} Un`,
+        label: `Quantidade Encomendada: ${reduxState.projects.displayedProject?.amount?.amount?.value} Un`,
         span: 1,
       },
       {
@@ -233,20 +175,15 @@ const Order = ({ ...pageProps }) => {
       {},
     ];
 
-    //  Filters what can the user see depending of profile
     const props = {
-      order,
+      order: reduxState.projects.displayedProject,
       breadcrumbsPath,
       headCellsOrderDetail,
-      headCellsUpperOrderDetail,
       headCellsDocs,
       pageProps,
-      orderDetail,
       headCellsUpperProductionDetail,
-      headCellsProductionDetail,
-      folders: [],
+      folders,
       headCellsMessages,
-      workers
     };
 
     return <OrderScreen {...props} />;

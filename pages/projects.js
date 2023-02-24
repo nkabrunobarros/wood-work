@@ -15,136 +15,57 @@ import OrdersScreen from '../components/pages/projects/projects';
 import PropTypes from 'prop-types';
 
 //  Data services
-import * as BudgetsActions from './api/actions/budget';
-import * as CategoriesActions from './api/actions/category';
-import * as ClientsActions from './api/actions/client';
-import * as ExpeditionActions from './api/actions/expedition';
-import * as ProductsActions from './api/actions/product';
-import * as ProjectsActions from './api/actions/project';
 
+//  Actions
+import * as budgetsActionsRedux from '../store/actions/budget';
+import * as clientsActionsRedux from '../store/actions/client';
+import * as expeditionsActionsRedux from '../store/actions/expedition';
+import * as projectsActionsRedux from '../store/actions/project';
 //  Icons
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Orders = ({ ...pageProps }) => {
-  const [clients, setClients] = useState();
-  const [categories, setCategories] = useState();
   const [loaded, setLoaded] = useState(false);
-  const [panelsInfo, setPanelsInfo] = useState();
-  const [products, setProducts] = useState();
-  const [projects, setProjects] = useState();
   const detailPage = routes.private.project;
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  //  dispatch actions
+  const getProjects = (data) => dispatch(projectsActionsRedux.myProjects(data));
+  const getBudgets = (data) => dispatch(budgetsActionsRedux.myBudgets(data));
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
+  const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
+
+  async function fetchData() {
+    let errors = false;
+
+    try {
+      if (!reduxState.projects?.data) {
+        await getProjects(reduxState.auth.me.id).then((res) => {
+          console.log('res');
+          console.log(res);
+        });
+      }
+
+      if (!reduxState.expeditions?.data) { await getExpeditions(); }
+
+      if (!reduxState.budgets?.data) { await getBudgets(); }
+
+      if (!reduxState.clients?.data) { await getClients(); }
+    } catch (err) {
+      console.log(err);
+      errors = true;
+    }
+
+    return !errors;
+  }
 
   useEffect(() => {
-    const getData = async () => {
-      const counts = {
-        waitingBudget: 0,
-        waitingAdjudication: 0,
-        drawing: 0,
-        production: 0,
-        expedition: 0,
-        concluded: 0,
-        testing: 0,
-      };
+    async function loadData() {
+      setLoaded(await fetchData(dispatch));
+    }
 
-      const test = [];
-
-      await ProductsActions.products().then((response) => setProducts(response.data.payload.data)).catch(() => setProducts([]));
-      await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data)).catch(() => setCategories([]));
-
-      await BudgetsActions.myBudgets().then((response) => {
-        response.data.map(item => {
-          switch (item.status.value) {
-          case 'waiting budget':
-            counts.waitingBudget++;
-
-            break;
-          case 'waiting adjudication':
-            counts.waitingAdjudication++;
-
-            break;
-
-          default:
-            break;
-          }
-
-          test.push({
-            id: item.id,
-            category: { ...item.category },
-            name: { ...item.name },
-            Nome: item.name.value,
-            amount: { ...item.amount },
-            statusClient: { type: 'Property', value: item.status.value },
-            Estado: item.status.value
-
-          });
-        });
-      });
-
-      await ClientsActions.clients().then(async (responseClients) => {
-        setClients(responseClients.data);
-
-        await ExpeditionActions.expeditions().then(async (expResponse) => {
-          //  Get projects and build
-          await ProjectsActions.myProjects().then((response) => {
-            console.log(response);
-
-            response.data.map((proj, index) => {
-              const thisClient = responseClients.data.find(ele => ele.id === proj.orderBy.object);
-
-              response.data[index].expedition.object = expResponse.data.find(exp => exp.id.toLowerCase().replace('project', 'expedition') === proj.expedition.object.toLowerCase());
-              response.data[index].Cliente = proj.orderBy.object;
-              response.data[index].Nome = proj.name.value;
-              response.data[index].telemovel = thisClient?.telephone.value;
-              // response.data[index].Producao = proj.status.value;
-              response.data[index].Producao = proj.expedition.object?.deliveryFlag?.value ? 'delivered' : (proj.expedition.object?.expeditionTime?.value ? 'expediting' : proj.status.value);
-              response.data[index].estado = { type: 'Property', value: response.data[index].status.value };
-              response.data[index].Estado = response.data[index].status.value;
-              response.data[index].statusClient = {};
-              response.data[index].statusClient.value = response.data[index].status.value;
-              test.push(response.data[index]);
-
-              switch (proj.status.value.toLowerCase()) {
-              case 'waiting budget':
-                counts.waitingBudget++;
-
-                break;
-              case 'waiting adjudication':
-                counts.waitingAdjudication++;
-
-                break;
-
-              case 'drawing':
-                counts.drawing++;
-
-                break;
-
-              case 'production':
-                counts.production++;
-
-                break;
-              case 'transport':
-                counts.expedition++;
-
-                break;
-              case 'testing':
-                counts.testing++;
-
-                break;
-              case 'finished':
-                counts.concluded++;
-
-                break;
-              }
-            });
-
-            setProjects(test);
-            setPanelsInfo(counts);
-          });
-        });
-      });
-    };
-
-    Promise.all([getData()]).then(() => setLoaded(true));
+    loadData();
   }, []);
 
   if (loaded) {
@@ -156,11 +77,59 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
+    const counts = {
+      waitingBudget: 0,
+      waitingAdjudication: 0,
+      drawing: 0,
+      production: 0,
+      expedition: 0,
+      concluded: 0,
+      testing: 0,
+    };
+
+    reduxState.budgets?.data?.forEach((bud) => {
+      switch (bud.status?.value) {
+        case 'waiting budget':
+          counts.waitingBudget++;
+
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
+
+          break;
+      }
+    });
+
+    reduxState.projects?.data?.forEach((proj) => {
+      switch (proj.status?.value) {
+        case 'drawing':
+          counts.drawing++;
+
+          break;
+        case 'production':
+          counts.production++;
+
+          break;
+        case 'transport':
+          counts.expedition++;
+
+          break;
+        case 'testing':
+          counts.testing++;
+
+          break;
+        case 'finished':
+          counts.concluded++;
+
+          break;
+      }
+    });
+
     const cards = [
       {
         num: 1,
         title: 'Em Orçamentação',
-        amount: panelsInfo.waitingBudget,
+        amount: counts.waitingBudget,
         icon: (
           <PackageCheck
             size={pageProps?.globalVars?.iconSizeXl}
@@ -172,7 +141,7 @@ const Orders = ({ ...pageProps }) => {
       {
         num: 2,
         title: 'Em Desenho',
-        amount: panelsInfo.drawing,
+        amount: counts.drawing,
         icon: (
           <LayoutTemplate
             size={pageProps?.globalVars?.iconSizeXl}
@@ -184,7 +153,7 @@ const Orders = ({ ...pageProps }) => {
       {
         num: 3,
         title: 'Em Produção',
-        amount: panelsInfo.production,
+        amount: counts.production,
         icon: (
           <Layers
             size={pageProps?.globalVars?.iconSizeXl}
@@ -196,7 +165,7 @@ const Orders = ({ ...pageProps }) => {
       {
         num: 4,
         title: 'Em Montagem',
-        amount: panelsInfo.testing,
+        amount: counts.testing,
         icon: <AlertOctagon
           size={pageProps?.globalVars?.iconSizeXl}
           strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />,
@@ -224,24 +193,46 @@ const Orders = ({ ...pageProps }) => {
         label: 'Quantidade',
       },
       {
-        id: 'statusClient.value',
+        id: 'Estado',
         numeric: false,
         disablePadding: false,
         label: 'Estado',
       },
     ];
 
+    const clients = [...reduxState.clients?.data ?? []];
+
+    const budgets = [...reduxState.budgets?.data ?? []].map((bud) => ({
+      ...bud,
+      Estado: bud?.status?.value,
+      Nome: bud?.name?.value.replace(/_/g, ' '),
+      Cliente: bud.orderBy.object
+    }));
+
+    const projects = [...reduxState.projects?.data ?? []].map((proj) => ({
+      ...proj,
+      Estado: proj?.status?.value,
+      Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
+      budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
+      Cliente: clients.find((ele) => ele.id === (budgets.find((ele) => ele.id === proj.budgetId.object)).orderBy.object).id
+    }));
+
+    console.log(projects);
+
+    const merged = [...projects, ...budgets.filter((ele) => ele.status === 'adjudicated')];
+
     const props = {
-      categories,
-      panelsInfo,
+      counts,
       breadcrumbsPath,
-      detailPage,
       cards,
-      clients,
       pageProps,
-      products,
-      projects,
-      headCellsProjects
+      headCellsProjects,
+      clients,
+      budgets,
+      projects: merged,
+      detailPage: routes.private.project,
+      editPage: routes.private.editProject,
+      detailPageBudgetTab: routes.private.budget,
     };
 
     return <OrdersScreen {...props} />;
@@ -252,7 +243,7 @@ const Orders = ({ ...pageProps }) => {
 
 Orders.propTypes = {
   categories: PropTypes.array.isRequired,
-  panelsInfo: PropTypes.object.isRequired,
+  counts: PropTypes.object.isRequired,
   headCells: PropTypes.array.isRequired,
   breadcrumbsPath: PropTypes.array.isRequired,
   clients: PropTypes.array.isRequired,

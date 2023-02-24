@@ -23,6 +23,10 @@ export const PROD_PROJECTS_REQUEST = 'PROD_PROJECTS_REQUEST';
 export const PROD_PROJECTS_FAIL = 'PROD_PROJECTS_FAIL';
 export const PROD_PROJECTS_SUCCESS = 'PROD_PROJECTS_SUCCESS';
 
+export const ACTIVE_PROJECTS_REQUEST = 'ACTIVE_PROJECTS_REQUEST';
+export const ACTIVE_PROJECTS_FAIL = 'ACTIVE_PROJECTS_FAIL';
+export const ACTIVE_PROJECTS_SUCCESS = 'ACTIVE_PROJECTS_SUCCESS';
+
 export const DISPLAYED_PROJECT_SET = 'DISPLAYED_PROJECT_SET';
 
 export const projects = (data) => {
@@ -77,6 +81,43 @@ export const projectsInProduction = (data) => {
       }
     },
     types: [PROD_PROJECTS_REQUEST, PROD_PROJECTS_SUCCESS, PROD_PROJECTS_FAIL],
+  });
+};
+
+export const myProjects = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    data,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: getApiURL(endpoints.PROJECTS),
+      params: {
+        options: 'sysAttrs',
+      }
+    },
+    types: [PROJECTS_REQUEST, PROJECTS_SUCCESS, PROJECTS_FAIL],
+  });
+};
+
+export const activeProjects = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    data,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: getApiURL(endpoints.PROJECTS),
+      params: {
+        options: 'sysAttrs',
+        q: 'status!="finished"'
+      }
+    },
+    types: [ACTIVE_PROJECTS_REQUEST, ACTIVE_PROJECTS_SUCCESS, ACTIVE_PROJECTS_FAIL],
   });
 };
 

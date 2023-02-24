@@ -1,88 +1,50 @@
-import { Box, Button, Chip, IconButton, OutlinedInput } from '@mui/material';
-import { ImagePlus, Send } from 'lucide-react';
-import moment from 'moment';
+import { Box, Button, OutlinedInput } from '@mui/material';
 import React, { useState } from 'react';
-import ConvertBase64 from '../../utils/ConvertBase64';
 //  PropTypes
+import { Send } from 'lucide-react';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import * as messagesActionsRedux from '../../../store/actions/message';
 
 const NewMsgInput = (props) => {
-  const { windowWidth, styles, pageProps, setLoadMessage, setConversations, activeRow, chats } = props;
-  const [newMessage, setNewMessage] = useState('');
+  const { windowWidth, styles, setLoadMessage } = props;
+  const [newMessageText, setNewMessageText] = useState('');
   const [files, setFiles] = useState();
-  const loggedUser = JSON.parse(localStorage.getItem('user'));
+  const reduxState = useSelector((state) => state);
+  const loggedUser = reduxState.auth.me;
+  const dispatch = useDispatch();
+  const newMessage = (data) => dispatch(messagesActionsRedux.newMessage(data));
 
-  async function onFileInput (e) {
-    const arr = [];
-
-    for (let index = 0; index < Object.keys(e.target.files).length; index++) {
-      const file = e.target.files[index];
-
-      await ConvertBase64(file)
-        .then(result => {
-          file.base64 = result;
-          arr.push(file);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-
-    const a = arr.filter(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE);
-
-    if (arr.find(ele => ele.size >= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE)) {
-      toast.error(`${Object.keys(a).length} não foram carregadas, tamanho maximo de 1 MB ( ${a.map(x => `${x.name} `)} )`);
-      arr.filter(ele => ele.size <= process.env.NEXT_PUBLIC_MAX_UPLOAD_FILE_SIZE);
-    }
-
-    if (arr) setFiles(arr);
-  }
-
-  const handleSendMessage = (event) => {
+  const handleSendMessage = async (event) => {
     event.preventDefault();
 
-    if (!newMessage && !files) return;
+    if (!newMessageText && !files) return;
 
     setLoadMessage(new Date());
 
-    const allConversations = chats;
+    await newMessage({
+      to: 'user_Xw9Jz3BbzBO4GlZ2',
+      by: 'user_Xw9Jz3BbzBO4GlZ2',
+      project: props.conversation.budgetId?.object || props.conversation.id,
+      text: newMessageText
+    }).then((res) => {
+      console.log(res);
 
-    if (files) {
-      // eslint-disable-next-line array-callback-return
-      files.map(file => {
-        const newMessageStucture = {
-          id: Math.random(),
-          sentBy: loggedUser.id,
-          content: file.base64,
-          msg: newMessage,
-          createdAt: moment(Date.now()).format(),
-          type: 'file'
-        };
+      const chats = [...props.chats];
 
-        allConversations[activeRow].messagesContent.push(newMessageStucture);
-        setConversations(allConversations);
-        setNewMessage('');
+      const chatsMsg = chats.map((chat, index) => {
+        const chat2 = { ...chat };
+
+        if (index === props.activeRow) {
+          chat2.messages.push(res.data);
+        }
+
+        return chat2;
       });
 
-      setFiles();
-    }
-
-    if (newMessage && !files) {
-      const newMessageStucture = {
-        id: Math.random(),
-        sentBy: loggedUser.id,
-        content: newMessage,
-        createdAt: moment().format(),
-        type: 'text'
-      };
-
-      if (allConversations[activeRow].messagesContent === undefined)allConversations[activeRow].messagesContent = [];
-
-      allConversations[activeRow].messagesContent.push(newMessageStucture);
-      setConversations(allConversations);
-      setNewMessage('');
-    }
+      setNewMessageText('');
+      props.setConversations(chatsMsg);
+    }).catch((err) => console.log(err));
   };
 
   return (
@@ -96,24 +58,12 @@ const NewMsgInput = (props) => {
         fullWidth
         placeholder='Aa'
         autoFocus
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
+        value={newMessageText}
+        onChange={(e) => setNewMessageText(e.target.value)}
         sx={styles.writeMessageInput}
-        endAdornment={
-          <>
-            {files && <Chip label={`${files.length} anexo(s)`} onDelete={() => setFiles()}/>}
-            <IconButton component='label'>
-              <ImagePlus
-                strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                size={pageProps?.globalVars?.iconSize}
-              />
-              <input multiple type='file' accept='image/*,.pdf' name='file' hidden onChange={(e) => onFileInput(e)}/>
-            </IconButton>
-            <Button position='end' type='submit'>
-              {windowWidth > 900 ? 'Enviar' : <Send size={20}/>}
-            </Button>
-          </>
-        }
+        endAdornment={ <Button position='end' type='submit'>
+          {windowWidth > 900 ? 'Enviar' : <Send size={20}/>}
+        </Button>}
       />
     </Box>
   );
