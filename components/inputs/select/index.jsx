@@ -58,7 +58,7 @@ const MySelect = ({
           </MenuItem>
           {options && options
             .map((opt, i) => (
-              <MenuItem disabled={opt.subheader} key={i} value={opt[optionValue]?.value ? opt[optionValue].value : opt[optionValue] || opt.id}>
+              !opt.hidden && <MenuItem disabled={opt.subheader} key={i} value={opt[optionValue]?.value ? opt[optionValue].value : opt[optionValue] || opt.id}>
                 <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
                   {!!opt.codigo &&
                     <img

@@ -54,6 +54,14 @@ const Account = ({ ...props }) => {
                       <Typography color='lightTextSm.black'>{user?.vat?.value}</Typography>
                     </Grid>
                   </Grid>
+                  <Grid item xs={12} pt={1} className='flex'>
+                    <Grid container md={3} sm={2} xs={2}>
+                      <Typography color='lightTextSm.main'>Tipo conta:</Typography>
+                    </Grid>
+                    <Grid container md={3} sm={2} xs={2}>
+                      <Typography color='lightTextSm.black'>{user?.isCompany?.value ? 'Empresarial' : 'Particular'}</Typography>
+                    </Grid>
+                  </Grid>
                   {user.type === 'Worker' &&
                   <Grid item xs={12} pt={1} className='flex'>
                     <Grid container md={3} sm={2} xs={2}>

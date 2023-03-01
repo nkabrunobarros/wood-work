@@ -66,7 +66,7 @@ export const functions = [
 ];
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, countries, organizations, permissions } = props;
+  const { breadcrumbsPath, countries, organizations } = props;
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);

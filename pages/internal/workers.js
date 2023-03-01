@@ -11,7 +11,6 @@ import AuthData from '../../lib/AuthData';
 //  Navigation
 import routes from '../../navigation/routes';
 import * as workersActionsRedux from '../../store/actions/worker';
-import * as permissionsActionsRedux from '../../store/actions/permission';
 
 //  Proptypes
 
@@ -21,7 +20,6 @@ const Workers = () => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getWorkers = (data) => dispatch(workersActionsRedux.workers(data));
-  const getPermissions = (data) => dispatch(permissionsActionsRedux.permissions(data));
 
   useEffect(() => {
     const getData = async () => {

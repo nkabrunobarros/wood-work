@@ -22,7 +22,7 @@ const ResetPassword = () => {
   console.log('aqui');
 
   useEffect(() => {
-    function checkToken() {
+    function checkToken () {
       console.log(router.query);
       //  TODO: validar o token recebido se existe na BD
       // TODO: apenas se existir, é que se dá o state do token

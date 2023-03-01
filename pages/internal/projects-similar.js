@@ -29,7 +29,7 @@ const OrdersSimilar = () => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       !reduxState.clients.data && getClients();
       !reduxState.projects.data && getProjects();

@@ -51,7 +51,9 @@ import routes from '../../navigation/routes';
 //  Utils
 import axios from 'axios';
 import moment from 'moment/moment';
+import { useSelector } from 'react-redux';
 import { methods } from '../../pages/api/actions/methods';
+import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
   children,
@@ -83,16 +85,14 @@ const AdvancedTable = ({
   const [refresh, setRefresh] = useState(new Date());
   const [loaded, setLoaded] = useState(false);
   const [displaying, setDisplaying] = useState();
+  const reduxState = useSelector((state) => state);
 
   useEffect(() => {
     const getData = async () => {
-  
-
       const allData = {
         categories: [],
         // categories: categories.data.payload.data,
-        clients: []
-        // clients: reduxState.clients.data
+        clients: reduxState.clients?.data
       };
 
       setData(allData);
@@ -308,7 +308,8 @@ const AdvancedTable = ({
         };
 
         axios(config)
-          .then(function () {
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
             toast.success('Cliente removido com sucesso!');
           })
           .catch(function (error) {
@@ -384,6 +385,8 @@ const AdvancedTable = ({
                   sortDirection={orderBy === headCell.id ? order : false}
                   color={'palette.background.default'}
                   sx={{
+                    backgroundColor: 'primary.main',
+                    color: 'white',
                     borderRight: headCell.borderRight
                       ? '1px solid var(--grayEdges)'
                       : null,
@@ -409,7 +412,7 @@ const AdvancedTable = ({
           : null
         }
 
-        <TableRow >
+        <TableRow sx={{ backgroundColor: 'primary.main' }} >
           {cellsFilter.map((headCell) => {
             return headCell.show && <TableCell
               key={headCell.id}
@@ -431,7 +434,7 @@ const AdvancedTable = ({
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
-                sx={{ width: '100%', height: '100%' }}
+                sx={{ width: '100%', height: '100%', color: 'white' }}
               >
                 {loaded
                   ? <>
@@ -542,6 +545,7 @@ const AdvancedTable = ({
       }
       );
 
+      console.log(filteredTest);
       setFilteredItems(filteredTest);
     }
   }, [filters, rangeFilters]);
@@ -693,7 +697,7 @@ const AdvancedTable = ({
 
                                       {headCell.id !== 'actionsConf'
                                         ? <>
-                                          {true &&
+                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
                                       <Tooltip title={'Editar'}>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
@@ -704,7 +708,7 @@ const AdvancedTable = ({
                                       </Tooltip>}
                                         </>
                                         : <>
-                                          {true &&
+                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
                                         <>
                                           <Tooltip title={'Adjudicar orçamento'}>
                                             <IconButton onClick={() => {
@@ -726,7 +730,7 @@ const AdvancedTable = ({
                                         </>}
                                         </>
                                       }
-                                      {true && <Tooltip title={'Remover'}>
+                                      {CanDo(['DELETE', displaying, reduxState.auth.userPermissions]) && <Tooltip title={'Remover'}>
                                         <IconButton onClick={() => onDeleteClick(row)} >
                                           <DeleteOutline
                                             color={'primary'}

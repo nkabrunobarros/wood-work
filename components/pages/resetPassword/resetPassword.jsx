@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-constant-condition */
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -22,7 +23,6 @@ import Loader from '../../loader/loader';
 
 const ResetPassword = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { clientType } = props;
   const [submiting, setSubmiting] = useState(false);
   const [visible, setVisible] = useState(false);
   const [windowWidth, setWindowHeight] = useState();

@@ -6,15 +6,11 @@ import React, { useEffect, useState } from 'react';
 //  Navigation
 import routes from '../navigation/routes';
 
-//  Preloader
-
 //  Page Component
 import OrdersScreen from '../components/pages/projects/projects';
 
 //  Proptypes
 import PropTypes from 'prop-types';
-
-//  Data services
 
 //  Actions
 import * as budgetsActionsRedux from '../store/actions/budget';
@@ -23,7 +19,9 @@ import * as expeditionsActionsRedux from '../store/actions/expedition';
 import * as projectsActionsRedux from '../store/actions/project';
 //  Icons
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
+import { categories } from './internal/new-project';
 
 const Orders = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -35,7 +33,7 @@ const Orders = ({ ...pageProps }) => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
 
-  async function fetchData() {
+  async function fetchData () {
     let errors = false;
 
     try {
@@ -57,7 +55,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData() {
+    async function loadData () {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -85,39 +83,39 @@ const Orders = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-        case 'waiting budget':
-          counts.waitingBudget++;
+      case 'waiting budget':
+        counts.waitingBudget++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'finished':
+        counts.concluded++;
 
-          break;
+        break;
       }
     });
 
@@ -175,13 +173,19 @@ const Orders = ({ ...pageProps }) => {
 
     const headCellsProjects = [
       {
-        id: 'name.value',
+        id: 'Nome',
         numeric: false,
         disablePadding: false,
         label: 'Nome',
       },
       {
-        id: 'category.value',
+        id: 'Referência',
+        numeric: false,
+        disablePadding: false,
+        label: 'Referência',
+      },
+      {
+        id: 'Categoria',
         numeric: false,
         disablePadding: false,
         label: 'Categoria',
@@ -198,6 +202,30 @@ const Orders = ({ ...pageProps }) => {
         disablePadding: false,
         label: 'Estado',
       },
+      {
+        id: 'Pedido',
+        numeric: false,
+        disablePadding: false,
+        label: 'Pedido',
+      },
+      {
+        id: 'Entregue',
+        numeric: false,
+        disablePadding: false,
+        label: 'Orç. Entregue',
+      },
+      {
+        id: 'Inicio',
+        numeric: false,
+        disablePadding: false,
+        label: 'Início Prod.',
+      },
+      {
+        id: 'Termino',
+        numeric: false,
+        disablePadding: false,
+        label: 'Fim Prod.',
+      },
     ];
 
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
@@ -205,18 +233,37 @@ const Orders = ({ ...pageProps }) => {
         ...bud,
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
-
+        Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
+        Pedido: bud?.dateRequest.value,
+        Entregue: bud?.dateDelivery.value,
+        Categoria: categories.find(c => c.id === bud.category.value).label,
+        Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
       };
     });
 
-    const projects = [...reduxState.projects?.data ?? []].map((proj) => ({
-      ...proj,
-      Estado: proj?.status?.value,
-      Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
-      budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
-    }));
+    const filteredBudgets = budgets.filter(item => item !== false);
 
-    const merged = [...projects, ...budgets.filter((ele) => ele.status !== 'adjudicated')];
+    const projects = [...reduxState.projects?.data ?? []].map((proj) => {
+      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
+
+      return {
+        ...proj,
+        Estado: proj?.status?.value,
+        Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
+        budget: thisBudget,
+        Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
+        Termino: thisBudget?.dateAgreedDelivery.value,
+        Pedido: thisBudget?.dateRequest.value,
+        Entregue: thisBudget?.dateDelivery.value,
+        Categoria: categories.find(c => c.id === thisBudget.category.value).label,
+        Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
+      };
+    }
+    );
+
+    const merged = [...projects, ...filteredBudgets.filter((ele) => ele.status !== 'adjudicated')];
+
+    merged.sort((a, b) => a.Pedido?.localeCompare(b.Pedido));
 
     const props = {
       counts,

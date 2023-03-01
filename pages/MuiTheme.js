@@ -33,6 +33,7 @@ function MuiTheme ({ ...props }) {
       main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
       dark: selectedTheme === 'light' ? '#0c2254' : '#1b91e7',
       light: selectedTheme === 'light' ? '#1b91e7' : '#1b91e7',
+      lightest: selectedTheme === 'light' ? '#225EE833' : '#225EE833',
     },
     default: {
       main: selectedTheme === 'light' ? '#fff' : '#282828',
@@ -68,6 +69,7 @@ function MuiTheme ({ ...props }) {
         main: colorScheme.primary.main,
         dark: colorScheme.primary.dark,
         light: colorScheme.primary.light,
+        lightest: colorScheme.primary.lightest,
       },
       // primary: {
       //     main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',

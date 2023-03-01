@@ -1,6 +1,6 @@
 // Node modules
 import { configureStore } from '@reduxjs/toolkit';
-import { createWrapper, HYDRATE } from 'next-redux-wrapper';
+import { HYDRATE, createWrapper } from 'next-redux-wrapper';
 // Store
 import { api } from '../pages/api/middlewares';
 import rootReducer from './reducers';

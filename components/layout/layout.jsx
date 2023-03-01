@@ -91,8 +91,6 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-  console.log(path.route);
-
   if (loaded) {
     if (noLayoutScreens.includes(path.route.replace('/[Id]', '')) || path.route === '/reset-password/[Id]') return children;
 
@@ -126,7 +124,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
             : <PageNotFound noAccess />
           }
         </Box>
-        {false && <Box style={{ width: '100%' }}>
+        {true && <Box style={{ width: '100%' }}>
           <Footer />
         </Box>}
       </React.Fragment>

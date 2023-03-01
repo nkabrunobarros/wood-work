@@ -147,68 +147,71 @@ const Terms = ({ ...props }) => {
           }}>
             <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
               <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-                <Typography>1. Termos</Typography>
+                <Typography>1. Propósito e alcance da plataforma</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>Ao acessar ao site <a href="http://ww40.nka.pt/">WoodWork4.0</a>, concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.</span></p>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>As presentes Condições Gerais de Contratação e Utilização, aplicam-se aos utilizadores de<a href=" https://ww40.mofreita.pt" target='#'> https://ww40.mofreita.pt</a> bem como a quaisquer interações efetuadas através deste Portal. A navegação no Portal, bem como a submissão de qualquer informação implica a aceitação das presentes Condições Gerais de Contratação e Utilização por parte do utilizador ou cliente. A Mofreita reserva-se no direito de alterar os presentes Termos Gerais de Condições e Utilização sem aviso prévio. Quaisquer alterações serão publicadas no website<a href=" https://ww40.mofreita.pt" target='#'> https://ww40.mofreita.pt</a>/.</span></p>
                 </Typography>
               </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')} >
               <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" expandIcon={<ChevronDown />}>
-                <Typography>2. Uso de Licença</Typography>
+                <Typography>2. Condições</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site WoodWork4.0 , apenas para visualização transitória pessoal e não comercial. Esta é a concessão de uma licença, não uma transferência de título e, sob esta licença, você não pode:&nbsp;</span></p><ol><li><span style={{ color: 'rgb(68, 68, 68)' }}>modificar ou copiar os materiais;&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>usar os materiais para qualquer finalidade comercial ou para exibição pública (comercial ou não comercial);&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>tentar descompilar ou fazer engenharia reversa de qualquer software contido no site WoodWork4.0;&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>remover quaisquer direitos autorais ou outras notações de propriedade dos materiais; ou&nbsp;</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>transferir os materiais para outra pessoa ou 'espelhe' os materiais em qualquer outro servidor.</span></li></ol><p><span style={{ color: 'rgb(68, 68, 68)' }}>Esta licença será automaticamente rescindida se você violar alguma dessas restrições e poderá ser rescindida por WoodWork4.0 a qualquer momento. Ao encerrar a visualização desses materiais ou após o término desta licença, você deve apagar todos os materiais baixados em sua posse, seja em formato eletrónico ou impresso.</span></p>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>O acesso a este website é permitido a título temporário, reservando-se à Mofreita, o direito de cancelar ou modificar os serviços sem aviso prévio. A Mofreita não se responsabiliza se, por qualquer motivo este site estiver temporariamente indisponível, podendo eventualmente restringir o acesso a algumas áreas do mesmo.
+A Mofreita não se responsabiliza por danos ou prejuízos decorrentes de qualquer utilização de qualquer informação contida neste website.
+                </span></p>
               </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')} >
               <AccordionSummary aria-controls="panel3d-content" id="panel3d-header" expandIcon={<ChevronDown />}>
-                <Typography>3. Isenção de responsabilidade</Typography>
+                <Typography>3. Conteúdo </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ol><li><span style={{ color: 'rgb(68, 68, 68)' }}>Os materiais no site da WoodWork4.0 são fornecidos 'como estão'. WoodWork4.0 não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</span></li><li><span style={{ color: 'rgb(68, 68, 68)' }}>Além disso, o WoodWork4.0 não garante ou faz qualquer representação relativa à precisão, aos resultados prováveis ​​ou à confiabilidade do uso dos materiais em seu site ou de outra forma relacionado a esses materiais ou em sites vinculados a este site.</span></li></ol>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>A reprodução, transferência, distribuição ou armazenamento dos conteúdos do website<a href=" https://ww40.mofreita.pt" target='#'> https://ww40.mofreita.pt</a>/ sem autorização prévia escrita concedida pela “Mofreita”, é proibida para outros fins que não o uso estritamente pessoal.
+A Mofreita, reserva-se no direito de modificar, a qualquer momento, a informação e a apresentada sobre: produtos, preços e projetos/encomendas.
+É expressamente proibida a utilização de links do presente website, independentemente do fim pretendido, sem autorização prévia da Mofreita. A utilização do domínio<a href=" https://ww40.mofreita.pt" target='#'> https://ww40.mofreita.pt</a>/ com fins abusivos, e sem autorização prévia, é suscetível de recurso aos meios legais competentes por parte da Mofreita.
+A Mofreita é responsável, direta ou indiretamente, por toda a informação e conteúdo deste Portal.
+                </span></p>
               </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')} >
               <AccordionSummary aria-controls="panel4d-content" id="panel4d-header" expandIcon={<ChevronDown />}>
-                <Typography>4. Limitações</Typography>
+                <Typography>4. Propriedade Intelectual e Industrial</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Em nenhum caso o WoodWork4.0 ou seus fornecedores serão responsáveis ​​por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em WoodWork4.0, mesmo que WoodWork4.0 ou um representante autorizado da WoodWork4.0 tenha sido notificado oralmente ou por escrito da possibilidade de tais danos. Como algumas jurisdições não permitem limitações em garantias implícitas, ou limitações de responsabilidade por danos conseqüentes ou incidentais, essas limitações podem não se aplicar a você.</span></p>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Todos os textos, comentários, trabalhos, ilustrações e imagens reproduzidas ou representadas no Portal<a href=" https://ww40.mofreita.pt" target='#'> https://ww40.mofreita.pt</a>/, constituem propriedade da Mofreita ou dos seus fornecedores e encontram-se devidamente protegidos pela Lei Internacional de Direitos de Autor. Desta forma, e nos termos do Código de Direitos de Autor e Direitos Conexos, apenas será autorizada a sua utilização para fins privados, sem prejuízo de disposições mais restritivas constantes do mencionado Código. Qualquer reprodução ou representação total ou parcial do site https:// Mofreita.pt/ ou dos elementos incluídos no mesmo é estritamente proibida, sob pena de recurso aos meios legais competentes contra quem atuar dessa forma.
+As denominações sociais, marcas e quaisquer outros sinais distintivos reproduzidos no website https://Mofreita.pt/ encontram-se protegidos de acordo com as disposições legais aplicáveis à propriedade industrial. A reprodução ou representação do todo ou parte desses sinais distintivos é estritamente proibida e deve ser objeto de uma autorização escrita prévia dos respetivos titulares.
+.</span></p>
               </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')} >
               <AccordionSummary aria-controls="panel5d-content" id="panel5d-header" expandIcon={<ChevronDown />}>
-                <Typography>5. Precisão dos materiais</Typography>
+                <Typography>5. Responsabilidades</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Os materiais exibidos no site da WoodWork4.0 podem incluir erros técnicos, tipográficos ou fotográficos. WoodWork4.0 não garante que qualquer material em seu site seja preciso, completo ou atual. WoodWork4.0 pode fazer alterações nos materiais contidos em seu site a qualquer momento, sem aviso prévio. No entanto, WoodWork4.0 não se compromete a atualizar os materiais.</span></p>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                Todos os produtos comercializados no website https://Mofreita.pt/ encontram-se em conformidade com a legislação portuguesa.
+ A Mofreita, não é responsável por prejuízos decorrentes de interferências, interrupções, vírus informáticos, avarias ou desconexões do sistema operativo que possam impedir, temporariamente, o acesso, a navegação ou a prestação de serviços aos utilizadores.
+A Mofreita, declina qualquer responsabilidade por um eventual atraso ou impossibilidade de processamento da encomenda, nomeadamente no ato de entrega, decorrente de erro ou insuficiência dos dados comunicados pelo cliente.
+Em caso de incumprimento, a Mofreita, reserva-se no direito de eliminar a conta do utilizador em questão.
+                </span></p>
               </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel6'} onChange={handleChange('panel6')} >
               <AccordionSummary aria-controls="panel6d-content" id="panel6d-header" expandIcon={<ChevronDown />}>
-                <Typography>6. Links</Typography>
+                <Typography>6. Obrigações dos clientes / utilizadores</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>O WoodWork4.0 não analisou todos os sites vinculados ao seu site e não é responsável pelo conteúdo de nenhum site vinculado. A inclusão de qualquer link não implica endosso por WoodWork4.0 do site. O uso de qualquer site vinculado é por conta e risco do usuário.</span></p><p><br /></p>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion expanded={expanded === 'panel7'} onChange={handleChange('panel7')} >
-              <AccordionSummary aria-controls="panel7d-content" id="panel7d-header" expandIcon={<ChevronDown />}>
-                <Typography>Modificações</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>O WoodWork4.0 pode revisar estes termos de serviço do site a qualquer momento, sem aviso prévio. Ao usar este site, você concorda em ficar vinculado à versão atual desses termos de serviço.</span></p>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion expanded={expanded === 'panel8'} onChange={handleChange('panel8')} >
-              <AccordionSummary aria-controls="panel8d-content" id="panel8d-header" expandIcon={<ChevronDown />}>
-                <Typography>Lei aplicável</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Estes termos e condições são regidos e interpretados de acordo com as leis do WoodWork4.0 e você se submete irrevogavelmente à jurisdição exclusiva dos tribunais naquele estado ou localidade.</span></p>
+                <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                O cliente e/ou utilizador compromete-se a cumprir e respeitar as presentes Condições Gerais de Contratação e Utilização, nomeadamente:
+                  <p>1. Abster-se de introduzir, armazenar ou difundir, através do website, conteúdos difamatórios, obscenos, injuriosos, xenófobos e/ou de qualquer outra índole, que violem os princípios gerais de direito e a ordem pública;</p>
+                  <p>2. Guardar, e não divulgar, a password de entrada no website, por forma de impedir que terceiros acedam à sua conta em<a href=" https://ww40.mofreita.pt" target='#'> https://ww40.mofreita.pt</a>/;</p>
+                  <p>3. Não utilizar identidades falsas;</p>
+                  <p>4. Facultar os dados pessoais e as moradas corretas de modo a que a Mofreita possa processar, devidamente, as encomendas.</p>
+                </span></p>
               </AccordionDetails>
             </Accordion>
           </Box>

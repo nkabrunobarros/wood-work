@@ -120,87 +120,127 @@ const Terms = ({ ...props }) => {
           }}>
             <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
               <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-                <Typography>1. Privacidade</Typography>
+                <Typography>1. Introdução</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>A sua privacidade é importante para nós. É política do Wood Work 4.0 respeitar
-        a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a
-                    href="http://ww40.nka.pt/">Wood Work 4.0</a>, e outros sites que possuímos e operamos.</span></p>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>Solicitamos informações pessoais apenas quando realmente precisamos delas para
-        lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento. Também
-        informamos por que estamos coletando e como será usado.</span></p>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>Apenas retemos as informações coletadas pelo tempo necessário para fornecer o
-        serviço solicitado. Quando armazenamos dados, protegemos dentro de meios comercialmente aceitáveis ​​para evitar
-        perdas e roubos, bem como acesso, divulgação, cópia, uso ou modificação não autorizados.</span></p>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>Não compartilhamos informações de identificação pessoal publicamente ou com
-        terceiros, exceto quando exigido por lei.</span></p>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>O nosso site pode ter links para sites externos que não são operados por nós.
-        Esteja ciente de que não temos controle sobre o conteúdo e práticas desses sites e não podemos aceitar
-        responsabilidade por suas respectivas&nbsp;</span><a href="https://politicaprivacidade.com/"
-                    style={{ backgroundColor: 'transparent', color: 'rgb(68, 68, 68)' }}>políticas de privacidade</a><span
-                    style={{ color: 'rgb(68, 68, 68)' }}>.</span></p>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>Você é livre para recusar a nossa solicitação de informações pessoais,
-        entendendo que talvez não possamos fornecer alguns dos serviços desejados.</span></p>
-                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>O uso continuado de nosso site será considerado como aceitação de nossas
-        práticas em torno de privacidade e informações pessoais. Se você tiver alguma dúvida sobre como lidamos com
-        dados do usuário e informações pessoais, entre em contacto connosco.</span></p>
-                  <p></p>
                   <p><span style={{ color: 'rgb(68, 68, 68)' }}>
-                    <ul>
-                      <li><span style={{ color: 'rgb(68, 68, 68)' }}>O serviço Google AdSense que usamos para veicular publicidade usa
-                    um cookie DoubleClick para veicular anúncios mais relevantes em toda a Web e limitar o número de
-                    vezes que um determinado anúncio é exibido para você.</span></li>
-                      <li><span style={{ color: 'rgb(68, 68, 68)' }}>Para mais informações sobre o Google AdSense, consulte as FAQs
-                    oficiais sobre privacidade do Google AdSense.</span></li>
-                      <li><span style={{ color: 'rgb(68, 68, 68)' }}>Utilizamos anúncios para compensar os custos de funcionamento
-                    deste site e fornecer financiamento para futuros desenvolvimentos. Os cookies de publicidade
-                    comportamental usados ​​por este site foram projetados para garantir que você forneça os anúncios
-                    mais relevantes sempre que possível, rastreando anonimamente seus interesses e apresentando coisas
-                    semelhantes que possam ser do seu interesse.</span></li>
-                      <li><span style={{ color: 'rgb(68, 68, 68)' }}>Vários parceiros anunciam em nosso nome e os cookies de
-                    rastreamento de afiliados simplesmente nos permitem ver se nossos clientes acessaram o site através
-                    de um dos sites de nossos parceiros, para que possamos creditá-los adequadamente e, quando
-                    aplicável, permitir que nossos parceiros afiliados ofereçam qualquer promoção que pode fornecê-lo
-                    para fazer uma compra.</span></li>
-                    </ul>
-                    <p><br></br></p>
+                  A Mofreita respeita a privacidade de todos os utilizadores do seu Portal de Cliente e compromete-se a proteger as informações pessoais que cada utilizador decida partilhar.
                   </span></p>
 
                 </Typography>
               </AccordionDetails>
             </Accordion>
-            <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')} >
-              <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" expandIcon={<ChevronDown />}>
-                <Typography>2. Compromisso do Usuário</Typography>
+            <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>2. Responsável pelo tratamento de dados pessoais</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>O usuário se compromete a fazer uso adequado dos conteúdos e da informação que
-        o Wood Work 4.0 oferece no site e com caráter enunciativo, mas não limitativo:</span></p>
-                <ul>
-                  <li><span style={{ color: 'rgb(68, 68, 68)' }}>A) Não se envolver em atividades que sejam ilegais ou contrárias à boa fé
-            a à ordem pública;</span></li>
-                  <li><span style={{ color: 'rgb(68, 68, 68)' }}>B) Não difundir propaganda ou conteúdo de natureza racista, xenofóbica,
-                  </span><span style={{ color: 'rgb(33, 37, 41)' }}><a href='https://apostasonline.guru/betano-apostas/' rel="nofollow noreferrer"
-                    target='_BLANK'
-                    style={{ color: 'inherit !important', textDecoration: 'none !important', fontSize: 'inherit !important' }}>betano</a></span><span
-                    style={{ color: 'rgb(68, 68, 68)' }}> ou azar, qualquer tipo de pornografia ilegal, de apologia ao terrorismo ou
-            contra os direitos humanos;</span></li>
-                  <li><span style={{ color: 'rgb(68, 68, 68)' }}>C) Não causar danos aos sistemas físicos (hardwares) e lógicos (softwares)
-            do Wood Work 4.0, de seus fornecedores ou terceiros, para introduzir ou disseminar vírus informáticos ou
-            quaisquer outros sistemas de hardware ou software que sejam capazes de causar danos anteriormente
-            mencionados.</span></li>
-                </ul>              </AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Mofreita é a entidade responsável pela recolha e tratamento de dados pessoais dos utilizadores deste Portal. Os dados partilhados pelos utilizadores estarão sujeitos a tratamento informático e constarão da(s) base(s) de dados da Mofreita.
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
             </Accordion>
-            <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')} >
-              <AccordionSummary aria-controls="panel3d-content" id="panel3d-header" expandIcon={<ChevronDown />}>
-                <Typography>Mais informações</Typography>
+            <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>3. Processamento e alteração</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Esperemos que esteja esclarecido e, como mencionado anteriormente, se houver
-                  algo que você não tem certeza se precisa ou não, geralmente é mais seguro deixar os cookies ativados, caso
-                  interaja com um dos recursos que você usa em nosso site.</span></p>
-                <p><span style={{ color: 'rgb(68, 68, 68)' }}>Esta política é efetiva a partir de&nbsp;16 dezembro 2022 17:38</span></p>              </AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Ao disponibilizar os seus dados pessoais a Mofreita, o utilizador consente que os mesmos sejam processados de acordo com esta Política de Privacidade e com os Termos e Condições. Sempre que se justifique, alteraremos a presente Política de Privacidade sem necessidade de qualquer autorização prévia.                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>4. Dados pessoais que podemos recolher</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Algumas secções e/ou funcionalidades deste sítio da internet podem ser navegadas sem recurso a divulgação de qualquer informação pessoal por parte do utilizador. Os dados pessoais recolhidos por Mofreita limitam-se aos estritamente necessários à prestação do serviço, nomeadamente, o nome, a morada, número de contribuinte, número de telefone ou correio eletrónico e outros que sejam necessários.
+A Mofreita recolhe dados pessoais, por exemplo, quando o utilizador efetua um pedido de orçamento, ou quando entra em contacto com Mofreita.
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>5. Como mantemos seguros dados pessoais?</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Mofreita implementa as necessárias medidas para preservar a confidencialidade e a segurança dos dados pessoais recolhidos e tratados.
+Diversas medidas de segurança física, lógica e de procedimentos referentes a este sítio da internet são aplicados de forma a proteger os dados pessoais contra a sua difusão, perda, uso indevido, alteração, tratamento ou acesso não autorizado, bem como contra qualquer outra forma de tratamento ilícito.
+O utilizador deverá ser parte ativa na garantia da segurança guardando em local seguro e não divulgando a terceiros os códigos de acesso e seguindo as práticas de segurança aplicáveis a equipamentos e ao software utilizado nesses mesmos dispositivos.
+
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel6'} onChange={handleChange('panel6')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>6. Durante quanto tempo os dados são mantidos?</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Os dados referentes a encomendas serão mantidos durante dez anos.
+Os restantes dados dos utilizadores, como nome, contactos telefónicos poderão ser criados, alterados ou eliminados pelo próprio utilizador, na sua área reservada.
+
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel7'} onChange={handleChange('panel7')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>7. Com quem podemos partilhar os seus dados pessoais?</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Os dados pessoais recolhidos não serão transmitidos a terceiros.
+
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel8'} onChange={handleChange('panel8')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>8. Como pode exercer os seus direitos?</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Os O fornecimento de dados pessoais é facultativo e será sempre garantido, nos termos da lei, o direito de acesso, retificação e anulação de qualquer dado fornecido, podendo aquele direito ser exercido pessoalmente ou por escrito, diretamente para o endereço constante no sítio da internet ww.mofreita.pt. pessoais recolhidos não serão transmitidos a terceiros.
+
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded === 'panel9'} onChange={handleChange('panel9')}>
+              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                <Typography>9. Uso de cookies</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <p><span style={{ color: 'rgb(68, 68, 68)' }}>
+                  Este sítio da internet utiliza Cookies de forma a proporcionar a melhor experiência ao utilizador. Considerando-se como tal, pequenos ficheiros de texto com informação relevante que o dispositivo de acesso (computador ou tablet) carrega, através do navegador de internet (browser), quando um site é visitado pelo utilizador. Os cookies utilizados neste sítio da internet permitem melhorar o desempenho e a experiência de navegação dos seus utilizadores, aumentando, por um lado, a rapidez e eficiência de resposta e, por outro, eliminando a necessidade de introduzir repetidamente as mesmas informações. A colocação de cookies não só ajuda o site a reconhecer o dispositivo do utilizador na próxima vez que este o visita, mas também será imprescindível para o funcionamento do mesmo. Os cookies usados neste sítio da internet, não recolhem informações pessoais que permitam identificar o utilizador, guardando apenas informações genéricas, designadamente a forma ou local/país de acesso e o modo como o utilizador usa o sítio da internet, entre outros. Os cookies retêm apenas informação relacionada com as preferências do utilizador e este pode, a qualquer momento e através do seu navegador de internet (browser), decidir ser notificado sobre a receção de cookies, bem como bloquear a respetiva entrada no seu sistema. Cada navegador de internet dispõe de um processo de configuração próprio para esta configuração. Esse processo pode ser consultado no menu Ajuda, o qual explica como configurar as preferências em matéria de cookies. Alerta-se, contudo, que a recusa de uso de cookies pode resultar na impossibilidade de acesso a algumas das áreas deste sítio da internet.
+                  </span></p>
+
+                </Typography>
+              </AccordionDetails>
             </Accordion>
           </Box>
         </Box>

@@ -14,14 +14,12 @@ import routes from '../../navigation/routes';
 
 //  Actions
 import * as OrganizationsActionsRedux from '../../store/actions/organization';
-import * as permissionsActionsRedux from '../../store/actions/permission';
 
 const NewOrder = () => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getOrganizations = (data) => dispatch(OrganizationsActionsRedux.organizations(data));
-  const getPermissions = (data) => dispatch(permissionsActionsRedux.permissions(data));
 
   useEffect(() => {
     const getData = async () => {

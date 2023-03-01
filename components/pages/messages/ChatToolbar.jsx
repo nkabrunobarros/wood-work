@@ -14,10 +14,10 @@ const ChatToolbar = (props) => {
           {/* <Avatar sx={styles.avatar}>N</Avatar> */}
           <Typography variant='md'sx={{ display: !conversation && 'none' }}> {isInternalPage
             ? conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
-            : conversation?.type === 'Project' ? 'Pedido' : 'Orçamento'
+            : conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
           }
           {' '}
-          {conversation?.orderId || conversation?.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
+          {conversation.filterName}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

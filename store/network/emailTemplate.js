@@ -200,7 +200,7 @@ function emailTemplate (props) {
                               <tbody>
                                 <tr>
                                   <td align="center" bgcolor="#41B8FF" role="presentation"
-                                    style="border:none;border-radius:0px;cursor:auto;mso-padding-alt:10px 25px;background:#41B8FF;"
+                                    style="border:none;border-radius:0px;cursor:auto;mso-padding-alt:10px 25px;background:#0C2254;"
                                     valign="top"><a href="${route || process.env.NEXT_PUBLIC_WEBSITE_URL}"
                                       style="display:inline-block;background:#0c2254;color:#ffffff;font-family:Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:0px;"
                                       target="_blank"><span

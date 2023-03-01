@@ -60,11 +60,13 @@ const ProjectsScreen = (props) => {
   const [producao, setProducao] = useState('');
   const [filters, setFilters] = useState({});
   const [product, setProduct] = useState('');
+  const [referencia, setReferência] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
   const userPermissions = useSelector((state) => state.auth.userPermissions);
 
   const ClearFilters = () => {
     setProduct('');
+    setReferência('');
     setNumber('');
     setClient('');
     setCategory('');
@@ -79,12 +81,14 @@ const ProjectsScreen = (props) => {
       Nome: number,
       Cliente: client,
       Estado: producao,
-      telemovel: telephone
+      telemovel: telephone,
+      Referência: referencia
     });
-  }, [number, producao, client, category, product, telephone]);
+  }, [number, producao, client, category, product, telephone, referencia]);
 
   useEffect(() => {
     setNumber(filters.Nome || '');
+    setReferência(filters.Referência || '');
     setClient(filters.Cliente || '');
     setProducao(filters.Estado || '');
     setTelephone(filters.telemovel || '');
@@ -122,7 +126,7 @@ const ProjectsScreen = (props) => {
       <Grid container md={12} sx={12} xs={12}>
         {cards?.map((card) => (
           <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1} onClick={() => {
-            console.log('cliquei');
+            setProducao(card.id);
           }}>
             <InfoCard
               amount={card.amount}
@@ -137,6 +141,18 @@ const ProjectsScreen = (props) => {
       <Content>
         <Grid id='pad' md={12} container>
           <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
+          <Grid container item md={3} sm={6} xs={12} p={1}>
+            <MyInput
+              fullWidth
+              label='Referência cliente'
+              id='Referência'
+              name='Referência'
+              autoComplete='name'
+              placeholder='Escrever Referência cliente'
+              value={referencia}
+              onChange={(e) => setReferência(e.target.value)}
+            />
+          </Grid>
           <Grid container item md={3} sm={6} xs={12} p={1}>
             <MyInput
               fullWidth
@@ -191,7 +207,7 @@ const ProjectsScreen = (props) => {
               options={[
                 {
                   subheader: true,
-                  label: 'Orçamentos'
+                  label: '--- Orçamento'
                 },
                 {
                   id: 'waiting budget',
@@ -203,7 +219,7 @@ const ProjectsScreen = (props) => {
                 },
                 {
                   subheader: true,
-                  label: 'Projetos'
+                  label: isInternalPage ? '--- Projeto' : '--- Pedido'
                 },
                 {
                   id: 'drawing',
@@ -223,7 +239,7 @@ const ProjectsScreen = (props) => {
                 },
                 {
                   id: 'finished',
-                  label: 'Terminada'
+                  label: 'Terminado'
                 },
 
               ]}

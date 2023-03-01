@@ -1,8 +1,5 @@
 TODOS
 Serviço de emails
-    on account created
-    on reset password
-    on production start
     on expedition (  )
     on finished ( thank you for trusting us, bla bla )
 
@@ -13,21 +10,10 @@ Chão de fábrica
 
 messages cliente (não envia mensagens, está tudo pronto para enviar)
 
-listar parts no sistema no leftovers (depois, está com dummy)
-
-
-
-enviar password or email ao criar worker e cliente
-
-
 
 VERIFICAR
-criação de clientes
-receção de email de criação para ativar
-
-ver templates dos emails de ativação
-ver templates dos emails de reset
 
 verificar onde tenho o redux a arrebentar
 
-arranjar a cor do fundo do texto no template de email no button
+
+edit order
