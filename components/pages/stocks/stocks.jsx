@@ -184,7 +184,7 @@ const Stock = ({ ...props }) => {
         <AdvancedTable
           rows={stocks}
           headCells={headCells}
-          clickRoute={routes.private.internal.stockId}
+          clickRoute={routes.private.internal.stock}
           filters={filters}
           setFilters={setFilters}
           rangeFilters={sizesFilter}

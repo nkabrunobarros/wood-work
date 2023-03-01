@@ -14,19 +14,18 @@ import routes from '../../navigation/routes';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as projectsActionsRedux from '../../store/actions/project';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const Messages = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [merged, setMerged] = useState();
-  const reduxState = useSelector((state) => state);
   const getProjects = (data) => dispatch(projectsActionsRedux.activeProjects(data));
   const getBudgets = (data) => dispatch(budgetsActionsRedux.activebudgets(data));
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
 
   useEffect(() => {
-    async function load() {
+    async function load () {
       const projects = await getProjects();
 
       projects.data.map(async (project) => {

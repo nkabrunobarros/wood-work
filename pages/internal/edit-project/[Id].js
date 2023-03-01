@@ -43,11 +43,11 @@ const EditProject = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Encomendas',
+        title: 'Pedidos',
         href: `${routes.private.internal.projects}`,
       },
       {
-        title: 'Editar Encomenda',
+        title: 'Editar Pedido',
         href: `${routes.private.internal.project}`,
       },
     ];

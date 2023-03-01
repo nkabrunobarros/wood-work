@@ -73,11 +73,11 @@ const Order = ({ ...pageProps }) => {
   ) {
     const breadcrumbsPath = [
       {
-        title: 'Encomendas',
+        title: 'Pedidos',
         href: `${routes.private.projects}`,
       },
       {
-        title: `Encomenda Nº ${reduxState.projects.displayedProject?.name?.value}`,
+        title: `Pedido  ${reduxState.projects.displayedProject?.name?.value}`,
         href: `${routes.private.internal.project}`,
       },
     ];
@@ -124,7 +124,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: `Quantidade Encomendada: ${reduxState.projects.displayedProject?.amount?.amount?.value} Un`,
+        label: `Quantidade Pedida: ${reduxState.projects.displayedProject?.amount?.amount?.value} Un`,
         span: 1,
       },
       {

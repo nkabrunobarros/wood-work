@@ -12,16 +12,16 @@ const ChatToolbar = (props) => {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {/* <Avatar sx={styles.avatar}>N</Avatar> */}
-          <Typography variant='md'> {isInternalPage
+          <Typography variant='md'sx={{ display: !conversation && 'none' }}> {isInternalPage
             ? conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
-            : conversation?.type === 'Project' ? 'Encomenda' : 'Orçamento'
+            : conversation?.type === 'Project' ? 'Pedido' : 'Orçamento'
           }
           {' '}
-          {conversation.orderId || conversation.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
+          {conversation?.orderId || conversation?.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <ButtonGroup>
+          <ButtonGroup sx={{ display: 'none' }} >
             <Tooltip title="Ajuda">
               <IconButton>
                 <HelpCircle
@@ -32,7 +32,8 @@ const ChatToolbar = (props) => {
             </Tooltip>
             <Tooltip title="Atualizar">
               <IconButton>
-                <RefreshCw strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                <RefreshCw
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
                   size={pageProps?.globalVars?.iconSize}/>
               </IconButton>
             </Tooltip>

@@ -55,35 +55,39 @@ const FilterItem = (data, item, col) => {
           case 'desvio': return calcDesvio(item[`${col}`]);
 
           case 'ord_amount': {
-            return <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box>
-                <Typography variant="body2" color="text.secondary">0</Typography>
-              </Box>
-              <Tooltip title={`${((item.completed - 0) * 100) / (item.amount - 0)} %`}>
-                <Box sx={{ width: '100%', padding: '0.5rem' }}>
-                  <LinearProgress variant="determinate" value={((item.completed - 0) * 100) / (item.amount - 0)} />
+            return Number.isInteger(item.amount)
+              ? <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">0</Typography>
                 </Box>
-              </Tooltip>
-              <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{item.amount}</Typography>
+                <Tooltip title={`${((item.completed - 0) * 100) / (item.amount - 0)} %`}>
+                  <Box sx={{ width: '100%', padding: '0.5rem' }}>
+                    <LinearProgress variant="determinate" value={((item.completed - 0) * 100) / (item.amount - 0)} />
+                  </Box>
+                </Tooltip>
+                <Box sx={{ minWidth: 35 }}>
+                  <Typography variant="body2" color="text.secondary">{item.amount}</Typography>
+                </Box>
               </Box>
-            </Box>;
+              : 'nah';
           }
 
           case 'ord_amount_proj': {
-            return <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box>
-                <Typography variant="body2" color="text.secondary">0</Typography>
-              </Box>
-              <Tooltip title={`${(((item.completed?.value || 0) * 100) / (item.amount?.value || 0) || 0)} %`}>
-                <Box sx={{ width: '100%', padding: '0.5rem' }}>
-                  <LinearProgress variant="determinate" value={((item.completed?.value || 0) * 100) / (item.amount?.value || 0)} />
+            return item.amount?.value !== '' && item.status.value !== 'waiting budget' && item.status.value !== 'waiting adjudication'
+              ? <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">0</Typography>
                 </Box>
-              </Tooltip>
-              <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{item.amount?.value || 0}</Typography>
+                <Tooltip title={`${((item.completed - 0) * 100) / (item.amount - 0)} %`}>
+                  <Box sx={{ width: '100%', padding: '0.5rem' }}>
+                    <LinearProgress variant="determinate" value={((item.completed - 0) * 100) / (item.amount.value - 0)} />
+                  </Box>
+                </Tooltip>
+                <Box sx={{ minWidth: 35 }}>
+                  <Typography variant="body2" color="text.secondary">{item.amount.value}</Typography>
+                </Box>
               </Box>
-            </Box>;
+              : item.amount.value || '';
           }
 
           case 'Estado': {

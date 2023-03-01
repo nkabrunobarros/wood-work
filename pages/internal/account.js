@@ -12,12 +12,13 @@ import PropTypes from 'prop-types';
 
 //  Navigation
 import routes from '../../navigation/routes';
+import { useSelector } from 'react-redux';
 
 //  Services
 
 const Account = ({ ...pageProps }) => {
   let loaded = false;
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useSelector((state) => state.auth.me);
 
   if (user) loaded = true;
 

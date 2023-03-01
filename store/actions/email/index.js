@@ -3,4 +3,6 @@ export {
   EMAIL_FAIL,
   EMAIL_SUCCESS,
   resetPassword,
+  budgetAdjudicated,
+  updatePassword
 } from './email';

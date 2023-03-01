@@ -94,7 +94,7 @@ const Budget = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${budget?.amount?.value} Un`,
+        label: `Quantidade Pedido: ${budget?.amount?.value} Un`,
         span: 1,
       },
     ];

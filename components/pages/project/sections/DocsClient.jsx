@@ -14,7 +14,7 @@ import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
   const { pageProps, styles, order, isInternalPage } = props;
-  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === order.budgetId.object.id.replace('Budget', 'Folder'))?.files);
+  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === order.budgetId.object?.id.replace('Budget', 'Folder'))?.files);
   const [newFiles, setNewFiles] = useState();
   const [confirmUploadModal, setConfirmUploadModal] = useState(false);
   const dispatch = useDispatch();

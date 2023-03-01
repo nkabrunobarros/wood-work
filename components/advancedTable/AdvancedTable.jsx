@@ -51,10 +51,7 @@ import routes from '../../navigation/routes';
 //  Utils
 import axios from 'axios';
 import moment from 'moment/moment';
-import { useDispatch, useSelector } from 'react-redux';
 import { methods } from '../../pages/api/actions/methods';
-import * as clientsActionsRedux from '../../store/actions/client';
-import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
   children,
@@ -86,18 +83,16 @@ const AdvancedTable = ({
   const [refresh, setRefresh] = useState(new Date());
   const [loaded, setLoaded] = useState(false);
   const [displaying, setDisplaying] = useState();
-  const dispatch = useDispatch();
-  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
-  const reduxState = useSelector((state) => state);
 
   useEffect(() => {
     const getData = async () => {
-      !reduxState.clients.data && await getClients();
+  
 
       const allData = {
         categories: [],
         // categories: categories.data.payload.data,
-        clients: reduxState.clients.data
+        clients: []
+        // clients: reduxState.clients.data
       };
 
       setData(allData);
@@ -313,8 +308,7 @@ const AdvancedTable = ({
         };
 
         axios(config)
-          .then(function (response) {
-            console.log(JSON.stringify(response.data));
+          .then(function () {
             toast.success('Cliente removido com sucesso!');
           })
           .catch(function (error) {
@@ -548,7 +542,6 @@ const AdvancedTable = ({
       }
       );
 
-      console.log(filteredTest);
       setFilteredItems(filteredTest);
     }
   }, [filters, rangeFilters]);
@@ -700,7 +693,7 @@ const AdvancedTable = ({
 
                                       {headCell.id !== 'actionsConf'
                                         ? <>
-                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
+                                          {true &&
                                       <Tooltip title={'Editar'}>
                                         <IconButton
                                           onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
@@ -711,7 +704,7 @@ const AdvancedTable = ({
                                       </Tooltip>}
                                         </>
                                         : <>
-                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
+                                          {true &&
                                         <>
                                           <Tooltip title={'Adjudicar orçamento'}>
                                             <IconButton onClick={() => {
@@ -733,7 +726,7 @@ const AdvancedTable = ({
                                         </>}
                                         </>
                                       }
-                                      {CanDo(['DELETE', displaying, reduxState.auth.userPermissions]) && <Tooltip title={'Remover'}>
+                                      {true && <Tooltip title={'Remover'}>
                                         <IconButton onClick={() => onDeleteClick(row)} >
                                           <DeleteOutline
                                             color={'primary'}

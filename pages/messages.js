@@ -11,7 +11,7 @@ import routes from '../navigation/routes';
 
 //  Page Component
 //  Data services
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as budgetsActionsRedux from '../store/actions/budget';
 import * as projectsActionsRedux from '../store/actions/project';
 
@@ -19,13 +19,12 @@ const Messages = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [merged, setMerged] = useState();
-  const reduxState = useSelector((state) => state);
   const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
   const getBudgets = (data) => dispatch(budgetsActionsRedux.activebudgets(data));
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
 
   useEffect(() => {
-    async function load() {
+    async function load () {
       try {
         const projects = await getProjects();
 
@@ -84,7 +83,12 @@ const Messages = ({ ...pageProps }) => {
       breadcrumbsPath,
       headCellsMessages,
       pageProps,
-      chats: [...merged].map((item) => {
+      // eslint-disable-next-line consistent-return
+      chats: [...merged].filter((item) => {
+        if (item.status.value === 'adjudicated' || item.status.value === 'canceled') {
+          console.log();
+        } else return item;
+      }).map((item) => {
         const item2 = { ...item };
 
         item2.filterName = item.name.value.replace(/_/g, ' ');

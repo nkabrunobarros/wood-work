@@ -177,7 +177,8 @@ const Workers = ({ ...props }) => {
           filters={filters}
         /> */}
         <AdvancedTable
-          rows={workers.filter((item) => item.active?.value && item)}
+          rows={workers}
+          // rows={workers.filter((item) => item.active?.value && item)}
           headCells={headCellsWorkers}
           clickRoute={detailRoute}
           editRoute={editRoute}

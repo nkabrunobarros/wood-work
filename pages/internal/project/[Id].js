@@ -172,7 +172,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${reduxState.projects.displayedProject?.amount?.value} Un`,
+        label: `Quantidade Pedida: ${reduxState.projects.displayedProject?.amount?.value} Un`,
         span: 1,
       },
     ];
@@ -256,7 +256,7 @@ const Order = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: `Quantidade Encomendada: ${reduxState.projects.displayedProject?.amount?.value} Un`,
+        label: `Quantidade Pe: ${reduxState.projects.displayedProject?.amount?.value} Un`,
         span: 1,
       },
       {

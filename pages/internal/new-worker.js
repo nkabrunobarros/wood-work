@@ -27,7 +27,7 @@ const NewOrder = () => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       !reduxState.organizations.data && await getOrganizations();
-      !reduxState.permissions.data && await getPermissions();
+      // !reduxState.permissions.data && await getPermissions();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
@@ -6,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import routes from '../navigation/routes';
 
 //  Preloader
-import Loader from '../components/loader/loader';
 
 //  Page Component
 import OrdersScreen from '../components/pages/projects/projects';
@@ -27,7 +27,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Orders = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const detailPage = routes.private.project;
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   //  dispatch actions
@@ -41,17 +40,14 @@ const Orders = ({ ...pageProps }) => {
 
     try {
       if (!reduxState.projects?.data) {
-        await getProjects(reduxState.auth.me.id).then((res) => {
-          console.log('res');
-          console.log(res);
-        });
+        await getProjects(reduxState.auth.me.id);
       }
+
+      if (!reduxState.clients?.data) { await getClients(); }
 
       if (!reduxState.expeditions?.data) { await getExpeditions(); }
 
       if (!reduxState.budgets?.data) { await getBudgets(); }
-
-      if (!reduxState.clients?.data) { await getClients(); }
     } catch (err) {
       console.log(err);
       errors = true;
@@ -72,7 +68,7 @@ const Orders = ({ ...pageProps }) => {
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
-        title: 'Encomendas',
+        title: 'Pedidos',
         href: `${routes.private.internal.orders}`,
       },
     ];
@@ -127,6 +123,7 @@ const Orders = ({ ...pageProps }) => {
 
     const cards = [
       {
+        id: 'waiting budget',
         num: 1,
         title: 'Em Orçamentação',
         amount: counts.waitingBudget,
@@ -139,6 +136,7 @@ const Orders = ({ ...pageProps }) => {
         color: 'var(--primary)',
       },
       {
+        id: 'drawing',
         num: 2,
         title: 'Em Desenho',
         amount: counts.drawing,
@@ -151,6 +149,7 @@ const Orders = ({ ...pageProps }) => {
         color: 'var(--green)',
       },
       {
+        id: 'production',
         num: 3,
         title: 'Em Produção',
         amount: counts.production,
@@ -163,6 +162,7 @@ const Orders = ({ ...pageProps }) => {
         color: 'var(--orange)',
       },
       {
+        id: 'testing',
         num: 4,
         title: 'Em Montagem',
         amount: counts.testing,
@@ -200,26 +200,23 @@ const Orders = ({ ...pageProps }) => {
       },
     ];
 
-    const clients = [...reduxState.clients?.data ?? []];
+    const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
+      return bud?.status?.value !== 'adjudicated' && bud?.status?.value !== 'canceled' && {
+        ...bud,
+        Estado: bud?.status?.value,
+        Nome: bud?.name?.value.replace(/_/g, ' '),
 
-    const budgets = [...reduxState.budgets?.data ?? []].map((bud) => ({
-      ...bud,
-      Estado: bud?.status?.value,
-      Nome: bud?.name?.value.replace(/_/g, ' '),
-      Cliente: bud.orderBy.object
-    }));
+      };
+    });
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => ({
       ...proj,
       Estado: proj?.status?.value,
       Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
       budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
-      Cliente: clients.find((ele) => ele.id === (budgets.find((ele) => ele.id === proj.budgetId.object)).orderBy.object).id
     }));
 
-    console.log(projects);
-
-    const merged = [...projects, ...budgets.filter((ele) => ele.status === 'adjudicated')];
+    const merged = [...projects, ...budgets.filter((ele) => ele.status !== 'adjudicated')];
 
     const props = {
       counts,
@@ -227,7 +224,6 @@ const Orders = ({ ...pageProps }) => {
       cards,
       pageProps,
       headCellsProjects,
-      clients,
       budgets,
       projects: merged,
       detailPage: routes.private.project,
@@ -237,8 +233,6 @@ const Orders = ({ ...pageProps }) => {
 
     return <OrdersScreen {...props} />;
   }
-
-  return <Loader center={true} />;
 };
 
 Orders.propTypes = {

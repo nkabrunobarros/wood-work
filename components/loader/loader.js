@@ -52,7 +52,8 @@ const Loader = ({ center, backdrop, noPos }) => {
 
 Loader.propTypes = {
   center: PropTypes.any,
-  backdrop: PropTypes.bool
+  backdrop: PropTypes.bool,
+  noPos: PropTypes.bool,
 };
 
 export default Loader;

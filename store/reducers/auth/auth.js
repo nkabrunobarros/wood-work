@@ -31,7 +31,7 @@ const auth = createReducer(initialState, (builder) => {
       ...state,
       errors: null,
       loading: false,
-      me: action.payload.data,
+      me: action.payload.data[0] || action.payload.data,
     }))
     .addCase(authActions.ME_FAIL, (state, action) => ({
       ...state,
@@ -46,17 +46,7 @@ const auth = createReducer(initialState, (builder) => {
     .addCase(authActions.USER_PERMISSIONS_SET, (state, action) => ({
       ...state,
       userPermissions: action.data,
-    }))
-    .addCase(authActions.LOGOUT_SUCCESS, (state) => {
-      return {
-        ...state,
-        errors: null,
-        loading: false,
-        me: null,
-        token: null,
-        userPermissions: null,
-      };
-    });
+    }));
 });
 
 export default auth;

@@ -27,7 +27,7 @@ const Workers = () => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       !reduxState.workers.data && await getWorkers();
-      !reduxState.permissions.data && await getPermissions();
+      // !reduxState.permissions.data && await getPermissions();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

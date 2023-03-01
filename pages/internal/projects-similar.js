@@ -29,10 +29,10 @@ const OrdersSimilar = () => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      !reduxState.projects.data && getProjects();
       !reduxState.clients.data && getClients();
+      !reduxState.projects.data && getProjects();
     }
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -64,7 +64,7 @@ const OrdersSimilar = () => {
         disablePadding: false,
         borderLeft: true,
         borderRight: true,
-        label: 'Quantidade Encomendada:25 Un',
+        label: 'Quantidade Pedida:25 Un',
         span: 1,
       },
       {
@@ -87,13 +87,13 @@ const OrdersSimilar = () => {
       //   label: 'Nome',
       // },
       {
-        id: 'id',
+        id: 'Nome',
         numeric: false,
         disablePadding: false,
-        label: 'Num. Encomenda',
+        label: 'Nome Projeto',
       },
       {
-        id: 'order.client.legalName',
+        id: 'order.orderBy.object',
         numeric: false,
         disablePadding: true,
         label: 'Cliente',
@@ -175,6 +175,8 @@ const OrdersSimilar = () => {
       },
     ];
 
+    const clients = [...reduxState.clients?.data];
+
     //  Page Props
     const props = {
       items: [...reduxState.projects.data]?.map(
@@ -191,6 +193,8 @@ const OrdersSimilar = () => {
           item2.previsto2 = item?.product?.craftTime;
           item2.realizado2 = 2;
           item2.desvio2 = -2;
+          item2.Nome = item?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ');
+          item2.Cliente = clients.find((ele) => ele.id === item.orderBy.object);
 
           return item2;
         }
@@ -205,8 +209,6 @@ const OrdersSimilar = () => {
       headCellsUpper,
       headCells,
     };
-
-    console.log(props);
 
     //  Verifies if all data as been loaded and set page to fully Loaded
     return <OrdersScreen {...props} />;

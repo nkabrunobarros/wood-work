@@ -40,7 +40,7 @@ const LeftOversDialog = ({ open, handleClose, onConfirm, sizes, setSizes }) => {
           <icons.Check size={80} strokeWidth={1} color='green' />
         </Box>
         <DialogContentText id='alert-dialog-description'>
-          {!manually ? ' Estes tamanhos estão corretos?' : 'Preencha os dados em cm' }
+          {!manually ? ' Estes tamanhos estão corretos?' : 'Preencha os dados em mm' }
         </DialogContentText>
         <Box mt={1}>
           <Grid container md={12}>
@@ -64,10 +64,10 @@ const LeftOversDialog = ({ open, handleClose, onConfirm, sizes, setSizes }) => {
           onConfirm(sizes);
           setManualy(false);
         }} autoFocus>
-          <Typography color="link.main">Concordo</Typography>
+          <Typography color="link.main">Sim</Typography>
         </Button>
         <Button onClick={() => setManualy(true)} autoFocus sx={{ display: manually && 'none' }}>
-          <Typography color="link.main">Colocar Manualmente</Typography>
+          <Typography color="link.main">Não</Typography>
         </Button>
         <Button onClick={handleClose} sx={{ color: 'var(--gray)' }}>Cancelar</Button>
       </DialogActions>

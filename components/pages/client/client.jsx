@@ -106,20 +106,20 @@ const EditClient = ({ ...props }) => {
                   </Grid>
                 </Grid>
                 <Grid container item>
-                  <Grid item xs={12} md={6} sm={6}>
+                  {/* <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Pessoa de Contacto </Typography>
                     <Typography item color='lightTextSm.black' >{client?.contact?.value}</Typography>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Contacto </Typography>
                     <Typography item color='lightTextSm.black' >{client?.telephone?.value}</Typography>
                   </Grid>
-                </Grid>
-                <Grid container item>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Observações </Typography>
                     <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
                   </Grid>
+                </Grid>
+                <Grid container item>
                 </Grid>
               </Grid>
             </Grid>
@@ -158,7 +158,7 @@ const EditClient = ({ ...props }) => {
                 <Grid container item>
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'> Número de Identificação Fiscal (Nif)</Typography>
-                    <Typography item color='lightTextSm.black' >{client?.taxId?.value}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.vat?.value}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Outros Dados</Typography>

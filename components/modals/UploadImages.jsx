@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-import { Box, CircularProgress, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from '@mui/material';
+import { Box, Grid, IconButton, ImageList, ImageListItem, Modal, Tooltip } from '@mui/material';
 import { X, XCircle } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -13,11 +13,11 @@ import IsInternal from '../utils/IsInternal';
 
 const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pageProps }) => {
   const [newImages, setNewImages] = useState();
-  const [newImageDescription, setNewImageDescription] = useState('');
+  // const [newImageDescription, setNewImageDescription] = useState('');
   // const [folders2, setFolders] = useState(folders);
   const [selectedFolder, setSelectedFolder] = useState(orderId);
-  const [uploading, setUploading] = useState(false);
-  const [errorFolder, setErrorFolder] = useState('');
+  // const [uploading, setUploading] = useState(false);
+  // const [errorFolder, setErrorFolder] = useState('');
   const userPermissions = useSelector((state) => state.auth.userPermissions);
 
   function getBase64 (file) {
@@ -136,27 +136,27 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
 
   const [uploadedFiles, setUploadedFiles] = useState();
 
-  function separateFilesByFolder (files) {
-    const folders = {};
+  // function separateFilesByFolder (files) {
+  //   const folders = {};
 
-    for (const file of files) {
-      const pathSegments = file.path.split('/');
-      let currentFolder = folders;
+  //   for (const file of files) {
+  //     const pathSegments = file.path.split('/');
+  //     let currentFolder = folders;
 
-      for (let i = 1; i < pathSegments.length - 1; i++) {
-        const folderName = pathSegments[i];
+  //     for (let i = 1; i < pathSegments.length - 1; i++) {
+  //       const folderName = pathSegments[i];
 
-        currentFolder[folderName] = currentFolder[folderName] || {};
-        currentFolder = currentFolder[folderName];
-      }
+  //       currentFolder[folderName] = currentFolder[folderName] || {};
+  //       currentFolder = currentFolder[folderName];
+  //     }
 
-      const fileName = pathSegments[pathSegments.length - 1];
+  //     const fileName = pathSegments[pathSegments.length - 1];
 
-      currentFolder[fileName] = file;
-    }
+  //     currentFolder[fileName] = file;
+  //   }
 
-    return folders;
-  }
+  //   return folders;
+  // }
 
   const onDrop = useCallback(acceptedFiles => {
     setUploadedFiles(acceptedFiles);
@@ -171,7 +171,6 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
           <Box sx={{ marginLeft: 'auto' }}>
             <IconButton onClick={() => {
               setNewImages();
-              setNewImageDescription();
               onClose(false);
             }}>
               <X
@@ -187,7 +186,6 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
               <Select
                 required
                 label='Pasta'
-                error={errorFolder}
                 value={selectedFolder}
                 onChange={(e) => setSelectedFolder(e.target.value)}
                 optionLabel={'name'}
@@ -232,10 +230,9 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
         <Grid md={12} sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', width: '100%' }}>
             <Box style={{ marginLeft: 'auto' }}>
-              <PrimaryBtn disabled={uploading} text={uploading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'Guardar'} onClick={() => handleSaveImages()} />
+              <PrimaryBtn text={ 'Guardar'} onClick={() => handleSaveImages()} />
               <PrimaryBtn light text={'Cancelar'} onClick={() => {
                 setNewImages();
-                setNewImageDescription('');
                 onClose();
               }} />
             </Box>

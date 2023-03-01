@@ -103,27 +103,38 @@ const SignIn = (props) => {
 
     const loadingNotification = toast.loading('');
 
-    await loginRedux({ username, password }).then(async (res) => {
-      setCookie(undefined, 'auth_token', res.data.access_token);
+    try {
+      await loginRedux({ username, password }).then(async (res) => {
+        setCookie(undefined, 'auth_token', res.data.access_token);
 
-      await me2(res.data.access_token).then((res) => {
-        const user = res?.data;
+        await me2(res.data.access_token).then((res) => {
+          const user = res?.data[0] || res?.data;
+          let active;
 
-        if (!user.is_active) {
-          ToastSet(loadingNotification, 'Conta Inativa', 'error');
-          setDialogOpen(true);
-          setLoading(false);
-          destroyCookie(null, 'auth_token');
-        } else {
-          // Success
-          ToastSet(loadingNotification, 'A entrar', 'success');
-          setLoading(false);
-          // if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
-          // else router.push(loginSuccessRoute);
-          router.push(loginSuccessRoute);
-        }
-      }).catch((err) => console.log(err));
-    });
+          if (user.type === 'Owner') active = user.active.value;
+          else active = user.is_active;
+
+          if (!active) {
+            ToastSet(loadingNotification, 'Conta Inativa', 'error');
+            setDialogOpen(true);
+            setLoading(false);
+            destroyCookie(null, 'auth_token');
+          } else {
+            // Success
+            ToastSet(loadingNotification, 'A entrar', 'success');
+            setLoading(false);
+            // if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
+            // else router.push(loginSuccessRoute);
+            router.push(loginSuccessRoute);
+          }
+        }).catch((err) => console.log(err));
+      });
+    } catch (err) {
+      if (err.response.data.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas', 'error');
+      else ToastSet(loadingNotification, 'Algo aconteceu. Por favor tente mais tarde', 'error');
+
+      setLoading(false);
+    }
   };
 
   return (

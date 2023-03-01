@@ -5,19 +5,15 @@ import React from 'react';
 
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
-import { useDispatch, useSelector } from 'react-redux';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
 import * as appStatesActions from '../../../store/actions/appState';
 import styles from '../../../styles/components/navbar.module.css';
 
-const Navbar = ({ ...pageProps }) => {
-  const open = Boolean();
-  const dispatch = useDispatch();
+const Navbar = ({ dispatch, me, ...pageProps }) => {
   const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
-  const loggedUser = useSelector((state) => state.auth.me);
 
-  return (
+  return true && (
     <>
       <AppBar position='sticky' sx={{ backgroundColor: 'default.sides' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -39,7 +35,7 @@ const Navbar = ({ ...pageProps }) => {
                   color='inherit'
                   aria-label='open drawer'
                   edge='start'
-                  sx={{ ml: 2, ...(open && { display: 'none' }) }}
+                  sx={{ ml: 2 }}
                   onClick={() => toggleDrawer()}
                 >
                   <Menu
@@ -52,7 +48,7 @@ const Navbar = ({ ...pageProps }) => {
           </Box>
           <Box id='align' justifyContent={'end'}>
             <Box pr={3}>
-              <Typography variant='md'>{loggedUser?.name?.value || loggedUser?.givenName?.value || (loggedUser?.first_name !== '' ? loggedUser?.first_name + ' ' + loggedUser?.last_name : loggedUser.username)}</Typography>
+              <Typography variant='md' sx={{ display: !me && 'none' }}>{me?.name?.value || me?.givenName?.value || (me?.first_name !== '' ? me?.first_name + ' ' + me?.last_name : me.username)}</Typography>
             </Box>
             <Box className={styles.logos} >
               <Image
@@ -72,8 +68,8 @@ const Navbar = ({ ...pageProps }) => {
 };
 
 Navbar.propTypes = {
-  openDrawer: PropTypes.any,
-  toggleTheme: PropTypes.any,
+  me: PropTypes.any,
+  dispatch: PropTypes.any,
 };
 
 export default Navbar;

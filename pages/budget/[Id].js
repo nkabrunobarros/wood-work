@@ -1,36 +1,54 @@
+/* eslint-disable array-callback-return */
 //  Page Component
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import BudgetScreen from '../../components/pages/budget/budget';
 import routes from '../../navigation/routes';
 import * as budgetsActionsRedux from '../../store/actions/budget';
-import * as BudgetActions from '../api/actions/budget';
-import * as ClientsActions from '../api/actions/client';
+import * as clientsActionsRedux from '../../store/actions/client';
+import * as filesActionsRedux from '../../store/actions/file';
+import * as foldersActionsRedux from '../../store/actions/folder';
 import { categories } from '../internal/new-project';
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
-  const reduxState = useSelector((state) => state);
+  // const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [budget, setBudget] = useState();
   const [loaded, setLoaded] = useState(false);
-  const folders = [];
-  const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
+  const [folders, setFolders] = useState([]);
+  const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
+  const setDisplayingBudget = (data) => dispatch(budgetsActionsRedux.setDisplayingBudget(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
 
   useEffect(() => {
     const getData = async () => {
-      if (!reduxState.budgets.data) await getBudgets();
+      const budget = (await getBudget(router.query.Id)).data;
+      const client = (await getClient(budget.orderBy.object)).data;
+      const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
 
-      await BudgetActions.budget({ id: router.query.Id }).then(async (res) => {
-        const thisBudget = res.data[0];
+      thisBudget.orderBy.object = client;
+      setBudget(thisBudget);
+      setDisplayingBudget(thisBudget);
 
-        await ClientsActions.client({ id: thisBudget.belongsTo.object }).then(async (clientRes) => {
-          thisBudget.belongsTo.object = clientRes.data[0];
+      await getFolders().then(async (res) => {
+        const builtFolders = [];
+        const resFiles = await getFiles(router.query.Id);
+
+        console.log(res.data);
+
+        res.data.results.map((folder) => {
+          const folder2 = { ...folder };
+
+          folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
+          builtFolders.push(folder2);
         });
 
-        setBudget(thisBudget);
+        setFolders(builtFolders);
       });
     };
 
@@ -41,11 +59,11 @@ const Budget = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Encomendas',
+        title: 'Pedidos',
         href: `${routes.private.projects}`,
       },
       {
-        title: `Encomenda ${budget.name.value}`,
+        title: `Pedido ${budget.name.value}`,
         // title: `Orçamento ${order.name.value}`,
         href: `${routes.private.budget}`,
       },
@@ -76,7 +94,7 @@ const Budget = ({ ...pageProps }) => {
         disablePadding: false,
         borderLeft: false,
         borderRight: false,
-        label: `Quantidade Encomendada: ${budget?.amount?.value} Un`,
+        label: `Quantidade Pedida: ${budget?.amount?.value} Un`,
         span: 1,
       },
     ];

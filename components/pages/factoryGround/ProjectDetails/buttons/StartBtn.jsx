@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { MinusCircle, Play } from 'lucide-react';
 import React, { useState } from 'react';
@@ -7,8 +8,6 @@ import PropTypes from 'prop-types';
 export const StartBtn = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
-  console.log(props);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -22,8 +21,8 @@ export const StartBtn = (props) => {
   return !props.detailOnly
     ? (
       <>
-        <IconButton onClick={(e) => !props.msg && handleClick(e)} >
-          <Tooltip title={props.msg || 'Iniciar'} >
+        <IconButton onClick={(e) => !props.msg && props.machines[0] && handleClick(e)} >
+          <Tooltip title={props.msg || !props.machines[0] ? 'Não há maquinas disponiveis' : 'Iniciar'} >
             <Play />
           </Tooltip>
         </IconButton>

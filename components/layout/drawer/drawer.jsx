@@ -18,8 +18,6 @@ import {
   Typography
 } from '@mui/material';
 
-//  Utlis
-
 //  Services
 import { navLinks } from '../../utils/navLinks';
 
@@ -37,13 +35,14 @@ import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
 import { useDispatch, useSelector } from 'react-redux';
-import * as authActions from '../../../pages/api/actions/auth';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
+import Router from 'next/router';
 import Auth from '../../../lib/AuthData';
 import * as appStatesActions from '../../../store/actions/appState';
+import * as authActions from '../../../store/actions/auth';
 
-const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontSize }) => {
+const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
   const theme = useTheme();
   const loggedUser = useSelector((state) => state.auth.me);
   const userPermissions = useSelector((state) => state.auth.userPermissions);
@@ -51,6 +50,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
   const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
+  const logout = () => dispatch(authActions.logout());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -101,7 +101,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
         >
           <IconButton
             style={{ color: 'var(--white)', position: 'absolute', right: '0%' }}
-            onClick={handleDrawerToggle}>
+            onClick={toggleDrawer}>
             <X />
           </IconButton>
           <Box style={{ margin: '1rem' }}>
@@ -229,7 +229,7 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
                   <MenuItem sx={{ padding: '0' }}>
 
                     <ActiveLink
-                      handleDrawerToggle={handleDrawerToggle}
+                      handleDrawerToggle={toggleDrawer}
                       href={IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
                       page={'Conta'}
                     >
@@ -242,8 +242,9 @@ const DrawerMobile = ({ mobileOpen, handleDrawerToggle, toggleTheme, toggleFontS
                     <a
                       className={styles.navItemContainer}
                       onClick={() => {
-                        authActions.logout();
-                        handleDrawerToggle();
+                        toggleDrawer();
+                        Router.push(userPermissions.type === 'client' ? '/' : '/signin');
+                        logout();
                       }}
                     >
                       <LogOut strokeWidth='1' size={20} />

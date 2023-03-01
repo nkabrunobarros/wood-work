@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus, Info, X } from 'lucide-react';
@@ -32,7 +34,7 @@ const Docs = (props) => {
     error: ''
   });
 
-  const newFolder = (data) => dispatch(foldersActionsRedux.newFolderName(data));
+  const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
   const dispatch = useDispatch();
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const [docsModal, setDocsModal] = useState(false);
@@ -94,7 +96,7 @@ const Docs = (props) => {
     return folders
       .filter((folder) => folder.parent_folder === parentId)
       .map((folder) => (
-        <Accordion key={folder.id} {...getRootProps()} sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
+        <Accordion key={folder.id} {...getRootProps()} ondrop={() => console.log('e')}sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
           <Tooltip title='Arrastar ficheiros para esta pasta' {...getRootProps()}>
             <AccordionSummary expandIcon={<ChevronDown />} >
               <Grid container bgcolor={'default.main'} >
@@ -153,7 +155,7 @@ const Docs = (props) => {
     }
 
     setConfirmUploadModal(false);
-    setnewFolderName({ value: '', error: '' });
+    setNewFolderName({ value: '', error: '' });
   }
 
   return open && <>

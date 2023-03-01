@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-constant-condition */
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button } from '@mui/material';
@@ -7,14 +8,14 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import routes from '../../../navigation/routes';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
 // import FormGenerator from '../../formGenerator';
+import { useDispatch } from 'react-redux';
+import * as emailActionsRedux from '../../../store/actions/email';
 import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Loader from '../../loader/loader';
@@ -25,11 +26,13 @@ const ResetPassword = (props) => {
   const [submiting, setSubmiting] = useState(false);
   const [visible, setVisible] = useState(false);
   const [windowWidth, setWindowHeight] = useState();
+  const dispatch = useDispatch();
+  const updatePassword = (data) => dispatch(emailActionsRedux.updatePassword(data));
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
       setWindowHeight(window.innerWidth);
-    }, [window.innerWidth]);
+    }, []);
   }
 
   const listenToResize = () => {
@@ -52,7 +55,7 @@ const ResetPassword = (props) => {
       type: 'password'
     },
     {
-      id: 'passwordConfirm',
+      id: 'password_confirm',
       label: 'Confirme senha',
       value: '',
       error: '',
@@ -97,19 +100,35 @@ const ResetPassword = (props) => {
     return true;
   }
 
-  function handleSubmit (e) {
+  console.log(props.token);
+
+  async function handleSubmit (e) {
     e.preventDefault();
     setSubmiting(true);
 
     //  Validate form data
     if (ValidateData()) {
-      //  TODO: FAZER O PEDIDO DE RESET
       // Reset Success
-      if (true) {
-        toast.success('Senha redefinida!');
+      const data = {};
+
+      inputFields.map((field) => {
+        data[field.id] = field.value;
+      });
+
+      data.id = props.token.uidb64 + '/' + props.token.token;
+      console.log(data);
+
+      await updatePassword(data).then((res) => {
+        if (res.data === '"The token is valid. The Operation has occurred successfully."') toast.success('Senha redefinida!');
+        else ;
+
         setSubmiting(false);
-        Router.push(clientType === '1' ? routes.public.signInInternal : routes.public.signIn);
-      }
+      }).catch((err) => {
+        if (err.response.data.includes('Token has expired'))toast.error('Link inválido. Por favor refaça o pedido.');
+        else toast.error('Algo aconteceu! Por favor tente mais tarde.');
+
+        setSubmiting(false);
+      });
     } else {
       //  Reset Fails
       setSubmiting(false);
@@ -172,7 +191,7 @@ const ResetPassword = (props) => {
             alignItems: 'start',
           }}
         >
-          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {clientType === '1' ? 'Interno' : 'Cliente'} WW4.0</Typography>
+          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.token.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
           <Typography component='h2' variant='h3'>
             Redefinir senha
           </Typography>

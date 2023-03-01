@@ -12,8 +12,6 @@ export const Message = (props) => {
   const reduxState = useSelector((state) => state);
   const loggedUser = reduxState.auth.me;
   const sender = loggedUser.id === msg.by;
-  const sender2 = loggedUser.id === (props.conversation.budgetId?.orderBy || props.conversation.orderBy);
-
   const styles = MessagesStyles({ theme, sender });
   const [toViewImage, setToViewImage] = useState();
 

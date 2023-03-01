@@ -1,5 +1,5 @@
 function emailTemplate (props) {
-  console.log(props);
+  const { clientName, msgBody, route } = props;
 
   return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -142,7 +142,7 @@ function emailTemplate (props) {
                               <tbody>
                                 <tr>
     
-                                  <td style="width:150px;"><img alt="theOPShub" height="auto"
+                                  <td style="width:150px;"><img alt="Mofreita" height="auto"
                                       src="http://mofreita.com/wp-content/uploads/2020/06/MOFREITA-LOGOTIPO_white.png"
                                       style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
                                       width="150"></td>
@@ -179,11 +179,11 @@ function emailTemplate (props) {
                               style="font-family:Arial, sans-serif;font-size:13px;letter-spacing:normal;line-height:1;text-align:left;color:#000000;">
                               <p class="text-build-content" data-testid="rPG6_j5GQA"
                                 style="margin: 10px 0; margin-top: 10px;"><span
-                                  style="color:#5e6977;font-family:Arial;font-size:18px;line-height:20px;">Caro
-                                  {{var:name:"sir/madam"}},</span></p>
+                                  style="color:#5e6977;font-family:Arial;font-size:18px;line-height:20px;">Olá
+                                  ${clientName},</span></p>
                               <p class="text-build-content" data-testid="rPG6_j5GQA" style="margin: 10px 0;"><span
                                   style="color:#5e6977;font-family:Arial;font-size:18px;line-height:20px;">
-                                  mensagem aqui</span></p>
+                                  ${msgBody}</span></p>
                               <p class="text-build-content" data-testid="rPG6_j5GQA" style="margin: 10px 0;"><span
                                   style="color:#5e6977;font-family:Arial;font-size:18px;line-height:20px;">Aceda ao WoodWork
                                   4.0 para mais detalhes.</span></p>
@@ -201,7 +201,7 @@ function emailTemplate (props) {
                                 <tr>
                                   <td align="center" bgcolor="#41B8FF" role="presentation"
                                     style="border:none;border-radius:0px;cursor:auto;mso-padding-alt:10px 25px;background:#41B8FF;"
-                                    valign="top"><a href="{{var:route}}"
+                                    valign="top"><a href="${route || process.env.NEXT_PUBLIC_WEBSITE_URL}"
                                       style="display:inline-block;background:#0c2254;color:#ffffff;font-family:Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:0px;"
                                       target="_blank"><span
                                         style="background-color:#0c2254;color:#ffffff;font-size:13px;"><b>Ir para Wood Work
@@ -241,7 +241,7 @@ function emailTemplate (props) {
                                   style="font-size:16px;letter-spacing:normal;text-align:left;color:#5e6977;font-family:Arial;line-height:13px;">Se
                                   o botão não funcionar, copie/cole o seguinte link no seu navegador: </span></p>
                               <p style="text-align: left; margin: 10px 0; margin-bottom: 10px;"><span
-                                  style="font-size:16px;letter-spacing:normal;text-align:left;color:#5e6977;font-family:Arial;line-height:13px;"><b>{{var:route}}</b></span>
+                                  style="font-size:16px;letter-spacing:normal;text-align:left;color:#5e6977;font-family:Arial;line-height:13px;"><b>${route || process.env.NEXT_PUBLIC_WEBSITE_URL}</b></span>
                               </p>
                             </div>
                           </td>

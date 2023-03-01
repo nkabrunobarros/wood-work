@@ -16,9 +16,7 @@ export const USER_MODULES_REQUEST = 'USER_MODULES_REQUEST';
 export const USER_MODULES_FAIL = 'USER_MODULESGIN_FAIL';
 export const USER_MODULES_SUCCESS = 'USER_MODULES_SUCCESS';
 
-export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
-export const LOGOUT_FAIL = 'LOGOUT_FAIL';
-export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT = 'LOGOUT';
 
 export const ME_REQUEST = 'ME_REQUEST';
 export const ME_FAIL = 'ME_FAIL';
@@ -49,21 +47,13 @@ export const login = (data) => {
 };
 
 export const logout = (data) => {
-  const { auth_token: userToken } = parseCookies();
-
   localStorage.removeItem('userToken');
   destroyCookie(null, 'auth_token');
 
-  return createAction({
-    meta: null,
-    request: {
-      data,
-      headers: { 'content-type': 'application/json', Authorization: `Bearer ${userToken}` },
-      method: 'DELETE',
-      url: getApiURL(endpoints.LOGIN),
-    },
-    types: [LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAIL],
-  });
+  return {
+    type: LOGOUT,
+    data,
+  };
 };
 
 export const me = (data) => {

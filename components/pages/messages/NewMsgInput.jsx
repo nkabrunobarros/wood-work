@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Box, Button, OutlinedInput } from '@mui/material';
 import React, { useState } from 'react';
 //  PropTypes
@@ -9,27 +10,21 @@ import * as messagesActionsRedux from '../../../store/actions/message';
 const NewMsgInput = (props) => {
   const { windowWidth, styles, setLoadMessage } = props;
   const [newMessageText, setNewMessageText] = useState('');
-  const [files, setFiles] = useState();
+  const newMessage = (data) => dispatch(messagesActionsRedux.newMessage(data));
   const reduxState = useSelector((state) => state);
   const loggedUser = reduxState.auth.me;
   const dispatch = useDispatch();
-  const newMessage = (data) => dispatch(messagesActionsRedux.newMessage(data));
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-
-    if (!newMessageText && !files) return;
-
     setLoadMessage(new Date());
 
     await newMessage({
-      to: 'user_Xw9Jz3BbzBO4GlZ2',
-      by: 'user_Xw9Jz3BbzBO4GlZ2',
+      to: loggedUser.id,
+      by: loggedUser.id,
       project: props.conversation.budgetId?.object || props.conversation.id,
       text: newMessageText
     }).then((res) => {
-      console.log(res);
-
       const chats = [...props.chats];
 
       const chatsMsg = chats.map((chat, index) => {

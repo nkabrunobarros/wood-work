@@ -28,8 +28,9 @@ const Account = ({ ...props }) => {
       <Content>
         <Grid id='pad'>
           <Grid container md={12} sm={12} sx={12}>
-            <Typography variant='title'>{user?.givenName?.value} {user?.familyName?.value}</Typography>
+            <Typography variant='title'>{user?.givenName?.value || user.first_name || user.username} {user?.familyName?.value || user.last_name}</Typography>
           </Grid>
+          {console.log(user)}
           <Grid container md={12} sm={12} sx={12} pt={2}>
             <User /> Informações Gerais
           </Grid>
@@ -41,8 +42,8 @@ const Account = ({ ...props }) => {
                     <Grid container md={3} sm={2} xs={2}>
                       <Typography color='lightTextSm.main'>Nome:</Typography>
                     </Grid>
-                    <Grid container md={3} sm={2} xs={2}>
-                      <Typography color='lightTextSm.black'>{user?.name?.value}</Typography>
+                    <Grid container md={5} sm={2} xs={2}>
+                      <Typography color='lightTextSm.black'>{user?.givenName?.value || user.first_name || user.username } {user?.familyName?.value || user.last_name}</Typography>
                     </Grid>
                   </Grid>
                   <Grid item xs={12} pt={1} className='flex'>
@@ -50,7 +51,7 @@ const Account = ({ ...props }) => {
                       <Typography color='lightTextSm.main'>Nif:</Typography>
                     </Grid>
                     <Grid container md={3} sm={2} xs={2}>
-                      <Typography color='lightTextSm.black'>{user?.taxId?.value}</Typography>
+                      <Typography color='lightTextSm.black'>{user?.vat?.value}</Typography>
                     </Grid>
                   </Grid>
                   {user.type === 'Worker' &&
@@ -67,21 +68,20 @@ const Account = ({ ...props }) => {
                 <Grid xs={12} sm={6} container p={2} spacing={2}>
                   <Grid container item>
                     <Grid className='fullCenter' container md={2} sm={2} xs={2} >
-
                       <Tooltip title='Email'>
-                        <a href={`mailto:${user?.email?.value}`}>
+                        <a href={`mailto:${user?.email?.value || user?.email}`}>
                           <Mail className='primaryIcon' size={22} />
                         </a>
                       </Tooltip>
                     </Grid>
                     <Grid alignItems={'center'} container md={10} sm={10} xs={10} >
-                      {user?.email?.value}
+                      {user?.email?.value || user?.email}
                     </Grid>
                   </Grid>
                   <Grid container item>
                     <Grid className='fullCenter' container md={2} sm={2} xs={2} >
                       <Tooltip title='Contacto'>
-                        <a href={`tel:${user?.cellphone?.value}`}>
+                        <a href={`tel:${user?.telephone?.value}`}>
                           <Phone className='primaryIcon' size={22} />
                         </a>
                       </Tooltip>
@@ -98,7 +98,7 @@ const Account = ({ ...props }) => {
                       </Tooltip>
                     </Grid>
                     <Grid container md={10} sm={10} xs={10} >
-                      <Typography >
+                      <Typography sx={{ display: !user.address && 'none' }}>
                         {user.address?.value?.streetAddress + ', '}
                         {user.address?.value?.postalCode + ', '}
                         {user.address?.value?.addressLocality + ', '}

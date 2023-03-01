@@ -4,7 +4,7 @@ import * as expeditionsActions from '../../actions/expedition';
 export const initialState = {
   errors: null,
   loading: false,
-  data: null,
+  data: [],
 };
 
 const expeditions = createReducer(initialState, (builder) => {
@@ -26,11 +26,10 @@ const expeditions = createReducer(initialState, (builder) => {
       loading: true,
     }))
     //  POST
-    .addCase(expeditionsActions.NEW_EXPEDITION_SUCCESS, (state, action) => ({
+    .addCase(expeditionsActions.NEW_EXPEDITION_SUCCESS, (state) => ({
       ...state,
       errors: null,
       loading: false,
-      data: state.data ? state.data.push(action.data) : action.data,
     }))
     .addCase(expeditionsActions.NEW_EXPEDITION_FAIL, (state, action) => ({
       ...state,

@@ -118,6 +118,7 @@ const Projects = ({ ...pageProps }) => {
 
     const cards = [
       {
+        id: 'waiting adjudication',
         num: 1,
         title: 'Por adjudicar',
         amount: counts.waitingAdjudication,
@@ -130,6 +131,7 @@ const Projects = ({ ...pageProps }) => {
         color: 'var(--primary)',
       },
       {
+        id: 'drawing',
         num: 2,
         title: 'Em Desenho',
         amount: counts.drawing,
@@ -142,6 +144,7 @@ const Projects = ({ ...pageProps }) => {
         color: 'var(--green)',
       },
       {
+        id: 'production',
         num: 3,
         title: 'Em Produção',
         amount: counts.production,
@@ -154,6 +157,7 @@ const Projects = ({ ...pageProps }) => {
         color: 'var(--orange)',
       },
       {
+        id: 'testing',
         num: 4,
         title: 'Em Montagem',
         amount: counts.testing,
@@ -166,6 +170,7 @@ const Projects = ({ ...pageProps }) => {
         color: 'var(--babyblue)',
       },
       {
+        id: 'transport',
         num: 5,
         title: 'Em Expedição',
         amount: counts.expedition,
@@ -178,7 +183,8 @@ const Projects = ({ ...pageProps }) => {
         color: 'var(--yellow)',
       },
       {
-        num: 5,
+        num: 6,
+        id: 'finished',
         title: 'Terminados',
         amount: counts.concluded,
         icon: (
@@ -290,7 +296,7 @@ const Projects = ({ ...pageProps }) => {
       Estado: proj?.status?.value,
       Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
       budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
-      Cliente: clients.find((ele) => ele.id === (budgets.find((ele) => ele.id === proj.budgetId.object)).orderBy.object).id
+      Cliente: proj.orderBy.object,
     }));
 
     const props = {

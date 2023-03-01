@@ -237,7 +237,7 @@ const OrdersScreen = ({ ...props }) => {
                       />
                       <TextField
                         id='standard-basic'
-                        label='Nº de Encomenda'
+                        label='Projeto'
                         variant='standard'
                         value={orderId}
                         onChange={(e) => setOrderId(e.target.value)}

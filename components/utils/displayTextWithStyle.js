@@ -35,7 +35,7 @@ const displayWithStyle = (item, col, index) => {
     if (index === 0) {
       return (
         <Typography variant='md' className='link'>
-          Nº {displayWithStyle(item[`${col}`])}{' '}
+          {displayWithStyle(item[`${col}`])}{' '}
           {ItsNumber(item[`${col}`]) ? 'horas' : null}
         </Typography>
       );

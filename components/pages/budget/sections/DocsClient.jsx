@@ -14,7 +14,7 @@ import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
   const { pageProps, styles, budget, isInternalPage } = props;
-  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === budget.id.replace('Budget', 'Folder')).files);
+  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === budget.id.replace('Budget', 'Folder'))?.files);
   const [newFiles, setNewFiles] = useState();
   const [confirmUploadModal, setConfirmUploadModal] = useState(false);
   const dispatch = useDispatch();
@@ -92,7 +92,7 @@ const DocsClient = (props) => {
             <TableBody >
               <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
                 <Grid container >
-                  {userFiles.map(file => <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                  {userFiles?.map(file => <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                     <Grid container md={6} sm={6} xs={6} alignItems='center'>
                       <Box color='primary.main' alignItems='center'>
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />

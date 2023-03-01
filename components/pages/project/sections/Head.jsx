@@ -67,7 +67,7 @@ const Head = (props) => {
     } catch (err) { console.log(err); }
   }
 
-  function onProjectScanned (props) {
+  function onProjectScanned () {
     setChangeToFinishedModal(false);
     setFinishModal(true);
   }
@@ -100,7 +100,7 @@ const Head = (props) => {
       message={'Está prestes a terminar este projeto. Tem a certeza que quer continuar?'}
     />
     <Box style={{ display: 'flex', marginBottom: '1rem' }}>
-      <Typography variant='title'> {internalPOV ? 'Projeto' : 'Encomenda'} {order.name.value}</Typography>
+      <Typography variant='title'> {internalPOV ? 'Projeto' : 'Pedido'} {order.name.value}</Typography>
       <Box pl={2}>
         {order.status?.value === 'drawing' && <Typography className='successBalloon'>Em desenho</Typography>}
         {order.status?.value === 'production' && <Typography className='warningBalloon'>Em produção</Typography>}

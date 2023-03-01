@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unknown-property */
 //  PropTypes
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
@@ -144,6 +145,7 @@ const Docs = (props) => {
 
     data.append('folder', uploadFolder);
     newFiles.map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
+    data.append('is_budget', false);
     data.append('budget', order.budgetId.object.id);
 
     try {

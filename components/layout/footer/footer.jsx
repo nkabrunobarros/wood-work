@@ -4,7 +4,6 @@ import { Box, Grid, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Image from 'next/image';
 import Router from 'next/router';
-import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../../navigation/routes';
 import logosFooter from '../../../public/Fundos-Europeus.png';
@@ -41,7 +40,6 @@ const Footer = () => {
       md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 5 : 12}
       style={{
         position: 'fixed',
-        // position: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'fixed' : footerPos,
         width: '100%',
         bottom: 0,
         borderTop: '1px solid var(--grayEdges)',
@@ -89,10 +87,6 @@ const Footer = () => {
       </Grid>
     </Grid >
   );
-};
-
-Footer.propTypes = {
-  page: PropTypes.string,
 };
 
 export default Footer;

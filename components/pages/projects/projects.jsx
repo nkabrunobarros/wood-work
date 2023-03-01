@@ -115,12 +115,15 @@ const ProjectsScreen = (props) => {
     <Grid component='main'>
       {/* <Button onClick={() => fixAll()}>fix</Button> */}
       <CssBaseline />
+
       {/* Breadcrumbs */}
       <CustomBreadcrumbs path={breadcrumbsPath} />
       {/* Statistics Cards */}
       <Grid container md={12} sx={12} xs={12}>
-        {cards.map((card) => (
-          <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
+        {cards?.map((card) => (
+          <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1} onClick={() => {
+            console.log('cliquei');
+          }}>
             <InfoCard
               amount={card.amount}
               color={card.color}
@@ -137,11 +140,11 @@ const ProjectsScreen = (props) => {
           <Grid container item md={3} sm={6} xs={12} p={1}>
             <MyInput
               fullWidth
-              label='name'
+              label='Nome'
               id='name'
               name='name'
               autoComplete='name'
-              placeholder='Escrever um nome'
+              placeholder='Escrever Nome'
               value={number}
               onChange={(e) => setNumber(e.target.value)}
             />
@@ -256,14 +259,14 @@ const ProjectsScreen = (props) => {
         </Box> }
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
-          <AdvancedTable
+          {true && <AdvancedTable
             rows={projects?.filter(ele => ele?.status?.value?.toLowerCase() !== 'canceled')}
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}
             editRoute={editPage}
             setFilters={setFilters}
-          />
+          />}
         </TabPanel>
         {/* Tab Budgets */}
         {isInternalPage && <TabPanel value={currentTab} index={1}>

@@ -9,7 +9,7 @@ import routes from '../../../navigation/routes';
 function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const path = useRouter();
   const orderSimilarPages = [`${routes.private.internal.projectsSimilar}`];
-  const messagesPages = [`${routes.private.messages}`];
+  const messagesPages = [`${routes.private.messages}`, `${routes.private.internal.messages}`];
 
   const projectsPages = [
     `${routes.private.internal.projects}`,
@@ -53,7 +53,11 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.factoryLevel}`,
   ];
 
-  const profilePages = [`${routes.private.profile}[Id]`, `${routes.private.internal.profile}[Id]`];
+  const profilePages = [
+    `${routes.private.profile}`,
+    `${routes.private.internal.profile}`
+  ];
+
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 

@@ -20,7 +20,7 @@ export const ChatRow = (props) => {
                 <Typography variant='md' color='primary.main'>
                   {isInternalPage
                     ? chat.type === 'Project' ? 'Projeto' : 'Orçamento'
-                    : chat.type === 'Project' ? 'Encomenda' : 'Orçamento'
+                    : chat.type === 'Project' ? 'Pedido' : 'Orçamento'
                   }
                   {' '}
                   {chat.filterName || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}

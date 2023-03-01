@@ -107,16 +107,16 @@ const newWorker = ({ ...props }) => {
       type: 'email',
       required: true
     },
-    {
-      id: 'functionPerformed',
-      label: 'Função',
-      value: '',
-      error: '',
-      required: true,
-      options: permissions,
-      optLabel: 'name',
-      optValue: 'id'
-    },
+    // {
+    //   id: 'functionPerformed',
+    //   label: 'Função',
+    //   value: '',
+    //   error: '',
+    //   required: true,
+    //   options: permissions,
+    //   optLabel: 'name',
+    //   optValue: 'id'
+    // },
     {
       id: 'hasOrganization',
       label: 'Organização',

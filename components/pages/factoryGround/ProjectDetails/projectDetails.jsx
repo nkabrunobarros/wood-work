@@ -538,7 +538,7 @@ const ProjectDetails = (props) => {
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } mm </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
                           <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
                           <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>

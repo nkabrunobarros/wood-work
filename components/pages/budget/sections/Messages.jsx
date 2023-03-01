@@ -1,29 +1,98 @@
-import { Avatar, Grid, Typography } from '@mui/material';
-import { MessageSquare } from 'lucide-react';
-import Router, { useRouter } from 'next/router';
+/* eslint-disable react/prop-types */
+import { Box, Button, OutlinedInput, Typography } from '@mui/material';
+import { MessageSquare, Send } from 'lucide-react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
-import routes from '../../../../navigation/routes';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as messagesActionsRedux from '../../../../store/actions/message';
 import PrimaryBtn from '../../../buttons/primaryBtn';
+import Loader from '../../../loader/loader';
+import scrollToBottom from '../../../utils/ScrollToBottom';
+import { Message } from '../../messages/Message';
 
 const Messages = (props) => {
-  const { pageProps, stylesMessage } = props;
-  const path = useRouter();
-  const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+  const { pageProps, budget } = props;
+  const [loaded, setLoaded] = useState(false);
+  const [messages, setMessages] = useState();
+  const dispatch = useDispatch();
+  const getMessages = (data) => dispatch(messagesActionsRedux.conversationMessages(data));
+  const [newMessageText, setNewMessageText] = useState('');
+  const newMessage = (data) => dispatch(messagesActionsRedux.newMessage(data));
+  const reduxState = useSelector((state) => state);
+  const loggedUser = reduxState.auth.me;
+  const [windowWidth, setWindowHeight] = useState();
+
+  useEffect(() => {
+    function loadMessages () {
+      setLoaded(false);
+
+      !messages && getMessages(budget?.id).then((res) => {
+        setMessages(res.data.results);
+      });
+
+      setLoaded(true);
+    }
+
+    loadMessages();
+  }, []);
+
+  const handleSendMessage = async (event) => {
+    event.preventDefault();
+
+    if (newMessageText === '') return;
+
+    await newMessage({
+      to: loggedUser.id,
+      by: loggedUser.id,
+      project: budget?.id,
+      text: newMessageText
+    }).then((res) => {
+      setMessages([...messages, res.data]);
+      setNewMessageText('');
+    }).catch((err) => console.log(err));
+  };
+
+  if (typeof window !== 'undefined') {
+    useEffect(() => {
+      setWindowHeight(window.innerWidth);
+    }, [window.innerWidth]);
+  }
+
+  const listenToResize = () => {
+    setWindowHeight(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', listenToResize);
+
+    return () => window.removeEventListener('resize', listenToResize);
+  }, []);
+
+  useEffect(() => {
+    const scroll = () => {
+      scrollToBottom('messagesContainer');
+    };
+
+    scroll();
+  }, [messages]);
 
   return <>
-    <div
+    <Box
       id='pad'
       style={{
         display: 'flex',
         alignItems: 'center',
+        borderBottom: '1px solid',
+        borderColor: 'divider'
       }}
     >
-      <div>
+      <Box>
         <Typography variant='title'>Mensagens</Typography>
-      </div>
-      <div style={{ marginLeft: 'auto' }}>
+      </Box>
+      <Box style={{ marginLeft: 'auto' }}>
         <PrimaryBtn
+          hidden
           icon={
             <MessageSquare
               strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
@@ -32,26 +101,44 @@ const Messages = (props) => {
           }
           text={'Criar Nova'}
         />
-      </div>
-    </div>
-    <div>
-      <Grid container>
-        <Grid p={1} container sx={{ border: '1px solid', borderColor: 'divider' }} >
-          <Grid container p={1} md={11}>Mensagem</Grid>
-          <Grid container p={1} md={1}>Data</Grid>
-        </Grid>
-        {[...Array(0)].map((x, i) => (
-          <Grid p={1} key={i} className={stylesMessage.messageRow} container onClick={() => internalPOV ? Router.push(routes.private.internal.messages) : Router.push(routes.private.messages)}>
-            <Grid container md={11}>
-              <Grid md={1} container ><Avatar className={stylesMessage.avatar}>N</Avatar></Grid>
-              <Grid md={11} container><div className={stylesMessage.sender}>Encomenda Nº {i + 1}</div></Grid>
-            </Grid>
-            <Grid container md={1}><Typography variant='md'>11/03/2022</Typography></Grid>
+      </Box>
+    </Box>
+    <Box>
 
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+      <Box id='messagesContainer' sx={{ padding: '2rem', maxHeight: '400px', overflowY: 'scroll' }}>
+        {loaded
+          ? messages?.sort((a, b) => moment(a.created).diff(moment(b.created))).map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)
+          : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Loader noPos />
+          </Box>
+        }
+      </Box>
+      <Box
+        component='form'
+        noValidate
+        onSubmit={handleSendMessage}
+        sx={{ width: '100%', paddingLeft: windowWidth > 900 && '2rem', paddingRight: windowWidth > 900 && '2rem', paddingBottom: '1rem' }}>
+        <OutlinedInput
+          required
+          fullWidth
+          placeholder='Aa'
+          value={newMessageText}
+          onChange={(e) => setNewMessageText(e.target.value)}
+          sx={{
+            maxHeight: '40px',
+            padding: '0.2rem',
+            fontSize: '13px',
+            lineHeight: '18px',
+            borderRadius: '16px',
+            color: '#999999',
+            width: '100%'
+          }}
+          endAdornment={ <Button position='end' type='submit'>
+            {windowWidth > 900 ? 'Enviar' : <Send size={20}/>}
+          </Button>}
+        />
+      </Box>
+    </Box>
   </>;
 };
 
