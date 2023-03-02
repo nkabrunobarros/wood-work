@@ -165,8 +165,8 @@ const newWorker = ({ ...props }) => {
     const qs = require('qs');
     const data = qs.stringify({ ...builtWorker });
 
-    await newWorker(data).then(() => setSuccessOpen(true))
-      .catch((err) => onError(err));
+    await newWorker(data).then(() => setSuccessOpen(true)).catch((err) => onError(err));
+    setProcessing(false);
 
     try {
       false && await WorkerActions.createWorker(builtWorker)

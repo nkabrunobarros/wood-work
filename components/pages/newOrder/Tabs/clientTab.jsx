@@ -98,7 +98,7 @@ const ClientTab = (props) => {
                   <Grid item md={6} sm={6} xs={6} p={1}>
                     <Typography color='lightTextSm.main'>Tipo cliente</Typography>
                     <Typography color='lightTextSm.black' >
-                      {clients.find(ele => ele.id === client.value)?.clientTypeInstitution?.value}</Typography>
+                      {clients.find(ele => ele.id === client.value)?.isCompany?.value ? 'Empresa' : 'Particular'}</Typography>
                   </Grid>
                   <Grid item md={6} sm={6} xs={6} p={1}>
                     <Typography color='lightTextSm.main'>Morada fiscal</Typography>
@@ -112,12 +112,12 @@ const ClientTab = (props) => {
                   </Grid>
                   <Grid item md={6} sm={6} xs={6} p={1}>
                     <Typography color='lightTextSm.main'>Morada entrega</Typography>
-                    <Typography color='lightTextSm.black' display={!clients.find(ele => ele.id === client.value)?.addressDelivery?.value?.addressCountry && 'none'} >
-                      {clients.find(ele => ele.id === client.value)?.addressDelivery?.value?.streetAddress + ', '}
-                      {clients.find(ele => ele.id === client.value)?.addressDelivery?.value?.postalCode + ', '}
-                      {clients.find(ele => ele.id === client.value)?.addressDelivery?.value?.addressLocality + ', '}
-                      {clients.find(ele => ele.id === client.value)?.addressDelivery?.value?.addressRegion + ', '}
-                      {clients.find(ele => ele.id === client.value)?.addressDelivery?.value?.addressCountry}
+                    <Typography color='lightTextSm.black' display={!clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressCountry && 'none'} >
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.streetAddress + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.postalCode + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressLocality + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressRegion + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressCountry}
                     </Typography>
                   </Grid>
                 </Grid>

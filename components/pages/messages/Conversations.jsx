@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import MessagesStyles from './MessagesStyles';
 
 export const ChatRow = (props) => {
-  const { chat, index, activeRow, windowWidth, onRowClick, isInternalPage } = props;
+  const { chat, index, activeRow, windowWidth, onRowClick } = props;
   // const [anchorEl, setAnchorEl] = useState(null);
   const [hovering, setHovering] = useState(false);
   const theme = localStorage.getItem('theme');
@@ -18,11 +18,11 @@ export const ChatRow = (props) => {
             <Grid container md={12} >
               <Grid>
                 <Typography variant='md' color='primary.main'>
-                  {isInternalPage
+                  {/* {isInternalPage
                     ? chat.type === 'Project' ? 'Projeto' : 'Orçamento'
                     : chat.type === 'Project' ? 'Projeto' : 'Orçamento'
                   }
-                  {' '}
+                  {' '} */}
                   {chat.filterName || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
                 </Typography>
               </Grid>

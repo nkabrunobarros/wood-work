@@ -128,18 +128,24 @@ const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
                     {userPermissions?.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === userPermissions?.description.toLowerCase()) && ele.action === 'READ') &&
                     IsInternal(userPermissions?.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
                       ? (
-                        <MenuItem id={item.id} sx={{ padding: '0' }}>
-                          <ActiveLink
-                            key={i}
-                            href={item.url}
-                            handleDrawerToggle={toggleDrawer}
-                            page={item.title}
-                          >
-                            {item.icon}
-                            <div style={{ paddingRight: '.5rem' }} />
-                            {item.title}
-                          </ActiveLink>
-                        </MenuItem>
+                        <>
+                          <MenuItem id={item.id} sx={{ padding: '0' }}>
+                            <ActiveLink
+                              key={i}
+                              href={item.url}
+                              handleDrawerToggle={toggleDrawer}
+                              page={item.title}
+                            >
+                              {item.icon}
+                              <div style={{ paddingRight: '.5rem' }} />
+                              {item.title}
+                            </ActiveLink>
+                          </MenuItem>
+                          {item.underline && <Divider
+                            color='white'
+                            width='100%'
+                          />}
+                        </>
                       )
                       : null}
                   </React.Fragment>
@@ -227,7 +233,6 @@ const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
                     style={{ marginTop: '1rem', marginBottom: '1rem' }}
                   />
                   <MenuItem sx={{ padding: '0' }}>
-
                     <ActiveLink
                       handleDrawerToggle={toggleDrawer}
                       href={IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}

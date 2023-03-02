@@ -38,12 +38,11 @@ const Projects = ({ ...pageProps }) => {
 
     try {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-
-      if (!reduxState.projects?.data) { await getProjects(); }
+      await getProjects();
 
       if (!reduxState.expeditions?.data) { await getExpeditions(); }
 
-      if (!reduxState.budgets?.data) { await getBudgets(); }
+      await getBudgets();
 
       if (!reduxState.clients?.data) { await getClients(); }
     } catch (err) { errors = true; }
@@ -111,7 +110,7 @@ const Projects = ({ ...pageProps }) => {
     // Breadcrumbs path feed
     const breadcrumbsPath = [
       {
-        title: 'Projetos/Orçamentos',
+        title: 'Pedidos',
         href: `${routes.private.internal.projects}`,
       },
     ];
@@ -262,7 +261,7 @@ const Projects = ({ ...pageProps }) => {
         label: 'Cliente',
       },
       {
-        id: 'ord_amount_proj',
+        id: 'amount.value',
         numeric: false,
         disablePadding: false,
         label: 'Quantidade',

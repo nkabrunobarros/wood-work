@@ -34,7 +34,6 @@ const budgets = createReducer(initialState, (builder) => {
       ...state,
       errors: null,
       loading: false,
-      data: state.data ? state.data.push(action.data) : state.data,
       newestBudget: action.payload.data
     }))
     .addCase(budgetsActions.NEW_BUDGET_FAIL, (state, action) => ({

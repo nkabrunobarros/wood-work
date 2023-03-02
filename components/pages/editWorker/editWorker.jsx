@@ -3,6 +3,7 @@ import Router from 'next/router';
 import React, { useState } from 'react';
 
 //  Custom Components
+import * as workersActionsRedux from '../../../store/actions/worker';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
@@ -12,17 +13,15 @@ import MyInput from '../../inputs/myInput';
 import PropTypes from 'prop-types';
 
 //  Styles
-import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
-import { Lock, Save, User, X } from 'lucide-react';
+import { Save, User, X } from 'lucide-react';
 
 //  Material UI
 import {
   Box,
   Button,
-  CircularProgress,
-  InputLabel, OutlinedInput
+  CircularProgress
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -31,20 +30,20 @@ import Grid from '@mui/material/Grid';
 import ToastSet from '../../utils/ToastSet';
 
 //  Navigation
-import * as WorkerActions from '../../../pages/api/actions/worker';
 import Notification from '../../dialogs/Notification';
 // import PhoneInput from '../../inputs/phoneInput/PhoneInput';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import MySelect from '../../inputs/select';
-import { functions } from '../newWorker/newWorker';
 
 const EditUser = ({ ...props }) => {
   const { breadcrumbsPath, pageProps } = props;
+  const dispatch = useDispatch();
+  const updateWorker = (data) => dispatch(workersActionsRedux.updateWorker(data));
 
   const [user, setUser] = useState({
-    name: { value: props.user?.name?.value, error: '' },
+    givenName: { value: props.user?.givenName?.value, error: '' },
+    familyName: { value: props.user?.familyName?.value, error: '' },
     email: { value: props.user?.email?.value, error: '' },
-    functionPerformed: { value: props.user?.functionPerformed?.value, error: '' },
     // functionPerformed: { value: props.user?.functionPerformed?.value, error: '' },
   });
 
@@ -67,18 +66,12 @@ const EditUser = ({ ...props }) => {
   async function handleUpdate () {
     const loading = toast.loading('');
 
-    const builtWorker = [{
-      id: props.user.id,
-      type: 'Worker',
-      name: { type: 'Property', value: user.name.value },
-      functionPerformed: { type: 'Property', value: user.functionPerformed.value },
-      '@context': [
-        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld',
-        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-      ]
-    }];
-
-    await WorkerActions.updateWorker(builtWorker)
+    await updateWorker({
+      id: props.user.id.replace('urn:ngsi-ld:Worker:', ''),
+      givenName: user.givenName.value,
+      familyName: user.familyName.value,
+      email: user.email.value,
+    })
       .then(() => ToastSet(loading, 'Utilizador atualizado.', 'success'))
       .catch(() => ToastSet(loading, 'Atualização falhou.', 'error'));
   }
@@ -88,21 +81,6 @@ const EditUser = ({ ...props }) => {
       setCleaningInputs(false);
     }, 500);
   };
-
-  // const shifts = [
-  //   {
-  //     label: 'Manhã',
-  //     value: [1, 2]
-  //   },
-  //   {
-  //     label: 'Tarde',
-  //     value: [2, 3]
-  //   },
-  //   {
-  //     label: 'Noite',
-  //     value: [3, 4]
-  //   }
-  // ];
 
   function onFieldChange ({ target }) {
     const user2 = { ...user };
@@ -158,58 +136,11 @@ const EditUser = ({ ...props }) => {
           <span>Dados de Utilizador</span>
         </a>
         <Grid id='pad' container md={12} sm={12} xs={12}>
-          <Grid container md={8} sm={8} xs={12}>
-            <Grid container md={6} sm={6} xs={12} p={0.5}><MyInput label='Nome' name='name' onChange={(e) => onFieldChange(e)} value={user?.name?.value} error={user?.name?.error} /></Grid>
-            <Grid container md={6} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>
-            <Grid container md={6} sm={6} xs={12} p={0.5}><MySelect label='Função' name='functionPerformed' onChange={(e) => onFieldChange(e)} value={user?.functionPerformed?.value} error={user?.functionPerformed?.error} options={functions} optionLabel='label' optionValue={'value'} /></Grid>
-            {/* <Grid container md={6} sm={6} xs={12} p={0.5}><PhoneInput label='Telemovel' name='cellphone' onChange={(e) => onFieldChange(e)} value={user?.cellphone?.value} error={user?.cellphone?.error} /></Grid> */}
-          </Grid>
-          <Grid container md={4} sm={4} xs={12}>
-            <Box id='pad' style={{ flex: 1 }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
-              <a id='align' className='headerTitleSm'>
-                <Lock
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
-                />
-                <span> Alterar Senha</span>
-              </a>
-              <Box>
-                <InputLabel >Senha Antiga</InputLabel>
-                <OutlinedInput
-                  required
-                  fullWidth
-                  id='nome'
-                  name='nome'
-                  type='password'
-                  autoComplete='nome'
-                  placeholder='Escrever password * '
-                />
-              </Box>
-              <Box>
-                <InputLabel >Senha Nova</InputLabel>
-                <OutlinedInput
-                  required
-                  fullWidth
-                  id='nome'
-                  name='nome'
-                  type='password'
-                  autoComplete='nome'
-                  placeholder='Escrever password * '
-                />
-              </Box>
-              <Box>
-                <InputLabel >Confirmar Senha Nova</InputLabel>
-                <OutlinedInput
-                  required
-                  fullWidth
-                  id='nome'
-                  name='nome'
-                  type='password'
-                  autoComplete='nome'
-                  placeholder='Escrever password * '
-                />
-              </Box>
-            </Box>
+          <Grid container md={12} sm={8} xs={12}>{console.log(user)}
+            <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Primeiro Nome' name='givenName' onChange={(e) => onFieldChange(e)} value={user?.givenName?.value} error={user?.givenName?.error} /></Grid>
+            <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Ultimo Nome' name='familyName' onChange={(e) => onFieldChange(e)} value={user?.familyName?.value} error={user?.familyName?.error} /></Grid>
+            <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>
+            {/* <Grid container md={4} sm={4} xs={12} p={0.5}><MySelect label='Função' name='functionPerformed' onChange={(e) => onFieldChange(e)} value={user?.functionPerformed?.value} error={user?.functionPerformed?.error} options={functions} optionLabel='label' optionValue={'value'} /></Grid> */}
           </Grid>
         </Grid>
         <Box style={{ display: 'flex' }}>

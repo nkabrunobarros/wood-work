@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Box, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 //  PropTypes
@@ -38,7 +39,7 @@ export const EditableCell = (props) => {
             ? <>
               {name === 'category' ? <>{options.find(ele => ele.id === value)?.label}</> : value + (type === 'currency' ? ' €' : '')}
             </>
-            : 'Não definido'}
+            : ''}
         </Typography>
       </Tooltip>
       : <>
@@ -120,7 +121,11 @@ const Head = (props) => {
       .catch(() => ToastSet(loading, 'Orçamento não alterado. Se o problema persistir, contacte a gerencia.', 'error'));
   }
 
-  async function handleConfirmation ({ amount, obs, price, category }) {
+  async function handleConfirmation ({
+    amount, obs, price, category,
+    dateAgreedDelivery,
+    dateDeliveryProject
+  }) {
     const processing = toast.loading('');
 
     const data = {
@@ -132,6 +137,8 @@ const Head = (props) => {
       category: { value: category.value, type: 'Property' },
       status: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
+      dateAgreedDelivery: { value: moment(dateAgreedDelivery).format('DD/MM/YYYY'), type: 'Property' },
+      dateDeliveryProject: { value: moment(dateDeliveryProject).format('DD/MM/YYYY'), type: 'Property' },
     };
 
     await updateBudget(data).then(() => {
@@ -254,7 +261,7 @@ const Head = (props) => {
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
-                <Typography variant='title'> {breadcrumbsPath[1].title}</Typography>
+                <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
                 {isInternalPage &&
                   <Box pl={2}>
                     {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
@@ -291,7 +298,7 @@ const Head = (props) => {
             </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
-            <Grid container md={4} p={1}>
+            <Grid container md={3} p={1}>
               <Grid container style={{ width: 'fit-content' }}>
                 {isInternalPage && <Grid container md={12}>
                   <Box>
@@ -305,40 +312,68 @@ const Head = (props) => {
                 </Grid>}
                 <Grid container md={12}>
                   <Box>
+                    <Typography color={'lightTextSm.main'} >Morada Entrega</Typography>
+                    <Typography>
+                      {budget.deliveryAddress?.value?.streetAddress + ', '}
+                      {budget.deliveryAddress?.value?.postalCode + ', '}
+                      {budget.deliveryAddress?.value?.addressLocality + ', '}
+                      {budget.deliveryAddress?.value?.addressRegion + ', '}
+                      {budget.deliveryAddress?.value?.addressCountry}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid container md={12}>
+                  <Box>
                     <Typography color={'lightTextSm.main'} >Observações</Typography>
                     <Typography>{budget.obs?.value || 'Não tem observações.'}</Typography>
                   </Box>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container md={8} p={1} >
+            <Grid container md={9} p={1} >
               <Grid container md={12} sm={12} xs={12} >
-                <Grid container sx={{ ...upperCells }} md={6} sm={6} xs={6}>Data</Grid>
-                <Grid container sx={{ ...upperCells }} md={6} sm={6} xs={6}>Informação</Grid>
+                <Grid container sx={{ ...upperCells }} md={(12 / 15) * 8} sm={8} xs={8}>Orçamento</Grid>
+                <Grid container sx={{ ...upperCells }} md={(12 / 15) * 3} sm={4} xs={4}>Produção</Grid>
+                <Grid container sx={{ ...upperCells }} md={(12 / 15) * 3} sm={4} xs={4}>Expedição</Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
-                <Grid container sx={{ ...upperCells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >Solicitação</Typography> </Grid>
-                <Grid container sx={{ ...upperCells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >Criação</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >Entrega Real</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Categoria</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Quantidade</Typography></Grid>
-                <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}><Typography variant='sm' >Valor</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Referência</Typography> </Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Categoria</Typography> </Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Quantidade</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Pedido</Typography> </Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Criação</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Valor</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entregue</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Inicio</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Fim</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Quantidade</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entrada</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+                <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entregue</Typography></Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
-                <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateRequest?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={1.5} sm={1.5} xs={1.5}><Typography variant='sm' >{budget?.dateDeliveryProject?.value}</Typography></Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{`${budget?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}>
                   <EditableCell active={activeFields.category} isInternalPage={isInternalPage} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
                 </Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
-                  <EditableCell active={activeFields.amount} isInternalPage={isInternalPage} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget?.amount?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget?.dateRequest?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}>
+                  <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value || 0} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
+                </Grid>{console.log(budget)}
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget?.dateDelivery?.value}</Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}>
                 </Grid>
-                <Grid container sx={{ ...cells }} md={2} sm={2} xs={2}>
-                  <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget.dateDeliveryProject?.value}</Typography></Grid>
+
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}>
                 </Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' ></Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' ></Typography></Grid>
+                <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' ></Typography></Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -347,14 +382,6 @@ const Head = (props) => {
     </>
 
   );
-};
-
-Head.propTypes = {
-  breadcrumbsPath: PropTypes.array,
-  budget: PropTypes.object,
-  isInternalPage: PropTypes.bool,
-  pageProps: PropTypes.object,
-  categories: PropTypes.array,
 };
 
 export default Head;

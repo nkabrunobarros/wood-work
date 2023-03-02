@@ -1,7 +1,9 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, InputLabel, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 //  PropTypes
 import { QuestionMark } from '@mui/icons-material';
+import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import PropTypes from 'prop-types';
 import CurrencyInput from '../../../../inputs/CurrencyInput';
 import MyInput from '../../../../inputs/myInput';
@@ -9,6 +11,8 @@ import MySelect from '../../../../inputs/select';
 
 const DeliverBudgetModal = (props) => {
   const { open, onConfirm, handleClose, budget, categories } = props;
+  const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: budget.dateAgreedDelivery.value, error: '' });
+  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: budget.dateDeliveryProject.value, error: '' });
   const [category, setCategory] = useState({ value: budget.category.value, error: '' });
   const [price, setPrice] = useState({ value: budget.price?.value, error: '' });
   const [amount, setAmount] = useState({ value: budget.amount.value, error: '' });
@@ -27,11 +31,23 @@ const DeliverBudgetModal = (props) => {
       errors = true;
     }
 
+    if (!dateDeliveryProject.value) {
+      setDateDeliveryProject({ ...price, error: 'Campo Obrigatório' });
+      errors = true;
+    }
+
+    if (!dateAgreedDelivery.value) {
+      setDateAgreedDelivery({ ...price, error: 'Campo Obrigatório' });
+      errors = true;
+    }
+
     !errors && onConfirm({
       category,
       price,
       amount,
-      obs
+      obs,
+      dateAgreedDelivery,
+      dateDeliveryProject
     });
   }
 
@@ -55,12 +71,53 @@ const DeliverBudgetModal = (props) => {
            Para finalizar a entrega do orçamento, por favor preencha a seguinte informação.
         </Typography>
       </DialogContentText>
-      <Grid container md={12} sm={12} xs={12}>
-        <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do pedido'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
-        <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount.value}/></Grid>
-        <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category.value}/></Grid>
-        <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>
-      </Grid>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do pedido'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount.value}/></Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category.value}/></Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}>
+            <InputLabel>
+            Data de entrega de projeto
+              <Tooltip title='Obrigatório' >
+                <span style={{ color: 'var(--red)' }}> *</span>
+              </Tooltip>
+
+            </InputLabel>
+            <DesktopDatePicker
+              inputFormat={'DD.MM.YYYY'}
+              value={dateDeliveryProject.value}
+              onChange={(e, newValue) => setDateDeliveryProject({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
+              // onChange={(newValue) => onBudgetChange(newValue)}
+              renderInput={(params) =>
+                <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD.MM.YYYY' }}/>}
+            />
+          </Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}>
+            <Box sx={{ width: '100%' }}>
+              <InputLabel>
+            Data de entrega orçamento
+                <Tooltip title='Obrigatório' >
+                  <span style={{ color: 'var(--red)' }}> *</span>
+                </Tooltip>
+
+              </InputLabel>
+              <DesktopDatePicker
+                sx={{ width: '100%' }}
+                inputFormat={'DD.MM.YYYY'}
+                value={dateAgreedDelivery.value}
+                onChange={(e, newValue) => setDateAgreedDelivery({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
+                // onChange={(newValue) => onBudgetChange(newValue)}
+                renderInput={(params) =>
+                  <TextField fullWidth sx={{ width: '100%' }} {...params} error={dateAgreedDelivery.error} inputProps={{ sx: { color: dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: dateAgreedDelivery.error || 'DD.MM.YYYY' }}/>}
+              />
+
+            </Box>
+          </Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>
+        </Grid>
+
+      </LocalizationProvider>
 
     </DialogContent>
     <DialogActions>

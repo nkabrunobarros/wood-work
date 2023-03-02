@@ -43,9 +43,9 @@ const Orders = ({ ...pageProps }) => {
 
       if (!reduxState.clients?.data) { await getClients(); }
 
-      if (!reduxState.expeditions?.data) { await getExpeditions(); }
+      if (!reduxState.expeditions?.data) { await getExpeditions().then((res) => console.log(res)); }
 
-      if (!reduxState.budgets?.data) { await getBudgets(); }
+      await getBudgets();
     } catch (err) {
       console.log(err);
       errors = true;
@@ -191,7 +191,7 @@ const Orders = ({ ...pageProps }) => {
         label: 'Categoria',
       },
       {
-        id: 'ord_amount_proj',
+        id: 'amount.value',
         numeric: false,
         disablePadding: false,
         label: 'Quantidade',
@@ -209,12 +209,6 @@ const Orders = ({ ...pageProps }) => {
         label: 'Pedido',
       },
       {
-        id: 'Entregue',
-        numeric: false,
-        disablePadding: false,
-        label: 'Orç. Entregue',
-      },
-      {
         id: 'Inicio',
         numeric: false,
         disablePadding: false,
@@ -225,6 +219,18 @@ const Orders = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Fim Prod.',
+      },
+      {
+        id: 'Complete',
+        numeric: false,
+        disablePadding: false,
+        label: 'Qtd. Prod.',
+      },
+      {
+        id: 'ExpeditionTime',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrada Expedição',
       },
     ];
 
@@ -245,6 +251,7 @@ const Orders = ({ ...pageProps }) => {
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
+      // const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
 
       return {
         ...proj,
@@ -257,6 +264,8 @@ const Orders = ({ ...pageProps }) => {
         Entregue: thisBudget?.dateDelivery.value,
         Categoria: categories.find(c => c.id === thisBudget.category.value).label,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
+        ExpeditionTime: '',
+        Complete: 0,
       };
     }
     );

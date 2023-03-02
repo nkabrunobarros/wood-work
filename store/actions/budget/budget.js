@@ -34,7 +34,7 @@ export const activebudgets = (data) => {
       url: getApiURL(endpoints.BUDGETS),
       params: {
         options: 'sysAttrs',
-        q: 'status!="adjudicated"&status!="canceled"',
+        q: 'status!="adjudicated',
         limit: 200
       }
     },
@@ -54,7 +54,7 @@ export const myBudgets = (data) => {
       url: getApiURL(endpoints.BUDGETS),
       params: {
         options: 'sysAttrs',
-        q: 'status!="adjudicated"&status!="canceled"',
+        q: 'status!="adjudicated',
       }
     },
     types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],

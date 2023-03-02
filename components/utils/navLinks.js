@@ -1,4 +1,4 @@
-import { Archive, LayoutDashboard, MessageCircle, Network, Scan, Table, Users } from 'lucide-react';
+import { Archive, MessageCircle, Network, Scan, Table, Users } from 'lucide-react';
 import React from 'react';
 import routes from '../../navigation/routes';
 
@@ -11,7 +11,7 @@ export const navLinks = [
     allowed: 'projects',
   },
   {
-    title: 'Projetos/Orçamentos',
+    title: 'Pedidos',
     id: 'projectsClient',
     url: routes.private.internal.projects,
     icon: <Archive strokeWidth='1' size={20} />,
@@ -24,19 +24,20 @@ export const navLinks = [
     icon: <MessageCircle strokeWidth='1' size={20} />,
     allowed: 'client',
   },
+  // {
+  //   title: 'Mensagens',
+  //   id: 'messagesInteral',
+  //   url: routes.private.internal.messages,
+  //   icon: <MessageCircle strokeWidth='1' size={20} />,
+  //   allowed: 'messages',
+  // },
   {
-    title: 'Mensagens',
-    id: 'messagesInteral',
-    url: routes.private.internal.messages,
-    icon: <MessageCircle strokeWidth='1' size={20} />,
-    allowed: 'messages',
-  },
-  {
-    title: 'Projetos Similares',
+    title: 'Pedidos Similares',
     id: 'projectsSimilar',
     url: routes.private.internal.projectsSimilar,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
+    underline: true
   },
   {
     title: 'Stock',
@@ -53,6 +54,14 @@ export const navLinks = [
     allowed: 'factoryLevel',
   },
   {
+    title: 'Sobrantes',
+    id: 'leftovers',
+    url: routes.private.internal.leftovers,
+    icon: <Scan strokeWidth='1' size={20} />,
+    allowed: 'leftovers',
+    underline: true
+  },
+  {
     title: 'Clientes',
     id: 'clients',
     url: routes.private.internal.clients,
@@ -66,19 +75,11 @@ export const navLinks = [
     icon: <Users strokeWidth='1' size={20} />,
     allowed: 'workers',
   },
-  {
-    title: 'Sobrantes',
-    id: 'leftovers',
-    url: routes.private.internal.leftovers,
-    icon: <Scan strokeWidth='1' size={20} />,
-    //  TODOS: FIX
-    allowed: 'leftovers',
-  },
-  {
-    title: 'Painel de Controlo',
-    id: 'dashboards',
-    url: routes.private.internal.dashboards,
-    icon: <LayoutDashboard strokeWidth='1' size={20} />,
-    allowed: 'dashboards',
-  },
+  // {
+  //   title: 'Painel de Controlo',
+  //   id: 'dashboards',
+  //   url: routes.private.internal.dashboards,
+  //   icon: <LayoutDashboard strokeWidth='1' size={20} />,
+  //   allowed: 'dashboards',
+  // },
 ];

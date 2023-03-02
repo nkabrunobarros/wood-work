@@ -63,7 +63,7 @@ const Budget = ({ ...pageProps }) => {
         href: `${routes.private.projects}`,
       },
       {
-        title: `Pedido ${budget.name.value}`,
+        title: `${budget.name.value}`,
         // title: `Orçamento ${order.name.value}`,
         href: `${routes.private.budget}`,
       },

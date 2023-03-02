@@ -5,19 +5,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ChatToolbar = (props) => {
-  const { styles, pageProps, conversation, isInternalPage } = props;
+  const { styles, pageProps, conversation } = props;
 
   return (
     <AppBar position='static' sx={styles.appBars}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {/* <Avatar sx={styles.avatar}>N</Avatar> */}
-          <Typography variant='md'sx={{ display: !conversation && 'none' }}> {isInternalPage
+          <Typography variant='md'sx={{ display: !conversation && 'none' }}>
+            {/* {isInternalPage
             ? conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
             : conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
-          }
-          {' '}
-          {conversation.filterName}
+          } */}
+            {' '}
+            {conversation.filterName}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

@@ -5,6 +5,9 @@ export {
   WORKER_REQUEST,
   WORKER_FAIL,
   WORKER_SUCCESS,
+  UPDATE_WORKER_REQUEST,
+  UPDATE_WORKER_FAIL,
+  UPDATE_WORKER_SUCCESS,
   ADD_WORKER_REQUEST,
   ADD_WORKER_SUCCESS,
   ADD_WORKER_FAIL,
@@ -13,4 +16,5 @@ export {
   worker,
   newWorker,
   setDisplayedWorker,
+  updateWorker
 } from './worker';

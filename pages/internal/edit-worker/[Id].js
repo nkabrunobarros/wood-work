@@ -1,6 +1,7 @@
 //  Nodes
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 //  Custom Components
 import Loader from '../../../components/loader/loader';
 
@@ -11,9 +12,7 @@ import EditWorkerScreen from '../../../components/pages/editWorker/editWorker';
 import routes from '../../../navigation/routes';
 
 //  Services
-// import * as CountryActions from '../../api/actions/country';
-// import * as ProfileActions from '../../api/actions/perfil';
-import * as workerActions from '../../api/actions/worker';
+import * as workersActionsRedux from '../../../store/actions/worker';
 
 const EditWorker = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -21,32 +20,28 @@ const EditWorker = ({ ...pageProps }) => {
   // const [profiles, setProfiles] = useState();
   const countries = [];
   const profiles = [];
-  const [user, setUser] = useState();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getWorker = (data) => dispatch(workersActionsRedux.worker(data));
 
   useEffect(() => {
-    const getAll = async () => {
-      try {
-        await workerActions
-          .worker({ id: router.query.Id })
-          .then((res) => setUser(res.data[0]));
-      } catch (error) { }
+    const getData = async () => {
+      !reduxState.workers.data && await getWorker(router.query.Id);
     };
 
-    Promise.all([getAll()]).then(() => setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
-  if (loaded) {
-    console.log(user);
-
+  if (loaded && reduxState.workers.displayedWorker) {
     const breadcrumbsPath = [
       {
         title: 'Utilizadores',
         href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${user?.name?.value}`,
-        href: `${routes.private.internal.worker}${user.id}`,
+        title: `${reduxState.workers.displayedWorker.givenName.value + ' ' + reduxState.workers.displayedWorker.familyName.value}`,
+        href: `${routes.private.internal.worker}${reduxState.workers.displayedWorker.id}`,
       },
       {
         title: 'Editar Utilizador',
@@ -56,7 +51,7 @@ const EditWorker = ({ ...pageProps }) => {
 
     const props = {
       breadcrumbsPath,
-      user,
+      user: reduxState.workers.displayedWorker,
       pageProps,
       countries,
       profiles,

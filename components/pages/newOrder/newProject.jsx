@@ -66,14 +66,14 @@ const NewOrder = ({ ...props }) => {
 
   const [budgetData, setBudgetData] = useState({
     obs: { value: '', type: 'area' },
-    amount: { value: '', error: '' },
+    amount: { value: '', error: '', required: true },
     price: { value: '', error: '' },
     category: { value: '', error: '' },
     name: { value: '', error: '', required: true },
     client: { value: '', error: '', required: true },
     dateRequest: { value: '', error: '', required: true, type: 'date' },
-    dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
-    dateDeliveryProject: { value: '', error: '', required: true, type: 'date' },
+    dateAgreedDelivery: { value: '', error: '', required: false, type: 'date' },
+    dateDeliveryProject: { value: '', error: '', required: false, type: 'date' },
     streetAddress: { value: '', error: '', required: true },
     postalCode: { value: '', error: '', required: true },
     addressLocality: { value: '', error: '', required: true },
@@ -186,15 +186,15 @@ const NewOrder = ({ ...props }) => {
       },
       dateRequest: {
         type: 'Property',
-        value: moment(budgetData.dateRequest.value).format('DD/MM/YYYY')
+        value: budgetData.dateRequest.value !== '' ? moment(budgetData.dateRequest.value).format('DD/MM/YYYY') : ''
       },
       dateAgreedDelivery: {
         type: 'Property',
-        value: moment(budgetData.dateAgreedDelivery.value).format('DD/MM/YYYY')
+        value: budgetData.dateAgreedDelivery.value !== '' ? moment(budgetData.dateAgreedDelivery.value).format('DD/MM/YYYY') : ''
       },
       dateDeliveryProject: {
         type: 'Property',
-        value: moment(budgetData.dateDeliveryProject.value).format('DD/MM/YYYY')
+        value: budgetData.dateDeliveryProject.value !== '' ? moment(budgetData.dateDeliveryProject.value).format('DD/MM/YYYY') : ''
       },
       obs: {
         type: 'Property',
@@ -289,15 +289,15 @@ const NewOrder = ({ ...props }) => {
           <Grid container md={2} sm={2} xs={12} justifyContent='end'>
             <ButtonGroup>
               <PrimaryBtn
+                onClick={() => ValidateData()}
+                text={'Guardar'}
+                icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+              />
+              <PrimaryBtn
                 text='Cancelar'
                 icon={<X size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
                 light
                 onClick={() => Router.back()}
-              />
-              <PrimaryBtn
-                onClick={() => ValidateData()}
-                text={'Guardar'}
-                icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
               />
             </ButtonGroup>
           </Grid>

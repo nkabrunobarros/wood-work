@@ -63,9 +63,9 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
 
   if (ordersPages.includes(path.route)) currentSection = 'Pedidos';
 
-  if (projectsPages.includes(path.route)) currentSection = 'Projetos/Orçamentos';
+  if (projectsPages.includes(path.route)) currentSection = 'Pedidos';
 
-  if (orderSimilarPages.includes(path.route)) currentSection = 'Projetos Similares';
+  if (orderSimilarPages.includes(path.route)) currentSection = 'Pedidos Similares';
 
   if (stockPages.includes(path.route)) currentSection = 'Stock';
 

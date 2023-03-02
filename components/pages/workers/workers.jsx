@@ -118,7 +118,7 @@ const Workers = ({ ...props }) => {
             <div className={'filterContainer'}>
               {Router.route !== routes.private.internal.clients &&
                 <Select
-                  label='Perfil'
+                  label='Função'
                   options={profiles}
                   value={profilesFilter}
                   optionLabel='label'

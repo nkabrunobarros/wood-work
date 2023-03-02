@@ -22,6 +22,7 @@ import * as expeditionsActionsRedux from '../../../store/actions/expedition';
 import * as filesActionsRedux from '../../../store/actions/file';
 import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as projectsActionsRedux from '../../../store/actions/project';
+import { categories } from '../new-project';
 
 const Order = ({ ...pageProps }) => {
   const reduxState = useSelector((state) => state);
@@ -309,11 +310,11 @@ const Order = ({ ...pageProps }) => {
 
     const breadcrumbsPath = [
       {
-        title: 'Projetos/Orçamentos',
+        title: 'Pedidos',
         href: `${routes.private.internal.projects}`,
       },
       {
-        title: `Projeto ${reduxState.projects.displayedProject?.name?.value}`,
+        title: `${reduxState.projects.displayedProject?.name?.value}`,
         href: `${routes.private.internal.project}`,
       },
     ];
@@ -351,6 +352,7 @@ const Order = ({ ...pageProps }) => {
       parts,
       workers: [],
       folders,
+      categories,
       finishProject: router.query.finishProject
     };
 

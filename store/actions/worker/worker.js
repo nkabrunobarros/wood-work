@@ -12,6 +12,10 @@ export const WORKER_REQUEST = 'WORKER_REQUEST';
 export const WORKER_FAIL = 'WORKER_FAIL';
 export const WORKER_SUCCESS = 'WORKER_SUCCESS';
 
+export const UPDATE_WORKER_REQUEST = 'UPDATE_WORKER_REQUEST';
+export const UPDATE_WORKER_FAIL = 'UPDATE_WORKER_FAIL';
+export const UPDATE_WORKER_SUCCESS = 'UPDATE_WORKER_SUCCESS';
+
 export const ADD_WORKER_REQUEST = 'ADD_WORKER_REQUEST';
 export const ADD_WORKER_SUCCESS = 'ADD_WORKER_SUCCESS';
 export const ADD_WORKER_FAIL = 'ADD_WORKER_FAIL';
@@ -69,4 +73,22 @@ export const setDisplayedWorker = (data) => {
     data,
 
   };
+};
+
+export const updateWorker = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'PATCH',
+      url: getApiURL(endpoints.DJANGOWORKERS + id),
+    },
+    types: [UPDATE_WORKER_REQUEST, UPDATE_WORKER_SUCCESS, UPDATE_WORKER_FAIL],
+  });
 };

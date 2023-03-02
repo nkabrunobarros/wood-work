@@ -218,8 +218,12 @@ const ProjectsScreen = (props) => {
                   label: 'Espera Adjudicação'
                 },
                 {
+                  id: 'canceled',
+                  label: 'Cancelado'
+                },
+                {
                   subheader: true,
-                  label: isInternalPage ? '--- Projeto' : '--- Pedido'
+                  label: '--- Projeto'
                 },
                 {
                   id: 'drawing',
@@ -259,7 +263,7 @@ const ProjectsScreen = (props) => {
           <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
           <PrimaryBtn
             hidden={!CanDo(['write', 'projects', userPermissions]) || !isInternalPage}
-            text='Adicionar orçamento'
+            text='Adicionar pedido'
             onClick={() => Router.push(routes.private.internal.newProject)}
           />
         </Box>
@@ -276,7 +280,7 @@ const ProjectsScreen = (props) => {
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
           {true && <AdvancedTable
-            rows={projects?.filter(ele => ele?.status?.value?.toLowerCase() !== 'canceled')}
+            rows={projects}
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}
@@ -287,7 +291,7 @@ const ProjectsScreen = (props) => {
         {/* Tab Budgets */}
         {isInternalPage && <TabPanel value={currentTab} index={1}>
           <AdvancedTable
-            rows={budgets?.filter(ele => ele.approvedDate?.value === '' && ele.status.value.toLowerCase() !== 'canceled')}
+            rows={budgets?.filter(ele => ele.approvedDate?.value === '')}
             headCells={headCellsBudget}
             filters={filters}
             clickRoute={detailPageBudgetTab}

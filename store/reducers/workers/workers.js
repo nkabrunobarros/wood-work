@@ -49,12 +49,12 @@ const workers = createReducer(initialState, (builder) => {
       displayedWorker: action.data,
     }))
     //  POST
-    .addCase(workersActions.ADD_WORKER_SUCCESS, (state, action) => ({
+    .addCase(workersActions.ADD_WORKER_SUCCESS, (state) => ({
       ...state,
       errors: null,
       loading: false,
-      data: state.data ? state.data.push(action.payload.data) : action.payload.data,
-      newestWorker: action.payload.data,
+      // data: state.data ? state.data.push(action.payload.data) : action.payload.data,
+      // newestWorker: action.payload.data,
     }))
     .addCase(workersActions.ADD_WORKER_FAIL, (state, action) => ({
       ...state,

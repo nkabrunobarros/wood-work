@@ -77,7 +77,6 @@ const NewClient = ({ ...props }) => {
         label: 'Ultimo Nome',
         value: '',
         error: '',
-        required: true,
         tooltip: ''
       },
       // {

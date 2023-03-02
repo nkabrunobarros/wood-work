@@ -19,6 +19,7 @@ import * as expeditionsActionsRedux from '../../store/actions/expedition';
 import * as filesActionsRedux from '../../store/actions/file';
 import * as foldersActionsRedux from '../../store/actions/folder';
 import * as projectsActionsRedux from '../../store/actions/project';
+import { categories } from '../internal/new-project';
 
 const Order = ({ ...pageProps }) => {
   const reduxState = useSelector((state) => state);
@@ -77,7 +78,7 @@ const Order = ({ ...pageProps }) => {
         href: `${routes.private.projects}`,
       },
       {
-        title: `Pedido  ${reduxState.projects.displayedProject?.name?.value}`,
+        title: `${reduxState.projects.displayedProject?.name?.value}`,
         href: `${routes.private.internal.project}`,
       },
     ];
@@ -184,6 +185,7 @@ const Order = ({ ...pageProps }) => {
       headCellsUpperProductionDetail,
       folders,
       headCellsMessages,
+      categories
     };
 
     return <OrderScreen {...props} />;
