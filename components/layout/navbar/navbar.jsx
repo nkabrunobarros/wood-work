@@ -7,12 +7,9 @@ import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
-import * as appStatesActions from '../../../store/actions/appState';
 import styles from '../../../styles/components/navbar.module.css';
 
-const Navbar = ({ dispatch, me, ...pageProps }) => {
-  const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
-
+const Navbar = ({ toggleDrawer, me, ...pageProps }) => {
   return true && (
     <>
       <AppBar position='sticky' sx={{ backgroundColor: 'default.sides' }}>
@@ -36,7 +33,7 @@ const Navbar = ({ dispatch, me, ...pageProps }) => {
                   aria-label='open drawer'
                   edge='start'
                   sx={{ ml: 2 }}
-                  onClick={() => toggleDrawer()}
+                  onClick={() => toggleDrawer(true)}
                 >
                   <Menu
                     strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
@@ -69,7 +66,7 @@ const Navbar = ({ dispatch, me, ...pageProps }) => {
 
 Navbar.propTypes = {
   me: PropTypes.any,
-  dispatch: PropTypes.any,
+  toggleDrawer: PropTypes.func,
 };
 
 export default Navbar;

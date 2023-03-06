@@ -15,7 +15,7 @@ export function calcDesvio (desvio) {
 }
 
 const FilterItem = (data, item, col) => {
-  if (Object.keys(data).length !== 0) {
+  if (Object.keys(data).length !== 0 || true) {
     const col2 = col.split('.');
 
     switch (Object.keys(col.split('.')).length) {
@@ -117,7 +117,7 @@ const FilterItem = (data, item, col) => {
     case 2: {
       switch (col) {
       case 'orderBy.object': return <Typography variant="md">
-        {data.clients.find(ele => ele.id === item?.orderBy?.object)?.givenName?.value}
+        {data?.clients?.find(ele => ele.id === item?.orderBy?.object)?.givenName?.value}
       </Typography>;
       case 'belongsTo.object': return <Typography variant="md">{item[col2[0]][col2[1]].replace('urn:ngsi-ld:Owner:', '')}</Typography>;
       case 'category.value': return <Typography variant="md">{categories.find(c => c.id === item[col2[0]][col2[1]])?.label || item[col2[0]][col2[1]]}</Typography>;

@@ -26,6 +26,8 @@ import { parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
 import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
+import * as appStatesActions from '../../store/actions/appState';
+import * as authActions from '../../store/actions/auth';
 import Footer from './footer/footer';
 
 const noLayoutScreens = [
@@ -39,7 +41,9 @@ const noLayoutScreens = [
   `${routes.private.tos}`,
   `${routes.private.privacy}`,
   `${routes.private.error}`,
+  `${routes.private.internal.test}`,
   `${routes.private.internal.test2}`,
+  `${routes.private.internal.test3}`,
 ];
 
 async function ValidateToken (path) {
@@ -62,6 +66,8 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
+  const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
+  const logout = () => dispatch(authActions.logout());
 
   const listenToScroll = () => {
     const heightToHideFrom = 500;
@@ -76,6 +82,8 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   };
 
   useEffect(() => {
+    console.log('out');
+
     async function load () {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && await AuthData(dispatch);
 
@@ -97,16 +105,18 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     return (
       <React.Fragment>
         <CssBaseline />
-        {true && <Navbar {...pageProps} me={reduxState.auth.me} dispatch={dispatch} />}
+        {true && <Navbar {...pageProps} me={reduxState.auth.me} toggleDrawer={toggleDrawer} />}
         {true && <Hidden>
           <DrawerMobile
             toggleFontSize={toggleFontSize}
             toggleTheme={toggleTheme}
-            mobileOpen={reduxState.appStates.drawerOpen}
+            state={reduxState}
             {...pageProps}
+            toggleDrawer={toggleDrawer}
+            logout={logout}
           />
         </Hidden>}
-        <Box id="appMainContainer" >
+        <Box id="appMainContainer">
           {IsInternal(reduxState.auth.userPermissions?.description) === isInternalPage
             ? <>
               {children}

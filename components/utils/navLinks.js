@@ -4,6 +4,20 @@ import routes from '../../navigation/routes';
 
 export const navLinks = [
   {
+    title: 'tests',
+    id: 'test',
+    url: routes.private.internal.test,
+    icon: <Archive strokeWidth='1' size={20} />,
+    allowed: 'projects',
+  },
+  {
+    title: 'tests2',
+    id: 'test',
+    url: routes.private.internal.test2,
+    icon: <Archive strokeWidth='1' size={20} />,
+    allowed: 'projects',
+  },
+  {
     title: 'Pedidos',
     id: 'projectsInternal',
     url: routes.private.projects,

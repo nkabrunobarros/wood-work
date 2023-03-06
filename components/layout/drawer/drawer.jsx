@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 //  Nodes
-import { useTheme } from '@emotion/react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import IsInternal from '../../utils/IsInternal';
 
 //  Material UI
@@ -34,32 +33,15 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
-import { useDispatch, useSelector } from 'react-redux';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
 import Router from 'next/router';
-import Auth from '../../../lib/AuthData';
-import * as appStatesActions from '../../../store/actions/appState';
-import * as authActions from '../../../store/actions/auth';
 
-const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
-  const theme = useTheme();
-  const loggedUser = useSelector((state) => state.auth.me);
-  const userPermissions = useSelector((state) => state.auth.userPermissions);
-  // const [anchorEl, setAnchorEl] = useState(null);
+const DrawerMobile = ({ logout, toggleDrawer, state, toggleTheme, toggleFontSize }) => {
+  const loggedUser = state.auth.me;
+  const userPermissions = state.auth.userPermissions;
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
-  const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
-  const logout = () => dispatch(authActions.logout());
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function getData () {
-      Auth(dispatch);
-    }
-
-    Promise.all([getData()]);
-  }, []);
 
   const actions = [
     { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
@@ -75,14 +57,14 @@ const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
       onOpen={() => toggleDrawer()}
       swipeAreaWidth={20}
       variant='temporary'
-      anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-      open={mobileOpen}
+      anchor={'right'}
+      open={state.appStates.drawerOpen}
       onClose={() => toggleDrawer()}
       ModalProps={{
         keepMounted: true, // Better open performance on mobile.
       }}
     >
-      <Box
+      { true && <Box
         sx={{ backgroundColor: 'default.sides' }}
         style={{
           display: 'flex',
@@ -101,7 +83,7 @@ const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
         >
           <IconButton
             style={{ color: 'var(--white)', position: 'absolute', right: '0%' }}
-            onClick={toggleDrawer}>
+            onClick={() => toggleDrawer()}>
             <X />
           </IconButton>
           <Box style={{ margin: '1rem' }}>
@@ -261,7 +243,7 @@ const DrawerMobile = ({ mobileOpen, toggleTheme, toggleFontSize }) => {
               : null}
           </div>
         </Box>
-      </Box>
+      </Box>}
     </SwipeableDrawer>
   );
 };
