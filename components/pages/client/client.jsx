@@ -20,29 +20,29 @@ import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
 import { Edit, PackagePlus, Trash, User } from 'lucide-react';
-import routes from '../../../navigation/routes';
-import * as ClientsActions from '../../../pages/api/actions/client';
+import { useDispatch } from 'react-redux';
+import * as ClientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, editRoute, pageProps } = props;
+  const { breadcrumbsPath, editRoute, pageProps, client } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
-  const client = { ...props.client };
+  const dispatch = useDispatch();
+  const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
+
+  console.log(client);
 
   async function onDelete () {
-    const builtClient = {
-      id: client?.id,
-      type: client?.type,
-      active: false,
+    const data = {
+      id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
+      is_active: false,
     };
 
-    builtClient['@context'] = [
-      'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-      'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-    ];
-
     try {
-      await ClientsActions.updateClient([builtClient]).then(() => Router.push(routes.private.internal.clients));
+      await updateClient(data).then((res) => {
+        console.log(res);
+        // Router.push(routes.private.internal.clients)
+      });
     } catch (err) { }
   }
 
@@ -66,8 +66,8 @@ const EditClient = ({ ...props }) => {
                   text='Editar'
                   icon={
                     <Edit
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   onClick={() => Router.push(`${editRoute}${client?.id}`)}
@@ -77,8 +77,8 @@ const EditClient = ({ ...props }) => {
                   onClick={() => setDialogOpen(true)}
                   icon={
                     <Trash
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   light
@@ -96,37 +96,37 @@ const EditClient = ({ ...props }) => {
                   />  Dados Gerais</Typography>
                 </Grid>
                 <Grid container item>
-                  <Grid item xs={12} md={6} sm={6} sx={{ overflow: 'hidden' }}>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.givenName?.value}</Typography>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Ultimo Nome</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.familyName?.value}</Typography>
+                  </Grid>
+                  <Grid item>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
                     <Typography item color='lightTextSm.main'>Email</Typography>
                     <Typography item color='lightTextSm.black' >{client?.email?.value}</Typography>
                   </Grid>
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Telefone </Typography>
-                    <Typography item color='lightTextSm.black' >{client?.telephone?.value}</Typography>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Tipo cliente </Typography>
+                    <Typography item color='lightTextSm.black' >{client?.isCompany?.value ? 'Empresarial' : 'Particular'}</Typography>
                   </Grid>
                 </Grid>
-                <Grid container item>
-                  {/* <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Pessoa de Contacto </Typography>
-                    <Typography item color='lightTextSm.black' >{client?.contact?.value}</Typography>
-                  </Grid> */}
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Contacto </Typography>
-                    <Typography item color='lightTextSm.black' >{client?.telephone?.value}</Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Observações </Typography>
-                    <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
-                  </Grid>
+                <Grid item xs={12} md={6} sm={6}>
+                  <Typography item color='lightTextSm.main'>Observações </Typography>
+                  <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
                 </Grid>
                 <Grid container item>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} md={6} sm={6}>
-              <Grid container spacing={3} bgcolor={'lightGray.main'} className={styles.clientContainer}>
-                <Grid container item>
-                  <Grid item xs={12}>
+            <Grid item xs={12} md={6} sm={12}>
+              <Grid container p={2} bgcolor={'lightGray.main'} className={styles.clientContainer}>
+                <Grid container item p={1}>
+                  <Grid container item xs={12}>
                     <Typography id='align' item color='lightTextSm.main'>
                       <PackagePlus
                         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
@@ -136,30 +136,65 @@ const EditClient = ({ ...props }) => {
                     </Typography>
                   </Grid>
                 </Grid>
-
-                <Grid container item>
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Morada Fiscal</Typography>
-                    <Typography item color='lightTextSm.black'>
-                      {client.address?.value?.streetAddress + ', '}
-                      {client.address?.value?.postalCode + ', '}
-                      {client.address?.value?.addressLocality + ', '}
-                      {client.address?.value?.addressRegion + ', '}
-                      {client.address?.value?.addressCountry}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Codigo Postal</Typography>
-                    <Typography item color='lightTextSm.black' >
-                      {client?.address?.value?.postalCode}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container item>
+                <Grid container item p={1}>
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'> Número de Identificação Fiscal (Nif)</Typography>
                     <Typography item color='lightTextSm.black' >{client?.vat?.value}</Typography>
                   </Grid>
+                  <Grid item xs={12} md={6} sm={6}>
+                  </Grid>
+                </Grid>
+                <Grid container item p={1}>
+                  <Grid container item md={6} sm={6} xs={12} >
+                    <Grid item xs={12} md={12} sm={12}>
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid container md={4} sm={4} xs={4} sx={{ p: 0.5 }} >Morada</Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ p: 0.5 }} justifyContent='center' ><Typography item color='lightTextSm.main'>Fiscal</Typography></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Codigo Postal</Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.value?.postalCode}</Typography></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Rua</Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.value?.streetAddress}</Typography></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Localidade</Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.value?.addressLocality}</Typography></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Região</Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.value?.addressRegion}</Typography></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Pais</Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.value?.addressCountry}</Typography></Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12} md={6} sm={6}>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid container md={12} sm={12} xs={12} sx={{ p: 0.5 }} justifyContent='center' > <Typography item color='lightTextSm.main'>Entrega</Typography></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.value?.postalCode}</Typography></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.value?.streetAddress}</Typography></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.value?.addressLocality}</Typography></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.value?.addressRegion}</Typography></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.value?.addressCountry}</Typography></Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid container item>
                   <Grid item xs={12} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Outros Dados</Typography>
                     <Typography item color='lightTextSm.black' >{client?.otherData?.value}</Typography>

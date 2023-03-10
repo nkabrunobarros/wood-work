@@ -32,11 +32,18 @@ import CanDo from '../../utils/CanDo';
 //  Navigation
 import routes from '../../../navigation/routes';
 // import * as ProjectActions from '../../../pages/api/actions/project';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import * as budgetsActionsRedux from '../../../store/actions/budget';
+import * as projectsActionsRedux from '../../../store/actions/project';
+import ToastSet from '../../utils/ToastSet';
 
 const ProjectsScreen = (props) => {
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+  const dispatch = useDispatch();
+  const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
+  const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
 
   const {
     breadcrumbsPath,
@@ -44,10 +51,8 @@ const ProjectsScreen = (props) => {
     cards,
     clients,
     editPage,
-    budgets,
     headCellsBudget,
     headCellsProjects,
-    projects,
     detailPageBudgetTab
   } = props;
 
@@ -62,6 +67,8 @@ const ProjectsScreen = (props) => {
   const [product, setProduct] = useState('');
   const [referencia, setReferência] = useState('');
   const [currentTab, setCurrentTab] = useState(0);
+  const [projects, setProjects] = useState(props.projects);
+  const [budgets, setBudgets] = useState(props.budgets);
   const userPermissions = useSelector((state) => state.auth.userPermissions);
 
   const ClearFilters = () => {
@@ -114,6 +121,75 @@ const ProjectsScreen = (props) => {
       'aria-controls': `tabpanel-${index}`,
     };
   }
+
+  async function onDeleteBudget (props) {
+    const loading = toast.loading('');
+    // eslint-disable-next-line react/prop-types
+    const id = props;
+
+    const data = {
+      id,
+      status: { type: 'Property', value: 'canceled' },
+      Estado: 'canceled'
+    };
+
+    try {
+      await updateBudget(data).then((res) => console.log(res));
+    } catch (err) {
+      console.log(err);
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+    }
+
+    const old = [...budgets];
+    const index = old.findIndex((item) => item.id === id);
+
+    if (index !== -1) {
+      const updatedItems = [...old];
+
+      setBudgets(updatedItems);
+      ToastSet(loading, 'Orçamento Removido.', 'success');
+    }
+  }
+
+  async function onDeleteProject (props) {
+    const loading = toast.loading('');
+    // eslint-disable-next-line react/prop-types
+    const id = props;
+
+    const data = {
+      id,
+      status: { type: 'Property', value: 'canceled' }
+    };
+
+    try {
+      await updateProject(data).then((res) => console.log(res));
+    } catch (err) {
+      console.log(err);
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+    }
+
+    const old = [...projects];
+    const index = old.findIndex((item) => item.id === id);
+
+    if (index !== -1) {
+      const updatedItem = {
+        ...projects[index], // Copy the existing item
+        status: { type: 'Property', value: 'canceled' },
+        Estado: 'canceled'
+      };
+
+      const updatedItems = [
+        ...projects.slice(0, index), // Copy the items before the updated item
+        updatedItem, // Add the updated item
+        ...projects.slice(index + 1) // Copy the items after the updated item
+      ];
+
+      setProjects(updatedItems);
+      ToastSet(loading, 'Utilizador Removido.', 'success');
+    }
+  }
+
+  console.log(projects);
 
   return (
     <Grid component='main'>
@@ -245,7 +321,6 @@ const ProjectsScreen = (props) => {
                   id: 'finished',
                   label: 'Terminado'
                 },
-
               ]}
             />
           </Grid>
@@ -279,14 +354,15 @@ const ProjectsScreen = (props) => {
         </Box> }
         {/* Tab Projects */}
         <TabPanel value={currentTab} index={0}>
-          {true && <AdvancedTable
+          <AdvancedTable
             rows={projects}
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}
             editRoute={editPage}
             setFilters={setFilters}
-          />}
+            onDelete={onDeleteProject}
+          />
         </TabPanel>
         {/* Tab Budgets */}
         {isInternalPage && <TabPanel value={currentTab} index={1}>
@@ -294,9 +370,10 @@ const ProjectsScreen = (props) => {
             rows={budgets?.filter(ele => ele.approvedDate?.value === '')}
             headCells={headCellsBudget}
             filters={filters}
+            setFilters={setFilters}
             clickRoute={detailPageBudgetTab}
             editRoute={editPage}
-            setFilters={setFilters}
+            onDelete={onDeleteBudget}
           />
         </TabPanel>}
       </Content>

@@ -17,7 +17,7 @@ const CustomBreadcrumbs = ({ path }) => {
     textDecoration: 'none !important',
   };
 
-  const output = Object.keys(path).sort((a, b) => b - a);
+  const output = Object.keys(path)?.sort((a, b) => b - a);
   const arrayLenght = parseInt(output[0]);
 
   return (

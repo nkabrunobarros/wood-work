@@ -16,8 +16,6 @@ import * as workersActionsRedux from '../../../store/actions/worker';
 
 const EditWorker = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  // const [countries, setCountries] = useState();
-  // const [profiles, setProfiles] = useState();
   const countries = [];
   const profiles = [];
   const router = useRouter();
@@ -48,6 +46,8 @@ const EditWorker = ({ ...pageProps }) => {
         href: `${routes.private.internal.editWorker}`,
       },
     ];
+
+    console.log(pageProps);
 
     const props = {
       breadcrumbsPath,

@@ -5,6 +5,9 @@ export {
   CLIENT_REQUEST,
   CLIENT_FAIL,
   CLIENT_SUCCESS,
+  UPDATE_CLIENT_REQUEST,
+  UPDATE_CLIENT_FAIL,
+  UPDATE_CLIENT_SUCCESS,
   ADD_CLIENT_REQUEST,
   ADD_CLIENT_SUCCESS,
   ADD_CLIENT_FAIL,
@@ -12,5 +15,6 @@ export {
   clients,
   client,
   newClient,
+  updateClient,
   setDisplayedClient,
 } from './client';

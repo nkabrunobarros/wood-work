@@ -5,10 +5,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Image from 'next/image';
 import Router from 'next/router';
 import React from 'react';
-import routes from '../../../navigation/routes';
 import logosFooter from '../../../public/Fundos-Europeus.png';
 import logosFooterDark from '../../../public/Fundos-Europeus_dark_mode.png';
-import IsInternal from '../../utils/IsInternal';
 
 // Pages without layout (sidebar + navbar + footer)
 function Copyright (props) {
@@ -33,9 +31,7 @@ function Copyright (props) {
   );
 }
 
-const Footer = () => {
-  const isPublicPage = Object.values(routes.public).includes(Router.route.replace('[Id]', ''));
-
+const Footer = ({ isPublicPage }) => {
   return typeof window !== 'undefined' && (
     <Grid
       container
@@ -53,7 +49,7 @@ const Footer = () => {
       }}
     >
       <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ minHeight: '40px', display: 'flex', alignItems: 'center', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null }}>
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile.object.description) || isPublicPage
+        {isPublicPage
           ? <Box ><Copyright /></Box>
           : <a
             target='#'
@@ -68,7 +64,7 @@ const Footer = () => {
         }
       </Grid>
       <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ minHeight: '40px', height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : 'end' }} >
-        {IsInternal(JSON.parse(localStorage.getItem('user'))?.profile?.object?.description || '') || isPublicPage
+        {isPublicPage
           ? <a
             target='#'
             href={'http://mofreita.com/wp-content/uploads/2022/08/72593_ww4.0_modelo_pag_web_0_norte2020_v2.pdf'} style={{ display: !isPublicPage && 'none' }}>
@@ -80,7 +76,7 @@ const Footer = () => {
               src={localStorage.getItem('theme') === 'light' ? logosFooter : logosFooterDark}
             />
           </a>
-          : <Box ><Copyright /></Box>
+          : <Box><Copyright /></Box>
         }
       </Grid>
     </Grid >

@@ -11,6 +11,9 @@ export const CLIENTS_SUCCESS = 'CLIENTS_SUCCESS';
 export const CLIENT_REQUEST = 'CLIENT_REQUEST';
 export const CLIENT_FAIL = 'CLIENT_FAIL';
 export const CLIENT_SUCCESS = 'CLIENT_SUCCESS';
+export const UPDATE_CLIENT_REQUEST = 'UPDATE_CLIENT_REQUEST';
+export const UPDATE_CLIENT_FAIL = 'UPDATE_CLIENT_FAIL';
+export const UPDATE_CLIENT_SUCCESS = 'UPDATE_CLIENT_SUCCESS';
 
 export const ADD_CLIENT_REQUEST = 'ADD_CLIENT_REQUEST';
 export const ADD_CLIENT_SUCCESS = 'ADD_CLIENT_SUCCESS';
@@ -45,6 +48,24 @@ export const client = (data) => {
       url: getApiURL(endpoints.CLIENTS + data),
     },
     types: [CLIENT_REQUEST, CLIENT_SUCCESS, CLIENT_FAIL],
+  });
+};
+
+export const updateClient = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'PATCH',
+      url: getApiURL(endpoints.CUSTOMER + id),
+    },
+    types: [UPDATE_CLIENT_REQUEST, UPDATE_CLIENT_SUCCESS, UPDATE_CLIENT_FAIL],
   });
 };
 

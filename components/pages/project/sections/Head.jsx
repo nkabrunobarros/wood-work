@@ -108,6 +108,7 @@ const Head = (props) => {
         {order.status?.value === 'testing' && <Typography className='infoBalloon'>Em montagem</Typography>}
         {order.status?.value === 'transport' && <Typography className='alertBalloon'>Em transporte</Typography>}
         {order.status?.value === 'finished' && <Typography className='successBalloon'>Terminado</Typography>}
+        {order.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
       </Box>
       <Box style={{ marginLeft: 'auto' }}>
         <PrimaryBtn

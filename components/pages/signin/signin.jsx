@@ -310,7 +310,7 @@ const SignIn = (props) => {
             </Button>
           </Box>
         </Box>
-        <Footer />
+        <Footer isPublicPage={true}/>
       </Grid>
     </Grid>
   );

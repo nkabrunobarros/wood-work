@@ -57,7 +57,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state, toggleTheme, toggleFontSize
       onOpen={() => toggleDrawer()}
       swipeAreaWidth={20}
       variant='temporary'
-      anchor={'right'}
+      anchor={'left'}
       open={state.appStates.drawerOpen}
       onClose={() => toggleDrawer()}
       ModalProps={{

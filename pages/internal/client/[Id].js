@@ -56,7 +56,7 @@ const EditClient = ({ ...pageProps }) => {
       client: JSON.parse(JSON.stringify({ ...reduxState.clients.displayedClient })),
       breadcrumbsPath,
       editRoute,
-      ...pageProps
+      pageProps
     };
 
     return <ClientScreen {...props} />;

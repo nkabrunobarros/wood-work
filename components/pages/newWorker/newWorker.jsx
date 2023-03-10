@@ -12,13 +12,11 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, Button, Checkbox, CircularProgress, FormControlLabel, Tooltip
+  Box, Button, CircularProgress
 } from '@mui/material';
 import { Save, X } from 'lucide-react';
 import Router from 'next/router';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
-import MyInput from '../../inputs/myInput';
-import Select from '../../inputs/select';
 import Loader from '../../loader/loader';
 import EmailValidation from '../../utils/EmailValidation';
 
@@ -28,7 +26,7 @@ import routes from '../../../navigation/routes';
 import * as WorkerActions from '../../../pages/api/actions/worker';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import Notification from '../../dialogs/Notification';
-import PhoneInput from '../../inputs/phoneInput/PhoneInput';
+import FormGenerator from '../../formGenerator';
 
 export const functions = [
   {
@@ -66,13 +64,12 @@ export const functions = [
 ];
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, countries, organizations } = props;
+  const { breadcrumbsPath, organizations } = props;
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [generatePassword, setGeneratePassword] = useState(true);
 
   const [inputFields, setInputFields] = useState([
     {
@@ -96,7 +93,6 @@ const newWorker = ({ ...props }) => {
       label: 'Ultimo Nome',
       value: '',
       error: '',
-      required: true,
       tooltip: ''
     },
     {
@@ -130,7 +126,7 @@ const newWorker = ({ ...props }) => {
     {
       id: 'user.password',
       label: 'Senha',
-      value: '',
+      value: 'ChangeMe',
       error: '',
       type: 'password',
       required: true
@@ -152,10 +148,6 @@ const newWorker = ({ ...props }) => {
     };
 
     inputFields.map((ele) => {
-      builtWorker[ele.id] = {};
-
-      if (ele.type === 'password') ele.value = 'ChangeMe';
-
       builtWorker[ele.id] = ele.value;
     });
 
@@ -184,80 +176,89 @@ const newWorker = ({ ...props }) => {
     setProcessing(false);
   }
 
-  function onError (err) {
-    const errorKeys = Object.keys(err.response.data);
+  function onError (error) {
+    const errorKeys = Object.keys(error.response.data);
 
-    inputFields.map((input, i) => {
-      const { id } = input;
-      const [errorKey, errorValue] = id.split('.');
+    const updatedFields = inputFields.map((field) => {
+      const [key, subKey] = field.id.split('.');
 
-      if (errorKeys.includes(errorKey)) {
-        const errorObj = err.response.data[errorKey];
-
-        if (errorObj[errorValue]) {
-          const data = [...inputFields];
-
-          data[i].error = errorObj[errorValue][0];
-          setInputFields(data);
+      if (errorKeys.includes(key) && error.response.data[key][subKey]) {
+        switch (error.response.data[key][subKey][0]) {
+        case 'A user with that username already exists.':
+          return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
+        case 'User with this email address already exists.':
+          return { ...field, error: 'Já existe um utilizador com este Email.' };
+        case 'This field is required.':
+          return { ...field, error: 'Campo Obrigatório.' };
+        default:
+          return { ...field, error: error.response.data[key][subKey][0] };
         }
       }
+
+      return field;
     });
 
-    if (err.response.status === 400) toast.warning('Erros no formulario.');
-    else toast.error('Algo aconteceu. Por favor tente mais tarde.');
+    setInputFields(updatedFields);
+
+    if (error.response.status === 400) {
+      toast.warning('Erros no formulário.');
+    } else {
+      toast.error('Algo aconteceu. Por favor tente mais tarde.');
+    }
   }
 
   const ClearFields = () => {
     setCleaningInputs(true);
 
-    const data = [...inputFields];
-
-    data.map((ele) => ele.value = '');
-    setInputFields(data);
-
     setTimeout(() => {
       setCleaningInputs(false);
       setSuccessOpen(false);
+      setInputFields(inputFields.map(input => ({ ...input, error: '', value: '' })));
     }, 500);
   };
 
   const handleFormChange = (i, e) => {
-    const data = [...inputFields];
+    setInputFields(prevInputFields => {
+      const data = [...prevInputFields];
 
-    data[i].value = e.target.value;
-    data[i].error = '';
-    setInputFields(data);
+      data[i].value = e.target.value;
+      data[i].error = '';
+
+      return data;
+    });
   };
 
   function ValidateFields () {
     let hasErrors = false;
+    const data = [...inputFields];
 
-    inputFields.map((input, i) => {
-      const data = [...inputFields];
-
-      if (input.type === 'password') {
-        if (!generatePassword && input.value === '') {
-          data[i].error = 'Campo Óbrigatorio';
-          hasErrors = true;
-        }
-      } else if (input.required && input.value === '') {
-        data[i].error = 'Campo Óbrigatorio';
+    data.forEach((input) => {
+      if (input.required && input.value === '') {
+        input.error = 'Campo Obrigatório';
         hasErrors = true;
-
-      // Case it reaches here, validates specifiq fields and value structure
-      } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
-        data[i].error = 'Email mal estruturado';
+      } else if (
+        input.required &&
+        input.id === 'email' &&
+        !EmailValidation(input.value)
+      ) {
+        input.error = 'Email mal estruturado';
         hasErrors = true;
-      } else if (input.value.length < 9 && input.type === 'phone' && input.required) {
-        data[i].error = 'Numero mal estruturado';
+      } else if (
+        input.value.length < 9 &&
+        input.type === 'phone' &&
+        input.required
+      ) {
+        input.error = 'Número mal estruturado';
         hasErrors = true;
+      } else {
+        input.error = '';
       }
-
-      setInputFields(data);
     });
 
+    setInputFields(data);
+
     if (hasErrors) {
-      toast.error('Prencha todos os campos.');
+      toast.error('Preencha todos os campos.');
 
       return true;
     }
@@ -317,77 +318,11 @@ const newWorker = ({ ...props }) => {
         <Box>
           {/* Input Fields Generator */}
           <Grid container p={'12px'}>
-            {inputFields.map((field, index) => {
-              if (field.options) {
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <Select
-                    name={field.id}
-                    label={field.label}
-                    required={field.required}
-                    value={field.value}
-                    error={field.error}
-                    type={field.type && field.type}
-                    onChange={(e) => handleFormChange(index, e)}
-                    options={field.options}
-                    optionValue={field.optValue}
-                    optionLabel={field.optLabel}
-                    placeholder={`Escrever ${field.label}`}
-                  />
-                </Grid>;
-              }
-
-              if (field.type === 'phone' && field.required) {
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <PhoneInput
-                    name={field.id}
-                    label={field.label}
-                    options={countries}
-                    required={field.required}
-                    value={field.value}
-                    placeholder={`Escrever ${field.label}`}
-                    error={field.error}
-                    onChange={(e) => handleFormChange(index, e)}
-                  />
-                </Grid>;
-              }
-
-              if (field.type === 'password' && field.required) {
-                return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  {generatePassword
-                    ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label="Enviar senha por email" />
-                    : <MyInput
-                      label={
-                        <Tooltip title='Trocar para enviar senha por email'>
-                          <a className='link' onClick={() => setGeneratePassword(!generatePassword)} >Senha</a>
-                        </Tooltip>
-                      }
-                      name={field.id}
-                      required={field.required}
-                      value={field.value}
-                      error={field.error}
-                      type={field.type}
-                      placeholder={`Escrever ${field.label}`}
-                      onChange={(e) => handleFormChange(index, e)}
-                    />
-                  }
-                </Grid>;
-              }
-
-              //  Default case regular text input
-              return <Grid key={index} md={3} sm={6} xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  name={field.id}
-                  label={field.label}
-                  required={field.required}
-                  value={field.value}
-                  error={field.error}
-                  type={field.type && field.type}
-                  onChange={(e) => handleFormChange(index, e)}
-                  placeholder={`Escrever ${field.label}`}
-
-                />
-              </Grid>;
-            })}
+            <FormGenerator
+              perRow={3}
+              fields={inputFields}
+              onFormChange={handleFormChange}
+            />
             <Grid container md={12} >
               <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
                 {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}

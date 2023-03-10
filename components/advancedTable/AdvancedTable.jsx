@@ -28,20 +28,17 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { CheckCircleOutline, DeleteOutline, EditOutlined } from '@mui/icons-material';
-import { Copy, Filter } from 'lucide-react';
+import { DeleteOutline, EditOutlined } from '@mui/icons-material';
+import { Filter } from 'lucide-react';
 
 //  Utlis
 import { FilterItem } from '../utils/FilterItem';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
 
 //  Services
-import * as BudgetActions from '../../pages/api/actions/budget';
 // import * as CategoriesActions from '../../pages/api/actions/category';
-import * as WorkerActions from '../../pages/api/actions/worker';
 
 //  Dialogs
-import { toast } from 'react-toastify';
 import ConfirmDialog from '../dialogs/ConfirmDialog';
 import Notification from '../dialogs/Notification';
 
@@ -49,14 +46,10 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
-import axios from 'axios';
-import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
-import { methods } from '../../pages/api/actions/methods';
 import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
-  children,
   rows,
   headCells,
   headCellsUpper,
@@ -67,7 +60,8 @@ const AdvancedTable = ({
   filters,
   setFilters,
   rangeFilters,
-  setRangeFilters
+  setRangeFilters,
+  onDelete
 }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
@@ -78,12 +72,11 @@ const AdvancedTable = ({
   const [data, setData] = useState({});
   const [deleteItemId, setDeleteItemId] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [cellsFilter, setCellsFilter] = useState(headCells);
   const [refresh, setRefresh] = useState(new Date());
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
   const [displaying, setDisplaying] = useState();
   const reduxState = useSelector((state) => state);
 
@@ -140,105 +133,6 @@ const AdvancedTable = ({
     Promise.all([getData(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => setLoaded(true));
   }, []);
 
-  async function onConfirmItem () {
-    const thisRow = rows.find(r => r.id === deleteItemId);
-
-    const builtBudget = [{
-      id: deleteItemId,
-      type: 'Budget',
-      aprovedDate: {
-        type: 'Property',
-        value: moment().format('DD/MM/YYYY')
-      },
-      status: {
-        type: 'Property',
-        value: 'adjudicated'
-      }
-    }];
-
-    try {
-      await BudgetActions.updateBudget(builtBudget).then(async () => {
-        setConfirmDialogOpen(false);
-        setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
-
-        if (data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === 'owner' || data.clients.find(ele => ele.id === thisRow.belongsTo.object).ownerType?.value === undefined) {
-          const builtProject = {
-            id: 'urn:ngsi-ld:Project:' + thisRow.name.value,
-            type: 'Project',
-            name: {
-              type: 'Property',
-              value: thisRow.name.value
-            },
-            // category: {
-            //   type: 'Property',
-            //   value: thisRow.category.value
-            // },
-            status: {
-              type: 'Property',
-              value: 'drawing'
-            },
-            budgetId: {
-              type: 'Relationship',
-              object: thisRow.id
-            },
-            // producedBy: {
-            //   type: 'Relationship',
-            //   object: ['urn:ngsi-ld:Worker:1', 'urn:ngsi-ld:Worker:2', 'urn:ngsi-ld:Worker:3', 'urn:ngsi-ld:Worker:4', 'urn:ngsi-ld:Worker:5', 'urn:ngsi-ld:Worker:6', 'urn:ngsi-ld:Worker:7', 'urn:ngsi-ld:Worker:8', 'urn:ngsi-ld:Worker:9', 'urn:ngsi-ld:Worker:10', 'urn:ngsi-ld:Worker:11', 'urn:ngsi-ld:Worker:12', 'urn:ngsi-ld:Worker:13']
-            // },
-            // orderBy: {
-            //   type: 'Relationship',
-            //   object: thisRow.belongsTo.object
-            // },
-            assemblyBy: {
-              type: 'Relationship',
-              object: ['urn:ngsi-ld:Worker:10']
-            },
-            // image: {
-            //   type: 'Property',
-            //   value: 'urn:ngsi-ld:image:project:MC_MUEBLETV_A'
-            // },
-            amount: {
-              type: 'Property',
-              value: thisRow.amount.value || 0
-            },
-            expedition: {
-              type: 'Relationship',
-              object: 'urn:ngsi-ld:expedition:' + thisRow.name.value
-            },
-            '@context': [
-              'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-              'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-            ]
-          };
-
-          const config = {
-            method: 'post',
-            url: 'http://woodwork4.ddns.net/api/ngsi-ld/v1/entities/',
-            headers: {
-              'Content-Type': 'application/ld+json',
-              'Fiware-Service': 'woodwork40'
-            },
-            data: builtProject
-          };
-
-          const axios = require('axios');
-
-          axios(config)
-            .then(() => {
-              toast.success('Orçamento adjudicado. Passou para produção');
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-
-          // await ClientsActions.updateClient(builtClient).then(async () => {
-
-          // }).catch((err) => console.log(err));
-        } else console.log('did not find  the owner');
-      });
-    } catch (err) { toast.error('Algo aconteceu. Por favor tente mais tarde'); }
-  }
-
   function onDeleteClick (row) {
     setDialogOpen(true);
 
@@ -266,102 +160,6 @@ const AdvancedTable = ({
       setCellsFilter(oldState);
       setRefresh(new Date());
     });
-  }
-
-  async function onDeleteItem () {
-    // eslint-disable-next-line react/prop-types
-    const thisRow = rows.find(r => r.id === deleteItemId);
-
-    try {
-      switch (Router.route) {
-      case routes.private.internal.workers:
-        await WorkerActions.deleteWorker({ id: deleteItemId })
-          .then(() => toast.success('Worker removido com sucesso!'));
-
-        break;
-
-      case routes.private.internal.clients:
-
-        const data = JSON.stringify([
-          {
-            id: deleteItemId,
-            type: 'Owner',
-            active: {
-              type: 'Property',
-              value: 'False'
-            },
-            '@context': [
-              'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld',
-              'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-            ]
-          }
-        ]);
-
-        const config = {
-          method: 'post',
-          url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.UPDATE + '?options=replace',
-          headers: {
-            'Content-Type': 'application/ld+json',
-            'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
-          },
-          data
-        };
-
-        axios(config)
-          .then(function (response) {
-            console.log(JSON.stringify(response.data));
-            toast.success('Cliente removido com sucesso!');
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
-        break;
-
-      case routes.private.internal.projects: {
-        const data = JSON.stringify([
-          {
-            id: deleteItemId,
-            type: deleteItemId.includes('Budget') ? 'Budget' : 'Project',
-            status: {
-              type: 'Property',
-              value: 'Canceled'
-            },
-            '@context': [
-              'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.keyValue.jsonld',
-              'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-            ]
-          }
-        ]);
-
-        const config = {
-          method: 'post',
-          url: process.env.NEXT_PUBLIC_FRONT_API_URL_DEV + methods.UPDATE + '?options=replace',
-          headers: {
-            'Content-Type': 'application/ld+json',
-            'Fiware-Service': process.env.NEXT_PUBLIC_FIWARE_SERVICE
-          },
-          data
-        };
-
-        axios(config)
-          .then(function () {
-            toast.success('Budget cancelado com sucesso!');
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
-        break;
-      }
-      }
-
-      setFilteredItems(filteredItems.filter(ele => ele !== thisRow));
-      setDialogOpen(false);
-    } catch (err) {
-      toast.error('Algo inesperado aconteceu. Se o problema persistir, contacte o responsavel.');
-      setDialogOpen(false);
-    }
   }
 
   function EnhancedTableHead (props) {
@@ -545,10 +343,9 @@ const AdvancedTable = ({
       }
       );
 
-      console.log(filteredTest);
       setFilteredItems(filteredTest);
     }
-  }, [filters, rangeFilters]);
+  }, [filters, rangeFilters, rows]);
 
   function onFilterRemove (filterName) {
     const filtersToWork = { ...filters };
@@ -569,16 +366,11 @@ const AdvancedTable = ({
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
-        onConfirm={() => onDeleteItem()}
+        onConfirm={() => {
+          !!onDelete && onDelete(deleteItemId);
+          setDialogOpen(false);
+        } }
         message={dialogMessage}
-      />
-      <ConfirmDialog
-        open={confirmDialogOpen}
-        handleClose={() => setConfirmDialogOpen(false)}
-        onConfirm={() => onConfirmItem()}
-        message={'Está prestes a registar a adjudicação do orçamento! Quer continuar'}
-        icon='Check'
-        iconType='success'
       />
 
       <Notification />
@@ -657,119 +449,100 @@ const AdvancedTable = ({
               onRequestSort={handleRequestSort}
               rowCount={filteredItems?.length}
             />
-            {children || (
-              <TableBody>
-                {(stableSort(filteredItems, getComparator(order, orderBy)))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role='checkbox'
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                      >
+            <TableBody>
+              {(stableSort(filteredItems, getComparator(order, orderBy)))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                        {cellsFilter.map((headCell, index2) => {
-                          return headCell.show && <TableCell
-                            id={labelId}
-                            key={headCell.id}
-                            align={headCell.numeric ? 'right' : 'left'}
-                            padding={
-                              headCell.disablePadding ? 'none' : 'normal'
-                            }
-                            sx={{
-                              borderRight: headCell.borderRight && '1px solid var(--grayEdges)',
-                              borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
-                            }}
-                          >
-                            {loaded
-                              ? <>
-                                {headCell.id === 'actions' || headCell.id === 'actionsConf'
-                                  ? (
-                                    <ButtonGroup color='link.main'>
-
-                                      {headCell.id !== 'actionsConf'
-                                        ? <>
-                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
-                                      <Tooltip title={'Editar'}>
-                                        <IconButton
-                                          onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
-                                          <EditOutlined
-                                            color={'primary'}
-                                          />
-                                        </IconButton>
-                                      </Tooltip>}
-                                        </>
-                                        : <>
-                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.id)}
+                      role='checkbox'
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                    >
+                      {cellsFilter.map((headCell, index2) => {
+                        return headCell.show && <TableCell
+                          id={labelId}
+                          key={headCell.id}
+                          align={headCell.numeric ? 'right' : 'left'}
+                          padding={
+                            headCell.disablePadding ? 'none' : 'normal'
+                          }
+                          sx={{
+                            borderRight: headCell.borderRight && '1px solid var(--grayEdges)',
+                            borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
+                          }}
+                        >
+                          {loaded
+                            ? <>
+                              {headCell.id === 'actions' || headCell.id === 'actionsConf'
+                                ? (
+                                  <ButtonGroup color='link.main'>
+                                    {headCell.id !== 'actionsConf' &&
                                         <>
-                                          <Tooltip title={'Adjudicar orçamento'}>
-                                            <IconButton onClick={() => {
-                                              setConfirmDialogOpen(true);
-                                              setDeleteItemId(row.id);
-                                            }} >
-                                              <CheckCircleOutline color={'success'} />
-                                            </IconButton>
-                                          </Tooltip>
-                                          <Tooltip title={'Duplicar orçamento'} sx={{ display: row.status.value !== 'waiting adjudication' && 'none' }}>
-                                            <IconButton onClick={() => {
-                                              setConfirmDialogOpen(true);
-                                              setDeleteItemId(row.id);
-                                            }} >
-                                              <Copy size={20} strokeWidth={1.5} color={'#225ee8'}/>
-                                            </IconButton>
-                                          </Tooltip>
-
-                                        </>}
+                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
+                                            <Tooltip title={'Editar'}>
+                                              <Box style={{ color: 'red' }}>
+                                                <IconButton
+                                                  onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
+                                                  <EditOutlined
+                                                    fontSize="small"
+                                                    color={'primary'}
+                                                  />
+                                                </IconButton>
+                                              </Box>
+                                            </Tooltip>
+                                          }
                                         </>
-                                      }
-                                      {CanDo(['DELETE', displaying, reduxState.auth.userPermissions]) && <Tooltip title={'Remover'}>
-                                        <IconButton onClick={() => onDeleteClick(row)} >
-                                          <DeleteOutline
-                                            color={'primary'}
-                                          />
-                                        </IconButton>
-                                      </Tooltip>}
-                                    </ButtonGroup>
-                                  )
-                                  : (
-                                    <Box
-                                      onClick={() =>
-                                        clickRoute && Router.route === routes.private.projects && row.id.includes('urn:ngsi-ld:Budget:')
-                                          ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`)
-                                          : Router.push(`${clickRoute}${row[actionId || 'id']}`)
-                                      }
-                                      color={index2 === 0 && 'primary.main'}
-                                      sx={{ cursor: clickRoute && 'pointer' }}
-                                    >
-                                      {FilterItem(
-                                        data,
-                                        row,
-                                        headCell.id
-                                      )}
-                                    </Box>
-                                  )}
-                              </>
-                              : <Skeleton animation="wave" width='100%' />}
-                          </TableCell>;
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                {(page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems?.length) : 0) > 0 && (
-                  <TableRow>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            )}
+                                    }
+                                    {CanDo(['DELETE', displaying, reduxState.auth.userPermissions]) && <Tooltip title={'Remover'}>
+                                      <IconButton onClick={() => onDeleteClick(row)} >
+                                        <DeleteOutline
+                                          color={'primary'}
+                                          fontSize="small"
+                                        />
+                                      </IconButton>
+                                    </Tooltip>}
+                                  </ButtonGroup>
+                                )
+                                : (
+                                  <Box
+                                    onClick={() =>
+                                      clickRoute && Router.route === routes.private.projects && row.id.includes('urn:ngsi-ld:Budget:')
+                                        ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`)
+                                        : Router.push(`${clickRoute}${row[actionId || 'id']}`)
+                                    }
+                                    color={index2 === 0 && 'primary.main'}
+                                    sx={{ cursor: clickRoute && 'pointer' }}
+                                  >
+                                    {FilterItem(
+                                      data,
+                                      row,
+                                      headCell.id
+                                    )}
+                                  </Box>
+                                )}
+                            </>
+                            : <Skeleton animation="wave" width='100%' />}
+                        </TableCell>;
+                      })}
+                    </TableRow>
+                  );
+                })}
+              {(page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems?.length) : 0) > 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+
           </Table>
         </TableContainer>
       </Paper>

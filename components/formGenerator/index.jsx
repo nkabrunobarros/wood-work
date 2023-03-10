@@ -59,11 +59,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
 
   useEffect(() => {
     const getData = async () => {
-      try {
-        // await CountryActions
-        //   .countries()
-        //   .then((res) => setCountries(res.data.payload.data));
-      } catch (error) { }
+      // try { } catch (error) { }
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -119,7 +115,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
     </Popover>
     <Grid container>
       {fields.map((field, index) => {
-        if (field.hidden) return true;
+        if (field.hidden) return null;
 
         if (field.options) {
           return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
@@ -138,7 +134,6 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               disabled={field.disabled}
               placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
               tooltip={field.tooltip}
-
             />
           </Grid>;
         }

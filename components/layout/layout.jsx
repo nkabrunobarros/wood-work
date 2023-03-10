@@ -18,7 +18,7 @@ import DrawerMobile from './drawer/drawer';
 import Navbar from './navbar/navbar';
 
 //  Material UI
-import { Box, CssBaseline, Fab, Hidden } from '@mui/material';
+import { Box, Fab, Hidden } from '@mui/material';
 
 import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
@@ -82,8 +82,6 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
   };
 
   useEffect(() => {
-    console.log('out');
-
     async function load () {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && await AuthData(dispatch);
 
@@ -103,8 +101,7 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     if (noLayoutScreens.includes(path.route.replace('/[Id]', '')) || path.route === '/reset-password/[Id]') return children;
 
     return (
-      <React.Fragment>
-        <CssBaseline />
+      <Box >
         {true && <Navbar {...pageProps} me={reduxState.auth.me} toggleDrawer={toggleDrawer} />}
         {true && <Hidden>
           <DrawerMobile
@@ -116,10 +113,10 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
             logout={logout}
           />
         </Hidden>}
-        <Box id="appMainContainer">
+        <Box sx={{ padding: '0rem 2rem 4rem 2rem' }} >
+          {children}
           {IsInternal(reduxState.auth.userPermissions?.description) === isInternalPage
             ? <>
-              {children}
               <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
                 <Fab
                   aria-label="like"
@@ -135,9 +132,9 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
           }
         </Box>
         {true && <Box style={{ width: '100%' }}>
-          <Footer />
+          <Footer isPublicPage={!isInternalPage}/>
         </Box>}
-      </React.Fragment>
+      </Box>
     );
   }
 

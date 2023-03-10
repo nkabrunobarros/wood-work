@@ -156,15 +156,7 @@ const NewClient = ({ ...props }) => {
         disabled: true,
         tooltip: 'Prencha o Codigo Postal'
       },
-      {
-        id: 'address.addressDistrict',
-        label: 'Distrito',
-        value: '',
-        error: '',
-        required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
-      },
+
       {
         id: 'address.addressCountry',
         label: 'País',
@@ -172,6 +164,47 @@ const NewClient = ({ ...props }) => {
         error: '',
         required: true,
         disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'delivery_address.streetAddress',
+        label: 'Rua de Entrega',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'delivery_address.postalCode',
+        label: 'Codigo Postal de Entrega',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'delivery_address.addressLocality',
+        label: 'Localidade de Entrega',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'delivery_address.addressRegion',
+        label: 'Concelho de Entrega',
+        value: '',
+        error: '',
+        required: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+
+      {
+        id: 'delivery_address.addressCountry',
+        label: 'País de Entrega',
+        value: '',
+        error: '',
+        required: true,
         tooltip: 'Prencha o Codigo Postal'
       },
       {
@@ -208,11 +241,17 @@ const NewClient = ({ ...props }) => {
 
         if (field.id === 'address.addressCountry') { data[i].value = 'PT'; data[i].error = ''; }
 
-        if (field.id === 'address.addressDistrict') { data[i].value = postalCodeInfo.Distrito; data[i].error = ''; }
-
         if (field.id === 'address.addressRegion') { data[i].value = postalCodeInfo.Concelho; data[i].error = ''; }
 
         if (field.id === 'address.addressLocality' && typeof postalCodeInfo.Localidade !== 'object') { data[i].value = postalCodeInfo.Localidade; data[i].error = ''; }
+
+        if (field.id === 'delivery_address.postalCode') { data[i].error = ''; data[i].value = postalCodeInfo.CP; }
+
+        if (field.id === 'delivery_address.addressCountry') { data[i].value = 'PT'; data[i].error = ''; }
+
+        if (field.id === 'delivery_address.addressRegion') { data[i].value = postalCodeInfo.Concelho; data[i].error = ''; }
+
+        if (field.id === 'delivery_address.addressLocality' && typeof postalCodeInfo.Localidade !== 'object') { data[i].value = postalCodeInfo.Localidade; data[i].error = ''; }
       });
 
       setInputFields(data);
@@ -251,7 +290,7 @@ const NewClient = ({ ...props }) => {
     });
 
     if (hasErrors) {
-      toast.error('Prencha todos os campos.');
+      toast.error('Preencha todos os campos.');
 
       return true;
     }
@@ -277,12 +316,6 @@ const NewClient = ({ ...props }) => {
 
     builtClient2.country = builtClient2['address.addressCountry'];
     builtClient2['user.password_confirm'] = builtClient2['user.password'];
-    builtClient2['delivery_address.addressCountry'] = builtClient2['address.addressCountry'];
-    builtClient2['delivery_address.addressDistrict'] = builtClient2['address.addressDistrict'];
-    builtClient2['delivery_address.addressLocality'] = builtClient2['address.addressLocality'];
-    builtClient2['delivery_address.addressRegion'] = builtClient2['address.addressRegion'];
-    builtClient2['delivery_address.postalCode'] = builtClient2['address.postalCode'];
-    builtClient2['delivery_address.streetAddress'] = builtClient2['address.streetAddress'];
 
     const data = qs.stringify({ ...builtClient2 });
 
@@ -292,24 +325,35 @@ const NewClient = ({ ...props }) => {
     setDialogOpen(false);
   }
 
-  function onError (err) {
-    const errorKeys = Object.keys(err.response.data);
+  function onError (error) {
+    const errorKeys = Object.keys(error.response.data);
 
-    inputFields.map((input, i) => {
-      const data = [...inputFields];
-      const split = input.id.split('.');
+    const updatedFields = inputFields.map((field) => {
+      const [key, subKey] = field.id.split('.');
 
-      if (errorKeys.includes(split[0])) {
-        Object.keys(err.response.data[split[0]]).map((key, index) => {
-          if (Object.keys(err.response.data[split[0]])[index] === split[1]) data[i].error = err.response.data[split[0]][Object.keys(err.response.data[split[0]])[index]][0];
-        });
+      if (errorKeys.includes(key) && error.response.data[key][subKey]) {
+        switch (error.response.data[key][subKey][0]) {
+        case 'A user with that username already exists.':
+          return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
+        case 'User with this email address already exists.':
+          return { ...field, error: 'Já existe um utilizador com este Email.' };
+        case 'This field is required.':
+          return { ...field, error: 'Campo Obrigatório.' };
+        default:
+          return { ...field, error: error.response.data[key][subKey][0] };
+        }
       }
 
-      setInputFields(data);
+      return field;
     });
 
-    if (err.response.status === 400) toast.warning('Erros no formulario.');
-    else toast.error('Algo aconteceu. Por favor tente mais tarde.');
+    setInputFields(updatedFields);
+
+    if (error.response.status === 400) {
+      toast.warning('Erros no formulário.');
+    } else {
+      toast.error('Algo aconteceu. Por favor tente mais tarde.');
+    }
   }
 
   const ClearFields = () => {
@@ -332,8 +376,6 @@ const NewClient = ({ ...props }) => {
 
       postalCodeInfo && data.map((field, i) => {
         if (field.id === 'addressCountry') data[i].value = '';
-
-        if (field.id === 'addressDistrict') data[i].value = '';
 
         if (field.id === 'addressRegion') data[i].value = '';
 

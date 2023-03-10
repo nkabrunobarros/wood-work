@@ -48,7 +48,7 @@ const Clients = ({ ...pageProps }) => {
         label: 'Nome',
       },
       {
-        id: 'email.value',
+        id: 'Email',
         numeric: false,
         disablePadding: true,
         label: 'Email',

@@ -1,6 +1,7 @@
 //  Nodes
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 //  PreLoader
 import Loader from '../../../components/loader/loader';
@@ -12,28 +13,21 @@ import EditClientScreen from '../../../components/pages/editClient/editClient';
 import routes from '../../../navigation/routes';
 
 //  Services
-import * as ClientActions from '../../../pages/api/actions/client';
-import * as OrganizationActions from '../../../pages/api/actions/organization';
+import * as clientsActionsRedux from '../../../store/actions/client';
 
 const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [client, setClient] = useState();
-  const [organizations, setOrganizations] = useState();
   const router = useRouter();
-  const clientId = router.query.Id;
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
 
   useEffect(() => {
-    const getAll = async () => {
-      await ClientActions
-        .client({ id: clientId })
-        .then((res) => setClient(res.data[0]));
-
-      await OrganizationActions
-        .organizations()
-        .then((res) => setOrganizations(res.data));
+    const getData = async () => {
+      await getClient(router.query.Id);
     };
 
-    Promise.all([getAll()]).then(() => setLoaded(true));
+    Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
@@ -45,8 +39,8 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
       {
-        title: `${client.legalName.value}`,
-        href: `${routes.private.internal.client}${client.id}`,
+        title: `${reduxState.clients.displayedClient.legalName.value}`,
+        href: `${routes.private.internal.client}${reduxState.clients.displayedClient.id}`,
       },
       {
         title: 'Editar Cliente',
@@ -55,11 +49,10 @@ const EditClient = ({ ...pageProps }) => {
     ];
 
     const props = {
-      client,
+      client: { ...reduxState.clients.displayedClient },
       breadcrumbsPath,
       detailPage,
       pageProps,
-      organizations,
     };
 
     return <EditClientScreen {...props} />;

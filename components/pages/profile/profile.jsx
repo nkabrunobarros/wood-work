@@ -126,7 +126,7 @@ const Profile = ({ ...props }) => {
                   </Grid>
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description || user?.functionPerformed?.value}</Typography>
+                    <Typography item color='lightTextSm.black'>{user?.profile?.object?.description || user?.functionPerformed?.value || user?.performanceRole.value}</Typography>
                   </Grid>
                   {user?.workerShift?.value && <Grid item xs={12}>
                     {/* Only applies to workers */}
@@ -135,9 +135,10 @@ const Profile = ({ ...props }) => {
                   </Grid>}
                   <Grid item xs={12}>
                     <Typography item color='lightTextSm.main'>Estado </Typography>
+                    {console.log(user)}
                     <Typography item>
                       <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
-                        {user?.active?.value === 'True' ? 'Ativo' : user?.active?.value === undefined ? 'Ativo' : 'Desativado'}
+                        {user?.active?.value ? 'Ativo' : user?.active?.value === undefined ? 'Ativo' : 'Inativo'}
                       </a>
                     </Typography>
                   </Grid>

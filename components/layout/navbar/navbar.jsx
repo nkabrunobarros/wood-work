@@ -33,7 +33,7 @@ const Navbar = ({ toggleDrawer, me, ...pageProps }) => {
                   aria-label='open drawer'
                   edge='start'
                   sx={{ ml: 2 }}
-                  onClick={() => toggleDrawer(true)}
+                  onClick={() => toggleDrawer()}
                 >
                   <Menu
                     strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}

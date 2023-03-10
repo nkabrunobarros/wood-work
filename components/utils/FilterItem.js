@@ -15,6 +15,7 @@ export function calcDesvio (desvio) {
 }
 
 const FilterItem = (data, item, col) => {
+  // eslint-disable-next-line no-constant-condition
   if (Object.keys(data).length !== 0 || true) {
     const col2 = col.split('.');
 
@@ -94,13 +95,13 @@ const FilterItem = (data, item, col) => {
         switch (item?.Estado?.toLowerCase()) {
         case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
         case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
-        case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;
         case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
         case 'drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
         case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
         case 'finished': return <Typography variant='md' className="successBalloon">Terminado</Typography>;
+        case 'canceled': return <Typography variant='md' className="errorBalloon">Cancelado</Typography>;
         }
       }
 

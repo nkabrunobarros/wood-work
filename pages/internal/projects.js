@@ -51,7 +51,7 @@ const Projects = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData() {
+    async function loadData () {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -71,39 +71,39 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-        case 'waiting budget':
-          counts.waitingBudget++;
+      case 'waiting budget':
+        counts.waitingBudget++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'finished':
+        counts.concluded++;
 
-          break;
+        break;
       }
     });
 
@@ -202,42 +202,49 @@ const Projects = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Nome',
+        show: true,
       },
       {
         id: 'orderBy.object',
         numeric: false,
         disablePadding: false,
         label: 'Cliente',
+        show: true,
       },
       {
         id: 'amount.value',
         numeric: false,
         disablePadding: false,
         label: 'Quantidade',
+        show: true,
       },
       {
         id: 'price.value',
         numeric: false,
         disablePadding: false,
         label: 'Preço',
+        show: true,
       },
       {
         id: 'createdAt.value',
         numeric: false,
         disablePadding: false,
         label: 'Data criação',
+        show: true,
       },
       {
         id: 'Estado',
         numeric: false,
         disablePadding: false,
         label: 'Estado',
+        show: true,
       },
       {
         id: 'actionsConf',
         numeric: true,
         disablePadding: false,
         label: 'Ações',
+        show: true,
       },
     ];
 
@@ -247,36 +254,42 @@ const Projects = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Nome',
+        show: true,
       },
       {
         id: 'category.value',
         numeric: false,
         disablePadding: false,
         label: 'Categoria',
+        show: true,
       },
       {
-        id: 'orderBy.object',
+        id: 'ClienteLabel',
         numeric: false,
         disablePadding: false,
         label: 'Cliente',
+        show: true,
       },
       {
-        id: 'amount.value',
+        id: 'Quantidade',
         numeric: false,
         disablePadding: false,
         label: 'Quantidade',
+        show: true,
       },
       {
         id: 'Estado',
         numeric: false,
         disablePadding: false,
         label: 'Estado',
+        show: true,
       },
       {
         id: 'actions',
         numeric: true,
         disablePadding: false,
         label: 'Ações',
+        show: true,
       },
     ];
 
@@ -286,16 +299,19 @@ const Projects = ({ ...pageProps }) => {
       ...bud,
       Estado: bud?.status?.value,
       Nome: bud?.name?.value.replace(/_/g, ' '),
-      Cliente: bud.orderBy.object
+      Cliente: bud.orderBy.object,
+      Quantidade: bud.amount.value
 
     }));
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => ({
       ...proj,
+      Quantidade: proj?.amount?.value,
       Estado: proj?.status?.value,
       Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
       budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
       Cliente: proj.orderBy.object,
+      ClienteLabel: clients.find(ele => ele.id === proj.orderBy.object).legalName.value,
     }));
 
     const props = {

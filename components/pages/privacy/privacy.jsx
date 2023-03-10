@@ -244,7 +244,7 @@ Os restantes dados dos utilizadores, como nome, contactos telefónicos poderão 
             </Accordion>
           </Box>
         </Box>
-        <Footer />
+        <Footer isPublicPage />
       </Grid>
     </Grid>
   );

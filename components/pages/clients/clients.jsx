@@ -7,20 +7,25 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
-import Select from '../../inputs/select';
 
 //  PropTypes
 import {
+  Autocomplete,
+  Box,
   InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  TextField
 } from '@mui/material';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import * as clientsActionsRedux from '../../../store/actions/client';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import ToastSet from '../../utils/ToastSet';
 
 const Clients = ({ ...props }) => {
   const {
-    items,
     breadcrumbsPath,
     profiles,
     headCells,
@@ -31,9 +36,12 @@ const Clients = ({ ...props }) => {
 
   //  States
   const [nome, setNome] = useState('');
+  const [clients, setClients] = useState(props.items);
   const [email, setEmail] = useState('');
   const [profilesFilter, setProfilesFilter] = useState('');
   const [filters, setFilters] = useState({});
+  const dispatch = useDispatch();
+  const updateClient = (data) => dispatch(clientsActionsRedux.updateClient(data));
 
   useEffect(() => {
     setFilters({
@@ -54,43 +62,95 @@ const Clients = ({ ...props }) => {
     setProfilesFilter('');
   };
 
+  async function onDelete (props) {
+    const loading = toast.loading('');
+    // eslint-disable-next-line react/prop-types
+    const id = props.replace('urn:ngsi-ld:Owner:', '');
+
+    const data = {
+      id,
+      is_active: false
+    };
+
+    try {
+      await updateClient(data).then((res) => console.log(res));
+    } catch (err) {
+      console.log(err);
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+    }
+
+    const old = [...clients];
+    const index = old.findIndex((item) => item.id.replace('urn:ngsi-ld:Owner:', '') === id);
+
+    if (index !== -1) {
+      const updatedItems = [...old];
+
+      updatedItems.splice(index, 1);
+      setClients(updatedItems);
+      ToastSet(loading, 'Cliente Removido.', 'success');
+    }
+  }
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       {/* Filters */}
       <Content>
-        <div id='pad'>
+        <Box id='pad'>
           <a className='headerTitleSm'>Filtros</a>
-          <div className='filters'>
-            <div className='filterContainer'>
-              <Select
-                label={'Nome'}
-                options={items}
-                optionValue={'Nome'}
-                optionLabel={'Nome'}
-                onChange={(event) => setNome(event.target.value)}
+          <Box className='filters'>
+            <Box className='filterContainer'>
+              <InputLabel htmlFor='email'>Cliente</InputLabel>
+              <Autocomplete
+                name='client'
+                id='client'
+                fullWidth
+                disablePortal
+                options={clients.sort((a, b) =>
+                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                )}
+                getOptionLabel={(option) => option.legalName?.value || option.name?.value}
+                getOptionValue={(option) => option.id}
+                onChange={(e, value) => setNome(value?.legalName.value || '')}
+                renderOption={(props, option) => {
+                  return (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      {option.legalName?.value || option.name?.value }
+                    </Box>
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    value={nome}
+                    {...params}
+                    placeholder="Escrever Nome Cliente"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
               />
-            </div>
-            <div className='filterContainer'>
+            </Box>
+            <Box className='filterContainer'>
               <InputLabel htmlFor='email'>Email</InputLabel>
               <OutlinedInput
-
                 fullWidth
                 id='email'
                 name='email'
                 autoComplete='email'
-                placeholder='Escrever um email'
+                placeholder='Escrever Email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-            </div>
-            <div className={'filterContainer'}>
+            </Box>
+            <Box className={'filterContainer'}>
 
-            </div>
+            </Box>
 
-          </div>
-          <div
+          </Box>
+          <Box
             style={{
               width: 'fit-content',
               marginLeft: 'auto',
@@ -98,20 +158,20 @@ const Clients = ({ ...props }) => {
             }}
           >
             <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
-          </div>
-        </div>
+          </Box>
+        </Box>
       </Content>
 
       <Content>
-        <div
+        <Box
           id='pad'
           className='flex'
           style={{ display: 'flex', alignItems: 'center' }}
         >
-          <div>
+          <Box>
             <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-          </div>
-          <div
+          </Box>
+          <Box
             style={{
               marginLeft: 'auto',
               display: 'flex',
@@ -121,21 +181,24 @@ const Clients = ({ ...props }) => {
               fontSize: 'small',
             }}
           >
-            <div>
+            <Box>
               <PrimaryBtn
                 text='Adicionar'
                 onClick={() => Router.push(`${newRoute}`)}
               />
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
         <AdvancedTable
-          rows={items.filter((item) => item.active?.value && item)}
+          rows={clients.filter((item) => item.active?.value && item).sort((a, b) =>
+            a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+          )}
           headCells={headCells}
           clickRoute={detailRoute}
           editRoute={editRoute}
           filters={filters}
           setFilters={setFilters}
+          onDelete={onDelete}
         />
       </Content>
     </Grid>

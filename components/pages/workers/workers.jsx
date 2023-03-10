@@ -17,11 +17,15 @@ import {
 } from '@mui/material';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as WorkerActions from '../../../pages/api/actions/worker';
+import * as workersActionsRedux from '../../../store/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import Notification from '../../dialogs/Notification';
 import CanDo from '../../utils/CanDo';
+import ToastSet from '../../utils/ToastSet';
 
 const Workers = ({ ...props }) => {
   const {
@@ -30,14 +34,16 @@ const Workers = ({ ...props }) => {
     editRoute,
     detailRoute,
     newRoute,
-    workers,
     headCellsWorkers,
   } = props;
 
+  const dispatch = useDispatch();
+  const updateWorker = (data) => dispatch(workersActionsRedux.updateWorker(data));
   const userPermissions = useSelector((state) => state.auth.userPermissions);
   //  States
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [workers, setWorkers] = useState(props.workers);
   const [profilesFilter, setProfilesFilter] = useState('');
 
   const [filters, setFilters] = useState({
@@ -83,9 +89,39 @@ const Workers = ({ ...props }) => {
       .catch(() => console.log('error'));
   }
 
+  async function onDelete (props) {
+    const loading = toast.loading('');
+    // eslint-disable-next-line react/prop-types
+    const id = props.replace('urn:ngsi-ld:Worker:', '');
+
+    const data = {
+      id,
+      is_active: false
+    };
+
+    try {
+      false && await updateWorker(data).then((res) => console.log(res));
+    } catch (err) {
+      console.log(err);
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+    }
+
+    const old = [...workers];
+    const index = old.findIndex((item) => item.id.replace('urn:ngsi-ld:Worker:', '') === id);
+
+    if (index !== -1) {
+      const updatedItems = [...old];
+
+      updatedItems.splice(index, 1);
+      setWorkers(updatedItems);
+      ToastSet(loading, 'Utilizador Removido.', 'success');
+    }
+  }
+
   return (
     <Grid component='main' sx={{ height: '100%' }}>
       <CssBaseline />
+      <Notification />
       <CustomBreadcrumbs path={breadcrumbsPath} />
       {false && <Button onClick={() => Fix()}>fix</Button>}
       {/* Filters */}
@@ -169,13 +205,6 @@ const Workers = ({ ...props }) => {
             </div>
           </div>
         </div>
-        {/* <AdvancedTable
-          rows={items.filter((item) => item.ativo && item)}
-          headCells={headCells}
-          clickRoute={detailRoute}
-          editRoute={editRoute}
-          filters={filters}
-        /> */}
         <AdvancedTable
           rows={workers}
           // rows={workers.filter((item) => item.active?.value && item)}
@@ -184,6 +213,7 @@ const Workers = ({ ...props }) => {
           editRoute={editRoute}
           filters={filters}
           setFilters={setFilters}
+          onDelete={onDelete}
         />
       </Content>
     </Grid>

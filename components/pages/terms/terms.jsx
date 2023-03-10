@@ -256,7 +256,7 @@ Em caso de incumprimento, a Mofreita, reserva-se no direito de eliminar a conta 
               </Box>
             )}
         </Box>
-        <Footer />
+        <Footer isPublicPage />
       </Grid>
     </Grid>
   );

@@ -2,7 +2,7 @@
 /* eslint-disable array-callback-return */
 //  Nodes
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 //  Mui
@@ -32,13 +32,11 @@ import styles from '../../../styles/NewOrder.module.css';
 //  FormGenerator
 import FormGenerator from '../../formGenerator';
 
-import * as ClientActions from '../../../pages/api/actions/client';
-
-//   TODO: FIX CLIENTE SAVE FUNCTION
-// TODO:
+import { useDispatch } from 'react-redux';
+import * as ClientsActionsRedux from '../../../store/actions/client';
 
 const EditClient = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, organizations, client } = props;
+  const { breadcrumbsPath, pageProps, client } = props;
   // const [client, setClient] = useState(props.client);
   const [postalCodeInfo, setPostalCodeInfo] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,6 +44,8 @@ const EditClient = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const processing = false;
   // const [processing, setProcessing] = useState(false);
+  const dispatch = useDispatch();
+  const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
 
   async function ValidatePostalCode (props) {
     const data = [...inputFields];
@@ -56,8 +56,6 @@ const EditClient = ({ ...props }) => {
 
       postalCodeInfo && data.map((field, i) => {
         if (field.id === 'addressCountry') data[i].value = '';
-
-        if (field.id === 'addressDistrict') data[i].value = '';
 
         if (field.id === 'addressRegion') data[i].value = '';
 
@@ -87,128 +85,124 @@ const EditClient = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState(
     [
-      // {
-      //   id: 'legalName',
-      //   label: 'Nome legal',
-      //   value: client?.legalName?.value,
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
       {
-        id: 'name',
-        label: 'Nome',
-        value: client?.name?.value,
+        id: 'user.first_name',
+        label: 'Primeiro Nome',
+        value: client.givenName.value,
         error: '',
         required: true,
         tooltip: ''
       },
       {
-        id: 'email',
+        id: 'user.last_name',
+        label: 'Ultimo Nome',
+        value: client.familyName.value,
+        error: '',
+        tooltip: ''
+      },
+      {
+        id: 'user.email',
         type: 'email',
         label: 'Email',
-        value: client?.email?.value,
+        value: client.email.value,
         error: '',
-        required: true,
         disabled: true,
-      },
-      {
-        id: 'telephone',
-        label: 'Telefone',
-        value: client?.telephone?.value,
-        error: '',
-        type: 'phone',
         required: true,
         tooltip: ''
       },
       {
-        id: 'hasOrganization',
-        label: 'Organização',
-        value: organizations[0].id,
-        // value: client?.hasOrganization?.value,
-        options: organizations,
-        optLabel: 'legalName',
-        error: '',
-        required: true,
-        tooltip: '',
-        hidden: true
-
-      },
-      {
-        id: 'postalCode',
-        label: 'Codigo Postal',
-        value: client?.address.value.postalCode,
+        id: 'vat',
+        label: 'Numero Identificação Fiscal (Nif)',
+        value: client.vat.value,
         error: '',
         required: true,
         tooltip: ''
       },
       {
-        id: 'streetAddress',
+        id: 'address.streetAddress',
         label: 'Rua',
-        value: client?.address.value.streetAddress || client?.address.value.streetAddres,
+        value: client.address.value.streetAddress,
         error: '',
         required: true,
         tooltip: ''
       },
       {
-        id: 'addressCountry',
-        label: 'País',
-        value: client?.address.value.addressCountry,
+        id: 'address.postalCode',
+        label: 'Codigo Postal',
+        value: client.address.value.postalCode,
         error: '',
         required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
+        tooltip: ''
       },
       {
-        id: 'addressRegion',
-        label: 'Concelho',
-        value: client?.address.value.addressRegion,
-        error: '',
-        required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
-      },
-      // {
-      //   id: 'addressDistrict',
-      //   label: 'Distrito',
-      //   value: client?.address.value.addressDistrict,
-      //   error: '',
-      //   required: true,
-      //   disabled: true,
-      //   tooltip: 'Prencha o Codigo Postal'
-      // },
-      {
-        id: 'addressLocality',
+        id: 'address.addressLocality',
         label: 'Localidade',
-        value: client?.address.value.addressLocality,
+        value: client.address.value.addressLocality,
         error: '',
         required: true,
         disabled: true,
         tooltip: 'Prencha o Codigo Postal'
       },
       {
-        id: 'obs',
-        label: 'Observações',
-        value: client?.obs?.value || '',
-        type: 'area',
+        id: 'address.addressRegion',
+        label: 'Concelho',
+        value: client.address.value.addressRegion,
         error: '',
-        required: false,
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'address.addressCountry',
+        label: 'País',
+        value: client.address.value.addressCountry,
+        error: '',
+        required: true,
+        disabled: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'delivery_address.streetAddress',
+        label: 'Rua de Entrega',
+        value: client.delivery_address.value.streetAddress,
+        error: '',
+        required: true,
         tooltip: ''
+      },
+      {
+        id: 'delivery_address.postalCode',
+        label: 'Codigo Postal de Entrega',
+        value: client.delivery_address.value.postalCode,
+        error: '',
+        required: true,
+        tooltip: ''
+      },
+      {
+        id: 'delivery_address.addressLocality',
+        label: 'Localidade de Entrega',
+        value: client.delivery_address.value.addressLocality,
+        error: '',
+        required: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'delivery_address.addressRegion',
+        label: 'Concelho de Entrega',
+        value: client.delivery_address.value.addressRegion,
+        error: '',
+        required: true,
+        tooltip: 'Prencha o Codigo Postal'
+      },
+      {
+        id: 'delivery_address.addressCountry',
+        label: 'País de Entrega',
+        value: client.delivery_address.value.addressCountry,
+        error: '',
+        required: true,
+        tooltip: 'Prencha o Codigo Postal'
       },
     ]
   );
-
-  const [inputFields2, setInputFields2] = useState([
-    {
-      id: 'taxId',
-      label: 'Número de Identificação Fiscal (Nif)',
-      value: client?.taxId?.value,
-      error: '',
-      required: true,
-      tooltip: ''
-    },
-
-  ]);
 
   const handleFormChange = (i, e) => {
     const data = [...inputFields];
@@ -217,28 +211,6 @@ const EditClient = ({ ...props }) => {
     data[i].error = '';
     setInputFields(data);
   };
-
-  const handleFormChange2 = (i, e) => {
-    const data = [...inputFields2];
-
-    data[i].value = e.target.value;
-    data[i].error = '';
-    setInputFields2(data);
-  };
-
-  useEffect(() => {
-    async function PostalCodeInfo () {
-      try {
-        const res = await axios.get(`https://geoapi.pt/cp/${inputFields2.find(ele => ele.id === 'postalCode').value}?json=1`);
-
-        if (res.data) setPostalCodeInfo(res.data);
-      } catch (error) {
-        setPostalCodeInfo();
-      }
-    }
-
-    PostalCodeInfo();
-  }, [inputFields2.find(ele => ele.id === 'postalCode')?.value]);
 
   function ValidateFields () {
     let hasErrors = false;
@@ -261,24 +233,6 @@ const EditClient = ({ ...props }) => {
       setInputFields(data);
     });
 
-    inputFields2.map((input, i) => {
-      const data = [...inputFields2];
-
-      if (input.required && input.value === '') {
-        data[i].error = 'Campo Óbrigatorio';
-        hasErrors = true;
-        // Case it reaches here, validates specifiq fields and value structure
-      } else if (!postalCodeInfo && input.id === 'postalCode') {
-        data[i].error = 'Codigo Postal Invalido';
-        hasErrors = true;
-      } else if (input.value?.length !== 9 && input.type === 'phone' && input.required) {
-        data[i].error = 'Número mal estruturado';
-        hasErrors = true;
-      }
-
-      setInputFields2(data);
-    });
-
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
 
@@ -290,8 +244,7 @@ const EditClient = ({ ...props }) => {
 
   async function onConfirm () {
     const builtClient = {
-      id: client.id,
-      type: client.type,
+      id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
     };
 
     inputFields.map((ele) => {
@@ -306,59 +259,46 @@ const EditClient = ({ ...props }) => {
       } else {
         if (ele.type === 'password') ele.value = 'ChangeMe';
 
-        builtClient[ele.id].type = 'Property';
-        builtClient[ele.id].value = ele.value;
+        builtClient[ele.id] = ele.value;
       }
     });
 
-    inputFields2.map((ele) => {
-      builtClient[ele.id] = {};
-
-      const a = false;
-
-      // if (ele.options) {
-      if (a) {
-        // builtWorker[ele.id].type = 'Relationship';
-        // builtWorker[ele.id].object = ele.value;
-      } else {
-        if (ele.type === 'password') ele.value = 'ChangeMe';
-
-        builtClient[ele.id].type = 'Property';
-        builtClient[ele.id].value = ele.value;
-      }
-    });
-
-    builtClient.telephone.value = builtClient.telephone.value.replace(/ /g, '');
+    // builtClient.telephone.value = builtClient.telephone.value.replace(/ /g, '');
 
     builtClient.address = {
-      value: {
-        streetAddress: builtClient.streetAddress.value,
-        postalCode: builtClient.postalCode.value,
-        addressLocality: builtClient.addressLocality.value,
-        addressRegion: builtClient.addressRegion.value,
-        addressCountry: builtClient.addressCountry.value
-      },
-      type: 'Property'
+      streetAddress: builtClient['address.streetAddress'],
+      postalCode: builtClient['address.postalCode'],
+      addressLocality: builtClient['address.addressLocality'],
+      addressRegion: builtClient['address.addressRegion'],
+      addressCountry: builtClient['address.addressCountry'],
+    };
+
+    builtClient.delivery_address = {
+      streetAddress: builtClient['delivery_address.streetAddress'],
+      postalCode: builtClient['delivery_address.postalCode'],
+      addressLocality: builtClient['delivery_address.addressLocality'],
+      addressRegion: builtClient['delivery_address.addressRegion'],
+      addressCountry: builtClient['delivery_address.addressCountry'],
     };
 
     //  Remove extra props
-    delete builtClient.streetAddres;
-    delete builtClient.addressCountry;
-    delete builtClient.addressRegion;
-    delete builtClient.addressLocality;
-    delete builtClient.addressDistrict;
-    delete builtClient.postalCode;
+    delete builtClient['address.streetAddress'];
+    delete builtClient['address.postalCode'];
+    delete builtClient['address.addressLocality'];
+    delete builtClient['address.addressRegion'];
+    delete builtClient['address.addressCountry'];
+    delete builtClient['delivery_address.streetAddress'];
+    delete builtClient['delivery_address.postalCode'];
+    delete builtClient['delivery_address.addressLocality'];
+    delete builtClient['delivery_address.addressRegion'];
+    delete builtClient['delivery_address.addressCountry'];
 
-    builtClient['@context'] = [
-      'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-      'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-    ];
+    const data = builtClient;
 
     try {
-      await ClientActions.updateClient(
-        [builtClient]
-      )
-        .then(() => {
+      await updateClient(data)
+        .then((res) => {
+          console.log(res);
           toast.success('Atualizado.');
           setDialogOpen(false);
         })
@@ -460,103 +400,8 @@ const EditClient = ({ ...props }) => {
           </Box>
         </Box>
         <Grid container sx={{ padding: '24px' }}>
-          <Grid item md={8} sm={8} xs={12} >
-            {/* <Grid container >
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <Typography id='align' item className='lightTextSm'><User
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
-                  />  Dados Gerais</Typography>
-                </Grid>
-              </Grid>
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required
-                    label={'Nome'}
-                    error={errorMessageName}
-                    placeholder='Escrever nome'
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      setErrorMessageName('');
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required
-                    label={'Nome Legal'}
-                    error={errorMessageLegalName}
-                    placeholder='Escrever Nome Legal'
-                    value={legalName}
-                    onChange={(e) => {
-                      setLegalName(e.target.value);
-                      setErrorMessageLegalName('');
-                    }}
-                  />
+          <Grid item md={12} sm={12} xs={12} >
 
-                </Grid>
-              </Grid>
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required
-                    disabled
-                    label={'Email'}
-                    error={errorMessageEmail}
-                    placeholder='Escrever email'
-                    value={email}
-                    type='email'
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setErrorMessageEmail('');
-                    }}
-                  />
-
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required
-                    label={'Pessoa de Contacto'}
-                    error={errorMessageContact}
-                    placeholder='Escrever pessoa de contacto'
-                    value={contactName}
-                    onChange={(e) => {
-                      setContactName(e.target.value);
-                      setErrorMessageContact('');
-                    }}
-                  />
-
-                </Grid>
-              </Grid>
-              <Grid container item>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <MyInput
-                    required
-                    label={'Telefone'}
-                    error={errorMessageTelefone}
-                    placeholder='Escrever numero de telefone'
-                    value={telefone}
-                    type='number'
-                    onChange={(e) => {
-                      setTelefone(e.target.value);
-                      setErrorMessageTelefone('');
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                  <InputLabel htmlFor='email'>Observações</InputLabel>
-                  <TextareaAutosize
-                    placeholder='Escrever observações'
-                    className={styles.textarea}
-                    value={obs}
-                    onChange={(e) => setObs(e.target.value)}
-                  />
-                </Grid>
-              </Grid>
-            </Grid> */}
             <Grid item xs={12} md={6} sx={{ paddingRight: '.5rem' }}>
               <Typography id='align' item className='lightTextSm'>
                 <User
@@ -576,74 +421,9 @@ const EditClient = ({ ...props }) => {
               }}
             />
           </Grid>
-          <Grid item md={4} sm={4} xs={12} bgcolor={'lightGray.main'} className={styles.clientContainer}>
-            {/* <Grid container>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <Typography id='align' item className='lightTextSm'>
-                  <Edit2
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
-                  />
-                  Dados de Faturação
-                </Typography>
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required
-                  label={'Morada Fiscal'}
-                  error={errorMessageAddress}
-                  placeholder='Escrever Morada Fiscal'
-                  value={address}
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                    setErrorMessageAddress('');
-                  }}
-                />
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required
-                  label={'Codigo Postal'}
-                  error={errorMessagePostalCode}
-                  placeholder='Escrever Codigo Postal'
-                  value={postalCode}
-                  onChange={(e) => {
-                    setPostalCode(e.target.value);
-                    setErrorMessagePostalCode('');
-                  }}
-                  adornmentIcon={!!postalCodeInfo &&
-                    <Tooltip title='Detalhes Codigo Postal' >
-                      <Info color="var(--primary)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
-                    </Tooltip>
-                  }
-                />
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required
-                  label={'Número de Identificação Fiscal (Nif)'}
-                  error={errorMessageNif}
-                  placeholder='Escrever Número de Identificação Fiscal'
-                  value={nif}
-                  onChange={(e) => {
-                    setNif(e.target.value);
-                    setErrorMessageNif('');
-                  }}
-                />
-              </Grid>
-              <Grid container item sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  required
-                  label={'Outros Dados'}
-                  placeholder='Escrever outros dados'
-                  value={otherData}
-                  onChange={(e) => {
-                    setOtherData(e.target.value);
-                  }}
-                />
-              </Grid>
-            </Grid> */}
-            <Grid container item sx={{ paddingRight: '.5rem' }}>
+          <Grid item md={4} sm={4} xs={12} sx={{ display: 'none' }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
+
+            <Grid container item sx={{ paddingRight: '.5rem', display: 'none' }}>
               <Typography id='align' className='lightTextSm'>
                 <Edit2
                   strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
@@ -652,23 +432,10 @@ const EditClient = ({ ...props }) => {
                   Dados de Faturação
               </Typography>
             </Grid>
-            <FormGenerator
-              perRow={1}
-              fields={inputFields2}
-              onFormChange={handleFormChange2}
-              optionalData={{
-                postalCodeInfo
-              }}
-            />
+
           </Grid>
         </Grid>
-        {/* <Box sx={{ display: 'flex' }}>
-          <Tooltip title='Restaurar Dados Originais'>
-            <Button onClick={RestoreData} style={{ marginLeft: 'auto' }}>
-              Restaurar
-            </Button>
-          </Tooltip>
-        </Box> */}
+
       </Content>
     </Grid>
   );
