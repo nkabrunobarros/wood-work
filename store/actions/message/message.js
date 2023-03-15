@@ -30,8 +30,6 @@ export const messages = (data) => {
 export const conversationMessages = (data) => {
   const { auth_token: userToken } = parseCookies();
 
-  console.log(data);
-
   return createAction({
     meta: null,
     data,

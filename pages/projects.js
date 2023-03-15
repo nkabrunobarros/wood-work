@@ -21,6 +21,7 @@ import * as projectsActionsRedux from '../store/actions/project';
 import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../components/loader/loader';
 import { categories } from './internal/new-project';
 
 const Orders = ({ ...pageProps }) => {
@@ -33,7 +34,7 @@ const Orders = ({ ...pageProps }) => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
 
-  async function fetchData () {
+  async function fetchData() {
     let errors = false;
 
     try {
@@ -55,7 +56,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData () {
+    async function loadData() {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -83,39 +84,39 @@ const Orders = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-      case 'waiting budget':
-        counts.waitingBudget++;
+        case 'waiting budget':
+          counts.waitingBudget++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
@@ -177,60 +178,70 @@ const Orders = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Nome',
+        show: true,
       },
       {
         id: 'Referência',
         numeric: false,
         disablePadding: false,
         label: 'Referência',
+        show: true,
       },
       {
         id: 'Categoria',
         numeric: false,
         disablePadding: false,
         label: 'Categoria',
+        show: true,
       },
       {
         id: 'amount.value',
         numeric: false,
         disablePadding: false,
         label: 'Quantidade',
+        show: true,
       },
       {
         id: 'Estado',
         numeric: false,
         disablePadding: false,
         label: 'Estado',
+        show: true,
       },
       {
         id: 'Pedido',
         numeric: false,
         disablePadding: false,
         label: 'Pedido',
+        show: true,
       },
       {
         id: 'Inicio',
         numeric: false,
         disablePadding: false,
         label: 'Início Prod.',
+        show: true,
       },
       {
         id: 'Termino',
         numeric: false,
         disablePadding: false,
         label: 'Fim Prod.',
+        show: true,
       },
       {
         id: 'Complete',
         numeric: false,
         disablePadding: false,
         label: 'Qtd. Prod.',
+        show: true,
       },
       {
         id: 'ExpeditionTime',
         numeric: false,
         disablePadding: false,
         label: 'Entrada Expedição',
+        show: true,
       },
     ];
 
@@ -289,6 +300,8 @@ const Orders = ({ ...pageProps }) => {
 
     return <OrdersScreen {...props} />;
   }
+
+  return <Loader center={true} />;
 };
 
 Orders.propTypes = {

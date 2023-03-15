@@ -100,8 +100,6 @@ const ResetPassword = (props) => {
     return true;
   }
 
-  console.log(props.token);
-
   async function handleSubmit (e) {
     e.preventDefault();
     setSubmiting(true);
@@ -116,7 +114,6 @@ const ResetPassword = (props) => {
       });
 
       data.id = props.token.uidb64 + '/' + props.token.token;
-      console.log(data);
 
       await updatePassword(data).then((res) => {
         if (res.data === '"The token is valid. The Operation has occurred successfully."') toast.success('Senha redefinida!');

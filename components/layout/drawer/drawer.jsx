@@ -9,19 +9,14 @@ import {
   Box,
   Collapse,
   Divider,
-  IconButton, MenuItem,
-  SpeedDial,
-  SpeedDialAction, SwipeableDrawer,
-  Switch,
-  Tooltip,
-  Typography
+  IconButton, MenuItem, SwipeableDrawer
 } from '@mui/material';
 
 //  Services
 import { navLinks } from '../../utils/navLinks';
 
 //  Icons
-import { ChevronDown, ChevronUp, LogOut, Moon, Settings, Sun, Type, User, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, LogOut, Moon, Settings, User, X } from 'lucide-react';
 
 //  Navigation
 import routes from '../../../navigation/routes';
@@ -37,19 +32,19 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import * as authActions from '../../../pages/api/actions/auth';
 import Router from 'next/router';
 
-const DrawerMobile = ({ logout, toggleDrawer, state, toggleTheme, toggleFontSize }) => {
+const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const loggedUser = state.auth.me;
   const userPermissions = state.auth.userPermissions;
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
 
-  const actions = [
-    { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
-    { icon: <Typography variant='sm'>T</Typography>, name: 'Pequeno', value: 'sm' },
-    { icon: <Typography variant='md'>T</Typography>, name: 'Normal', value: 'md' },
-    { icon: <Typography variant='xl'>T</Typography>, name: 'Grande', value: 'xl' },
-    { icon: <Typography variant='xxl'>T</Typography>, name: 'Maior', value: 'xxl' },
-  ];
+  // const actions = [
+  //   { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
+  //   { icon: <Typography variant='sm'>T</Typography>, name: 'Pequeno', value: 'sm' },
+  //   { icon: <Typography variant='md'>T</Typography>, name: 'Normal', value: 'md' },
+  //   { icon: <Typography variant='xl'>T</Typography>, name: 'Grande', value: 'xl' },
+  //   { icon: <Typography variant='xxl'>T</Typography>, name: 'Maior', value: 'xxl' },
+  // ];
 
   return loggedUser && userPermissions && (
     <SwipeableDrawer
@@ -172,38 +167,6 @@ const DrawerMobile = ({ logout, toggleDrawer, state, toggleTheme, toggleFontSize
                 </Box>
               </a>
             </MenuItem>
-            <Collapse in={ecraOpen}>
-              <Box sx={{ width: '100%', marginLeft: '1rem' }} >
-                <Box >
-                  <Tooltip title='Ajusta o aspeto da aplicação para reduzir o brilho excessivo e para descansares os olhos.'>
-                    <a style={{ color: 'white' }} >Modo Escuro</a>
-                  </Tooltip>
-                  <Switch checked={localStorage.getItem('theme') === 'dark'} onClick={toggleTheme} />
-                  {localStorage.getItem('theme') === 'light' ? <Sun color='yellow' size={16} /> : <Moon color={'white'} size={16} />}
-                </Box>
-                <Tooltip title='Ajusta o tamanho do tipo de letra para que possam aparecer mais ou menos conteúdos no ecrã.'>
-                  <a style={{ color: 'white' }} >Modo Compacto</a>
-                </Tooltip>
-                <Tooltip title='Altere o tamanho de letra' placement="right">
-                  <SpeedDial
-                    ariaLabel="SpeedDial basic example"
-                    sx={{ position: 'fixed', bottom: 16, left: 225 }}
-
-                    icon={<Type />}
-                  >
-                    {actions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        tooltipTitle={action.name}
-                        disabled={localStorage.getItem('font') === action.value}
-                        onClick={() => toggleFontSize(action.value)}
-                      />
-                    ))}
-                  </SpeedDial>
-                </Tooltip>
-              </Box>
-            </Collapse>
           </Collapse>
           <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             {loggedUser

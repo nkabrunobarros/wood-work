@@ -362,7 +362,7 @@ const Head = (props) => {
                 <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}>
-                  <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value || 0} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
+                  <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value !== '' ? budget?.price?.value : 0} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
                 </Grid>{console.log(budget)}
                 <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{budget?.dateDelivery?.value}</Typography></Grid>
                 <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}>

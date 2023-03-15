@@ -18,20 +18,19 @@ const api = () => () => (next) => async (action) => {
   const [REQUEST, SUCCESS, FAIL] = types;
   const headers = { ...(request.headers || {}), Authorization: userToken && `Bearer ${userToken}` };
   const requestOptions = { ...request, headers, url: buildURL(request.url) };
-  const actionWith = (payload) => ({ ...action, ...payload });
-  const requestAction = actionWith({ type: REQUEST, meta });
+  const requestAction = { type: REQUEST, meta };
 
   next(requestAction);
 
   try {
     const response = await axios(requestOptions);
-    const successAction = actionWith({ type: SUCCESS, meta, payload: response });
+    const successAction = { type: SUCCESS, meta, payload: response };
 
     next(successAction);
 
     return response;
   } catch (error) {
-    const failAction = actionWith({ type: FAIL, meta, payload: error.response || error });
+    const failAction = { type: FAIL, meta, payload: error.response || error };
 
     next(failAction);
 

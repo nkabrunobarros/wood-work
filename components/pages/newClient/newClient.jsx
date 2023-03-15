@@ -33,6 +33,8 @@ import EmailValidation from '../../utils/EmailValidation';
 //  PropTypes
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 
 const NewClient = ({ ...props }) => {
   const {
@@ -425,156 +427,160 @@ const NewClient = ({ ...props }) => {
   };
 
   return (
-    <Grid component='main'>
-      <CssBaseline />
-      <Notification />
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      <Popover
-        id={anchorEl ? 'simple-popover' : undefined}
-        open={!!anchorEl}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Box sx={{ flexGrow: 1, p: 1 }}>
-          <Grid container >
-            <Grid container item >
-              <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                <Item>Distrito</Item>
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
+        <CssBaseline />
+        <Notification />
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        <Popover
+          id={anchorEl ? 'simple-popover' : undefined}
+          open={!!anchorEl}
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <Box sx={{ flexGrow: 1, p: 1 }}>
+            <Grid container >
+              <Grid container item >
+                <Grid item xs={6} sx={{ padding: '.5rem' }}>
+                  <Item>Distrito</Item>
+                </Grid>
+                <Grid item xs={6} sx={{ padding: '.5rem' }}>
+                  <Item>{postalCodeInfo?.Distrito}</Item>
+                </Grid>
               </Grid>
-              <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                <Item>{postalCodeInfo?.Distrito}</Item>
+              <Grid container item >
+                <Grid item xs={6} sx={{ padding: '.5rem' }}>
+                  <Item>Concelho</Item>
+                </Grid>
+                <Grid item xs={6} sx={{ padding: '.5rem' }}>
+                  <Item>{postalCodeInfo?.Concelho}</Item>
+                </Grid>
+              </Grid>
+              <Grid container item >
+                <Grid item xs={6} sx={{ padding: '.5rem' }}>
+                  <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
+                </Grid>
+                <Grid item xs={6} sx={{ maxHeight: '300px', overflow: 'scroll', padding: '.5rem' }}>
+                  <Item> {typeof postalCodeInfo?.Localidade === 'object'
+                    ? <>
+                      {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<Divider /></a>)}
+                    </>
+                    : postalCodeInfo?.Localidade}</Item>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container item >
-              <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                <Item>Concelho</Item>
+          </Box>
+        </Popover>
+        {/* Situational Panels */}
+        <ConfirmDialog
+          open={dialogOpen}
+          handleClose={() => setDialogOpen(false)}
+          onConfirm={() => handleSave()}
+          message='Está prestes a criar um novo cliente, tem certeza que quer continuar?'
+          icon='AlertOctagon'
+        />
+        <ConfirmDialog
+          open={successOpen}
+          handleClose={() => ClearFields()}
+          onConfirm={() => Router.push(`${routes.private.internal.clients}`)}
+          message={'Cliente criado com sucesso, que deseja fazer a agora?'}
+          icon='Verified'
+          iconType='success'
+          okTxt='Ver Cliente'
+          cancelTxt='Criar novo Cliente'
+        />
+        <SwipeableViews
+          axis={theme?.direction === 'rtl' ? 'x-reverse' : 'x'}
+          index={activeStep}
+          onChangeIndex={handleStepChange}
+        >
+          <TabPanel value={activeStep} index={0}>
+            <Grid container md={12} sm={12} xs={12}>
+              <Grid container md={6} sm={6} xs={6} p={10}>
+                <Card
+                  {...panelProps}
+                  onClick={() => {
+                    setSelectTypeInstituition('particular');
+                    setActiveStep(1);
+                  }}
+                >
+                  <User size={100} strokeWidth={1} color='white' />
+                  <Typography variant='title' color='white'>Particular</Typography>
+                </Card>
               </Grid>
-              <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                <Item>{postalCodeInfo?.Concelho}</Item>
+              <Grid container md={6} sm={6} xs={6} p={10} >
+                <Card
+                  onClick={() => {
+                    setSelectTypeInstituition('empresa');
+                    setActiveStep(1);
+                  }}
+                  {...panelProps}
+                >
+                  <Building2 size={100} strokeWidth={1} color='white'/>
+                  <Typography variant='title' color='white'>Empresa</Typography>
+                </Card>
               </Grid>
             </Grid>
-            <Grid container item >
-              <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
-              </Grid>
-              <Grid item xs={6} sx={{ maxHeight: '300px', overflow: 'scroll', padding: '.5rem' }}>
-                <Item> {typeof postalCodeInfo?.Localidade === 'object'
-                  ? <>
-                    {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<Divider /></a>)}
-                  </>
-                  : postalCodeInfo?.Localidade}</Item>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Box>
-      </Popover>
-      {/* Situational Panels */}
-      <ConfirmDialog
-        open={dialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        onConfirm={() => handleSave()}
-        message='Está prestes a criar um novo cliente, tem certeza que quer continuar?'
-        icon='AlertOctagon'
-      />
-      <ConfirmDialog
-        open={successOpen}
-        handleClose={() => ClearFields()}
-        onConfirm={() => Router.push(`${routes.private.internal.clients}`)}
-        message={'Cliente criado com sucesso, que deseja fazer a agora?'}
-        icon='Verified'
-        iconType='success'
-        okTxt='Ver Cliente'
-        cancelTxt='Criar novo Cliente'
-      />
-      <SwipeableViews
-        axis={theme?.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={activeStep}
-        onChangeIndex={handleStepChange}
-      >
-        <TabPanel value={activeStep} index={0}>
-          <Grid container md={12} sm={12} xs={12}>
-            <Grid container md={6} sm={6} xs={6} p={10}>
-              <Card
-                {...panelProps}
-                onClick={() => {
-                  setSelectTypeInstituition('particular');
-                  setActiveStep(1);
-                }}
-              >
-                <User size={100} strokeWidth={1} color='white' />
-                <Typography variant='title' color='white'>Particular</Typography>
-              </Card>
-            </Grid>
-            <Grid container md={6} sm={6} xs={6} p={10} >
-              <Card
-                onClick={() => {
-                  setSelectTypeInstituition('empresa');
-                  setActiveStep(1);
-                }}
-                {...panelProps}
-              >
-                <Building2 size={100} strokeWidth={1} color='white'/>
-                <Typography variant='title' color='white'>Empresa</Typography>
-              </Card>
-            </Grid>
-          </Grid>
-        </TabPanel>
-        <TabPanel value={activeStep} index={1}>
-          {/* Case clientType is chosen */}
-          <Content>
-            <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-              <Typography item className='headerTitleXl'>Novo Cliente</Typography>
-              <Box sx={{ marginLeft: 'auto' }}>
-                <ButtonGroup>
-                  <PrimaryBtn
-                    text='Guardar'
-                    icon={
-                      <Save
-                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                        size={pageProps?.globalVars?.iconSize}
-                      />
-                    }
-                    onClick={ValidateFields}
-                  />
-                  <PrimaryBtn
-                    text='Cancelar'
-                    icon={
-                      <X
-                        strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                        size={pageProps?.globalVars?.iconSize}
-                      />
-                    }
-                    light
-                    onClick={() => Router.back()}
-                  />
-                </ButtonGroup>
+          </TabPanel>
+          <TabPanel value={activeStep} index={1}>
+            {/* Case clientType is chosen */}
+            <Content>
+              <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+                <Typography item className='headerTitleXl'>Novo Cliente</Typography>
+                <Box sx={{ marginLeft: 'auto' }}>
+                  <ButtonGroup>
+                    <PrimaryBtn
+                      text='Guardar'
+                      icon={
+                        <Save
+                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                          size={pageProps?.globalVars?.iconSize}
+                        />
+                      }
+                      onClick={ValidateFields}
+                    />
+                    <PrimaryBtn
+                      text='Cancelar'
+                      icon={
+                        <X
+                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                          size={pageProps?.globalVars?.iconSize}
+                        />
+                      }
+                      light
+                      onClick={() => Router.back()}
+                    />
+                  </ButtonGroup>
+                </Box>
               </Box>
-            </Box>
-            <Grid container sx={{ padding: '24px' }}>
-              <Tooltip title='Clique para voltar'>
-                <Typography variant='md' p={'8px'}>
-                  <a id='align' className='link' onClick={() => setActiveStep(0)}> <ChevronLeft /> Voltar</a>
-                </Typography>
-              </Tooltip>
-              <FormGenerator
-                fields={inputFields}
-                onFormChange={handleFormChange}
-                optionalData={{
-                  generatePassword,
-                  postalCodeInfo,
-                  setGeneratePassword,
-                  ValidatePostalCode
-                }}
-              />
-            </Grid>
-          </Content>
-        </TabPanel>
-      </SwipeableViews>
-    </Grid>
+              <Grid container sx={{ padding: '24px' }}>
+                <Tooltip title='Clique para voltar'>
+                  <Typography variant='md' p={'8px'}>
+                    <a id='align' className='link' onClick={() => setActiveStep(0)}> <ChevronLeft /> Voltar</a>
+                  </Typography>
+                </Tooltip>
+                <FormGenerator
+                  fields={inputFields}
+                  onFormChange={handleFormChange}
+                  optionalData={{
+                    generatePassword,
+                    postalCodeInfo,
+                    setGeneratePassword,
+                    ValidatePostalCode
+                  }}
+                />
+              </Grid>
+            </Content>
+          </TabPanel>
+        </SwipeableViews>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

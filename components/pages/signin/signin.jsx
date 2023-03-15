@@ -106,6 +106,7 @@ const SignIn = (props) => {
     try {
       await loginRedux({ username, password }).then(async (res) => {
         setCookie(undefined, 'auth_token', res.data.access_token);
+        console.log(res);
 
         await me2(res.data.access_token).then((res) => {
           const user = res?.data[0] || res?.data;
@@ -130,7 +131,9 @@ const SignIn = (props) => {
         }).catch((err) => console.log(err));
       });
     } catch (err) {
-      if (err.response.data.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas', 'error');
+      console.log(err);
+
+      if (err.response.data.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas.', 'error');
       else ToastSet(loadingNotification, 'Algo aconteceu. Por favor tente mais tarde', 'error');
 
       setLoading(false);

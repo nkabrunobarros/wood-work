@@ -3,8 +3,9 @@
 import { Box, Grid, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Image from 'next/image';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React from 'react';
+import routes from '../../../navigation/routes';
 import logosFooter from '../../../public/Fundos-Europeus.png';
 import logosFooterDark from '../../../public/Fundos-Europeus_dark_mode.png';
 
@@ -31,7 +32,10 @@ function Copyright (props) {
   );
 }
 
-const Footer = ({ isPublicPage }) => {
+const Footer = () => {
+  const path = useRouter();
+  const isPublicPage = Object.values(routes.public).includes(path.route.replace('[Id]', ''));
+
   return typeof window !== 'undefined' && (
     <Grid
       container

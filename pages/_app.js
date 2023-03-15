@@ -26,8 +26,9 @@ import routes from '../navigation/routes';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
-import IsInternal from '../components/utils/IsInternal';
+import { useDispatch, useSelector } from 'react-redux';
 import MomentJsConfig from '../components/utils/MomentJsConfig';
+import AuthData from '../lib/AuthData';
 import { storeWrapper } from '../store/store';
 import MuiTheme from './MuiTheme';
 
@@ -45,6 +46,8 @@ const App = ({ Component, pageProps }) => {
   const { auth_token: token } = parseCookies();
   const theme = MuiTheme({ selectedTheme, fontSize });
   const router = useRouter();
+  const reduxState = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   moment.locale(MomentJsConfig());
 
@@ -64,8 +67,10 @@ const App = ({ Component, pageProps }) => {
     return value;
   };
 
+  const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
+
   useEffect(() => {
-    const load = () => {
+    const load = async () => {
       //  theme
       if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'light');
       else if (selectedTheme !== localStorage.getItem('theme')) setSelectedTheme(localStorage.getItem('theme'));
@@ -73,22 +78,21 @@ const App = ({ Component, pageProps }) => {
       if (!localStorage.getItem('font')) localStorage.setItem('font', 'md');
       else if (fontSize !== localStorage.getItem('font')) setFontSize(localStorage.getItem('font'));
 
-      if (token !== 'undefined') {
+      if (typeof token !== 'undefined') {
         const decodedToken = jwt.decode(token);
         const a = true;
+        let myCredentials;
+
+        if (!reduxState.auth.me || !reduxState.auth.userPermissions) myCredentials = await AuthData(dispatch);
 
         if (moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment() || a) {
-          pageProps.loggedUser = JSON.parse(localStorage.getItem('user'));
           pageProps.theme = selectedTheme;
 
-          const isPublicPage = Object.values(routes.public).some((route) => route === router.route);
-
-          if (isPublicPage && !!token) {
-            if (IsInternal(pageProps.loggedUser?.profile.object.description)) router.push(routes.private.internal.projects);
-            else {
-              // if (pageProps.loggedUser?.tos) router.push(routes.private.projects);
-              // else router.push(routes.private.terms);
+          if (isPublicPage && !!myCredentials) {
+            if (myCredentials.me.role === 'CUSTOMER') {
               router.push(routes.private.projects);
+            } else {
+              router.push(routes.private.internal.projects);
             }
           }
         } else {
@@ -97,8 +101,7 @@ const App = ({ Component, pageProps }) => {
         }
       } else {
         destroyCookie('auth-token');
-        console.log('here destroyed');
-        router.push(routes.public.signIn);
+        !isPublicPage && router.push(routes.public.signIn);
       }
     };
 

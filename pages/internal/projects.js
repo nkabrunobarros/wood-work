@@ -19,9 +19,10 @@ import * as projectsActionsRedux from '../../store/actions/project';
 import { Check, Layers, LayoutTemplate, PackagePlus, Settings, Truck } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthData from '../../lib/AuthData';
+import Loader from '../../components/loader/loader';
 
 //  Preloader
-import Loader from '../../components/loader/loader';
+// import Loader from '../../components/loader/loader';
 
 const Projects = ({ ...pageProps }) => {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const Projects = ({ ...pageProps }) => {
 
     try {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      await getProjects();
+      await getProjects().then((res) => console.log(res));
 
       if (!reduxState.expeditions?.data) { await getExpeditions(); }
 
@@ -71,39 +72,39 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-      case 'waiting budget':
-        counts.waitingBudget++;
+        case 'waiting budget':
+          counts.waitingBudget++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
@@ -205,7 +206,7 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'orderBy.object',
+        id: 'ClienteLabel',
         numeric: false,
         disablePadding: false,
         label: 'Cliente',
@@ -299,7 +300,7 @@ const Projects = ({ ...pageProps }) => {
       ...bud,
       Estado: bud?.status?.value,
       Nome: bud?.name?.value.replace(/_/g, ' '),
-      Cliente: bud.orderBy.object,
+      ClienteLabel: clients.find(ele => ele.id === bud.orderBy.object).legalName.value,
       Quantidade: bud.amount.value
 
     }));

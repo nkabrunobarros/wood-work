@@ -34,6 +34,8 @@ import FormGenerator from '../../formGenerator';
 
 import { useDispatch } from 'react-redux';
 import * as ClientsActionsRedux from '../../../store/actions/client';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, client } = props;
@@ -314,130 +316,134 @@ const EditClient = ({ ...props }) => {
   }));
 
   return (
-    <Grid component='main'>
-      <CssBaseline />
-      <Notification />
-      <CustomBreadcrumbs path={breadcrumbsPath} />
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
+        <CssBaseline />
+        <Notification />
+        <CustomBreadcrumbs path={breadcrumbsPath} />
 
-      <ConfirmDialog
-        open={dialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        onConfirm={() => onConfirm()}
-        icon='AlertOctagon'
-        message={'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'}
-      />
-      <Popover
-        id={anchorEl ? 'simple-popover' : undefined}
-        open={!!anchorEl}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Box sx={{ flexGrow: 1, p: 1 }}>
-          <Grid container spacing={1}>
-            <Grid container item spacing={3}>
-              <Grid item xs={6}>
-                <Item>Distrito</Item>
+        <ConfirmDialog
+          open={dialogOpen}
+          handleClose={() => setDialogOpen(false)}
+          onConfirm={() => onConfirm()}
+          icon='AlertOctagon'
+          message={'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'}
+        />
+        <Popover
+          id={anchorEl ? 'simple-popover' : undefined}
+          open={!!anchorEl}
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <Box sx={{ flexGrow: 1, p: 1 }}>
+            <Grid container spacing={1}>
+              <Grid container item spacing={3}>
+                <Grid item xs={6}>
+                  <Item>Distrito</Item>
+                </Grid>
+                <Grid item xs={6}>
+                  <Item>{postalCodeInfo?.Distrito}</Item>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Item>{postalCodeInfo?.Distrito}</Item>
+              <Grid container item spacing={3}>
+                <Grid item xs={6}>
+                  <Item>Concelho</Item>
+                </Grid>
+                <Grid item xs={6}>
+                  <Item>{postalCodeInfo?.Concelho}</Item>
+                </Grid>
+              </Grid>
+              <Grid container item spacing={3}>
+                <Grid item xs={6}>
+                  <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
+                </Grid>
+                <Grid item xs={6}>
+                  <Item> {typeof postalCodeInfo?.Localidade === 'object'
+                    ? <>
+                      {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
+                    </>
+                    : postalCodeInfo?.Localidade}</Item>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container item spacing={3}>
-              <Grid item xs={6}>
-                <Item>Concelho</Item>
-              </Grid>
-              <Grid item xs={6}>
-                <Item>{postalCodeInfo?.Concelho}</Item>
-              </Grid>
-            </Grid>
-            <Grid container item spacing={3}>
-              <Grid item xs={6}>
-                <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
-              </Grid>
-              <Grid item xs={6}>
-                <Item> {typeof postalCodeInfo?.Localidade === 'object'
-                  ? <>
-                    {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<br></br></a>)}
-                  </>
-                  : postalCodeInfo?.Localidade}</Item>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Box>
-      </Popover>
-      {processing && <Loader center={true} backdrop />}
-      <Content>
-        <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-          <Typography item className='headerTitleXl'>{client.givenName.value}</Typography>
-          <Box sx={{ marginLeft: 'auto' }}>
-            <ButtonGroup>
-              <PrimaryBtn
-                text='Guardar'
-                icon={
-                  <Save
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
-                  />
-                }
-                onClick={ValidateFields}
-              />
-              <PrimaryBtn
-                text='Cancelar'
-                icon={
-                  <X
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
-                  />
-                }
-                light
-                onClick={() => Router.back()}
-              />
-            </ButtonGroup>
           </Box>
-        </Box>
-        <Grid container sx={{ padding: '24px' }}>
-          <Grid item md={12} sm={12} xs={12} >
-
-            <Grid item xs={12} md={6} sx={{ paddingRight: '.5rem' }}>
-              <Typography id='align' item className='lightTextSm'>
-                <User
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
+        </Popover>
+        {processing && <Loader center={true} backdrop />}
+        <Content>
+          <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+            <Typography item className='headerTitleXl'>{client.givenName.value}</Typography>
+            <Box sx={{ marginLeft: 'auto' }}>
+              <ButtonGroup>
+                <PrimaryBtn
+                  text='Guardar'
+                  icon={
+                    <Save
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                      size={pageProps?.globalVars?.iconSize}
+                    />
+                  }
+                  onClick={ValidateFields}
                 />
+                <PrimaryBtn
+                  text='Cancelar'
+                  icon={
+                    <X
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                      size={pageProps?.globalVars?.iconSize}
+                    />
+                  }
+                  light
+                  onClick={() => Router.back()}
+                />
+              </ButtonGroup>
+            </Box>
+          </Box>
+          <Grid container sx={{ padding: '24px' }}>
+            <Grid item md={12} sm={12} xs={12} >
+
+              <Grid item xs={12} md={6} sx={{ paddingRight: '.5rem' }}>
+                <Typography id='align' item className='lightTextSm'>
+                  <User
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />
               Dados Gerais
-              </Typography>
+                </Typography>
+              </Grid>
+              <FormGenerator
+                perRow={3}
+                fields={inputFields}
+                onFormChange={handleFormChange}
+                optionalData={{
+                  postalCodeInfo,
+                  ValidatePostalCode
+                }}
+              />
             </Grid>
-            <FormGenerator
-              perRow={3}
-              fields={inputFields}
-              onFormChange={handleFormChange}
-              optionalData={{
-                postalCodeInfo,
-                ValidatePostalCode
-              }}
-            />
-          </Grid>
-          <Grid item md={4} sm={4} xs={12} sx={{ display: 'none' }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
+            <Grid item md={4} sm={4} xs={12} sx={{ display: 'none' }} bgcolor={'lightGray.main'} className={styles.clientContainer}>
 
-            <Grid container item sx={{ paddingRight: '.5rem', display: 'none' }}>
-              <Typography id='align' className='lightTextSm'>
-                <Edit2
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
-                />
+              <Grid container item sx={{ paddingRight: '.5rem', display: 'none' }}>
+                <Typography id='align' className='lightTextSm'>
+                  <Edit2
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />
                   Dados de Faturação
-              </Typography>
+                </Typography>
+              </Grid>
+
             </Grid>
-
           </Grid>
-        </Grid>
 
-      </Content>
-    </Grid>
+        </Content>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

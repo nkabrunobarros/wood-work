@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import routes from '../../../navigation/routes';
 
 import Notification from '../../dialogs/Notification';
+import Navbar from '../../layout/navbar/navbar';
 import Docs from './sections/Docs';
 import DocsClient from './sections/DocsClient';
 import Head from './sections/Head';
@@ -29,31 +30,34 @@ const Order = ({ ...props }) => {
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
   return (
-    <Grid component='main' sx={{ height: '100%' }}>
-      <CssBaseline />
-      <Notification />
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      {/* Page Header */}
-      <Content id={refresh}>
-        <Head {...props} order={order} setOrder={setOrder}/>
-      </Content>
-      {/* Produção section */}
-      <Content>
-        <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
-      </Content>
-      {/* Docs */}
-      <Content>
-        <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
-      </Content>
-      {/* Messages */}
-      <Content>
-        <Messages stylesMessage={stylesMessage}{...props} />
-      </Content>
-      {/* Docs Cliente */}
-      <Content id={refresh}>
-        <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
-      </Content>
-    </Grid >
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem', height: '100%' }}>
+        <CssBaseline />
+        <Notification />
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        {/* Page Header */}
+        <Content id={refresh}>
+          <Head {...props} order={order} setOrder={setOrder}/>
+        </Content>
+        {/* Produção section */}
+        <Content>
+          <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
+        </Content>
+        {/* Docs */}
+        <Content>
+          <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
+        </Content>
+        {/* Messages */}
+        <Content>
+          <Messages stylesMessage={stylesMessage}{...props} />
+        </Content>
+        {/* Docs Cliente */}
+        <Content id={refresh}>
+          <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
+        </Content>
+      </Grid >
+    </>
   );
 };
 

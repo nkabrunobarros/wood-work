@@ -27,6 +27,8 @@ import * as WorkerActions from '../../../pages/api/actions/worker';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 
 export const functions = [
   {
@@ -267,71 +269,75 @@ const newWorker = ({ ...props }) => {
   }
 
   return (
-    <Grid component='main'>
-      <CssBaseline />
-      <Notification />
-      {/* Situational Panels */}
-      <ConfirmDialog
-        open={dialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        onConfirm={() => CreateWorker()}
-        message='Está prestes a criar um novo utlizador, tem certeza que quer continuar?'
-        icon='AlertOctagon'
-      />
-      {processing && <Loader center={true} backdrop />}
-      {/* What to do after Create Modal */}
-      <ConfirmDialog
-        open={successOpen}
-        handleClose={() => ClearFields()}
-        onConfirm={() => Router.push(`${routes.private.internal.workers}`)}
-        message={'Utilizador criado com sucesso, que deseja fazer a agora?'}
-        icon='Verified'
-        iconType='success'
-        okTxt='Ver Utilizador'
-        cancelTxt='Criar novo utilizador'
-      />
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
+        <CssBaseline />
+        <Notification />
+        {/* Situational Panels */}
+        <ConfirmDialog
+          open={dialogOpen}
+          handleClose={() => setDialogOpen(false)}
+          onConfirm={() => CreateWorker()}
+          message='Está prestes a criar um novo utlizador, tem certeza que quer continuar?'
+          icon='AlertOctagon'
+        />
+        {processing && <Loader center={true} backdrop />}
+        {/* What to do after Create Modal */}
+        <ConfirmDialog
+          open={successOpen}
+          handleClose={() => ClearFields()}
+          onConfirm={() => Router.push(`${routes.private.internal.workers}`)}
+          message={'Utilizador criado com sucesso, que deseja fazer a agora?'}
+          icon='Verified'
+          iconType='success'
+          okTxt='Ver Utilizador'
+          cancelTxt='Criar novo utilizador'
+        />
 
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        <Content>
+          <div
+            id='pad'
+            className='flex'
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            <div id='align' style={{ flex: 1 }}>
+              <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <PrimaryBtn
+                text='Guardar'
+                icon={<Save strokeWidth='1' />}
+                onClick={ValidateFields}
+              />
+              <PrimaryBtn
+                text='Cancelar'
+                icon={<X strokeWidth='1' />}
+                light
+                onClick={() => Router.back()}
+              />
+            </div>
           </div>
-          <div style={{ display: 'flex' }}>
-            <PrimaryBtn
-              text='Guardar'
-              icon={<Save strokeWidth='1' />}
-              onClick={ValidateFields}
-            />
-            <PrimaryBtn
-              text='Cancelar'
-              icon={<X strokeWidth='1' />}
-              light
-              onClick={() => Router.back()}
-            />
-          </div>
-        </div>
-        <Box>
-          {/* Input Fields Generator */}
-          <Grid container p={'12px'}>
-            <FormGenerator
-              perRow={3}
-              fields={inputFields}
-              onFormChange={handleFormChange}
-            />
-            <Grid container md={12} >
-              <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-                {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
-              </Button>
+          <Box>
+            {/* Input Fields Generator */}
+            <Grid container p={'12px'}>
+              <FormGenerator
+                perRow={3}
+                fields={inputFields}
+                onFormChange={handleFormChange}
+              />
+              <Grid container md={12} >
+                <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
+                  {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </Content>
-    </Grid>
+          </Box>
+        </Content>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

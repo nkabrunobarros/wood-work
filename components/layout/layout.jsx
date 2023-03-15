@@ -1,6 +1,6 @@
 // Node modules
 import Router, { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -10,25 +10,12 @@ import routes from '../../navigation/routes';
 
 //  Custom Components
 import jwt from 'jsonwebtoken';
-import styles from '../../styles/404.module.css';
-import Loader from '../loader/loader';
-import IsInternal from '../utils/IsInternal';
 // import { navLinks } from '../utils/navLinks';
-import DrawerMobile from './drawer/drawer';
-import Navbar from './navbar/navbar';
 
-//  Material UI
-import { Box, Fab, Hidden } from '@mui/material';
-
-import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
-import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
-import * as appStatesActions from '../../store/actions/appState';
-import * as authActions from '../../store/actions/auth';
-import Footer from './footer/footer';
 
 const noLayoutScreens = [
   `${routes.public.signIn}`,
@@ -59,15 +46,12 @@ async function ValidateToken (path) {
   }
 }
 
-const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
+const Layout = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const reduxState = useSelector((state) => state);
   const path = useRouter();
-  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
-  const toggleDrawer = () => dispatch(appStatesActions.toggleDrawer());
-  const logout = () => dispatch(authActions.logout());
 
   const listenToScroll = () => {
     const heightToHideFrom = 500;
@@ -97,48 +81,9 @@ const Layout = ({ children, toggleTheme, toggleFontSize, ...pageProps }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-  if (loaded) {
-    if (noLayoutScreens.includes(path.route.replace('/[Id]', '')) || path.route === '/reset-password/[Id]') return children;
+  return loaded && children;
 
-    return (
-      <Box >
-        {true && <Navbar {...pageProps} me={reduxState.auth.me} toggleDrawer={toggleDrawer} />}
-        {true && <Hidden>
-          <DrawerMobile
-            toggleFontSize={toggleFontSize}
-            toggleTheme={toggleTheme}
-            state={reduxState}
-            {...pageProps}
-            toggleDrawer={toggleDrawer}
-            logout={logout}
-          />
-        </Hidden>}
-        <Box sx={{ padding: '0rem 2rem 4rem 2rem' }} >
-          {children}
-          {IsInternal(reduxState.auth.userPermissions?.description) === isInternalPage
-            ? <>
-              <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
-                <Fab
-                  aria-label="like"
-                  size={'medium'}
-                  color={'primary'}
-                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-                >
-                  <ChevronUp color="white" />
-                </Fab>
-              </Box>
-            </>
-            : <PageNotFound noAccess />
-          }
-        </Box>
-        {true && <Box style={{ width: '100%' }}>
-          <Footer isPublicPage={!isInternalPage}/>
-        </Box>}
-      </Box>
-    );
-  }
-
-  return <Loader center={true} />;
+  // return <Loader center={true} />;
 };
 
 Layout.propTypes = {

@@ -37,8 +37,6 @@ const Messages = ({ ...pageProps }) => {
           });
         });
 
-        console.log(projects);
-
         const budgetsRes = await getBudgets();
 
         const budgets = budgetsRes.data.map((budget) => {
@@ -49,7 +47,6 @@ const Messages = ({ ...pageProps }) => {
           return bud;
         });
 
-        console.log(budgets);
         setMerged([...projects.data, ...budgets]);
       } catch (err) {
         console.log(err);
@@ -96,8 +93,6 @@ const Messages = ({ ...pageProps }) => {
         return item2;
       }),
     };
-
-    console.log(props);
 
     return <MessagesScreen {...props} />;
   }

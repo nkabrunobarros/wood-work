@@ -23,6 +23,8 @@ import { Edit, PackagePlus, Trash, User } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, editRoute, pageProps, client } = props;
@@ -54,7 +56,8 @@ const EditClient = ({ ...props }) => {
         onConfirm={() => onDelete()}
         message={'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'}
       />
-      <Grid component='main'>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
@@ -205,6 +208,7 @@ const EditClient = ({ ...props }) => {
           </Grid>
         </Content>
       </Grid>
+      <Footer/>
     </>
   );
 };

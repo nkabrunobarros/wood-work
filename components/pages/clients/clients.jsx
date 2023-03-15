@@ -22,6 +22,8 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
 
 const Clients = ({ ...props }) => {
@@ -92,116 +94,120 @@ const Clients = ({ ...props }) => {
   }
 
   return (
-    <Grid component='main' sx={{ height: '100%' }}>
-      <CssBaseline />
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      {/* Filters */}
-      <Content>
-        <Box id='pad'>
-          <a className='headerTitleSm'>Filtros</a>
-          <Box className='filters'>
-            <Box className='filterContainer'>
-              <InputLabel htmlFor='email'>Cliente</InputLabel>
-              <Autocomplete
-                name='client'
-                id='client'
-                fullWidth
-                disablePortal
-                options={clients.sort((a, b) =>
-                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-                )}
-                getOptionLabel={(option) => option.legalName?.value || option.name?.value}
-                getOptionValue={(option) => option.id}
-                onChange={(e, value) => setNome(value?.legalName.value || '')}
-                renderOption={(props, option) => {
-                  return (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.legalName?.value || option.name?.value }
-                    </Box>
-                  );
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    value={nome}
-                    {...params}
-                    placeholder="Escrever Nome Cliente"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-            </Box>
-            <Box className='filterContainer'>
-              <InputLabel htmlFor='email'>Email</InputLabel>
-              <OutlinedInput
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Escrever Email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Box>
-            <Box className={'filterContainer'}>
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
+        <CssBaseline />
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        {/* Filters */}
+        <Content>
+          <Box id='pad'>
+            <a className='headerTitleSm'>Filtros</a>
+            <Box className='filters'>
+              <Box className='filterContainer'>
+                <InputLabel htmlFor='email'>Cliente</InputLabel>
+                <Autocomplete
+                  name='client'
+                  id='client'
+                  fullWidth
+                  disablePortal
+                  options={clients.sort((a, b) =>
+                    a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                  )}
+                  getOptionLabel={(option) => option.legalName?.value || option.name?.value}
+                  getOptionValue={(option) => option.id}
+                  onChange={(e, value) => setNome(value?.legalName.value || '')}
+                  renderOption={(props, option) => {
+                    return (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        {option.legalName?.value || option.name?.value }
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      value={nome}
+                      {...params}
+                      placeholder="Escrever Nome Cliente"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </Box>
+              <Box className='filterContainer'>
+                <InputLabel htmlFor='email'>Email</InputLabel>
+                <OutlinedInput
+                  fullWidth
+                  id='email'
+                  name='email'
+                  autoComplete='email'
+                  placeholder='Escrever Email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Box>
+              <Box className={'filterContainer'}>
+
+              </Box>
 
             </Box>
-
+            <Box
+              style={{
+                width: 'fit-content',
+                marginLeft: 'auto',
+                paddingTop: '1rem',
+              }}
+            >
+              <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
+            </Box>
           </Box>
+        </Content>
+
+        <Content>
           <Box
-            style={{
-              width: 'fit-content',
-              marginLeft: 'auto',
-              paddingTop: '1rem',
-            }}
-          >
-            <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
-          </Box>
-        </Box>
-      </Content>
-
-      <Content>
-        <Box
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Box>
-            <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-          </Box>
-          <Box
-            style={{
-              marginLeft: 'auto',
-              display: 'flex',
-              alignItems: 'end',
-              flexDirection: 'column',
-              color: 'var(--grayTexts)',
-              fontSize: 'small',
-            }}
+            id='pad'
+            className='flex'
+            style={{ display: 'flex', alignItems: 'center' }}
           >
             <Box>
-              <PrimaryBtn
-                text='Adicionar'
-                onClick={() => Router.push(`${newRoute}`)}
-              />
+              <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+            </Box>
+            <Box
+              style={{
+                marginLeft: 'auto',
+                display: 'flex',
+                alignItems: 'end',
+                flexDirection: 'column',
+                color: 'var(--grayTexts)',
+                fontSize: 'small',
+              }}
+            >
+              <Box>
+                <PrimaryBtn
+                  text='Adicionar'
+                  onClick={() => Router.push(`${newRoute}`)}
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
-        <AdvancedTable
-          rows={clients.filter((item) => item.active?.value && item).sort((a, b) =>
-            a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-          )}
-          headCells={headCells}
-          clickRoute={detailRoute}
-          editRoute={editRoute}
-          filters={filters}
-          setFilters={setFilters}
-          onDelete={onDelete}
-        />
-      </Content>
-    </Grid>
+          <AdvancedTable
+            rows={clients.filter((item) => item.active?.value && item).sort((a, b) =>
+              a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+            )}
+            headCells={headCells}
+            clickRoute={detailRoute}
+            editRoute={editRoute}
+            filters={filters}
+            setFilters={setFilters}
+            onDelete={onDelete}
+          />
+        </Content>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

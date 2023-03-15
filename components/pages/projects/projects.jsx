@@ -36,6 +36,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as projectsActionsRedux from '../../../store/actions/project';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
 
 const ProjectsScreen = (props) => {
@@ -189,195 +191,196 @@ const ProjectsScreen = (props) => {
     }
   }
 
-  console.log(projects);
-
   return (
-    <Grid component='main'>
-      {/* <Button onClick={() => fixAll()}>fix</Button> */}
-      <CssBaseline />
-
-      {/* Breadcrumbs */}
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      {/* Statistics Cards */}
-      <Grid container md={12} sx={12} xs={12}>
-        {cards?.map((card) => (
-          <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1} onClick={() => {
-            setProducao(card.id);
-          }}>
-            <InfoCard
-              amount={card.amount}
-              color={card.color}
-              icon={card.icon}
-              title={card.title}
-            />
-          </Grid>
-        ))}
-      </Grid>
-      {/* Filters */}
-      <Content>
-        <Grid id='pad' md={12} container>
-          <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-          <Grid container item md={3} sm={6} xs={12} p={1}>
-            <MyInput
-              fullWidth
-              label='Referência cliente'
-              id='Referência'
-              name='Referência'
-              autoComplete='name'
-              placeholder='Escrever Referência cliente'
-              value={referencia}
-              onChange={(e) => setReferência(e.target.value)}
-            />
-          </Grid>
-          <Grid container item md={3} sm={6} xs={12} p={1}>
-            <MyInput
-              fullWidth
-              label='Nome'
-              id='name'
-              name='name'
-              autoComplete='name'
-              placeholder='Escrever Nome'
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
-          </Grid>
-          {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
-            <InputLabel htmlFor='email'>Cliente</InputLabel>
-            <Autocomplete
-              fullWidth
-              disablePortal
-              options={clients}
-              getOptionLabel={(option) => option.legalName?.value}
-              getOptionValue={(option) => option.id}
-              onChange={(e, value) => {
-                // eslint-disable-next-line react/prop-types
-                setClient(value?.id || '');
-              }}
-              renderOption={(props, option) => {
-                return (
-                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    {option?.legalName?.value}
-                  </Box>
-                );
-              }}
-              renderInput={(params) => (
-                <TextField
-                  value={client}
-                  {...params}
-                  placeholder="Escrever Nome Cliente"
-                  inputProps={{
-                    ...params.inputProps,
-                    autoComplete: 'new-password', // disable autocomplete and autofill
-                  }}
-                />
-              )}
-
-            />
-          </Grid>}
-          <Grid container item md={3} sm={6} xs={12} p={1}>
-            <Select
-              label='Estado'
-              fullWidth
-              value={producao}
-              onChange={(e) => setProducao(e.target.value)}
-              options={[
-                {
-                  subheader: true,
-                  label: '--- Orçamento'
-                },
-                {
-                  id: 'waiting budget',
-                  label: 'Espera Orçamento'
-                },
-                {
-                  id: 'waiting adjudication',
-                  label: 'Espera Adjudicação'
-                },
-                {
-                  id: 'canceled',
-                  label: 'Cancelado'
-                },
-                {
-                  subheader: true,
-                  label: '--- Projeto'
-                },
-                {
-                  id: 'drawing',
-                  label: 'Em Desenho'
-                },
-                {
-                  id: 'production',
-                  label: 'Em Produção'
-                },
-                {
-                  id: 'testing',
-                  label: 'Em Montagem'
-                },
-                {
-                  id: 'transport',
-                  label: 'Em Transporte'
-                },
-                {
-                  id: 'finished',
-                  label: 'Terminado'
-                },
-              ]}
-            />
-          </Grid>
-          {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
-            <MyInput label='Número telefone' value={telephone} onChange={(e) => setTelephone(e.target.value)} />
-          </Grid>}
-          <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
-            <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
-          </Grid>
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
+        {/* <Button onClick={() => fixAll()}>fix</Button> */}
+        <CssBaseline />
+        {/* Breadcrumbs */}
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        {/* Statistics Cards */}
+        <Grid container md={12} sx={12} xs={12}>
+          {cards?.map((card) => (
+            <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1} onClick={() => {
+              setProducao(card.id);
+            }}>
+              <InfoCard
+                amount={card.amount}
+                color={card.color}
+                icon={card.icon}
+                title={card.title}
+              />
+            </Grid>
+          ))}
         </Grid>
-      </Content>
-      {/* Projects */}
-      <Content>
-        <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
-          <PrimaryBtn
-            hidden={!CanDo(['write', 'projects', userPermissions]) || !isInternalPage}
-            text='Adicionar pedido'
-            onClick={() => Router.push(routes.private.internal.newProject)}
-          />
-        </Box>
-        {isInternalPage && <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)} aria-label="basic tabs example">
-            <Tooltip title='Confirmadas'>
-              <Tab label="Projetos" {...a11yProps(0)} />
-            </Tooltip>
-            <Tooltip title='Por confirmar'>
-              <Tab label="Orçamentos" {...a11yProps(1)} />
-            </Tooltip>
-          </Tabs>
-        </Box> }
-        {/* Tab Projects */}
-        <TabPanel value={currentTab} index={0}>
-          <AdvancedTable
-            rows={projects}
-            headCells={headCellsProjects}
-            filters={filters}
-            clickRoute={detailPage}
-            editRoute={editPage}
-            setFilters={setFilters}
-            onDelete={onDeleteProject}
-          />
-        </TabPanel>
-        {/* Tab Budgets */}
-        {isInternalPage && <TabPanel value={currentTab} index={1}>
-          <AdvancedTable
-            rows={budgets?.filter(ele => ele.approvedDate?.value === '')}
-            headCells={headCellsBudget}
-            filters={filters}
-            setFilters={setFilters}
-            clickRoute={detailPageBudgetTab}
-            editRoute={editPage}
-            onDelete={onDeleteBudget}
-          />
-        </TabPanel>}
-      </Content>
-    </Grid>
+        {/* Filters */}
+        <Content>
+          <Grid id='pad' md={12} container>
+            <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
+            <Grid container item md={3} sm={6} xs={12} p={1}>
+              <MyInput
+                fullWidth
+                label='Referência cliente'
+                id='Referência'
+                name='Referência'
+                autoComplete='name'
+                placeholder='Escrever Referência cliente'
+                value={referencia}
+                onChange={(e) => setReferência(e.target.value)}
+              />
+            </Grid>
+            <Grid container item md={3} sm={6} xs={12} p={1}>
+              <MyInput
+                fullWidth
+                label='Nome'
+                id='name'
+                name='name'
+                autoComplete='name'
+                placeholder='Escrever Nome'
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              />
+            </Grid>
+            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
+              <InputLabel htmlFor='email'>Cliente</InputLabel>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                options={clients}
+                getOptionLabel={(option) => option.legalName?.value}
+                getOptionValue={(option) => option.id}
+                onChange={(e, value) => {
+                // eslint-disable-next-line react/prop-types
+                  setClient(value?.id || '');
+                }}
+                renderOption={(props, option) => {
+                  return (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      {option?.legalName?.value}
+                    </Box>
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    value={client}
+                    {...params}
+                    placeholder="Escrever Nome Cliente"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
+
+              />
+            </Grid>}
+            <Grid container item md={3} sm={6} xs={12} p={1}>
+              <Select
+                label='Estado'
+                fullWidth
+                value={producao}
+                onChange={(e) => setProducao(e.target.value)}
+                options={[
+                  {
+                    subheader: true,
+                    label: '--- Orçamento'
+                  },
+                  {
+                    id: 'waiting budget',
+                    label: 'Espera Orçamento'
+                  },
+                  {
+                    id: 'waiting adjudication',
+                    label: 'Espera Adjudicação'
+                  },
+                  {
+                    id: 'canceled',
+                    label: 'Cancelado'
+                  },
+                  {
+                    subheader: true,
+                    label: '--- Projeto'
+                  },
+                  {
+                    id: 'drawing',
+                    label: 'Em Desenho'
+                  },
+                  {
+                    id: 'production',
+                    label: 'Em Produção'
+                  },
+                  {
+                    id: 'testing',
+                    label: 'Em Montagem'
+                  },
+                  {
+                    id: 'transport',
+                    label: 'Em Transporte'
+                  },
+                  {
+                    id: 'finished',
+                    label: 'Terminado'
+                  },
+                ]}
+              />
+            </Grid>
+            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
+              <MyInput label='Número telefone' value={telephone} onChange={(e) => setTelephone(e.target.value)} />
+            </Grid>}
+            <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
+              <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
+            </Grid>
+          </Grid>
+        </Content>
+        {/* Projects */}
+        <Content>
+          <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
+            <PrimaryBtn
+              hidden={!CanDo(['write', 'projects', userPermissions]) || !isInternalPage}
+              text='Adicionar pedido'
+              onClick={() => Router.push(routes.private.internal.newProject)}
+            />
+          </Box>
+          {isInternalPage && <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)} aria-label="basic tabs example">
+              <Tooltip title='Confirmadas'>
+                <Tab label="Projetos" {...a11yProps(0)} />
+              </Tooltip>
+              <Tooltip title='Por confirmar'>
+                <Tab label="Orçamentos" {...a11yProps(1)} />
+              </Tooltip>
+            </Tabs>
+          </Box> }
+          {/* Tab Projects */}
+          <TabPanel value={currentTab} index={0}>
+            <AdvancedTable
+              rows={projects}
+              headCells={headCellsProjects}
+              filters={filters}
+              clickRoute={detailPage}
+              editRoute={editPage}
+              setFilters={setFilters}
+              onDelete={onDeleteProject}
+            />
+          </TabPanel>
+          {/* Tab Budgets */}
+          {isInternalPage && <TabPanel value={currentTab} index={1}>
+            <AdvancedTable
+              rows={budgets?.filter(ele => ele.approvedDate?.value === '')}
+              headCells={headCellsBudget}
+              filters={filters}
+              setFilters={setFilters}
+              clickRoute={detailPageBudgetTab}
+              editRoute={editPage}
+              onDelete={onDeleteBudget}
+            />
+          </TabPanel>}
+        </Content>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

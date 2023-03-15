@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  Preloader
-import Loader from '../../../components/loader/loader';
 
 //  Page Component
 
@@ -15,6 +14,7 @@ import routes from '../../../navigation/routes';
 import OrderScreen from '../../../components/pages/project/project';
 
 import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../../../components/loader/loader';
 import AuthData from '../../../lib/AuthData';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';

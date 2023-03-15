@@ -24,6 +24,8 @@ import * as WorkerActions from '../../../pages/api/actions/worker';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
@@ -119,40 +121,42 @@ const Workers = ({ ...props }) => {
   }
 
   return (
-    <Grid component='main' sx={{ height: '100%' }}>
-      <CssBaseline />
-      <Notification />
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      {false && <Button onClick={() => Fix()}>fix</Button>}
-      {/* Filters */}
-      <Content>
-        <div id='pad'>
-          <a className='headerTitleSm'>Filtros</a>
-          <div className='filters'>
-            <div className='filterContainer'>
-              <Select
-                label={'Nome'}
-                options={workers.filter((item) => item.active && item)}
-                optionValue={'Nome'}
-                optionLabel={'Nome'}
-                onChange={(event) => setNome(event.target.value)}
-              />
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
+        <CssBaseline />
+        <Notification />
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        {false && <Button onClick={() => Fix()}>fix</Button>}
+        {/* Filters */}
+        <Content>
+          <div id='pad'>
+            <a className='headerTitleSm'>Filtros</a>
+            <div className='filters'>
+              <div className='filterContainer'>
+                <Select
+                  label={'Nome'}
+                  options={workers.filter((item) => item.active && item)}
+                  optionValue={'Nome'}
+                  optionLabel={'Nome'}
+                  onChange={(event) => setNome(event.target.value)}
+                />
 
-            </div>
-            <div className='filterContainer'>
-              <InputLabel htmlFor='email'>Email</InputLabel>
-              <OutlinedInput
-                fullWidth
-                id='email'
-                name='email'
-                autoComplete='email'
-                placeholder='Escrever um email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className={'filterContainer'}>
-              {Router.route !== routes.private.internal.clients &&
+              </div>
+              <div className='filterContainer'>
+                <InputLabel htmlFor='email'>Email</InputLabel>
+                <OutlinedInput
+                  fullWidth
+                  id='email'
+                  name='email'
+                  autoComplete='email'
+                  placeholder='Escrever um email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className={'filterContainer'}>
+                {Router.route !== routes.private.internal.clients &&
                 <Select
                   label='Função'
                   options={profiles}
@@ -161,62 +165,64 @@ const Workers = ({ ...props }) => {
                   optionValue='value'
                   onChange={(e) => setProfilesFilter(e.target.value)}
                 />
-              }
+                }
+              </div>
+
             </div>
+            <div
+              style={{
+                width: 'fit-content',
+                marginLeft: 'auto',
+                paddingTop: '1rem',
+              }}
+            >
+              <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
+            </div>
+          </div>
+        </Content>
 
-          </div>
+        <Content>
           <div
-            style={{
-              width: 'fit-content',
-              marginLeft: 'auto',
-              paddingTop: '1rem',
-            }}
-          >
-            <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
-          </div>
-        </div>
-      </Content>
-
-      <Content>
-        <div
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <div>
-            <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-          </div>
-          <div
-            style={{
-              marginLeft: 'auto',
-              display: 'flex',
-              alignItems: 'end',
-              flexDirection: 'column',
-              color: 'var(--grayTexts)',
-              fontSize: 'small',
-            }}
+            id='pad'
+            className='flex'
+            style={{ display: 'flex', alignItems: 'center' }}
           >
             <div>
-              <PrimaryBtn
-                hidden={!CanDo(['write', 'workers', userPermissions])}
-                text='Adicionar'
-                onClick={() => Router.push(`${newRoute}`)}
-              />
+              <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+            </div>
+            <div
+              style={{
+                marginLeft: 'auto',
+                display: 'flex',
+                alignItems: 'end',
+                flexDirection: 'column',
+                color: 'var(--grayTexts)',
+                fontSize: 'small',
+              }}
+            >
+              <div>
+                <PrimaryBtn
+                  hidden={!CanDo(['write', 'workers', userPermissions])}
+                  text='Adicionar'
+                  onClick={() => Router.push(`${newRoute}`)}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <AdvancedTable
-          rows={workers}
-          // rows={workers.filter((item) => item.active?.value && item)}
-          headCells={headCellsWorkers}
-          clickRoute={detailRoute}
-          editRoute={editRoute}
-          filters={filters}
-          setFilters={setFilters}
-          onDelete={onDelete}
-        />
-      </Content>
-    </Grid>
+          <AdvancedTable
+            rows={workers}
+            // rows={workers.filter((item) => item.active?.value && item)}
+            headCells={headCellsWorkers}
+            clickRoute={detailRoute}
+            editRoute={editRoute}
+            filters={filters}
+            setFilters={setFilters}
+            onDelete={onDelete}
+          />
+        </Content>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

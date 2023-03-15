@@ -487,7 +487,7 @@ const AdvancedTable = ({
                                   <ButtonGroup color='link.main'>
                                     {headCell.id !== 'actionsConf' &&
                                         <>
-                                          {CanDo(['WRITE', displaying, reduxState.auth.userPermissions]) &&
+                                          {editRoute &&
                                             <Tooltip title={'Editar'}>
                                               <Box style={{ color: 'red' }}>
                                                 <IconButton
@@ -502,7 +502,7 @@ const AdvancedTable = ({
                                           }
                                         </>
                                     }
-                                    {CanDo(['DELETE', displaying, reduxState.auth.userPermissions]) && <Tooltip title={'Remover'}>
+                                    {!!onDeleteClick && <Tooltip title={'Remover'}>
                                       <IconButton onClick={() => onDeleteClick(row)} >
                                         <DeleteOutline
                                           color={'primary'}

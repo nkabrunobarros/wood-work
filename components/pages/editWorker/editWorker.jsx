@@ -34,6 +34,8 @@ import Notification from '../../dialogs/Notification';
 // import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import Footer from '../../layout/footer/footer';
+import Navbar from '../../layout/navbar/navbar';
 
 const EditUser = ({ ...props }) => {
   const { breadcrumbsPath, pageProps } = props;
@@ -92,65 +94,69 @@ const EditUser = ({ ...props }) => {
   }
 
   return (
-    <Grid component='main'>
-      <CssBaseline />
-      <CustomBreadcrumbs path={breadcrumbsPath} />
-      <Notification />
-      <Content>
-        <Box
-          id='pad'
-          className='flex'
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Box id='align' style={{ flex: 1 }}>
-            <a className='headerTitleXl'>{breadcrumbsPath[1].title} </a>
+    <>
+      {true && <Navbar />}
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
+        <CssBaseline />
+        <CustomBreadcrumbs path={breadcrumbsPath} />
+        <Notification />
+        <Content>
+          <Box
+            id='pad'
+            className='flex'
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            <Box id='align' style={{ flex: 1 }}>
+              <a className='headerTitleXl'>{breadcrumbsPath[1].title} </a>
+            </Box>
+            <Box style={{ display: 'flex' }}>
+              {console.log(props)}
+              <PrimaryBtn
+                text='Guardar'
+                icon={
+                  <Save
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />
+                }
+                onClick={Validate}
+              />
+              <PrimaryBtn
+                text='Cancelar'
+                icon={
+                  <X
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />
+                }
+                light
+                onClick={() => Router.back()}
+              />
+            </Box>
           </Box>
-          <Box style={{ display: 'flex' }}>
-            {console.log(props)}
-            <PrimaryBtn
-              text='Guardar'
-              icon={
-                <Save
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
-                />
-              }
-              onClick={Validate}
-            />
-            <PrimaryBtn
-              text='Cancelar'
-              icon={
-                <X
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
-                />
-              }
-              light
-              onClick={() => Router.back()}
-            />
-          </Box>
-        </Box>
-        <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
-          <User
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-            size={pageProps?.globalVars?.iconSize} />
-          <span>Dados de Utilizador</span>
-        </a>
-        <Grid id='pad' container md={12} sm={12} xs={12}>
-          <Grid container md={12} sm={12} xs={12}>{console.log(user)}
-            <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Primeiro Nome' name='givenName' onChange={(e) => onFieldChange(e)} value={user?.givenName?.value} error={user?.givenName?.error} /></Grid>
-            <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Ultimo Nome' name='familyName' onChange={(e) => onFieldChange(e)} value={user?.familyName?.value} error={user?.familyName?.error} /></Grid>
-            <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>
-            {/* <Grid container md={4} sm={4} xs={12} p={0.5}><MySelect label='Função' name='functionPerformed' onChange={(e) => onFieldChange(e)} value={user?.functionPerformed?.value} error={user?.functionPerformed?.error} options={functions} optionLabel='label' optionValue={'value'} /></Grid> */}
+          <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
+            <User
+              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+              size={pageProps?.globalVars?.iconSize} />
+            <span>Dados de Utilizador</span>
+          </a>
+          <Grid id='pad' container md={12} sm={12} xs={12}>
+            <Grid container md={12} sm={12} xs={12}>{console.log(user)}
+              <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Primeiro Nome' name='givenName' onChange={(e) => onFieldChange(e)} value={user?.givenName?.value} error={user?.givenName?.error} /></Grid>
+              <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Ultimo Nome' name='familyName' onChange={(e) => onFieldChange(e)} value={user?.familyName?.value} error={user?.familyName?.error} /></Grid>
+              <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>
+              {/* <Grid container md={4} sm={4} xs={12} p={0.5}><MySelect label='Função' name='functionPerformed' onChange={(e) => onFieldChange(e)} value={user?.functionPerformed?.value} error={user?.functionPerformed?.error} options={functions} optionLabel='label' optionValue={'value'} /></Grid> */}
+            </Grid>
           </Grid>
-        </Grid>
-        <Box style={{ display: 'flex' }}>
-          <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-            {cleaningInputs ? <CircularProgress size={26} /> : 'Restaurar'}
-          </Button>
-        </Box>
-      </Content>
-    </Grid>
+          <Box style={{ display: 'flex' }}>
+            <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
+              {cleaningInputs ? <CircularProgress size={26} /> : 'Restaurar'}
+            </Button>
+          </Box>
+        </Content>
+      </Grid>
+      <Footer/>
+    </>
   );
 };
 

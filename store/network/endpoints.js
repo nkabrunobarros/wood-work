@@ -3,7 +3,7 @@ const endpoints = {
   LOGIN: 'auth/token',
   ME: 'accounts/worker/me/',
   CUSTOMER: 'accounts/customer/',
-  MECLIENT: 'owner',
+  MECLIENT: 'accounts/customer/me/',
   PROJECTS: 'project/',
   BUDGETS: 'budget/',
   WORKERS: 'worker/',
