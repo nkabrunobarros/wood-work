@@ -1,5 +1,7 @@
 export const DRAWER_TOGGLE = 'DRAWER_TOGGLE';
 export const SET_LAST_REFRESHED = 'SET_LAST_REFRESHED';
+export const SET_LOADING = 'SET_LOADING';
+export const SET_THEME = 'SET_THEME';
 
 export const toggleDrawer = () => {
   return {
@@ -10,5 +12,19 @@ export const toggleDrawer = () => {
 export const setLastRefreshed = () => {
   return {
     type: SET_LAST_REFRESHED,
+  };
+};
+
+export const setLoading = (data) => {
+  return {
+    type: SET_LOADING,
+    data,
+  };
+};
+
+export const setTheme = (data) => {
+  return {
+    type: SET_THEME,
+    data,
   };
 };

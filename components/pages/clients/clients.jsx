@@ -95,7 +95,7 @@ const Clients = ({ ...props }) => {
 
   return (
     <>
-      {true && <Navbar />}
+      <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -194,7 +194,7 @@ const Clients = ({ ...props }) => {
             </Box>
           </Box>
           <AdvancedTable
-            rows={clients.filter((item) => item.active?.value && item).sort((a, b) =>
+            rows={clients.filter((item) => item.user.is_active && item).sort((a, b) =>
               a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
             )}
             headCells={headCells}

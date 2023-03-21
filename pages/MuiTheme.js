@@ -171,7 +171,7 @@ function MuiTheme ({ ...props }) {
     },
   });
 
-  return theme;
+  return { ...theme };
 }
 
 export default MuiTheme;

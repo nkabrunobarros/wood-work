@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Grid, Grow, IconButton, InputLabel, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 
 //  PropTypes
@@ -7,7 +8,7 @@ import PropTypes from 'prop-types';
 //  Page Component Styles
 
 //  Actions
-import { Package } from 'lucide-react';
+import { Package, Plus, X } from 'lucide-react';
 // import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 import MySelect from '../../../inputs/select';
@@ -18,11 +19,43 @@ const ProductTab = (props) => {
     onBudgetChange,
     noDrop,
     pageProps,
-    categories
+    categories,
+    inputFields,
+    setInputFields
   } = props;
 
   const { getRootProps, getInputProps, isDragActive } = props.dragDrop;
   const { uploadedFiles, setUploadedFiles } = props.docs;
+
+  function addNewProduct () {
+    setInputFields([...inputFields, {
+      category: { value: '', error: '' },
+      name: { value: '', error: '', required: true },
+      amount: { value: 0, error: '' }
+    }]);
+  }
+
+  function onFieldChange (props) {
+    setInputFields(prevInputFields => {
+      const newInputFields = [...prevInputFields];
+      const fieldToEdit = newInputFields[props.row];
+
+      if (props.field === 'category') {
+        if (fieldToEdit.name.value === '') fieldToEdit.name.value = props.value + fieldToEdit.name.value;
+        else fieldToEdit.name.value = fieldToEdit.name.value.replace(newInputFields[props.row].category.value, props.value);
+
+        fieldToEdit.name.error = '';
+      }
+
+      fieldToEdit[props.field] = { ...fieldToEdit[props.field], value: props.value, error: '' };
+
+      return newInputFields;
+    });
+  }
+
+  function onRemoveRow (props) {
+    setInputFields(inputFields.filter((item, index) => index !== props.row));
+  }
 
   return (
     <Grid container p={'16px'}>
@@ -35,8 +68,8 @@ const ProductTab = (props) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid container md={6} sm={6} xs={6} pl={1} pr={1}>
+          {false && <Grid container>
+            <Grid container md={4} sm={4} xs={12} pl={1} pr={1}>
               <MySelect
                 options={categories}
                 label='Categoria'
@@ -44,7 +77,7 @@ const ProductTab = (props) => {
                 onChange={(e) => onBudgetChange(e.target)}
               />
             </Grid>
-            <Grid container md={6} sm={6} xs={6} pl={1} pr={1}>
+            <Grid container md={4} sm={4} xs={12} pl={1} pr={1}>
               <MyInput
                 label='Nome'
                 name='name'
@@ -54,16 +87,7 @@ const ProductTab = (props) => {
                 onChange={(e) => onBudgetChange(e.target)}
               />
             </Grid>
-            {/* <Grid container md={6} sm={6} xs={6} pl={1} pr={1}>
-              <MyInput
-                label='Categoria'
-                value={budgetData.category.value}
-                error={budgetData.category.error}
-                name='category'
-                onChange={(e) => onBudgetChange(e.target)}
-              />
-            </Grid> */}
-            <Grid container md={6} sm={6} xs={6} pl={1} pr={1}>
+            {/* <Grid container md={5} sm={6} xs={6} pl={1} pr={1}>
               <MyInput
                 label='Quantidade'
                 type='number'
@@ -72,25 +96,72 @@ const ProductTab = (props) => {
                 error={budgetData.amount.error}
                 onChange={(e) => onBudgetChange(e.target)}
               />
+            </Grid> */}
+            <Grid container md={4} sm={4} xs={12} pl={1} pr={1} >
+              <InputLabel sx={{ width: '100%' }}>Qtd.</InputLabel>
+              <Box sx={{ display: 'flex', alignItems: 'center', height: '56px' }}>
+                <ButtonGroup size="small" aria-label="small outlined button group">
+                  <Button >+</Button>
+                  <Button disabled>{}</Button>
+                  <Button >-</Button>
+                </ButtonGroup>
+              </Box>
             </Grid>
-            {/* <Grid container md={6} sm={6} xs={6} pl={1} pr={1}>
-              <CurrencyInput
-                label='Preço'
-                name='price'
-                value={budgetData.price.value}
-                error={budgetData.price.error}
+          </Grid>}
+          {inputFields.map((field, index) => {
+            return <Grow key={index} in={true}>
+              <Grid container>
+                <Grid container md={4} sm={4} xs={12} pl={1} pr={1}>
+                  <MySelect
+                    options={categories}
+                    label='Categoria'
+                    name='category'
+                    onChange={(e) => onFieldChange({ value: e.target.value, field: e.target.name, row: index })}
+                  />
+                </Grid>
+                <Grid container md={4} sm={4} xs={12} pl={1} pr={1}>
+                  <MyInput
+                    label='Nome'
+                    name='name'
+                    required
+                    value={field.name.value}
+                    error={field.name.error}
+                    onChange={(e) => onFieldChange({ value: e.target.value, field: e.target.name, row: index })}
+                  />
+                </Grid>
+                {/* <Grid container md={5} sm={6} xs={6} pl={1} pr={1}>
+              <MyInput
+                label='Quantidade'
+                type='number'
+                name='amount'
+                value={budgetData.amount.value}
+                error={budgetData.amount.error}
                 onChange={(e) => onBudgetChange(e.target)}
               />
             </Grid> */}
-            {/* <Grid container item sm={12} xs={12} pl={1} pr={1}>
-              <InputLabel htmlFor='email'>Observações</InputLabel>
-              <TextareaAutosize
-                placeholder='Escrever observações'
-                className={styles.textarea}
-                value={obs}
-                onChange={(e) => onObsChange(e.target.value)}
-              />
-            </Grid> */}
+                <Grid container md={4} sm={4} xs={12} pl={1} pr={1} >
+                  <InputLabel sx={{ width: '100%' }}>Qtd.</InputLabel>
+                  <Box sx={{ display: 'flex', alignItems: 'center', height: '56px' }}>
+                    <ButtonGroup size="small" aria-label="small outlined button group">
+                      <Button onClick={() => onFieldChange({ value: field.amount.value + 1, field: 'amount', row: index })} >+</Button>
+                      <Button disabled>{field.amount.value}</Button>
+                      <Button onClick={() => onFieldChange({ value: field.amount.value - 1 > -1 ? field.amount.value - 1 : 0, field: 'amount', row: index })}>-</Button>
+                    </ButtonGroup>
+                  </Box>
+                  <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: inputFields.length === 1 && 'none' }}>
+                    <Tooltip title='Remover este produto'>
+                      <IconButton onClick={() => onRemoveRow({ row: index })}>
+                        <X color='red' />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+
+                </Grid>
+              </Grid>
+            </Grow>;
+          })}
+          <Grid container justifyContent={'center'} pt={2}>
+            <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={addNewProduct} > <Plus /> Adicionar</Button>
           </Grid>
         </Box>
       </Grid>
@@ -130,6 +201,8 @@ ProductTab.propTypes = {
   onObsChange: PropTypes.func,
   obs: PropTypes.string,
   categories: PropTypes.string,
+  inputFields: PropTypes.array,
+  setInputFields: PropTypes.func,
 };
 
 export default ProductTab;

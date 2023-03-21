@@ -20,16 +20,20 @@ export const Message = (props) => {
       <ImageViewer images={toViewImage} open={!!toViewImage} handleClose={() => setToViewImage()}/>
       <Grid container md={12} sm={12} sx={styles.messageContainer}>
         <Tooltip title={moment(msg.created).format('DD [de] MMMM [de] YYYY, [às] h:mm a')}>
-          <Grid md={6} sm={12} sx={styles.messageBox}>
+          <Grid container md={6} sm={12} sx={styles.messageBox}>
             {sender &&
-                  <Grid container item md={10} sm={10} xs={10} sx={styles.message}>
-                    <Typography variant='md'> {msg.text}</Typography>
-                  </Grid>
+               <Grid container item md={10} sm={10} xs={10} >
+                 <Typography variant='xs' sx={{ marginLeft: 'auto' }}>{moment(msg.created).format('DD/MM/yyyy HH:mm ')}</Typography>
+                 <Typography variant='md' sx={styles.message}> {msg.text} </Typography>
+               </Grid>
             }
             {!sender &&
-                  <Grid container item md={10} sm={10} xs={10} sx={styles.message}>
-                    <Typography variant='md'> {msg.text}</Typography>
-                  </Grid>
+            <>
+              <Grid container item md={10} sm={10} xs={10} >
+                <Typography variant='xs' pl={2}>{moment(msg.created).format('DD/MM/yyyy HH:mm ')}</Typography>
+                <Typography variant='md' sx={styles.message}> {msg.text} </Typography>
+              </Grid>
+            </>
             }
           </Grid>
         </Tooltip>

@@ -47,7 +47,6 @@ import routes from '../../navigation/routes';
 
 //  Utils
 import { useSelector } from 'react-redux';
-import CanDo from '../utils/CanDo';
 
 const AdvancedTable = ({
   rows,
@@ -77,7 +76,6 @@ const AdvancedTable = ({
   const [cellsFilter, setCellsFilter] = useState(headCells);
   const [refresh, setRefresh] = useState(new Date());
   const [loaded, setLoaded] = useState(true);
-  const [displaying, setDisplaying] = useState();
   const reduxState = useSelector((state) => state);
 
   useEffect(() => {
@@ -94,25 +92,20 @@ const AdvancedTable = ({
     const getWhatDisplaying = () => {
       switch (Router.route) {
       case routes.private.internal.projects:
-        setDisplaying('projects');
 
         break;
       case routes.private.internal.projectsSimilar:
-        setDisplaying('projects');
         setDialogMessage('Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?');
 
         break;
       case routes.private.internal.stocks:
-        setDisplaying('stocks');
 
         break;
       case routes.private.internal.clients:
-        setDisplaying('clients');
         setDialogMessage('Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?');
 
         break;
       case routes.private.internal.workers:
-        setDisplaying('workers');
         setDialogMessage('Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?');
 
         break;

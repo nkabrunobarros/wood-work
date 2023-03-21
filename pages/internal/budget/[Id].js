@@ -31,7 +31,7 @@ const Budget = ({ ...pageProps }) => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
       const budget = (await getBudget(router.query.Id)).data;
-      const client = (await getClient(budget.orderBy.object)).data;
+      const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
 
       thisBudget.orderBy.object = client;

@@ -90,7 +90,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'user.first_name',
         label: 'Primeiro Nome',
-        value: client.givenName.value,
+        value: client.user.first_name,
         error: '',
         required: true,
         tooltip: ''
@@ -98,7 +98,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'user.last_name',
         label: 'Ultimo Nome',
-        value: client.familyName.value,
+        value: client.user.last_name,
         error: '',
         tooltip: ''
       },
@@ -106,7 +106,7 @@ const EditClient = ({ ...props }) => {
         id: 'user.email',
         type: 'email',
         label: 'Email',
-        value: client.email.value,
+        value: client.user.email,
         error: '',
         disabled: true,
         required: true,
@@ -115,7 +115,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'vat',
         label: 'Numero Identificação Fiscal (Nif)',
-        value: client.vat.value,
+        value: client.vat,
         error: '',
         required: true,
         tooltip: ''
@@ -123,7 +123,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'address.streetAddress',
         label: 'Rua',
-        value: client.address.value.streetAddress,
+        value: client.address.streetAddress,
         error: '',
         required: true,
         tooltip: ''
@@ -131,7 +131,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'address.postalCode',
         label: 'Codigo Postal',
-        value: client.address.value.postalCode,
+        value: client.address.postalCode,
         error: '',
         required: true,
         tooltip: ''
@@ -139,7 +139,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'address.addressLocality',
         label: 'Localidade',
-        value: client.address.value.addressLocality,
+        value: client.address.addressLocality,
         error: '',
         required: true,
         disabled: true,
@@ -148,7 +148,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'address.addressRegion',
         label: 'Concelho',
-        value: client.address.value.addressRegion,
+        value: client.address.addressRegion,
         error: '',
         required: true,
         disabled: true,
@@ -157,7 +157,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'address.addressCountry',
         label: 'País',
-        value: client.address.value.addressCountry,
+        value: client.address.addressCountry,
         error: '',
         required: true,
         disabled: true,
@@ -166,7 +166,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'delivery_address.streetAddress',
         label: 'Rua de Entrega',
-        value: client.delivery_address.value.streetAddress,
+        value: client.delivery_address.streetAddress,
         error: '',
         required: true,
         tooltip: ''
@@ -174,7 +174,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'delivery_address.postalCode',
         label: 'Codigo Postal de Entrega',
-        value: client.delivery_address.value.postalCode,
+        value: client.delivery_address.postalCode,
         error: '',
         required: true,
         tooltip: ''
@@ -182,7 +182,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'delivery_address.addressLocality',
         label: 'Localidade de Entrega',
-        value: client.delivery_address.value.addressLocality,
+        value: client.delivery_address.addressLocality,
         error: '',
         required: true,
         tooltip: 'Prencha o Codigo Postal'
@@ -190,7 +190,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'delivery_address.addressRegion',
         label: 'Concelho de Entrega',
-        value: client.delivery_address.value.addressRegion,
+        value: client.delivery_address.addressRegion,
         error: '',
         required: true,
         tooltip: 'Prencha o Codigo Postal'
@@ -198,7 +198,7 @@ const EditClient = ({ ...props }) => {
       {
         id: 'delivery_address.addressCountry',
         label: 'País de Entrega',
-        value: client.delivery_address.value.addressCountry,
+        value: client.delivery_address.addressCountry,
         error: '',
         required: true,
         tooltip: 'Prencha o Codigo Postal'
@@ -249,6 +249,8 @@ const EditClient = ({ ...props }) => {
       id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
     };
 
+    const formData = new FormData();
+
     inputFields.map((ele) => {
       builtClient[ele.id] = {};
 
@@ -261,44 +263,48 @@ const EditClient = ({ ...props }) => {
       } else {
         if (ele.type === 'password') ele.value = 'ChangeMe';
 
+        if (ele.id !== 'user.email') formData.append(ele.id, ele.value);
+
         builtClient[ele.id] = ele.value;
       }
     });
 
     // builtClient.telephone.value = builtClient.telephone.value.replace(/ /g, '');
 
-    builtClient.address = {
-      streetAddress: builtClient['address.streetAddress'],
-      postalCode: builtClient['address.postalCode'],
-      addressLocality: builtClient['address.addressLocality'],
-      addressRegion: builtClient['address.addressRegion'],
-      addressCountry: builtClient['address.addressCountry'],
-    };
+    // builtClient.address = {
+    //   streetAddress: builtClient['address.streetAddress'],
+    //   postalCode: builtClient['address.postalCode'],
+    //   addressLocality: builtClient['address.addressLocality'],
+    //   addressRegion: builtClient['address.addressRegion'],
+    //   addressCountry: builtClient['address.addressCountry'],
+    // };
 
-    builtClient.delivery_address = {
-      streetAddress: builtClient['delivery_address.streetAddress'],
-      postalCode: builtClient['delivery_address.postalCode'],
-      addressLocality: builtClient['delivery_address.addressLocality'],
-      addressRegion: builtClient['delivery_address.addressRegion'],
-      addressCountry: builtClient['delivery_address.addressCountry'],
-    };
+    // builtClient.delivery_address = {
+    //   streetAddress: builtClient['delivery_address.streetAddress'],
+    //   postalCode: builtClient['delivery_address.postalCode'],
+    //   addressLocality: builtClient['delivery_address.addressLocality'],
+    //   addressRegion: builtClient['delivery_address.addressRegion'],
+    //   addressCountry: builtClient['delivery_address.addressCountry'],
+    // };
 
     //  Remove extra props
-    delete builtClient['address.streetAddress'];
-    delete builtClient['address.postalCode'];
-    delete builtClient['address.addressLocality'];
-    delete builtClient['address.addressRegion'];
-    delete builtClient['address.addressCountry'];
-    delete builtClient['delivery_address.streetAddress'];
-    delete builtClient['delivery_address.postalCode'];
-    delete builtClient['delivery_address.addressLocality'];
-    delete builtClient['delivery_address.addressRegion'];
-    delete builtClient['delivery_address.addressCountry'];
+    // delete builtClient['address.streetAddress'];
+    // delete builtClient['address.postalCode'];
+    // delete builtClient['address.addressLocality'];
+    // delete builtClient['address.addressRegion'];
+    // delete builtClient['address.addressCountry'];
+    // delete builtClient['delivery_address.streetAddress'];
+    // delete builtClient['delivery_address.postalCode'];
+    // delete builtClient['delivery_address.addressLocality'];
+    // delete builtClient['delivery_address.addressRegion'];
+    // delete builtClient['delivery_address.addressCountry'];
 
     const data = builtClient;
 
+    console.log(data);
+
     try {
-      await updateClient(data)
+      await updateClient({ data: formData, id: client?.id })
         .then((res) => {
           console.log(res);
           toast.success('Atualizado.');
@@ -317,7 +323,7 @@ const EditClient = ({ ...props }) => {
 
   return (
     <>
-      {true && <Navbar />}
+      <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <Notification />
@@ -376,7 +382,7 @@ const EditClient = ({ ...props }) => {
         {processing && <Loader center={true} backdrop />}
         <Content>
           <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-            <Typography item className='headerTitleXl'>{client.givenName.value}</Typography>
+            <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title}</Typography>
             <Box sx={{ marginLeft: 'auto' }}>
               <ButtonGroup>
                 <PrimaryBtn

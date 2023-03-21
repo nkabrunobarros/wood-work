@@ -6,6 +6,7 @@ export const initialState = {
   drawerOpen: false,
   lastRefreshed: false,
   loading: false,
+  theme: null
 };
 
 const appStates = createReducer(initialState, (builder) => {
@@ -17,6 +18,14 @@ const appStates = createReducer(initialState, (builder) => {
     .addCase(appStatesActions.SET_LAST_REFRESHED, (state) => ({
       ...state,
       lastRefreshed: moment().format(),
+    }))
+    .addCase(appStatesActions.SET_THEME, (state, action) => ({
+      ...state,
+      theme: action.data,
+    }))
+    .addCase(appStatesActions.SET_LOADING, (state, action) => ({
+      ...state,
+      loading: action.data,
     }));
 });
 

@@ -17,7 +17,7 @@ const clients = createReducer(initialState, (builder) => {
       ...state,
       errors: null,
       loading: false,
-      data: action.payload.data,
+      data: action.payload.data.results,
     }))
     .addCase(clientsActions.CLIENTS_FAIL, (state, action) => ({
       ...state,

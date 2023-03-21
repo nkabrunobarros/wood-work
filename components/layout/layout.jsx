@@ -1,7 +1,6 @@
 // Node modules
 import Router, { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 //  PropTypes
 import PropTypes from 'prop-types';
 
@@ -12,10 +11,13 @@ import routes from '../../navigation/routes';
 import jwt from 'jsonwebtoken';
 // import { navLinks } from '../utils/navLinks';
 
+import { Box, Fab } from '@mui/material';
+import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthData from '../../lib/AuthData';
+import styles from '../../styles/404.module.css';
 
 const noLayoutScreens = [
   `${routes.public.signIn}`,
@@ -81,7 +83,17 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-  return loaded && children;
+  return loaded && <>{children}
+    <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
+      <Fab
+        aria-label="like"
+        size={'medium'}
+        color={'primary'}
+        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+      >
+        <ChevronUp color="white" />
+      </Fab>
+    </Box></>;
 
   // return <Loader center={true} />;
 };

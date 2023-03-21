@@ -15,14 +15,17 @@ const NewMsgInput = (props) => {
   const loggedUser = reduxState.auth.me;
   const dispatch = useDispatch();
 
+  console.log(props.conversation?.orderBy.object);
+  console.log(loggedUser);
+
   const handleSendMessage = async (event) => {
     event.preventDefault();
     setLoadMessage(new Date());
 
-    await newMessage({
-      to: loggedUser.id,
+    newMessageText !== '' && props.conversation && await newMessage({
+      to: 'user_Xw9Jz3BbzBO4GlZ2',
       by: loggedUser.id,
-      project: props.conversation.budgetId?.object || props.conversation.id,
+      project: props.conversation?.budgetId?.object || props.conversation?.id,
       text: newMessageText
     }).then((res) => {
       const chats = [...props.chats];

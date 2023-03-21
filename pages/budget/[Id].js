@@ -28,7 +28,7 @@ const Budget = ({ ...pageProps }) => {
   useEffect(() => {
     const getData = async () => {
       const budget = (await getBudget(router.query.Id)).data;
-      const client = (await getClient(budget.orderBy.object)).data;
+      const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
 
       thisBudget.orderBy.object = client;

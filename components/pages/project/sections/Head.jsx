@@ -29,22 +29,31 @@ const Head = (props) => {
   const dispatch = useDispatch();
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
 
+  const commonProps = {
+    sx: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      border: '1px solid',
+      borderColor: 'divider',
+      padding: '.5rem',
+      textAlign: 'center',
+    },
+    md: 12 / 14,
+    sm: 12 / 14,
+    xs: 12 / 14
+  };
+
   const upperCells = {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '.5rem',
-    backgroundColor: '#F9F9F9',
-    border: '1px solid',
-    borderColor: 'divider',
-    textAlign: 'center'
+    ...commonProps,
+    sx: {
+      ...commonProps.sx,
+      backgroundColor: '#F9F9F9',
+      textAlign: 'center',
+    },
   };
 
   const cells = {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '.5rem',
-    border: '1px solid',
-    borderColor: 'divider',
+    ...commonProps,
   };
 
   async function handleChangeToProd (props) {
@@ -144,7 +153,50 @@ const Head = (props) => {
       </Box>
     </Box>
     <Grid container md={12}>
-      <Grid md={2} container>
+      <Grid container md={12} p={1} >
+        {/* <Grid container md={12} sm={12} xs={12} >
+          <Grid container { ...upperCells } md={10} sm={10} xs={10}>Datas</Grid>
+          <Grid container { ...upperCells } md={2} sm={2} xs={2}>Informação</Grid>
+        </Grid> */}
+        <Grid container md={12} sm={12} xs={12} >
+          <Grid container { ...upperCells } md={(12 / 14) * 8} sm={(12 / 14) * 8} xs={(12 / 14) * 8}>Orçamento</Grid>
+          <Grid container { ...upperCells } md={(12 / 14) * 3} sm={(12 / 14) * 3} xs={(12 / 14) * 3}>Produção</Grid>
+          <Grid container { ...upperCells } md={(12 / 14) * 3} sm={(12 / 14) * 3} xs={(12 / 14) * 3}>Expedição</Grid>
+        </Grid>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container { ...upperCells }><Typography variant='sm' >Referência</Typography> </Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Categoria</Typography> </Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Quantidade</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Pedido</Typography> </Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Criação</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Valor</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Inicio</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Fim</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Quantidade</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Entrada</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
+        </Grid>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container { ...cells }><Typography variant='sm' >{`${order.budgetId.object?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{props.categories.find(ele => ele.id === order?.budgetId?.object?.category.value).label}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateRequest?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{moment(order?.budgetId?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateAgreedDelivery?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.price?.value} €</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateDelivery?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.completed?.value || 0}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
+        </Grid>
+      </Grid>
+      <Grid md={12} container>
         <Grid md={12} sm={6}>
           {internalPOV &&
           <Box style={{ width: 'fit-content' }}>
@@ -169,49 +221,6 @@ const Head = (props) => {
         <Grid md={12} sm={6}>
           <Typography color={'lightTextSm.main'} >Observações</Typography>
           <Typography color={'lightTextSm.black'} >{order?.budgetId?.object?.obs?.value || 'Não tem observações.'}</Typography>
-        </Grid>
-      </Grid>
-      <Grid container md={10} p={1} >
-        {/* <Grid container md={12} sm={12} xs={12} >
-          <Grid container sx={{ ...upperCells }} md={10} sm={10} xs={10}>Datas</Grid>
-          <Grid container sx={{ ...upperCells }} md={2} sm={2} xs={2}>Informação</Grid>
-        </Grid> */}
-        <Grid container md={12} sm={12} xs={12} >
-          <Grid container sx={{ ...upperCells }} md={(12 / 15) * 8} sm={8} xs={8}>Orçamento</Grid>
-          <Grid container sx={{ ...upperCells }} md={(12 / 15) * 3} sm={4} xs={4}>Produção</Grid>
-          <Grid container sx={{ ...upperCells }} md={(12 / 15) * 3} sm={4} xs={4}>Expedição</Grid>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12}>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Referência</Typography> </Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Categoria</Typography> </Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Quantidade</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Pedido</Typography> </Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Criação</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Valor</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entregue</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Inicio</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Fim</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Quantidade</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entrada</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
-          <Grid container sx={{ ...upperCells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >Entregue</Typography></Grid>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12}>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{`${order.budgetId.object?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{props.categories.find(ele => ele.id === order?.budgetId?.object?.category.value).label}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object?.dateRequest?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{moment(order?.budgetId?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object?.dateAgreedDelivery?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object?.price?.value} €</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object?.dateDelivery?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.completed?.value || 0}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
-          <Grid container sx={{ ...cells }} md={12 / 15} sm={12 / 15} xs={12 / 15}><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
         </Grid>
       </Grid>
     </Grid>

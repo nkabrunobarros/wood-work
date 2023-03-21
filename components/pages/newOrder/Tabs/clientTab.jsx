@@ -17,6 +17,7 @@ const ClientTab = (props) => {
     client,
     onClientChange,
     onProcessing,
+    setClientUser
   } = props;
 
   const [clients, setClients] = useState(props.clients);
@@ -64,13 +65,16 @@ const ClientTab = (props) => {
               fullWidth
               disablePortal
               options={clients}
-              getOptionLabel={(option) => option.legalName?.value || option.name?.value}
-              getOptionValue={(option) => option.id}
-              onChange={(e, value) => onClientChange({ value: value?.id || '', name: 'client' })}
+              getOptionLabel={(option) => option.user.first_name}
+              getOptionValue={(option) => option.user.id}
+              onChange={(e, value) => {
+                setClientUser(value.user.id);
+                onClientChange({ value: value?.id || '', name: 'client' });
+              }}
               renderOption={(props, option) => {
                 return (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    {option.legalName?.value || option.name?.value }
+                    {option.user.first_name + ' ' + option.user.last_name }
                   </Box>
                 );
               }}
@@ -102,22 +106,22 @@ const ClientTab = (props) => {
                   </Grid>
                   <Grid item md={6} sm={6} xs={6} p={1}>
                     <Typography color='lightTextSm.main'>Morada fiscal</Typography>
-                    <Typography color='lightTextSm.black' display={!clients.find(ele => ele.id === client.value)?.address?.value?.addressCountry && 'none'}>
-                      {clients.find(ele => ele.id === client.value)?.address?.value?.streetAddress + ', '}
-                      {clients.find(ele => ele.id === client.value)?.address?.value?.postalCode + ', '}
-                      {clients.find(ele => ele.id === client.value)?.address?.value?.addressLocality + ', '}
-                      {clients.find(ele => ele.id === client.value)?.address?.value?.addressRegion + ', '}
-                      {clients.find(ele => ele.id === client.value)?.address?.value?.addressCountry}
+                    <Typography color='lightTextSm.black' display={!clients.find(ele => ele.id === client.value)?.address?.addressCountry && 'none'}>
+                      {clients.find(ele => ele.id === client.value)?.address?.streetAddress + ', '}
+                      {clients.find(ele => ele.id === client.value)?.address?.postalCode + ', '}
+                      {clients.find(ele => ele.id === client.value)?.address?.addressLocality + ', '}
+                      {clients.find(ele => ele.id === client.value)?.address?.addressRegion + ', '}
+                      {clients.find(ele => ele.id === client.value)?.address?.addressCountry}
                     </Typography>
                   </Grid>
                   <Grid item md={6} sm={6} xs={6} p={1}>
                     <Typography color='lightTextSm.main'>Morada entrega</Typography>
-                    <Typography color='lightTextSm.black' display={!clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressCountry && 'none'} >
-                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.streetAddress + ', '}
-                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.postalCode + ', '}
-                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressLocality + ', '}
-                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressRegion + ', '}
-                      {clients.find(ele => ele.id === client.value)?.delivery_address?.value?.addressCountry}
+                    <Typography color='lightTextSm.black' display={!clients.find(ele => ele.id === client.value)?.delivery_address?.addressCountry && 'none'} >
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.streetAddress + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.postalCode + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.addressLocality + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.addressRegion + ', '}
+                      {clients.find(ele => ele.id === client.value)?.delivery_address?.addressCountry}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -142,6 +146,7 @@ ClientTab.propTypes = {
   onEndAtChange: PropTypes.func,
   onObsChange: PropTypes.func,
   onProcessing: PropTypes.func,
+  setClientUser: PropTypes.func,
   noDetail: PropTypes.bool,
 };
 

@@ -11,15 +11,18 @@ import ProjectsScreen from '../../components/pages/projects/projects';
 //  Proptypes
 
 //  Actions
+import * as appStatesActions from '../../store/actions/appState';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
 import * as expeditionsActionsRedux from '../../store/actions/expedition';
 import * as projectsActionsRedux from '../../store/actions/project';
 //  Icons
 import { Check, Layers, LayoutTemplate, PackagePlus, Settings, Truck } from 'lucide-react';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import AuthData from '../../lib/AuthData';
 import Loader from '../../components/loader/loader';
+import useWindowFocus from '../../components/utils/useWindowFocus';
+import AuthData from '../../lib/AuthData';
 
 //  Preloader
 // import Loader from '../../components/loader/loader';
@@ -32,20 +35,33 @@ const Projects = ({ ...pageProps }) => {
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
+  const setLoading = (data) => dispatch(appStatesActions.setLoading(data));
+  const setLastRefreshed = () => dispatch(appStatesActions.setLastRefreshed());
   const [loaded, setLoaded] = useState(false);
+  const focused = useWindowFocus();
+  const shouldRefresh = moment().diff(moment(reduxState.appStates.lastRefreshed), 'seconds') > 30;
 
   async function fetchData (dispatch) {
     let errors = false;
+    let loadedSomething = false;
 
     try {
+      await setLoading(true);
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      await getProjects().then((res) => console.log(res));
 
-      if (!reduxState.expeditions?.data) { await getExpeditions(); }
+      if (!reduxState.projects?.data || shouldRefresh) { await getProjects(); loadedSomething = true; }
 
-      await getBudgets();
+      if (!reduxState.expeditions?.data || shouldRefresh) { await getExpeditions(); loadedSomething = true; }
 
-      if (!reduxState.clients?.data) { await getClients(); }
+      if (!reduxState.budgets?.data || shouldRefresh) { await getBudgets(); loadedSomething = true; }
+
+      if (!reduxState.clients?.data || shouldRefresh) { await getClients(); loadedSomething = true; }
+
+      setTimeout(() => {
+        setLoading(false);
+      }, '500');
+
+      (loadedSomething || shouldRefresh) && await setLastRefreshed();
     } catch (err) { errors = true; }
 
     return !errors;
@@ -56,8 +72,8 @@ const Projects = ({ ...pageProps }) => {
       setLoaded(await fetchData(dispatch));
     }
 
-    loadData();
-  }, []);
+    focused && loadData();
+  }, [focused]);
 
   if (loaded) {
     const counts = {
@@ -72,39 +88,39 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-        case 'waiting budget':
-          counts.waitingBudget++;
+      case 'waiting budget':
+        counts.waitingBudget++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'finished':
+        counts.concluded++;
 
-          break;
+        break;
       }
     });
 
@@ -296,24 +312,32 @@ const Projects = ({ ...pageProps }) => {
 
     const clients = [...reduxState.clients?.data ?? []];
 
-    const budgets = [...reduxState.budgets?.data ?? []].map((bud) => ({
-      ...bud,
-      Estado: bud?.status?.value,
-      Nome: bud?.name?.value.replace(/_/g, ' '),
-      ClienteLabel: clients.find(ele => ele.id === bud.orderBy.object).legalName.value,
-      Quantidade: bud.amount.value
+    const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
+      const thisClient = clients.find(ele => ele.id === bud.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
 
-    }));
+      return {
+        ...bud,
+        Estado: bud?.status?.value,
+        Nome: bud?.name?.value.replace(/_/g, ' '),
+        ClienteLabel: thisClient?.user?.first_name + ' ' + thisClient?.user?.last_name,
+        Quantidade: bud.amount.value
 
-    const projects = [...reduxState.projects?.data ?? []].map((proj) => ({
-      ...proj,
-      Quantidade: proj?.amount?.value,
-      Estado: proj?.status?.value,
-      Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
-      budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
-      Cliente: proj.orderBy.object,
-      ClienteLabel: clients.find(ele => ele.id === proj.orderBy.object).legalName.value,
-    }));
+      };
+    });
+
+    const projects = [...reduxState.projects?.data ?? []].map((proj) => {
+      const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
+
+      return {
+        ...proj,
+        Quantidade: proj?.amount?.value,
+        Estado: proj?.status?.value,
+        Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
+        budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
+        Cliente: proj.orderBy.object,
+        ClienteLabel: thisClient?.user?.first_name + ' ' + thisClient?.user?.last_name,
+      };
+    });
 
     const props = {
       counts,

@@ -18,7 +18,7 @@ const ChatToolbar = (props) => {
             : conversation?.type === 'Project' ? 'Projeto' : 'Orçamento'
           } */}
             {' '}
-            {conversation.filterName}
+            {conversation?.filterName}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

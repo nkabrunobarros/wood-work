@@ -76,8 +76,8 @@ const Clients = ({ ...pageProps }) => {
       items: [...reduxState.clients?.data].map(client => {
         const client2 = { ...client };
 
-        client2.Nome = client.name?.value || client.givenName?.value;
-        client2.Email = client.email?.value;
+        client2.Nome = client.user.first_name + ' ' + client.user.last_name;
+        client2.Email = client.user.email;
 
         return client2;
       }),

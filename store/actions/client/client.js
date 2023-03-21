@@ -30,7 +30,7 @@ export const clients = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.CLIENTS),
+      url: getApiURL(endpoints.CUSTOMER),
     },
     types: [CLIENTS_REQUEST, CLIENTS_SUCCESS, CLIENTS_FAIL],
   });
@@ -45,7 +45,7 @@ export const client = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.CLIENTS + data),
+      url: getApiURL(endpoints.CUSTOMER + data),
     },
     types: [CLIENT_REQUEST, CLIENT_SUCCESS, CLIENT_FAIL],
   });
@@ -60,7 +60,7 @@ export const updateClient = (data) => {
   return createAction({
     meta: null,
     request: {
-      data,
+      ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
       url: getApiURL(endpoints.CUSTOMER + id),

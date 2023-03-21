@@ -270,7 +270,7 @@ const newWorker = ({ ...props }) => {
 
   return (
     <>
-      {true && <Navbar />}
+      <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <Notification />

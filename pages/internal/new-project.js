@@ -30,7 +30,7 @@ const NewOrder = ({ ...pageProps }) => {
 
       if (!reduxState.budgets.data) await getBudgets();
 
-      if (!reduxState.clients.data) await getClients();
+      if (!reduxState.clients.data) await getClients().then((res) => console.log(res));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

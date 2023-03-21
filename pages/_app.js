@@ -29,6 +29,7 @@ import { destroyCookie, parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
 import MomentJsConfig from '../components/utils/MomentJsConfig';
 import AuthData from '../lib/AuthData';
+import * as appStatesActions from '../store/actions/appState';
 import { storeWrapper } from '../store/store';
 import MuiTheme from './MuiTheme';
 
@@ -48,6 +49,7 @@ const App = ({ Component, pageProps }) => {
   const router = useRouter();
   const reduxState = useSelector((state) => state);
   const dispatch = useDispatch();
+  const setTheme = (data) => dispatch(appStatesActions.setTheme(data));
 
   moment.locale(MomentJsConfig());
 
@@ -71,6 +73,8 @@ const App = ({ Component, pageProps }) => {
 
   useEffect(() => {
     const load = async () => {
+      await setTheme(theme);
+
       //  theme
       if (!localStorage.getItem('theme')) localStorage.setItem('theme', 'light');
       else if (selectedTheme !== localStorage.getItem('theme')) setSelectedTheme(localStorage.getItem('theme'));
@@ -125,35 +129,6 @@ const App = ({ Component, pageProps }) => {
     </ThemeProvider>
   );
 };
-
-App.getInitialProps = storeWrapper.getInitialAppProps((store) => async ({ Component, ctx }) => {
-  const hasFullyLoaded = false;
-
-  const globalVars = {
-    iconSize: 20,
-    iconSizeMd: 30,
-    iconSizeXl: 40,
-    iconSizeXxl: 54,
-    iconStrokeWidth: 1,
-    iconXlStrokeWidth: 0.5,
-    iconSmStrokeWidth: 1.5,
-  };
-
-  // Client-side-only code
-  if (typeof window !== 'undefined') {
-    return initializeClientSideProps({ Component, ctx, store });
-  }
-
-  // Ignore server side initialization for now
-  const pageProps = {
-    ...(Component.getInitialProps ? await Component.getInitialProps(ctx, hasFullyLoaded) : {}),
-  };
-
-  pageProps.globalVars = globalVars;
-  pageProps.hasFullyLoaded = hasFullyLoaded;
-
-  return { pageProps };
-});
 
 App.propTypes = {
   Component: PropTypes.func,

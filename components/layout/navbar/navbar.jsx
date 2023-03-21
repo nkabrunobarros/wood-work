@@ -1,5 +1,5 @@
 // Node modules
-import { AppBar, Box, Hidden, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Hidden, IconButton, LinearProgress, Toolbar, Tooltip, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -68,15 +68,17 @@ const Navbar = ({ ...pageProps }) => {
             </Box>
           </Box>
         </Toolbar>
+        {reduxState.appStates.loading && <LinearProgress color="secondary"/>}
       </AppBar>
-      {true && <Hidden>
+
+      <Hidden>
         <DrawerMobile
           state={reduxState}
           {...pageProps}
           toggleDrawer={toggleDrawer}
           logout={logout}
         />
-      </Hidden>}
+      </Hidden>
     </>
   );
 };

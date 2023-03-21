@@ -526,3 +526,27 @@ a {
   -o-animation: rotating 3s linear infinite;
   animation: rotating 3s linear infinite;
 }
+
+.conversationRow {
+  width: fit-content;
+  padding: 1rem;
+}
+
+.conversationRow:hover {
+  width: 100%;
+}
+
+.conversationsBox {
+  width: 20%;
+  transition: .5s ease-in-out;
+
+}
+
+.conversationsBox:hover {
+  width: 30%;
+}
+
+.chatBox {
+  width: 80%;
+  height: 100%;
+}

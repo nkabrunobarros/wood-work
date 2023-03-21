@@ -37,13 +37,15 @@ const Messages = (props) => {
     loadMessages();
   }, []);
 
+  console.log(budget.orderBy.object.user.id);
+
   const handleSendMessage = async (event) => {
     event.preventDefault();
 
     if (newMessageText === '') return;
 
     await newMessage({
-      to: loggedUser.id,
+      to: loggedUser.role === 'CUSTOMER' ? 'user_Xw9Jz3BbzBO4GlZ2' : budget.orderBy.object.user.id,
       by: loggedUser.id,
       project: budget?.id,
       text: newMessageText

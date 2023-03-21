@@ -304,7 +304,7 @@ const NewClient = ({ ...props }) => {
     const qs = require('qs');
 
     const builtClient2 = {
-      active: true,
+      active: false,
       tos: false,
     };
 
@@ -428,7 +428,7 @@ const NewClient = ({ ...props }) => {
 
   return (
     <>
-      {true && <Navbar />}
+      <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <Notification />
