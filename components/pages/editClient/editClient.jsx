@@ -269,40 +269,6 @@ const EditClient = ({ ...props }) => {
       }
     });
 
-    // builtClient.telephone.value = builtClient.telephone.value.replace(/ /g, '');
-
-    // builtClient.address = {
-    //   streetAddress: builtClient['address.streetAddress'],
-    //   postalCode: builtClient['address.postalCode'],
-    //   addressLocality: builtClient['address.addressLocality'],
-    //   addressRegion: builtClient['address.addressRegion'],
-    //   addressCountry: builtClient['address.addressCountry'],
-    // };
-
-    // builtClient.delivery_address = {
-    //   streetAddress: builtClient['delivery_address.streetAddress'],
-    //   postalCode: builtClient['delivery_address.postalCode'],
-    //   addressLocality: builtClient['delivery_address.addressLocality'],
-    //   addressRegion: builtClient['delivery_address.addressRegion'],
-    //   addressCountry: builtClient['delivery_address.addressCountry'],
-    // };
-
-    //  Remove extra props
-    // delete builtClient['address.streetAddress'];
-    // delete builtClient['address.postalCode'];
-    // delete builtClient['address.addressLocality'];
-    // delete builtClient['address.addressRegion'];
-    // delete builtClient['address.addressCountry'];
-    // delete builtClient['delivery_address.streetAddress'];
-    // delete builtClient['delivery_address.postalCode'];
-    // delete builtClient['delivery_address.addressLocality'];
-    // delete builtClient['delivery_address.addressRegion'];
-    // delete builtClient['delivery_address.addressCountry'];
-
-    const data = builtClient;
-
-    console.log(data);
-
     try {
       await updateClient({ data: formData, id: client?.id })
         .then((res) => {

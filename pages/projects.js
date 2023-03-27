@@ -34,7 +34,7 @@ const Orders = ({ ...pageProps }) => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
 
-  async function fetchData() {
+  async function fetchData () {
     let errors = false;
 
     try {
@@ -56,7 +56,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData() {
+    async function loadData () {
       setLoaded(await fetchData(dispatch));
     }
 

@@ -32,8 +32,6 @@ const EditClient = ({ ...props }) => {
   const dispatch = useDispatch();
   const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
 
-  console.log(client);
-
   async function onDelete () {
     const data = {
       id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
@@ -100,6 +98,10 @@ const EditClient = ({ ...props }) => {
                 </Grid>
                 <Grid container item>
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Nome Utilizador</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.user?.username}</Typography>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
                     <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
                     <Typography item color='lightTextSm.black' >{client?.user?.first_name}</Typography>
                   </Grid>
@@ -107,8 +109,7 @@ const EditClient = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Ultimo Nome</Typography>
                     <Typography item color='lightTextSm.black' >{client?.user?.last_name}</Typography>
                   </Grid>
-                  <Grid item>
-                  </Grid>
+
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
                     <Typography item color='lightTextSm.main'>Email</Typography>
                     <Typography item color='lightTextSm.black' >{client?.user.email}</Typography>
@@ -117,13 +118,12 @@ const EditClient = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Tipo cliente </Typography>
                     <Typography item color='lightTextSm.black' >{client?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
                   </Grid>
+                  <Grid item xs={6} md={6} sm={6}>
+                    <Typography item color='lightTextSm.main'>Observações </Typography>
+                    <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={6} sm={6}>
-                  <Typography item color='lightTextSm.main'>Observações </Typography>
-                  <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
-                </Grid>
-                <Grid container item>
-                </Grid>
+
               </Grid>
             </Grid>
             <Grid item xs={12} md={6} sm={12}>

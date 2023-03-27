@@ -68,14 +68,12 @@ const Clients = ({ ...props }) => {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
     const id = props.replace('urn:ngsi-ld:Owner:', '');
+    const formData = new FormData();
 
-    const data = {
-      id,
-      is_active: false
-    };
+    formData.append('user.is_active', false);
 
     try {
-      await updateClient(data).then((res) => console.log(res));
+      await updateClient({ data: formData, id: props }).then((res) => console.log(res));
     } catch (err) {
       console.log(err);
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');

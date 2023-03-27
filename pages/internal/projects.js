@@ -42,7 +42,7 @@ const Projects = ({ ...pageProps }) => {
   const focused = useWindowFocus();
   const shouldRefresh = moment().diff(moment(reduxState.appStates.lastRefreshed), 'seconds') > 30;
 
-  async function fetchData(dispatch) {
+  async function fetchData (dispatch) {
     let errors = false;
     let loadedSomething = false;
 
@@ -69,7 +69,7 @@ const Projects = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData() {
+    async function loadData () {
       setLoaded(await fetchData(dispatch));
     }
 
