@@ -118,7 +118,6 @@ export const updateBudget = (data) => {
   const { auth_token: userToken } = parseCookies();
   const id = data?.id;
 
-  console.log(data);
   delete data.id;
 
   return createAction({

@@ -346,7 +346,6 @@ const OrdersScreen = ({ ...props }) => {
             headCells={headCells}
             headCellsUpper={headCellsUpper}
             filters={filters}
-            editRoute={editPage}
             clickRoute={detailPage}
           />
         </Content>

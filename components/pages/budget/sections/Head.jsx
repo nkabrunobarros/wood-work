@@ -194,20 +194,20 @@ const Head = (props) => {
         },
         orderBy: {
           type: 'Relationship',
-          object: budget.orderBy?.object.id
+          object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id
         }
       });
 
       const projRes = await newProject({
         id: 'urn:ngsi-ld:Project:' + budget.name.value.replace(/ /g, '').toUpperCase(),
         type: 'Project',
-        orderBy: { type: 'Relationship', object: budget.orderBy?.object.id },
+        orderBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id },
         name: { type: 'Property', value: budget.name.value },
         status: { type: 'Property', value: 'drawing' },
         budgetId: { type: 'Relationship', object: budget.id },
         assemblyBy: { type: 'Relationship', object: ['urn:ngsi-ld:Worker:'] },
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
-        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + budget.name.value },
+        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:expedition:' + budget.name.value },
         category: {
           type: 'Property',
           value: budget.category?.value
@@ -235,7 +235,7 @@ const Head = (props) => {
         },
         orderBy: {
           type: 'Relationship',
-          object: budget.orderBy?.object.id
+          object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id
         }
       });
 
@@ -287,12 +287,10 @@ const Head = (props) => {
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
                 <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
-                {isInternalPage &&
-                  <Box pl={2}>
-                    {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
-                    {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
-                  </Box>
-                }
+                <Box pl={2}>
+                  {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
+                  {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
+                </Box>
               </Box>
             </Grid>
             <Grid container md={6} sm={6} xs={6} justifyContent='end' alignItems={'center'}>
@@ -380,7 +378,7 @@ const Head = (props) => {
                     <Typography color={'lightTextSm.main'}>Cliente</Typography>
                     <Tooltip title='Ver cliente'>
                       <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                        <Typography color={'primary.main'}>{budget.orderBy?.object?.legalName?.value || 'Cliente aqui'}</Typography>
+                        <Typography color={'primary.main'}>{`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}</Typography>
                       </a>
                     </Tooltip>
                   </Box>

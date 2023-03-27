@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import useWindowFocus from '../../components/utils/useWindowFocus';
 import AuthData from '../../lib/AuthData';
+import { categories } from './new-project';
 
 //  Preloader
 // import Loader from '../../components/loader/loader';
@@ -41,7 +42,7 @@ const Projects = ({ ...pageProps }) => {
   const focused = useWindowFocus();
   const shouldRefresh = moment().diff(moment(reduxState.appStates.lastRefreshed), 'seconds') > 30;
 
-  async function fetchData (dispatch) {
+  async function fetchData(dispatch) {
     let errors = false;
     let loadedSomething = false;
 
@@ -68,7 +69,7 @@ const Projects = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData () {
+    async function loadData() {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -88,39 +89,39 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-      case 'waiting budget':
-        counts.waitingBudget++;
+        case 'waiting budget':
+          counts.waitingBudget++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
@@ -274,13 +275,6 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'category.value',
-        numeric: false,
-        disablePadding: false,
-        label: 'Categoria',
-        show: true,
-      },
-      {
         id: 'ClienteLabel',
         numeric: false,
         disablePadding: false,
@@ -288,7 +282,21 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'Quantidade',
+        id: 'Referência',
+        numeric: false,
+        disablePadding: false,
+        label: 'Referência',
+        show: true,
+      },
+      {
+        id: 'Categoria',
+        numeric: false,
+        disablePadding: false,
+        label: 'Categoria',
+        show: true,
+      },
+      {
+        id: 'amount.value',
         numeric: false,
         disablePadding: false,
         label: 'Quantidade',
@@ -302,11 +310,45 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
+        id: 'Pedido',
+        numeric: false,
+        disablePadding: false,
+        label: 'Pedido',
+        show: true,
+      },
+      {
+        id: 'Inicio',
+        numeric: false,
+        disablePadding: false,
+        label: 'Início Prod.',
+        show: true,
+      },
+      {
+        id: 'Termino',
+        numeric: false,
+        disablePadding: false,
+        label: 'Fim Prod.',
+        show: true,
+      },
+      {
+        id: 'Complete',
+        numeric: false,
+        disablePadding: false,
+        label: 'Qtd. Prod.',
+        show: true,
+      },
+      {
+        id: 'ExpeditionTime',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrada Expedição',
+        show: true,
+      },
+      {
         id: 'actions',
         numeric: true,
         disablePadding: false,
         label: 'Ações',
-        show: true,
       },
     ];
 
@@ -319,7 +361,7 @@ const Projects = ({ ...pageProps }) => {
         ...bud,
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
-        ClienteLabel: thisClient?.user?.first_name + ' ' + thisClient?.user?.last_name,
+        ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Quantidade: bud.amount.value
 
       };
@@ -327,6 +369,9 @@ const Projects = ({ ...pageProps }) => {
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
+      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
+
+      // customer_8Y5d0LMQZeRPXnjk
 
       return {
         ...proj,
@@ -335,7 +380,14 @@ const Projects = ({ ...pageProps }) => {
         Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
         budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
         Cliente: proj.orderBy.object,
-        ClienteLabel: thisClient?.user?.first_name + ' ' + thisClient?.user?.last_name,
+        ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
+        Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
+        Categoria: categories.find(c => c.id === thisBudget.category.value).label,
+        ExpeditionTime: '',
+        Complete: 0,
+        Pedido: thisBudget?.dateRequest.value,
+        Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
+        Termino: thisBudget?.dateAgreedDelivery.value,
       };
     });
 

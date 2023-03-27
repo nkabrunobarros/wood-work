@@ -40,7 +40,7 @@ const Order = ({ ...pageProps }) => {
       const project = (await getProject(router.query.Id)).data;
       const expedition = (await getExpedition(project.expedition.object)).data;
       const budget = (await getBudget(project.budgetId.object)).data;
-      const client = (await getClient(project.orderBy.object)).data;
+      const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
 
       getFolders().then(async (res) => {
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));

@@ -132,7 +132,6 @@ const ProjectsScreen = (props) => {
     const data = {
       id,
       status: { type: 'Property', value: 'canceled' },
-      Estado: 'canceled'
     };
 
     try {
@@ -146,10 +145,20 @@ const ProjectsScreen = (props) => {
     const index = old.findIndex((item) => item.id === id);
 
     if (index !== -1) {
-      const updatedItems = [...old];
+      const updatedItem = {
+        ...budgets[index], // Copy the existing item
+        status: { type: 'Property', value: 'canceled' },
+        Estado: 'canceled'
+      };
+
+      const updatedItems = [
+        ...budgets.slice(0, index), // Copy the items before the updated item
+        updatedItem, // Add the updated item
+        ...budgets.slice(index + 1) // Copy the items after the updated item
+      ];
 
       setBudgets(updatedItems);
-      ToastSet(loading, 'Orçamento Removido.', 'success');
+      ToastSet(loading, 'Pedido Cancelado.', 'success');
     }
   }
 
@@ -187,7 +196,7 @@ const ProjectsScreen = (props) => {
       ];
 
       setProjects(updatedItems);
-      ToastSet(loading, 'Utilizador Removido.', 'success');
+      ToastSet(loading, 'Pedido Cancelado.', 'success');
     }
   }
 
@@ -360,7 +369,7 @@ const ProjectsScreen = (props) => {
               headCells={headCellsProjects}
               filters={filters}
               clickRoute={detailPage}
-              editRoute={editPage}
+              // editRoute={editPage}
               setFilters={setFilters}
               onDelete={onDeleteProject}
             />

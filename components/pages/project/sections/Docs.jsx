@@ -249,7 +249,7 @@ const Docs = (props) => {
           </Table>
         </TableContainer>
       </div>
-      <Box className={styles.infoContainer}>
+      {/* <Box className={styles.infoContainer}>
         <Typography className='headerTitleSm'>{folders[activeFolder]?.name}</Typography>
         <Grid container md={12} bgcolor={'lightGray.main'} className={styles.innerInfoContainer}>
           <Grid container md={12}>
@@ -301,7 +301,7 @@ const Docs = (props) => {
             <Grid md={6}> <Typography fontSize={'14px'} color={'lightTextSm.main'} >AlteradoEm</Typography></Grid>
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </div>
   </>;
 };

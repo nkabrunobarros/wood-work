@@ -5,7 +5,11 @@ export {
   NEW_EXPEDITION_REQUEST,
   NEW_EXPEDITION_FAIL,
   NEW_EXPEDITION_SUCCESS,
+  UPDATE_EXPEDITION_REQUEST,
+  UPDATE_EXPEDITION_FAIL,
+  UPDATE_EXPEDITION_SUCCESS,
   expeditions,
   expedition,
-  newExpedition
+  newExpedition,
+  updateExpedition
 } from './expedition';

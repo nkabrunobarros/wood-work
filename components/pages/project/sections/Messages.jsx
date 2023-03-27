@@ -37,13 +37,15 @@ const Messages = (props) => {
     loadMessages();
   }, []);
 
+  console.log(order);
+
   const handleSendMessage = async (event) => {
     event.preventDefault();
 
     if (newMessageText === '') return;
 
     await newMessage({
-      to: loggedUser.id,
+      to: loggedUser.role === 'CUSTOMER' ? 'user_Xw9Jz3BbzBO4GlZ2' : order.orderBy.object.user.id,
       by: loggedUser.id,
       project: order.budgetId?.object.id,
       text: newMessageText

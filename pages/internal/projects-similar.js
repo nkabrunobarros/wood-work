@@ -29,7 +29,7 @@ const OrdersSimilar = () => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
-    async function getData () {
+    async function getData() {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       !reduxState.clients.data && getClients();
       !reduxState.projects.data && getProjects();
@@ -175,7 +175,7 @@ const OrdersSimilar = () => {
       },
     ];
 
-    const clients = [...reduxState.clients?.data];
+    const clients = [...reduxState.clients?.data ?? []];
 
     //  Page Props
     const props = {
@@ -183,6 +183,9 @@ const OrdersSimilar = () => {
         // eslint-disable-next-line array-callback-return
         (item) => {
           const item2 = { ...item };
+          const thisClient = clients.find(ele => ele.id === item.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
+
+          debugger;
 
           // data[i].desvio = formatNum(item.previsto, item.realizado)
           item2.operacao = item.status.value;
@@ -194,7 +197,7 @@ const OrdersSimilar = () => {
           item2.realizado2 = 2;
           item2.desvio2 = -2;
           item2.Nome = item?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ');
-          item2.Cliente = clients.find((ele) => ele.id === item.orderBy.object);
+          item2.Cliente = (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || '');
 
           return item2;
         }

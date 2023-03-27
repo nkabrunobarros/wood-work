@@ -7,10 +7,10 @@ import PrimaryBtn from '../../../buttons/primaryBtn';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../../navigation/routes';
+import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
@@ -28,6 +28,7 @@ const Head = (props) => {
   const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
+  const updateExpedition = (data) => dispatch(expeditionsActionsRedux.updateExpedition(data));
 
   const commonProps = {
     sx: {
@@ -66,12 +67,15 @@ const Head = (props) => {
         id: order.id,
         type: order.type,
         status: { value: `${props}`, type: 'Property' }
-      }).then(() => {
+      }).then(async () => {
         setOrder({ ...order, status: { type: 'Property', value: `${props}` } });
         setChangeToProdModal(false);
         setChangeToAssemblyModal(false);
         setChangeToTransportModal(false);
         setFinishModal(false);
+
+        if (props === 'finished') await updateExpedition({ id: order.expedition.id, deliveryFlag: 1, expeditionTime: moment().format('DD/MM/YYYY HH:mm:ss') }).then(res => setOrder({ ...order, expedition: { ...order.expedition, deliveryFlag: 1, expeditionTime: res.data.expeditionTime } }));
+
         ToastSet(processing, `Projeto passou a ${props === 'production' ? 'produção' : (props === 'testing' ? 'montagem' : (props === 'testing' ? 'transporte' : 'terminado'))}`, 'success');
       });
     } catch (err) { console.log(err); }
@@ -225,14 +229,6 @@ const Head = (props) => {
       </Grid>
     </Grid>
   </Box>;
-};
-
-Head.propTypes = {
-  pageProps: PropTypes.object,
-  order: PropTypes.object,
-  finishProject: PropTypes.string,
-  setOrder: PropTypes.func,
-  breadcrumbsPath: PropTypes.array,
 };
 
 export default Head;

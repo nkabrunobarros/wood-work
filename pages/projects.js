@@ -34,7 +34,7 @@ const Orders = ({ ...pageProps }) => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
 
-  async function fetchData () {
+  async function fetchData() {
     let errors = false;
 
     try {
@@ -56,7 +56,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData () {
+    async function loadData() {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -84,39 +84,39 @@ const Orders = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-      case 'waiting budget':
-        counts.waitingBudget++;
+        case 'waiting budget':
+          counts.waitingBudget++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
@@ -246,7 +246,7 @@ const Orders = ({ ...pageProps }) => {
     ];
 
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
-      return bud?.status?.value !== 'adjudicated' && bud?.status?.value !== 'canceled' && {
+      return bud?.status?.value !== 'adjudicated' && {
         ...bud,
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
@@ -284,6 +284,7 @@ const Orders = ({ ...pageProps }) => {
     const merged = [...projects, ...filteredBudgets.filter((ele) => ele.status !== 'adjudicated')];
 
     merged.sort((a, b) => a.Pedido?.localeCompare(b.Pedido));
+    console.log(budgets);
 
     const props = {
       counts,
