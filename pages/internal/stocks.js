@@ -8,10 +8,11 @@ import Loader from '../../components/loader/loader';
 import StockScreen from '../../components/pages/stocks/stocks';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 //  Navigation
+import { useDispatch } from 'react-redux';
 import routes from '../../navigation/routes';
+import * as lefctoversActionsRedux from '../../store/actions/leftover';
 
 export const dummyStocks = [
   { id: 'AG L Biscuit Nude 36W 10', warehouse: '4', material: 'AG L Biscuit Nude 36W 10 ', qtd: 2, comp: 400, larg: 338.5, esp: 10 },
@@ -29,36 +30,53 @@ export const dummyStocks = [
   { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 924, larg: 283, esp: 19 },
   { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', qtd: 1, comp: 907, larg: 76, esp: 19 },
   { id: 'MDF Folheado Carv 19', warehouse: '4', material: 'MDF Folheado Carv 19', qtd: 1, comp: 2394, larg: 560, esp: 19 },
-  { warehouse: '4', material: 'HDF 19 ', qtd: 24, comp: 540, larg: 70, esp: 19 },
 ];
 
 const Stock = () => {
   const [loaded, setLoaded] = useState(false);
   const [stocks, setStocks] = useState();
   const [filtersSizes, setFiltersSizes] = useState();
+  const dispatch = useDispatch();
+  const getLeftovers = (data) => dispatch(lefctoversActionsRedux.leftovers(data));
 
   //  Data Fetching
   useEffect(() => {
     const getData = async () => {
-      setStocks(dummyStocks);
+      await getLeftovers().then((res) => {
+        const newArray = [...res.data].map((obj) => {
+          const newObj = {};
 
-      setFiltersSizes({
-        larg: {
-          values: [Math.min(...dummyStocks.map(o => o.larg)), Math.max(...dummyStocks.map(o => o.larg))],
-          min: Math.min(...dummyStocks.map(o => o.larg)),
-          max: Math.max(...dummyStocks.map(o => o.larg))
-        },
-        esp: {
-          values: [Math.min(...dummyStocks.map(o => o.esp)), Math.max(...dummyStocks.map(o => o.esp))],
-          min: Math.min(...dummyStocks.map(o => o.esp)),
-          max: Math.max(...dummyStocks.map(o => o.esp))
-        },
-        comp: {
-          values: [Math.min(...dummyStocks.map(o => o.comp)), Math.max(...dummyStocks.map(o => o.comp))],
-          min: Math.min(...dummyStocks.map(o => o.comp)),
-          max: Math.max(...dummyStocks.map(o => o.comp))
-        },
+          Object.keys(obj).forEach((key) => {
+            if (typeof obj[key].value !== 'undefined' || typeof obj[key].object !== 'undefined') {
+              newObj[key] = obj[key].value;
+            } else newObj[key] = obj[key];
+          });
+
+          return newObj;
+        });
+
+        setStocks(newArray);
+
+        setFiltersSizes({
+          width: {
+            values: [Math.min(...newArray.map(o => o.width)), Math.max(...newArray.map(o => o.width))],
+            min: Math.min(...newArray.map(o => o.width)),
+            max: Math.max(...newArray.map(o => o.width))
+          },
+          thickness: {
+            values: [Math.min(...newArray.map(o => o.thickness)), Math.max(...newArray.map(o => o.thickness))],
+            min: Math.min(...newArray.map(o => o.thickness)),
+            max: Math.max(...newArray.map(o => o.thickness))
+          },
+          height: {
+            values: [Math.min(...newArray.map(o => o.height)), Math.max(...newArray.map(o => o.height))],
+            min: Math.min(...newArray.map(o => o.height)),
+            max: Math.max(...newArray.map(o => o.height))
+          },
+        });
       });
+
+      // setStocks(dummyStocks);
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -73,19 +91,19 @@ const Stock = () => {
         width: '20%',
       },
       {
-        id: 'qtd',
+        id: 'amount',
         label: 'Disponivel',
       },
       {
-        id: 'comp',
+        id: 'height',
         label: 'Comp',
       },
       {
-        id: 'larg',
+        id: 'width',
         label: 'Largura',
       },
       {
-        id: 'esp',
+        id: 'thickness',
         label: 'Espessura',
       },
       {
@@ -121,15 +139,6 @@ const Stock = () => {
   }
 
   return <Loader center={true} />;
-};
-
-Stock.propTypes = {
-  categories: PropTypes.array,
-  orders: PropTypes.array,
-  detailPage: PropTypes.any,
-  allStock: PropTypes.array,
-  headCells: PropTypes.array,
-  products: PropTypes.array,
 };
 
 export default Stock;

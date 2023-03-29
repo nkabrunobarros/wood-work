@@ -7,8 +7,8 @@ import { categories } from '../../pages/internal/new-project';
 import displayWithStyle from './displayTextWithStyle';
 
 export function calcDesvio (desvio) {
-  if (desvio < 0) return <Typography className="successBalloon">{desvio} horas</Typography>;
-  else if (desvio > 0) return <Typography className="errorBalloon">{desvio} horas</Typography>;
+  if (desvio < 0) return <Typography className="errorBalloon">{desvio} horas</Typography>;
+  else if (desvio > 0) return <Typography className="successBalloon">{desvio} horas</Typography>;
   else if (Math.ceil(desvio) === 0) return <Typography className="warningBalloon">{desvio} horas</Typography>;
 
   return true;

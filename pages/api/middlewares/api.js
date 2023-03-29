@@ -1,7 +1,7 @@
 // Node modules
 import axios from 'axios';
 // Network
-import { parseCookies } from 'nookies';
+import { destroyCookie, parseCookies } from 'nookies';
 import { buildURL } from '../../../store/network/config';
 
 export const CALL_API = Symbol('CALL_API');
@@ -32,6 +32,16 @@ const api = () => () => (next) => async (action) => {
     return response;
   } catch (error) {
     const failAction = actionWith({ type: FAIL, meta, payload: error.response || error });
+
+    if (error.response?.data?.detail === ('Invalid token header. No credentials provided.' || 'Authentication credentials were not provided.')) {
+      destroyCookie(null, 'auth_token');
+
+      return [
+        {
+          destination: '/signin', // Matched parameters can be used in the destination
+          permanent: false,
+        }];
+    }
 
     next(failAction);
 

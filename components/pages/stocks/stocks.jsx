@@ -60,6 +60,7 @@ const Stock = ({ ...props }) => {
 
   return (
     <>
+
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -91,24 +92,24 @@ const Stock = ({ ...props }) => {
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
                   getAriaLabel={() => 'Width range'}
-                  value={sizesFilter.comp.values}
-                  name='comp'
+                  value={sizesFilter.height.values}
+                  name='height'
                   onChange={(e) => onFilterChange({ e })}
                   disableSwap
-                  max={sizesFilter.comp.max}
-                  min={sizesFilter.comp.min}
+                  max={sizesFilter.height.max}
+                  min={sizesFilter.height.min}
                   sx={{ width: '90%' }}
                   valueLabelDisplay="none"
-                  step={sizesFilter.comp.max / 10}
+                  step={sizesFilter.height.max / 10}
                   valueLabelFormat={value => <>{SliderValueLabel(value)}</>}
                   marks={[
                     {
-                      value: sizesFilter.comp.min,
-                      label: `${sizesFilter.comp.values[0]} mm`
+                      value: sizesFilter.height.min,
+                      label: `${sizesFilter.height.values[0]} mm`
                     },
                     {
-                      value: sizesFilter.comp.max,
-                      label: `${sizesFilter.comp.values[1]} mm`
+                      value: sizesFilter.height.max,
+                      label: `${sizesFilter.height.values[1]} mm`
                     },
                   ]}
                 />
@@ -119,24 +120,24 @@ const Stock = ({ ...props }) => {
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
                   getAriaLabel={() => 'Width range'}
-                  value={sizesFilter.larg.values}
-                  name='larg'
+                  value={sizesFilter.width.values}
+                  name='width'
                   onChange={(e) => onFilterChange({ e })}
                   disableSwap
-                  max={sizesFilter.larg.max}
-                  min={sizesFilter.larg.min}
+                  max={sizesFilter.width.max}
+                  min={sizesFilter.width.min}
                   sx={{ width: '90%' }}
                   valueLabelDisplay="none"
-                  step={sizesFilter.larg.max / 10}
+                  step={sizesFilter.width.max / 10}
                   valueLabelFormat={value => <>{SliderValueLabel(value)}</>}
                   marks={[
                     {
-                      value: sizesFilter.larg.min,
-                      label: `${sizesFilter.larg.values[0]} mm`
+                      value: sizesFilter.width.min,
+                      label: `${sizesFilter.width.values[0]} mm`
                     },
                     {
-                      value: sizesFilter.larg.max,
-                      label: `${sizesFilter.larg.values[1]} mm`
+                      value: sizesFilter.width.max,
+                      label: `${sizesFilter.width.values[1]} mm`
                     },
                   ]}
                 />
@@ -147,24 +148,24 @@ const Stock = ({ ...props }) => {
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
                   getAriaLabel={() => 'Width range'}
-                  value={sizesFilter.esp.values}
-                  name='esp'
+                  value={sizesFilter.thickness.values}
+                  name='thickness'
                   onChange={(e) => onFilterChange({ e })}
                   disableSwap
-                  max={sizesFilter.esp.max}
-                  min={sizesFilter.esp.min}
+                  max={sizesFilter.thickness.max}
+                  min={sizesFilter.thickness.min}
                   sx={{ width: '90%' }}
                   valueLabelDisplay="none"
-                  step={sizesFilter.esp.max / 10}
+                  step={sizesFilter.thickness.max / 10}
                   valueLabelFormat={value => <>{SliderValueLabel(value)}</>}
                   marks={[
                     {
-                      value: sizesFilter.esp.min,
-                      label: `${sizesFilter.esp.values[0]} mm`
+                      value: sizesFilter.thickness.min,
+                      label: `${sizesFilter.thickness.values[0]} mm`
                     },
                     {
-                      value: sizesFilter.esp.max,
-                      label: `${sizesFilter.esp.values[1]} mm`
+                      value: sizesFilter.thickness.max,
+                      label: `${sizesFilter.thickness.values[1]} mm`
                     },
                   ]}
                 />

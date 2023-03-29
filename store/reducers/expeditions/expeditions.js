@@ -4,7 +4,7 @@ import * as expeditionsActions from '../../actions/expedition';
 export const initialState = {
   errors: null,
   loading: false,
-  data: [],
+  data: null,
 };
 
 const expeditions = createReducer(initialState, (builder) => {

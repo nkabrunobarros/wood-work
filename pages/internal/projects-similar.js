@@ -14,8 +14,11 @@ import OrdersScreen from '../../components/pages/ordersSimilar/projects-similar'
 import routes from '../../navigation/routes';
 
 //  Services
+import moment from 'moment/moment';
 import AuthData from '../../lib/AuthData';
+import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
+import * as expeditionsActionsRedux from '../../store/actions/expedition';
 import * as projectsActionsRedux from '../../store/actions/project';
 
 //  Utils
@@ -23,15 +26,20 @@ import * as projectsActionsRedux from '../../store/actions/project';
 const OrdersSimilar = () => {
   //  Data States
   const [loaded, setLoaded] = useState(false);
+  const [datesDiferencesFormat, setDatesDiferencesFormat] = useState('days');
   const reduxState = useSelector((state) => state);
   const dispatch = useDispatch();
-  const getProjects = (data) => dispatch(projectsActionsRedux.finalizedProjects(data));
+  const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
+  const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
+  const getExpeditions = () => dispatch(expeditionsActionsRedux.expeditions());
 
   useEffect(() => {
     async function getData () {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       !reduxState.clients.data && await getClients();
+      !reduxState.expeditions.data && await getExpeditions();
+      !reduxState.budgets.data && await getBudgets();
       await getProjects();
     }
 
@@ -90,16 +98,16 @@ const OrdersSimilar = () => {
         id: 'Nome',
         numeric: false,
         disablePadding: false,
-        label: 'Nome Projeto',
+        label: 'Nome Pedido',
       },
       {
-        id: 'order.orderBy.object',
+        id: 'Cliente',
         numeric: false,
         disablePadding: true,
         label: 'Cliente',
       },
       {
-        id: 'product.craftTime',
+        id: 'previsto1',
         numeric: false,
         disablePadding: false,
         label: 'Previsto',
@@ -131,7 +139,7 @@ const OrdersSimilar = () => {
         label: 'Previsto',
       },
       {
-        id: 'product.cost',
+        id: 'Custo',
         numeric: false,
         disablePadding: false,
         label: 'Custo',
@@ -148,12 +156,12 @@ const OrdersSimilar = () => {
         disablePadding: false,
         label: 'Desvio',
       },
-      {
-        id: 'actions',
-        numeric: true,
-        disablePadding: false,
-        label: 'Ações',
-      },
+      // {
+      //   id: 'actions',
+      //   numeric: true,
+      //   disablePadding: false,
+      //   label: 'Ações',
+      // },
     ];
 
     const detailPage = routes.private.internal.project;
@@ -177,38 +185,56 @@ const OrdersSimilar = () => {
 
     const clients = [...reduxState.clients?.data ?? []];
 
+    const projects = [...reduxState.projects.data]?.map(
+      // eslint-disable-next-line array-callback-return
+      (item) => {
+        const item2 = { ...item };
+        const thisClient = clients.find(ele => ele.id === item.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
+        const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === item.expedition.object);
+        const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === item.budgetId.object);
+        const projCreated = moment(item.createdAt);
+        const projAgreedDelivery = moment(thisBudget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
+        const projDelivered = moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY');
+
+        console.log(projDelivered);
+        // data[i].desvio = formatNum(item.previsto, item.realizado)
+        item2.operacao = item.status.value;
+        item2.previsto1 = `${projCreated.diff(projAgreedDelivery, datesDiferencesFormat) * -1 || 0} ${datesDiferencesFormat === 'days' ? 'dia(s)' : 'hora(s)'}`;
+        item2.realizado1 = `${projCreated.diff(projDelivered, datesDiferencesFormat) || 0} ${datesDiferencesFormat === 'days' ? 'dia(s)' : 'hora(s)'}`;
+        item2.desvio = (projCreated.diff(projAgreedDelivery, datesDiferencesFormat) * -1 || 0) - (projCreated.diff(projDelivered, datesDiferencesFormat) || 0);
+        item2.previstoAtual = 20;
+        item2.previsto2 = 0;
+        item2.realizado2 = '2 hora(s)';
+        item2.desvio2 = -2;
+        item2.Custo = '20€';
+        item2.Nome = item?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ');
+        item2.Cliente = (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || '');
+
+        return item2;
+      }
+    );
+
     //  Page Props
     const props = {
-      items: [...reduxState.projects.data]?.map(
-        // eslint-disable-next-line array-callback-return
-        (item) => {
-          const item2 = { ...item };
-          const thisClient = clients.find(ele => ele.id === item.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
-
-          // data[i].desvio = formatNum(item.previsto, item.realizado)
-          item2.operacao = item.status.value;
-          item2.previsto1 = `${item?.product?.craftTime * item?.amount} H`;
-          item2.realizado1 = `${18} horas`;
-          item2.desvio = (item?.product?.craftTime * item?.amount) - 18;
-          item2.previstoAtual = 20;
-          item2.previsto2 = item?.product?.craftTime;
-          item2.realizado2 = 2;
-          item2.desvio2 = -2;
-          item2.Nome = item?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ');
-          item2.Cliente = (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || '');
-
-          return item2;
-        }
-      ),
+      items: projects,
       breadcrumbsPath,
       detailPage,
       editPage,
-      clients: [],
+      clients: [...reduxState.clients?.data].map(client => {
+        const client2 = { ...client };
+
+        client2.Nome = client.user.first_name + ' ' + client.user.last_name;
+        client2.Email = client.user.email;
+
+        return client2;
+      }),
       woodTypes: [],
       products: [],
       operations,
       headCellsUpper,
       headCells,
+      setDatesDiferencesFormat,
+      datesDiferencesFormat
     };
 
     //  Verifies if all data as been loaded and set page to fully Loaded

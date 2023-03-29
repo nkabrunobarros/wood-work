@@ -14,6 +14,7 @@ import parts from './parts';
 import permissions from './permissions';
 import projects from './projects';
 import workers from './workers';
+import leftovers from './leftovers';
 
 const appReducer = combineReducers({
   auth,
@@ -29,6 +30,7 @@ const appReducer = combineReducers({
   emails,
   folders,
   machines,
+  leftovers,
 });
 
 const rootReducer = (state, action) => {

@@ -12,10 +12,10 @@ import {
   ButtonGroup,
   Chip,
   IconButton,
-  MenuItem, TextField
+  MenuItem, TextField, Tooltip, Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { Filter, X } from 'lucide-react';
+import { ArrowLeftRight, Filter, X } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 
@@ -39,6 +39,8 @@ const OrdersScreen = ({ ...props }) => {
     headCells,
     headCellsUpper,
     detailPage,
+    setDatesDiferencesFormat,
+    datesDiferencesFormat
   } = props;
 
   const rows = items;
@@ -133,7 +135,6 @@ const OrdersScreen = ({ ...props }) => {
 
   return (
     <>
-
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -141,12 +142,12 @@ const OrdersScreen = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         {/* Orders */}
         <Content>
-          <div id='pad' className='flex' style={{ alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div>
-                <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-              </div>
-              <div className='activeFilterBalloonContainer'>
+          <Box id='pad' className='flex' style={{ alignItems: 'center' }}>
+            <Box style={{ display: 'flex', flexDirection: 'column' }}>
+              <Box>
+                <Typography variant='title' >{breadcrumbsPath[0].title}</Typography>
+              </Box>
+              <Box className='activeFilterBalloonContainer'>
                 {/* Filter Balloons here */}
                 {DisplayBalloonFilter(filters.cliente, 'client', () =>
                   setClient('')
@@ -170,9 +171,9 @@ const OrdersScreen = ({ ...props }) => {
                   setTotalArea('')
                 )}
                 {DisplayBalloonFilter(filters.cost, 'cost', () => setCost(''))}
-              </div>
-            </div>
-            <div
+              </Box>
+            </Box>
+            <Box
               style={{
                 marginLeft: 'auto',
                 display: 'flex',
@@ -183,36 +184,48 @@ const OrdersScreen = ({ ...props }) => {
             >
               {modal
                 ? (
-                  <div className='filterPopupMain'>
-                    <h2 className='black' style={{ marginLeft: '1rem' }}>
+                  <Box className='filterPopupMain'>
+                    <Typography variant="h2" className='black' style={{ marginLeft: '1rem' }}>
                   Filtros
                       <Button sx={{ float: 'right' }} onClick={handleClick}>
                         <X />
                       </Button>
-                    </h2>
-                    <div
+                    </Typography>
+                    <Box
                       style={{
                         display: 'flex',
                         flex: 1,
                       }}
                     >
-                      <div className='filterPopupCol'>
+                      <Box className='filterPopupCol'>
                         <Autocomplete
+                          name='client'
+                          id='client'
+                          fullWidth
                           disablePortal
-                          id='combo-box-demo'
-                          options={clients}
-                          getOptionLabel={(option) => option.legalName}
-                          onChange={(event, value) => onClientChange(value)}
+                          options={clients.sort((a, b) =>
+                            a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                          )}
+                          getOptionLabel={(option) => option.Nome }
+                          getOptionValue={(option) => option.id}
+                          onChange={(e, value) => onClientChange(value)}
+                          renderOption={(props, option) => {
+                            return (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                {option.Nome}
+                              </Box>
+                            );
+                          }}
                           renderInput={(params) => (
                             <TextField
-                              {...params}
-                              fullWidth
-                              variant='standard'
                               value={client}
-                              onChange={(event) =>
-                                setClient(event.target.value)
-                              }
-                              placeholder='Cliente'
+                              {...params}
+                              variant="standard"
+                              placeholder="Cliente"
+                              inputProps={{
+                                ...params.inputProps,
+                                autoComplete: 'new-password', // disable autocomplete and autofill
+                              }}
                             />
                           )}
                         />
@@ -246,8 +259,8 @@ const OrdersScreen = ({ ...props }) => {
                           value={orderId}
                           onChange={(e) => setOrderId(e.target.value)}
                         />
-                      </div>
-                      <div className='filterPopupCol'>
+                      </Box>
+                      <Box className='filterPopupCol'>
                         <Autocomplete
                           disablePortal
                           id='combo-box-demo'
@@ -315,9 +328,9 @@ const OrdersScreen = ({ ...props }) => {
                             />
                           )}
                         />
-                      </div>
-                    </div>
-                    <div id='pad'>
+                      </Box>
+                    </Box>
+                    <Box id='pad'>
                       <ButtonGroup>
                         <PrimaryBtn text='Aplicar Filtros' onClick={ApplyFilters} />
                         <PrimaryBtn
@@ -327,19 +340,30 @@ const OrdersScreen = ({ ...props }) => {
                           onClick={ClearFilters}
                         />
                       </ButtonGroup>
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
                 )
                 : null}
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ marginLeft: 'auto' }}>
+            </Box>
+            <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Box style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+                <Box display='flex' alignItems='center'>
+                  <Tooltip title={`Trocar para ${datesDiferencesFormat === 'days' ? 'horas' : 'dias'}`}>
+                    <IconButton onClick={() => setDatesDiferencesFormat(datesDiferencesFormat === 'days' ? 'hours' : 'days')} >
+                      <Box color='primary.main' >
+                        <ArrowLeftRight />
+                      </Box>
+                    </IconButton>
+                  </Tooltip>
+                  <Typography variant='subtitle2'>{datesDiferencesFormat === 'days' ? 'Dia(s)' : 'Hora(s)'}</Typography>
+                </Box>
                 <IconButton onClick={handleClick}>
                   <Filter />
                 </IconButton>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
+
           <AdvancedTable
             rows={rows}
             headCells={headCells}
@@ -368,6 +392,8 @@ OrdersScreen.propTypes = {
   operations: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object),
   pageProps: PropTypes.object,
+  setDatesDiferencesFormat: PropTypes.func,
+  datesDiferencesFormat: PropTypes.string,
 };
 
 export default OrdersScreen;

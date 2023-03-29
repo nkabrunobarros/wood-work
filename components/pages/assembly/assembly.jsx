@@ -17,7 +17,7 @@ const Assembly = (props) => {
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Grid container md={12} >
         <Grid container md={12} p={1} >
-          <Typography variant='title'>Escolha Projeto</Typography>
+          <Typography variant='title'>Escolha Pedido</Typography>
         </Grid>
       </Grid>
       <Grid container md={3} sm={6} xs={12} p={1} >

@@ -3,7 +3,6 @@ import Loader from '../../components/loader/loader';
 import NewOrderScreen from '../../components/pages/newOrder/newProject';
 import routes from '../../navigation/routes';
 
-// import * as ProductsActions from '../api/actions/product';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthData from '../../lib/AuthData';
 import * as budgetsActionsRedux from '../../store/actions/budget';
