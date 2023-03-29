@@ -26,4 +26,5 @@ export {
   project,
   activeProjects,
   myProjects,
+  finalizedProjects
 } from './project';

@@ -32,12 +32,12 @@ const DeliverBudgetModal = (props) => {
     }
 
     if (!dateDeliveryProject.value) {
-      setDateDeliveryProject({ ...price, error: 'Campo Obrigatório' });
+      setDateDeliveryProject({ ...dateDeliveryProject, error: 'Campo Obrigatório' });
       errors = true;
     }
 
     if (!dateAgreedDelivery.value) {
-      setDateAgreedDelivery({ ...price, error: 'Campo Obrigatório' });
+      setDateAgreedDelivery({ ...dateAgreedDelivery, error: 'Campo Obrigatório' });
       errors = true;
     }
 

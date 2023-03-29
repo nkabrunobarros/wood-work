@@ -113,7 +113,7 @@ const ResetPassword = (props) => {
         data[field.id] = field.value;
       });
 
-      data.id = props.token.uidb64 + '/' + props.token.token;
+      data.id = props.params.token;
 
       await updatePassword(data).then((res) => {
         if (res.data === '"The token is valid. The Operation has occurred successfully."') toast.success('Senha redefinida!');
@@ -188,7 +188,7 @@ const ResetPassword = (props) => {
             alignItems: 'start',
           }}
         >
-          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.token.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
+          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.params.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
           <Typography component='h2' variant='h3'>
             Redefinir senha
           </Typography>

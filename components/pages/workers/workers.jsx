@@ -86,9 +86,7 @@ const Workers = ({ ...props }) => {
       };
     });
 
-    await WorkerActions.updateWorker(fixedWorkers)
-      .then(() => console.log('success'))
-      .catch(() => console.log('error'));
+    await WorkerActions.updateWorker(fixedWorkers);
   }
 
   async function onDelete (props) {

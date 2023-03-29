@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 //  PropTypes
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
-import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus, Info } from 'lucide-react';
+import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
@@ -150,6 +150,7 @@ const Docs = (props) => {
 
     try {
       await uploadFiles(data).then(() => toast.success('Ficheiros carregados.'));
+      setConfirmUploadModal(false);
     } catch (error) {
       toast.error(error);
     }
@@ -174,10 +175,12 @@ const Docs = (props) => {
         <div id='align' style={{ display: 'flex', padding: '24px' }}>
           <div style={{ flex: 1 }}>
             <Typography variant='title'>Documentos</Typography>
+            <Typography variant='subtitle2'>Para carregar ficheiros, arrastar para a pasta a carregar.</Typography>
           </div>
           <div className='flex'>
             {!creatingFolder
               ? <PrimaryBtn
+                hidden
                 disabled={!folders.filter(ele => !(ele.name === order.id))[0]}
                 text='Carregar'
                 onClick={() => setDocsModal(true)}
@@ -211,7 +214,6 @@ const Docs = (props) => {
             }
             <div>
               <PrimaryBtn
-                light
                 text='Criar Pasta'
                 onClick={() => !creatingFolder ? setCreatingFolder(true) : handleCreateFolder()}
                 icon={

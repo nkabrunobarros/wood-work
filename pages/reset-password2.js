@@ -21,7 +21,6 @@ const ResetPassword = () => {
 
   useEffect(() => {
     function checkToken () {
-      console.log(router);
       //  TODO: validar o token recebido se existe na BD
       // TODO: apenas se existir, é que se dá o state do token
       setToken(router.query?.token);

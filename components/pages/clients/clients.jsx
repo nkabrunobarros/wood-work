@@ -112,13 +112,13 @@ const Clients = ({ ...props }) => {
                   options={clients.sort((a, b) =>
                     a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
                   )}
-                  getOptionLabel={(option) => option.legalName?.value || option.name?.value}
+                  getOptionLabel={(option) => option.Nome }
                   getOptionValue={(option) => option.id}
-                  onChange={(e, value) => setNome(value?.legalName.value || '')}
+                  onChange={(e, value) => setNome(value?.Nome || '')}
                   renderOption={(props, option) => {
                     return (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        {option.legalName?.value || option.name?.value }
+                        {option.Nome}
                       </Box>
                     );
                   }}

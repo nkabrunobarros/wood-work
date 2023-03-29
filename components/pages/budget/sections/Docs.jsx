@@ -117,7 +117,7 @@ const Docs = (props) => {
 
             </AccordionSummary>
           </Tooltip>
-          <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('aqui')} />
+          <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
             {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
             {folder.files.map((file) => (

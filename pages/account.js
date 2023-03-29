@@ -36,8 +36,6 @@ const Account = ({ ...pageProps }) => {
       pageProps
     };
 
-    console.log(user);
-
     return loaded && <AccountScreen {...props} />;
   }
 

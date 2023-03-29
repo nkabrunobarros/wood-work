@@ -2,22 +2,19 @@
 import { Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import ImageViewer from '../../modals/ImageViewer';
 import MessagesStyles from './MessagesStyles';
 
 export const Message = (props) => {
-  const { msg, theme } = props;
+  const { msg } = props;
   const reduxState = useSelector((state) => state);
   const loggedUser = reduxState.auth.me;
-  const sender = loggedUser.id === msg.by;
-  const styles = MessagesStyles({ theme, sender });
-  const [toViewImage, setToViewImage] = useState();
+  const sender = loggedUser?.id === msg.by;
+  const styles = MessagesStyles({ theme: 'light', sender });
 
   return (
     <Grid sx={styles.chatContainer} container md={12}>
-      <ImageViewer images={toViewImage} open={!!toViewImage} handleClose={() => setToViewImage()}/>
       <Grid container md={12} sm={12} sx={styles.messageContainer}>
         <Tooltip title={moment(msg.created).format('DD [de] MMMM [de] YYYY, [às] h:mm a')}>
           <Grid container md={6} sm={12} sx={styles.messageBox}>

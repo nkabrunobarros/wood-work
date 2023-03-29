@@ -70,7 +70,6 @@ const Navbar = ({ ...pageProps }) => {
         </Toolbar>
         {reduxState.appStates.loading && <LinearProgress color="secondary"/>}
       </AppBar>
-
       <Hidden>
         <DrawerMobile
           state={reduxState}

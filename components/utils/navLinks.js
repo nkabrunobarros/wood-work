@@ -1,4 +1,4 @@
-import { Archive, MessageCircle, Network, Scan, Table, Users } from 'lucide-react';
+import { Archive, Factory, MessageCircle, Network, Scan, Table, Users } from 'lucide-react';
 import React from 'react';
 import routes from '../../navigation/routes';
 
@@ -51,8 +51,15 @@ export const navLinks = [
     title: 'Chão de Fabrica',
     id: 'fabrica',
     url: routes.private.internal.factoryLevel,
-    icon: <Network strokeWidth='1' size={20} />,
+    icon: <Factory strokeWidth='1' size={20} />,
     allowed: 'factoryLevel',
+  },
+  {
+    title: 'Montagens',
+    id: 'assembly',
+    url: routes.private.internal.assemblys,
+    icon: <Network strokeWidth='1' size={20} />,
+    allowed: 'assemblys',
   },
   {
     title: 'Sobrantes',

@@ -35,7 +35,6 @@ export async function sendMail (input) {
   } catch (e) {
     await this.prisma.email.create({ data: { ...omit(input), enviado: false, mensagem: e.message } });
 
-    // console.log(e)
     return false;
   }
 }

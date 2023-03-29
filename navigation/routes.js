@@ -30,7 +30,9 @@ const routes = {
 
       dashboards: '/internal/dashboards',
 
-      factoryLevel: '/internal/factory'
+      factoryLevel: '/internal/factory',
+
+      assemblys: '/internal/assemblys'
     },
     //  Pages shared
     terms: '/terms',

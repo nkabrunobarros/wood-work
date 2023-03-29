@@ -29,7 +29,6 @@ const FinishProjectModal = (props) => {
     // Starts scanner
 
     function success () {
-      console.log('success');
       // Prints result as a link inside result element
       scanner.clear();
       // Clears scanning instance

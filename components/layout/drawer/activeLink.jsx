@@ -53,6 +53,10 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.factoryLevel}`,
   ];
 
+  const assemblyPages = [
+    `${routes.private.internal.assemblys}`,
+  ];
+
   const profilePages = [
     `${routes.private.profile}`,
     `${routes.private.internal.profile}`
@@ -80,6 +84,8 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   if (dashboardPages.includes(path.route)) currentSection = 'Painel de Controlo';
 
   if (leftoversPages.includes(path.route)) currentSection = 'Sobrantes';
+
+  if (assemblyPages.includes(path.route)) currentSection = 'Montagens';
 
   if (factoryPages.includes(path.route)) currentSection = 'Chão de Fabrica';
 

@@ -47,7 +47,7 @@ export const EditableCell = ({ active, onDoubleClick, value, type, name, options
     <>
       {!active
         ? (
-          <Tooltip title={tooltipTitle} sx={{ cursor: 'pointer' }}>
+          <Tooltip title={tooltipTitle} sx={{ cursor: isInternalPage && 'pointer' }}>
             <Typography variant='sm' onDoubleClick={() => isInternalPage && onDoubleClick(name)}>
               {label}
               {currencySymbol}
@@ -161,8 +161,8 @@ const Head = (props) => {
       category: { value: category.value, type: 'Property' },
       status: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
-      dateAgreedDelivery: { value: moment(dateAgreedDelivery).format('DD/MM/YYYY'), type: 'Property' },
-      dateDeliveryProject: { value: moment(dateDeliveryProject).format('DD/MM/YYYY'), type: 'Property' },
+      dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
+      dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
     };
 
     await updateBudget(data).then(() => {
@@ -288,6 +288,7 @@ const Head = (props) => {
               <Box id='align'>
                 <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
                 <Box pl={2}>
+                  {budget.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
                   {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
                   {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
                 </Box>

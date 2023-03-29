@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { Button, Grow, Tooltip } from '@mui/material';
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps }) => {
   const style = {
     color: light ? 'palette.primary.main' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
@@ -17,7 +17,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
   return !hidden && (
     <Grow in={true}>
       <Tooltip title={title || ''}>
-        <Button className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
+        <Button {...otherProps} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
           {icon}
           {text}
           {/* Children is for file Inputs */}
@@ -44,6 +44,7 @@ PrimaryBtn.propTypes = {
   title: PropTypes.string,
   id: PropTypes.string,
   sx: PropTypes.object,
+  otherProps: PropTypes.object,
 };
 
 export default PrimaryBtn;

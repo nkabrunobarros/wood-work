@@ -47,8 +47,6 @@ const EditWorker = ({ ...pageProps }) => {
       },
     ];
 
-    console.log(pageProps);
-
     const props = {
       breadcrumbsPath,
       user: reduxState.workers.displayedWorker,

@@ -89,39 +89,39 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-        case 'waiting budget':
-          counts.waitingBudget++;
+      case 'waiting budget':
+        counts.waitingBudget++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'finished':
+        counts.concluded++;
 
-          break;
+        break;
       }
     });
 
@@ -370,7 +370,9 @@ const Projects = ({ ...pageProps }) => {
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
+      const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
 
+      console.log(thisExpedition);
       // customer_8Y5d0LMQZeRPXnjk
 
       return {
@@ -383,7 +385,7 @@ const Projects = ({ ...pageProps }) => {
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         Categoria: categories.find(c => c.id === thisBudget.category.value).label,
-        ExpeditionTime: '',
+        ExpeditionTime: thisExpedition?.expeditionTime.value,
         Complete: 0,
         Pedido: thisBudget?.dateRequest.value,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),

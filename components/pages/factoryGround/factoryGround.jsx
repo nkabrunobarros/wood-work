@@ -37,9 +37,7 @@ const FactoryGround = ({ ...props }) => {
           </Grid>
         )}
       </Grid>
-
     </Grid>
-
   </>;
 };
 

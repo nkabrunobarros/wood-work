@@ -15,8 +15,6 @@ import HeightModal from './modals/HeightModal';
 import PartModal from './modals/PartModal';
 
 const Leftovers = (props) => {
-  console.log(props);
-
   const [imagesTaken, setImagesTaken] = useState();
   const camera = React.useRef(null);
   const [currentPanel, setCurrentPanel] = useState(-1);

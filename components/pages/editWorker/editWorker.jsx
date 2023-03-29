@@ -110,7 +110,6 @@ const EditUser = ({ ...props }) => {
               <a className='headerTitleXl'>{breadcrumbsPath[1].title} </a>
             </Box>
             <Box style={{ display: 'flex' }}>
-              {console.log(props)}
               <PrimaryBtn
                 text='Guardar'
                 icon={
@@ -141,7 +140,7 @@ const EditUser = ({ ...props }) => {
             <span>Dados de Utilizador</span>
           </a>
           <Grid id='pad' container md={12} sm={12} xs={12}>
-            <Grid container md={12} sm={12} xs={12}>{console.log(user)}
+            <Grid container md={12} sm={12} xs={12}>
               <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Primeiro Nome' name='givenName' onChange={(e) => onFieldChange(e)} value={user?.givenName?.value} error={user?.givenName?.error} /></Grid>
               <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Ultimo Nome' name='familyName' onChange={(e) => onFieldChange(e)} value={user?.familyName?.value} error={user?.familyName?.error} /></Grid>
               <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>

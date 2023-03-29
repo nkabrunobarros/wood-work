@@ -139,7 +139,6 @@ const Profile = ({ ...props }) => {
                     </Grid>}
                     <Grid item xs={12}>
                       <Typography item color='lightTextSm.main'>Estado </Typography>
-                      {console.log(user)}
                       <Typography item>
                         <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
                           {user?.active?.value ? 'Ativo' : user?.active?.value === undefined ? 'Ativo' : 'Inativo'}

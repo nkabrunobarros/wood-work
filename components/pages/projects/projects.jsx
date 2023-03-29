@@ -227,7 +227,7 @@ const ProjectsScreen = (props) => {
         <Content>
           <Grid id='pad' md={12} container>
             <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-            <Grid container item md={3} sm={6} xs={12} p={1}>
+            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Referência cliente'
@@ -238,7 +238,7 @@ const ProjectsScreen = (props) => {
                 value={referencia}
                 onChange={(e) => setReferência(e.target.value)}
               />
-            </Grid>
+            </Grid>}
             <Grid container item md={3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth

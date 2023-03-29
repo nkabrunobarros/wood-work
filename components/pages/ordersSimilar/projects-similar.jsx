@@ -38,7 +38,6 @@ const OrdersScreen = ({ ...props }) => {
     operations,
     headCells,
     headCellsUpper,
-    editPage,
     detailPage,
   } = props;
 

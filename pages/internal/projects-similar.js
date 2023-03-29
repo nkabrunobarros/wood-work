@@ -25,11 +25,11 @@ const OrdersSimilar = () => {
   const [loaded, setLoaded] = useState(false);
   const reduxState = useSelector((state) => state);
   const dispatch = useDispatch();
-  const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
+  const getProjects = (data) => dispatch(projectsActionsRedux.finalizedProjects(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
 
   useEffect(() => {
-    async function getData() {
+    async function getData () {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       !reduxState.clients.data && getClients();
       !reduxState.projects.data && getProjects();
@@ -184,8 +184,6 @@ const OrdersSimilar = () => {
         (item) => {
           const item2 = { ...item };
           const thisClient = clients.find(ele => ele.id === item.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
-
-          debugger;
 
           // data[i].desvio = formatNum(item.previsto, item.realizado)
           item2.operacao = item.status.value;

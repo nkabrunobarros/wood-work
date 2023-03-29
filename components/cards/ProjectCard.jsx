@@ -25,7 +25,7 @@ const ProjectCard = (props) => {
           <Grid container sx={{ width: '100%' }}>
             <Grid container md={6} sm={6} xs={6} p={1}>
               <Typography variant="h5" component="div">
-                {proj.name.value}
+                {proj?.name?.value}
               </Typography>
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} justifyContent='end'>
@@ -35,12 +35,12 @@ const ProjectCard = (props) => {
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} >
               <Typography variant="md">
-                Qtd: {proj.amount?.value}
+                Qtd: {proj?.amount?.value}
               </Typography>
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} justifyContent='end'>
               <Typography variant="md">
-                Feito: 0 / {proj.amount?.value}
+                Feito: 0 / {proj?.amount?.value}
               </Typography></Grid>
           </Grid>
 

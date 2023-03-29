@@ -37,8 +37,6 @@ const Messages = (props) => {
     loadMessages();
   }, []);
 
-  console.log(order);
-
   const handleSendMessage = async (event) => {
     event.preventDefault();
 
@@ -46,7 +44,7 @@ const Messages = (props) => {
 
     await newMessage({
       to: loggedUser.role === 'CUSTOMER' ? 'user_Xw9Jz3BbzBO4GlZ2' : order.orderBy.object.user.id,
-      by: loggedUser.id,
+      by: loggedUser?.id,
       project: order.budgetId?.object.id,
       text: newMessageText
     }).then((res) => {
@@ -79,6 +77,7 @@ const Messages = (props) => {
     scroll();
   }, [messages]);
 
+  // eslint-disable-next-line no-constant-condition
   return <>
     <Box
       id='pad'
@@ -106,7 +105,6 @@ const Messages = (props) => {
       </Box>
     </Box>
     <Box>
-
       <Box id='messagesContainer' sx={{ padding: '2rem', maxHeight: '400px', overflowY: 'scroll' }}>
         {loaded
           ? messages?.sort((a, b) => moment(a.created).diff(moment(b.created))).map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)

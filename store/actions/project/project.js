@@ -102,6 +102,25 @@ export const myProjects = (data) => {
   });
 };
 
+export const finalizedProjects = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    data,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: getApiURL(endpoints.PROJECTS),
+      params: {
+        options: 'sysAttrs',
+        q: 'status=="finished"'
+      }
+    },
+    types: [PROJECTS_REQUEST, PROJECTS_SUCCESS, PROJECTS_FAIL],
+  });
+};
+
 export const activeProjects = (data) => {
   const { auth_token: userToken } = parseCookies();
 

@@ -41,7 +41,7 @@ const User = ({ ...pageProps }) => {
         href: `${routes.private.internal.worker}`,
       },
     ];
-    
+
     const props = {
       user: { ...reduxState.workers.displayedWorker },
       breadcrumbsPath,

@@ -473,7 +473,8 @@ const ProjectDetails = (props) => {
                 </CardContent>
               </Card>
               : <Box pr={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' }}>
-                <Typography variant='md'>{me.givenName?.value + ' ' + me.familyName?.value || me.legalName?.value}</Typography>
+                <Typography variant='md'>{(me.first_name + ' ' + me.last_name) !== ' ' || me.username}</Typography>
+                {console.log(me)}
               </Box>
             }
           </Grid>
@@ -565,7 +566,6 @@ const ProjectDetails = (props) => {
                   <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
                 </Grid>
                 <Grid container md={12} sm={12} xs={12}>
-                  {console.log(consumables)}
                   {consumables
                     .map((part, rowIndex) => {
                       return (

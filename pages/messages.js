@@ -88,7 +88,7 @@ const Messages = ({ ...pageProps }) => {
       }).map((item) => {
         const item2 = { ...item };
 
-        item2.filterName = `${item.name.value.replace(/_/g, ' ')} - ECL 2023/000100`;
+        item2.filterName = `${item.name.value.replace(/_/g, ' ')}`;
 
         return item2;
       }),

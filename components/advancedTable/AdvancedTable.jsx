@@ -399,7 +399,7 @@ const AdvancedTable = ({
                   }}
                 />
                 <Box>
-                  <Tooltip title='Filtrar tabela'>
+                  <Tooltip title='Filtrar colunas'>
                     <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
                       <Filter size={20} strokeWidth={1.5} />
                     </IconButton>

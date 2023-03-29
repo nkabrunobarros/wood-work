@@ -1,0 +1,131 @@
+<html>
+
+<body>
+    <div class="row">
+
+        <div class="col-md-12 col-sm-12">
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+            <div class="col-md-10 col-sm-10">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%; "><img src="uploads/'.$_COOKIE[" user"].'/header_dtp_7.jpg"
+                                style="width:100%;">
+                        <td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%; text-align:center;"><big><big><big><br><strong>MATERIAL DE APOIO
+                        <td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-2 col-sm-2">
+            </div>
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+            <div class="col-md-10 col-sm-10">
+                <table style="width: 100%; border: 1px solid black;">
+                    <tr style="background-color: lightgrey;">
+                        <td style="width: 70%; height: 35px;"><strong> &nbsp; &nbsp;CURSO : </strong>
+                            &nbsp;'.utf8_encode(nka_mysqli_result($result_det_curso,0,"descricao")).'</td>
+                        <td style="width: 30%; height: 35px;"><strong> &nbsp; &nbsp;AÇÃO
+                                :</strong>'.nka_mysqli_result($resultcurso,0,"sessao").'&nbsp;</td>
+                    </tr>
+                    <tr style="background-color: lightgrey;">
+                        <td style="width: 70%; height: 35px;"><strong> &nbsp; &nbsp;DATA
+                                :</strong>&nbsp;'.substr(nka_mysqli_result($resultcurso,0,"datainicio"),0,10).'</td>
+                        <td style="width: 30%; height: 35px;"><strong> &nbsp; &nbsp;Nº SESSÃO
+                                :</strong>&nbsp;'.nka_mysqli_result($resultcurso,0,"sessao").'&nbsp;</strong>&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+            <div class="col-md-10 col-sm-10">
+                <table style="width: 100%;">
+                    <tr>
+                        <th
+                            style="background-color: lightgrey; text-align: center; width: 85%; height: 40px; border: 1px solid black;">
+                            <strong>MATERIAL DIDÁTICO</strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td valign="top"
+                            style="width: 10%; height: 150px; border: 1px solid black; text-align: left; padding-left: 10px;padding-right: 10px;">
+                            '.str_replace("\n","<br>",utf8_encode(nka_mysqli_result($result_det_curso,0,"mate_did"))).'
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+            <div class="col-md-10 col-sm-10">
+                <table style="width: 100%;">
+                    <tr>
+                        <th
+                            style="background-color: lightgrey; text-align: center; width: 85%; height: 40px; border: 1px solid black;">
+                            <strong style="padding-left: 4%;" id="label_03_01">EQUIPAMENTO TÉCNICO PEDAGÓGICO</strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td valign="top"
+                            style="width: 10%; height: 150px; border: 1px solid black; text-align: left; padding-left: 10px;padding-right: 10px;">
+                            '.str_replace("\n","<br>",utf8_encode(nka_mysqli_result($result_det_curso,0,"mate_ped"))).'
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+            <div class="col-md-10 col-sm-10">
+                <table style="width: 100%;">
+                    <tr>
+                        <th
+                            style="background-color: lightgrey; text-align: center; width: 85%; height: 40px; border: 1px solid black;">
+                            <strong>OUTRO MATERIAL/DOCUMENTAÇÃO</strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td valign="top"
+                            style="width: 10%; height: 150px; border: 1px solid black; text-align: left; padding-left: 10px;padding-right: 10px;">
+                            '.str_replace("\n","<br>",utf8_encode(nka_mysqli_result($result_det_curso,0,"mate_tec"))).'
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-1 col-sm-1 hidden-print">
+            </div>
+        </div>
+    </div>
+    <p style="page-break-after:always;"></p>
+</body>
+
+</html>

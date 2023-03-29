@@ -11,7 +11,6 @@ import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import * as filesActionsRedux from '../../../store/actions/file';
 import * as foldersActionsRedux from '../../../store/actions/folder';
-import { categories } from '../new-project';
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
@@ -170,7 +169,14 @@ const Budget = ({ ...pageProps }) => {
       headCellsMessages,
       headCellsOrderDetail,
       headCellsUpperOrderDetail,
-      categories
+      categories: [
+        { label: 'Cozinha', id: 'MC_' },
+        { label: 'Quarto', id: 'MQ_' },
+        { label: 'Banheiro', id: 'MB_' },
+        { label: 'Garagem', id: 'MG_' },
+        { label: 'Varanda', id: 'MV_' },
+        { label: 'Sala de estar', id: 'MS_' }
+      ]
     };
 
     return <BudgetScreen {...props} />;

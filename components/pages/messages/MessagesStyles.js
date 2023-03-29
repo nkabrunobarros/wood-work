@@ -25,10 +25,6 @@ function MessagesStyles ({ ...props }) {
       color: 'var(--primary) !important',
       border: '1px solid var(--grayTextsLight) !important',
     },
-    timeAgo: {
-      fontSize: '10px',
-      color: 'lightTextSm.dark',
-    },
     chatContainer: {
       display: 'flex',
       alignItems: 'end'

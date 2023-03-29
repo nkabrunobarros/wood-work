@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable react/no-unknown-property */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +14,6 @@ import PropTypes from 'prop-types';
 
 import { useRouter } from 'next/router';
 import routes from '../../../navigation/routes';
-
 import Notification from '../../dialogs/Notification';
 import Navbar from '../../layout/navbar/navbar';
 import Docs from './sections/Docs';
@@ -40,7 +40,7 @@ const Order = ({ ...props }) => {
         <Content id={refresh}>
           <Head {...props} order={order} setOrder={setOrder}/>
         </Content>
-        {/* Produção section */}
+        {/* Production section */}
         <Content>
           <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
         </Content>
@@ -50,9 +50,9 @@ const Order = ({ ...props }) => {
         </Content>
         {/* Messages */}
         <Content>
-          <Messages stylesMessage={stylesMessage}{...props} />
+          <Messages stylesMessage={stylesMessage} {...props} />
         </Content>
-        {/* Docs Cliente */}
+        {/* Docs Client */}
         <Content id={refresh}>
           <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
         </Content>

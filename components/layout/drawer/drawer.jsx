@@ -45,7 +45,6 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   //   { icon: <Typography variant='xl'>T</Typography>, name: 'Grande', value: 'xl' },
   //   { icon: <Typography variant='xxl'>T</Typography>, name: 'Maior', value: 'xxl' },
   // ];
-
   return loggedUser && userPermissions && (
     <SwipeableDrawer
       disableSwipeToOpen={false}

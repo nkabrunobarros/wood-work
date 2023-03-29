@@ -18,6 +18,7 @@ function MuiTheme ({ ...props }) {
       main: selectedTheme === 'light' ? '#E50000' : '#3F0000',
       dark: selectedTheme === 'light' ? '#3F0000' : '#3F0000',
       light: selectedTheme === 'light' ? '#ffe8e5' : '#ffe8e5',
+      lightest: selectedTheme === 'light' ? '#E5000033' : '#3F000033',
     },
     default: {
       main: selectedTheme === 'light' ? '#fff' : '#282828',
@@ -44,7 +45,8 @@ function MuiTheme ({ ...props }) {
     },
     lightTextSm: {
       main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
-      black: selectedTheme === 'light' ? 'black' : 'var(--white)'
+      black: selectedTheme === 'light' ? 'black' : 'var(--white)',
+      dark: selectedTheme === 'light' ? 'black' : 'var(--white)',
     },
     link: {
       main: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
@@ -71,10 +73,6 @@ function MuiTheme ({ ...props }) {
         light: colorScheme.primary.light,
         lightest: colorScheme.primary.lightest,
       },
-      // primary: {
-      //     main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
-      //     dark: selectedTheme === 'light' ? '#0c2254' : '#1b91e7',
-      // },
       default: {
         main: colorScheme.default.main,
         sides: colorScheme.default.sides,
@@ -89,7 +87,8 @@ function MuiTheme ({ ...props }) {
       },
       lightTextSm: {
         main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
-        black: selectedTheme === 'light' ? 'black' : 'var(--white)'
+        black: selectedTheme === 'light' ? 'black' : 'var(--white)',
+        dark: selectedTheme === 'light' ? 'black' : 'var(--white)'
       },
       link: {
         main: colorScheme.link.main,

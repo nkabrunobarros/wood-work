@@ -49,9 +49,9 @@ const SignIn = (props) => {
     forgotPasswordRoute
   } = props;
 
-  const [username, setUsername] = useState(Router.route === '/' ? 'jacqueline' : 'admin');
+  const [username, setUsername] = useState(Router.route === '/' ? 'Barros' : 'admin');
   // const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
-  const [password, setPassword] = useState(Router.route === '/' ? '59CAyKMHfSLAtBt9' : 'zo5JhUY7xzgg5Jk');
+  const [password, setPassword] = useState(Router.route === '/' ? 'ChangeMe' : 'zo5JhUY7xzgg5Jk');
   const [loading, setLoading] = useState(false);
   const [usernameErrors, setUsernameErrors] = useState();
   // const [emailErrors, setEmailErrors] = useState();
@@ -62,6 +62,7 @@ const SignIn = (props) => {
   const dispatch = useDispatch();
   const loginRedux = (data) => dispatch(authActionsRedux.login(data));
   const me2 = (data) => dispatch(authActionsRedux.me(data));
+  const userPermissionsSet = (data) => dispatch(authActionsRedux.userPermissionsSet(data));
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
@@ -106,11 +107,69 @@ const SignIn = (props) => {
     try {
       await loginRedux({ username, password }).then(async (res) => {
         setCookie(undefined, 'auth_token', res.data.access_token);
-        console.log(res);
 
-        await me2(res.data.access_token).then((res) => {
+        await me2(res.data.access_token).then(async (res) => {
           const user = res?.data[0] || res?.data;
           let active;
+
+          const permissions = [
+            { idPerfil: '123456789', subject: 'workers', action: 'READ' },
+            { idPerfil: '123456789', subject: 'workers', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'workers', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'dashboards', action: 'READ' },
+            { idPerfil: '123456789', subject: 'factoryLevel', action: 'READ' },
+            { idPerfil: '123456789', subject: 'assemblys', action: 'READ' },
+            { idPerfil: '123456789', subject: 'leftovers', action: 'READ' },
+            { idPerfil: '123456789', subject: 'ficheiros', action: 'READ' },
+            { idPerfil: '123456789', subject: 'ficheiros', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'ficheiros', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'perfis', action: 'READ' },
+            { idPerfil: '123456789', subject: 'perfis', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'perfis', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'messages', action: 'READ' },
+            { idPerfil: '123456789', subject: 'messages', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'messages', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'profiles', action: 'READ' },
+            { idPerfil: '123456789', subject: 'profiles', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'profiles', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'unidades', action: 'READ' },
+            { idPerfil: '123456789', subject: 'unidades', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'unidades', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'conversaounidades', action: 'READ' },
+            { idPerfil: '123456789', subject: 'conversaounidades', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'conversaounidades', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'moedas', action: 'READ' },
+            { idPerfil: '123456789', subject: 'moedas', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'moedas', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'projects', action: 'READ' },
+            { idPerfil: '123456789', subject: 'projects', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'projects', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'clients', action: 'READ' },
+            { idPerfil: '123456789', subject: 'clients', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'clients', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'stocks', action: 'READ' },
+            { idPerfil: '123456789', subject: 'stocks', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'stocks', action: 'DELETE' },
+            { idPerfil: '123456789', subject: 'products', action: 'READ' },
+            { idPerfil: '123456789', subject: 'products', action: 'WRITE' },
+            { idPerfil: '123456789', subject: 'products', action: 'DELETE' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'profiles', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'unidades', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'conversaounidades', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'moedas', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'projects', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'clients', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'stocks', action: 'READ' },
+            { idPerfil: 'cl16o9cag0000x3tqp8lbslzz', subject: 'products', action: 'READ' },
+          ];
+
+          await userPermissionsSet({
+            description: window.location.pathname.includes('/internal/') || window.location.pathname.includes('/signin') ? 'Admin' : 'Client',
+            type: window.location.pathname.includes('/internal/') || window.location.pathname.includes('/signin') ? 'internal' : 'client',
+            permissions,
+            newPerms: res.data.orionPermissions,
+          });
 
           if (user.type === 'Owner') active = user.active.value;
           else active = user.is_active;

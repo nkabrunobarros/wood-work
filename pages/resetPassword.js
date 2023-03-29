@@ -19,11 +19,8 @@ const ResetPassword = () => {
   const [clientType, setClientType] = useState();
   const [loaded, setLoaded] = useState(false);
 
-  console.log('aqui');
-
   useEffect(() => {
     function checkToken () {
-      console.log(router.query);
       //  TODO: validar o token recebido se existe na BD
       // TODO: apenas se existir, é que se dá o state do token
       setToken(router.query?.token);
