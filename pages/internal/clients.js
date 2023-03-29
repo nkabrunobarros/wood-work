@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 //  Services
 // import countryService from '../../services/countries/country-service';
 import { useDispatch, useSelector } from 'react-redux';
-// import * as ProfileActions from '../../pages/api/actions/perfil';
 import AuthData from '../../lib/AuthData';
 import * as clientsActionsRedux from '../../store/actions/client';
 

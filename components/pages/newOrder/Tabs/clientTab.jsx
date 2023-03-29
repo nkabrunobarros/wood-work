@@ -6,10 +6,11 @@ import { RefreshCw, User, UserPlus } from 'lucide-react';
 import PropTypes from 'prop-types';
 import routes from '../../../../navigation/routes';
 //  Page Component Styles
+import { useDispatch, useSelector } from 'react-redux';
+import * as clientsActionsRedux from '../../../../store/actions/client';
 import styles from '../../../../styles/NewOrder.module.css';
 
 //  Actions
-import * as ClientsActions from '../../../../pages/api/actions/client';
 
 const ClientTab = (props) => {
   const {
@@ -21,14 +22,13 @@ const ClientTab = (props) => {
   } = props;
 
   const [clients, setClients] = useState(props.clients);
+  const dispatch = useDispatch();
+  const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
+  const reduxState = useSelector((state) => state);
 
-  async function getClients () {
+  async function refreshClients () {
     onProcessing(true);
-
-    await ClientsActions.clients()
-      .then((res) => setClients(res.data.payload.data))
-      .catch(err => console.log(err));
-
+    await getClients().then(() => setClients(reduxState.clients.data));
     onProcessing(false);
   }
 
@@ -45,7 +45,7 @@ const ClientTab = (props) => {
             <Grid container md={3} sm={3} xs={3}>
               <ButtonGroup>
                 <Tooltip title='Atualizar lista de Clientes'>
-                  <IconButton onClick={() => getClients()}>
+                  <IconButton onClick={() => refreshClients()}>
                     <RefreshCw size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />
                   </IconButton>
                 </Tooltip>

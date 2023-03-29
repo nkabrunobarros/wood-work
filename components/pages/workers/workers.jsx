@@ -11,7 +11,6 @@ import Select from '../../inputs/select';
 
 //  PropTypes
 import {
-  Button,
   InputLabel,
   OutlinedInput
 } from '@mui/material';
@@ -20,7 +19,6 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
-import * as WorkerActions from '../../../pages/api/actions/worker';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
@@ -68,27 +66,6 @@ const Workers = ({ ...props }) => {
     setProfilesFilter('');
   };
 
-  async function Fix () {
-    const fixedWorkers = [...workers].map((worker) => {
-      worker.name = worker.givenName.value + ' ' + worker.familyName.value;
-      delete worker.Email;
-      delete worker.Nome;
-      delete worker.Perfil;
-
-      return {
-        id: worker.id,
-        name: { type: 'Property', value: worker.givenName.value + ' ' + worker.familyName.value },
-        type: 'Worker',
-        '@context': [
-          'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-          'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-        ]
-      };
-    });
-
-    await WorkerActions.updateWorker(fixedWorkers);
-  }
-
   async function onDelete (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
@@ -125,7 +102,6 @@ const Workers = ({ ...props }) => {
         <CssBaseline />
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
-        {false && <Button onClick={() => Fix()}>fix</Button>}
         {/* Filters */}
         <Content>
           <div id='pad'>

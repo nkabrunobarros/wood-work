@@ -23,7 +23,6 @@ import EmailValidation from '../../utils/EmailValidation';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
-import * as WorkerActions from '../../../pages/api/actions/worker';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
@@ -160,21 +159,6 @@ const newWorker = ({ ...props }) => {
     const data = qs.stringify({ ...builtWorker });
 
     await newWorker(data).then(() => setSuccessOpen(true)).catch((err) => onError(err));
-    setProcessing(false);
-
-    try {
-      false && await WorkerActions.createWorker(builtWorker)
-        .then(() => {
-          Router.push(routes.private.internal.workers);
-        })
-        .catch((err) => {
-          if (err.response.status === 409) toast.warning('Este utilizador já existe');
-          else toast.error('Algo aconteceu. Por favor tente mais tarde.');
-        });
-    } catch (e) {
-      console.log(e);
-    }
-
     setProcessing(false);
   }
 

@@ -6,7 +6,6 @@ import routes from '../../navigation/routes';
 
 //  Actions
 import * as OrganizationsActionsRedux from '../../store/actions/organization';
-// import * as ProfileActions from '../../pages/api/actions/perfil';
 import AuthData from '../../lib/AuthData';
 
 const NewOrder = ({ ...pageProps }) => {

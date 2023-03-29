@@ -2,7 +2,6 @@
 import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from '@mui/material';
 import { HelpCircle, Verified } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-// import * as CountryActions from '../../pages/api/actions/country';
 import MyInput from '../inputs/myInput';
 import PhoneInput from '../inputs/phoneInput/PhoneInput';
 import MySelect from '../inputs/select';

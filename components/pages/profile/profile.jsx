@@ -18,7 +18,6 @@ import {
 import Router, { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import routes from '../../../navigation/routes';
-import * as UserActions from '../../../pages/api/actions/user';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
@@ -48,11 +47,6 @@ const Profile = ({ ...props }) => {
     };
 
     userCpy.ativo = false;
-
-    try {
-      await UserActions.saveUser(userCpy).then((res) => console.log(res));
-    } catch (err) {
-    }
   }
 
   function displayShift (value) {

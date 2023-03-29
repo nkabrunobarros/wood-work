@@ -35,9 +35,6 @@ import { Filter } from 'lucide-react';
 import { FilterItem } from '../utils/FilterItem';
 import { MultiFilterArray } from '../utils/MultiFilterArray';
 
-//  Services
-// import * as CategoriesActions from '../../pages/api/actions/category';
-
 //  Dialogs
 import ConfirmDialog from '../dialogs/ConfirmDialog';
 import Notification from '../dialogs/Notification';

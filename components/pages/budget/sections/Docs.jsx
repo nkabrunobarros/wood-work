@@ -9,8 +9,6 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import * as FileActions from '../../../../pages/api/actions/file';
-import * as FolderActions from '../../../../pages/api/actions/folder';
 import * as filesActionsRedux from '../../../../store/actions/file';
 import * as foldersActionsRedux from '../../../../store/actions/folder';
 import PrimaryBtn from '../../../buttons/primaryBtn';
@@ -48,21 +46,7 @@ const Docs = (props) => {
   } = props;
 
   async function onImagesUpload () {
-    await FolderActions
-      .folders({ id: budget.id })
-      .then(async (res) => {
-        res.data.payload.data.map(async (fold, i) => {
-          res.data.payload.data[i].files = [];
 
-          await FileActions
-            .files({ id: fold.id })
-            .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
-            .catch((err) => console.log(err));
-        });
-
-        setFolders(res.data.payload.data);
-      })
-      .catch((err) => console.log(err));
   }
 
   async function handleCreateFolder () {

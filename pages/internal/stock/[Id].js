@@ -14,11 +14,6 @@ import { dummyStocks } from '../stocks';
 
 //  Utils
 
-//  Services
-// import * as CategoriesActions from '../../../pages/api/actions/category';
-// import * as OrdersActions from '../../../pages/api/actions/order';
-// import * as StocksActions from '../../../pages/api/actions/stock';
-
 const Stock = () => {
   const [loaded, setLoaded] = useState(false);
   // const [categories, setCategories] = useState();

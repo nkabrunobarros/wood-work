@@ -6,9 +6,6 @@ import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus } from 
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
-import * as FileActions from '../../../../pages/api/actions/file';
-import * as FolderActions from '../../../../pages/api/actions/folder';
-
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -49,21 +46,7 @@ const Docs = (props) => {
   } = props;
 
   async function onImagesUpload () {
-    await FolderActions
-      .folders({ id: order.id })
-      .then(async (res) => {
-        res.data.payload.data.map(async (fold, i) => {
-          res.data.payload.data[i].files = [];
 
-          await FileActions
-            .files({ id: fold.id })
-            .then((result) => res.data.payload.data[i].files.push(result.data.payload.data))
-            .catch((err) => console.log(err));
-        });
-
-        setFolders(res.data.payload.data);
-      })
-      .catch((err) => console.log(err));
   }
 
   async function handleCreateFolder () {

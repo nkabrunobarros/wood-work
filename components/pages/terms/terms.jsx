@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
-import * as authActions from '../../../pages/api/actions/auth';
 import styles from '../../../styles/SignIn.module.css';
 import Footer from '../../layout/footer/footer';
 
@@ -18,9 +17,8 @@ import Footer from '../../layout/footer/footer';
 import { ChevronDown, ChevronLeft, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import Router from 'next/router';
-import routes from '../../../navigation/routes';
-import * as ClientsActions from '../../../pages/api/actions/client';
 import backgroundImg from '../../../public/Log_In.jpg';
+import { logout } from '../../../store/actions/auth';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -48,23 +46,6 @@ const Terms = ({ ...props }) => {
     event.preventDefault();
 
     // const data = new FormData(event.currentTarget);
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    const newUser = [{
-      id: user.id,
-      type: user.type,
-      tos: { type: 'Property', value: 'True' },
-      '@context': [
-        'https://raw.githubusercontent.com/More-Collaborative-Laboratory/ww4zero/main/ww4zero.context.normalized.jsonld',
-        'https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld'
-      ]
-    }];
-
-    try {
-      await ClientsActions.updateClient(newUser).then(() => {
-        Router.push(routes.private.projects);
-      });
-    } catch (err) { console.log(err); }
   };
 
   const [expanded, setExpanded] = React.useState('panel1');
@@ -248,7 +229,7 @@ Em caso de incumprimento, a Mofreita, reserva-se no direito de eliminar a conta 
                   type='submit'
                   fullWidth
                   onClick={() => {
-                    authActions.logout();
+                    logout();
                   }}
                 >
                   <LogOut strokeWidth='1' size={20} />Cancelar

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../components/loader/loader';
 import SignInScreen from '../components/pages/signin/signin';
-import * as authActions from '../pages/api/actions/auth';
 
 //  Navigation
 import routes from '../navigation/routes';
@@ -22,8 +21,6 @@ const SignIn = () => {
     const props = {
 
       loginSuccessRoute,
-      login: authActions.login,
-      me: authActions.me,
       forgotPasswordRoute
     };
 

@@ -19,8 +19,6 @@ import {
 } from '@mui/material';
 import { Package, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
-import { toast } from 'react-toastify';
-import * as projectsActions from '../../../pages/api/actions/project';
 // import styles from '../../../styles/Newproject.module.css';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
@@ -38,25 +36,15 @@ const EditProject = ({ ...props }) => {
   // const [obs, setObs] = useState('');
 
   async function Createproject () {
-    const builtproject = {
-      productId: product,
-      status: 'Em orçamentação',
-      clientId: client,
-      createdAt: Date.now(),
-    };
+    // const builtproject = {
+    //   productId: product,
+    //   status: 'Em orçamentação',
+    //   clientId: client,
+    //   createdAt: Date.now(),
+    // };
 
     setProcessing(true);
-
-    try {
-      await projectsActions.saveproject(builtproject).then(() => {
-        setDialogOpen(false);
-        setProcessing(false);
-      });
-    } catch (err) {
-      toast.error('Algo Aconteceu');
-      setProcessing(false);
-      setDialogOpen(false);
-    }
+    setProcessing(false);
   }
 
   function ClearAll () {

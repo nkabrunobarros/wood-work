@@ -29,7 +29,6 @@ import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-// import * as authActions from '../../../pages/api/actions/auth';
 import Router from 'next/router';
 
 const DrawerMobile = ({ logout, toggleDrawer, state }) => {

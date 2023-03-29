@@ -5,7 +5,6 @@ import Loader from '../../components/loader/loader';
 import DashboardScreen from '../../components/pages/dashboard/dashboard';
 import AuthData from '../../lib/AuthData';
 import routes from '../../navigation/routes';
-// import * as ProductsActions from '../../pages/api/actions/product';
 //  Actions
 import * as clientsActionsRedux from '../../store/actions/client';
 import * as permissionsActionsRedux from '../../store/actions/permission';
