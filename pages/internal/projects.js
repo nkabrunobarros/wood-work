@@ -49,8 +49,7 @@ const Projects = ({ ...pageProps }) => {
     try {
       await setLoading(true);
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-
-      if (!reduxState.projects?.data || shouldRefresh) { await getProjects(); loadedSomething = true; }
+      await getProjects();
 
       if (!reduxState.expeditions?.data || shouldRefresh) { await getExpeditions(); loadedSomething = true; }
 
@@ -371,9 +370,6 @@ const Projects = ({ ...pageProps }) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
       const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
-
-      console.log(thisExpedition);
-      // customer_8Y5d0LMQZeRPXnjk
 
       return {
         ...proj,

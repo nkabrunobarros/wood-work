@@ -1,5 +1,5 @@
 //  Nodes
-import { Tooltip, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import { Mail, Map, Phone, User } from 'lucide-react';
@@ -8,7 +8,10 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 //  Proptypes
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import * as appStatesActions from '../../../store/actions/appState';
 import Navbar from '../../layout/navbar/navbar';
+import { themes } from '../../themes/themes';
 
 const Account = ({ ...props }) => {
   const { user, breadcrumbsPath } = props;
@@ -22,7 +25,9 @@ const Account = ({ ...props }) => {
     }
   }
 
-  console.log(user);
+  const dispatch = useDispatch();
+  const setThemeColor = (data) => dispatch(appStatesActions.setThemeColor(data));
+  const allThemes = themes;
 
   return (
     <>
@@ -34,6 +39,11 @@ const Account = ({ ...props }) => {
           <Grid id='pad'>
             <Grid container md={12} sm={12} sx={12}>
               <Typography variant='title'>{user?.givenName?.value || user.first_name || user.username} {user?.familyName?.value || user.last_name}</Typography>
+              <Box display='flex' alignItems='center' sx={{ marginLeft: 'auto' }}>
+                {Object.keys(allThemes).map((theme) => {
+                  return <Tooltip key={theme} title={theme}><Box onClick={() => setThemeColor(theme)} m={0.2} sx={{ borderRadius: '50%', cursor: 'pointer', width: '25px', height: '25px', background: themes[theme].primary.main }}></Box></Tooltip>;
+                })}
+              </Box>
             </Grid>
             <Grid container md={12} sm={12} sx={12} pt={2}>
               <User /> Informações Gerais
@@ -97,9 +107,12 @@ const Account = ({ ...props }) => {
                     <Grid container item>
                       <Grid className='fullCenter' container md={2} sm={2} xs={2} >
                         <Tooltip title='Email'>
-                          <a href={`mailto:${user?.email?.value || user?.email}`}>
-                            <Mail className='primaryIcon' size={22} />
-                          </a>
+                          <Box color='primary.main' >
+
+                            <a href={`mailto:${user?.email?.value || user?.email}`}>
+                              <Mail className='primaryIcon' size={22} />
+                            </a>
+                          </Box>
                         </Tooltip>
                       </Grid>
                       <Grid alignItems={'center'} container md={10} sm={10} xs={10} >
@@ -109,9 +122,11 @@ const Account = ({ ...props }) => {
                     <Grid container item>
                       <Grid className='fullCenter' container md={2} sm={2} xs={2} >
                         <Tooltip title='Contacto'>
-                          <a href={`tel:${user?.telephone?.value}`}>
-                            <Phone className='primaryIcon' size={22} />
-                          </a>
+                          <Box color='primary.main' >
+                            <a href={`tel:${user?.telephone?.value}`}>
+                              <Phone className='primaryIcon' size={22} />
+                            </a>
+                          </Box>
                         </Tooltip>
 
                       </Grid>
@@ -122,7 +137,9 @@ const Account = ({ ...props }) => {
                     <Grid container item>
                       <Grid className='fullCenter' container md={2} sm={2} xs={2} >
                         <Tooltip title='Morada'>
-                          <Map className='primaryIcon' size={22} />
+                          <Box color='primary.main' >
+                            <Map className='primaryIcon' size={22} />
+                          </Box>
                         </Tooltip>
                       </Grid>
                       <Grid container md={10} sm={10} xs={10} >

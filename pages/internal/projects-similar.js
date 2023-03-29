@@ -31,8 +31,8 @@ const OrdersSimilar = () => {
   useEffect(() => {
     async function getData () {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      !reduxState.clients.data && getClients();
-      !reduxState.projects.data && getProjects();
+      !reduxState.clients.data && await getClients();
+      await getProjects();
     }
 
     Promise.all([getData()]).then(() => setLoaded(true));

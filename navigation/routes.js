@@ -50,6 +50,7 @@ const routes = {
     signIn: '/',
     forgotPassword: '/forgot-password',
     resetPassword: '/reset-password',
+    accountActivation: '/account-activation',
     //  Internal
     signInInternal: '/signin',
     forgotPasswordInternal: '/forgotPassword',

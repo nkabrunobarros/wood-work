@@ -496,7 +496,7 @@ const AdvancedTable = ({
                                         </>
                                     }
                                     {!!onDelete && <Tooltip title={'Remover'}>
-                                      <IconButton onClick={() => onDeleteClick(row)} >
+                                      <IconButton onClick={() => onDeleteClick(row)} size='small' >
                                         <DeleteOutline
                                           color={'primary'}
                                           fontSize="small"

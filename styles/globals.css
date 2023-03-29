@@ -30,7 +30,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Montserrat' !important;
-  transition: all .0s ease-in-out;
+
 }
 
 #appMainContainer {
@@ -203,7 +203,6 @@ a {
 }
 
 .primaryIcon {
-  color: var(--primary);
   margin-right: 1rem;
 }
 
@@ -476,11 +475,13 @@ a {
 }
 
 @keyframes breathing-color--dark {
-  from {}
+  from {
+    opacity: 0.2;
+  }
 
   to {
-    background-color: #8ccdff;
-    /* background-color: #e6b000; */
+    opacity: 1
+      /* background-color: #e6b000; */
   }
 }
 

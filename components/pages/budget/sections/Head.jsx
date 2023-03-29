@@ -349,17 +349,17 @@ const Head = (props) => {
                 <Grid container { ...cells }>
                   <EditableCell active={activeFields.category} isInternalPage={isInternalPage} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.amount?.value && 'breathingBackgroundWarning'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.amount?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.amount?.value && 'primary.light'}>
                   <EditableCell active={activeFields.amount} isInternalPage={isInternalPage} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && 'breathingBackgroundWarning'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateRequest} isInternalPage={isInternalPage} value={budget?.dateRequest?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateRequest' type='date' />
                 </Grid>
                 <Grid container { ...cells }><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.dateAgreedDelivery?.value && 'breathingBackgroundWarning'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.dateAgreedDelivery?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateAgreedDelivery?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateAgreedDelivery} isInternalPage={isInternalPage} value={budget?.dateAgreedDelivery?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateAgreedDelivery' type='date' />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.price?.value && 'breathingBackgroundWarning'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.price?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.price?.value && 'primary.light'}>
                   <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
                 </Grid>
                 <Grid container { ...cells }><Typography variant='sm' >{budget?.dateDelivery?.value}</Typography></Grid>

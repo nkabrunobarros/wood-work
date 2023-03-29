@@ -45,9 +45,9 @@ const App = ({ Component, pageProps }) => {
   const [selectedTheme, setSelectedTheme] = useState('light');
   const [fontSize, setFontSize] = useState('md');
   const { auth_token: token } = parseCookies();
-  const theme = MuiTheme({ selectedTheme, fontSize });
   const router = useRouter();
   const reduxState = useSelector((state) => state);
+  const theme = MuiTheme({ selectedTheme: reduxState.appStates.themeColor, fontSize });
   const dispatch = useDispatch();
   const setTheme = (data) => dispatch(appStatesActions.setTheme(data));
 

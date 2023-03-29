@@ -107,7 +107,7 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
     TransitionComponent={Transition}
     sx={{ display: !chosenProject && 'none' }}
   >
-    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)' }}>
+    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }}>
       <Toolbar>
         <Grid container>
           <Grid container md={1} sm={1} xs={12} p={1} >
@@ -259,7 +259,7 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
                         <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'><Typography variant='sm'>  </Typography> </TableSortLabel></Box></Grid>
                       </Grid>
                       {mod.parts.map((part) => {
-                        return <Grid key={part} container md={12} sm={12} xs={12} bgcolor={part.complete ? '#37a62b53' : (part.inProduction && 'primary.lightest')} >
+                        return <Grid key={part} container md={12} sm={12} xs={12} bgcolor={part.complete ? '#37a62b53' : (part.inProduction && 'info.lightest')} >
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.partName.replace(/_/g, ' ') } </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>

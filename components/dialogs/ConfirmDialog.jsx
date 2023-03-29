@@ -5,9 +5,9 @@ import React from 'react';
 
 const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, iconType, confirmText, cancelText, inputs }) => {
   const colors = {
-    error: 'var(--red)',
-    success: 'var(--green)',
-    default: 'var(--primary)',
+    error: 'error.main',
+    success: 'success.main',
+    default: 'primary.main',
   };
 
   const iconColor = colors[iconType || 'default'];
@@ -26,8 +26,8 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, iconType,
       </DialogTitle>
       <Divider />
       <DialogContent>
-        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} style={{ color: iconColor }} />
+        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color={iconColor} >
+          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
         </Box>
         <DialogContentText id='alert-dialog-description' variant='body1'>
           {message || 'A ação que está a fazer é irreversível. Tem certeza que quer continuar?'}

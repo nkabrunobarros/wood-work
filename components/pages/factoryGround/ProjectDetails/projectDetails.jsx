@@ -410,7 +410,7 @@ const ProjectDetails = (props) => {
     TransitionComponent={Transition}
     sx={{ display: !chosenProject && 'none' }}
   >
-    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: localStorage.getItem('theme') === 'light' && 'var(--primary-dark)' }}>
+    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }} >
       <Toolbar>
         <Grid container>
           <Grid container md={1} sm={1} xs={1} p={1} >

@@ -134,7 +134,7 @@ const Leftovers = (props) => {
           {/* Part */}
           <Grid md={3} sx={3} p={1}>
             <Tooltip title='Clique para escolher peça'>
-              <Card onClick={() => setPartModal(true)} sx={{ width: '100%', height: '100%' }} className={` ${!partChosen && 'breathingBackgroundWarning'}`}>
+              <Card onClick={() => setPartModal(true)} sx={{ width: '100%', height: '100%', backgroundColor: !partChosen && 'primary.light' }} className={` ${!partChosen && 'breathingBackgroundWarning'}`} >
                 <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
                   <Typography variant='subtitle'>Peça</Typography>
                 </Box>
@@ -171,7 +171,7 @@ const Leftovers = (props) => {
           {/* ESPESSURA */}
           <Grid md={3} sx={3} p={1}>
             <Tooltip title='Clique para escolher espessura'>
-              <Card onClick={() => setHeightModal(true)} sx={{ width: '100%', height: '100%' }} className={` ${partChosen?.esp === 0 || partChosen?.esp === undefined ? 'breathingBackgroundWarning' : null}`}>
+              <Card onClick={() => setHeightModal(true)} sx={{ width: '100%', height: '100%', backgroundColor: !partChosen && 'primary.light' }} className={` ${partChosen?.esp === 0 || partChosen?.esp === undefined ? 'breathingBackgroundWarning' : null}`}>
                 <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
                   <Typography variant='subtitle'>Espessura</Typography>
                 </Box>

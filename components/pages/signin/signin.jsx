@@ -326,10 +326,13 @@ const SignIn = (props) => {
               adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />} />
             <Grid container style={{ alignItems: 'center' }}>
               <Grid item xs>
-                <a
-                  onClick={() => Router.push(forgotPasswordRoute)}
-                  className='link'
-                >Esqueceu-se da sua senha?</a>
+                <Typography variant="sm" color="link.main">
+
+                  <a
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => Router.push(forgotPasswordRoute)}
+                  >Esqueceu-se da sua senha?</a>
+                </Typography>
               </Grid>
               <Grid item>
                 <FormControlLabel

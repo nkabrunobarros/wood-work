@@ -16,6 +16,7 @@ const Notification = () => {
       pauseOnFocusLoss
       draggable
       pauseOnHover
+      bodyStyle={{ height: '10px' }}
     />
   );
 };

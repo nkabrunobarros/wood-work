@@ -51,6 +51,7 @@ const Navbar = ({ ...pageProps }) => {
                 </IconButton>
               </Tooltip>
             </Box>
+
           </Box>
           <Box id='align' justifyContent={'end'}>
             <Box pr={3}>
@@ -68,7 +69,7 @@ const Navbar = ({ ...pageProps }) => {
             </Box>
           </Box>
         </Toolbar>
-        {reduxState.appStates.loading && <LinearProgress color="secondary"/>}
+        {reduxState.appStates.loading && false && <LinearProgress color="secondary"/>}
       </AppBar>
       <Hidden>
         <DrawerMobile

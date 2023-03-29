@@ -25,14 +25,12 @@ const noLayoutScreens = [
   `${routes.public.forgotPassword}`,
   `${routes.public.forgotPasswordInternal}`,
   `${routes.public.resetPassword}`,
+  `${routes.public.accountActivation}`,
   `${routes.public.resetPasswordInternal}`,
   `${routes.private.terms}`,
   `${routes.private.tos}`,
   `${routes.private.privacy}`,
   `${routes.private.error}`,
-  `${routes.private.internal.test}`,
-  `${routes.private.internal.test2}`,
-  `${routes.private.internal.test3}`,
 ];
 
 async function ValidateToken (path) {

@@ -55,6 +55,12 @@ const clients = createReducer(initialState, (builder) => {
       loading: false,
       newestClient: action.payload.data,
     }))
+    // .addCase(clientsActions.UPDATE_CLIENT_SUCCESS, (state, action) => ({
+    //   ...state,
+    //   errors: null,
+    //   loading: false,
+    //   newestClient: action.payload.data,
+    // }))
     .addCase(clientsActions.ADD_CLIENT_FAIL, (state, action) => ({
       ...state,
       newestClientErrors: state.newestClientErrors ? [...state.newestClientErrors, action.payload] : [action.payload],

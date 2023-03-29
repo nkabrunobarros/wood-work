@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import { themes } from '../components/themes/themes';
 
 function MuiTheme ({ ...props }) {
   const { selectedTheme, fontSize } = props;
@@ -13,60 +14,11 @@ function MuiTheme ({ ...props }) {
     titlexxl: 32,
   };
 
-  const redTheme = {
-    primary: {
-      main: selectedTheme === 'light' ? '#E50000' : '#3F0000',
-      dark: selectedTheme === 'light' ? '#3F0000' : '#3F0000',
-      light: selectedTheme === 'light' ? '#ffe8e5' : '#ffe8e5',
-      lightest: selectedTheme === 'light' ? '#E5000033' : '#3F000033',
-    },
-    default: {
-      main: selectedTheme === 'light' ? '#fff' : '#282828',
-      sides: selectedTheme === 'light' ? '#3F0000' : '#282828',
-    },
-    link: {
-      main: selectedTheme === 'light' ? '#E50000' : '#E50000',
-    },
-  };
-
-  const blueTheme = {
-    primary: {
-      main: selectedTheme === 'light' ? '#225EE8' : '#1b91e7',
-      dark: selectedTheme === 'light' ? '#0c2254' : '#1b91e7',
-      light: selectedTheme === 'light' ? '#1b91e7' : '#1b91e7',
-      lightest: selectedTheme === 'light' ? '#225EE833' : '#225EE833',
-    },
-    default: {
-      main: selectedTheme === 'light' ? '#fff' : '#282828',
-      sides: selectedTheme === 'light' ? '#0c2254' : '#282828',
-    },
-    lightGray: {
-      main: selectedTheme === 'light' ? 'var(--grayBG)' : '#383838',
-    },
-    lightTextSm: {
-      main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
-      black: selectedTheme === 'light' ? 'black' : 'var(--white)',
-      dark: selectedTheme === 'light' ? 'black' : 'var(--white)',
-    },
-    link: {
-      main: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
-    },
-    messages: {
-      sender: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
-      receiver: selectedTheme === 'light' ? '#E4E6EB' : '#3E4042',
-    }
-  };
-
-  const currentClient = 'Etos';
-  let colorScheme = blueTheme;
-
-  if (currentClient === 'Etos') colorScheme = blueTheme;
-  else if (currentClient === 'red') colorScheme = redTheme;
-  else colorScheme = blueTheme;
+  const colorScheme = themes[selectedTheme];
 
   const theme = createTheme({
     palette: {
-      mode: selectedTheme,
+      mode: 'light',
       primary: {
         main: colorScheme.primary.main,
         dark: colorScheme.primary.dark,
@@ -74,28 +26,25 @@ function MuiTheme ({ ...props }) {
         lightest: colorScheme.primary.lightest,
       },
       default: {
-        main: colorScheme.default.main,
-        sides: colorScheme.default.sides,
+        main: '#fff',
+        sides: colorScheme.primary.dark,
       },
       lightGray: {
-        main: selectedTheme === 'light' ? 'var(--grayBG)' : '#383838',
-        edges: selectedTheme === 'light' ? '#EDEDED' : '#3B3B3B',
-        secondary: selectedTheme === 'light' && '#FAFAFA'
-      },
-      collapseImg: {
-        main: selectedTheme === 'light' ? 'red' : 'red',
+        main: 'var(--grayBG)',
+        edges: '#EDEDED',
+        secondary: '#FAFAFA'
       },
       lightTextSm: {
-        main: selectedTheme === 'light' ? '#8c8c8c' : 'rgba(255, 255, 255, 0.7)',
-        black: selectedTheme === 'light' ? 'black' : 'var(--white)',
-        dark: selectedTheme === 'light' ? 'black' : 'var(--white)'
+        main: '#8c8c8c',
+        black: 'black',
+        dark: 'black',
       },
       link: {
-        main: colorScheme.link.main,
+        main: colorScheme.primary.main,
       },
       messages: {
-        sender: selectedTheme === 'light' ? 'var(--primary)' : 'var(--babyblue)',
-        receiver: selectedTheme === 'light' ? '#E4E6EB' : '#3E4042',
+        sender: colorScheme.primary.main,
+        receiver: '#E4E6EB',
       }
     },
     //  Muda a shape de todos os obj incluido inputs
@@ -115,27 +64,27 @@ function MuiTheme ({ ...props }) {
     },
     TextareaAutosize: {
       fontFamily: 'Montserrat',
-      backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
+      backgroundColor: 'white',
     },
     components: {
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
+            backgroundColor: 'white',
           },
         },
       },
       MuiSelect: {
         styleOverrides: {
           root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
+            backgroundColor: 'white',
           },
         },
       },
       MuiAutocomplete: {
         styleOverrides: {
           root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
+            backgroundColor: 'white',
           },
         },
       },
@@ -156,16 +105,31 @@ function MuiTheme ({ ...props }) {
       MuiTableRow: {
         styleOverrides: {
           root: {
-            backgroundColor: selectedTheme === 'light' && 'var(--grayBG)'
+            backgroundColor: 'var(--grayBG)'
           }
         }
       },
       MuiTextareaAutosize: {
         styleOverrides: {
           root: {
-            backgroundColor: selectedTheme === 'light' ? 'white' : '#282828',
+            backgroundColor: 'white',
           }
         }
+      },
+    },
+    transitions: {
+      duration: {
+        shortest: 150,
+        shorter: 200,
+        short: 250,
+        // most basic recommended timing
+        standard: 300,
+        // this is to be used in complex animations
+        complex: 375,
+        // recommended when something is entering screen
+        enteringScreen: 225,
+        // recommended when something is leaving screen
+        leavingScreen: 195,
       },
     },
   });

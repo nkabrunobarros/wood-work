@@ -100,7 +100,7 @@ const Docs = (props) => {
             <AccordionSummary expandIcon={<ChevronDown />} >
               <Grid container bgcolor={'default.main'} >
                 <Grid container md={6} sm={6} xs={6} alignItems='center'>
-                  <div id='align' style={{ color: 'var(--primary)' }} >
+                  <Box id='align' color='primary.main' >
                     {open
                       ? (
                         <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
@@ -108,7 +108,7 @@ const Docs = (props) => {
                       : (
                         <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
                       )}
-                  </div>
+                  </Box>
                   <Typography>{!isDragActive ? folder.folder_name : 'Carregar ficheiros para esta pasta'} </Typography>
                 </Grid>
                 <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
