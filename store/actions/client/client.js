@@ -88,6 +88,5 @@ export const setDisplayedClient = (data) => {
   return {
     type: SET_DISPLAYED_CLIENT,
     data,
-
   };
 };

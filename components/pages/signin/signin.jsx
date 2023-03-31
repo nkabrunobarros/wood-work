@@ -183,9 +183,9 @@ const SignIn = (props) => {
             // Success
             ToastSet(loadingNotification, 'A entrar', 'success');
             setLoading(false);
-            // if (user.type === 'Owner' && user.tos?.value === 'False') router.push(loginSuccessRouteTerms);
-            // else router.push(loginSuccessRoute);
-            router.push(loginSuccessRoute);
+
+            if (user.role === 'CUSTOMER' && user.tos?.value === 'false') router.push('/terms');
+            else router.push(loginSuccessRoute);
           }
         }).catch((err) => console.log(err));
       });
