@@ -216,7 +216,7 @@ const ResetPassword = (props) => {
           >
             <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.params.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
             <Typography component='h2' variant='h3'>
-            Redefinir senha
+              {success ? 'Definir senha' : 'Redefinir senha'}
             </Typography>
             <Box
               component='form'
@@ -233,7 +233,7 @@ const ResetPassword = (props) => {
                     required={inputFields[0].required}
                     value={inputFields[0].value}
                     error={inputFields[0].error}
-                    placeholder={'Escrever nova Senha'}
+                    placeholder={`Escrever ${!success ? 'nova ' : ''}Senha`}
                     type={visible ? 'text' : 'password'}
                     onChange={(e) => handleFormChange(0, e)}
                     adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
@@ -248,7 +248,7 @@ const ResetPassword = (props) => {
                     required={inputFields[1].required}
                     value={inputFields[1].value}
                     error={inputFields[1].error}
-                    placeholder={'Repita nova senha'}
+                    placeholder={`Repita ${!success ? 'nova ' : ''}Senha`}
                     type={visible ? 'text' : 'password'}
                     onChange={(e) => handleFormChange(1, e)}
                     adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
