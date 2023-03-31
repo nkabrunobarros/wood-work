@@ -16,8 +16,9 @@ const ResetPassword = () => {
       const urlParams = new URLSearchParams(queryString);
       const token = urlParams.get('token');
       const profile = urlParams.get('profile');
+      const activationToken = urlParams.get('activationToken');
 
-      setToken({ token, profile });
+      setToken({ token, profile, activationToken });
     }
 
     Promise.all([checkToken()]).then(() => setLoaded(true));

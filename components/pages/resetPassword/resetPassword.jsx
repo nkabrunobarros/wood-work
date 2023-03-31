@@ -1,8 +1,8 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-constant-condition */
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import { Check, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -26,6 +26,8 @@ const ResetPassword = (props) => {
   const [submiting, setSubmiting] = useState(false);
   const [visible, setVisible] = useState(false);
   const [windowWidth, setWindowHeight] = useState();
+  const [activatingUser, setActivatingUser] = useState(!!props.params.activationToken);
+  const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
   const updatePassword = (data) => dispatch(emailActionsRedux.updatePassword(data));
 
@@ -39,8 +41,18 @@ const ResetPassword = (props) => {
     setWindowHeight(window.innerWidth);
   };
 
+  function ActivateUser () {
+    setTimeout(() => {
+      setSuccess(true);
+    }, '1000');
+
+    setTimeout(() => {
+      setActivatingUser(false);
+    }, '3000');
+  }
+
   useEffect(() => {
-    window.addEventListener('resize', listenToResize);
+    props.params.activationToken && ActivateUser();
 
     return () => window.removeEventListener('resize', listenToResize);
   }, []);
@@ -179,70 +191,85 @@ const ResetPassword = (props) => {
         </Box>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} square>
-        <Box
-          sx={{
-            my: '25%',
-            mx: '15%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-          }}
-        >
-          <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.params.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
-          <Typography component='h2' variant='h3'>
-            Redefinir senha
-          </Typography>
-          <Box
-            component='form'
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: '100%' }}
-          >
-            <Grid container>
-              {/* <FormGenerator fields={inputFields} perRow={1} onFormChange={handleFormChange} /> */}
-              <Grid md={12} sm={12 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  name={inputFields[0].id}
-                  label={inputFields[0].label}
-                  required={inputFields[0].required}
-                  value={inputFields[0].value}
-                  error={inputFields[0].error}
-                  placeholder={'Escrever nova Senha'}
-                  type={visible ? 'text' : 'password'}
-                  onChange={(e) => handleFormChange(0, e)}
-                  adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
-                  adornmentOnClick={() => setVisible(!visible)}
-                  iconTooltip={!visible && 'Mostrar senha'}
-                />
-              </Grid>
-              <Grid md={12} sm={12 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-                <MyInput
-                  name={inputFields[1].id}
-                  label={inputFields[1].label}
-                  required={inputFields[1].required}
-                  value={inputFields[1].value}
-                  error={inputFields[1].error}
-                  placeholder={'Repita nova senha'}
-                  type={visible ? 'text' : 'password'}
-                  onChange={(e) => handleFormChange(1, e)}
-                  adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
-                  adornmentOnClick={() => setVisible(!visible)}
-                  iconTooltip={!visible && 'Mostrar Senha'}
-                />
-              </Grid>
-            </Grid>
-            <Grid container p={1} className='fullCenter'>
-              <Button
-                fullWidth
-                type='submit'
-                variant='contained'
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Submeter
-              </Button>
-            </Grid>
+
+        {activatingUser
+          ? <Box display={'flex'} justifyContent='center' alignItems='center' sx={{ height: '100%' }}>
+            <Box sx={{ width: '100%' }}>
+              <Box sx={{ width: '100%', textAlign: 'center' }}>
+                <Typography variant='title'>A ativar a conta!</Typography>
+              </Box>
+              <Box sx={{ width: '100%', textAlign: 'center' }}>
+                {success ? <Check sx={{ fontSize: '120px' }} color='success' /> : <CircularProgress size={120} color='primary'/>}
+
+              </Box>
+
+            </Box>
           </Box>
-        </Box>
+          : <Box
+            sx={{
+              my: '25%',
+              mx: '15%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'start',
+            }}
+          >
+            <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.params.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
+            <Typography component='h2' variant='h3'>
+            Redefinir senha
+            </Typography>
+            <Box
+              component='form'
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1, width: '100%' }}
+            >
+              <Grid container>
+                {/* <FormGenerator fields={inputFields} perRow={1} onFormChange={handleFormChange} /> */}
+                <Grid md={12} sm={12 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    name={inputFields[0].id}
+                    label={inputFields[0].label}
+                    required={inputFields[0].required}
+                    value={inputFields[0].value}
+                    error={inputFields[0].error}
+                    placeholder={'Escrever nova Senha'}
+                    type={visible ? 'text' : 'password'}
+                    onChange={(e) => handleFormChange(0, e)}
+                    adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
+                    adornmentOnClick={() => setVisible(!visible)}
+                    iconTooltip={!visible && 'Mostrar senha'}
+                  />
+                </Grid>
+                <Grid md={12} sm={12 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+                  <MyInput
+                    name={inputFields[1].id}
+                    label={inputFields[1].label}
+                    required={inputFields[1].required}
+                    value={inputFields[1].value}
+                    error={inputFields[1].error}
+                    placeholder={'Repita nova senha'}
+                    type={visible ? 'text' : 'password'}
+                    onChange={(e) => handleFormChange(1, e)}
+                    adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
+                    adornmentOnClick={() => setVisible(!visible)}
+                    iconTooltip={!visible && 'Mostrar Senha'}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container p={1} className='fullCenter'>
+                <Button
+                  fullWidth
+                  type='submit'
+                  variant='contained'
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                Submeter
+                </Button>
+              </Grid>
+            </Box>
+          </Box>
+        }
         <Footer />
       </Grid>
     </Grid>);

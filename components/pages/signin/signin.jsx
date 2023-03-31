@@ -51,7 +51,7 @@ const SignIn = (props) => {
 
   const [username, setUsername] = useState(Router.route === '/' ? 'Barros' : 'admin');
   // const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
-  const [password, setPassword] = useState(Router.route === '/' ? 'ChangeMe' : 'zo5JhUY7xzgg5Jk');
+  const [password, setPassword] = useState(Router.route === '/' ? 'ChangeMe1' : 'zo5JhUY7xzgg5Jk');
   const [loading, setLoading] = useState(false);
   const [usernameErrors, setUsernameErrors] = useState();
   // const [emailErrors, setEmailErrors] = useState();

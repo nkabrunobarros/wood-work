@@ -346,7 +346,7 @@ const AdvancedTable = ({
 
   function onFilterSizeRemove (filterName) {
     const rangeFiltersToWork = { ...rangeFilters };
-    
+
     rangeFiltersToWork[filterName].values = [rangeFiltersToWork[filterName].min, rangeFiltersToWork[filterName].max];
     setRangeFilters(rangeFiltersToWork);
   }

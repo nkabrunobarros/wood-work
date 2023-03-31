@@ -13,3 +13,19 @@ Bugs
 
     Cliente
     Upload de ficheiros como cliente
+
+
+
+Em falta
+    Especificação da API
+        parâmetros especiais de endpoints
+    Propriedades das entidades
+    descrição dos endpoints
+    campos obrigatorios por endpoint
+    resposta por endpoint
+    comportamentos extras por endpoint
+
+    Entidade file
+    Entidade folder
+    Entidade message
+    Definição de senha

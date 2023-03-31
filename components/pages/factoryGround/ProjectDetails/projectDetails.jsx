@@ -172,46 +172,7 @@ const ProjectDetails = (props) => {
   const getParts = (data) => dispatch(partsActionsRedux.projectParts(data));
   const getConsumables = (data) => dispatch(consumablesActionsRedux.projectConsumables(data));
 
-  useEffect(() => {
-    async function load () {
-      await getParts(chosenProject.id).then((res) => {
-        const built = res.data.map((part) => {
-          const part2 = { ...part };
-
-          Object.keys(part2).map((key) => {
-            part2[key] = part2[key].type === 'Property' ? part2[key].value : (part2[key].type === 'Relationship' ? part2[key].object : part2[key]);
-          });
-
-          part2.inProduction = false;
-          part2.f = !!(part2.f2 || part2.f3 || part2.f4 || part2.f5);
-          part2.orla = !!(part2.orla2 || part2.orla3 || part2.orla4 || part2.orla5);
-
-          return part2;
-        });
-
-        setProjectParts(built);
-      });
-
-      await getConsumables(chosenProject.id).then((res) => {
-        const built = res.data.map((consu) => {
-          const consu2 = { ...consu };
-
-          Object.keys(consu2).map((key) => {
-            consu2[key] = consu2[key].type === 'Property' ? consu2[key].value : (consu2[key].type === 'Relationship' ? consu2[key].object : consu2[key]);
-          });
-
-          return consu2;
-        });
-
-        setConsumables(built);
-      });
-    }
-
-    load();
-    Promise.all([load()]).then(() => setFullyLoaded(true));
-  }, []);
-
-  const [projectParts, setProjectParts] = useState(props.projectParts || [
+  const [projectParts, setProjectParts] = useState(props?.projectParts || [
     { partName: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 1, nestingFlag: true, cncFlag: true, orla: true, f: true, obs: '', inProduction: false },
     { partName: 'MC_MUEBLETV_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 2, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
     { partName: 'MC_MUEBLETV_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 3, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
@@ -239,6 +200,47 @@ const ProjectDetails = (props) => {
     { partName: 'MC_MUEBLETV_A2_PORTA_BASC', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 924, width: 283, thickness: 19, tag: 25, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
     { partName: 'MC_MUEBLETV_A2_RIPA_TRAS', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 907, width: 76, thickness: 19, tag: 26, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
   ]);
+
+  useEffect(() => {
+    async function load () {
+      await getParts(chosenProject.id).then((res) => {
+        const built = res.data.map((part) => {
+          const part2 = { ...part };
+
+          Object.keys(part2).map((key) => {
+            part2[key] = part2[key].type === 'Property' ? part2[key].value : (part2[key].type === 'Relationship' ? part2[key].object : part2[key]);
+          });
+
+          part2.inProduction = false;
+          part2.f = !!(part2.f2 || part2.f3 || part2.f4 || part2.f5);
+          part2.orla = !!(part2.orla2 || part2.orla3 || part2.orla4 || part2.orla5);
+
+          return part2;
+        });
+
+        built[0] && setProjectParts(built);
+      });
+
+      await getConsumables(chosenProject.id).then((res) => {
+        const built = res.data.map((consu) => {
+          const consu2 = { ...consu };
+
+          Object.keys(consu2).map((key) => {
+            consu2[key] = consu2[key].type === 'Property' ? consu2[key].value : (consu2[key].type === 'Relationship' ? consu2[key].object : consu2[key]);
+          });
+
+          return consu2;
+        });
+
+        setConsumables(built);
+      });
+    }
+
+    load();
+    Promise.all([load()]).then(() => setFullyLoaded(true));
+  }, []);
+
+  console.log(props?.projectParts);
 
   const cellProps = {
     md: 0.85,
@@ -507,20 +509,20 @@ const ProjectDetails = (props) => {
               <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
                 {/* Headers */}
                 <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Peso  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>orla  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Peso  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>orla  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Typography></Box></Grid>
+                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Typography></Box></Grid>
                 </Grid>
                 <Grid container md={12} sm={12} xs={12}>
                   {projectParts

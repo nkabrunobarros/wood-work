@@ -12,6 +12,10 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 
+export const ACTIVATION_REQUEST = 'ACTIVATION_REQUEST';
+export const ACTIVATION_FAIL = 'ACTIVATION_FAIL';
+export const ACTIVATION_SUCCESS = 'ACTIVATION_SUCCESS';
+
 export const USER_MODULES_REQUEST = 'USER_MODULES_REQUEST';
 export const USER_MODULES_FAIL = 'USER_MODULESGIN_FAIL';
 export const USER_MODULES_SUCCESS = 'USER_MODULES_SUCCESS';
@@ -88,5 +92,17 @@ export const userPermissions = (id, token) => {
       url: getApiURL(endpoints.PERMISSIONS + id),
     },
     types: [USER_PERMISSIONS_REQUEST, USER_PERMISSIONS_SUCCESS, USER_PERMISSIONS_FAIL],
+  });
+};
+
+export const activateUser = (data) => {
+  return createAction({
+    meta: null,
+    request: {
+      headers: {},
+      method: 'POST',
+      url: getApiURL(endpoints.ACTIVATE + data),
+    },
+    types: [ACTIVATION_REQUEST, ACTIVATION_SUCCESS, ACTIVATION_FAIL],
   });
 };

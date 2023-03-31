@@ -27,6 +27,7 @@ const endpoints = {
   MACHINES: 'machine/',
   MESSAGES: 'chat/message/',
   LEFTOVERS: 'leftover/',
+  ACTIVATE: 'accounts/activate/',
 };
 
 export default endpoints;
