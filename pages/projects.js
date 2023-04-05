@@ -75,8 +75,8 @@ const Orders = ({ ...pageProps }) => {
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
-        title: 'Pedidos',
-        href: `${routes.private.internal.orders}`,
+        title: 'Projetos',
+        href: `${routes.private.internal.projects}`,
       },
     ];
 
@@ -217,10 +217,10 @@ const Orders = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'Pedido',
+        id: 'Projeto',
         numeric: false,
         disablePadding: false,
-        label: 'Pedido',
+        label: 'Projeto',
         show: true,
       },
       {
@@ -259,9 +259,9 @@ const Orders = ({ ...pageProps }) => {
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
-        Pedido: bud?.dateRequest.value,
+        Projeto: bud?.dateRequest.value,
         Entregue: bud?.dateDelivery.value,
-        Categoria: categories.find(c => c.id === bud.category.value).label,
+        Categoria: categories.find(c => c.id === bud.category.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
       };
     });
@@ -279,9 +279,9 @@ const Orders = ({ ...pageProps }) => {
         budget: thisBudget,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
         Termino: thisBudget?.dateAgreedDelivery.value,
-        Pedido: thisBudget?.dateRequest.value,
+        Projeto: thisBudget?.dateRequest.value,
         Entregue: thisBudget?.dateDelivery.value,
-        Categoria: categories.find(c => c.id === thisBudget.category.value).label,
+        Categoria: categories.find(c => c.id === thisBudget.category.value)?.label,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         ExpeditionTime: '',
         Complete: 0,
@@ -291,8 +291,7 @@ const Orders = ({ ...pageProps }) => {
 
     const merged = [...projects, ...filteredBudgets.filter((ele) => ele.status !== 'adjudicated')];
 
-    merged.sort((a, b) => a.Pedido?.localeCompare(b.Pedido));
-    console.log(budgets);
+    merged.sort((a, b) => a.Projeto?.localeCompare(b.Projeto));
 
     const props = {
       counts,
@@ -301,7 +300,8 @@ const Orders = ({ ...pageProps }) => {
       pageProps,
       headCellsProjects,
       budgets,
-      projects: merged,
+      items: merged,
+      projects,
       detailPage: routes.private.project,
       editPage: routes.private.editProject,
       detailPageBudgetTab: routes.private.budget,

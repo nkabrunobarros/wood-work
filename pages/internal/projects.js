@@ -21,7 +21,7 @@ import { Check, Layers, LayoutTemplate, PackagePlus, Settings, Truck } from 'luc
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
-import useWindowFocus from '../../components/utils/useWindowFocus';
+// import useWindowFocus from '../../components/utils/useWindowFocus';
 import AuthData from '../../lib/AuthData';
 import { categories } from './new-project';
 
@@ -39,7 +39,7 @@ const Projects = ({ ...pageProps }) => {
   const setLoading = (data) => dispatch(appStatesActions.setLoading(data));
   const setLastRefreshed = () => dispatch(appStatesActions.setLastRefreshed());
   const [loaded, setLoaded] = useState(false);
-  const focused = useWindowFocus();
+  // const focused = useWindowFocus();
   const shouldRefresh = moment().diff(moment(reduxState.appStates.lastRefreshed), 'seconds') > 30;
 
   async function fetchData (dispatch) {
@@ -72,8 +72,15 @@ const Projects = ({ ...pageProps }) => {
       setLoaded(await fetchData(dispatch));
     }
 
-    focused && loadData();
-  }, [focused]);
+    loadData();
+  }, []);
+  // useEffect(() => {
+  //   async function loadData () {
+  //     setLoaded(await fetchData(dispatch));
+  //   }
+
+  //   focused && loadData();
+  // }, [focused]);
 
   if (loaded) {
     const counts = {
@@ -127,7 +134,7 @@ const Projects = ({ ...pageProps }) => {
     // Breadcrumbs path feed
     const breadcrumbsPath = [
       {
-        title: 'Pedidos',
+        title: 'Projetos',
         href: `${routes.private.internal.projects}`,
       },
     ];
@@ -309,10 +316,10 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'Pedido',
+        id: 'Projeto',
         numeric: false,
         disablePadding: false,
-        label: 'Pedido',
+        label: 'Projeto',
         show: true,
       },
       {
@@ -351,12 +358,18 @@ const Projects = ({ ...pageProps }) => {
       },
     ];
 
-    const clients = [...reduxState.clients?.data ?? []];
+    const clients = [...reduxState.clients?.data ?? []].map((client) => {
+      return {
+        ...client,
+        Nome: client.user.first_name + ' ' + client.user.last_name + ' - ' + client.user.email,
+        Email: client.user.email,
+      };
+    });
 
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
       const thisClient = clients.find(ele => ele.id === bud.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
 
-      return {
+      return bud?.status?.value !== 'adjudicated' && {
         ...bud,
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
@@ -365,6 +378,8 @@ const Projects = ({ ...pageProps }) => {
 
       };
     });
+
+    const filteredBudgets = budgets.filter(item => item !== false);
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
@@ -380,16 +395,21 @@ const Projects = ({ ...pageProps }) => {
         Cliente: proj.orderBy.object,
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
-        Categoria: categories.find(c => c.id === thisBudget.category.value).label,
+        Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         ExpeditionTime: thisExpedition?.expeditionTime.value,
         Complete: 0,
-        Pedido: thisBudget?.dateRequest.value,
+        Projeto: thisBudget?.dateRequest?.value,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
-        Termino: thisBudget?.dateAgreedDelivery.value,
+        Termino: thisBudget?.dateAgreedDelivery?.value,
       };
     });
 
+    const merged = [...projects, ...filteredBudgets];
+
+    console.log(merged);
+
     const props = {
+      items: merged,
       counts,
       breadcrumbsPath,
       cards,
@@ -398,7 +418,7 @@ const Projects = ({ ...pageProps }) => {
       headCellsProjects,
       clients,
       budgets,
-      projects,
+      projects: merged,
       detailPage: routes.private.internal.project,
       editPage: routes.private.internal.editProject,
       detailPageBudgetTab: routes.private.internal.budget,

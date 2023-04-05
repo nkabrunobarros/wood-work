@@ -181,7 +181,7 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
           </Box>
         </Grid>
         <Grid container md={12} sx={{ width: '100%' }}>
-          {folders && !client && IsInternal(userPermissions.description)
+          {folders && !client && IsInternal(userPermissions?.description)
             ? <Grid md={6} p={1}>
               <Select
                 required

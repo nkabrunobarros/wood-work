@@ -7,9 +7,14 @@ import endpoints from '../../network/endpoints';
 export const FILES_REQUEST = 'FILES_REQUEST';
 export const FILES_FAIL = 'FILES_FAIL';
 export const FILES_SUCCESS = 'FILES_SUCCESS';
+
 export const FILE_REQUEST = 'FILE_REQUEST';
 export const FILE_FAIL = 'FILE_FAIL';
 export const FILE_SUCCESS = 'FILE_SUCCESS';
+
+export const DOWNLOAD_FILE_REQUEST = 'DOWNLOAD_FILE_REQUEST';
+export const DOWNLOAD_FILE_FAIL = 'DOWNLOAD_FILE_FAIL';
+export const DOWNLOAD_FILE_SUCCESS = 'DOWNLOAD_FILE_SUCCESS';
 
 export const NEW_FILE_REQUEST = 'NEW_FILE_REQUEST';
 export const NEW_FILE_FAIL = 'NEW_FILE_FAIL';
@@ -32,6 +37,20 @@ export const files = (data) => {
       params: {
         options: 'sysAttrs',
       }
+    },
+    types: [FILES_REQUEST, FILES_SUCCESS, FILES_FAIL],
+  });
+};
+
+export const downloadFile = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: data,
     },
     types: [FILES_REQUEST, FILES_SUCCESS, FILES_FAIL],
   });

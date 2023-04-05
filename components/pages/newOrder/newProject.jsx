@@ -72,12 +72,13 @@ const NewOrder = ({ ...props }) => {
     // name: { value: '', error: '', required: true },
     client: { value: '', error: '', required: true },
     dateRequest: { value: '', error: '', required: true, type: 'date' },
-    dateAgreedDelivery: { value: '', error: '', required: false, type: 'date' },
+    dateDelivery: { value: '', error: '', required: false, type: 'date' },
+    dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
     dateDeliveryProject: { value: '', error: '', required: false, type: 'date' },
     streetAddress: { value: '', error: '', required: true },
     postalCode: { value: '', error: '', required: true },
     addressLocality: { value: '', error: '', required: true },
-    addressRegion: { value: '', error: '', required: true },
+    addressRegion: { value: '', error: '', required: false },
     addressCountry: { value: '', error: '', required: true },
   });
 
@@ -235,7 +236,7 @@ const NewOrder = ({ ...props }) => {
       },
       status: {
         type: 'Property',
-        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value ? 'waiting adjudication' : 'waiting budget'
+        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'waiting budget'
       },
       orderBy: {
         type: 'Relationship',
@@ -247,7 +248,7 @@ const NewOrder = ({ ...props }) => {
       },
       dateDelivery: {
         type: 'Property',
-        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value ? budgetData.dateDelivery.value : ''
+        value: moment(budgetData.dateDelivery.value).format('DD/MM/YYYY')
       },
       deliveryAddress: {
         type: 'Property',
@@ -263,7 +264,7 @@ const NewOrder = ({ ...props }) => {
 
     await newBudget(data).then(() => {
       toast.success('Orçamento Criado!');
-    }).catch((err) => console.log(err));
+    }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
 
     await newFolder({
       folder_name: `urn:ngsi-ld:Folder:${inputFields[0]?.name.value.replace(/ /g, '_').toUpperCase()}`,

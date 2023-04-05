@@ -1,7 +1,8 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unknown-property */
 //  PropTypes
-import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -22,6 +23,8 @@ const Docs = (props) => {
   const dispatch = useDispatch();
   const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
   const [creatingFolder, setCreatingFolder] = useState(false);
   const reduxState = useSelector((state) => state);
   const me = reduxState.auth.me;
@@ -81,9 +84,9 @@ const Docs = (props) => {
         <Accordion key={folder.id} {...getRootProps()} sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
           <Tooltip title='Arrastar ficheiros para esta pasta' {...getRootProps()}>
             <AccordionSummary expandIcon={<ChevronDown />} >
-              <Grid container bgcolor={'default.main'} >
-                <Grid container md={6} sm={6} xs={6} alignItems='center'>
-                  <Box id='align' color='primary.main' >
+              <Grid id="abc" container bgcolor={'default.main'} >
+                <Grid id="abce" container md={6} sm={6} xs={6} alignItems='center'>
+                  <Box id="align abcf" color='primary.main' >
                     {open
                       ? (
                         <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
@@ -101,15 +104,15 @@ const Docs = (props) => {
           </Tooltip>
           <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('aqui')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
-            {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
-            {folder.files.map((file) => (
-              <Box key={file.id} display='flex' alignItems={'center'} p={1}>
+            {folder.files?.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
+            {folder.files?.filter(file => typeof file !== 'undefined').map((file) => (
+              <Box key={file?.id} display='flex' alignItems={'center'} p={1}>
                 <FileText
                   strokeWidth='1'
                   style={{ marginRight: '1rem' }}
                 />
                 <Tooltip title='Clique para abrir este ficheiro.'>
-                  <Typography><a target='#' href={file.file}>{file.file_name + file.file_type}</a></Typography>
+                  <Typography><a target='#' href={file?.file}>{file?.file_name + file?.file_type}</a></Typography>
                 </Tooltip>
               </Box>
             ))}
@@ -122,6 +125,28 @@ const Docs = (props) => {
       ));
   }
 
+  const testRefreshFoldders = async () => {
+    getFolders().then(async (res) => {
+      const builtFolders = [];
+
+      await getFiles(order.budgetId.object.id).then((resFiles) => {
+        res.data.results.map((folder) => {
+          const folder2 = { ...folder };
+
+          folder2.files = [...folder.files].map((file) => {
+            const thisFile = resFiles.data.results.find((ele) => ele.id === file);
+
+            return thisFile;
+          });
+
+          builtFolders.push(folder2);
+        });
+
+        setFolders(builtFolders);
+      });
+    });
+  };
+
   async function handleFilesUpload () {
     const FormData = require('form-data');
     const data = new FormData();
@@ -132,7 +157,11 @@ const Docs = (props) => {
     data.append('budget', order.budgetId.object.id);
 
     try {
-      await uploadFiles(data).then(() => toast.success('Ficheiros carregados.'));
+      await uploadFiles(data).then(() => {
+        testRefreshFoldders();
+        toast.success('Ficheiros carregados.');
+      });
+
       setConfirmUploadModal(false);
     } catch (error) {
       toast.error(error);
@@ -153,6 +182,7 @@ const Docs = (props) => {
         <MySelect label='Escolha a pasta destino' options={folders} optionLabel='folder_name' onChange={(e) => setUploadFolder(e.target.value)} />
       </Box>}
     />
+    <Button onClick={() => testRefreshFoldders()}>refreshFolders</Button>
     <div className={styles.docsMain}>
       <div className={styles.tableContainer}>
         <div id='align' style={{ display: 'flex', padding: '24px' }}>

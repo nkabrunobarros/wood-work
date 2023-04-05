@@ -22,7 +22,7 @@ export const StartBtn = (props) => {
     ? (
       <>
         <IconButton onClick={(e) => !props.msg && props.machines[0] && handleClick(e)} >
-          <Tooltip title={props.msg || !props.machines[0] ? 'Não há maquinas disponiveis' : 'Iniciar'} >
+          <Tooltip title={!props.machines[0] ? 'Não há maquinas disponiveis' : (props.msg || 'Iniciar')} >
             <Play />
           </Tooltip>
         </IconButton>

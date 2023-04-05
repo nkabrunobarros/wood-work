@@ -60,7 +60,8 @@ const ForgotPassword = (props) => {
       toast.success('Sucesso! Siga as instruções que constam do email enviado.');
     }).catch(() => {
       setEmail('');
-      toast.error('Email não enviado.');
+      toast.success('Sucesso! Siga as instruções que constam do email enviado.');
+      // toast.error('Email não enviado.');
     });
   };
 

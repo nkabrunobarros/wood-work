@@ -190,10 +190,10 @@ const Row = (props) => {
                           strokeWidth='1'
                           style={{ marginRight: '1rem' }}
                         />
-                        {file.filename}
+                        {file.file_name} aqui
                       </div>
                     </TableCell>
-                    <TableCell width='30%'>{moment(file.dataCriacao).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell width='30%'> ali {moment(file.created).format('DD/MM/YYYY hh:mm')}</TableCell>
                     <TableCell>
                       <ButtonGroup>
                         <Tooltip title='Editar'>

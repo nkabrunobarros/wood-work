@@ -98,7 +98,7 @@ const OrdersSimilar = () => {
         id: 'Nome',
         numeric: false,
         disablePadding: false,
-        label: 'Nome Pedido',
+        label: 'Nome Projeto',
       },
       {
         id: 'Cliente',

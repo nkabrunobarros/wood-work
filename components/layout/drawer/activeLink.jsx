@@ -65,11 +65,11 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const dashboardPages = [`${routes.private.internal.dashboards}`];
   let currentSection = '';
 
-  if (ordersPages.includes(path.route)) currentSection = 'Pedidos';
+  if (ordersPages.includes(path.route)) currentSection = 'Projetos';
 
-  if (projectsPages.includes(path.route)) currentSection = 'Pedidos';
+  if (projectsPages.includes(path.route)) currentSection = 'Projetos';
 
-  if (orderSimilarPages.includes(path.route)) currentSection = 'Pedidos Similares';
+  if (orderSimilarPages.includes(path.route)) currentSection = 'Projetos Similares';
 
   if (stockPages.includes(path.route)) currentSection = 'Stock';
 

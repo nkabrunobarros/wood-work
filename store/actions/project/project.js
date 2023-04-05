@@ -7,6 +7,7 @@ import endpoints from '../../network/endpoints';
 export const PROJECTS_REQUEST = 'PROJECTS_REQUEST';
 export const PROJECTS_FAIL = 'PROJECTS_FAIL';
 export const PROJECTS_SUCCESS = 'PROJECTS_SUCCESS';
+
 export const PROJECT_REQUEST = 'PROJECT_REQUEST';
 export const PROJECT_FAIL = 'PROJECT_FAIL';
 export const PROJECT_SUCCESS = 'PROJECT_SUCCESS';
@@ -18,6 +19,10 @@ export const NEW_PROJECT_SUCCESS = 'NEW_PROJECT_SUCCESS';
 export const UPDATE_PROJECT_REQUEST = 'UPDATE_PROJECT_REQUEST';
 export const UPDATE_PROJECT_SUCCESS = 'UPDATE_PROJECT_SUCCESS';
 export const UPDATE_PROJECT_FAIL = 'UPDATE_PROJECT_FAIL';
+
+export const DELETE_PROJECT_REQUEST = 'DELETE_PROJECT_REQUEST';
+export const DELETE_PROJECT_SUCCESS = 'DELETE_PROJECT_SUCCESS';
+export const DELETE_PROJECT_FAIL = 'DELETE_PROJECT_FAIL';
 
 export const PROD_PROJECTS_REQUEST = 'PROD_PROJECTS_REQUEST';
 export const PROD_PROJECTS_FAIL = 'PROD_PROJECTS_FAIL';
@@ -177,5 +182,20 @@ export const updateProject = (data) => {
       url: getApiURL(endpoints.PROJECTS + id),
     },
     types: [UPDATE_PROJECT_REQUEST, UPDATE_PROJECT_SUCCESS, UPDATE_PROJECT_FAIL],
+  });
+};
+
+export const deleteProject = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.PROJECTS + data),
+    },
+    types: [DELETE_PROJECT_REQUEST, DELETE_PROJECT_SUCCESS, DELETE_PROJECT_FAIL],
   });
 };

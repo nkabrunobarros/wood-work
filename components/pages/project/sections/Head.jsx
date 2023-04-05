@@ -185,7 +185,7 @@ const Head = (props) => {
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container { ...cells }><Typography variant='sm' >{`${order.budgetId.object?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{props.categories.find(ele => ele.id === order?.budgetId?.object?.category.value).label}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{props.categories.find(ele => ele.id === order?.budgetId?.object?.category.value)?.label}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateRequest?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{moment(order?.budgetId?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>

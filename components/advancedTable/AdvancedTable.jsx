@@ -28,7 +28,7 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { DeleteOutline, EditOutlined } from '@mui/icons-material';
+import { DeleteOutline, EditOutlined, PowerSettingsNew } from '@mui/icons-material';
 import { Filter } from 'lucide-react';
 
 //  Utlis
@@ -57,7 +57,8 @@ const AdvancedTable = ({
   setFilters,
   rangeFilters,
   setRangeFilters,
-  onDelete
+  onDelete,
+  onReactivation
 }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
@@ -68,6 +69,7 @@ const AdvancedTable = ({
   const [data, setData] = useState({});
   const [deleteItemId, setDeleteItemId] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpenReactivation, setDialogOpenReactivation] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [cellsFilter, setCellsFilter] = useState(headCells);
@@ -125,6 +127,13 @@ const AdvancedTable = ({
 
   function onDeleteClick (row) {
     setDialogOpen(true);
+
+    if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
+    else setDeleteItemId(row.id);
+  }
+
+  function onReactivationClick (row) {
+    setDialogOpenReactivation(true);
 
     if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
     else setDeleteItemId(row.id);
@@ -362,6 +371,15 @@ const AdvancedTable = ({
         } }
         message={dialogMessage}
       />
+      <ConfirmDialog
+        open={dialogOpenReactivation}
+        handleClose={() => setDialogOpenReactivation(false)}
+        onConfirm={() => {
+          !!onReactivation && onReactivation(deleteItemId);
+          setDialogOpenReactivation(false);
+        } }
+        message={'Está prestes a fazer uma reabertura. Tem certeza que quer continuar?'}
+      />
 
       <Notification />
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -492,10 +510,19 @@ const AdvancedTable = ({
                                           }
                                         </>
                                     }
-                                    {!!onDelete && <Tooltip title={'Remover'}>
+                                    {!!onReactivation && row?.status?.value === 'canceled' && <Tooltip title={'Reabrir'}>
+                                      <IconButton onClick={() => onReactivationClick(row)} size='small' >
+                                        <PowerSettingsNew
+                                          color={ 'warning'}
+
+                                          fontSize="sm"
+                                        />
+                                      </IconButton>
+                                    </Tooltip>}
+                                    {!!onDelete && <Tooltip title={row?.status?.value !== 'canceled' ? 'Remover' : 'Apagar do sistema'}>
                                       <IconButton onClick={() => onDeleteClick(row)} size='small' >
                                         <DeleteOutline
-                                          color={'primary'}
+                                          color={ row?.status?.value !== 'canceled' ? 'primary' : 'error'}
                                           fontSize="small"
                                         />
                                       </IconButton>
@@ -504,10 +531,19 @@ const AdvancedTable = ({
                                 )
                                 : (
                                   <Box
-                                    onClick={() =>
-                                      clickRoute && Router.route === routes.private.projects && row.id.includes('urn:ngsi-ld:Budget:')
-                                        ? Router.push(`${routes.private.budget}${row[actionId || 'id']}`)
-                                        : Router.push(`${clickRoute}${row[actionId || 'id']}`)
+                                    onClick={() => {
+                                      //  Verifies if im in a internal page
+                                      const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
+
+                                      //  Verifies if im in a internal page AND in a projects section
+                                      if (isInternalPage && Router.route.includes('projects')) {
+                                        Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
+                                        //  Verifies if im NOT in a internal page AND in a projects section
+                                      } else if (!isInternalPage && Router.route.includes('projects')) {
+                                        Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
+                                        //  if its not on a projects section, just use the click route
+                                      } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
+                                    }
                                     }
                                     color={index2 === 0 && 'primary.main'}
                                     sx={{ cursor: clickRoute && 'pointer' }}

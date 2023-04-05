@@ -57,7 +57,7 @@ const NewMsgInput = (props) => {
         onChange={(e) => setNewMessageText(e.target.value)}
         sx={styles.writeMessageInput}
         endAdornment={ <Button position='end' type='submit'>
-          {windowWidth > 900 ? 'Enviar' : <Send size={20}/>}
+          <Send size={20}/>
         </Button>}
       />
     </Box>

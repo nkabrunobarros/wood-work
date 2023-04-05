@@ -11,6 +11,7 @@ export const CLIENTS_SUCCESS = 'CLIENTS_SUCCESS';
 export const CLIENT_REQUEST = 'CLIENT_REQUEST';
 export const CLIENT_FAIL = 'CLIENT_FAIL';
 export const CLIENT_SUCCESS = 'CLIENT_SUCCESS';
+
 export const UPDATE_CLIENT_REQUEST = 'UPDATE_CLIENT_REQUEST';
 export const UPDATE_CLIENT_FAIL = 'UPDATE_CLIENT_FAIL';
 export const UPDATE_CLIENT_SUCCESS = 'UPDATE_CLIENT_SUCCESS';
@@ -18,6 +19,10 @@ export const UPDATE_CLIENT_SUCCESS = 'UPDATE_CLIENT_SUCCESS';
 export const ADD_CLIENT_REQUEST = 'ADD_CLIENT_REQUEST';
 export const ADD_CLIENT_SUCCESS = 'ADD_CLIENT_SUCCESS';
 export const ADD_CLIENT_FAIL = 'ADD_CLIENT_FAIL';
+
+export const DELETE_CLIENT_REQUEST = 'DELETE_CLIENT_REQUEST';
+export const DELETE_CLIENT_SUCCESS = 'DELETE_CLIENT_SUCCESS';
+export const DELETE_CLIENT_FAIL = 'DELETE_CLIENT_FAIL';
 
 export const SET_DISPLAYED_CLIENT = 'SET_DISPLAYED_CLIENT';
 
@@ -81,6 +86,20 @@ export const newClient = (data) => {
       url: getApiURL(endpoints.ADDCLIENT),
     },
     types: [ADD_CLIENT_REQUEST, ADD_CLIENT_SUCCESS, ADD_CLIENT_FAIL],
+  });
+};
+
+export const deleteClient = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.CUSTOMER + data),
+    },
+    types: [DELETE_CLIENT_REQUEST, DELETE_CLIENT_SUCCESS, DELETE_CLIENT_FAIL],
   });
 };
 

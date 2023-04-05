@@ -37,8 +37,6 @@ const Messages = (props) => {
     loadMessages();
   }, []);
 
-  console.log(budget.orderBy.object.user.id);
-
   const handleSendMessage = async (event) => {
     event.preventDefault();
 
@@ -136,7 +134,7 @@ const Messages = (props) => {
             width: '100%'
           }}
           endAdornment={ <Button position='end' type='submit'>
-            {windowWidth > 900 ? 'Enviar' : <Send size={20}/>}
+            <Send size={20}/>
           </Button>}
         />
       </Box>

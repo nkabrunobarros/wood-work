@@ -29,7 +29,7 @@ const NewOrder = ({ ...pageProps }) => {
 
       if (!reduxState.budgets.data) await getBudgets();
 
-      if (!reduxState.clients.data) await getClients().then((res) => console.log(res));
+      if (!reduxState.clients.data) await getClients();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -38,7 +38,7 @@ const NewOrder = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Pedidos',
+        title: 'Projetos',
         href: `${routes.private.internal.projects}`,
       },
       {
@@ -51,7 +51,13 @@ const NewOrder = ({ ...pageProps }) => {
       pageProps,
       breadcrumbsPath,
       budgets: reduxState.budgets.data,
-      clients: reduxState.clients.data,
+      clients: [...reduxState.clients?.data ?? []].map((client) => {
+        return {
+          ...client,
+          Nome: client.user.first_name + ' ' + client.user.last_name + ' - ' + client.user.email,
+          Email: client.user.email,
+        };
+      }),
       categories,
     };
 

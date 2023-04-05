@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
@@ -37,6 +38,8 @@ const Docs = (props) => {
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const [docsModal, setDocsModal] = useState(false);
   const [folders, setFolders] = useState(props.folders);
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
 
   const {
     pageProps,
@@ -104,14 +107,14 @@ const Docs = (props) => {
           <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
             {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
-            {folder.files.map((file) => (
-              <Box key={file.id} display='flex' alignItems={'center'} p={1}>
+            {folder.files.filter(file => typeof file !== 'undefined').map((file) => (
+              <Box key={file?.id} display='flex' alignItems={'center'} p={1}>
                 <FileText
                   strokeWidth='1'
                   style={{ marginRight: '1rem' }}
                 />
                 <Tooltip title='Clique para abrir este ficheiro.'>
-                  <Typography><a target='#' href={file.file}>{file.file_name + file.file_type}</a></Typography>
+                  <Typography><a target='#' href={file?.file}>{file?.file_name + file?.file_type}</a></Typography>
                 </Tooltip>
               </Box>
             ))}
@@ -124,6 +127,30 @@ const Docs = (props) => {
       ));
   }
 
+  console.log(budget);
+
+  const testRefreshFoldders = async () => {
+    getFolders().then(async (res) => {
+      const builtFolders = [];
+
+      await getFiles(budget.id).then((resFiles) => {
+        res.data.results.map((folder) => {
+          const folder2 = { ...folder };
+
+          folder2.files = [...folder.files].map((file) => {
+            const thisFile = resFiles.data.results.find((ele) => ele.id === file);
+
+            return thisFile;
+          });
+
+          builtFolders.push(folder2);
+        });
+
+        setFolders(builtFolders);
+      });
+    });
+  };
+
   async function handleFilesUpload () {
     const FormData = require('form-data');
     const data = new FormData();
@@ -133,7 +160,12 @@ const Docs = (props) => {
     data.append('budget', budget.id);
 
     try {
-      await uploadFiles(data).then(() => toast.success('Ficheiros carregados.'));
+      await uploadFiles(data).then(() => {
+        testRefreshFoldders();
+        toast.success('Ficheiros carregados.');
+      });
+
+      setConfirmUploadModal(false);
     } catch (error) {
       toast.error(error);
     }

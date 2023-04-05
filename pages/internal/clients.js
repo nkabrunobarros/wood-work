@@ -31,8 +31,8 @@ const Clients = ({ ...pageProps }) => {
   useEffect(() => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-
-      if (!reduxState.clients.data) await getClients();
+      await getClients();
+      // if (!reduxState.clients.data) await getClients();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -72,9 +72,10 @@ const Clients = ({ ...pageProps }) => {
     ];
 
     const props = {
-      items: [...reduxState.clients?.data].map(client => {
+      items: [...reduxState.clients?.data ?? []].map(client => {
         const client2 = { ...client };
 
+        client2.NomeDropdown = client.user.first_name + ' ' + client.user.last_name + ' - ' + client.user.email;
         client2.Nome = client.user.first_name + ' ' + client.user.last_name;
         client2.Email = client.user.email;
 

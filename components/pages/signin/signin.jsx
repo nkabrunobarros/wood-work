@@ -9,7 +9,8 @@ import {
   Box,
   Button,
   Checkbox,
-  CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid, Paper, Typography
+  CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid, Paper,
+  Typography
 } from '@mui/material';
 
 //  Styles
@@ -190,9 +191,7 @@ const SignIn = (props) => {
         }).catch((err) => console.log(err));
       });
     } catch (err) {
-      console.log(err);
-
-      if (err.response.data.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas.', 'error');
+      if (err.response?.data?.error_description === 'Invalid credentials given.') ToastSet(loadingNotification, 'Credenciais erradas.', 'error');
       else ToastSet(loadingNotification, 'Algo aconteceu. Por favor tente mais tarde', 'error');
 
       setLoading(false);
@@ -257,13 +256,13 @@ const SignIn = (props) => {
           </Box>
         </Grid>
       }
-
       <Grid container item xs={12} sm={6} md={5}
         component={Paper}
         elevation={6}
         square
         fullHeight
       >
+
         <Box
           sx={{
             my: '20%',
@@ -302,7 +301,7 @@ const SignIn = (props) => {
             /> */}
             <MyInput
               id='email'
-              label='Nome de Utilizador'
+              label='Endereço de email'
               onChange={(e) => {
                 if (usernameErrors) setUsernameErrors('');
 
@@ -312,6 +311,7 @@ const SignIn = (props) => {
               value={username}
               error={usernameErrors}
               name='email'
+              type='email'
             />
             <MyInput
               id='password'

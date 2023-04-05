@@ -8,6 +8,9 @@ export {
   UPDATE_BUDGET_REQUEST,
   UPDATE_BUDGET_FAIL,
   UPDATE_BUDGET_SUCCESS,
+  DELETE_BUDGET_REQUEST,
+  DELETE_BUDGET_FAIL,
+  DELETE_BUDGET_SUCCESS,
   DISPLAYED_BUDGET_SET,
   budgets,
   setDisplayingBudget,
@@ -16,4 +19,5 @@ export {
   activebudgets,
   budget,
   myBudgets,
+  deleteBudget,
 } from './budget';

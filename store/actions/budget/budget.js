@@ -20,6 +20,10 @@ export const UPDATE_BUDGET_REQUEST = 'UPDATE_BUDGET_REQUEST';
 export const UPDATE_BUDGET_FAIL = 'UPDATE_BUDGET_FAIL';
 export const UPDATE_BUDGET_SUCCESS = 'UPDATE_BUDGET_SUCCESS';
 
+export const DELETE_BUDGET_REQUEST = 'DELETE_BUDGET_REQUEST';
+export const DELETE_BUDGET_FAIL = 'DELETE_BUDGET_FAIL';
+export const DELETE_BUDGET_SUCCESS = 'DELETE_BUDGET_SUCCESS';
+
 export const DISPLAYED_BUDGET_SET = 'DISPLAYED_BUDGET_SET';
 
 export const activebudgets = (data) => {
@@ -34,7 +38,7 @@ export const activebudgets = (data) => {
       url: getApiURL(endpoints.BUDGETS),
       params: {
         options: 'sysAttrs',
-        q: 'status!="adjudicated',
+        q: 'status!="adjudicated"',
         limit: 200
       }
     },
@@ -54,7 +58,7 @@ export const myBudgets = (data) => {
       url: getApiURL(endpoints.BUDGETS),
       params: {
         options: 'sysAttrs',
-        q: 'status!="adjudicated',
+        q: 'status!="adjudicated"',
       }
     },
     types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],
@@ -132,6 +136,20 @@ export const updateBudget = (data) => {
       }
     },
     types: [UPDATE_BUDGET_REQUEST, UPDATE_BUDGET_SUCCESS, UPDATE_BUDGET_FAIL],
+  });
+};
+
+export const deleteBudget = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.BUDGETS + data),
+    },
+    types: [DELETE_BUDGET_REQUEST, DELETE_BUDGET_SUCCESS, DELETE_BUDGET_FAIL],
   });
 };
 

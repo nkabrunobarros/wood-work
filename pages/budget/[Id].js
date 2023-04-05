@@ -58,7 +58,7 @@ const Budget = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Pedidos',
+        title: 'Projetos',
         href: `${routes.private.projects}`,
       },
       {

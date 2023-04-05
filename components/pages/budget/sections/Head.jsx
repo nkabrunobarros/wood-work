@@ -43,26 +43,20 @@ export const EditableCell = ({ active, onDoubleClick, value, type, name, options
     type: type || 'text'
   };
 
-  return (
-    <>
-      {!active
-        ? (
-          <Tooltip title={tooltipTitle} sx={{ cursor: isInternalPage && 'pointer' }}>
-            <Typography variant='sm' onDoubleClick={() => isInternalPage && onDoubleClick(name)}>
-              {label}
-              {currencySymbol}
-            </Typography>
-          </Tooltip>
-        )
-        : (
-          <>
-            {type === 'currency' && <CurrencyInput {...commonProps} />}
-            {type === 'select' && <MySelect {...commonProps} /> }
-            {type !== 'currency' && type !== 'select' && <TextField {...commonProps} />}
-          </>
-        )}
-    </>
-  );
+  if (!active) {
+    return <Tooltip title={tooltipTitle} sx={{ cursor: isInternalPage && 'pointer' }}>
+      <Typography variant='sm' onDoubleClick={() => isInternalPage && onDoubleClick(name)}>
+        {label}
+        {currencySymbol}
+      </Typography>
+    </Tooltip>;
+  }
+
+  switch (type) {
+  case 'currency': return <CurrencyInput {...commonProps} />;
+  case 'select': return <MySelect {...commonProps} />;
+  default: return <TextField {...commonProps} />;
+  }
 };
 
 EditableCell.propTypes = {
@@ -249,8 +243,8 @@ const Head = (props) => {
       );
 
       await getCustomer(budget.orderBy.object.id.replace('urn:ngsi-ld:Owner:', '')).then(async (res) => {
-        await budgetAdjudicated({
-          subject: 'Pedido adjudicado!',
+        false && await budgetAdjudicated({
+          subject: 'Projeto adjudicado!',
           html_message: emailTemplate({ clientName: `${res.data.user.first_name} ${res.data.user.last_name}`, msgBody: 'O seu pedido passou a produção.' }),
           recipients: [res.data.user.id],
           recipient_group: -1
@@ -280,7 +274,6 @@ const Head = (props) => {
       <Notification />
       <DeliverBudgetModal {...props} open={deliverModal} handleClose={() => setDeliverModal(false)} onConfirm={handleConfirmation} />
       <AdjudicateBudgetModal {...props} open={adjudicateModal} handleClose={() => setAdjudicateModal(false)} onConfirm={handleAdjudication} />
-
       <Box id='pad'>
         <Box container >
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
@@ -349,17 +342,17 @@ const Head = (props) => {
                 <Grid container { ...cells }>
                   <EditableCell active={activeFields.category} isInternalPage={isInternalPage} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.amount?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.amount?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.amount?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.amount?.value && 'primary.light'}>
                   <EditableCell active={activeFields.amount} isInternalPage={isInternalPage} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateRequest} isInternalPage={isInternalPage} value={budget?.dateRequest?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateRequest' type='date' />
                 </Grid>
                 <Grid container { ...cells }><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.dateAgreedDelivery?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateAgreedDelivery?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.dateAgreedDelivery?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateAgreedDelivery?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateAgreedDelivery} isInternalPage={isInternalPage} value={budget?.dateAgreedDelivery?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateAgreedDelivery' type='date' />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.price?.value && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.price?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.price?.value && budget?.status?.value !== 'canceled' && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.price?.value && 'primary.light'}>
                   <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
                 </Grid>
                 <Grid container { ...cells }><Typography variant='sm' >{budget?.dateDelivery?.value}</Typography></Grid>

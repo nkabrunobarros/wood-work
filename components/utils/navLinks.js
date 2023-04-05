@@ -5,14 +5,14 @@ import routes from '../../navigation/routes';
 export const navLinks = [
 
   {
-    title: 'Pedidos',
+    title: 'Projetos',
     id: 'projectsInternal',
     url: routes.private.projects,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
   },
   {
-    title: 'Pedidos',
+    title: 'Projetos',
     id: 'projectsClient',
     url: routes.private.internal.projects,
     icon: <Archive strokeWidth='1' size={20} />,
@@ -33,7 +33,7 @@ export const navLinks = [
   //   allowed: 'messages',
   // },
   {
-    title: 'Pedidos Similares',
+    title: 'Projetos Similares',
     id: 'projectsSimilar',
     url: routes.private.internal.projectsSimilar,
     icon: <Archive strokeWidth='1' size={20} />,

@@ -2,6 +2,7 @@
 import {
   Box,
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -31,8 +32,9 @@ const MyInput = ({
   name,
   id = `ID-${label}`,
   tooltip,
-}) => (
-  <Box sx={{ width: '100%' }}>
+  maxLength
+}) => {
+  return <Box sx={{ width: '100%' }}>
     {variant !== 'standard' && (
       <Tooltip title={tooltip || ''}>
         <InputLabel htmlFor={id} id={id}>
@@ -62,10 +64,13 @@ const MyInput = ({
         required
         label={error}
         fullWidth={fullWidth}
-        InputProps={{ inputProps: { min: 0, max: 10 } }}
+        inputProps={{
+          maxLength: maxLength || 255,
+        }}
         sx={{
           width: width || (halfWidth && '50%'),
         }}
+
         rows={4}
         style={style}
         placeholder={placeholder || ''}
@@ -97,8 +102,14 @@ const MyInput = ({
           </InputAdornment>
         )}
       />
+      {maxLength && <Tooltip title='Tamanho máximo'>
+        <FormHelperText sx={{ display: 'flex', justifyContent: 'end' }} >
+          {value?.length} / {maxLength} caracteres
+        </FormHelperText>
+      </Tooltip>
+      }
     </FormControl>
-  </Box>
-);
+  </Box>;
+};
 
 export default MyInput;

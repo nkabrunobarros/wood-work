@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
 import { Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
 import { FilePlus, Image } from 'lucide-react';
@@ -20,20 +21,21 @@ const DocsClient = (props) => {
   const dispatch = useDispatch();
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const getFile = (data) => dispatch(filesActionsRedux.file(data));
+  const downloadFile = (data) => dispatch(filesActionsRedux.downloadFile(data));
 
   const onDrop = useCallback((acceptedFiles) => {
     setNewFiles(acceptedFiles);
     setConfirmUploadModal(true);
   }, []);
 
-  const { getRootProps } = useDropzone({ onDrop });
+  const { getInputProps } = useDropzone({ onDrop });
 
   async function handleFilesUpload () {
     const FormData = require('form-data');
     const data = new FormData();
 
     data.append('folder', props.folders.find(ele => ele.folder_name === order.budgetId.object.id.replace('Budget', 'Folder')).id);
-    newFiles.map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
+    [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
     data.append('budget', order.budgetId.object.id);
 
     try {
@@ -48,6 +50,18 @@ const DocsClient = (props) => {
     }
 
     setConfirmUploadModal(false);
+  }
+
+  async function handleFileClick (file) {
+    await downloadFile(file.file)
+      .then((res) => {
+        toast.success('Consegui buscar ficheiro.');
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error('Algo aconteceu. Por favor tente mais tarde.');
+        console.log(err);
+      });
   }
 
   return <>
@@ -69,7 +83,6 @@ const DocsClient = (props) => {
           <Box className='flex'>
             <Box>
               <PrimaryBtn
-                {...getRootProps()}
                 text='Carregar'
                 icon={
                   <FilePlus
@@ -77,7 +90,10 @@ const DocsClient = (props) => {
                     size={pageProps?.globalVars?.iconSize}
                   />
                 }
-              />
+              >
+                <input {...getInputProps()} hidden multiple onChange={(e) => onDrop(e.target.files) } />
+
+              </PrimaryBtn>
             </Box>
           </Box>
         </Box>
@@ -98,7 +114,7 @@ const DocsClient = (props) => {
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
                       <Tooltip title='Clique para abrir este ficheiro.'>
-                        <Typography><a target='#' href={file.file}>{file.file_name + file.file_type}</a></Typography>
+                        <Typography sx={{ cursor: 'pointer' }}><a onClick={() => handleFileClick(file)} >{file.file_name + file.file_type}</a></Typography>
                       </Tooltip>
                     </Grid>
                     <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>

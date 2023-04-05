@@ -15,6 +15,9 @@ export {
   UPDATE_PROJECT_REQUEST,
   UPDATE_PROJECT_SUCCESS,
   UPDATE_PROJECT_FAIL,
+  DELETE_PROJECT_REQUEST,
+  DELETE_PROJECT_SUCCESS,
+  DELETE_PROJECT_FAIL,
   ACTIVE_PROJECTS_REQUEST,
   ACTIVE_PROJECTS_FAIL,
   ACTIVE_PROJECTS_SUCCESS,
@@ -26,5 +29,6 @@ export {
   project,
   activeProjects,
   myProjects,
-  finalizedProjects
+  finalizedProjects,
+  deleteProject
 } from './project';

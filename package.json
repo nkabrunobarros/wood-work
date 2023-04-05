@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "static": "next build && next export"
+    "static": "next build && next export",
+    "prod": "./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:1 . && docker tag mofreita:1 registry.nka.pt/nka/mofreita:1 && docker push registry.nka.pt/nka/mofreita:1"
   },
   "browser": {
     "fs": false,
@@ -29,6 +30,7 @@
     "dayjs": "^1.11.7",
     "eslint": ">=5.16.0",
     "html5-qrcode": "^2.3.4",
+    "js-file-download": "^0.4.12",
     "jsonwebtoken": "^8.5.1",
     "konva": "^8.4.3",
     "lucide-react": "^0.48.0",

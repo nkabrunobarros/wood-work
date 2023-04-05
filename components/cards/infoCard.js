@@ -21,7 +21,7 @@ const InfoCard = ({ title, icon, amount, color }) => {
           <Grid container item md={2}>{icon}</Grid>
           <Grid container item md={10} className='fullCenter'>
             <Grid><Typography variant='md' className={styles.cardTitle}>{title}</Typography></Grid>
-            <Grid><Typography variant='xxl'>{amount} {'Pedidos'}</Typography></Grid>
+            <Grid><Typography variant='xxl'>{amount} {'Projeto(s)'}</Typography></Grid>
           </Grid>
         </Grid>
       </Tooltip>

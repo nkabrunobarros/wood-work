@@ -15,10 +15,11 @@ const ResetPassword = () => {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const token = urlParams.get('token');
+      const uidb64 = urlParams.get('uidb64');
       const profile = urlParams.get('profile');
       const activationToken = urlParams.get('activationToken');
 
-      setToken({ token, profile, activationToken });
+      setToken({ uidb64, token, profile, activationToken });
     }
 
     Promise.all([checkToken()]).then(() => setLoaded(true));
@@ -29,7 +30,7 @@ const ResetPassword = () => {
       params: token,
     };
 
-    return token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
+    return token.token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
   }
 
   return <Loader center={true} />;

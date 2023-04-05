@@ -310,7 +310,7 @@ const Order = ({ ...pageProps }) => {
 
     const breadcrumbsPath = [
       {
-        title: 'Pedidos',
+        title: 'Projetos',
         href: `${routes.private.internal.projects}`,
       },
       {

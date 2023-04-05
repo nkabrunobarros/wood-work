@@ -29,7 +29,7 @@ const FactoryGround = ({ ...props }) => {
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Grid container md={12} >
         <Grid container md={12} p={1} >
-          <Typography variant='title'>Escolha Pedido</Typography>
+          <Typography variant='title'>Escolha Projeto</Typography>
         </Grid>
         {projects?.map((proj, i) =>
           <Grid key={i} container md={3} sm={6} xs={12} p={1} >

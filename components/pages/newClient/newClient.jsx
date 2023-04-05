@@ -3,7 +3,7 @@
 /* eslint-disable array-callback-return */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
@@ -13,16 +13,14 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, ButtonGroup, Card, Divider, Paper,
-  Popover, Tooltip, Typography
+  Box, ButtonGroup, Card,
+  Tooltip, Typography
 } from '@mui/material';
-import axios from 'axios';
 import { Building2, ChevronLeft, Save, User, X } from 'lucide-react';
 import Router from 'next/router';
 import SwipeableViews from 'react-swipeable-views';
 import { toast } from 'react-toastify';
-import styled, { useTheme } from 'styled-components';
-import routes from '../../../navigation/routes';
+import { useTheme } from 'styled-components';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
@@ -35,6 +33,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import ToastSet from '../../utils/ToastSet';
 
 const NewClient = ({ ...props }) => {
   const {
@@ -47,9 +46,6 @@ const NewClient = ({ ...props }) => {
   //  Dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   //  Errors states
-  const [postalCodeInfo, setPostalCodeInfo] = useState();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [successOpen, setSuccessOpen] = useState(false);
   const [generatePassword, setGeneratePassword] = useState(true);
   const [selectTypeInstituition, setSelectTypeInstituition] = useState();
   //  Step states
@@ -58,21 +54,21 @@ const NewClient = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState(
     [
-      {
-        id: 'user.username',
-        label: 'Nome Utilizador',
-        value: '',
-        error: '',
-        required: true,
-        tooltip: 'Dado utilizado para login.',
-      },
+      // {
+      //   id: 'user.username',
+      //   label: 'Nome Utilizador',
+      //   value: '',
+      //   error: '',
+      //   required: true,
+      //   tooltip: 'Dado utilizado para login.',
+      // },
       {
         id: 'user.first_name',
         label: 'Primeiro Nome',
         value: '',
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
       },
       {
         id: 'user.last_name',
@@ -116,21 +112,22 @@ const NewClient = ({ ...props }) => {
       //   required: true,
       //   tooltip: ''
       // },
-      {
-        id: 'vat',
-        label: 'Numero Identificação Fiscal (Nif)',
-        value: '',
-        error: '',
-        required: true,
-        tooltip: ''
-      },
+      // {
+      //   id: 'vat',
+      //   label: 'Numero Identificação Fiscal (Nif)',
+      //   value: '',
+      //   error: '',
+      //   required: false,
+      //   tooltip: '',
+      // },
       {
         id: 'address.streetAddress',
         label: 'Rua',
         value: '',
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 50
       },
       {
         id: 'address.postalCode',
@@ -138,7 +135,8 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 15
       },
       {
         id: 'address.addressLocality',
@@ -146,27 +144,23 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
+        maxLength: 25,
       },
       {
         id: 'address.addressRegion',
         label: 'Concelho',
         value: '',
         error: '',
-        required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
+        required: false,
+        maxLength: 25,
       },
-
       {
         id: 'address.addressCountry',
         label: 'País',
         value: '',
         error: '',
+        type: 'country',
         required: true,
-        disabled: true,
-        tooltip: 'Prencha o Codigo Postal'
       },
       {
         id: 'delivery_address.streetAddress',
@@ -190,24 +184,21 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
-        tooltip: 'Prencha o Codigo Postal'
       },
       {
         id: 'delivery_address.addressRegion',
         label: 'Concelho de Entrega',
         value: '',
         error: '',
-        required: true,
-        tooltip: 'Prencha o Codigo Postal'
+        required: false,
       },
-
       {
         id: 'delivery_address.addressCountry',
         label: 'País de Entrega',
         value: '',
         error: '',
         required: true,
-        tooltip: 'Prencha o Codigo Postal'
+        type: 'country',
       },
       {
         id: 'ownerType',
@@ -222,45 +213,18 @@ const NewClient = ({ ...props }) => {
         required: true,
         tooltip: 'Isto ainda nao está aplicado no fireware.'
       },
-      {
-        id: 'user.password',
-        label: 'Senha',
-        value: '',
-        error: '',
-        type: 'password',
-        required: true,
-        tooltip: 'Trocar para senha autogerada'
-      },
+      // {
+      //   id: 'user.password',
+      //   label: 'Senha',
+      //   value: 'ChangeMe',
+      //   error: '',
+      //   type: 'password',
+      //   required: true,
+      //   tooltip: 'Trocar para senha autogerada',
+      //   hidden: true,
+      // },
     ]
   );
-
-  useEffect(() => {
-    function FillAddressFields () {
-      const data = [...inputFields];
-
-      postalCodeInfo && data.map((field, i) => {
-        if (field.id === 'address.postalCode') { data[i].error = ''; }
-
-        if (field.id === 'address.addressCountry') { data[i].value = 'PT'; data[i].error = ''; }
-
-        if (field.id === 'address.addressRegion') { data[i].value = postalCodeInfo.Concelho; data[i].error = ''; }
-
-        if (field.id === 'address.addressLocality' && typeof postalCodeInfo.Localidade !== 'object') { data[i].value = postalCodeInfo.Localidade; data[i].error = ''; }
-
-        if (field.id === 'delivery_address.postalCode') { data[i].error = ''; data[i].value = postalCodeInfo.CP; }
-
-        if (field.id === 'delivery_address.addressCountry') { data[i].value = 'PT'; data[i].error = ''; }
-
-        if (field.id === 'delivery_address.addressRegion') { data[i].value = postalCodeInfo.Concelho; data[i].error = ''; }
-
-        if (field.id === 'delivery_address.addressLocality' && typeof postalCodeInfo.Localidade !== 'object') { data[i].value = postalCodeInfo.Localidade; data[i].error = ''; }
-      });
-
-      setInputFields(data);
-    }
-
-    FillAddressFields();
-  }, [postalCodeInfo]);
 
   function ValidateFields () {
     let hasErrors = false;
@@ -280,9 +244,6 @@ const NewClient = ({ ...props }) => {
       } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
         data[i].error = 'Email mal estruturado';
         hasErrors = true;
-      } else if (!postalCodeInfo && input.id === 'postalCode') {
-        data[i].error = 'Codigo Postal Invalido';
-        hasErrors = true;
       } else if (String(input.value).replace(/ /g, '').length !== 9 && input.type === 'phone' && input.required) {
         data[i].error = 'Número mal estruturado';
         hasErrors = true;
@@ -301,6 +262,7 @@ const NewClient = ({ ...props }) => {
   }
 
   async function handleSave () {
+    const loading = toast.loading('');
     const qs = require('qs');
 
     const builtClient2 = {
@@ -309,40 +271,64 @@ const NewClient = ({ ...props }) => {
     };
 
     inputFields.map((ele) => {
-      builtClient2[ele.id] = {};
-
       if (ele.type === 'password') ele.value = 'ChangeMe';
 
-      builtClient2[ele.id] = ele.value;
+      if (ele.value !== '') {
+        builtClient2[ele.id] = {};
+        builtClient2[ele.id] = ele.value;
+      }
     });
 
+    builtClient2['user.username'] = builtClient2['user.email'];
     builtClient2.country = builtClient2['address.addressCountry'];
-    builtClient2['user.password_confirm'] = builtClient2['user.password'];
+    // builtClient2['user.password_confirm'] = builtClient2['user.password'];
 
     const data = qs.stringify({ ...builtClient2 });
 
-    await newClient(data).then(() => setSuccessOpen(true))
-      .catch((err) => onError(err));
+    await newClient(data).then(() => {
+      ClearFields();
+      ToastSet(loading, 'Cliente Criado!', 'success');
+    })
+      .catch((err) => { onError(err, loading); });
 
     setDialogOpen(false);
   }
 
-  function onError (error) {
+  function onError (error, loading) {
     const errorKeys = Object.keys(error.response.data);
 
     const updatedFields = inputFields.map((field) => {
       const [key, subKey] = field.id.split('.');
 
-      if (errorKeys.includes(key) && error.response.data[key][subKey]) {
-        switch (error.response.data[key][subKey][0]) {
-        case 'A user with that username already exists.':
-          return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
-        case 'User with this email address already exists.':
-          return { ...field, error: 'Já existe um utilizador com este Email.' };
-        case 'This field is required.':
-          return { ...field, error: 'Campo Obrigatório.' };
-        default:
-          return { ...field, error: error.response.data[key][subKey][0] };
+      if (errorKeys.includes(key)) {
+        if (subKey && error.response.data[key][subKey]) {
+          switch (error.response.data[key][subKey][0]) {
+          case 'A user with that username already exists.':
+            return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
+          case 'User with this email address already exists.':
+            return { ...field, error: 'Já existe um utilizador com este Email.' };
+          case 'This field is required.':
+            return { ...field, error: 'Campo Obrigatório.' };
+          case 'Ensure this field has no more than 15 characters.':
+            return { ...field, error: 'Tamanho máximo de 15 caracteres.' };
+          case 'Ensure this field has no more than 50 characters.':
+            return { ...field, error: 'Tamanho máximo de 50 caracteres.' };
+          case '[\'Zip codes must be in the format XYYY-YYY (where X is a digit between 1 and 9 and Y is any other digit).\']':
+            return { ...field, error: 'Mal formatado.' };
+          case 'Enter a valid username. This value may contain only letters, numbers, and @/./+/-/_ characters.':
+            return { ...field, error: 'Só pode conter letras, números e @/./+/-/_' };
+          default:
+            return { ...field, error: error.response.data[key][subKey][0] };
+          }
+        } else if (!subKey && error.response.data[key]) {
+          switch (error.response.data[key][0]) {
+          case 'The vat number already exists.':
+            return { ...field, error: 'Já existe um utilizador com este número.' };
+          case 'Invalid tax ID':
+            return { ...field, error: 'Número inválido' };
+          default:
+            return { ...field, error: error.response.data[key][0] };
+          }
         }
       }
 
@@ -352,9 +338,9 @@ const NewClient = ({ ...props }) => {
     setInputFields(updatedFields);
 
     if (error.response.status === 400) {
-      toast.warning('Erros no formulário.');
+      ToastSet(loading, 'Erros no formulário.', 'warning');
     } else {
-      toast.error('Algo aconteceu. Por favor tente mais tarde.');
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
     }
   }
 
@@ -363,45 +349,7 @@ const NewClient = ({ ...props }) => {
 
     data.map((ele) => ele.value = '');
     setInputFields(data);
-
-    setTimeout(() => {
-      setSuccessOpen(false);
-    }, 500);
   };
-
-  async function ValidatePostalCode (props) {
-    //  e brings the postal code string
-    if (props === null && postalCodeInfo !== null) {
-      setPostalCodeInfo();
-
-      const data = [...inputFields];
-
-      postalCodeInfo && data.map((field, i) => {
-        if (field.id === 'addressCountry') data[i].value = '';
-
-        if (field.id === 'addressRegion') data[i].value = '';
-
-        if (field.id === 'addressLocality') data[i].value = '';
-      });
-
-      setInputFields(data);
-
-      return;
-    }
-
-    try {
-      const res = await axios.get(`https://geoapi.pt/cp/${props.value}?json=1`);
-
-      if (res.data) setPostalCodeInfo(res.data);
-    } catch (error) {
-      // TODO: CATCH ERROR
-      toast.warning('Codigo Postal Invalido');
-    }
-  }
-
-  const Item = styled(Paper)(() => ({
-    padding: '.5rem',
-  }));
 
   const handleFormChange = (i, e) => {
     const data = [...inputFields];
@@ -433,49 +381,6 @@ const NewClient = ({ ...props }) => {
         <CssBaseline />
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
-        <Popover
-          id={anchorEl ? 'simple-popover' : undefined}
-          open={!!anchorEl}
-          anchorEl={anchorEl}
-          onClose={() => setAnchorEl(null)}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <Box sx={{ flexGrow: 1, p: 1 }}>
-            <Grid container >
-              <Grid container item >
-                <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                  <Item>Distrito</Item>
-                </Grid>
-                <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                  <Item>{postalCodeInfo?.Distrito}</Item>
-                </Grid>
-              </Grid>
-              <Grid container item >
-                <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                  <Item>Concelho</Item>
-                </Grid>
-                <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                  <Item>{postalCodeInfo?.Concelho}</Item>
-                </Grid>
-              </Grid>
-              <Grid container item >
-                <Grid item xs={6} sx={{ padding: '.5rem' }}>
-                  <Item>{typeof postalCodeInfo?.Localidade === 'object' ? 'Localidades' : 'Localidade'}</Item>
-                </Grid>
-                <Grid item xs={6} sx={{ maxHeight: '300px', overflow: 'scroll', padding: '.5rem' }}>
-                  <Item> {typeof postalCodeInfo?.Localidade === 'object'
-                    ? <>
-                      {postalCodeInfo.Localidade.map((x, i) => <a key={i}>{x}<Divider /></a>)}
-                    </>
-                    : postalCodeInfo?.Localidade}</Item>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Box>
-        </Popover>
         {/* Situational Panels */}
         <ConfirmDialog
           open={dialogOpen}
@@ -484,16 +389,7 @@ const NewClient = ({ ...props }) => {
           message='Está prestes a criar um novo cliente, tem certeza que quer continuar?'
           icon='AlertOctagon'
         />
-        <ConfirmDialog
-          open={successOpen}
-          handleClose={() => ClearFields()}
-          onConfirm={() => Router.push(`${routes.private.internal.clients}`)}
-          message={'Cliente criado com sucesso, que deseja fazer a agora?'}
-          icon='Verified'
-          iconType='success'
-          okTxt='Ver Cliente'
-          cancelTxt='Criar novo Cliente'
-        />
+
         <SwipeableViews
           axis={theme?.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={activeStep}
@@ -501,7 +397,7 @@ const NewClient = ({ ...props }) => {
         >
           <TabPanel value={activeStep} index={0}>
             <Grid container md={12} sm={12} xs={12}>
-              <Grid container md={6} sm={6} xs={6} p={10}>
+              <Grid container md={6} sm={6} xs={12} pt={'2rem'} pl={'2rem'} pr={'2rem'}>
                 <Card
                   {...panelProps}
                   onClick={() => {
@@ -513,7 +409,7 @@ const NewClient = ({ ...props }) => {
                   <Typography variant='title' color='white'>Particular</Typography>
                 </Card>
               </Grid>
-              <Grid container md={6} sm={6} xs={6} p={10} >
+              <Grid container md={6} sm={6} xs={12} pt={'2rem'} pl={'2rem'} pr={'2rem'} >
                 <Card
                   onClick={() => {
                     setSelectTypeInstituition('empresa');
@@ -529,9 +425,9 @@ const NewClient = ({ ...props }) => {
           </TabPanel>
           <TabPanel value={activeStep} index={1}>
             {/* Case clientType is chosen */}
-            <Content>
+            <Content>{console.log()}
               <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-                <Typography item className='headerTitleXl'>Novo Cliente</Typography>
+                <Typography variant='title'>Novo Cliente {selectTypeInstituition === 'empresa' ? ' Empresarial' : ' Particular'} </Typography>
                 <Box sx={{ marginLeft: 'auto' }}>
                   <ButtonGroup>
                     <PrimaryBtn
@@ -569,9 +465,7 @@ const NewClient = ({ ...props }) => {
                   onFormChange={handleFormChange}
                   optionalData={{
                     generatePassword,
-                    postalCodeInfo,
                     setGeneratePassword,
-                    ValidatePostalCode
                   }}
                 />
               </Grid>

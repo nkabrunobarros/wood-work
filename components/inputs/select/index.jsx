@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // Node modules
 import { Box, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material';
+import Image from 'next/image';
 import React from 'react';
 
 const MySelect = ({
@@ -21,6 +22,10 @@ const MySelect = ({
   id,
   tooltip,
 }) => {
+  let portugal = {};
+
+  if (label === 'Country' || label === 'Code') portugal = options.find((option) => option.cca2 === 'PT');
+
   return (
     <Box sx={{ width: '100%' }}>
       {variant !== 'standard' && label
@@ -56,16 +61,35 @@ const MySelect = ({
           <MenuItem value="" disabled>
             Escolha uma opcao
           </MenuItem>
+          {portugal && portugal.cca2 === 'PT'
+            ? (
+              <MenuItem value={portugal[optionValue]}>
+                <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }}>
+                  {!!portugal.cca2 && (
+                    <Image
+                      loading="lazy"
+                      width={20}
+                      height={16}
+                      src={`https://flagcdn.com/w20/${portugal.cca2.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${portugal.cca2.toLowerCase()}.png 2x`}
+                      alt=""
+                    />
+                  )}
+                  {portugal[optionLabel]}
+                </Box>
+              </MenuItem>
+            )
+            : null}
           {options && options
             .map((opt, i) => (
               !opt.hidden && <MenuItem disabled={opt.subheader} key={i} value={opt[optionValue]?.value ? opt[optionValue].value : opt[optionValue] || opt.id}>
                 <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
-                  {!!opt.codigo &&
+                  {!!opt.cca2 &&
                     <img
                       loading='lazy'
                       width='20'
-                      src={`https://flagcdn.com/w20/${opt.codigo.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${opt.codigo.toLowerCase()}.png 2x`}
+                      src={`https://flagcdn.com/w20/${opt.cca2.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
                       alt=''
                     />}
                   {opt[optionLabel]?.value ? opt[optionLabel].value : opt[optionLabel] || opt.label || 'Empty'}

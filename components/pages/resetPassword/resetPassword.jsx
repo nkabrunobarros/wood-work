@@ -15,7 +15,9 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
 // import FormGenerator from '../../formGenerator';
+import Router from 'next/router';
 import { useDispatch } from 'react-redux';
+import routes from '../../../navigation/routes';
 import * as emailActionsRedux from '../../../store/actions/email';
 import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
@@ -93,7 +95,7 @@ const ResetPassword = (props) => {
         data[i].error = 'Campo Óbrigatorio';
         hasErrors = true;
       } else if (i === 0 && input.value.length < 6) {
-        data[i].error = 'password tem que ser minimo 6 letras';
+        data[i].error = 'Password tem que ter minimo de 6 caracteres.';
         hasErrors = true;
       } else if (i === 1 && !hasErrors && inputFields[0].value !== inputFields[1].value) {
         data[i].error = 'Senhas tem que ser iguais';
@@ -125,13 +127,13 @@ const ResetPassword = (props) => {
         data[field.id] = field.value;
       });
 
-      data.id = props.params.token;
+      data.id = props.params.uidb64 + '/' + props.params.token;
 
       await updatePassword(data).then((res) => {
-        if (res.data === '"The token is valid. The Operation has occurred successfully."') toast.success('Senha redefinida!');
-        else ;
-
-        setSubmiting(false);
+        if (res.data === 'The token is valid. The Operation has occurred successfully.') {
+          Router.push(props.params.profile !== '2' ? routes.public.signInInternal : routes.public.signIn);
+          setSubmiting(false);
+        }
       }).catch((err) => {
         if (err.response.data.includes('Token has expired'))toast.error('Link inválido. Por favor refaça o pedido.');
         else toast.error('Algo aconteceu! Por favor tente mais tarde.');
@@ -214,7 +216,7 @@ const ResetPassword = (props) => {
               alignItems: 'start',
             }}
           >
-            <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.params.profile !== 'CUSTOMER' ? 'Interno' : 'Cliente'} WW4.0</Typography>
+            <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>Portal {props.params.profile !== '2' ? 'Interno' : 'Cliente'} WW4.0</Typography>
             <Typography component='h2' variant='h3'>
               {success ? 'Definir senha' : 'Redefinir senha'}
             </Typography>

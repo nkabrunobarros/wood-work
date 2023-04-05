@@ -1,5 +1,5 @@
-import { Divider, Grid, InputLabel, TextField, Tooltip, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Divider, Grid, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 //  PropTypes
 import { Calendar } from 'lucide-react';
@@ -10,9 +10,13 @@ import styles from '../../../../styles/NewOrder.module.css';
 //  Actions
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import axios from 'axios';
+import moment from 'moment';
+import Image from 'next/image';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 import PostalCodeInput from '../../../inputs/postalCodeInput';
+import dayjs from 'dayjs';
 
 const RequestTab = (props) => {
   const {
@@ -21,6 +25,20 @@ const RequestTab = (props) => {
     onBudgetChange,
   } = props;
 
+  const [countries, setCountries] = useState();
+
+  useEffect(() => {
+    const test = async () => {
+      await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
+    };
+
+    test();
+  }, []);
+
+  let portugal = {};
+
+  portugal = countries?.find((option) => option.cca2 === 'PT');
+
   return (
     <Grid container>
       <Grid container md={12} sm={12} >
@@ -28,7 +46,7 @@ const RequestTab = (props) => {
           <Grid container item sm={12} xs={12} >
             <Grid container md={12}>
               <Typography id='align' className='headerTitleSm'>
-                <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Pedido
+                <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto
               </Typography>
             </Grid>
           </Grid>
@@ -45,6 +63,7 @@ const RequestTab = (props) => {
 
               <DesktopDatePicker
                 inputFormat={'DD.MM.YYYY'}
+                maxDate={dayjs().endOf('day')}
                 value={budgetData.dateRequest.value}
                 onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
                 // onChange={(newValue) => onBudgetChange(newValue)}
@@ -71,7 +90,7 @@ const RequestTab = (props) => {
             </Grid> */}
             <Grid container item sm={12} xs={12} >
               <InputLabel >
-                Data de entrega do orçamento
+                Data acordada de entrega de orçamento
                 {budgetData.dateAgreedDelivery.required && <Tooltip title='Obrigatório' >
                   <span style={{ color: 'var(--red)' }}> *</span>
                 </Tooltip>}
@@ -79,10 +98,29 @@ const RequestTab = (props) => {
               </InputLabel>
               <DesktopDatePicker
                 inputFormat={'DD.MM.YYYY'}
+                minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
                 value={budgetData.dateAgreedDelivery.value}
                 onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateAgreedDelivery' })}
                 renderInput={(params) =>
                   <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: budgetData.dateAgreedDelivery.error || 'DD.MM.YYYY' }}/>}
+              />
+            </Grid>
+            <Grid container item sm={12} xs={12} >
+              <InputLabel >
+                Data de entrega do orçamento
+                {budgetData.dateDelivery.required && <Tooltip title='Obrigatório' >
+                  <span style={{ color: 'var(--red)' }}> *</span>
+                </Tooltip>}
+
+              </InputLabel>
+              <DesktopDatePicker
+                inputFormat={'DD.MM.YYYY'}
+                value={budgetData.dateDelivery.value}
+                minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
+
+                onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDelivery' })}
+                renderInput={(params) =>
+                  <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: budgetData.dateDelivery.error || 'DD.MM.YYYY' }}/>}
               />
             </Grid>
             {/* <Grid container item sm={12} xs={12} >
@@ -112,6 +150,7 @@ const RequestTab = (props) => {
               </InputLabel>
               <DesktopDatePicker
                 inputFormat={'DD.MM.YYYY'}
+                minDate={moment.utc().startOf('day')}
                 value={budgetData.dateDeliveryProject.value}
                 onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDeliveryProject' })}
                 renderInput={(params) =>
@@ -127,10 +166,24 @@ const RequestTab = (props) => {
                 name='streetAddress'
                 placeholder='Escrever rua'
                 value={budgetData.streetAddress.value}
+                maxLength={50}
+
               />
             </Grid>
             <Grid container item sm={12} xs={12} >
               <Grid container item sm={6} xs={6} pr={0.5}>
+                <MyInput
+                  label='Codigo Postal'
+                  required={budgetData.postalCode.required}
+                  error={budgetData.postalCode.error}
+                  name='postalCode'
+                  placeholder='Escrever Codigo Postal'
+                  value={budgetData.postalCode.value}
+                  onChange={(e) => onBudgetChange(e.target)}
+                  maxLength={15}
+                />
+              </Grid>
+              { false && <Grid container item sm={6} xs={6} pr={0.5}>
                 <PostalCodeInput
                   label='Localidade'
                   required={budgetData.postalCode.required}
@@ -139,16 +192,20 @@ const RequestTab = (props) => {
                   placeholder='XXXX-XXX'
                   value={budgetData.postalCode.value}
                   onChange={(e) => onBudgetChange(e.target)}
+
                 />
-              </Grid>
+              </Grid>}
               <Grid container item sm={6} xs={6} pl={0.5}>
                 <MyInput
                   label='Localidade'
+                  placeholder='Escrever Localidade'
                   required={budgetData.addressLocality.required}
                   error={budgetData.addressLocality.error}
                   name='addressLocality'
                   value={budgetData.addressLocality.value}
                   onChange={(e) => onBudgetChange(e.target)}
+                  maxLength={25}
+
                 />
               </Grid>
             </Grid>
@@ -156,22 +213,92 @@ const RequestTab = (props) => {
               <Grid container item sm={6} xs={6} pr={0.5}>
                 <MyInput
                   label='Concelho'
+                  placeholder='Escrever Concelho'
                   required={budgetData.addressRegion?.required}
                   error={budgetData.addressRegion.error}
                   name='addressRegion'
                   value={budgetData.addressRegion.value}
                   onChange={(e) => onBudgetChange(e.target)}
+                  maxLength={25}
                 />
               </Grid>
               <Grid container item sm={6} xs={6} pl={0.5}>
-                <MyInput
+                <Box sx={{ width: '100%' }}>
+                  <InputLabel htmlFor={budgetData.addressCountry.id} id={budgetData.addressCountry.id}>
+                Pais
+                    {budgetData.addressCountry.required
+                      ? (
+                        <Tooltip title='Obrigatório'>
+                          <span style={{ color: 'var(--red)' }}> *</span>
+                        </Tooltip>
+                      )
+                      : null}
+                  </InputLabel>
+                  {!!budgetData.addressCountry.error && <InputLabel error={!!budgetData.addressCountry.error} id={budgetData.addressCountry.id}>{budgetData.addressCountry.error}</InputLabel>}
+                  <Select
+                    name='addressCountry'
+                    placeholder={budgetData.addressCountry.error}
+                    label={budgetData.addressCountry.error && budgetData.addressCountry.error}
+                    error={!!budgetData.addressCountry.error}
+                    required={budgetData.addressCountry.required}
+                    select
+                    id={budgetData.addressCountry.id}
+                    fullWidth={budgetData.addressCountry.fullWidth || false}
+                    value={budgetData.addressCountry.value}
+                    onChange={(e) => onBudgetChange(e.target)}
+                    sx={{ width: budgetData.addressCountry.width && budgetData.addressCountry.width }}
+                    style={{ width: '100%' }}
+                  >
+                    <MenuItem value="" disabled>
+            Escolha uma opcao
+                    </MenuItem>
+                    {portugal && portugal.cca2 === 'PT'
+                      ? (
+                        <MenuItem value={portugal.cca2}>
+                          <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }}>
+                            {!!portugal.cca2 && (
+                              <Image
+                                loading="lazy"
+                                width={20}
+                                height={16}
+                                src={`https://flagcdn.com/w20/${portugal.cca2.toLowerCase()}.png`}
+                                srcSet={`https://flagcdn.com/w40/${portugal.cca2.toLowerCase()}.png 2x`}
+                                alt=""
+                              />
+                            )}
+                            {portugal.cc2}
+                            {portugal?.name?.common}
+                          </Box>
+                        </MenuItem>
+                      )
+                      : null}
+                    {countries?.filter((item) => item.cca2 !== 'PT').map((opt, i) => (
+                      !opt.hidden && <MenuItem key={i} value={opt.cca2}>
+                        <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
+                          {!!opt.cca2 &&
+                    <img
+                      loading='lazy'
+                      width='20'
+                      src={`https://flagcdn.com/w20/${opt.cca2.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
+                      alt=''
+                    />}
+                          {opt.cc2}
+                          {opt?.name?.common}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Select>
+
+                </Box>
+                {/* <MyInput
                   label='Pais'
                   required={budgetData.addressCountry?.required}
                   error={budgetData.addressCountry.error}
                   name='addressCountry'
                   value={budgetData.addressCountry.value}
                   onChange={(e) => onBudgetChange(e.target)}
-                />
+                /> */}
               </Grid>
             </Grid>
             <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />

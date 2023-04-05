@@ -97,10 +97,10 @@ const EditClient = ({ ...props }) => {
                   />  Dados Gerais</Typography>
                 </Grid>
                 <Grid container item>
-                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                  {/* <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
                     <Typography item color='lightTextSm.main'>Nome Utilizador</Typography>
                     <Typography item color='lightTextSm.black' >{client?.user?.username}</Typography>
-                  </Grid>
+                  </Grid> */}
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
                     <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
                     <Typography item color='lightTextSm.black' >{client?.user?.first_name}</Typography>

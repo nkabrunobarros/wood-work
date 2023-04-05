@@ -17,7 +17,7 @@ const api = () => () => (next) => async (action) => {
   const { meta, request, types } = callAPI;
   const [REQUEST, SUCCESS, FAIL] = types;
   const headers = { ...(request.headers || {}), Authorization: userToken && `Bearer ${userToken}` };
-  const requestOptions = { ...request, headers, url: buildURL(request.url) };
+  const requestOptions = { ...request, headers, url: !request.url.includes('woodwork4.ddns.net/ww4/protected/') ? buildURL(request.url) : request.url };
   const actionWith = (payload) => ({ ...action, ...payload });
   const requestAction = actionWith({ type: REQUEST, meta });
 

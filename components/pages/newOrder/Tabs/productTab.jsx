@@ -189,7 +189,6 @@ ProductTab.propTypes = {
   chosenBudget: PropTypes.object,
   budgetData: PropTypes.object,
   pageProps: PropTypes.object,
-  budgets: PropTypes.array,
   uploadedFiles: PropTypes.array,
   onTabChange: PropTypes.func,
   onBudgetChange: PropTypes.func,

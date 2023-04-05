@@ -123,6 +123,9 @@ const Messages = (props) => {
           fullWidth
           placeholder='Aa'
           value={newMessageText}
+          inputProps={{
+            maxLength: 255,
+          }}
           onChange={(e) => setNewMessageText(e.target.value)}
           sx={{
             maxHeight: '40px',
@@ -134,7 +137,7 @@ const Messages = (props) => {
             width: '100%'
           }}
           endAdornment={ <Button position='end' type='submit'>
-            {windowWidth > 900 ? 'Enviar' : <Send size={20}/>}
+            <Send size={20}/>
           </Button>}
         />
       </Box>

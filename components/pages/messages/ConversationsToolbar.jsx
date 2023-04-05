@@ -11,7 +11,7 @@ const ConversationsToolbar = (props) => {
   return (
     <AppBar position='static' sx={styles.appBars} >
       <Toolbar sx={{ padding: '.5rem !important' }}>
-        <Typography pl={1} variant='title'> {isInternalPage ? 'Projetos/Orçamentos' : 'Pedidos' }</Typography>
+        <Typography pl={1} variant='title'> {isInternalPage ? 'Projetos' : 'Projetos' }</Typography>
 
       </Toolbar>
       <Toolbar sx={{ padding: '.5rem !important' }}>

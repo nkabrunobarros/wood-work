@@ -1,12 +1,13 @@
 /* eslint-disable sort-imports */
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Popover, styled, Tooltip } from '@mui/material';
+import { Box, Divider, FormControl, Grid, InputLabel, MenuItem, Paper, Popover, Select, styled, Tooltip } from '@mui/material';
 import { HelpCircle, Verified } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import MyInput from '../inputs/myInput';
 import PhoneInput from '../inputs/phoneInput/PhoneInput';
 import MySelect from '../inputs/select';
 //  Proptypes
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import axios from 'axios';
+import Image from 'next/image';
 import PropTypes from 'prop-types';
 
 /* HOW TO USE
@@ -42,16 +43,11 @@ import PropTypes from 'prop-types';
 
 const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [countries, setCountries] = useState();
   const [loaded, setLoaded] = useState(false);
-  const [visible, setVisible] = useState(false);
   const placeholderDefault = 'Escrever';
   const optData = props.optionalData || {};
-  const countries = [];
 
   const {
-    generatePassword,
-    setGeneratePassword,
     postalCodeInfo,
     ValidatePostalCode
   } = optData;
@@ -62,6 +58,16 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
+  }, []);
+
+  const [countries, setCountries] = useState();
+
+  useEffect(() => {
+    const test = async () => {
+      await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
+    };
+
+    test();
   }, []);
 
   const Item = styled(Paper)(() => ({
@@ -114,9 +120,9 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
     </Popover>
     <Grid container>
       {fields.map((field, index) => {
-        if (field.hidden) return null;
+        if (field?.hidden) return null;
 
-        if (field.options) {
+        if (field?.options) {
           return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
             <MySelect
               fullWidth
@@ -137,7 +143,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
           </Grid>;
         }
 
-        if (field.type === 'phone') {
+        if (field?.type === 'phone') {
           return <Grid key={index}
             md={ perRow ? (12 / perRow) : 3}
             sm={ perRow !== 1 ? 6 : 12}
@@ -158,33 +164,108 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
           </Grid>;
         }
 
-        if (field.type === 'password') {
-          return <Grid key={index} md={ perRow ? (12 / perRow) : 3}
-            sm={ perRow !== 1 ? 6 : 12}
-            xs={ perRow !== 1 ? 12 : 12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-            <Box sx={{ width: '100%' }}>
-              {generatePassword
-                ? <FormControlLabel control={<Checkbox checked={generatePassword} onChange={() => setGeneratePassword(!generatePassword)} />} label={field.label} />
-                : <MyInput
-                  label={
-                    <a className={ generatePassword !== 'undefined' && setGeneratePassword ? 'link' : null } onClick={() => generatePassword !== 'undefined' && setGeneratePassword ? setGeneratePassword(!generatePassword) : null} >{field.label}</a>
-                  }
-                  name={field.id}
-                  required={field.required}
-                  value={field.value}
-                  error={field.error}
-                  type={visible ? 'text' : field.type}
-                  placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-                  onChange={(e) => onFormChange(index, e)}
-                  tooltip={field.tooltip}
-                  disabled={field.disabled}
-                  adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />}
-                  adornmentOnClick={() => setVisible(!visible)}
-                  iconTooltip={!visible && 'Mostrar Senha'}
+        if (field?.type === 'country') {
+          let portugal = {};
 
-                />
-              }
-            </Box>
+          portugal = countries?.find((option) => option.cca2 === 'PT');
+
+          return <Grid key={index}
+            md={ perRow ? (12 / perRow) : 3}
+            sm={ perRow !== 1 ? 6 : 12}
+            xs={ perRow !== 1 ? 12 : 12}
+            container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+            <Tooltip title={field.tooltip || ''} >
+              <Box sx={{ width: '100%' }}>
+
+                <InputLabel htmlFor={field.label}>
+                  {field.label}
+                  {field.required &&
+              <Tooltip title='Obrigatório' >
+                <span style={{ color: 'var(--red)' }}> *</span>
+              </Tooltip>}
+                </InputLabel>
+                <FormControl fullWidth>
+                  {!!field.error && <InputLabel error={!!field.error} id={field.id}>{field.error}</InputLabel>}
+                  <Select
+                    placeholder={field.error}
+                    label={field.error && field.error}
+                    error={!!field.error}
+                    required={field.required}
+                    select
+                    name={field.name}
+                    disabled={field.disabled}
+                    id={field.id}
+                    fullWidth={field.fullWidth || false}
+                    value={field.value}
+                    onChange={(e) => onFormChange(index, e)}
+                    sx={{ width: field.width && field.width }}
+                    style={{ width: '100%' }}
+                  >
+                    <MenuItem value="" disabled>
+            Escolha uma opcao
+                    </MenuItem>
+                    {portugal && portugal.cca2 === 'PT'
+                      ? (
+                        <MenuItem value={portugal.cca2}>
+                          <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }}>
+                            {!!portugal.cca2 && (
+                              <Image
+                                loading="lazy"
+                                width={20}
+                                height={16}
+                                src={`https://flagcdn.com/w20/${portugal.cca2.toLowerCase()}.png`}
+                                srcSet={`https://flagcdn.com/w40/${portugal.cca2.toLowerCase()}.png 2x`}
+                                alt=""
+                              />
+                            )}
+                            {portugal.cc2}
+                            {portugal?.name?.common}
+                          </Box>
+                        </MenuItem>
+                      )
+                      : null}
+                    {countries?.filter((item) => item.cca2 !== 'PT').map((opt, i) => (
+                      !opt.hidden && <MenuItem key={i} value={opt.cca2}>
+                        <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
+                          {!!opt.cca2 &&
+                    <img
+                      loading='lazy'
+                      width='20'
+                      src={`https://flagcdn.com/w20/${opt.cca2.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
+                      alt=''
+                    />}
+                          {opt.cc2}
+                          {opt?.name?.common}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+
+            </Tooltip>
+          </Grid>;
+        }
+
+        if (field?.type === 'password') {
+          return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+            <MySelect
+              fullWidth
+              name={field.id}
+              label={field.label}
+              required={field.required}
+              value={field.value}
+              error={field.error}
+              type={field.type && field.type}
+              onChange={(e) => onFormChange(index, e)}
+              options={field.options}
+              optionValue={field.optValue}
+              optionLabel={field.optLabel}
+              disabled={field.disabled}
+              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              tooltip={field.tooltip}
+            />
           </Grid>;
         }
 
@@ -205,10 +286,11 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
             type={field.type && field.type}
             onChange={(e) => {
               onFormChange(index, e);
-              (field.id === 'postalCode' || field.id === 'address.postalCode') && ValidatePostalCode(null);
+              (field.id === 'postalCode2' || field.id === 'address.postalCode2') && ValidatePostalCode(null);
             }}
+            maxLength={field.maxLength}
             placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-            adornmentIcon={(field.id === 'postalCode' || field.id === 'address.postalCode') &&
+            adornmentIcon={(field.id === 'postalCode2' || field.id === 'address.postalCode2') &&
               <>
                 {postalCodeInfo
                   ? <Tooltip title='Detalhes Codigo Postal' >

@@ -40,7 +40,7 @@ const Account = ({ ...props }) => {
             <Grid container md={12} sm={12} sx={12}>
               <Typography variant='title'>{user?.givenName?.value || user.first_name || user.username} {user?.familyName?.value || user.last_name}</Typography>
               <Box display='flex' alignItems='center' sx={{ marginLeft: 'auto' }}>
-                {Object.keys(allThemes).map((theme) => {
+                {false && Object.keys(allThemes).map((theme) => {
                   return <Tooltip key={theme} title={theme}><Box onClick={() => setThemeColor(theme)} m={0.2} sx={{ borderRadius: '50%', cursor: 'pointer', width: '25px', height: '25px', background: themes[theme].primary.main }}></Box></Tooltip>;
                 })}
               </Box>
@@ -52,14 +52,14 @@ const Account = ({ ...props }) => {
               <Grid container md={8} sm={12} xs={12}>
                 <Grid container sx={12}>
                   <Grid xs={12} sm={6} container p={2} bgcolor={'lightGray.main'}>
-                    <Grid item md={12} sm={12} xs={12} pt={1} className='flex'>
+                    { false && <Grid item md={12} sm={12} xs={12} pt={1} className='flex'>
                       <Grid container md={6} sm={6} xs={6}>
                         <Typography color='lightTextSm.main'>Nome de utilizador:</Typography>
                       </Grid>
                       <Grid container md={6} sm={6} xs={6}>
                         <Typography color='lightTextSm.black'>{user?.user?.username || user?.username}</Typography>
                       </Grid>
-                    </Grid>
+                    </Grid>}
                     <Grid item xs={12} pt={1} className='flex'>
                       <Grid container md={6} sm={6} xs={6}>
                         <Typography color='lightTextSm.main'>Primeiro nome:</Typography>

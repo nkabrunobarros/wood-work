@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 // Node modules
 import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +17,7 @@ import { ChevronUp } from 'lucide-react';
 import moment from 'moment';
 import { parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
+import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
 import styles from '../../styles/404.module.css';
 
@@ -67,7 +69,18 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     async function load () {
-      (!reduxState.auth.me || !reduxState.auth.userPermissions) && await AuthData(dispatch);
+      let me = reduxState.auth.me;
+
+      if (!reduxState.auth.me || !reduxState.auth.userPermissions)me = await AuthData(dispatch);
+
+      const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+      const isClientPage = Object.values(routes.private).includes(path.route.replace('[Id]', ''));
+
+      if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER')) {
+        setLoaded(false);
+
+        return <PageNotFound noAccess />;
+      }
 
       // check cookie
       const isValid = await ValidateToken(path);
@@ -81,7 +94,8 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-  return loaded && <>{children}
+  return loaded && <>
+    {children}
     <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
       <Fab
         aria-label="like"

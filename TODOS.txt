@@ -7,13 +7,14 @@ Pendentes
 
     
 Bugs
-    Criar cliente dá erro (erro ao enviar email)
     Cliente não consegue buscar mensagens enviados por admin, recebe apenas as que envia
     Criar worker dá erro
 
     Cliente
     Upload de ficheiros como cliente
 
+    Messages    
+        ao fazer filtro e selecionar 1 chat, seleciona o chat errado (prob: index's)
 
 
 Em falta
@@ -29,3 +30,17 @@ Em falta
     Entidade folder
     Entidade message
     Definição de senha
+
+
+
+PERGUNTAS!
+
+qual a diferença entre 
+    "Worker - list": "http://woodwork4.ddns.net/ww4/api/v1/accounts/worker/",
+    "worker": "http://woodwork4.ddns.net/ww4/api/v1/worker/",
+qual a diferença entre 
+    "owner": "http://woodwork4.ddns.net/ww4/api/v1/owner/",
+    "Customer - list": "http://woodwork4.ddns.net/ww4/api/v1/accounts/customer/",
+
+
+qual dos dois utilizar

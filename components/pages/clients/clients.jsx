@@ -43,7 +43,7 @@ const Clients = ({ ...props }) => {
   const [profilesFilter, setProfilesFilter] = useState('');
   const [filters, setFilters] = useState({});
   const dispatch = useDispatch();
-  const updateClient = (data) => dispatch(clientsActionsRedux.updateClient(data));
+  const deleteClient = (data) => dispatch(clientsActionsRedux.deleteClient(data));
 
   useEffect(() => {
     setFilters({
@@ -66,21 +66,16 @@ const Clients = ({ ...props }) => {
 
   async function onDelete (props) {
     const loading = toast.loading('');
-    // eslint-disable-next-line react/prop-types
-    const id = props.replace('urn:ngsi-ld:Owner:', '');
-    const formData = new FormData();
-
-    formData.append('user.is_active', false);
 
     try {
-      await updateClient({ data: formData, id: props }).then((res) => console.log(res));
+      await deleteClient(props).then((res) => console.log(res));
     } catch (err) {
       console.log(err);
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
     }
 
     const old = [...clients];
-    const index = old.findIndex((item) => item.id.replace('urn:ngsi-ld:Owner:', '') === id);
+    const index = old.findIndex((item) => item.id === props);
 
     if (index !== -1) {
       const updatedItems = [...old];

@@ -5,9 +5,13 @@ export {
   NEW_FILE_REQUEST,
   NEW_FILE_FAIL,
   NEW_FILE_SUCCESS,
+  DOWNLOAD_FILE_REQUEST,
+  DOWNLOAD_FILE_FAIL,
+  DOWNLOAD_FILE_SUCCESS,
   files,
   file,
   budgetFiles,
   newFile,
-  batchFiles
+  batchFiles,
+  downloadFile,
 } from './file';

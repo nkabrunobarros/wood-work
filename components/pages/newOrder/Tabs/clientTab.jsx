@@ -65,16 +65,16 @@ const ClientTab = (props) => {
               fullWidth
               disablePortal
               options={clients}
-              getOptionLabel={(option) => option.user.first_name}
+              getOptionLabel={(option) => option.Nome}
               getOptionValue={(option) => option.user.id}
               onChange={(e, value) => {
-                setClientUser(value.user.id);
+                setClientUser(value?.user?.id);
                 onClientChange({ value: value?.id || '', name: 'client' });
               }}
               renderOption={(props, option) => {
                 return (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    {option.user.first_name + ' ' + option.user.last_name }
+                    {option.Nome }
                   </Box>
                 );
               }}
