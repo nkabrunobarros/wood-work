@@ -76,7 +76,7 @@ const Head = (props) => {
   const [adjudicateModal, setAdjudicateModal] = useState(false);
   const [old, setOld] = useState(JSON.parse(JSON.stringify({ ...props.budget })));
   const [budget, setBudget] = useState({ ...props.budget });
-  const [activeFields, setActiveFields] = useState({ price: false, amount: false, category: false });
+  const [activeFields, setActiveFields] = useState({});
   const dispatch = useDispatch();
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const newExpedition = (data) => dispatch(expeditionsActionsRedux.newExpedition(data));
@@ -118,22 +118,34 @@ const Head = (props) => {
 
     const data = {
       id: budget.id,
-      type: 'Budget',
       price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
       amount: { type: 'Property', value: budget.amount.value },
       category: { type: 'Property', value: budget.category.value },
+      dateAgreedDelivery: { type: 'Property', value: budget.dateAgreedDelivery.value },
+      dateRequest: { type: 'Property', value: budget.dateRequest.value },
     };
 
     await updateBudget(data)
       .then(() => {
         ToastSet(loading, 'Orçamento alterado!', 'success');
-        setActiveFields({ price: false, amount: false, category: false });
+        setActiveFields({});
 
         setOld({
           ...budget,
-          price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
-          amount: { type: 'Property', value: budget.amount.value },
-          category: { type: 'Property', value: budget.category.value }
+          price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
+          amount: { ...budget.amount, value: budget.amount.value },
+          category: { ...budget.category, value: budget.category.value },
+          dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
+          dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
+        });
+
+        setBudget({
+          ...budget,
+          price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
+          amount: { ...budget.amount, value: budget.amount.value },
+          category: { ...budget.category, value: budget.category.value },
+          dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
+          dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
         });
       })
       .catch(() => ToastSet(loading, 'Orçamento não alterado. Se o problema persistir, contacte a gerencia.', 'error'));
@@ -147,8 +159,7 @@ const Head = (props) => {
     const processing = toast.loading('');
 
     const data = {
-      id: budget.id,
-      type: budget.type,
+      ...budget,
       amount: { value: amount.value, type: 'Property' },
       obs: { value: obs.value, type: 'Property' },
       price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
@@ -159,8 +170,35 @@ const Head = (props) => {
       dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
     };
 
+    delete data.createdAt;
+    delete data.modifiedAt;
+    delete data.orderBy;
+
     await updateBudget(data).then(() => {
-      setBudget({ ...data, id: old.id });
+      setBudget({
+        ...budget,
+        amount: { value: amount.value, type: 'Property' },
+        obs: { value: obs.value, type: 'Property' },
+        price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
+        category: { value: category.value, type: 'Property' },
+        status: { value: 'waiting adjudication', type: 'Property' },
+        dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
+        dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
+        dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
+      });
+
+      setOld({
+        ...budget,
+        amount: { value: amount.value, type: 'Property' },
+        obs: { value: obs.value, type: 'Property' },
+        price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
+        category: { value: category.value, type: 'Property' },
+        status: { value: 'waiting adjudication', type: 'Property' },
+        dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
+        dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
+        dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
+      });
+
       setDeliverModal(false);
       ToastSet(processing, 'Orçamento entregue', 'success');
     }).catch((err) => console.log(err));

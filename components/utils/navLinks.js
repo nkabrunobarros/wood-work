@@ -10,6 +10,7 @@ export const navLinks = [
     url: routes.private.projects,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
+    allowed_: 'access_projects',
   },
   {
     title: 'Projetos',
@@ -17,6 +18,7 @@ export const navLinks = [
     url: routes.private.internal.projects,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
+    allowed_: 'access_projects',
   },
   {
     title: 'Mensagens',
@@ -24,6 +26,8 @@ export const navLinks = [
     url: routes.private.messages,
     icon: <MessageCircle strokeWidth='1' size={20} />,
     allowed: 'client',
+    allowed_: 'access_messages',
+
   },
   // {
   //   title: 'Mensagens',
@@ -38,7 +42,9 @@ export const navLinks = [
     url: routes.private.internal.projectsSimilar,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
-    underline: true
+    allowed_: 'access_projects_similar',
+    underline: true,
+
   },
   {
     title: 'Stock',
@@ -46,6 +52,7 @@ export const navLinks = [
     url: routes.private.internal.stocks,
     icon: <Table strokeWidth='1' size={20} />,
     allowed: 'stocks',
+    allowed_: 'access_stocks',
   },
   {
     title: 'Chão de Fabrica',
@@ -53,6 +60,7 @@ export const navLinks = [
     url: routes.private.internal.factoryLevel,
     icon: <Factory strokeWidth='1' size={20} />,
     allowed: 'factoryLevel',
+    allowed_: 'access_factory',
   },
   {
     title: 'Montagens',
@@ -60,6 +68,7 @@ export const navLinks = [
     url: routes.private.internal.assemblys,
     icon: <Network strokeWidth='1' size={20} />,
     allowed: 'assemblys',
+    allowed_: 'access_assembly',
   },
   {
     title: 'Sobrantes',
@@ -67,6 +76,7 @@ export const navLinks = [
     url: routes.private.internal.leftovers,
     icon: <Scan strokeWidth='1' size={20} />,
     allowed: 'leftovers',
+    allowed_: 'access_leftovers',
     underline: true
   },
   {
@@ -75,6 +85,7 @@ export const navLinks = [
     url: routes.private.internal.clients,
     icon: <Users strokeWidth='1' size={20} />,
     allowed: 'clients',
+    allowed_: 'access_clients',
   },
   {
     title: 'Utilizadores',
@@ -82,6 +93,7 @@ export const navLinks = [
     url: routes.private.internal.workers,
     icon: <Users strokeWidth='1' size={20} />,
     allowed: 'workers',
+    allowed_: 'access_workers',
   },
   // {
   //   title: 'Painel de Controlo',

@@ -466,7 +466,7 @@ const ProjectsScreen = (props) => {
             <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
             <PrimaryBtn
               hidden={!CanDo(['write', 'projects', userPermissions]) || !isInternalPage}
-              text='Adicionar pedido'
+              text='Adicionar projeto'
               onClick={() => Router.push(routes.private.internal.newProject)}
             />
           </Box>

@@ -43,12 +43,10 @@ export const files = (data) => {
 };
 
 export const downloadFile = (data) => {
-  const { auth_token: userToken } = parseCookies();
-
   return createAction({
     meta: null,
     request: {
-      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      headers: { 'content-type': 'application/json' },
       method: 'GET',
       url: data,
     },

@@ -21,7 +21,6 @@ const DocsClient = (props) => {
   const dispatch = useDispatch();
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const getFile = (data) => dispatch(filesActionsRedux.file(data));
-  const downloadFile = (data) => dispatch(filesActionsRedux.downloadFile(data));
 
   const onDrop = useCallback((acceptedFiles) => {
     setNewFiles(acceptedFiles);
@@ -50,18 +49,6 @@ const DocsClient = (props) => {
     }
 
     setConfirmUploadModal(false);
-  }
-
-  async function handleFileClick (file) {
-    await downloadFile(file.file)
-      .then((res) => {
-        toast.success('Consegui buscar ficheiro.');
-        console.log(res);
-      })
-      .catch((err) => {
-        toast.error('Algo aconteceu. Por favor tente mais tarde.');
-        console.log(err);
-      });
   }
 
   return <>
@@ -113,8 +100,8 @@ const DocsClient = (props) => {
                       <Box color='primary.main' alignItems='center'>
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
-                      <Tooltip title='Clique para abrir este ficheiro.'>
-                        <Typography sx={{ cursor: 'pointer' }}><a onClick={() => handleFileClick(file)} >{file.file_name + file.file_type}</a></Typography>
+                      <Tooltip title='Clique para descarregar este ficheiro.'>
+                        <Typography sx={{ cursor: 'pointer' }}><a href={file?.file} download>{file?.file_name + file?.file_type}</a></Typography>
                       </Tooltip>
                     </Grid>
                     <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>

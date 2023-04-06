@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import CurrencyInput from '../../../../inputs/CurrencyInput';
 import MyInput from '../../../../inputs/myInput';
 import MySelect from '../../../../inputs/select';
-import dayjs from 'dayjs';
 
 const DeliverBudgetModal = (props) => {
   const { open, onConfirm, handleClose, budget, categories } = props;
@@ -106,7 +105,6 @@ const DeliverBudgetModal = (props) => {
               <DesktopDatePicker
                 sx={{ width: '100%' }}
                 inputFormat={'DD.MM.YYYY'}
-                minDate={dayjs(budget.dateRequest.value).endOf('day')}
 
                 value={dateAgreedDelivery.value}
                 onChange={(e, newValue) => setDateAgreedDelivery({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}

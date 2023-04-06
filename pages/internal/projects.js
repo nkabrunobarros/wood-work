@@ -53,7 +53,7 @@ const Projects = ({ ...pageProps }) => {
 
       if (!reduxState.expeditions?.data || shouldRefresh) { await getExpeditions(); loadedSomething = true; }
 
-      if (!reduxState.budgets?.data || shouldRefresh) { await getBudgets(); loadedSomething = true; }
+      await getBudgets();
 
       if (!reduxState.clients?.data || shouldRefresh) { await getClients(); loadedSomething = true; }
 

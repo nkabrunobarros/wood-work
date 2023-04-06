@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unknown-property */
 //  PropTypes
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { ChevronDown, FilePlus, FileText, Folder, FolderOpen, FolderPlus } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -111,8 +111,8 @@ const Docs = (props) => {
                   strokeWidth='1'
                   style={{ marginRight: '1rem' }}
                 />
-                <Tooltip title='Clique para abrir este ficheiro.'>
-                  <Typography><a target='#' href={file?.file}>{file?.file_name + file?.file_type}</a></Typography>
+                <Tooltip title='Clique para descarregar este ficheiro.'>
+                  <Typography sx={{ cursor: 'pointer' }}><a href={file?.file} download target='_blank' rel="noreferrer">{file?.file_name + file?.file_type}</a></Typography>
                 </Tooltip>
               </Box>
             ))}
@@ -125,7 +125,7 @@ const Docs = (props) => {
       ));
   }
 
-  const testRefreshFoldders = async () => {
+  const RefreshFolders = async () => {
     getFolders().then(async (res) => {
       const builtFolders = [];
 
@@ -158,7 +158,7 @@ const Docs = (props) => {
 
     try {
       await uploadFiles(data).then(() => {
-        testRefreshFoldders();
+        RefreshFolders();
         toast.success('Ficheiros carregados.');
       });
 
@@ -182,7 +182,6 @@ const Docs = (props) => {
         <MySelect label='Escolha a pasta destino' options={folders} optionLabel='folder_name' onChange={(e) => setUploadFolder(e.target.value)} />
       </Box>}
     />
-    <Button onClick={() => testRefreshFoldders()}>refreshFolders</Button>
     <div className={styles.docsMain}>
       <div className={styles.tableContainer}>
         <div id='align' style={{ display: 'flex', padding: '24px' }}>

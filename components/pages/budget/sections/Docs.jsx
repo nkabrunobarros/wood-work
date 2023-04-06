@@ -113,8 +113,8 @@ const Docs = (props) => {
                   strokeWidth='1'
                   style={{ marginRight: '1rem' }}
                 />
-                <Tooltip title='Clique para abrir este ficheiro.'>
-                  <Typography><a target='#' href={file?.file}>{file?.file_name + file?.file_type}</a></Typography>
+                <Tooltip title='Clique para descarregar este ficheiro.'>
+                  <Typography sx={{ cursor: 'pointer' }}><a href={file?.file} download target='_blank' rel="noreferrer">{file?.file_name + file?.file_type}</a></Typography>
                 </Tooltip>
               </Box>
             ))}
@@ -127,9 +127,7 @@ const Docs = (props) => {
       ));
   }
 
-  console.log(budget);
-
-  const testRefreshFoldders = async () => {
+  const RefreshFolders = async () => {
     getFolders().then(async (res) => {
       const builtFolders = [];
 
@@ -161,7 +159,7 @@ const Docs = (props) => {
 
     try {
       await uploadFiles(data).then(() => {
-        testRefreshFoldders();
+        RefreshFolders();
         toast.success('Ficheiros carregados.');
       });
 

@@ -42,7 +42,7 @@ const Order = ({ ...props }) => {
         </Content>
         {/* Production section */}
         <Content>
-          <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
+          {true && <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />}
         </Content>
         {/* Docs */}
         <Content>

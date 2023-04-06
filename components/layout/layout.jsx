@@ -3,7 +3,6 @@
 import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 //  PropTypes
-import PropTypes from 'prop-types';
 
 //  Navigation
 import routes from '../../navigation/routes';
@@ -14,7 +13,6 @@ import jwt from 'jsonwebtoken';
 
 import { Box, Fab } from '@mui/material';
 import { ChevronUp } from 'lucide-react';
-import moment from 'moment';
 import { parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
 import PageNotFound from '../../components/pages/404';
@@ -44,13 +42,15 @@ async function ValidateToken (path) {
   if (token) {
     const decodedToken = jwt.decode(token);
 
-    return !moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment();
+    return !!decodedToken;
+    // return !moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment();
   }
 }
 
 const Layout = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [noAccess, setNoAccess] = useState(false);
   const reduxState = useSelector((state) => state);
   const path = useRouter();
   const dispatch = useDispatch();
@@ -71,15 +71,13 @@ const Layout = ({ children }) => {
     async function load () {
       let me = reduxState.auth.me;
 
-      if (!reduxState.auth.me || !reduxState.auth.userPermissions)me = await AuthData(dispatch);
+      if (!reduxState.auth.me || !reduxState.auth.userPermissions) me = await AuthData(dispatch);
 
       const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
       const isClientPage = Object.values(routes.private).includes(path.route.replace('[Id]', ''));
 
-      if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER')) {
-        setLoaded(false);
-
-        return <PageNotFound noAccess />;
+      if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER') || me?.response?.status === 403) {
+        setNoAccess(true);
       }
 
       // check cookie
@@ -94,26 +92,22 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-  return loaded && <>
-    {children}
-    <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
-      <Fab
-        aria-label="like"
-        size={'medium'}
-        color={'primary'}
-        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-      >
-        <ChevronUp color="white" />
-      </Fab>
-    </Box></>;
+  return loaded && noAccess
+    ? <PageNotFound noAccess />
+    : loaded && <>
+      {children}
+      <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
+        <Fab
+          aria-label="like"
+          size={'medium'}
+          color={'primary'}
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+        >
+          <ChevronUp color="white" />
+        </Fab>
+      </Box></>;
 
   // return <Loader center={true} />;
-};
-
-Layout.propTypes = {
-  children: PropTypes.any,
-  toggleTheme: PropTypes.any,
-  toggleFontSize: PropTypes.any,
 };
 
 export default Layout;

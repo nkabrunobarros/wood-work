@@ -54,8 +54,18 @@ const DocsClient = (props) => {
   }
 
   async function handleFileClick (file) {
-    await downloadFile(file.file)
+    downloadFile(file.file)
+      .then((res) => res.blob())
       .then((res) => {
+        const blobUrl = window.URL.createObjectURL(new Blob([res.blob()]));
+        const fileName = 'teste.jpg';
+        const aTag = document.createElement('a');
+
+        aTag.href = blobUrl;
+        aTag.setAttribute('download', fileName);
+        document.body.appendChild(aTag);
+        aTag.click();
+        aTag.remove();
         toast.success('Consegui buscar ficheiro.');
         console.log(res);
       })
@@ -113,8 +123,11 @@ const DocsClient = (props) => {
                       <Box color='primary.main' alignItems='center'>
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
-                      <Tooltip title='Clique para abrir este ficheiro.'>
+                      {true && <Tooltip title='get'>
                         <Typography sx={{ cursor: 'pointer' }}><a onClick={() => handleFileClick(file)} >{file.file_name + file.file_type}</a></Typography>
+                      </Tooltip>}
+                      <Tooltip title='Clique para descarregar este ficheiro.'>
+                        <Typography><a href={file?.file} download target='_blank' rel="noreferrer">{file?.file_name + file?.file_type}</a></Typography>
                       </Tooltip>
                     </Grid>
                     <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>

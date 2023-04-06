@@ -535,7 +535,7 @@ const ProjectDetails = (props) => {
                           bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
                           onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
                         >
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.partName.replace(/_/g, ' ') } </Typography></Grid>
+                          <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
                           <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
