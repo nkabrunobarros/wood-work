@@ -187,7 +187,7 @@ const Clients = ({ ...props }) => {
             </Box>
           </Box>
           <AdvancedTable
-            rows={clients.filter((item) => item.user.is_active && item).sort((a, b) =>
+            rows={clients.sort((a, b) =>
               a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
             )}
             headCells={headCells}

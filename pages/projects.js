@@ -259,9 +259,9 @@ const Orders = ({ ...pageProps }) => {
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
-        Projeto: bud?.dateRequest.value,
-        Entregue: bud?.dateDelivery.value,
-        Categoria: categories.find(c => c.id === bud.category.value)?.label,
+        Projeto: bud?.dateRequest?.value,
+        Entregue: bud?.dateDelivery?.value,
+        Categoria: categories.find(c => c.id === bud.category?.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
       };
     });

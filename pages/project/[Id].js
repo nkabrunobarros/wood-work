@@ -18,6 +18,7 @@ import * as clientsActionsRedux from '../../store/actions/client';
 import * as expeditionsActionsRedux from '../../store/actions/expedition';
 import * as filesActionsRedux from '../../store/actions/file';
 import * as foldersActionsRedux from '../../store/actions/folder';
+import * as furnituresActionsRedux from '../../store/actions/furniture';
 import * as projectsActionsRedux from '../../store/actions/project';
 import { categories } from '../internal/new-project';
 
@@ -31,9 +32,11 @@ const Order = ({ ...pageProps }) => {
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getExpedition = (data) => dispatch(expeditionsActionsRedux.expedition(data));
-  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.budgetFolders(data));
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const [folders, setFolders] = useState();
+  const [furnitures, setFurnitures] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -41,6 +44,27 @@ const Order = ({ ...pageProps }) => {
       const expedition = (await getExpedition(project.expedition.object)).data;
       const budget = (await getBudget(project.budgetId.object)).data;
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
+
+      const groups = furnitures.reduce((accumulator, item) => {
+        const groupName = item.group.value;
+
+        if (!accumulator[groupName]) {
+          accumulator[groupName] = {
+            id: `group${Object.keys(accumulator).length}`,
+            name: groupName,
+            items: []
+          };
+        }
+
+        accumulator[groupName].items.push(item);
+
+        return accumulator;
+      }, {});
+
+      const result = Object.values(groups);
+
+      setFurnitures(result);
 
       getFolders().then(async (res) => {
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
@@ -185,7 +209,8 @@ const Order = ({ ...pageProps }) => {
       headCellsUpperProductionDetail,
       folders,
       headCellsMessages,
-      categories
+      categories,
+      furnitures
     };
 
     return <OrderScreen {...props} />;

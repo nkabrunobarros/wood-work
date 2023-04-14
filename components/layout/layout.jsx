@@ -1,3 +1,5 @@
+/* eslint-disable no-constant-condition */
+/* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
 // Node modules
 import Router, { useRouter } from 'next/router';
@@ -78,6 +80,10 @@ const Layout = ({ children }) => {
 
       if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER') || me?.response?.status === 403) {
         setNoAccess(true);
+      }
+
+      if ((me?.me?.role === 'CUSTOMER' && me.me.tos === false) && false) {
+        // Router.push('/terms');
       }
 
       // check cookie

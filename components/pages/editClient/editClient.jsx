@@ -73,19 +73,13 @@ const EditClient = ({ ...props }) => {
         tooltip: ''
       },
       {
-        id: 'vat',
-        label: 'Numero Identificação Fiscal (Nif)',
-        value: client.vat,
-        error: '',
-        tooltip: ''
-      },
-      {
         id: 'address.streetAddress',
         label: 'Rua',
         value: client.address.streetAddress,
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 50
       },
       {
         id: 'address.postalCode',
@@ -93,7 +87,8 @@ const EditClient = ({ ...props }) => {
         value: client.address.postalCode,
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 15
       },
       {
         id: 'address.addressLocality',
@@ -101,14 +96,14 @@ const EditClient = ({ ...props }) => {
         value: client.address.addressLocality,
         error: '',
         required: true,
-        tooltip: 'Prencha o Codigo Postal'
+
       },
       {
         id: 'address.addressRegion',
         label: 'Concelho',
         value: client.address.addressRegion,
         error: '',
-        tooltip: 'Prencha o Codigo Postal'
+
       },
       {
         id: 'address.addressCountry',
@@ -117,7 +112,7 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         type: 'country',
-        tooltip: 'Prencha o Codigo Postal'
+
       },
       {
         id: 'delivery_address.streetAddress',
@@ -125,7 +120,8 @@ const EditClient = ({ ...props }) => {
         value: client.delivery_address.streetAddress,
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 50
       },
       {
         id: 'delivery_address.postalCode',
@@ -133,7 +129,8 @@ const EditClient = ({ ...props }) => {
         value: client.delivery_address.postalCode,
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 15
       },
       {
         id: 'delivery_address.addressLocality',
@@ -141,13 +138,15 @@ const EditClient = ({ ...props }) => {
         value: client.delivery_address.addressLocality,
         error: '',
         required: true,
-        tooltip: 'Prencha o Codigo Postal'
+        maxLength: 25
+
       },
       {
         id: 'delivery_address.addressRegion',
         label: 'Concelho de Entrega',
         value: client.delivery_address.addressRegion,
         error: '',
+        maxLength: 25
       },
       {
         id: 'delivery_address.addressCountry',
@@ -156,7 +155,7 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         type: 'country',
-        tooltip: 'Prencha o Codigo Postal'
+
       },
     ]
   );

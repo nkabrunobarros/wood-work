@@ -168,7 +168,9 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 50
+
       },
       {
         id: 'delivery_address.postalCode',
@@ -176,7 +178,9 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
-        tooltip: ''
+        tooltip: '',
+        maxLength: 15
+
       },
       {
         id: 'delivery_address.addressLocality',
@@ -184,6 +188,8 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
+        maxLength: 25
+
       },
       {
         id: 'delivery_address.addressRegion',
@@ -191,6 +197,8 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: false,
+        maxLength: 25
+
       },
       {
         id: 'delivery_address.addressCountry',

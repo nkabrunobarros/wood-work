@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // Node modules
-import { FormControl, IconButton, InputAdornment, InputLabel, TextField, Tooltip } from '@mui/material';
+import { Box, FormControl, IconButton, InputAdornment, InputLabel, TextField, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { NumericFormat } from 'react-number-format';
@@ -46,35 +46,36 @@ const CurrencyInput = ({
 }) => {
   return (
     <>
-      {variant !== 'standard' && (
-        <InputLabel htmlFor={label}>
-          {label}
-          {required &&
+      <Box sx={{ width: '100%' }}>
+        {variant !== 'standard' && (
+          <InputLabel htmlFor={label}>
+            {label}
+            {required &&
             <Tooltip title='Obrigatório' >
               <span style={{ color: 'var(--red)' }}> *</span>
             </Tooltip>
-          }
-        </InputLabel>
-      )}
-      <FormControl fullWidth disabled={disabled}>
-        {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
-        <TextField
-          placeholder={placeholder}
-          disabled={disabled}
-          id={id}
-          variant={variant || 'outlined'}
-          error={error}
-          label={error}
-          value={value}
-          fullWidth={fullWidth}
-          sx={{ width: width || (halfWidth && '50%') }}
-          onChange={onChange}
-          style={style}
-          name={name}
-          InputProps={{
-            inputComponent: NumberFormatCustom,
-          }}
-          endAdornment={!!adornmentIcon &&
+            }
+          </InputLabel>
+        )}
+        <FormControl fullWidth disabled={disabled}>
+          {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
+          <TextField
+            placeholder={placeholder}
+            disabled={disabled}
+            id={id}
+            variant={variant || 'outlined'}
+            error={error}
+            label={error}
+            value={value}
+            fullWidth={fullWidth}
+            sx={{ width: width || (halfWidth && '50%') }}
+            onChange={onChange}
+            style={style}
+            name={name}
+            InputProps={{
+              inputComponent: NumberFormatCustom,
+            }}
+            endAdornment={!!adornmentIcon &&
             <InputAdornment position={adornmentPos || 'end'}>
               <Tooltip title={iconTooltip || ''}>
                 <IconButton component='label'
@@ -84,9 +85,11 @@ const CurrencyInput = ({
                 </IconButton>
               </Tooltip>
             </InputAdornment>
-          }
-        />
-      </FormControl>
+            }
+          />
+
+        </FormControl>
+      </Box>
 
     </>
   );

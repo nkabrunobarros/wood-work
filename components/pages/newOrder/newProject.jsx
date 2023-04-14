@@ -37,10 +37,12 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as foldersActionsRedux from '../../../store/actions/folder';
+import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ClientTab from './Tabs/clientTab';
+import ProductLinesTab from './Tabs/productLinesTab';
 import ProductTab from './Tabs/productTab';
 import RequestTab from './Tabs/requestTab';
 
@@ -53,6 +55,7 @@ const NewOrder = ({ ...props }) => {
   const dispatch = useDispatch();
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
   const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
+  const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -65,11 +68,10 @@ const NewOrder = ({ ...props }) => {
   const [clientUser, setClientUser] = useState('');
 
   const [budgetData, setBudgetData] = useState({
+    num: { value: '', error: '', required: true },
+    name: { value: '', error: '', required: true },
     obs: { value: '', type: 'area' },
-    // amount: { value: '', error: '', required: true },
     price: { value: '', error: '' },
-    // category: { value: '', error: '' },
-    // name: { value: '', error: '', required: true },
     client: { value: '', error: '', required: true },
     dateRequest: { value: '', error: '', required: true, type: 'date' },
     dateDelivery: { value: '', error: '', required: false, type: 'date' },
@@ -81,6 +83,8 @@ const NewOrder = ({ ...props }) => {
     addressRegion: { value: '', error: '', required: false },
     addressCountry: { value: '', error: '', required: true },
   });
+
+  const [lines, setLines] = useState([]);
 
   const [inputFields, setInputFields] = useState([{
     category: { value: '', error: '' },
@@ -124,6 +128,30 @@ const NewOrder = ({ ...props }) => {
     setBudgetData(data);
   }
 
+  function ValidateLines () {
+    const obj = [...lines];
+    let hasErrors = false;
+
+    //  if there are 0 items in the 1st group, return true = errors
+    if (obj[0]?.items?.length === 0 || typeof obj[0]?.items === 'undefined') return true;
+
+    obj.map((group) => {
+      group.items.map((item) => {
+        Object.entries(item).forEach(([, value]) => {
+          if (typeof value === 'object' && 'error' in value && value.value === '' && value.required) {
+            value.error = 'Campo obrigatorio';
+            hasErrors = true;
+          } else value.error = '';
+        });
+      });
+    });
+
+    setLines(obj);
+    console.log(hasErrors);
+
+    return hasErrors;
+  }
+
   function ValidateData () {
     let hasErrors = false;
     const data = { ...budgetData };
@@ -146,10 +174,10 @@ const NewOrder = ({ ...props }) => {
             hasErrors = true;
           }
 
-          if (data[prop].value === data.category.value) {
-            data[prop].error = 'Nome mal estruturado';
-            hasErrors = true;
-          }
+          // if (data[prop].value === data.category.value) {
+          //   data[prop].error = 'Nome mal estruturado';
+          //   hasErrors = true;
+          // }
         }
       } else if (data[prop].required) {
         data[prop].error = 'Campo Obrigatório';
@@ -173,6 +201,8 @@ const NewOrder = ({ ...props }) => {
       return field;
     });
 
+    hasErrors = ValidateLines();
+
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
       setBudgetData(data);
@@ -189,17 +219,15 @@ const NewOrder = ({ ...props }) => {
     setProcessing(true);
 
     const data = {
-      id: (budgetData.id + Math.random()) || `urn:ngsi-ld:Budget:${inputFields[0]?.name.value.replace(/ /g, '_').toUpperCase()}`,
+      id: (budgetData.id + Math.random()) || `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`,
       type: 'Budget',
       name: {
         type: 'Property',
-        value: inputFields[0]?.name.value
-        // value: budgetData?.name.value
+        value: budgetData.name.value
       },
       amount: {
         type: 'Property',
         value: inputFields[0]?.amount.value
-        // value: budgetData.amount.value
       },
       price: {
         type: 'Property',
@@ -225,10 +253,6 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: budgetData.obs.value
       },
-      image: {
-        type: 'Property',
-        value: 'urn:ngsi-ld:Image:Budget:MC_MUEBLETV_A'
-      },
       category: {
         type: 'Property',
         value: inputFields[0]?.category.value || ''
@@ -244,7 +268,7 @@ const NewOrder = ({ ...props }) => {
       },
       belongsTo: {
         type: 'Relationship',
-        object: `urn:ngsi-ld:Project:${inputFields[0]?.name.value.replace(/ /g, '_').toUpperCase()}`
+        object: `urn:ngsi-ld:Project:${formatString(budgetData.name.value)}`
       },
       dateDelivery: {
         type: 'Property',
@@ -266,10 +290,13 @@ const NewOrder = ({ ...props }) => {
       toast.success('Orçamento Criado!');
     }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
 
+    CreateFurnitures();
+
     await newFolder({
-      folder_name: `urn:ngsi-ld:Folder:${inputFields[0]?.name.value.replace(/ /g, '_').toUpperCase()}`,
+      folder_name: `urn:ngsi-ld:Folder:${formatString(budgetData.name.value)}`,
       parent_folder: null,
-      user: clientUser
+      user: clientUser,
+      budget: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`
     });
 
     // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
@@ -291,6 +318,60 @@ const NewOrder = ({ ...props }) => {
     cancelTxt: 'Criar novo orçamento',
   };
 
+  function formatString (str) {
+    // Replace all spaces with underscores
+    str = str.replace(/ /g, '_');
+    // Replace accented characters
+    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // Replace all non-alphanumeric characters except for underscores
+    str = str.replace(/[^a-zA-Z0-9_]/g, '');
+
+    return str;
+  }
+
+  async function CreateFurnitures () {
+    const items = lines.map(line => {
+      let lastGroup = '';
+
+      const lines = line.items.map(item => {
+        if (item.rowType.value === 'group') { lastGroup = item.name.value; console.log(item.name); }
+
+        const valuesOnly = {};
+
+        Object.keys(item).map(key => {
+          valuesOnly[key] = {
+            type: 'Property',
+            value: item[key].value
+          };
+        });
+
+        valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_';
+        valuesOnly.type = 'Furniture';
+        valuesOnly.group = { value: line.name, type: 'Property' };
+        valuesOnly.section = { value: lastGroup, type: 'Property' };
+        valuesOnly.hasBudget = { value: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, type: 'Property' };
+
+        return valuesOnly;
+      });
+
+      return lines;
+    });
+
+    const mergedArray = items.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
+      return { ...item, num: index, id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
+    });
+
+    try {
+      mergedArray.map(async (item) => {
+        await newFurniture(item).then((result) => console.log(result));
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log(mergedArray);
+  }
+
   return (
     <>
       <Navbar />
@@ -310,6 +391,7 @@ const NewOrder = ({ ...props }) => {
         {/* What do do after Create Modal */}
         <ConfirmDialog {...successModalProps} />
         <Content>
+
           <Grid container md={12} sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
             <Grid container md={10} sm={10} xs={12}>
               <Typography variant='titlexxl'>{breadcrumbsPath[1].title}</Typography>
@@ -330,8 +412,10 @@ const NewOrder = ({ ...props }) => {
               </ButtonGroup>
             </Grid>
           </Grid>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid container md={3.5}>
+        </Content>
+        <Grid container sx={{ width: '100%' }}>
+          <Grid container md={12}>
+            <Content>
               <ClientTab {...props}
                 client={budgetData.client}
                 onClientChange={onBudgetChange}
@@ -339,9 +423,11 @@ const NewOrder = ({ ...props }) => {
                 setClientUser={setClientUser}
                 noDetail
               />
-            </Grid>
-            <Grid container md={5}>
-              <ProductTab {...props}
+            </Content>
+          </Grid>
+          <Grid container md={12}>
+            <Content>
+              <ProductLinesTab {...props}
                 dragDrop={{ getRootProps, getInputProps, isDragActive }}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
@@ -349,18 +435,31 @@ const NewOrder = ({ ...props }) => {
                 inputFields={inputFields}
                 setInputFields={setInputFields}
                 noDrop
+                lines={lines}
+                setLines={setLines}
               />
-            </Grid>
-            <Grid container md={3.5}>
+              {false && <ProductTab {...props}
+                dragDrop={{ getRootProps, getInputProps, isDragActive }}
+                budgetData={budgetData}
+                onBudgetChange={onBudgetChange}
+                docs={{ uploadedFiles, setUploadedFiles }}
+                inputFields={inputFields}
+                setInputFields={setInputFields}
+                noDrop
+              />}
+            </Content>
+          </Grid>
+          <Grid container md={12}>
+            <Content>
               <RequestTab {...props}
                 onProcessing={setProcessing}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 noDetail
               />
-            </Grid>
+            </Content>
           </Grid>
-        </Content>
+        </Grid>
       </Grid >
 
     </>

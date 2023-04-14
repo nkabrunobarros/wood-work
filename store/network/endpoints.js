@@ -5,6 +5,7 @@ const endpoints = {
   CUSTOMER: 'accounts/customer/',
   MECLIENT: 'accounts/customer/me/',
   PROJECTS: 'project/',
+  FURNITURES: 'furniture/',
   BUDGETS: 'budget/',
   WORKERS: 'worker/',
   EXPEDITIONS: 'expedition/',

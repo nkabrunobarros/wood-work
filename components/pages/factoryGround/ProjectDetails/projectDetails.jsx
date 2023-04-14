@@ -240,8 +240,6 @@ const ProjectDetails = (props) => {
     Promise.all([load()]).then(() => setFullyLoaded(true));
   }, []);
 
-  console.log(props?.projectParts);
-
   const cellProps = {
     md: 0.85,
     sm: 0.85,

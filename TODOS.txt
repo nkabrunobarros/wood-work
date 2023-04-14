@@ -44,3 +44,17 @@ qual a diferença entre
 
 
 qual dos dois utilizar
+
+
+
+
+Estados
+
+'waiting budget',
+'waiting adjudication',
+'canceled',
+'drawing',
+'production',
+'testing',
+'transport',
+'finished',

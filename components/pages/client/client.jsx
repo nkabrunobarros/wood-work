@@ -112,7 +112,7 @@ const EditClient = ({ ...props }) => {
 
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
                     <Typography item color='lightTextSm.main'>Email</Typography>
-                    <Typography item color='lightTextSm.black' >{client?.user.email}</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.user?.email}</Typography>
                   </Grid>
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
                     <Typography item color='lightTextSm.main'>Tipo cliente </Typography>
@@ -140,14 +140,6 @@ const EditClient = ({ ...props }) => {
                   </Grid>
                 </Grid>
                 <Grid container item p={1}>
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'> Número de Identificação Fiscal (Nif)</Typography>
-                    <Typography item color='lightTextSm.black' >{client?.vat?.value}</Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6} sm={6}>
-                  </Grid>
-                </Grid>
-                <Grid container item p={1}>
                   <Grid container item md={6} sm={6} xs={12} >
                     <Grid item xs={12} md={12} sm={12}>
                       <Grid container md={12} sm={12} xs={12}>
@@ -168,7 +160,7 @@ const EditClient = ({ ...props }) => {
                       </Grid>
                       <Grid container md={12} sm={12} xs={12}>
                         <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Região</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.addressRegion}</Typography></Grid>
+                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.addressRegion || 'Não definido'}</Typography></Grid>
                       </Grid>
                       <Grid container md={12} sm={12} xs={12}>
                         <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Pais</Grid>
@@ -190,19 +182,14 @@ const EditClient = ({ ...props }) => {
                       <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressLocality}</Typography></Grid>
                     </Grid>
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressRegion}</Typography></Grid>
+                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressRegion || 'Não definido'}</Typography></Grid>
                     </Grid>
                     <Grid container md={12} sm={12} xs={12}>
                       <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressCountry}</Typography></Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container item>
-                  <Grid item xs={12} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Outros Dados</Typography>
-                    <Typography item color='lightTextSm.black' >{client?.otherData?.value}</Typography>
-                  </Grid>
-                </Grid>
+
               </Grid>
             </Grid>
           </Grid>

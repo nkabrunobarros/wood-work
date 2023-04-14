@@ -50,7 +50,7 @@ const SignIn = (props) => {
     forgotPasswordRoute
   } = props;
 
-  const [username, setUsername] = useState(Router.route === '/' ? 'Barros' : 'admin');
+  const [username, setUsername] = useState(Router.route === '/' ? 'bruno.barros@nka.pt' : 'admin');
   // const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
   const [password, setPassword] = useState(Router.route === '/' ? 'ChangeMe1' : 'zo5JhUY7xzgg5Jk');
   const [loading, setLoading] = useState(false);
@@ -530,7 +530,7 @@ const SignIn = (props) => {
             ToastSet(loadingNotification, 'A entrar', 'success');
             setLoading(false);
 
-            if (user.role === 'CUSTOMER' && user.tos?.value === 'false') router.push('/terms');
+            if (user.role === 'CUSTOMER' && user.tos === false) router.push('/terms');
             else router.push(loginSuccessRoute);
           }
         }).catch((err) => console.log(err));

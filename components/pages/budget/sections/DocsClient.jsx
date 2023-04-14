@@ -21,7 +21,7 @@ const DocsClient = (props) => {
   const dispatch = useDispatch();
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const getFile = (data) => dispatch(filesActionsRedux.file(data));
-  const downloadFile = (data) => dispatch(filesActionsRedux.downloadFile(data));
+  // const downloadFile = (data) => dispatch(filesActionsRedux.downloadFile(data));
 
   const onDrop = useCallback((acceptedFiles) => {
     setNewFiles(acceptedFiles);
@@ -53,9 +53,10 @@ const DocsClient = (props) => {
     setConfirmUploadModal(false);
   }
 
-  async function handleFileClick (file) {
-    downloadFile(file.file)
-      .then((res) => res.blob())
+  async function handleFileClick () {
+    fetch('https://docs.google.com/spreadsheets/d/1_JI3oX6paFDfHdx0mUWbBqatx1Fw8SL7/edit#ghttps://docs.google.com/spreadsheets/d/1_JI3oX6paFDfHdx0mUWbBqatx1Fw8SL7/edit?usp=sharing&ouid=107951653271019838541&rtpof=true&sd=trueid=1994250179')
+      .then((res) => { console.log(res); })
+      // .then((res) => res.blob())
       .then((res) => {
         const blobUrl = window.URL.createObjectURL(new Blob([res.blob()]));
         const fileName = 'teste.jpg';
@@ -123,7 +124,7 @@ const DocsClient = (props) => {
                       <Box color='primary.main' alignItems='center'>
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
-                      {true && <Tooltip title='get'>
+                      {false && <Tooltip title='get'>
                         <Typography sx={{ cursor: 'pointer' }}><a onClick={() => handleFileClick(file)} >{file.file_name + file.file_type}</a></Typography>
                       </Tooltip>}
                       <Tooltip title='Clique para descarregar este ficheiro.'>

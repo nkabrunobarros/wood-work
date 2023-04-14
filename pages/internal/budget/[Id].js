@@ -11,6 +11,7 @@ import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import * as filesActionsRedux from '../../../store/actions/file';
 import * as foldersActionsRedux from '../../../store/actions/folder';
+import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
@@ -19,11 +20,13 @@ const Budget = ({ ...pageProps }) => {
   const [budget, setBudget] = useState();
   const [loaded, setLoaded] = useState(false);
   const [folders, setFolders] = useState([]);
+  const [furnitures, setFurnitures] = useState();
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
   const setDisplayingBudget = (data) => dispatch(budgetsActionsRedux.setDisplayingBudget(data));
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
-  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.budgetFolders(data));
+  const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
 
   useEffect(() => {
     const getData = async () => {
@@ -32,12 +35,32 @@ const Budget = ({ ...pageProps }) => {
       const budget = (await getBudget(router.query.Id)).data;
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
 
+      const groups = furnitures.reduce((accumulator, item) => {
+        const groupName = item.group.value;
+
+        if (!accumulator[groupName]) {
+          accumulator[groupName] = {
+            id: `group${Object.keys(accumulator).length}`,
+            name: groupName,
+            items: []
+          };
+        }
+
+        accumulator[groupName].items.push(item);
+
+        return accumulator;
+      }, {});
+
+      const result = Object.values(groups);
+
+      setFurnitures(result);
       thisBudget.orderBy.object = client;
       setBudget(thisBudget);
       setDisplayingBudget(thisBudget);
 
-      await getFolders().then(async (res) => {
+      await getFolders(router.query.Id).then(async (res) => {
         const builtFolders = [];
         const resFiles = await getFiles(router.query.Id);
 
@@ -169,6 +192,7 @@ const Budget = ({ ...pageProps }) => {
       headCellsMessages,
       headCellsOrderDetail,
       headCellsUpperOrderDetail,
+      furnitures,
       categories: [
         { label: 'Cozinha', id: 'MC_' },
         { label: 'Quarto', id: 'MQ_' },

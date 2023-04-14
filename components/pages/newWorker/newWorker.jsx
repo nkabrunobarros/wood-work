@@ -117,20 +117,12 @@ const newWorker = ({ ...props }) => {
     {
       id: 'hasOrganization',
       label: 'Organização',
-      value: organizations[0].id,
+      value: organizations[0]?.id,
       options: organizations,
       optLabel: 'legalName',
       error: '',
       required: true,
       tooltip: ''
-    },
-    {
-      id: 'user.password',
-      label: 'Senha',
-      value: 'ChangeMe',
-      error: '',
-      type: 'password',
-      required: true
     },
   ]
   );

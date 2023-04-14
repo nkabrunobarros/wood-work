@@ -46,7 +46,6 @@ export const downloadFile = (data) => {
   return createAction({
     meta: null,
     request: {
-      headers: { 'content-type': 'application/json' },
       method: 'GET',
       url: data,
     },

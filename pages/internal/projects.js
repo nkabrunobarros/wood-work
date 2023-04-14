@@ -406,8 +406,6 @@ const Projects = ({ ...pageProps }) => {
 
     const merged = [...projects, ...filteredBudgets];
 
-    console.log(merged);
-
     const props = {
       items: merged,
       counts,

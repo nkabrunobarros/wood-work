@@ -81,36 +81,9 @@ export const budgetFolders = (data) => {
       url: getApiURL(endpoints.FOLDERS),
       params: {
         options: 'sysAttrs',
-        q: 'status!="adjudicated"&status!="canceled"',
+        budget: data
       }
     },
     types: [FOLDERS_REQUEST, FOLDERS_SUCCESS, FOLDERS_FAIL],
   });
 };
-// export const updateBudget = (data) => {
-//   const { auth_token: userToken } = parseCookies();
-//   const id = data?.id;
-
-//   delete data.id;
-
-//   return createAction({
-//     meta: null,
-//     request: {
-//       data,
-//       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
-//       method: 'PATCH',
-//       url: getApiURL(endpoints.FOLDERS + id),
-//       params: {
-//         options: 'replace'
-//       }
-//     },
-//     types: [UPDATE_FOLDER_REQUEST, UPDATE_FOLDER_SUCCESS, UPDATE_FOLDER_FAIL],
-//   });
-// };
-
-// export const setDisplayingBudget = (data) => {
-//   return {
-//     type: DISPLAYED_FOLDER_SET,
-//     data,
-//   };
-// };

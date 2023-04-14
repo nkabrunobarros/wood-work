@@ -9,6 +9,7 @@ import MySelect from '../inputs/select';
 import axios from 'axios';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
+import CurrencyInput from '../inputs/CurrencyInput';
 
 /* HOW TO USE
  * to use this form generator, u need to provida a array of objects for the inputs.
@@ -164,6 +165,28 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
           </Grid>;
         }
 
+        if (field?.type === 'currency') {
+          return <Grid key={index}
+            md={ perRow ? (12 / perRow) : 3}
+            sm={ perRow !== 1 ? 6 : 12}
+            xs={ perRow !== 1 ? 12 : 12}
+            container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+            <CurrencyInput
+              name={field.id}
+              label={field.label}
+              options={countries}
+              required={field.required}
+              value={field.value}
+              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              error={field.error}
+              onChange={(e) => onFormChange(index, e)}
+              tooltip={field.tooltip}
+              disabled={field.disabled}
+            />
+
+          </Grid>;
+        }
+
         if (field?.type === 'country') {
           let portugal = {};
 
@@ -245,27 +268,6 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               </Box>
 
             </Tooltip>
-          </Grid>;
-        }
-
-        if (field?.type === 'password') {
-          return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-            <MySelect
-              fullWidth
-              name={field.id}
-              label={field.label}
-              required={field.required}
-              value={field.value}
-              error={field.error}
-              type={field.type && field.type}
-              onChange={(e) => onFormChange(index, e)}
-              options={field.options}
-              optionValue={field.optValue}
-              optionLabel={field.optLabel}
-              disabled={field.disabled}
-              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
-              tooltip={field.tooltip}
-            />
           </Grid>;
         }
 

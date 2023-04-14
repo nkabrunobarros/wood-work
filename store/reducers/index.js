@@ -15,6 +15,7 @@ import permissions from './permissions';
 import projects from './projects';
 import workers from './workers';
 import leftovers from './leftovers';
+import furnitures from './furnitures';
 
 const appReducer = combineReducers({
   auth,
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
   folders,
   machines,
   leftovers,
+  furnitures,
 });
 
 const rootReducer = (state, action) => {

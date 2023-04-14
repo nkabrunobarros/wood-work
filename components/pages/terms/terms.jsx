@@ -17,14 +17,20 @@ import Footer from '../../layout/footer/footer';
 import { ChevronDown, ChevronLeft, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import Router from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import backgroundImg from '../../../public/Log_In.jpg';
 import { logout } from '../../../store/actions/auth';
+import * as ClientsActionsRedux from '../../../store/actions/client';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [windowWidth, setWindowHeight] = useState();
   // eslint-disable-next-line react/prop-types
   const { readOnly } = props;
+  const dispatch = useDispatch();
+  const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
+  const reduxState = useSelector((state) => state);
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
@@ -45,6 +51,17 @@ const Terms = ({ ...props }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const formData = new FormData();
+
+    formData.append('tos', true);
+
+    await updateClient({ data: formData, id: reduxState.auth.me?.id })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     // const data = new FormData(event.currentTarget);
   };
 
@@ -109,8 +126,24 @@ const Terms = ({ ...props }) => {
           </div>
         )}
         <Box
+          style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+        >
+          <a
+            target='#'
+            href='http://mofreita.com/'
+          >
+            <Image
+              width={windowWidth > 600 ? 80 : 50}
+              alt='Company Logo'
+              src={companyLogo}
+              placeholder='blur'
+            />
+          </a>
+        </Box>
+        <Box
           sx={{
             mx: '10%',
+            mt: '10%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'start',
@@ -229,6 +262,7 @@ Em caso de incumprimento, a Mofreita, reserva-se no direito de eliminar a conta 
                   type='submit'
                   fullWidth
                   onClick={() => {
+                    Router.push('/');
                     logout();
                   }}
                 >
