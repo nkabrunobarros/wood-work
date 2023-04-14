@@ -100,7 +100,7 @@ const EditClient = ({ ...props }) => {
       },
       {
         id: 'address.addressRegion',
-        label: 'Concelho',
+        label: 'Região',
         value: client.address.addressRegion,
         error: '',
 
@@ -143,7 +143,7 @@ const EditClient = ({ ...props }) => {
       },
       {
         id: 'delivery_address.addressRegion',
-        label: 'Concelho de Entrega',
+        label: 'Região de Entrega',
         value: client.delivery_address.addressRegion,
         error: '',
         maxLength: 25

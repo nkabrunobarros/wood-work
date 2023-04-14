@@ -148,7 +148,7 @@ const NewClient = ({ ...props }) => {
       },
       {
         id: 'address.addressRegion',
-        label: 'Concelho',
+        label: 'Região',
         value: '',
         error: '',
         required: false,
@@ -193,7 +193,7 @@ const NewClient = ({ ...props }) => {
       },
       {
         id: 'delivery_address.addressRegion',
-        label: 'Concelho de Entrega',
+        label: 'Região de Entrega',
         value: '',
         error: '',
         required: false,

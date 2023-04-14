@@ -9,9 +9,12 @@ import AuthData from '../../../lib/AuthData';
 import routes from '../../../navigation/routes';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
+import * as countriesActionsRedux from '../../../store/actions/country';
 import * as filesActionsRedux from '../../../store/actions/file';
 import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
+
+import axios from 'axios';
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
@@ -27,10 +30,12 @@ const Budget = ({ ...pageProps }) => {
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
   const getFolders = (data) => dispatch(foldersActionsRedux.budgetFolders(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
+  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
   useEffect(() => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       const budget = (await getBudget(router.query.Id)).data;
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;

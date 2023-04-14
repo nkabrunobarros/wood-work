@@ -15,6 +15,7 @@ import DocsClient from './sections/DocsClient';
 import Head from './sections/Head';
 import Messages from './sections/Messages';
 import Products from './sections/Products';
+import ProductsObservations from './sections/ProductsObservations';
 
 const BudgetPage = (props) => {
   const { breadcrumbsPath } = props;
@@ -35,6 +36,10 @@ const BudgetPage = (props) => {
         {/* Products */}
         <Content>
           <Products open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
+        </Content>
+        {/* Observations products */}
+        <Content>
+          <ProductsObservations open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
         </Content>
         {/* Docs */}
         <Content>

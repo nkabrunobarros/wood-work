@@ -5,17 +5,18 @@ import appStates from './appStates';
 import auth from './auth';
 import budgets from './budgets';
 import clients from './clients';
+import countries from './countries';
 import emails from './emails';
 import expeditions from './expeditions';
 import folders from './folders';
+import furnitures from './furnitures';
+import leftovers from './leftovers';
 import machines from './machines';
 import organizations from './organizations';
 import parts from './parts';
 import permissions from './permissions';
 import projects from './projects';
 import workers from './workers';
-import leftovers from './leftovers';
-import furnitures from './furnitures';
 
 const appReducer = combineReducers({
   auth,
@@ -33,6 +34,7 @@ const appReducer = combineReducers({
   machines,
   leftovers,
   furnitures,
+  countries,
 });
 
 const rootReducer = (state, action) => {

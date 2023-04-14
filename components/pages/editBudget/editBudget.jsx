@@ -46,8 +46,8 @@ import ProductLinesTab from './Tabs/productLinesTab';
 import ProductTab from './Tabs/productTab';
 import RequestTab from './Tabs/requestTab';
 
-const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, budgets, clients } = props;
+const EditBudget = ({ ...props }) => {
+  const { breadcrumbsPath, pageProps, budgets, clients, budget } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -65,26 +65,31 @@ const NewOrder = ({ ...props }) => {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: false });
-  const [clientUser, setClientUser] = useState('');
+  const [clientUser, setClientUser] = useState(budget.orderBy.object.id);
+
+  console.log(budget?.dateRequest.value);
+  console.log(moment(budget?.dateRequest.value, 'DD/MM/YYYY'));
 
   const [budgetData, setBudgetData] = useState({
-    num: { value: '', error: '', required: true },
-    name: { value: '', error: '', required: true },
-    obs: { value: '', type: 'area' },
-    price: { value: '', error: '' },
-    client: { value: '', error: '', required: true },
-    dateRequest: { value: '', error: '', required: true, type: 'date' },
-    dateDelivery: { value: '', error: '', required: false, type: 'date' },
-    dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
-    dateDeliveryProject: { value: '', error: '', required: false, type: 'date' },
-    streetAddress: { value: '', error: '', required: true },
-    postalCode: { value: '', error: '', required: true },
-    addressLocality: { value: '', error: '', required: true },
-    addressRegion: { value: '', error: '', required: false },
-    addressCountry: { value: '', error: '', required: true },
+    num: { value: budget?.num?.value, error: '', required: true },
+    name: { value: budget?.name?.value, error: '', required: true },
+    obs: { value: budget?.obs?.value, type: 'area' },
+    price: { value: budget?.price?.value, error: '' },
+    client: { value: budget?.orderBy?.object.id, error: '', required: true },
+    dateRequest: { value: moment(budget?.dateRequest.value, 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
+    dateDelivery: { value: budget?.dateDelivery?.value, error: '', required: false, type: 'date' },
+    dateAgreedDelivery: { value: budget?.dateAgreedDelivery?.value, error: '', required: true, type: 'date' },
+    dateDeliveryProject: { value: budget?.dateDeliveryProject?.value, error: '', required: false, type: 'date' },
+    streetAddress: { value: budget?.deliveryAddress?.value?.streetAddress, error: '', required: true },
+    postalCode: { value: budget?.deliveryAddress?.value?.postalCode, error: '', required: true },
+    addressLocality: { value: budget?.deliveryAddress?.value?.addressLocality, error: '', required: true },
+    addressRegion: { value: budget?.deliveryAddress?.value?.addressRegion, error: '', required: false },
+    addressCountry: { value: budget?.deliveryAddress?.value?.addressCountry, error: '', required: true },
   });
 
-  const [lines, setLines] = useState([]);
+  console.log(budget);
+
+  const [lines, setLines] = useState(props.furnitures);
 
   const [inputFields, setInputFields] = useState([{
     category: { value: '', error: '' },
@@ -372,6 +377,8 @@ const NewOrder = ({ ...props }) => {
     } catch (err) {
       console.log(err);
     }
+
+    console.log(mergedArray);
   }
 
   return (
@@ -469,4 +476,4 @@ const NewOrder = ({ ...props }) => {
   );
 };
 
-export default NewOrder;
+export default EditBudget;

@@ -269,7 +269,7 @@ const Orders = ({ ...pageProps }) => {
     const filteredBudgets = budgets.filter(item => item !== false);
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
-      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
+      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId?.object);
       // const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
 
       return {
@@ -281,7 +281,7 @@ const Orders = ({ ...pageProps }) => {
         Termino: thisBudget?.dateAgreedDelivery.value,
         Projeto: thisBudget?.dateRequest.value,
         Entregue: thisBudget?.dateDelivery.value,
-        Categoria: categories.find(c => c.id === thisBudget.category.value)?.label,
+        Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         ExpeditionTime: '',
         Complete: 0,

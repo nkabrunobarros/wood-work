@@ -4,9 +4,11 @@ import NewOrderScreen from '../../components/pages/newOrder/newProject';
 import routes from '../../navigation/routes';
 
 import { useDispatch, useSelector } from 'react-redux';
+import * as countriesActionsRedux from '../../store/actions/country';
 import AuthData from '../../lib/AuthData';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
+
 import axios from 'axios';
 export const categories = [
   { label: 'Cozinha', id: 'MC_' },
@@ -23,11 +25,12 @@ const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
-  const [countries, setCountries] = useState();
+  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
   useEffect(() => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
+      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       if (!reduxState.budgets.data) await getBudgets();
 
@@ -63,7 +66,7 @@ const NewOrder = ({ ...pageProps }) => {
         };
       }),
       categories,
-      countries
+      countries: [...reduxState.countries.data]
     };
 
     return <NewOrderScreen {...props} />;

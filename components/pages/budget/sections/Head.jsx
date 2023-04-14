@@ -13,7 +13,7 @@ import DeliverBudgetModal from './modals/DeliverBudgetModal';
 import { Save } from 'lucide-react';
 import moment from 'moment';
 import Router from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 //  Services
 import * as assemblysActionsRedux from '../../../../store/actions/assembly';
@@ -84,6 +84,7 @@ const Head = (props) => {
   const newAssembly = (data) => dispatch(assemblysActionsRedux.newAssembly(data));
   const budgetAdjudicated = (data) => dispatch(emailActionsRedux.budgetAdjudicated(data));
   const getCustomer = (data) => dispatch(customersActionsRedux.customer(data));
+  const reduxState = useSelector((state) => state);
 
   const commonProps = {
     sx: {
@@ -307,6 +308,32 @@ const Head = (props) => {
     setBudget({ ...budget, [target.name]: { ...budget[target.name], value: target.value } });
   }
 
+  const tableFirstCell = {
+    container: true,
+    sx: { borderLeft: '1px solid', borderBottom: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
+    md: 2,
+    sm: 2,
+    xs: 2,
+    p: 0.5
+  };
+
+  const tableLastCell = {
+    container: true,
+    sx: { borderRight: '1px solid ', borderColor: 'divider' },
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
+
+  const tablemiddleCell = {
+    container: true,
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
+
   return (
     <>
       <Notification />
@@ -317,7 +344,7 @@ const Head = (props) => {
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
-                <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
+                <Typography variant='title'>{breadcrumbsPath[1].title} - {budget?.num?.value}</Typography>
                 <Box pl={2}>
                   {budget.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
                   {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
@@ -340,9 +367,9 @@ const Head = (props) => {
                 sx={{ mr: 1 }}
               />
               <PrimaryBtn
-                hidden={!(budget.status.value !== 'adjudicated' && budget.status.value !== 'canceled' && isInternalPage)}
-                text={budget.status.value === 'waiting adjudication' ? 'Adjudicar orçamento' : 'Entregar orçamento'}
-                onClick={() => budget.status.value === 'waiting budget' ? setDeliverModal(!deliverModal) : setAdjudicateModal(!adjudicateModal)}
+                hidden={!(budget?.status?.value !== 'adjudicated' && budget?.status?.value !== 'canceled' && isInternalPage)}
+                text={budget.status?.value === 'waiting adjudication' ? 'Adjudicar orçamento' : 'Entregar orçamento'}
+                onClick={() => budget.status?.value === 'waiting budget' ? setDeliverModal(!deliverModal) : setAdjudicateModal(!adjudicateModal)}
                 icon={
                   <CheckCircleOutline
                     strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
@@ -403,35 +430,65 @@ const Head = (props) => {
               </Grid>
 
             </Grid>
-            <Grid container md={3} p={1}>
+            <Grid container md={12} p={1}>
               <Grid container style={{ width: 'fit-content' }}>
-                {isInternalPage && <Grid container md={12}>
-                  <Box>
+                <Grid container md={4} display={!isInternalPage && 'none'}>
+                  <Grid md={12} sm={12} xs={12}>
                     <Typography color={'lightTextSm.main'}>Cliente</Typography>
                     <Tooltip title='Ver cliente'>
                       <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
                         <Typography color={'primary.main'}>{`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}</Typography>
                       </a>
                     </Tooltip>
-                  </Box>
-                </Grid>}
-                <Grid container md={12}>
-                  <Box>
-                    <Typography color={'lightTextSm.main'} >Morada Entrega</Typography>
-                    <Typography>
-                      {budget.deliveryAddress?.value?.streetAddress + ', '}
-                      {budget.deliveryAddress?.value?.postalCode + ', '}
-                      {budget.deliveryAddress?.value?.addressLocality + ', '}
-                      {budget.deliveryAddress?.value?.addressRegion + ', '}
-                      {budget.deliveryAddress?.value?.addressCountry}
-                    </Typography>
-                  </Box>
+                  </Grid>
+                  <Grid container md={12}>
+                    <Box>
+                      <Typography color={'lightTextSm.main'} >Observações</Typography>
+                      <Typography>{budget.obs?.value || 'Não tem observações.'}</Typography>
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Grid container md={12}>
-                  <Box>
-                    <Typography color={'lightTextSm.main'} >Observações</Typography>
-                    <Typography>{budget.obs?.value || 'Não tem observações.'}</Typography>
-                  </Box>
+                <Grid container md={8}>
+                  <Grid container p={1}>
+                    <Grid container md={12} sm={12} xs={12} >
+                      {/* Headers */}
+                      <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
+                        <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
+                        <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
+                        <Grid {...tableLastCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                      </Grid>
+                      {/* Postal Code */}
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.postalCode}</Typography></Grid>
+                        <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.postalCode}</Typography></Grid>
+                      </Grid>
+                      {/* Street */}
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
+                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.streetAddress}</Typography></Grid>
+                        <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.streetAddress}</Typography></Grid>
+                      </Grid>
+                      {/* addressLocality */}
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
+                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.addressLocality}</Typography></Grid>
+                        <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressLocality}</Typography></Grid>
+                      </Grid>
+                      {/* addressRegion */}
+                      <Grid container md={12} sm={12} xs={12}>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
+                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.addressRegion}</Typography></Grid>
+                        <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressRegion}</Typography></Grid>
+                      </Grid>
+                      {/* addressCountry */}
+                      <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>{console.log(budget.deliveryAddress?.value?.addressCountry)}
+                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === budget.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
+                        <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === budget.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

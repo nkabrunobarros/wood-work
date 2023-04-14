@@ -19,8 +19,8 @@ import PropTypes from 'prop-types';
 import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
-import { Edit, PackagePlus, Trash, User } from 'lucide-react';
-import { useDispatch } from 'react-redux';
+import { Edit, Map, Trash, User } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Footer from '../../layout/footer/footer';
@@ -31,6 +31,7 @@ const EditClient = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
+  const reduxState = useSelector((state) => state);
 
   async function onDelete () {
     const data = {
@@ -45,6 +46,32 @@ const EditClient = ({ ...props }) => {
       });
     } catch (err) { }
   }
+
+  const tableFirstCell = {
+    container: true,
+    sx: { borderLeft: '1px solid', borderBottom: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
+    md: 2,
+    sm: 2,
+    xs: 2,
+    p: 0.5
+  };
+
+  const tableLastCell = {
+    container: true,
+    sx: { borderRight: '1px solid ', borderColor: 'divider' },
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
+
+  const tablemiddleCell = {
+    container: true,
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
 
   return (
     <>
@@ -118,12 +145,11 @@ const EditClient = ({ ...props }) => {
                     <Typography item color='lightTextSm.main'>Tipo cliente </Typography>
                     <Typography item color='lightTextSm.black' >{client?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
                   </Grid>
-                  <Grid item xs={6} md={6} sm={6}>
+                  {/* <Grid item xs={6} md={6} sm={6}>
                     <Typography item color='lightTextSm.main'>Observações </Typography>
                     <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
-
               </Grid>
             </Grid>
             <Grid item xs={12} md={6} sm={12}>
@@ -131,65 +157,54 @@ const EditClient = ({ ...props }) => {
                 <Grid container item p={1}>
                   <Grid container item xs={12}>
                     <Typography id='align' item color='lightTextSm.main'>
-                      <PackagePlus
+                      <Map
                         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
                         size={pageProps?.globalVars?.iconSize}
                       />
-                      Dados de Faturação
+                      Moradas
                     </Typography>
                   </Grid>
                 </Grid>
-                <Grid container item p={1}>
-                  <Grid container item md={6} sm={6} xs={12} >
-                    <Grid item xs={12} md={12} sm={12}>
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid container md={4} sm={4} xs={4} sx={{ p: 0.5 }} >Morada</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ p: 0.5 }} justifyContent='center' ><Typography item color='lightTextSm.main'>Fiscal</Typography></Grid>
-                      </Grid>
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Codigo Postal</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.postalCode}</Typography></Grid>
-                      </Grid>
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Rua</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.streetAddress}</Typography></Grid>
-                      </Grid>
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Localidade</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.addressLocality}</Typography></Grid>
-                      </Grid>
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Região</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.addressRegion || 'Não definido'}</Typography></Grid>
-                      </Grid>
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid container md={4} sm={4} xs={4} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} >Pais</Grid>
-                        <Grid container md={8} sm={8} xs={8} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.address?.addressCountry}</Typography></Grid>
-                      </Grid>
+                <Grid container p={1}>
+                  <Grid container md={12} sm={12} xs={12} >
+                    {/* Headers */}
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
+                      <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
+                      <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
+                      <Grid {...tableLastCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={12} md={6} sm={6}>
+                    {/* Postal Code */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ p: 0.5 }} justifyContent='center' > <Typography item color='lightTextSm.main'>Entrega</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{client.address?.postalCode}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{client.delivery_address?.postalCode}</Typography></Grid>
                     </Grid>
+                    {/* Street */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.postalCode}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{client.address?.streetAddress}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{client.delivery_address?.streetAddress}</Typography></Grid>
                     </Grid>
+                    {/* addressLocality */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.streetAddress}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{client.address?.addressLocality}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{client.delivery_address?.addressLocality}</Typography></Grid>
                     </Grid>
+                    {/* addressRegion */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressLocality}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{client.address?.addressRegion}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{client.delivery_address?.addressRegion}</Typography></Grid>
                     </Grid>
-                    <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressRegion || 'Não definido'}</Typography></Grid>
-                    </Grid>
-                    <Grid container md={12} sm={12} xs={12}>
-                      <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid', p: 0.5, borderColor: 'divider' }} ><Typography item color='lightTextSm.black'>{client.delivery_address?.addressCountry}</Typography></Grid>
+                    {/* addressCountry */}
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === client.address?.addressCountry).name.common}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === client.delivery_address?.addressCountry).name.common}</Typography></Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-
               </Grid>
             </Grid>
           </Grid>

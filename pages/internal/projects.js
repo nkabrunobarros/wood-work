@@ -374,7 +374,7 @@ const Projects = ({ ...pageProps }) => {
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
-        Quantidade: bud.amount.value
+        Quantidade: bud?.amount?.value
 
       };
     });
@@ -383,15 +383,15 @@ const Projects = ({ ...pageProps }) => {
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
-      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId.object);
-      const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
+      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId?.object);
+      const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition?.object);
 
       return {
         ...proj,
         Quantidade: proj?.amount?.value,
         Estado: proj?.status?.value,
         Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
-        budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId.object)) },
+        budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId?.object)) },
         Cliente: proj.orderBy.object,
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,

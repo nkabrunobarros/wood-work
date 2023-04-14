@@ -9,6 +9,7 @@ import MySelect from '../inputs/select';
 import axios from 'axios';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import CurrencyInput from '../inputs/CurrencyInput';
 
 /* HOW TO USE
@@ -47,6 +48,8 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   const [loaded, setLoaded] = useState(false);
   const placeholderDefault = 'Escrever';
   const optData = props.optionalData || {};
+  const reduxState = useSelector((state) => state);
+  const [countries, setCountries] = useState(reduxState.countries.data);
 
   const {
     postalCodeInfo,
@@ -56,19 +59,10 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   useEffect(() => {
     const getData = async () => {
       // try { } catch (error) { }
+      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
-  }, []);
-
-  const [countries, setCountries] = useState();
-
-  useEffect(() => {
-    const test = async () => {
-      await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
-    };
-
-    test();
   }, []);
 
   const Item = styled(Paper)(() => ({

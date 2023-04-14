@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../../../components/loader/loader';
 
 //  Page Component
-import EditProjectScreen from '../../../components/pages/editProject/editProject';
+import EditProjectScreen from '../../../components/pages/editBudget/editBudget';
 
 //  Navigation
 import routes from '../../../navigation/routes';

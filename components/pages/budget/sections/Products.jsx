@@ -1,15 +1,39 @@
 /* eslint-disable react/prop-types */
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Grid, Grow, Typography } from '@mui/material';
+import { UnfoldLessOutlined, UnfoldMoreOutlined } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, ButtonGroup, Divider, Grid, Grow, Typography } from '@mui/material';
 import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
+import PrimaryBtn from '../../../buttons/primaryBtn';
 
 const Products = (props) => {
   const { furnitures } = props;
-  const [expanded, setExpanded] = useState();
+  const [expandedGroups, setExpandedGroups] = useState([]);
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
+  const toggleValueInArray = (value, array) => {
+    const index = array.indexOf(value);
+
+    if (index === -1) {
+      return [...array, value];
+    }
+
+    return [...array.slice(0, index), ...array.slice(index + 1)];
   };
+
+  const handleChange = (expandedGroups, setExpandedGroups) => (panel) => {
+    setExpandedGroups((prevExpandedGroups) =>
+      toggleValueInArray(panel, prevExpandedGroups)
+    );
+  };
+
+  const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
+
+  function collapseAll () {
+    setExpandedGroups([]);
+  }
+
+  function expandAll () {
+    setExpandedGroups(furnitures.map((x) => x.id));
+  }
 
   return <Grid id='pad' container>
     <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
@@ -18,16 +42,25 @@ const Products = (props) => {
           <Typography variant='title'> Produtos</Typography>
         </Box>
       </Grid>
+      <Grid container md={6} sm={6} xs={6} justifyContent={'end'}>
+        <ButtonGroup>
+          <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir todos'} />
+          <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar todos'} />
+        </ButtonGroup>
+      </Grid>
     </Grid>
     <Grid container md={12} sm={12} xs={12}>
       {/* Lines */}
       {furnitures.map((line, i) => {
-        return <Grow key={i} in={true}><Accordion key={i} expanded={expanded === line.id} onChange={handleChange(line.id)} sx={{ width: '100%' }}>
+        return <Grow key={i} in={true}><Accordion key={i}
+          expanded={expandedGroups.includes(line.id)}
+          onChange={() => handlePanelChange(line.id)}
+          sx={{ width: '100%' }}>
           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
             <Typography>{line.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {line.items.map((field, index) => {
+            {line.items.sort((a, b) => a.num.value - b.num.value).map((field, index) => {
               return <Grow key={index}in={true}>
                 <Grid container>
                   {index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%' }} /></Box>}
@@ -45,7 +78,7 @@ const Products = (props) => {
                   </Grid>
                   <Grid container md={12} sm={12} xs={12} p={1}>
                     <Divider sx={{ width: '100%', borderStyle: 'dotted' }} />
-                    <Typography p={1} variant='subtitle2' sx={{ whiteSpace: 'pre-line' }}>Preço: {field?.price?.value}</Typography>
+                    <Typography p={1} variant='subtitle2' >Preço: {field?.price?.value}</Typography>
 
                   </Grid>
                 </Grid>

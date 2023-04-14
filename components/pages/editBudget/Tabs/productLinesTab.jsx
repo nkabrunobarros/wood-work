@@ -52,7 +52,7 @@ const ProductLinesTab = (props) => {
         {
           rowType: { value: 'furniture', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Nome' },
-          description: { id: 'description', value: '', error: '', label: 'Descrição', type: 'area' },
+          description: { id: 'description', value: '', error: '', required: true, label: 'Descrição', type: 'area' },
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
           obs: { id: 'obs', value: '', error: '', label: 'Observações', type: 'area' },
           width: { id: 'width', value: '', error: '', label: 'Largura' },

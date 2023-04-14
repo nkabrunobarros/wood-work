@@ -19,6 +19,7 @@ const routes = {
       projects: '/internal/projects',
       project: '/internal/project/',
       budget: '/internal/budget/',
+      editBudget: '/internal/edit-budget/',
       newProject: '/internal/new-project',
       editProject: '/internal/edit-project/',
 

@@ -11,11 +11,11 @@ import MySelect from '../../../../inputs/select';
 
 const DeliverBudgetModal = (props) => {
   const { open, onConfirm, handleClose, budget, categories } = props;
-  const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: budget.dateAgreedDelivery.value, error: '' });
-  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: budget.dateDeliveryProject.value, error: '' });
-  const [category, setCategory] = useState({ value: budget.category.value, error: '' });
+  const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: budget.dateAgreedDelivery?.value, error: '' });
+  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: budget.dateDeliveryProject?.value, error: '' });
+  const [category, setCategory] = useState({ value: budget.category?.value, error: '' });
   const [price, setPrice] = useState({ value: budget.price?.value, error: '' });
-  const [amount, setAmount] = useState({ value: budget.amount.value, error: '' });
+  const [amount, setAmount] = useState({ value: budget.amount?.value, error: '' });
   const [obs, setObs] = useState({ value: budget.obs?.value, error: '' });
 
   function validateData () {
@@ -74,15 +74,14 @@ const DeliverBudgetModal = (props) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do projeto'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount.value}/></Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category.value}/></Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount?.value}/></Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category?.value}/></Grid>
           <Grid container md={6} sm={6} xs={6} p={1}>
             <InputLabel>
             Data de entrega de projeto
               <Tooltip title='Obrigatório' >
                 <span style={{ color: 'var(--red)' }}> *</span>
               </Tooltip>
-
             </InputLabel>
             <DesktopDatePicker
               inputFormat={'DD.MM.YYYY'}
