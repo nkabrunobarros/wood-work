@@ -45,6 +45,8 @@ const DocsClient = (props) => {
         });
       });
     } catch (error) {
+      if (error.response.data.non_field_errors[0] === 'A file with the same name already exists in the parent folder') toast.error('Este ficheiro já existe.');
+
       toast.error(error);
     }
 

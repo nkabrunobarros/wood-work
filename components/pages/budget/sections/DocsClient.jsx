@@ -43,11 +43,10 @@ const DocsClient = (props) => {
         await getFile(res.data.id).then((res) => {
           setUserFiles([...userFiles, res.data]);
           toast.success('Ficheiros carregados.');
-        }).catch(() => console.log('erro cat'));
+        });
       });
     } catch (error) {
-      console.log('erro');
-      toast.error('erro');
+      if (error.response.data.non_field_errors[0] === 'A file with the same name already exists in the parent folder') toast.error('Este ficheiro já existe.');
     }
 
     setConfirmUploadModal(false);
@@ -82,7 +81,7 @@ const DocsClient = (props) => {
       open={confirmUploadModal}
       handleClose={() => setConfirmUploadModal(false)}
       onConfirm={() => handleFilesUpload()}
-      message={'Carregados ' + newFiles?.length + ' ficheiros. Proceder com upload?' }
+      message={'Carregado ' + newFiles?.length + ' ficheiro(s). Proceder com upload?' }
       icon='Check'
       iconType='success'
     />

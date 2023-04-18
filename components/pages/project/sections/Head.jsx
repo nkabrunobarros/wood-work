@@ -229,9 +229,11 @@ const Head = (props) => {
             <Grid md={12} sm={12} xs={12}>
               <Typography color={'lightTextSm.main'}>Cliente</Typography>
               <Tooltip title='Ver cliente'>
-                <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                  <Typography color={'primary.main'}>{`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}</Typography>
-                </a>
+                <Typography color={'primary.main'}>
+                  <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                    {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}
+                  </a>
+                </Typography>
               </Tooltip>
             </Grid>
             <Grid md={12} sm={12} xs={12}>

@@ -172,6 +172,10 @@ const Head = (props) => {
       category: { type: 'Property', value: budget.category.value },
       dateAgreedDelivery: { type: 'Property', value: budget.dateAgreedDelivery.value },
       dateRequest: { type: 'Property', value: budget.dateRequest.value },
+      approvedDate: { type: 'Property', value: budget.approvedDate.value },
+      name: { type: 'Property', value: budget.name.value },
+      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
+
     };
 
     await updateBudget(data)
@@ -197,7 +201,31 @@ const Head = (props) => {
           dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
         });
       })
-      .catch(() => ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error'));
+      .catch((err) => {
+        if (JSON.stringify(err).includes('approvedBy')) {
+          setActiveFields({});
+
+          setOld({
+            ...budget,
+            price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
+            amount: { ...budget.amount, value: budget.amount.value },
+            category: { ...budget.category, value: budget.category.value },
+            dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
+            dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
+          });
+
+          setBudget({
+            ...budget,
+            price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
+            amount: { ...budget.amount, value: budget.amount.value },
+            category: { ...budget.category, value: budget.category.value },
+            dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
+            dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
+          });
+
+          ToastSet(loading, 'Projeto alterado!', 'success');
+        } else ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
+      });
   }
 
   async function handleConfirmation ({
@@ -530,9 +558,11 @@ const Head = (props) => {
                   <Grid md={12} sm={12} xs={12}>
                     <Typography color={'lightTextSm.main'}>Cliente</Typography>
                     <Tooltip title='Ver cliente'>
-                      <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                        <Typography color={'primary.main'}>{`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}</Typography>
-                      </a>
+                      <Typography color={'primary.main'}>
+                        <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                          {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}
+                        </a>
+                      </Typography>
                     </Tooltip>
                   </Grid>
                 </Grid>
