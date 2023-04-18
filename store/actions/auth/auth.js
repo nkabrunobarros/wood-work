@@ -51,8 +51,8 @@ export const login = (data) => {
 };
 
 export const logout = (data) => {
-  localStorage.removeItem('userToken');
   destroyCookie(null, 'auth_token');
+  localStorage.removeItem('userToken');
 
   return {
     type: LOGOUT,

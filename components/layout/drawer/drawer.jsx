@@ -32,6 +32,7 @@ import companyLogo from '../../../public/Logo-NKA.png';
 
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import Router from 'next/router';
+import { destroyCookie } from 'nookies';
 
 const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const loggedUser = state.auth.me;
@@ -194,8 +195,10 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                       className={styles.navItemContainer}
                       onClick={() => {
                         toggleDrawer();
-                        Router.push(userPermissions.type === 'client' ? '/' : '/signin');
+                        destroyCookie(null, 'auth_token');
                         logout();
+                        localStorage.removeItem('userToken');
+                        Router.push(userPermissions.type === 'client' ? '/' : '/signin');
                       }}
                     >
                       <LogOut strokeWidth='1' size={20} />
