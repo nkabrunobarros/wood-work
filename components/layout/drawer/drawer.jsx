@@ -190,16 +190,15 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                     Conta
                     </ActiveLink>
                   </MenuItem>
-                  <MenuItem sx={{ padding: '0' }}>
+                  <MenuItem sx={{ padding: '0' }} onClick={() => {
+                    toggleDrawer();
+                    destroyCookie(undefined, 'auth_token');
+                    logout();
+                    localStorage.removeItem('userToken');
+                    Router.push(userPermissions.type === 'client' ? '/' : '/signin');
+                  }}>
                     <a
                       className={styles.navItemContainer}
-                      onClick={() => {
-                        toggleDrawer();
-                        destroyCookie(null, 'auth_token');
-                        logout();
-                        localStorage.removeItem('userToken');
-                        Router.push(userPermissions.type === 'client' ? '/' : '/signin');
-                      }}
                     >
                       <LogOut strokeWidth='1' size={20} />
                       <div style={{ paddingRight: '.5rem' }} /> Sair

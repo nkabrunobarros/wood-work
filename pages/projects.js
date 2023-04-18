@@ -42,7 +42,7 @@ const Orders = ({ ...pageProps }) => {
     { label: 'Sala de estar', id: 'MS_' }
   ];
 
-  async function fetchData () {
+  async function fetchData() {
     let errors = false;
 
     try {
@@ -64,7 +64,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData () {
+    async function loadData() {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -92,39 +92,39 @@ const Orders = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-      case 'waiting budget':
-        counts.waitingBudget++;
+        case 'waiting budget':
+          counts.waitingBudget++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
@@ -220,7 +220,7 @@ const Orders = ({ ...pageProps }) => {
         id: 'Projeto',
         numeric: false,
         disablePadding: false,
-        label: 'Pedido',
+        label: 'Data',
         show: true,
       },
       {
@@ -271,7 +271,10 @@ const Orders = ({ ...pageProps }) => {
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
-      // const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
+      const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
+
+      console.log(proj.expedition.object);
+      console.log(thisExpedition);
 
       return {
         ...proj,
@@ -279,14 +282,14 @@ const Orders = ({ ...pageProps }) => {
         Nome: proj?.name?.value?.replace(/_/g, ' '),
         budget: thisBudget,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
-        Termino: thisBudget?.dateAgreedDelivery?.value,
+        Termino: thisExpedition?.deliveryTime?.value,
         Projeto: thisBudget?.dateRequest?.value,
         Entregue: thisBudget?.dateDelivery?.value,
         Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         Numero: thisBudget?.num?.value || 212453,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         ExpeditionTime: '',
-        Complete: 0,
+        Complete: '',
       };
     }
     );

@@ -141,7 +141,7 @@ const Head = (props) => {
       message={'Está prestes a terminar este projeto. Tem a certeza que quer continuar?'}
     />
     <Box style={{ display: 'flex', marginBottom: '1rem' }}>
-      <Typography variant='title'> {breadcrumbsPath[1].title} - {order?.hasBudget?.object?.num?.value || 212453}</Typography>
+      <Typography variant='title'> {breadcrumbsPath[1].title}</Typography>
       <Box pl={2}>
         {order.status?.value === 'drawing' && <Typography className='successBalloon'>Em desenho</Typography>}
         {order.status?.value === 'production' && <Typography className='warningBalloon'>Em produção</Typography>}
@@ -254,31 +254,31 @@ const Head = (props) => {
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.postalCode}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address.postalCode}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.postalCode}</Typography></Grid>
                 </Grid>
                 {/* Street */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.streetAddress}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address?.streetAddress}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.streetAddress}</Typography></Grid>
                 </Grid>
                 {/* addressLocality */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressLocality}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address?.addressLocality}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.addressLocality}</Typography></Grid>
                 </Grid>
                 {/* addressRegion */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressRegion}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address?.addressRegion}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.addressRegion}</Typography></Grid>
                 </Grid>
                 {/* addressCountry */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.orderBy?.object?.delivery_address.addressCountry)?.name?.common}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.hasBudget?.object?.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
                 </Grid>
               </Grid>
             </Grid>

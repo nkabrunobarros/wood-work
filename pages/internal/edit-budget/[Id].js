@@ -94,6 +94,8 @@ const EditProject = ({ ...pageProps }) => {
               group: { ...newObj.group, hidden: true },
               num: { ...newObj.num, hidden: true },
             };
+
+            console.log(newObj);
           } else {
             newObj[key] = value;
           }

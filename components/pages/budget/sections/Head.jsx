@@ -483,7 +483,7 @@ const Head = (props) => {
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
-                <Typography variant='title'>{breadcrumbsPath[1].title} - {budget?.num?.value || 212453}</Typography>
+                <Typography variant='title'>{breadcrumbsPath[1].title} </Typography>
                 <Box pl={2}>
                   {budget.status?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
                   {budget.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
@@ -518,8 +518,8 @@ const Head = (props) => {
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
                 <Grid container {...upperCells}><Typography variant='sm' >Número</Typography> </Grid>
-                <Grid container {...upperCells}><Typography variant='sm' >Pedido</Typography> </Grid>
-                <Grid container {...upperCells}><Typography variant='sm' >Criação</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Data</Typography> </Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Revisto a</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Valor</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Entregue</Typography></Grid>

@@ -165,7 +165,7 @@ const ProductLinesTab = (props) => {
                 </Grid>
                 <Grid container md={4} alignItems={'end'} >
                   <Box>
-                    <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={addGroup} > <Plus /> Adicionar Grupo</Button>
+                    <Button sx={{ marginLeft: '1rem', border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={addGroup} > <Plus /> Gravar Grupo</Button>
                   </Box>
                 </Grid>
               </Grid>
@@ -196,7 +196,7 @@ const ProductLinesTab = (props) => {
                     })}
                     <Grid container md={12} sm={12} xs={12} pt={4}>
                       { false && <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addNewLineGroup(i)} > <Plus /> Adicionar Separador</Button>}
-                      <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addNewLineProduct(i)} > <Plus /> Adicionar Móvel</Button>
+                      <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px', marginRight: '1rem' }} onClick={() => addNewLineProduct(i)} > <Plus /> Adicionar Móvel</Button>
                       <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addNewLineAccessory(i)} > <Plus /> Adicionar Acessório</Button>
                     </Grid>
                   </AccordionDetails>

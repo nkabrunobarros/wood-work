@@ -29,6 +29,8 @@ const endpoints = {
   MESSAGES: 'chat/message/',
   LEFTOVERS: 'leftover/',
   ACTIVATE: 'accounts/activate/',
+  WORKERTASKS: 'worker-task/',
+  MACHINETASKS: 'machine-task/',
 };
 
 export default endpoints;

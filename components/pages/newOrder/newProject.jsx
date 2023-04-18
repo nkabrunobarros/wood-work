@@ -121,11 +121,11 @@ const NewOrder = ({ ...props }) => {
 
       data.postalCode.error = '';
       data.streetAddress.error = '';
-      data.postalCode.value = client?.address?.postalCode;
-      data.streetAddress.value = client?.address?.streetAddress || '';
-      data.addressLocality.value = client?.address?.addressLocality;
-      data.addressRegion.value = client?.address?.addressRegion;
-      data.addressCountry.value = client?.address?.addressCountry;
+      data.postalCode.value = client?.delivery_address?.postalCode;
+      data.streetAddress.value = client?.delivery_address?.streetAddress || '';
+      data.addressLocality.value = client?.delivery_address?.addressLocality;
+      data.addressRegion.value = client?.delivery_address?.addressRegion;
+      data.addressCountry.value = client?.delivery_address?.addressCountry;
     }
 
     data[props.name].value = props.value;

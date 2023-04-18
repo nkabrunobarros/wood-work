@@ -13,12 +13,12 @@ export const StartBtn = (props) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    props.onStart(props);
+  const handleClose = (machine) => {
+    props.onStart({ ...props, machine });
     setAnchorEl(null);
   };
 
-  const machines = props.machines?.filter(machine => machine?.machineType?.value?.includes(props.field.replace('Flag', '')));
+  const machines = props.machines?.filter(machine => machine?.machineType?.value?.toLowerCase()?.includes(props?.field?.replace('Flag', '')));
 
   return !props.detailOnly
     ? (
@@ -43,14 +43,9 @@ export const StartBtn = (props) => {
             horizontal: 'left',
           }}
         >
-          {machines?.filter(machine => machine.machineType.value === props.field.replace('Flag', '') || machine.machineType.value === props.field.replace('Flag', '') + '1')?.map((mach, i) => <MenuItem key={i} onClick={handleClose}>{mach.id.replace('urn:ngsi-ld:Machine:', '')}</MenuItem>)}
+          {machines?.map((mach, i) => <MenuItem key={i} onClick={() => handleClose(mach.id)}>{mach.id.replace('urn:ngsi-ld:Machine:', '')}</MenuItem>)}
         </Menu>
       </>
-      // <IconButton onClick={() => !props.msg && props.onStart(props)} >
-      //   <Tooltip title={props.msg || 'Iniciar'} >
-      //     <Play />
-      //   </Tooltip>
-      // </IconButton>
     )
     : <Tooltip title='Ainda não iniciou'>
       <MinusCircle color='gray' />
