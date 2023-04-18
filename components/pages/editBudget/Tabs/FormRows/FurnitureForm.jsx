@@ -34,7 +34,7 @@ const FurnitureForm = (props) => {
       perRow={4}
       fields={Object.keys(props.field).map((key) => {
         return props.field[key];
-      })}
+      }).sort((a, b) => a.displayOrder - b.displayOrder)}
       onFormChange={onChange}
     />
 

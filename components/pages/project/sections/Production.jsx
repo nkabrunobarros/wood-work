@@ -25,12 +25,12 @@ export const TimeDetour = ({ part, parts }) => {
   const a = moment(part.startedAt);
   const b = moment();
   const currentPartBuildTime = a.diff(b, 'minutes') * -1;
-  const thisPartDetail = parts.find(ele => ele.name === part.part.ref.replace('MC_MUEBLETV_', ''));
+  const thisPartDetail = parts.find(ele => ele.name === part?.part?.productionDetail?.replace('MC_MUEBLETV_', ''));
 
-  if (currentPartBuildTime < thisPartDetail.buildTime) return <Typography variant='md' className="successBalloon">+{thisPartDetail.buildTime - currentPartBuildTime} min</Typography>;
-  else if (currentPartBuildTime === thisPartDetail.buildTime) return <Typography variant='md' className="warningBalloon"> 0 min</Typography>;
+  if (currentPartBuildTime < thisPartDetail?.buildTime) return <Typography variant='md' className="successBalloon">+{thisPartDetail?.buildTime - currentPartBuildTime} min</Typography>;
+  else if (currentPartBuildTime === thisPartDetail?.buildTime) return <Typography variant='md' className="warningBalloon"> 0 min</Typography>;
 
-  return <Typography variant='md' className="errorBalloon">-{currentPartBuildTime - thisPartDetail.buildTime} min</Typography>;
+  return <Typography variant='md' className="errorBalloon">-{currentPartBuildTime - thisPartDetail?.buildTime || 0} min</Typography>;
 };
 
 TimeDetour.propTypes = {
@@ -41,7 +41,7 @@ TimeDetour.propTypes = {
 export const WorkerName = ({ part, workers }) => {
   const worker = workers.find(worker => worker.id === part.workerId);
 
-  return `${worker?.givenName?.value} ${worker?.familyName?.value}`;
+  return worker ? `${worker?.givenName?.value} ${worker?.familyName?.value}` : part.workerName;
 };
 
 const Production = (props) => {
@@ -123,6 +123,7 @@ const Production = (props) => {
               <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[7].label}</Typography></Box></Grid>
             </Grid>
             <Grid container md={12} sm={12} xs={12} >
+              {console.log(productionDetail)}
               {productionDetail
                 .filter(ele => !ele.endedAt)
                 .sort((a, b) => a.tag - b.tag)
@@ -133,10 +134,10 @@ const Production = (props) => {
                       key={rowIndex}
                     >
                       <Grid {...cellProps} > <Typography variant='sm'>{part?.part?.tag }</Typography></Grid>
-                      <Grid {...cellProps} > <Typography variant='sm'>{part?.part.ref.replace('MC_MUEBLETV_', '').replace('_', ' ') } </Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'>{part?.part?.partName?.replace('MC_MUEBLETV_', '').replace('_', ' ') } </Typography></Grid>
                       <Grid {...cellProps} > <Typography variant='sm'> <CurrentOperation part={part} /> </Typography></Grid>
                       <Grid {...cellProps} > <Typography variant='sm'>{moment(part.startedAt).format('DD/MM/YYYY hh:mm') } </Typography></Grid>
-                      <Grid {...cellProps} > <Typography variant='sm'>{parts.find(ele => ele.name === part.part.ref.replace('MC_MUEBLETV_', '')).buildTime || '?'} min</Typography></Grid>
+                      <Grid {...cellProps} > <Typography variant='sm'>{parts.find(ele => ele.name === part?.part?.productionDetail?.replace('MC_MUEBLETV_', ''))?.buildTime || '0'} min</Typography></Grid>
                       <Grid {...cellProps} > <Typography variant='sm'><PartDone part={part} /></Typography></Grid>
                       <Grid {...cellProps} > <Typography variant='sm'><TimeDetour {...props} part={part} /> </Typography></Grid>
                       <Grid {...cellProps} > <Typography variant='sm'><WorkerName {...props} part={part} /> </Typography></Grid>

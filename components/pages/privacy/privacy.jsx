@@ -18,6 +18,7 @@ import { ChevronDown, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Router from 'next/router';
 import backgroundImg from '../../../public/Log_In.jpg';
+import companyLogo from '../../../public/Logo-NKA.png';
 
 const Terms = ({ ...props }) => {
   const [windowWidth, setWindowHeight] = useState();
@@ -67,6 +68,7 @@ const Terms = ({ ...props }) => {
             priority
           />
         </div>
+
         <Box
           className={styles.logo}
           sx={{
@@ -108,6 +110,21 @@ const Terms = ({ ...props }) => {
             alignItems: 'start',
           }}
         >
+          <Box
+            style={{ width: windowWidth > 600 ? '160px' : '100px', position: 'absolute', right: '25px', top: '25px' }}
+          >
+            <a
+              target='#'
+              href='http://mofreita.com/'
+            >
+              <Image
+                width={windowWidth > 600 ? 160 : 100}
+                alt='Company Logo'
+                src={companyLogo}
+                placeholder='blur'
+              />
+            </a>
+          </Box>
           <Typography color={'primary'}>Portal Cliente WW4.0</Typography>
           <Typography variant='titlexxl'>
             Politica de Privacidade

@@ -1,15 +1,15 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { Accordion, AccordionDetails, AccordionSummary, AppBar, Box, ButtonGroup, Card, CardActions, CardContent, Dialog, Grid, IconButton, TableSortLabel, Toolbar, Tooltip, Typography } from '@mui/material';
-import { Check, ChevronDown, QrCode, X } from 'lucide-react';
-import moment from 'moment';
+import { Accordion, AccordionDetails, AccordionSummary, AppBar, Box, ButtonGroup, Card, CardContent, Dialog, Grid, IconButton, TableSortLabel, Toolbar, Tooltip, Typography } from '@mui/material';
+import { Check, ChevronDown, Package, QrCode, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import lenghtanyLogo from '../../../public/Logotipo_Vetorizado.png';
+import lenghtanyLogo from '../../../public/Logo-NKA.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
 import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 import Loader from '../../loader/loader';
 import { Transition } from '../factoryGround/factoryGround';
 
@@ -39,7 +39,6 @@ export const PartStatus = ({ part }) => {
 
 const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
   const reduxState = useSelector((state) => state);
-  const me = reduxState.auth.me;
   // const [consumables, setConsumables] = useState();
   const [fullyLoaded, setFullyLoaded] = useState(false);
 
@@ -107,10 +106,10 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
     TransitionComponent={Transition}
     sx={{ display: !chosenProject && 'none' }}
   >
-    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }}>
+    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }} >
       <Toolbar>
         <Grid container>
-          <Grid container md={1} sm={1} xs={12} p={1} >
+          <Grid container md={6} sm={6} xs={6} p={1} >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <IconButton
                 edge="start"
@@ -126,74 +125,46 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
                   alt={'lenghtanyLogo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 50 : 40}
+                  width={!detailOnly ? 100 : 80}
                   loading='lazy'
                 />
               </Box>
             </Box>
           </Grid>
-          <Grid container md={2.5} sm={2.5} xs={12} p={1} >
-            {!detailOnly && <Card sx={{ width: '100%' }}>
-              <CardContent className='fullCenter' sx={{ padding: 0.5 }}>
-                <Image
-                  alt='Project Card'
-                  width={40}
-                  height={40}
-                  src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png' />
-              </CardContent>
-              <CardActions>
-                <Typography sx={{ textAlign: 'center', width: '100%' }}>{me?.givenName?.value} {me?.familyName?.value}</Typography>
-              </CardActions>
-            </Card>}
-          </Grid>
-          <Grid container md={2.5} sm={2.5} xs={12} p={1} >
-            {!detailOnly && <TopCard title='Projeto' textCenter >{chosenProject?.name?.value}</TopCard>}
-          </Grid>
-          <Grid container md={2.5} sm={2.5} xs={12} p={1} >
-            {!detailOnly && <TopCard title='Maquina em uso' textCenter ><Typography variant='h5'>CNC</Typography> </TopCard> }
-          </Grid>
-          <Grid container md={2.5} sm={2.5} xs={12} p={1}>
-            {!detailOnly
-              ? <Card sx={{ width: '100%', height: '100%' }}>
-                <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
-                  <Typography variant='subtitle'>Data</Typography>
-                </Box>
-                <CardContent>
-                  <Grid container md={12}>
-                    <Grid container md={12} sm={12} xs={12}>
-                      <Box sx={{ textAlign: 'center', width: '100%' }}>
-                        <Typography>{moment().format('dddd Do MMMM [de] YYYY')} </Typography>
-                        {/* <Typography><ClockTime /></Typography> */}
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-              : <Box pr={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' }}>
-                <Typography variant='md'>{me.givenName?.value + ' ' + me.familyName?.value || me.legalName?.value}</Typography>
-              </Box>
-            }
-          </Grid>
-          <Grid container md={1} sm={1} xs={12} p={1} >
-            <Box className='fullCenter' sx={{ width: '100%' }}>
-              <Box p={detailOnly && 1}>
-                <Image
-                  src={woodWorkyLogo}
-                  alt={'woodWork Logo'}
-                  placeholder='blur'
-                  height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 50 : 40}
-                  loading='lazy'
-                />
-              </Box>
+          <Grid container md={6} sm={6} xs={6} p={1} justifyContent={'end'} alignItems='center' >
+            <Box pr={3}>
+              <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>
+            </Box>
+            <Box p={detailOnly && 1}>
+              <Image
+                src={woodWorkyLogo}
+                alt={'woodWork Logo'}
+                placeholder='blur'
+                height={!detailOnly ? 50 : 40}
+                width={!detailOnly ? 50 : 40}
+                loading='lazy'
+              />
             </Box>
           </Grid>
         </Grid>
       </Toolbar>
     </AppBar>
     {fullyLoaded
-      ? <Box>
-        <>
+      ? <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
+        <Content>
+          <Grid id='pad' container md={12} sm={12} xs={12}>
+            <Grid m={1} md={2} sm={2} xs={2}>
+              <Typography variant='titlexxl'>{chosenProject?.name?.value}</Typography>
+            </Grid>
+            <Grid container m={1} md={2} sm={2} xs={2} bgcolor={'lightGray.main'} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }}>
+              <Grid container md={12} sm={12} xs={12} color='primary.main' p={1}>
+                <Package />
+                <Typography variant='subtitle2'>Estação</Typography></Grid>
+              <Grid container md={12} sm={12} xs={12} pl={2}>
+                <Typography variant='subtitle2' color='lightTextSm.main'>Estação B</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
           {projectModules.map((mod) => {
             return <Accordion key={mod.id}>
               <AccordionSummary
@@ -287,9 +258,9 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
               </AccordionDetails>
             </Accordion>;
           })}
+        </Content>
 
-        </>
-      </Box>
+      </Grid>
       : <Loader center={true} />
     }
   </Dialog >;

@@ -271,6 +271,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
           sm={ perRow !== 1 ? 6 : 12}
           xs={ perRow !== 1 ? 12 : 12}
           container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+          {field.displayOrder}
           <MyInput
             name={field.id}
             label={field.label}

@@ -21,6 +21,8 @@ import DocsClient from './sections/DocsClient';
 import Head from './sections/Head';
 import Messages from './sections/Messages';
 import Production from './sections/Production';
+import Products from './sections/Products';
+import ProductsObservations from './sections/ProductsObservations';
 
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
@@ -38,7 +40,15 @@ const Order = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         {/* Page Header */}
         <Content id={refresh}>
-          <Head {...props} order={order} setOrder={setOrder}/>
+          <Head {...props} order={order} setOrder={setOrder} isInternalPage={isInternalPage} />
+        </Content>
+        {/* Products */}
+        <Content>
+          <Products open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
+        </Content>
+        {/* Products */}
+        <Content>
+          <ProductsObservations open={isInternalPage} styles={styles} {...props} />
         </Content>
         {/* Production section */}
         <Content>

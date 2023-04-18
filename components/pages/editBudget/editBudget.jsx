@@ -36,26 +36,26 @@ import { useDropzone } from 'react-dropzone';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
-import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
-import ClientTab from './Tabs/clientTab';
+import ToastSet from '../../utils/ToastSet';
 import ProductLinesTab from './Tabs/productLinesTab';
 import ProductTab from './Tabs/productTab';
 import RequestTab from './Tabs/requestTab';
 
 const EditBudget = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, budgets, clients, budget } = props;
+  const { breadcrumbsPath, pageProps, clients, budget } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
   const dispatch = useDispatch();
-  const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
-  const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
+  const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
+  const updateFurniture = (data) => dispatch(furnituresActionsRedux.updateFurniture(data));
+  const deleteFurniture = (data) => dispatch(furnituresActionsRedux.deleteFurniture(data));
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -65,10 +65,6 @@ const EditBudget = ({ ...props }) => {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: false });
-  const [clientUser, setClientUser] = useState(budget.orderBy.object.id);
-
-  console.log(budget?.dateRequest.value);
-  console.log(moment(budget?.dateRequest.value, 'DD/MM/YYYY'));
 
   const [budgetData, setBudgetData] = useState({
     num: { value: budget?.num?.value, error: '', required: true },
@@ -76,18 +72,16 @@ const EditBudget = ({ ...props }) => {
     obs: { value: budget?.obs?.value, type: 'area' },
     price: { value: budget?.price?.value, error: '' },
     client: { value: budget?.orderBy?.object.id, error: '', required: true },
-    dateRequest: { value: moment(budget?.dateRequest.value, 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
-    dateDelivery: { value: budget?.dateDelivery?.value, error: '', required: false, type: 'date' },
-    dateAgreedDelivery: { value: budget?.dateAgreedDelivery?.value, error: '', required: true, type: 'date' },
-    dateDeliveryProject: { value: budget?.dateDeliveryProject?.value, error: '', required: false, type: 'date' },
+    dateRequest: { value: moment(budget?.dateRequest?.value, 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
+    dateDelivery: { value: moment(budget?.dateDelivery?.value, 'DD/MM/YYYY'), error: '', required: false, type: 'date' },
+    dateAgreedDelivery: { value: moment(budget?.dateAgreedDelivery?.value, 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
+    dateDeliveryProject: { value: moment(budget?.dateDeliveryProject?.value, 'DD/MM/YYYY'), error: '', required: false, type: 'date' },
     streetAddress: { value: budget?.deliveryAddress?.value?.streetAddress, error: '', required: true },
     postalCode: { value: budget?.deliveryAddress?.value?.postalCode, error: '', required: true },
     addressLocality: { value: budget?.deliveryAddress?.value?.addressLocality, error: '', required: true },
     addressRegion: { value: budget?.deliveryAddress?.value?.addressRegion, error: '', required: false },
     addressCountry: { value: budget?.deliveryAddress?.value?.addressCountry, error: '', required: true },
   });
-
-  console.log(budget);
 
   const [lines, setLines] = useState(props.furnitures);
 
@@ -146,7 +140,7 @@ const EditBudget = ({ ...props }) => {
           if (typeof value === 'object' && 'error' in value && value.value === '' && value.required) {
             value.error = 'Campo obrigatorio';
             hasErrors = true;
-          } else value.error = '';
+          } else if (typeof value === 'object') { value.error = ''; }
         });
       });
     });
@@ -171,18 +165,6 @@ const EditBudget = ({ ...props }) => {
             data[prop].error = 'Data Invalida';
             hasErrors = true;
           }
-        }
-
-        if (prop === 'name') {
-          if (budgets.find((element) => element.name.value.toLowerCase() === data[prop].value.toLowerCase()) !== undefined) {
-            data[prop].error = 'Nome já usado';
-            hasErrors = true;
-          }
-
-          // if (data[prop].value === data.category.value) {
-          //   data[prop].error = 'Nome mal estruturado';
-          //   hasErrors = true;
-          // }
         }
       } else if (data[prop].required) {
         data[prop].error = 'Campo Obrigatório';
@@ -220,99 +202,6 @@ const EditBudget = ({ ...props }) => {
     return !hasErrors;
   }
 
-  async function CreateOrder () {
-    setProcessing(true);
-
-    const data = {
-      id: (budgetData.id + Math.random()) || `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`,
-      type: 'Budget',
-      name: {
-        type: 'Property',
-        value: budgetData.name.value
-      },
-      num: {
-        type: 'Property',
-        value: budgetData.num.value
-      },
-      amount: {
-        type: 'Property',
-        value: inputFields[0]?.amount.value
-      },
-      price: {
-        type: 'Property',
-        value: budgetData.price.value.replace(/ /g, '').replace(/€/g, '')
-      },
-      approvedDate: {
-        type: 'Property',
-        value: ''
-      },
-      dateRequest: {
-        type: 'Property',
-        value: budgetData.dateRequest.value !== '' ? moment(budgetData.dateRequest.value).format('DD/MM/YYYY') : ''
-      },
-      dateAgreedDelivery: {
-        type: 'Property',
-        value: budgetData.dateAgreedDelivery.value !== '' ? moment(budgetData.dateAgreedDelivery.value).format('DD/MM/YYYY') : ''
-      },
-      dateDeliveryProject: {
-        type: 'Property',
-        value: budgetData.dateDeliveryProject.value !== '' ? moment(budgetData.dateDeliveryProject.value).format('DD/MM/YYYY') : ''
-      },
-      obs: {
-        type: 'Property',
-        value: budgetData.obs.value
-      },
-      category: {
-        type: 'Property',
-        value: inputFields[0]?.category.value || ''
-        // value: budgetData.category.value || ''
-      },
-      status: {
-        type: 'Property',
-        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'waiting budget'
-      },
-      orderBy: {
-        type: 'Relationship',
-        object: 'urn:ngsi-ld:Owner:' + budgetData.client.value
-      },
-      belongsTo: {
-        type: 'Relationship',
-        object: `urn:ngsi-ld:Project:${formatString(budgetData.name.value)}`
-      },
-      dateDelivery: {
-        type: 'Property',
-        value: moment(budgetData.dateDelivery.value).format('DD/MM/YYYY')
-      },
-      deliveryAddress: {
-        type: 'Property',
-        value: {
-          postalCode: budgetData.postalCode.value,
-          streetAddress: budgetData.streetAddress.value,
-          addressLocality: budgetData.addressLocality.value,
-          addressRegion: budgetData.addressRegion.value,
-          addressCountry: budgetData.addressCountry.value,
-        }
-      },
-    };
-
-    await newBudget(data).then(() => {
-      toast.success('Orçamento Criado!');
-    }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
-
-    CreateFurnitures();
-
-    await newFolder({
-      folder_name: `urn:ngsi-ld:Folder:${formatString(budgetData.name.value)}`,
-      parent_folder: null,
-      user: clientUser,
-      budget: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`
-    });
-
-    // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
-    setProcessing(false);
-    setDialogOpen(false);
-  }
-
   function ClearAll () {
     setSuccessOpen(false);
   }
@@ -320,11 +209,11 @@ const EditBudget = ({ ...props }) => {
   const successModalProps = {
     open: successOpen,
     handleClose: ClearAll,
-    message: 'Orçamento criado com sucesso, que deseja fazer agora?',
+    message: 'Projeto criado com sucesso, que deseja fazer agora?',
     icon: 'Verified',
     iconType: 'success',
-    okTxt: 'Ver orçamento',
-    cancelTxt: 'Criar novo orçamento',
+    okTxt: 'Ver projeto',
+    cancelTxt: 'Criar novo projeto',
   };
 
   function formatString (str) {
@@ -338,7 +227,48 @@ const EditBudget = ({ ...props }) => {
     return str;
   }
 
-  async function CreateFurnitures () {
+  async function UpdateBudgetData () {
+    const onlyValues = {};
+
+    Object.keys(budgetData).map((key) => { onlyValues[key] = { value: budgetData[key].value, type: 'Property' }; });
+
+    const built = {
+      ...onlyValues,
+      id: budget.id,
+      type: 'Budget',
+      approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
+      dateDeliveryProject: { type: 'Property', value: moment(onlyValues.dateDeliveryProject?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateDeliveryProject?.value).format('DD/MM/YYYY') : '' },
+      dateDelivery: { type: 'Property', value: moment(onlyValues.dateDelivery?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateDelivery?.value).format('DD/MM/YYYY') : '' },
+      dateRequest: { type: 'Property', value: moment(onlyValues.dateRequest?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateRequest?.value).format('DD/MM/YYYY') : '' },
+      dateAgreedDelivery: { type: 'Property', value: moment(onlyValues.dateAgreedDelivery?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateAgreedDelivery?.value).format('DD/MM/YYYY') : '' },
+      amount: { type: 'Property', value: '0' },
+      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + onlyValues.client.value },
+      deliveryAddress: {
+        type: 'Property',
+        value: {
+          postalCode: budgetData.postalCode.value,
+          streetAddress: budgetData.streetAddress.value,
+          addressLocality: budgetData.addressLocality.value,
+          addressRegion: budgetData.addressRegion.value,
+          addressCountry: budgetData.addressCountry.value,
+        }
+      },
+      price: { value: onlyValues.price?.value?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
+
+    };
+
+    delete built.client;
+    delete built.postalCode;
+    delete built.streetAddress;
+    delete built.addressLocality;
+    delete built.addressRegion;
+    delete built.addressCountry;
+    true && await updateBudget(built).then((res) => console.log(res)).catch((err) => console.log(err));
+  }
+
+  async function handleSave () {
+    const loading = toast.loading();
+
     const items = lines.map(line => {
       let lastGroup = '';
 
@@ -350,11 +280,38 @@ const EditBudget = ({ ...props }) => {
         Object.keys(item).map(key => {
           valuesOnly[key] = {
             type: 'Property',
-            value: item[key].value
+            value: typeof item[key].value !== 'undefined' ? item[key].value : item[key]
           };
         });
 
-        valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_';
+        valuesOnly.id = valuesOnly.id?.value;
+        valuesOnly.type = 'Furniture';
+        valuesOnly.group = { value: line.name, type: 'Property' };
+        valuesOnly.section = { value: lastGroup, type: 'Property' };
+        valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+
+        return valuesOnly;
+      });
+
+      return lines;
+    });
+
+    const oldItems = props.furnitures.map(line => {
+      let lastGroup = '';
+
+      const lines = line.items.map(item => {
+        if (item.rowType.value === 'group') { lastGroup = item.name.value; console.log(item.name); }
+
+        const valuesOnly = {};
+
+        Object.keys(item).map(key => {
+          valuesOnly[key] = {
+            type: 'Property',
+            value: typeof item[key].value !== 'undefined' ? item[key].value : item[key]
+          };
+        });
+
+        valuesOnly.id = valuesOnly.id?.value;
         valuesOnly.type = 'Furniture';
         valuesOnly.group = { value: line.name, type: 'Property' };
         valuesOnly.section = { value: lastGroup, type: 'Property' };
@@ -367,18 +324,76 @@ const EditBudget = ({ ...props }) => {
     });
 
     const mergedArray = items.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
-      return { ...item, num: index, id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
+      return { ...item, num: index, id: item.id || 'new_urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
     });
 
+    const mergedArrayOld = oldItems.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
+      return { ...item, num: index, id: item.id || 'new_urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
+    });
+
+    const toDelete = mergedArrayOld.filter((row1) => {
+      const index = mergedArray.findIndex((row2) => row2.id === row1.id);
+
+      return index === -1;
+    });
+
+    await UpdateBudgetData();
+    await DeleteRows(toDelete);
+
+    const toCreate = mergedArray.filter((ele) => ele.id?.includes('new_'));
+
+    await CreateBudgetRows(toCreate);
+
+    // eslint-disable-next-line consistent-return
+    const toUpdate = mergedArray.filter((row1) => {
+      const index = mergedArrayOld.find((row2) => row2.id === row1.id);
+
+      if (JSON.stringify(row1) !== JSON.stringify(index)) {
+        return row1;
+      }
+
+      return row1;
+    });
+
+    await UpdateRows(toUpdate);
+    ToastSet(loading, 'Projeto atualizado.', 'success');
+    Router.push(breadcrumbsPath[1].href);
+  }
+
+  async function DeleteRows (rows) {
+    console.log(rows);
+
     try {
-      mergedArray.map(async (item) => {
-        await newFurniture(item).then((result) => console.log(result));
+      rows.map(async (row) => await deleteFurniture(row.id).then((res) => console.log(res)).catch((err) => console.log(err)));
+
+      return true;
+    } catch (err) { return false; }
+  }
+
+  async function UpdateRows (rows) {
+    console.log(rows);
+
+    try {
+      rows.map(async (item, index) => {
+        item.num = index;
+        console.log(item.num);
+        await updateFurniture(item).then((result) => console.log(result)).catch((err) => console.log(err));
       });
     } catch (err) {
       console.log(err);
     }
+  }
 
-    console.log(mergedArray);
+  async function CreateBudgetRows (rows) {
+    console.log(rows);
+
+    try {
+      rows.map(async (item) => {
+        await newFurniture(item).then((result) => console.log(result)).catch((err) => console.log(err));
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -392,8 +407,8 @@ const EditBudget = ({ ...props }) => {
         <ConfirmDialog
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
-          onConfirm={() => CreateOrder()}
-          message={'Está prestes a criar um orçamento, tem certeza que quer continuar?'}
+          onConfirm={() => handleSave()}
+          message={'Está prestes a alterar um projeto, tem certeza que quer continuar?'}
           icon='AlertOctagon'
         />
         {processing && <Loader center={true} backdrop />}
@@ -423,17 +438,6 @@ const EditBudget = ({ ...props }) => {
           </Grid>
         </Content>
         <Grid container sx={{ width: '100%' }}>
-          <Grid container md={12}>
-            <Content>
-              <ClientTab {...props}
-                client={budgetData.client}
-                onClientChange={onBudgetChange}
-                onProcessing={setProcessing}
-                setClientUser={setClientUser}
-                noDetail
-              />
-            </Content>
-          </Grid>
           <Grid container md={12}>
             <Content>
               <RequestTab {...props}

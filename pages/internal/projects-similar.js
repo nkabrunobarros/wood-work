@@ -190,8 +190,8 @@ const OrdersSimilar = () => {
       (item) => {
         const item2 = { ...item };
         const thisClient = clients.find(ele => ele.id === item.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
-        const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === item.expedition.object);
-        const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === item.budgetId.object);
+        const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === item?.expedition?.object);
+        const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === item?.hasBudget?.object);
         const projCreated = moment(item.createdAt);
         const projAgreedDelivery = moment(thisBudget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
         const projDelivered = moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY');
@@ -207,7 +207,7 @@ const OrdersSimilar = () => {
         item2.realizado2 = '2 hora(s)';
         item2.desvio2 = -2;
         item2.Custo = '20€';
-        item2.Nome = item?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ');
+        item2.Nome = item?.name.value;
         item2.Cliente = (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || '');
 
         return item2;

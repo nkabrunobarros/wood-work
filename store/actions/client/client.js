@@ -56,6 +56,20 @@ export const client = (data) => {
   });
 };
 
+export const clientMe = () => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: getApiURL(endpoints.CLIENTS),
+    },
+    types: [CLIENT_REQUEST, CLIENT_SUCCESS, CLIENT_FAIL],
+  });
+};
+
 export const updateClient = (data) => {
   const { auth_token: userToken } = parseCookies();
   const id = data?.id;

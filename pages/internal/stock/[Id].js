@@ -39,12 +39,12 @@ const Stock = () => {
 
     const breadcrumbsPath = [
       {
-        title: 'Stock',
+        title: 'Stocks',
         href: `${routes.private.internal.stocks}`,
       },
       {
-        title: `${stock.material}`,
-        href: `${routes.private.internal.stockId}`,
+        title: `${stock?.material}`,
+        href: `${routes.private.internal.stock}`,
       },
     ];
 

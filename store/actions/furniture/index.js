@@ -11,5 +11,6 @@ export {
   furnitures,
   furniture,
   newFurniture,
-  updateFurniture
+  updateFurniture,
+  deleteFurniture,
 } from './furniture';

@@ -42,6 +42,8 @@ const Budget = ({ ...pageProps }) => {
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
 
+      console.log(furnitures);
+
       const groups = furnitures.reduce((accumulator, item) => {
         const groupName = item.group.value;
 
@@ -60,6 +62,7 @@ const Budget = ({ ...pageProps }) => {
 
       const result = Object.values(groups);
 
+      console.log(result);
       setFurnitures(result);
       thisBudget.orderBy.object = client;
       setBudget(thisBudget);

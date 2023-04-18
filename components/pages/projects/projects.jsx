@@ -153,7 +153,7 @@ const ProjectsScreen = (props) => {
 
         updatedItems.splice(index, 1);
         setBudgets(updatedItems);
-        ToastSet(loading, 'Orçamento apagado do sistema.', 'success');
+        ToastSet(loading, 'Projeto apagado do sistema.', 'success');
       }
     } else if (index !== -1) {
       const updatedItem = {
@@ -169,7 +169,7 @@ const ProjectsScreen = (props) => {
       ];
 
       setBudgets(updatedItems);
-      ToastSet(loading, 'Orçamento cancelado.', 'success');
+      ToastSet(loading, 'Projeto cancelado.', 'success');
     }
   }
 
@@ -210,7 +210,7 @@ const ProjectsScreen = (props) => {
       ];
 
       setItems(updatedItems);
-      ToastSet(loading, `${isProject ? 'Projeto' : 'Orçamento'} reaberto.`, 'success');
+      ToastSet(loading, `${isProject ? 'Projeto' : 'Projeto'} reaberto.`, 'success');
     }
   }
 
@@ -414,6 +414,10 @@ const ProjectsScreen = (props) => {
                     label: '--- Orçamento'
                   },
                   {
+                    id: 'needs analysis',
+                    label: 'Análise Necessidades'
+                  },
+                  {
                     id: 'waiting budget',
                     label: 'Espera Orçamento'
                   },
@@ -475,7 +479,7 @@ const ProjectsScreen = (props) => {
             headCells={headCellsProjects}
             filters={filters}
             clickRoute={detailPage}
-            // editRoute={editPage}
+            editRoute={editPage}
             setFilters={setFilters}
             onDelete={onDeleteItem}
             onReactivation={onReactivationItem}
@@ -498,6 +502,7 @@ const ProjectsScreen = (props) => {
               headCells={headCellsProjects}
               filters={filters}
               clickRoute={detailPage}
+              editRoute={detailPage}
               setFilters={setFilters}
               onDelete={onDeleteProject}
             />

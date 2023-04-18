@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 //  Nodes
 import Router from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 //  Material Ui
 import { ButtonGroup, Grid, Typography } from '@mui/material';
@@ -30,7 +30,6 @@ import Notification from '../../dialogs/Notification';
 import Loader from '../../loader/loader';
 
 //  Utils
-import { useDropzone } from 'react-dropzone';
 
 //  Device "Detector"
 import moment from 'moment';
@@ -40,10 +39,9 @@ import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
-import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ClientTab from './Tabs/clientTab';
+import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
-import ProductTab from './Tabs/productTab';
 import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
@@ -52,19 +50,27 @@ const NewOrder = ({ ...props }) => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
+  const [lines, setLines] = useState([]);
   const dispatch = useDispatch();
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
   const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
 
-  const onDrop = useCallback(acceptedFiles => {
-    // Do something with the files
-    const obj = ConvertFilesToObj(acceptedFiles);
+  useEffect(() => {
+    let total = 0;
 
-    setUploadedFiles(obj);
-  }, []);
+    lines.map((line) => {
+      console.log(line);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: false });
+      line.items.map((item) => {
+        total += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+      });
+    });
+
+    budgetData.price.value = total;
+    setBudgetData({ ...budgetData, price: { ...budgetData.price, value: total } });
+  }, [lines]);
+
   const [clientUser, setClientUser] = useState('');
 
   const [budgetData, setBudgetData] = useState({
@@ -83,8 +89,6 @@ const NewOrder = ({ ...props }) => {
     addressRegion: { value: '', error: '', required: false },
     addressCountry: { value: '', error: '', required: true },
   });
-
-  const [lines, setLines] = useState([]);
 
   const [inputFields, setInputFields] = useState([{
     category: { value: '', error: '' },
@@ -147,7 +151,6 @@ const NewOrder = ({ ...props }) => {
     });
 
     setLines(obj);
-    console.log(hasErrors);
 
     return hasErrors;
   }
@@ -173,11 +176,6 @@ const NewOrder = ({ ...props }) => {
             data[prop].error = 'Nome já usado';
             hasErrors = true;
           }
-
-          // if (data[prop].value === data.category.value) {
-          //   data[prop].error = 'Nome mal estruturado';
-          //   hasErrors = true;
-          // }
         }
       } else if (data[prop].required) {
         data[prop].error = 'Campo Obrigatório';
@@ -235,7 +233,7 @@ const NewOrder = ({ ...props }) => {
       },
       price: {
         type: 'Property',
-        value: budgetData.price.value.replace(/ /g, '').replace(/€/g, '')
+        value: budgetData.price.value
       },
       approvedDate: {
         type: 'Property',
@@ -264,7 +262,7 @@ const NewOrder = ({ ...props }) => {
       },
       status: {
         type: 'Property',
-        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'waiting budget'
+        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'needs analysis'
       },
       orderBy: {
         type: 'Relationship',
@@ -291,7 +289,7 @@ const NewOrder = ({ ...props }) => {
     };
 
     await newBudget(data).then(() => {
-      toast.success('Orçamento Criado!');
+      toast.success('Projeto Criado!');
     }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
 
     CreateFurnitures();
@@ -315,11 +313,11 @@ const NewOrder = ({ ...props }) => {
   const successModalProps = {
     open: successOpen,
     handleClose: ClearAll,
-    message: 'Orçamento criado com sucesso, que deseja fazer agora?',
+    message: 'Projeto criado com sucesso, que deseja fazer agora?',
     icon: 'Verified',
     iconType: 'success',
-    okTxt: 'Ver orçamento',
-    cancelTxt: 'Criar novo orçamento',
+    okTxt: 'Ver projeto',
+    cancelTxt: 'Criar novo projeto',
   };
 
   function formatString (str) {
@@ -386,17 +384,16 @@ const NewOrder = ({ ...props }) => {
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
           onConfirm={() => CreateOrder()}
-          message={'Está prestes a criar um orçamento, tem certeza que quer continuar?'}
+          message={'Está prestes a criar um projeto, tem certeza que quer continuar?'}
           icon='AlertOctagon'
         />
         {processing && <Loader center={true} backdrop />}
         {/* What do do after Create Modal */}
         <ConfirmDialog {...successModalProps} />
         <Content>
-
           <Grid container md={12} sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
             <Grid container md={10} sm={10} xs={12}>
-              <Typography variant='titlexxl'>{breadcrumbsPath[1].title}</Typography>
+              <Typography variant='titlexxl'>{breadcrumbsPath[1]?.title}</Typography>
             </Grid >
             <Grid container md={2} sm={2} xs={12} justifyContent='end'>
               <ButtonGroup>
@@ -416,31 +413,47 @@ const NewOrder = ({ ...props }) => {
           </Grid>
         </Content>
         <Grid container sx={{ width: '100%' }}>
-          <Grid container md={12}>
+          {false && <Grid container md={12}>
             <Content>
               <ClientTab {...props}
                 client={budgetData.client}
                 onClientChange={onBudgetChange}
-                onProcessing={setProcessing}
                 setClientUser={setClientUser}
+                onProcessing={setProcessing}
                 noDetail
               />
             </Content>
-          </Grid>
+          </Grid>}
           <Grid container md={12}>
             <Content>
               <RequestTab {...props}
                 onProcessing={setProcessing}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
-                noDetail
+                setClientUser={setClientUser}
+                onClientChange={onBudgetChange}
+
               />
             </Content>
           </Grid>
           <Grid container md={12}>
             <Content>
               <ProductLinesTab {...props}
-                dragDrop={{ getRootProps, getInputProps, isDragActive }}
+                budgetData={budgetData}
+                onBudgetChange={onBudgetChange}
+                docs={{ uploadedFiles, setUploadedFiles }}
+                inputFields={inputFields}
+                setInputFields={setInputFields}
+                noDrop
+                lines={lines}
+                setLines={setLines}
+
+              />
+            </Content>
+          </Grid>
+          <Grid container md={12}>
+            <Content>
+              <ObservationsTab {...props}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 docs={{ uploadedFiles, setUploadedFiles }}
@@ -450,18 +463,8 @@ const NewOrder = ({ ...props }) => {
                 lines={lines}
                 setLines={setLines}
               />
-              {false && <ProductTab {...props}
-                dragDrop={{ getRootProps, getInputProps, isDragActive }}
-                budgetData={budgetData}
-                onBudgetChange={onBudgetChange}
-                docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
-                noDrop
-              />}
             </Content>
           </Grid>
-
         </Grid>
       </Grid >
 

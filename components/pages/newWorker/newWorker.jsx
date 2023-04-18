@@ -73,14 +73,14 @@ const newWorker = ({ ...props }) => {
   const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState([
-    {
-      id: 'user.username',
-      label: 'Nome Utilizador',
-      value: '',
-      error: '',
-      required: true,
-      tooltip: 'Dado utilizado para login.',
-    },
+    // {
+    //   id: 'user.username',
+    //   label: 'Nome Utilizador',
+    //   value: '',
+    //   error: '',
+    //   required: true,
+    //   tooltip: 'Dado utilizado para login.',
+    // },
     {
       id: 'user.first_name',
       label: 'Primeiro Nome',
@@ -144,13 +144,15 @@ const newWorker = ({ ...props }) => {
       builtWorker[ele.id] = ele.value;
     });
 
-    builtWorker['user.password_confirm'] = builtWorker['user.password'];
+    builtWorker['user.username'] = builtWorker['user.email'];
+    builtWorker['user.password'] = 'ChangeMe';
+    builtWorker['user.password_confirm'] = 'ChangeMe';
     builtWorker.hasOrganization = builtWorker.hasOrganization.replace('urn:ngsi-ld:Organization:', '');
 
     const qs = require('qs');
     const data = qs.stringify({ ...builtWorker });
 
-    await newWorker(data).then(() => setSuccessOpen(true)).catch((err) => onError(err));
+    await newWorker(data).then((res) => Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id)).catch((err) => onError(err));
     setProcessing(false);
   }
 

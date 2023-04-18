@@ -54,7 +54,7 @@ const ProductTab = (props) => {
   }
 
   function onRemoveRow (props) {
-    setInputFields(inputFields.filter((item, index) => index !== props.row));
+    setInputFields(inputFields?.filter((item, index) => index !== props.row));
   }
 
   return (

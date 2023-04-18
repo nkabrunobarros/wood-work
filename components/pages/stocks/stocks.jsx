@@ -7,7 +7,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 //  PropTypes
-import { Autocomplete, Box, Grid, InputLabel, Slider, TextField } from '@mui/material';
+import { Autocomplete, Box, Grid, InputLabel, Slider, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
@@ -183,7 +183,7 @@ const Stock = ({ ...props }) => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <Box>
-              <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
+              <Typography variant='title'>{breadcrumbsPath[0].title}</Typography>
             </Box>
           </Box>
           <AdvancedTable

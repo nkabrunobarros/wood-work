@@ -84,26 +84,24 @@ const Docs = (props) => {
       .filter((folder) => folder.parent_folder === parentId)
       .map((folder) => (
         <Accordion key={folder.id} {...getRootProps()} ondrop={() => console.log('e')}sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
-          <Tooltip title='Arrastar ficheiros para esta pasta' {...getRootProps()}>
-            <AccordionSummary expandIcon={<ChevronDown />} >
-              <Grid container bgcolor={'default.main'} >
-                <Grid container md={6} sm={6} xs={6} alignItems='center'>
-                  <Box id='align' color='primary.main' >
-                    {open
-                      ? (
-                        <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
-                      )
-                      : (
-                        <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
-                      )}
-                  </Box>
-                  <Typography>{!isDragActive ? folder.folder_name : 'Carregar ficheiros para esta pasta'} </Typography>
-                </Grid>
-                <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
+          <AccordionSummary expandIcon={<ChevronDown />} >
+            <Grid container bgcolor={'default.main'} >
+              <Grid container md={6} sm={6} xs={6} alignItems='center'>
+                <Box id='align' color='primary.main' >
+                  {open
+                    ? (
+                      <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
+                    )
+                    : (
+                      <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
+                    )}
+                </Box>
+                <Typography>{!isDragActive ? folder.folder_name.replace('urn:ngsi-ld:Folder:', '') : 'Carregar ficheiros para esta pasta'} </Typography>
               </Grid>
+              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
+            </Grid>
 
-            </AccordionSummary>
-          </Tooltip>
+          </AccordionSummary>
           <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
             {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
@@ -193,7 +191,7 @@ const Docs = (props) => {
           <Box style={{ flex: 1 }}>
             <Typography variant='title'>Documentos</Typography>
           </Box>
-          <Box className='flex'>
+          <Box className='flex' display={'none'}>
             {!creatingFolder
               ? <PrimaryBtn
                 disabled={!folders.filter(ele => !(ele.name === budget.id))[0]}

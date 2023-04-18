@@ -1,156 +1,148 @@
+/* eslint-disable react/prop-types */
 //  Nodes
-import { Box, Tooltip, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import { Mail, Map, Phone, User } from 'lucide-react';
+import { Map, User } from 'lucide-react';
 import React from 'react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 //  Proptypes
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import * as appStatesActions from '../../../store/actions/appState';
+import { useSelector } from 'react-redux';
 import Navbar from '../../layout/navbar/navbar';
-import { themes } from '../../themes/themes';
+//  Styles
+import styles from '../../../styles/NewOrder.module.css';
+import Footer from '../../layout/footer/footer';
 
 const Account = ({ ...props }) => {
-  const { user, breadcrumbsPath } = props;
+  const { user, breadcrumbsPath, owner, pageProps } = props;
+  const reduxState = useSelector((state) => state);
 
-  function displayShift (value) {
-    switch (JSON.stringify(value)) {
-    case '[1,2]': return 'Manhã';
-    case '[2,3]': return 'Tarde';
-    case '[3,4]': return 'Noite';
-    default: return 'Nenhum';
-    }
-  }
+  const tableFirstCell = {
+    container: true,
+    sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
+    md: 2,
+    sm: 2,
+    xs: 2,
+    p: 0.5
+  };
 
-  const dispatch = useDispatch();
-  const setThemeColor = (data) => dispatch(appStatesActions.setThemeColor(data));
-  const allThemes = themes;
+  const tableLastCell = {
+    container: true,
+    sx: { borderRight: '1px solid ', borderColor: 'divider' },
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
+
+  const tablemiddleCell = {
+    container: true,
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
 
   return (
     <>
       <Navbar />
-      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
+      <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
-          <Grid id='pad'>
-            <Grid container md={12} sm={12} sx={12}>
-              <Typography variant='title'>{user?.givenName?.value || user.first_name || user.username} {user?.familyName?.value || user.last_name}</Typography>
-              <Box display='flex' alignItems='center' sx={{ marginLeft: 'auto' }}>
-                {false && Object.keys(allThemes).map((theme) => {
-                  return <Tooltip key={theme} title={theme}><Box onClick={() => setThemeColor(theme)} m={0.2} sx={{ borderRadius: '50%', cursor: 'pointer', width: '25px', height: '25px', background: themes[theme].primary.main }}></Box></Tooltip>;
-                })}
-              </Box>
-            </Grid>
-            <Grid container md={12} sm={12} sx={12} pt={2}>
-              <User /> Informações Gerais
-            </Grid>
-            <Grid container md={12} sm={12} sx={12} pt={2}>
-              <Grid container md={8} sm={12} xs={12}>
-                <Grid container sx={12}>
-                  <Grid xs={12} sm={6} container p={2} bgcolor={'lightGray.main'}>
-                    { false && <Grid item md={12} sm={12} xs={12} pt={1} className='flex'>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.main'>Nome de utilizador:</Typography>
-                      </Grid>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.black'>{user?.user?.username || user?.username}</Typography>
-                      </Grid>
-                    </Grid>}
-                    <Grid item xs={12} pt={1} className='flex'>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.main'>Primeiro nome:</Typography>
-                      </Grid>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.black'>{user?.user?.first_name || user?.first_name}</Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12} pt={1} className='flex'>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.main'>Ultimo nome:</Typography>
-                      </Grid>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.black'>{user?.user?.last_name || user?.last_name}</Typography>
-                      </Grid>
-                    </Grid>
-                    { user?.user?.vat && <Grid item xs={12} pt={1} className='flex'>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.main'>Nif:</Typography>
-                      </Grid>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.black'>{user?.user?.vat}</Typography>
-                      </Grid>
-                    </Grid>}
-                    {user?.isCompany && <Grid item xs={12} pt={1} className='flex'>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.main'>Tipo conta:</Typography>
-                      </Grid>
-                      <Grid container md={6} sm={6} xs={6}>
-                        <Typography color='lightTextSm.black'>{user?.isCompany?.value ? 'Empresarial' : 'Particular'}</Typography>
-                      </Grid>
-                    </Grid>}
-                    {user.type === 'Worker' &&
-                  <Grid item xs={12} pt={1} className='flex'>
-                    <Grid container md={6} sm={6} xs={6}>
-                      <Typography color='lightTextSm.main'>Turno:</Typography>
-                    </Grid>
-                    <Grid container md={6} sm={6} xs={6}>
-                      <Typography item color='lightTextSm.black'>{displayShift(user?.workerShift?.value)}</Typography>
-                    </Grid>
+          <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+            <Typography variant='title'>{breadcrumbsPath[0].title}</Typography>
+          </Box>
+          <Grid id='clientPanel' container sx={{ padding: '24px' }}>
+            <Grid item xs={12} md={6} sm={6}>
+              <Grid container spacing={3} >
+                <Grid container item>
+                  <Typography id='align' item color='lightTextSm.main'><User
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />  Dados Gerais</Typography>
+                </Grid>
+                <Grid container item>
+                  {/* <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Nome Utilizador</Typography>
+                    <Typography item color='lightTextSm.black' >{user?.user?.username}</Typography>
+                  </Grid> */}
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
+                    <Typography item color='lightTextSm.black' >{user?.first_name}</Typography>
                   </Grid>
-                    }
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Ultimo Nome</Typography>
+                    <Typography item color='lightTextSm.black' >{user?.last_name}</Typography>
                   </Grid>
-                  <Grid xs={12} sm={6} container p={2} spacing={2}>
-                    <Grid container item>
-                      <Grid className='fullCenter' container md={2} sm={2} xs={2} >
-                        <Tooltip title='Email'>
-                          <Box color='primary.main' >
 
-                            <a href={`mailto:${user?.email?.value || user?.email}`}>
-                              <Mail className='primaryIcon' size={22} />
-                            </a>
-                          </Box>
-                        </Tooltip>
-                      </Grid>
-                      <Grid alignItems={'center'} container md={10} sm={10} xs={10} >
-                        {user?.email?.value || user?.email}
-                      </Grid>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
+                    <Typography item color='lightTextSm.main'>Email</Typography>
+                    <Typography item color='lightTextSm.black' >{user?.email}</Typography>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1} display={user?.role !== 'CUSTOMER' && 'none'}>
+                    <Typography item color='lightTextSm.main'>Tipo cliente </Typography>
+                    <Typography item color='lightTextSm.black' >{owner?.isCompany?.value ? 'Empresarial' : 'Particular'}</Typography>
+                  </Grid>
+                  {/* <Grid item xs={6} md={6} sm={6}>
+                    <Typography item color='lightTextSm.main'>Observações </Typography>
+                    <Typography item color='lightTextSm.black' >{user?.obs?.value}</Typography>
+                  </Grid> */}
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={6} sm={12} display={user?.role !== 'CUSTOMER' && 'none'}>
+              <Grid container p={2} bgcolor={'lightGray.main'} className={styles.clientContainer}>
+                <Grid container item p={1}>
+                  <Grid container item xs={12}>
+                    <Typography id='align' item color='lightTextSm.main'>
+                      <Map
+                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                        size={pageProps?.globalVars?.iconSize}
+                      />
+                      Moradas
+                    </Typography>
+                  </Grid>
+                </Grid>{console.log(owner)}
+                <Grid container p={1}>
+                  <Grid container md={12} sm={12} xs={12} >
+                    {/* Headers */}
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
+                      <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
+                      <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
+                      <Grid {...tableLastCell} justifyContent={'center'} sx={{ border: 'none' }}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                     </Grid>
-                    <Grid container item>
-                      <Grid className='fullCenter' container md={2} sm={2} xs={2} >
-                        <Tooltip title='Contacto'>
-                          <Box color='primary.main' >
-                            <a href={`tel:${user?.telephone?.value}`}>
-                              <Phone className='primaryIcon' size={22} />
-                            </a>
-                          </Box>
-                        </Tooltip>
-
-                      </Grid>
-                      <Grid alignItems={'center'} container md={10} sm={10} xs={10} >
-                        {user?.cellphone?.value}
-                      </Grid>
+                    {/* Postal Code */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.postalCode}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.postalCode}</Typography></Grid>
                     </Grid>
-                    <Grid container item>
-                      <Grid className='fullCenter' container md={2} sm={2} xs={2} >
-                        <Tooltip title='Morada'>
-                          <Box color='primary.main' >
-                            <Map className='primaryIcon' size={22} />
-                          </Box>
-                        </Tooltip>
-                      </Grid>
-                      <Grid container md={10} sm={10} xs={10} >
-                        <Typography sx={{ display: !user.address && 'none' }}>
-                          {user.address?.value?.streetAddress + ', '}
-                          {user.address?.value?.postalCode + ', '}
-                          {user.address?.value?.addressLocality + ', '}
-                          {user.address?.value?.addressRegion + ', '}
-                          {user.address?.value?.addressCountry}
-                        </Typography>
-                      </Grid>
+                    {/* Street */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.streetAddress}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.streetAddress}</Typography></Grid>
+                    </Grid>
+                    {/* addressLocality */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.addressLocality}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.addressLocality}</Typography></Grid>
+                    </Grid>
+                    {/* addressRegion */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.addressRegion}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.addressRegion}</Typography></Grid>
+                    </Grid>
+                    {/* addressCountry */}
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data?.find(ele => ele.cca2 === owner?.address?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data?.find(ele => ele.cca2 === owner?.delivery_address?.value?.addressCountry)?.name?.common}</Typography></Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -159,6 +151,7 @@ const Account = ({ ...props }) => {
           </Grid>
         </Content>
       </Grid>
+      <Footer/>
     </>
   );
 };

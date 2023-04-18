@@ -27,7 +27,7 @@ const Messages = (props) => {
     function loadMessages () {
       setLoaded(false);
 
-      !messages && getMessages(order?.budgetId.object.id).then((res) => {
+      !messages && getMessages(order?.hasBudget.object.id).then((res) => {
         setMessages(res.data.results);
       });
 
@@ -45,7 +45,7 @@ const Messages = (props) => {
     await newMessage({
       to: loggedUser.role === 'CUSTOMER' ? 'user_Xw9Jz3BbzBO4GlZ2' : order.orderBy.object.user.id,
       by: loggedUser?.id,
-      project: order.budgetId?.object.id,
+      project: order.hasBudget?.object.id,
       text: newMessageText
     }).then((res) => {
       setMessages([...messages, res.data]);

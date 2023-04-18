@@ -3,21 +3,17 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
-import { Box, Tooltip, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
   Edit,
-  Flag,
-  Mail,
-  Map,
-  Phone,
-  Smartphone,
   Trash,
   User
 } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import routes from '../../../navigation/routes';
+import * as workersActionsRedux from '../../../store/actions/worker';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
@@ -31,31 +27,16 @@ const Profile = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
 
-  async function DisableUser () {
-    const userCpy = {
-      id: user?.id,
-      email: user?.email.value,
-      ativo: true,
-      nome: user?.nome,
-      // telemovel: user?.telemovel.value,
-      telefone: user?.telefone,
-      morada: user?.morada,
-      paisCodigo: user?.paisCodigo,
-      idPerfil: user?.idPerfil,
-      obs: user?.obs,
-    };
-
-    userCpy.ativo = false;
-  }
-
-  function displayShift (value) {
-    switch (JSON.stringify(value)) {
-    case '[1,2]': return 'Manhã';
-    case '[2,3]': return 'Tarde';
-    case '[3,4]': return 'Noite';
-    default: return 'Nenhum';
-    }
+  async function DeleteUser () {
+    try {
+      await deleteWorker(user.id.replace('urn:ngsi-ld:Worker:', '')).then(() => {
+        Router.push(routes.private.internal.workers);
+        setDialogOpen(false)
+      });
+    } catch (err) { console.log(err); }
   }
 
   return (
@@ -66,15 +47,15 @@ const Profile = ({ ...props }) => {
         <ConfirmDialog
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
-          onConfirm={() => DisableUser()}
-          message='Está prestes a desativar este Utilizador, tem certeza que quer continuar?'
+          onConfirm={() => DeleteUser()}
+          message='Está prestes a remover este utilizador, tem certeza que quer continuar?'
           icon='AlertOctagon'
         />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
           <Box id='pad' style={{ display: 'flex' }}>
             <Box style={{ flex: 1 }}>
-              <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
+              <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
             </Box>
             {router.pathname === `${routes.private.profile}[Id]`
               ? null
@@ -106,109 +87,39 @@ const Profile = ({ ...props }) => {
                 </Box>
               )}
           </Box>
-          <Box id='pad'>
-            <a
-              id='align'
-              className='lightText bold'
-              style={{ marginBottom: '1rem' }}
-            >
-              <User /> Informações Gerais
-            </a>
-            <Grid container sx={12}>
-              <Grid container sm={12} md={6}>
-                <Grid container sx={12}>
-                  <Grid md={6} sm={6} xs={12} container p={2} spacing={2} bgcolor={'lightGray.main'}>
-                    <Grid item xs={12}>
-                      <Typography item color='lightTextSm.main'>Nome </Typography>
-                      <Typography item color='lightTextSm.black'>{breadcrumbsPath[1].title}</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography item color='lightTextSm.main'>Perfil de Utilizador </Typography>
-                      <Typography item color='lightTextSm.black'>{user?.profile?.object?.description || user?.functionPerformed?.value || user?.performanceRole.value}</Typography>
-                    </Grid>
-                    {user?.workerShift?.value && <Grid item xs={12}>
-                      {/* Only applies to workers */}
-                      <Typography item color='lightTextSm.main'>Turno</Typography>
-                      <Typography item color='lightTextSm.black'>{displayShift(user?.workerShift?.value)}</Typography>
-                    </Grid>}
-                    <Grid item xs={12}>
-                      <Typography item color='lightTextSm.main'>Estado </Typography>
-                      <Typography item>
-                        <a color='lightTextSm.main' style={{ color: 'var(--primary)' }}>
-                          {user?.active?.value ? 'Ativo' : user?.active?.value === undefined ? 'Ativo' : 'Inativo'}
-                        </a>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid md={6} sm={6} xs={12} container p={2} spacing={2}>
-                    <Grid container item>
-                      <Tooltip title='Email'>
-                        <a href={`mailto:${user?.email?.value}`}>
-                          <Mail className='primaryIcon' size={22} />
-                        </a>
-                      </Tooltip>
-                      <span>
-                        {user?.email?.value}
-                      </span>
-                    </Grid>
-                    <Grid container item>
-                      <Tooltip title='telemovel'>
-                        <a href={`tel:${user?.cellphone?.value}`}>
-                          <Smartphone className='primaryIcon' size={22} />
-                        </a>
-                      </Tooltip>
-                      <span>
-                        {user?.cellphone?.value}
-                      </span>
-                    </Grid>
-                    <Grid container item>
-                      <Tooltip title='Telefone'>
-                        <a href={`tel:${user?.telefone?.value}`}>
-                          <Phone className='primaryIcon' size={22} />
-                        </a>
-                      </Tooltip>
-                      <span>
-                        {user?.phone?.value || user?.cellphone?.value}
-                      </span>
-                    </Grid>
-                    {user?.address &&
-                  <>
-                    <Grid container item>
-                      <Tooltip title='Morada'>
-                        <Map className='primaryIcon' size={22} />
-                      </Tooltip>
-                      <span>
-                        {/* {user?.address} */}
-                      </span>
-                    </Grid>
-                    <Grid container item>
-                      <Tooltip title='Morada'>
-                        <Flag className='primaryIcon' size={22} />
-                      </Tooltip>
-                      <span>
-                        {/* {user?.pais.descricao || ''} */}
-                      pais
-                      </span>
-                    </Grid>
-                  </>
-                    }
-                  </Grid>
-                </Grid>
+          <Grid id='pad' container md={6} sm={8} xs={12} >
+            <Grid container spacing={3} >
+              <Grid container item>
+                <Typography id='align' item color='lightTextSm.main'><User
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                  size={pageProps?.globalVars?.iconSize}
+                />  Dados Gerais</Typography>
               </Grid>
-            </Grid>
-            {/* Only shows when on user detail NOT profile */}
-            {Router.route.replace('[Id]', '') === routes.private.internal.user &&
-            <Grid container>
-              <Grid container item p={2} sm={12} xs={12} md={6}>
-                <Grid item xs={12}>
-                  <Typography item color='lightTextSm.main'>Observações </Typography>
-                  <Typography item color='lightTextSm.black'>{user?.obs}</Typography>
+              <Grid container item>
+                {/* <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                    <Typography item color='lightTextSm.main'>Nome Utilizador</Typography>
+                    <Typography item color='lightTextSm.black' >{client?.user?.username}</Typography>
+                  </Grid> */}
+                <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                  <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
+                  <Typography item color='lightTextSm.black' >{user?.givenName?.value}</Typography>
                 </Grid>
-              </Grid>
-            </Grid>
-            }
+                <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                  <Typography item color='lightTextSm.main'>Ultimo Nome</Typography>
+                  <Typography item color='lightTextSm.black' >{user?.familyName?.value}</Typography>
+                </Grid>
 
-          </Box>
+                <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
+                  <Typography item color='lightTextSm.main'>Email</Typography>
+                  <Typography item color='lightTextSm.black' >{user?.email?.value}</Typography>
+                </Grid>
+                {/* <Grid item xs={6} md={6} sm={6}>
+                    <Typography item color='lightTextSm.main'>Observações </Typography>
+                    <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
+                  </Grid> */}
+              </Grid>
+            </Grid>
+          </Grid>
         </Content>
       </Grid>
       <Footer/>

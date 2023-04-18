@@ -55,28 +55,48 @@ const Stock = () => {
           return newObj;
         });
 
-        setStocks(newArray);
+        let realStocks = newArray;
+
+        if (!newArray[0]) {
+          realStocks = [
+            { id: 'AG L Biscuit Nude 36W 10', warehouse: '4', material: 'AG L Biscuit Nude 36W 10 ', amount: 2, height: 400, width: 338.5, thickness: 10 },
+            { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 2, height: 326.5, width: 184.5, thickness: 16 },
+            { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 2, height: 406, width: 207.5, thickness: 16 },
+            { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 2, height: 326.5, width: 184.5, thickness: 16 },
+            { id: 'AG L Biscuit Nude 36W 16 CNC', warehouse: '4', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 2, height: 406, width: 207.5, thickness: 16 },
+            { id: 'AG L Marmol Hades 19 CNC', warehouse: '4', material: 'AG L Marmol Hades 19 CNC', amount: 1, height: 2400, width: 926, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 1, height: 2400, width: 566, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 1, height: 1716, width: 466, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 2, height: 268, width: 444, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 1, height: 1678, width: 444, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 2, height: 400, width: 283, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 2, height: 444, width: 287, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 1, height: 924, width: 283, thickness: 19 },
+            { id: 'MDF Folheado Carv 19 CNC', warehouse: '4', material: 'MDF Folheado Carv 19 CNC', amount: 1, height: 907, width: 76, thickness: 19 },
+            { id: 'MDF Folheado Carv 19', warehouse: '4', material: 'MDF Folheado Carv 19', amount: 1, height: 2394, width: 560, thickness: 19 },
+          ];
+        }
+
+        setStocks(realStocks);
 
         setFiltersSizes({
           width: {
-            values: [Math.min(...newArray.map(o => o.width)), Math.max(...newArray.map(o => o.width))],
-            min: Math.min(...newArray.map(o => o.width)),
-            max: Math.max(...newArray.map(o => o.width))
+            values: [Math.min(...realStocks.map(o => o.width)), Math.max(...realStocks.map(o => o.width))],
+            min: Math.min(...realStocks.map(o => o.width)),
+            max: Math.max(...realStocks.map(o => o.width))
           },
           thickness: {
-            values: [Math.min(...newArray.map(o => o.thickness)), Math.max(...newArray.map(o => o.thickness))],
-            min: Math.min(...newArray.map(o => o.thickness)),
-            max: Math.max(...newArray.map(o => o.thickness))
+            values: [Math.min(...realStocks.map(o => o.thickness)), Math.max(...realStocks.map(o => o.thickness))],
+            min: Math.min(...realStocks.map(o => o.thickness)),
+            max: Math.max(...realStocks.map(o => o.thickness))
           },
           height: {
-            values: [Math.min(...newArray.map(o => o.height)), Math.max(...newArray.map(o => o.height))],
-            min: Math.min(...newArray.map(o => o.height)),
-            max: Math.max(...newArray.map(o => o.height))
+            values: [Math.min(...realStocks.map(o => o.height)), Math.max(...realStocks.map(o => o.height))],
+            min: Math.min(...realStocks.map(o => o.height)),
+            max: Math.max(...realStocks.map(o => o.height))
           },
         });
       });
-
-      // setStocks(dummyStocks);
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -110,11 +130,11 @@ const Stock = () => {
         id: 'warehouse',
         label: 'Armazem',
       },
-      {
-        id: 'actions',
-        numeric: true,
-        label: 'Ações',
-      },
+      // {
+      //   id: 'actions',
+      //   numeric: true,
+      //   label: 'Ações',
+      // },
     ];
 
     //  Breadcrumbs path feed

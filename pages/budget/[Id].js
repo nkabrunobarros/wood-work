@@ -2,7 +2,7 @@
 //  Page Component
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import BudgetScreen from '../../components/pages/budget/budget';
 import routes from '../../navigation/routes';
@@ -11,6 +11,8 @@ import * as clientsActionsRedux from '../../store/actions/client';
 import * as filesActionsRedux from '../../store/actions/file';
 import * as foldersActionsRedux from '../../store/actions/folder';
 import * as furnituresActionsRedux from '../../store/actions/furniture';
+import axios from 'axios';
+import * as countriesActionsRedux from '../../store/actions/country';
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
@@ -26,6 +28,8 @@ const Budget = ({ ...pageProps }) => {
   const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const [furnitures, setFurnitures] = useState();
+  const reduxState = useSelector((state) => state);
+  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
   useEffect(() => {
     const getData = async () => {
@@ -33,6 +37,8 @@ const Budget = ({ ...pageProps }) => {
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
+
+      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       const groups = furnitures.reduce((accumulator, item) => {
         const groupName = item.group.value;

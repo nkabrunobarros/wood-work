@@ -49,7 +49,7 @@ const EditClient = ({ ...props }) => {
 
   const tableFirstCell = {
     container: true,
-    sx: { borderLeft: '1px solid', borderBottom: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
+    sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
     md: 2,
     sm: 2,
     xs: 2,

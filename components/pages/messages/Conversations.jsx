@@ -18,11 +18,6 @@ export const ChatRow = (props) => {
             <Grid container md={12} >
               <Grid>
                 <Typography variant='md' color='primary.main'>
-                  {/* {isInternalPage
-                    ? chat.type === 'Project' ? 'Projeto' : 'Orçamento'
-                    : chat.type === 'Project' ? 'Projeto' : 'Orçamento'
-                  }
-                  {' '} */}
                   {chat.filterName || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
                 </Typography>
               </Grid>

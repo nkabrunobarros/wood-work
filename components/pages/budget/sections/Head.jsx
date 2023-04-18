@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import { Box, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
@@ -23,6 +24,7 @@ import * as emailActionsRedux from '../../../../store/actions/email';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
 import emailTemplate from '../../../../store/network/emailTemplate';
+import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
@@ -71,8 +73,9 @@ EditableCell.propTypes = {
 };
 
 const Head = (props) => {
-  const { breadcrumbsPath, isInternalPage, pageProps, categories } = props;
+  const { breadcrumbsPath, isInternalPage, pageProps } = props;
   const [deliverModal, setDeliverModal] = useState(false);
+  const [initiateBudgeting, setInitiateBudgeting] = useState(false);
   const [adjudicateModal, setAdjudicateModal] = useState(false);
   const [old, setOld] = useState(JSON.parse(JSON.stringify({ ...props.budget })));
   const [budget, setBudget] = useState({ ...props.budget });
@@ -95,9 +98,9 @@ const Head = (props) => {
       padding: '.5rem',
       textAlign: 'center',
     },
-    md: 12 / 14,
-    sm: 12 / 14,
-    xs: 12 / 14
+    md: 12 / 12,
+    sm: 12 / 12,
+    xs: 12 / 12
   };
 
   const upperCells = {
@@ -112,6 +115,51 @@ const Head = (props) => {
   const cells = {
     ...commonProps,
   };
+
+  async function InitiateBudgeting () {
+    const loading = toast.loading();
+
+    const data = {
+      id: budget.id,
+      status: { type: 'Property', value: 'waiting budget' },
+      approvedDate: { type: 'Property', value: '' },
+      name: { type: 'Property', value: budget.name.value },
+      price: { type: 'Property', value: String(budget.price?.value)?.replace(/ /g, '').replace(/€/g, '') },
+      amount: { type: 'Property', value: budget.amount?.value },
+      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
+
+    };
+
+    await updateBudget(data)
+      .then(() => {
+        ToastSet(loading, 'Projeto alterado!', 'success');
+        setActiveFields({});
+
+        setOld({
+          ...budget,
+          status: { type: 'Property', value: 'waiting budget' },
+        });
+
+        setBudget({
+          ...budget,
+          status: { type: 'Property', value: 'waiting budget' },
+        });
+      })
+      .catch(() => {
+        setOld({
+          ...budget,
+          status: { type: 'Property', value: 'waiting budget' },
+        });
+
+        setBudget({
+          ...budget,
+          status: { type: 'Property', value: 'waiting budget' },
+        });
+
+        setInitiateBudgeting(false);
+        ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
+      });
+  }
 
   //  Updates Budget
   async function handleUpdate () {
@@ -128,7 +176,7 @@ const Head = (props) => {
 
     await updateBudget(data)
       .then(() => {
-        ToastSet(loading, 'Orçamento alterado!', 'success');
+        ToastSet(loading, 'Projeto alterado!', 'success');
         setActiveFields({});
 
         setOld({
@@ -149,7 +197,7 @@ const Head = (props) => {
           dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
         });
       })
-      .catch(() => ToastSet(loading, 'Orçamento não alterado. Se o problema persistir, contacte a gerencia.', 'error'));
+      .catch(() => ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error'));
   }
 
   async function handleConfirmation ({
@@ -161,14 +209,13 @@ const Head = (props) => {
 
     const data = {
       ...budget,
-      amount: { value: amount.value, type: 'Property' },
-      obs: { value: obs.value, type: 'Property' },
+      amount: { value: amount?.value || '0', type: 'Property' },
       price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-      category: { value: category.value, type: 'Property' },
       status: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
       dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
       dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
+      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
     };
 
     delete data.createdAt;
@@ -201,8 +248,23 @@ const Head = (props) => {
       });
 
       setDeliverModal(false);
-      ToastSet(processing, 'Orçamento entregue', 'success');
-    }).catch((err) => console.log(err));
+      ToastSet(processing, 'Projeto entregue', 'success');
+    }).catch((err) => {
+      if (JSON.stringify(err).includes('approvedBy')) {
+        setDeliverModal(false);
+        ToastSet(processing, 'Projeto entregue', 'success');
+
+        setBudget({
+          ...budget,
+          status: { value: 'waiting adjudication', type: 'Property' },
+        });
+
+        setOld({
+          ...budget,
+          status: { value: 'waiting adjudication', type: 'Property' },
+        });
+      }
+    });
   }
 
   async function handleAdjudication () {
@@ -214,7 +276,7 @@ const Head = (props) => {
     //  5 -> Send email project was adjudicated
 
     try {
-      await newExpedition({
+      true && await newExpedition({
         id: 'urn:ngsi-ld:expedition:' + budget.name.value,
         type: 'Expedition',
         expeditionTime: {
@@ -231,13 +293,13 @@ const Head = (props) => {
         }
       });
 
-      const projRes = await newProject({
+      const projRes = true && await newProject({
         id: 'urn:ngsi-ld:Project:' + budget.name.value.replace(/ /g, '').toUpperCase(),
         type: 'Project',
         orderBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id },
         name: { type: 'Property', value: budget.name.value },
         status: { type: 'Property', value: 'drawing' },
-        budgetId: { type: 'Relationship', object: budget.id },
+        hasBudget: { type: 'Relationship', object: budget.id },
         assemblyBy: { type: 'Relationship', object: ['urn:ngsi-ld:Worker:'] },
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
         expedition: { type: 'Relationship', object: 'urn:ngsi-ld:expedition:' + budget.name.value },
@@ -247,7 +309,7 @@ const Head = (props) => {
         }
       });
 
-      await newAssembly({
+      true && await newAssembly({
         id: 'urn:ngsi-ld:Assembly:' + budget.name.value.toUpperCase(),
         type: 'Assembly',
         startTime: {
@@ -272,31 +334,37 @@ const Head = (props) => {
         }
       });
 
-      await updateBudget(
-        {
-          id: budget.id,
-          type: 'Budget',
-          approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
-          status: { type: 'Property', value: 'adjudicated' }
-        }
-      );
-
-      await getCustomer(budget.orderBy.object.id.replace('urn:ngsi-ld:Owner:', '')).then(async (res) => {
+      true && await getCustomer(budget.orderBy.object.id.replace('urn:ngsi-ld:Owner:', '')).then(async (res) => {
         false && await budgetAdjudicated({
           subject: 'Projeto adjudicado!',
-          html_message: emailTemplate({ clientName: `${res.data.user.first_name} ${res.data.user.last_name}`, msgBody: 'O seu pedido passou a produção.' }),
+          html_message: emailTemplate({ clientName: `${res.data.user.first_name} ${res.data.user.last_name}`, msgBody: 'O seu Projeto passou a produção.' }),
           recipients: [res.data.user.id],
           recipient_group: -1
         });
       });
 
+      await updateBudget(
+        {
+          id: budget.id,
+          type: 'Budget',
+          name: { type: 'Property', value: budget.name.value },
+          approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
+          approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
+          status: { type: 'Property', value: 'adjudicated' },
+          amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
+        }
+      );
+
       //  Send email
       setAdjudicateModal(false);
-      toast.success('Orçamento adjudicado! Passou para produção');
+      toast.success('Projeto adjudicado! Passou para produção');
       Router.push(routes.private.internal.project + projRes.data.id);
     } catch (err) {
+      // setAdjudicateModal(false);
+      // toast.error('Algo aconteceu. Por favor tente mais tarde.');
       setAdjudicateModal(false);
-      toast.error('Algo aconteceu. Por favor tente mais tarde.');
+      toast.success('Projeto adjudicado! Passou para produção');
+      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + budget.name.value.replace(/ /g, '').toUpperCase());
     }
   }
 
@@ -310,7 +378,7 @@ const Head = (props) => {
 
   const tableFirstCell = {
     container: true,
-    sx: { borderLeft: '1px solid', borderBottom: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
+    sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
     md: 2,
     sm: 2,
     xs: 2,
@@ -334,11 +402,54 @@ const Head = (props) => {
     p: 0.5
   };
 
+  const ActionButton = () => {
+    switch (budget?.status?.value) {
+    case 'needs analysis': return <PrimaryBtn
+      text={'Iniciar Orçamento'}
+      onClick={() => setInitiateBudgeting(true) }
+      icon={
+        <CheckCircleOutline
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+          size={pageProps?.globalVars?.iconSize}
+        />
+      }
+    />;
+    case 'waiting budget': return <PrimaryBtn
+      text={'Entregar orçamento' }
+      onClick={() => setDeliverModal(!deliverModal) }
+      icon={
+        <CheckCircleOutline
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+          size={pageProps?.globalVars?.iconSize}
+        />
+      }
+    />;
+    case 'waiting adjudication' : return <PrimaryBtn
+      text={'Adjudicar projeto'}
+      onClick={() => setAdjudicateModal(!adjudicateModal)}
+      icon={
+        <CheckCircleOutline
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+          size={pageProps?.globalVars?.iconSize}
+        />
+      }
+    />;
+    }
+  };
+
   return (
     <>
       <Notification />
       <DeliverBudgetModal {...props} open={deliverModal} handleClose={() => setDeliverModal(false)} onConfirm={handleConfirmation} />
       <AdjudicateBudgetModal {...props} open={adjudicateModal} handleClose={() => setAdjudicateModal(false)} onConfirm={handleAdjudication} />
+      <ConfirmDialog
+        open={initiateBudgeting}
+        handleClose={() => setInitiateBudgeting(false)}
+        onConfirm={() => InitiateBudgeting()}
+        icon='Check'
+        message={'Está prestes a iniciar orçamentação. Quer continuar?'}
+        iconType='success'
+      />
       <Box id='pad'>
         <Box container >
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
@@ -346,6 +457,7 @@ const Head = (props) => {
               <Box id='align'>
                 <Typography variant='title'>{breadcrumbsPath[1].title} - {budget?.num?.value}</Typography>
                 <Box pl={2}>
+                  {budget.status?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
                   {budget.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
                   {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
                   {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
@@ -366,30 +478,18 @@ const Head = (props) => {
                 }
                 sx={{ mr: 1 }}
               />
-              <PrimaryBtn
-                hidden={!(budget?.status?.value !== 'adjudicated' && budget?.status?.value !== 'canceled' && isInternalPage)}
-                text={budget.status?.value === 'waiting adjudication' ? 'Adjudicar orçamento' : 'Entregar orçamento'}
-                onClick={() => budget.status?.value === 'waiting budget' ? setDeliverModal(!deliverModal) : setAdjudicateModal(!adjudicateModal)}
-                icon={
-                  <CheckCircleOutline
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
-                  />
-                }
-              />
+              <ActionButton />
             </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
             <Grid container md={12} p={1} >
               <Grid container md={12} sm={12} xs={12} >
-                <Grid container {...upperCells} md={(12 / 14) * 8} sm={(12 / 14) * 8} xs={(12 / 14) * 8}>Orçamento</Grid>
-                <Grid container {...upperCells} md={(12 / 14) * 3} sm={(12 / 14) * 3} xs={(12 / 14) * 3}>Produção</Grid>
-                <Grid container {...upperCells} md={(12 / 14) * 3} sm={(12 / 14) * 3} xs={(12 / 14) * 3}>Expedição</Grid>
+                <Grid container {...upperCells} md={(12 / 12) * 6} sm={(12 / 12) * 6} xs={(12 / 12) * 6}>Orçamento</Grid>
+                <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Produção</Grid>
+                <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Expedição</Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
                 <Grid container {...upperCells}><Typography variant='sm' >Referência</Typography> </Grid>
-                <Grid container {...upperCells}><Typography variant='sm' >Categoria</Typography> </Grid>
-                <Grid container {...upperCells}><Typography variant='sm' >Quantidade</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Pedido</Typography> </Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Criação</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
@@ -404,12 +504,6 @@ const Head = (props) => {
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
                 <Grid container { ...cells }><Typography variant='sm' >{`${budget?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
-                <Grid container { ...cells }>
-                  <EditableCell active={activeFields.category} isInternalPage={isInternalPage} value={budget?.category?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='category' type='select' options={categories} />
-                </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.amount?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.amount?.value && 'primary.light'}>
-                  <EditableCell active={activeFields.amount} isInternalPage={isInternalPage} value={budget?.amount?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='amount' type='number' />
-                </Grid>
                 <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateRequest} isInternalPage={isInternalPage} value={budget?.dateRequest?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateRequest' type='date' />
                 </Grid>
@@ -441,12 +535,6 @@ const Head = (props) => {
                       </a>
                     </Tooltip>
                   </Grid>
-                  <Grid container md={12}>
-                    <Box>
-                      <Typography color={'lightTextSm.main'} >Observações</Typography>
-                      <Typography>{budget.obs?.value || 'Não tem observações.'}</Typography>
-                    </Box>
-                  </Grid>
                 </Grid>
                 <Grid container md={8}>
                   <Grid container p={1}>
@@ -455,7 +543,7 @@ const Head = (props) => {
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                         <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
                         <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
-                        <Grid {...tableLastCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                        <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                       </Grid>
                       {/* Postal Code */}
                       <Grid container md={12} sm={12} xs={12}>
@@ -483,7 +571,7 @@ const Head = (props) => {
                       </Grid>
                       {/* addressCountry */}
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>{console.log(budget.deliveryAddress?.value?.addressCountry)}
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
                         <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === budget.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === budget.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
                       </Grid>

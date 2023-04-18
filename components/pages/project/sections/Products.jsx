@@ -60,13 +60,13 @@ const Products = (props) => {
             <Typography>{line.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {line.items.sort((a, b) => a.num.value - b.num.value).map((field, index) => {
+            {line.items.sort((a, b) => a?.num?.value - b?.num?.value).map((field, index) => {
               return <Grow key={index}in={true}>
                 <Grid container>
                   {index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%' }} /></Box>}
 
                   <Grid container md={12} sm={12} xs={12}>
-                    <Typography variant='subtitle2' fontWeight={'bold'}>{field.amount.value} {field.name.value} {field?.description?.value && ','} {field?.description?.value}</Typography>
+                    <Typography variant='subtitle2' fontWeight={'bold'}>{field.amount?.value} {field.name?.value} {field?.description?.value && ','} {field?.description?.value}</Typography>
                   </Grid>
                   <Grid container md={12} sm={12} xs={12} p={1}>
                     <Typography variant='subtitle2' sx={{ whiteSpace: 'pre-line' }}> {field?.obs?.value}</Typography>

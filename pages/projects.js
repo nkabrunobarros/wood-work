@@ -220,7 +220,7 @@ const Orders = ({ ...pageProps }) => {
         id: 'Projeto',
         numeric: false,
         disablePadding: false,
-        label: 'Projeto',
+        label: 'Pedido',
         show: true,
       },
       {
@@ -269,18 +269,18 @@ const Orders = ({ ...pageProps }) => {
     const filteredBudgets = budgets.filter(item => item !== false);
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
-      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId?.object);
+      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
       // const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
 
       return {
         ...proj,
         Estado: proj?.status?.value,
-        Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
+        Nome: proj?.name?.value?.replace(/_/g, ' '),
         budget: thisBudget,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
-        Termino: thisBudget?.dateAgreedDelivery.value,
-        Projeto: thisBudget?.dateRequest.value,
-        Entregue: thisBudget?.dateDelivery.value,
+        Termino: thisBudget?.dateAgreedDelivery?.value,
+        Projeto: thisBudget?.dateRequest?.value,
+        Entregue: thisBudget?.dateDelivery?.value,
         Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         ExpeditionTime: '',

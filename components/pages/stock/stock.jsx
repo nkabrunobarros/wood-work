@@ -85,12 +85,11 @@ const Stock = ({ ...props }) => {
                 <Grid item xs={12}>
                   <Typography item color='lightTextSm.main'>Espessura</Typography>
                   <Typography item color='lightTextSm.black'>{stock?.esp} mm </Typography>
-                  {console.log(stock)}
                 </Grid>
               </Grid>
             </Grid>
             {/* Supplier info panel */}
-            <Grid container md={6} xs={12}>
+            <Grid container md={6} xs={12} display='none'>
               <Grid container bgcolor={'lightGray.main'} className={styles.supplierInfoContainer}>
                 <Grid container item md={12} p={1} id='align' className='lightTextSm'>
                   <PackagePlus style={{ marginRight: '1rem' }} size={20} />

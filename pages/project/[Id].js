@@ -42,7 +42,7 @@ const Order = ({ ...pageProps }) => {
     const getData = async () => {
       const project = (await getProject(router.query.Id)).data;
       const expedition = (await getExpedition(project.expedition.object)).data;
-      const budget = (await getBudget(project.budgetId.object)).data;
+      const budget = (await getBudget(project.hasBudget.object)).data;
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
 
@@ -73,7 +73,7 @@ const Order = ({ ...pageProps }) => {
         const builtFolders = res.data.results.map((folder) => {
           const folder2 = { ...folder };
 
-          folder2.files = resFiles.data.results.filter((file) => file.budget === project.budgetId.object && file.folder === folder.id);
+          folder2.files = resFiles.data.results.filter((file) => file.budget === project.hasBudget.object && file.folder === folder.id);
           // builtFolders.push(folder2);
 
           return folder2;
@@ -84,7 +84,7 @@ const Order = ({ ...pageProps }) => {
 
       const thisOrder = JSON.parse(JSON.stringify({ ...project }));
 
-      thisOrder.budgetId.object = budget;
+      thisOrder.hasBudget.object = budget;
       thisOrder.orderBy.object = client;
       thisOrder.expedition = expedition;
       setDisplayedProject(thisOrder);

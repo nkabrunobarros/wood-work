@@ -33,7 +33,7 @@ const EditStock = ({ ...pageProps }) => {
       },
       {
         title: `${stock.material}`,
-        href: `${routes.private.internal.stock}`,
+        href: `${routes.private.internal.stock}${router.query.Id}`,
       },
       {
         title: 'Editar stock',

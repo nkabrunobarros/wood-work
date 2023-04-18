@@ -21,4 +21,5 @@ export {
   updateClient,
   setDisplayedClient,
   deleteClient,
+  clientMe
 } from './client';

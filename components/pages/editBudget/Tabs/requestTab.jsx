@@ -24,7 +24,7 @@ const RequestTab = (props) => {
     countries
   } = props;
 
-  const [expanded, setExpanded] = useState();
+  const [expanded, setExpanded] = useState(true);
   let portugal = {};
 
   portugal = countries?.find((option) => option.cca2 === 'PT');
@@ -98,7 +98,7 @@ const RequestTab = (props) => {
                   {/* Date agreed delivery */}
                   <Grid container md={6} sm={6} xs={12} p={1}>
                     <InputLabel >
-                Data acordada de entrega de orçamento
+                      Data acordada de entrega de orçamento
                       {budgetData.dateAgreedDelivery.required && <Tooltip title='Obrigatório' >
                         <span style={{ color: 'var(--red)' }}> *</span>
                       </Tooltip>}
@@ -289,6 +289,7 @@ const RequestTab = (props) => {
                       label='Valor'
                       error={budgetData.price.error}
                       required={budgetData.price.required}
+                      disabled={true}
                       name='price'
                       paceholder='Valor total do projeto'
                       value={budgetData.price.value}
@@ -299,8 +300,7 @@ const RequestTab = (props) => {
                       label='Observações'
                       type={budgetData.obs.type}
                       name='obs'
-                      paceholder='Escrever observações'
-                      className={styles.textarea}
+                      placeholder='Escrever observações'
                       value={budgetData.obs.value}
                       onChange={(e) => onBudgetChange(e.target)}
                     />

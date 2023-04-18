@@ -37,7 +37,9 @@ import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
-import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+// import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import companyLogo from '../../../public/Logo-NKA.png';
+
 import * as authActionsRedux from '../../../store/actions/auth';
 
 const SignIn = (props) => {
@@ -530,7 +532,8 @@ const SignIn = (props) => {
             ToastSet(loadingNotification, 'A entrar', 'success');
             setLoading(false);
 
-            if (user.role === 'CUSTOMER' && user.tos === false) router.push('/terms');
+            // eslint-disable-next-line no-constant-condition
+            if (user.role === 'CUSTOMER' && user.tos === false && false) router.push('/terms');
             else router.push(loginSuccessRoute);
           }
         }).catch((err) => console.log(err));
@@ -549,8 +552,7 @@ const SignIn = (props) => {
       <Notification />
       <Dialog
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-      >
+        onClose={() => setDialogOpen(false)}>
         <DialogTitle id='alert-dialog-title' sx={{ color: 'var(--primary)' }}>
           Conta Bloqueada
         </DialogTitle>
@@ -571,14 +573,14 @@ const SignIn = (props) => {
         </DialogActions>
       </Dialog>
       <Box
-        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+        style={{ width: windowWidth > 600 ? '160px' : '100px', position: 'absolute', right: '25px', top: '25px' }}
       >
         <a
           target='#'
           href='http://mofreita.com/'
         >
           <Image
-            width={windowWidth > 600 ? 80 : 50}
+            width={windowWidth > 600 ? 160 : 100}
             alt='Company Logo'
             src={companyLogo}
             placeholder='blur'
@@ -618,6 +620,7 @@ const SignIn = (props) => {
             width: '100%'
           }}
         >
+
           <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
             {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
           </Typography>

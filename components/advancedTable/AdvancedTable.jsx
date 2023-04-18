@@ -495,11 +495,15 @@ const AdvancedTable = ({
                                   <ButtonGroup color='link.main'>
                                     {headCell.id !== 'actionsConf' &&
                                         <>
-                                          {editRoute &&
+                                          {editRoute && !(Router.route.includes('projects') && row.type === 'Project') &&
                                             <Tooltip title={'Editar'}>
                                               <Box style={{ color: 'red' }}>
                                                 <IconButton
-                                                  onClick={() => editRoute && Router.push(`${editRoute}${row.id}`)}>
+                                                  onClick={() => {
+                                                    if (Router.route.includes('projects') && row.type === 'Project') return;
+
+                                                    editRoute && Router.push(`${editRoute}${row.id}`);
+                                                  }}>
                                                   <EditOutlined
                                                     fontSize="small"
                                                     color={'primary'}

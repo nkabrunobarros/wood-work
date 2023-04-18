@@ -58,9 +58,8 @@ const ClientTab = (props) => {
           <Grid container>
             <Grid container md={12} sm={12} xs={12} >
               <Grid container bgcolor={'lightGray.main'} className={styles.clientContainer} spacing={1} p={2}>
-
                 <Grid container md={10} sm={10} xs={10} >
-                  {<InputLabel htmlFor='email'>Escolher Cliente</InputLabel>}
+                  <InputLabel htmlFor='email'>Escolher Cliente</InputLabel>
                   <Autocomplete
                     name='client'
                     id='client'
@@ -96,11 +95,6 @@ const ClientTab = (props) => {
                   />
                 </Grid>
                 <Grid container md={2} sm={2} xs={2} >
-                  {false && <Grid container md={9} sm={9} xs={9}>
-                    <Typography id='align' className='headerTitleSm'>
-                      <User size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Cliente
-                    </Typography>
-                  </Grid>}
                   <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
                     <Box>
                       <ButtonGroup>
@@ -119,44 +113,43 @@ const ClientTab = (props) => {
                   </Grid>
                 </Grid>
                 <Grid container md={12} sm={12} xs={12} sx={{ border: '1px solid var(--white)' }}>
-                  {clients.find(ele => ele.id === client.value) &&
-                <Grid container md={12} sm={12} xs={12} sx={{ height: 'fit-content' }}>
-                  <Grid item md={12} sm={12} xs={12} p={1}>
-                    <Typography id='align' item color='lightTextSm.main'>Dados Gerais</Typography>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={6} p={1}>
-                    <Typography color='lightTextSm.main'>Tipo cliente</Typography>
-                    <Typography color='lightTextSm.black' >
-                      {clients.find(ele => ele.id === client.value)?.isCompany?.value ? 'Empresa' : 'Particular'}</Typography>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={6} p={1}>
-                    <Typography color='lightTextSm.main'></Typography>
-                    <Typography color='lightTextSm.black' ></Typography>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={6} p={1}>
-                    <Typography color='lightTextSm.main'>Morada fiscal</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.address?.streetAddress}</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.address?.postalCode}</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.address?.addressLocality}</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.address?.addressRegion}</Typography>
-                    <Typography color='lightTextSm.black'>{countries.find(ele => ele.cca2 === clients.find(ele => ele.id === client.value)?.address?.addressCountry).name.common}</Typography>
+                  {clients?.find(ele => ele.id === client.value) &&
+                    <Grid container md={12} sm={12} xs={12} sx={{ height: 'fit-content' }}>
+                      <Grid item md={12} sm={12} xs={12} p={1}>
+                        <Typography id='align' item color='lightTextSm.main'>Dados Gerais</Typography>
+                      </Grid>
+                      <Grid item md={6} sm={6} xs={6} p={1}>
+                        <Typography color='lightTextSm.main'>Tipo cliente</Typography>
+                        <Typography color='lightTextSm.black' >
+                          {clients?.find(ele => ele.id === client.value)?.isCompany?.value ? 'Empresa' : 'Particular'}</Typography>
+                      </Grid>
+                      <Grid item md={6} sm={6} xs={6} p={1}>
+                        <Typography color='lightTextSm.main'></Typography>
+                        <Typography color='lightTextSm.black' ></Typography>
+                      </Grid>
+                      <Grid item md={6} sm={6} xs={6} p={1}>
+                        <Typography color='lightTextSm.main'>Morada fiscal</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.address?.streetAddress}</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.address?.postalCode}</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.address?.addressLocality}</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.address?.addressRegion}</Typography>
+                        <Typography color='lightTextSm.black'>{countries.find(ele => ele.cca2 === clients?.find(ele => ele.id === client.value)?.address?.addressCountry).name.common}</Typography>
 
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={6} p={1}>
-                    <Typography color='lightTextSm.main'>Morada entrega</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.delivery_address?.streetAddress }</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.delivery_address?.postalCode }</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.delivery_address?.addressLocality }</Typography>
-                    <Typography color='lightTextSm.black'>{clients.find(ele => ele.id === client.value)?.delivery_address?.addressRegion }</Typography>
-                    <Typography color='lightTextSm.black'>{countries.find(ele => ele.cca2 === clients.find(ele => ele.id === client.value)?.delivery_address?.addressCountry).name.common}</Typography>
-                  </Grid>
-                </Grid>
+                      </Grid>
+                      <Grid item md={6} sm={6} xs={6} p={1}>
+                        <Typography color='lightTextSm.main'>Morada entrega</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.delivery_address?.streetAddress }</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.delivery_address?.postalCode }</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.delivery_address?.addressLocality }</Typography>
+                        <Typography color='lightTextSm.black'>{clients?.find(ele => ele.id === client.value)?.delivery_address?.addressRegion }</Typography>
+                        <Typography color='lightTextSm.black'>{countries.find(ele => ele.cca2 === clients?.find(ele => ele.id === client.value)?.delivery_address?.addressCountry).name.common}</Typography>
+                      </Grid>
+                    </Grid>
                   }
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-
         </AccordionDetails>
       </Accordion>
     </>

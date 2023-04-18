@@ -21,7 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import backgroundImg from '../../../public/Log_In.jpg';
 import { logout } from '../../../store/actions/auth';
 import * as ClientsActionsRedux from '../../../store/actions/client';
-import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+// import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import companyLogo from '../../../public/Logo-NKA.png';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -126,14 +127,14 @@ const Terms = ({ ...props }) => {
           </div>
         )}
         <Box
-          style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+          style={{ width: windowWidth > 600 ? '160px' : '100px', position: 'absolute', right: '25px', top: '25px' }}
         >
           <a
             target='#'
             href='http://mofreita.com/'
           >
             <Image
-              width={windowWidth > 600 ? 80 : 50}
+              width={windowWidth > 600 ? 160 : 100}
               alt='Company Logo'
               src={companyLogo}
               placeholder='blur'

@@ -15,7 +15,7 @@ import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
   const { pageProps, styles, order, isInternalPage } = props;
-  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === order.budgetId.object?.id?.replace('Budget', 'Folder'))?.files);
+  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === order.hasBudget.object?.id?.replace('Budget', 'Folder'))?.files);
   const [newFiles, setNewFiles] = useState();
   const [confirmUploadModal, setConfirmUploadModal] = useState(false);
   const dispatch = useDispatch();
@@ -33,9 +33,9 @@ const DocsClient = (props) => {
     const FormData = require('form-data');
     const data = new FormData();
 
-    data.append('folder', props.folders.find(ele => ele.folder_name === order.budgetId.object.id.replace('Budget', 'Folder')).id);
+    data.append('folder', props.folders.find(ele => ele.folder_name === order.hasBudget.object.id.replace('Budget', 'Folder')).id);
     [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
-    data.append('budget', order.budgetId.object.id);
+    data.append('budget', order.hasBudget.object.id);
 
     try {
       await uploadFiles(data).then(async (res) => {

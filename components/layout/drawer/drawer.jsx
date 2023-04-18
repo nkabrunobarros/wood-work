@@ -28,7 +28,9 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
-import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import companyLogo from '../../../public/Logo-NKA.png';
+
+// import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import Router from 'next/router';
 
 const DrawerMobile = ({ logout, toggleDrawer, state }) => {
@@ -83,7 +85,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
             <Image
               src={companyLogo}
               alt='company logo'
-              width={75}
+              width={150}
               height={75}
             />
           </Box>

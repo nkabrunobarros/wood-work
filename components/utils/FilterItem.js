@@ -93,6 +93,7 @@ const FilterItem = (data, item, col) => {
 
       case 'Estado': {
         switch (item?.Estado?.toLowerCase()) {
+        case 'needs analysis': return <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>;
         case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
         case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
         case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
@@ -137,6 +138,7 @@ const FilterItem = (data, item, col) => {
 
       case 'statusClient.value': {
         switch (item?.statusClient?.value.toLowerCase()) {
+        case 'needs analysis': return <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>;
         case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
         case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
         case 'waiting': return <Typography variant='md' className="errorBalloon">Não Iniciada</Typography>;

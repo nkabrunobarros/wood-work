@@ -75,70 +75,30 @@ const EditProject = ({ ...pageProps }) => {
             newObj[key] = {
               value: value.value,
               error: '',
-
             };
 
-            newObj.rowType = { value: 'furniture', error: '', hidden: true };
+            newObj = {
+              rowType: { ...newObj.rowType, value: 'furniture', error: '', hidden: true },
+              name: { ...newObj.name, id: 'name', error: '', required: true, label: 'Nome' },
+              description: { ...newObj.description, id: 'description', error: '', label: 'Descrição', type: 'area' },
+              amount: { ...newObj.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number' },
+              obs: { ...newObj.obs, id: 'obs', error: '', label: 'Observações', type: 'area' },
+              width: { ...newObj.width, id: 'width', error: '', label: 'Largura' },
+              height: { ...newObj.height, id: 'height', error: '', label: 'Altura' },
+              thickness: { ...newObj.thickness, id: 'thickness', error: '', label: 'Profundidade' },
+              price: { ...newObj.price, id: 'price', error: '', label: 'Valor', type: 'currency' },
+              category: { ...newObj.category, hidden: true, id: 'category', error: '', options: categories, label: 'Categoria' },
 
-            //  add required's
-            if (key === 'name' || key === 'amount') {
-              newObj[key].required = true;
-            }
-
-            //  add hidden's
-            if (key === 'id' || key === 'category' || key === 'group' || key === 'hasBudget' || key === 'num' || key === 'rowType' || key === 'type' || key === 'section') {
-              newObj[key].hidden = true;
-            }
-
-            //  Add labels
-            switch (key) {
-            case 'amount': newObj[key].label = 'Quantidade';
-
-              break;
-            case 'price': newObj[key].label = 'Valor';
-
-              break;
-            case 'name': newObj[key].label = 'Nome';
-
-              break;
-            case 'description': newObj[key].label = 'Descrição';
-
-              break;
-            case 'obs': newObj[key].label = 'Observações';
-
-              break;
-            case 'width': newObj[key].label = 'Largura';
-
-              break;
-            case 'height': newObj[key].label = 'Altura';
-
-              break;
-            case 'thickness': newObj[key].label = 'Profundidade';
-
-              break;
-            }
-
-            //  Add types
-            switch (key) {
-            case 'amount': newObj[key].type = 'number';
-
-              break;
-            case 'price': newObj[key].type = 'currency';
-
-              break;
-            case 'name': newObj[key].type = 'Nome';
-
-              break;
-            case 'description': newObj[key].type = 'area';
-
-              break;
-            case 'obs': newObj[key].type = 'area';
-
-              break;
-            }
+              section: { ...newObj.category, hidden: true },
+              hasBudget: { ...newObj.hasBudget, hidden: true },
+              group: { ...newObj.group, hidden: true },
+              num: { ...newObj.num, hidden: true },
+            };
           } else {
             newObj[key] = value;
           }
+
+          newObj.id = item.id;
 
           return newObj;
         }, {});
@@ -167,10 +127,10 @@ const EditProject = ({ ...pageProps }) => {
       },
       {
         title: `${budget.name.value}`,
-        href: `${routes.private.internal.budget + budget.id}`,
+        href: `${routes.private.internal.budget}${budget.id}`,
       },
       {
-        title: 'Editar projeto',
+        title: 'Editar',
         href: `${routes.private.internal.budget}`,
       },
     ];
@@ -187,7 +147,7 @@ const EditProject = ({ ...pageProps }) => {
         };
       }),
       categories,
-      countries: [...reduxState.countries.data],
+      countries: [...reduxState?.countries?.data || []],
       furnitures,
       budget
     };

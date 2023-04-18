@@ -22,7 +22,7 @@ const NewMsgInput = (props) => {
     newMessageText !== '' && props.conversation && await newMessage({
       to: 'user_Xw9Jz3BbzBO4GlZ2',
       by: loggedUser?.id,
-      project: props.conversation?.budgetId?.object || props.conversation?.id,
+      project: props.conversation?.hasBudget?.object || props.conversation?.id,
       text: newMessageText
     }).then((res) => {
       const chats = [...props.chats];

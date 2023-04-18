@@ -1,8 +1,8 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Grid, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Divider, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 //  PropTypes
-import { Calendar, ChevronDown } from 'lucide-react';
+import { Calendar, ChevronDown, UserPlus } from 'lucide-react';
 import PropTypes from 'prop-types';
 //  Page Component Styles
 import styles from '../../../../styles/NewOrder.module.css';
@@ -13,6 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import Image from 'next/image';
+import routes from '../../../../navigation/routes';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 
@@ -21,10 +22,14 @@ const RequestTab = (props) => {
     pageProps,
     budgetData,
     onBudgetChange,
-    countries
+    countries,
+    clients,
+    setClientUser,
+    onClientChange,
+    client
   } = props;
 
-  const [expanded, setExpanded] = useState();
+  const [expanded, setExpanded] = useState(true);
   let portugal = {};
 
   portugal = countries?.find((option) => option.cca2 === 'PT');
@@ -32,25 +37,67 @@ const RequestTab = (props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography>
-          <Typography id='align' className='headerTitleSm'>
-            <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto          </Typography>
+        <Typography id='align' className='headerTitleSm'>
+          <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
           <Grid container md={12} sm={12} >
             <Grid bgcolor={'lightGray.main'} className={styles.clientContainer} spacing={1} p={2}>
-              {/* <Grid container item sm={12} xs={12} >
-                <Grid container md={12}>
-                  <Typography id='align' className='headerTitleSm'>
-                    <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto
-                  </Typography>
-                </Grid>
-              </Grid> */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Grid container>
-                  <Grid container md={6} sm={6} xs={12} p={1}>
+                  <Grid container md={4} sm={4} xs={12} p={1} sx={{
+                    position: 'relative',
+                    display: 'block'
+                  }}>
+                    <Box sx={{
+                      position: 'absolute',
+                      top: '-20px',
+                      right: '95%'
+                    }}>
+                      <Tooltip title='Novo Cliente'>
+                        <IconButton href={routes.private.internal.newClient} target='#'>
+                          <UserPlus size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <InputLabel htmlFor='email'>Cliente</InputLabel>
+                    <Autocomplete
+                      name='client'
+                      id='client'
+                      fullWidth
+                      disablePortal
+                      options={clients || []}
+                      getOptionLabel={(option) => option.Nome}
+                      getOptionValue={(option) => option.user.id}
+                      onChange={(e, value) => {
+                        setClientUser(value?.user?.id);
+                        onClientChange({ value: value?.id || '', name: 'client' });
+                      }}
+                      renderOption={(props, option) => {
+                        return (
+                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            {option.Nome }
+                          </Box>
+                        );
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          label={client?.error}
+                          error={client?.error}
+                          value={client?.value}
+                          {...params}
+                          placeholder="Escrever Nome Cliente"
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid container md={4} sm={4} xs={12} p={1}>
                     <MyInput
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Nome'
@@ -61,7 +108,7 @@ const RequestTab = (props) => {
                       value={budgetData.name.value}
                     />
                   </Grid>
-                  <Grid container md={6} sm={6} xs={12} p={1}>
+                  <Grid container md={4} sm={4} xs={12} p={1}>
                     <MyInput
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Numero'
@@ -73,7 +120,6 @@ const RequestTab = (props) => {
                     />
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
-
                   {/* Date request */}
                   <Grid container md={6} sm={6} xs={12} p={1}>
                     <InputLabel>
@@ -98,7 +144,7 @@ const RequestTab = (props) => {
                   {/* Date agreed delivery */}
                   <Grid container md={6} sm={6} xs={12} p={1}>
                     <InputLabel >
-                Data acordada de entrega de orçamento
+                       Data acordada de entrega de orçamento
                       {budgetData.dateAgreedDelivery.required && <Tooltip title='Obrigatório' >
                         <span style={{ color: 'var(--red)' }}> *</span>
                       </Tooltip>}
@@ -285,6 +331,7 @@ const RequestTab = (props) => {
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
                     <CurrencyInput
+                      disabled
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Valor'
                       error={budgetData.price.error}
@@ -294,7 +341,7 @@ const RequestTab = (props) => {
                       value={budgetData.price.value}
                     />
                   </Grid>
-                  <Grid container item sm={12} xs={12} p={1} >
+                  {false && <Grid container item sm={12} xs={12} p={1} >
                     <MyInput
                       label='Observações'
                       type={budgetData.obs.type}
@@ -304,7 +351,7 @@ const RequestTab = (props) => {
                       value={budgetData.obs.value}
                       onChange={(e) => onBudgetChange(e.target)}
                     />
-                  </Grid>
+                  </Grid>}
                 </Grid>
               </LocalizationProvider>
             </Grid>
@@ -321,7 +368,10 @@ RequestTab.propTypes = {
   budgetData: PropTypes.any,
   onBudgetChange: PropTypes.any,
   countries: PropTypes.array,
-
+  clients: PropTypes.array,
+  setClientUser: PropTypes.func,
+  onClientChange: PropTypes.func,
+  client: PropTypes.object,
 };
 
 export default RequestTab;

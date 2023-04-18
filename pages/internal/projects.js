@@ -235,13 +235,13 @@ const Projects = ({ ...pageProps }) => {
         label: 'Cliente',
         show: true,
       },
-      {
-        id: 'amount.value',
-        numeric: false,
-        disablePadding: false,
-        label: 'Quantidade',
-        show: true,
-      },
+      // {
+      //   id: 'amount.value',
+      //   numeric: false,
+      //   disablePadding: false,
+      //   label: 'Quantidade',
+      //   show: true,
+      // },
       {
         id: 'price.value',
         numeric: false,
@@ -319,7 +319,7 @@ const Projects = ({ ...pageProps }) => {
         id: 'Projeto',
         numeric: false,
         disablePadding: false,
-        label: 'Projeto',
+        label: 'Pedido',
         show: true,
       },
       {
@@ -383,15 +383,15 @@ const Projects = ({ ...pageProps }) => {
 
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
-      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.budgetId?.object);
+      const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
       const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition?.object);
 
       return {
         ...proj,
         Quantidade: proj?.amount?.value,
         Estado: proj?.status?.value,
-        Nome: proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' '),
-        budgetId: { ...proj.budgetId, ...(budgets.find((ele) => ele.id === proj.budgetId?.object)) },
+        Nome: proj?.name.value,
+        hasBudget: { ...proj.hasBudget, ...(budgets.find((ele) => ele.id === proj.hasBudget?.object)) },
         Cliente: proj.orderBy.object,
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
@@ -418,7 +418,7 @@ const Projects = ({ ...pageProps }) => {
       budgets,
       projects: merged,
       detailPage: routes.private.internal.project,
-      editPage: routes.private.internal.editProject,
+      editPage: routes.private.internal.editBudget,
       detailPageBudgetTab: routes.private.internal.budget,
     };
 

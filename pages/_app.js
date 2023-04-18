@@ -93,7 +93,7 @@ const App = ({ Component, pageProps }) => {
           pageProps.theme = selectedTheme;
 
           if (isPublicPage && !!myCredentials) {
-            if (myCredentials.me.role === 'CUSTOMER') {
+            if (myCredentials?.me?.role === 'CUSTOMER') {
               router.push(routes.private.projects);
             } else {
               router.push(routes.private.internal.projects);

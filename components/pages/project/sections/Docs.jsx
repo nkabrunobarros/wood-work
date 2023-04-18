@@ -82,26 +82,24 @@ const Docs = (props) => {
       .filter((folder) => folder.parent_folder === parentId)
       .map((folder) => (
         <Accordion key={folder.id} {...getRootProps()} sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
-          <Tooltip title='Arrastar ficheiros para esta pasta' {...getRootProps()}>
-            <AccordionSummary expandIcon={<ChevronDown />} >
-              <Grid id="abc" container bgcolor={'default.main'} >
-                <Grid id="abce" container md={6} sm={6} xs={6} alignItems='center'>
-                  <Box id="align abcf" color='primary.main' >
-                    {open
-                      ? (
-                        <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
-                      )
-                      : (
-                        <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
-                      )}
-                  </Box>
-                  <Typography>{!isDragActive ? folder.folder_name : 'Carregar ficheiros para esta pasta'} </Typography>
-                </Grid>
-                <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
+          <AccordionSummary expandIcon={<ChevronDown />} >
+            <Grid id="abc" container bgcolor={'default.main'} >
+              <Grid id="abce" container md={6} sm={6} xs={6} alignItems='center'>
+                <Box id="align abcf" color='primary.main' >
+                  {open
+                    ? (
+                      <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
+                    )
+                    : (
+                      <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
+                    )}
+                </Box>
+                <Typography>{!isDragActive ? folder.folder_name : 'Carregar ficheiros para esta pasta'} </Typography>
               </Grid>
+              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
+            </Grid>
 
-            </AccordionSummary>
-          </Tooltip>
+          </AccordionSummary>
           <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('aqui')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
             {folder.files?.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
@@ -129,7 +127,7 @@ const Docs = (props) => {
     getFolders().then(async (res) => {
       const builtFolders = [];
 
-      await getFiles(order.budgetId.object.id).then((resFiles) => {
+      await getFiles(order.hasBudget.object.id).then((resFiles) => {
         res.data.results.map((folder) => {
           const folder2 = { ...folder };
 
@@ -154,7 +152,7 @@ const Docs = (props) => {
     data.append('folder', uploadFolder);
     newFiles.map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
     data.append('is_budget', false);
-    data.append('budget', order.budgetId.object.id);
+    data.append('budget', order.hasBudget.object.id);
 
     try {
       await uploadFiles(data).then(() => {
@@ -187,9 +185,9 @@ const Docs = (props) => {
         <div id='align' style={{ display: 'flex', padding: '24px' }}>
           <div style={{ flex: 1 }}>
             <Typography variant='title'>Documentos</Typography>
-            <Typography variant='subtitle2'>Para carregar ficheiros, arrastar para a pasta a carregar.</Typography>
+            {/* <Typography variant='subtitle2'>Para carregar ficheiros, arrastar para a pasta a carregar.</Typography> */}
           </div>
-          <div className='flex'>
+          {false && <div className='flex'>
             {!creatingFolder
               ? <PrimaryBtn
                 hidden
@@ -236,7 +234,7 @@ const Docs = (props) => {
                 }
               />
             </div>
-          </div>
+          </div>}
         </div>
 
         <TableContainer component={Paper}>

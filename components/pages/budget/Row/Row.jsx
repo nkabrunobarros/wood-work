@@ -141,7 +141,7 @@ const Row = (props) => {
               : (
                 <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
               )}
-            {!isDragActive ? row.name : `Upload files to ${row.name}`}
+            {!isDragActive ? row.name.replace('urn:ngsi-ld:Folder:', '') : `Upload files to ${row.name.replace('urn:ngsi-ld:Folder:', '')}`}
           </div>
         </TableCell>
         <TableCell onClick={() => onRowClick()}>{moment(row.createdAt).format('DD/MM/YYYY')}</TableCell>

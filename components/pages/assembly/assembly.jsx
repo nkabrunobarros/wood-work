@@ -8,7 +8,7 @@ import Navbar from '../../layout/navbar/navbar';
 import ProjectAssembly from './projectAssembly';
 
 const Assembly = (props) => {
-  const { breadcrumbsPath } = props;
+  const { breadcrumbsPath, projects } = props;
   const [chosenProject, setChosenProject] = useState();
 
   return <>
@@ -20,9 +20,15 @@ const Assembly = (props) => {
           <Typography variant='title'>Escolha Projeto</Typography>
         </Grid>
       </Grid>
-      <Grid container md={3} sm={6} xs={12} p={1} >
-        <ProjectCard proj={{ id: 1, name: { value: 'teste' }, amount: { value: 0 } }} setChosenProject={setChosenProject} {...props}/>
-      </Grid>
+      {projects
+        ? projects?.map((proj, i) =>
+          <Grid key={i} container md={3} sm={6} xs={12} p={1} >
+            <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
+          </Grid>
+        )
+        : <Grid container md={3} sm={6} xs={12} p={1} >
+          <ProjectCard proj={{ id: 1, name: { value: 'teste' }, amount: { value: 0 } }} setChosenProject={setChosenProject} {...props}/>
+        </Grid>}
       <ProjectAssembly open={chosenProject} chosenProject={chosenProject} onClose={() => setChosenProject()} />
     </Grid>
   </>;

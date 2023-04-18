@@ -14,7 +14,7 @@ const AdjudicateBudgetModal = (props) => {
     aria-describedby='alert-dialog-description'
   >
     <DialogTitle color="link.main" id='alert-dialog-title' >
-     Adjudicação de orçamento
+     Adjudicação de projeto
     </DialogTitle>
     <Divider />
     <DialogContent>
@@ -24,7 +24,7 @@ const AdjudicateBudgetModal = (props) => {
 
       <DialogContentText id='alert-dialog-description'>
         <Typography variant='md'>
-          Está prestes a adjudicar este orçamento. Quer continuar?
+          Está prestes a adjudicar este projeto. Quer continuar?
         </Typography>
       </DialogContentText>
     </DialogContent>

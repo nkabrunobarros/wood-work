@@ -12,9 +12,13 @@ export {
   ADD_WORKER_SUCCESS,
   ADD_WORKER_FAIL,
   SET_DISPLAYED_WORKER,
+  DELETE_WORKER_REQUEST,
+  DELETE_WORKER_SUCCESS,
+  DELETE_WORKER_FAIL,
   workers,
   worker,
   newWorker,
   setDisplayedWorker,
-  updateWorker
+  updateWorker,
+  deleteWorker
 } from './worker';

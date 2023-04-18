@@ -33,10 +33,8 @@ const EditClient = ({ ...pageProps }) => {
   useEffect(() => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-
-      if (!reduxState.clients.displayedClient) await getClient(router.query.Id).then((res) => console.log(res));
-      else if (reduxState.clients.data) setDisplayedClient(reduxState.clients.data.find(ele => ele.id === router.query.Id));
-
+      await getClient(router.query.Id).then((res) => setDisplayedClient(res.data));
+      // else if (reduxState.clients.data) setDisplayedClient(reduxState.clients.data.find(ele => ele.id === router.query.Id));
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
     };
 

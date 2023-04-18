@@ -33,7 +33,7 @@ const User = ({ ...pageProps }) => {
   if (loaded && reduxState.workers.displayedWorker) {
     const breadcrumbsPath = [
       {
-        title: 'Workers',
+        title: 'Utilizadores',
         href: `${routes.private.internal.workers}`,
       },
       {

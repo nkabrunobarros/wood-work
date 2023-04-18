@@ -67,13 +67,12 @@ const EditUser = ({ ...props }) => {
 
   async function handleUpdate () {
     const loading = toast.loading('');
+    const formData = new FormData();
 
-    await updateWorker({
-      id: props.user.id.replace('urn:ngsi-ld:Worker:', ''),
-      givenName: user.givenName.value,
-      familyName: user.familyName.value,
-      email: user.email.value,
-    })
+    formData.append('user.first_name', user.givenName.value);
+    formData.append('user.last_name', user.familyName.value);
+
+    await updateWorker({ data: formData, id: props?.user?.id.replace('urn:ngsi-ld:Worker:', '') })
       .then(() => ToastSet(loading, 'Utilizador atualizado.', 'success'))
       .catch(() => ToastSet(loading, 'Atualização falhou.', 'error'));
   }

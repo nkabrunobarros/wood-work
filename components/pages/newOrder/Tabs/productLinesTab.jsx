@@ -21,7 +21,8 @@ const ProductLinesTab = (props) => {
   } = props;
 
   const [newGroupName, setNewGroupName] = useState('');
-  const [expanded, setExpanded] = useState();
+  const [expanded, setExpanded] = useState(true);
+  const [sectionExpanded, setSectionExpanded] = useState(true);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -144,7 +145,7 @@ const ProductLinesTab = (props) => {
   };
 
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%' }}>
+    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Typography id='align' className='headerTitleSm'>
           <Package size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Produtos
@@ -218,7 +219,6 @@ ProductLinesTab.propTypes = {
   onBudgetChange: PropTypes.func,
   setUploadedFiles: PropTypes.func,
   docs: PropTypes.any,
-  dragDrop: PropTypes.any,
   currentTab: PropTypes.number,
   noDrop: PropTypes.bool,
   onObsChange: PropTypes.func,

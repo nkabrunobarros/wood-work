@@ -32,7 +32,8 @@ const MyInput = ({
   name,
   id = `ID-${label}`,
   tooltip,
-  maxLength
+  maxLength,
+  rows
 }) => {
   return <Box sx={{ width: '100%' }}>
     {variant !== 'standard' && (
@@ -71,7 +72,7 @@ const MyInput = ({
           width: width || (halfWidth && '50%'),
         }}
 
-        rows={4}
+        rows={rows || 4}
         style={style}
         placeholder={placeholder || ''}
         endAdornment={adornmentIcon && (

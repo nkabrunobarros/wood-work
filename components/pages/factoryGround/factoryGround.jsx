@@ -31,14 +31,15 @@ const FactoryGround = ({ ...props }) => {
         <Grid container md={12} p={1} >
           <Typography variant='title'>Escolha Móvel</Typography>
         </Grid>
-        {projects?.map((proj, i) =>
-          <Grid key={i} container md={3} sm={6} xs={12} p={1} >
-            <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
-          </Grid>
-        )}
-        <Grid container md={3} sm={6} xs={12} p={1} >
-          <ProjectCard proj={{ id: 1, name: { value: 'teste' }, amount: { value: 0 } }} setChosenProject={setChosenProject} {...props}/>
-        </Grid>
+        {projects
+          ? projects?.map((proj, i) =>
+            <Grid key={i} container md={3} sm={6} xs={12} p={1} >
+              <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
+            </Grid>
+          )
+          : <Grid container md={3} sm={6} xs={12} p={1} >
+            <ProjectCard proj={{ id: 1, name: { value: 'teste' }, amount: { value: 0 } }} setChosenProject={setChosenProject} {...props}/>
+          </Grid>}
 
       </Grid>
     </Grid>

@@ -118,6 +118,14 @@ a {
   white-space: nowrap !important;
 }
 
+.goldenBalloon {
+  color: goldenrod;
+  background: #daa52033;
+  border: 1px solid #daa520;
+  padding: 0.5rem;
+  border-radius: 50px;
+  white-space: nowrap !important;
+}
 .blankBalloon {
   color: var(--grayLight);
   background: transparent;

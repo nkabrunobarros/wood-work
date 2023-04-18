@@ -38,7 +38,7 @@ const Workers = ({ ...props }) => {
   } = props;
 
   const dispatch = useDispatch();
-  const updateWorker = (data) => dispatch(workersActionsRedux.updateWorker(data));
+  const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
   const userPermissions = useSelector((state) => state.auth.userPermissions);
   //  States
   const [nome, setNome] = useState('');
@@ -71,13 +71,8 @@ const Workers = ({ ...props }) => {
     // eslint-disable-next-line react/prop-types
     const id = props.replace('urn:ngsi-ld:Worker:', '');
 
-    const data = {
-      id,
-      is_active: false
-    };
-
     try {
-      false && await updateWorker(data).then((res) => console.log(res));
+      await deleteWorker(id);
     } catch (err) {
       console.log(err);
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
@@ -130,7 +125,7 @@ const Workers = ({ ...props }) => {
                 />
               </div>
               <div className={'filterContainer'}>
-                {Router.route !== routes.private.internal.clients &&
+                {Router.route !== routes.private.internal.clients && false &&
                 <Select
                   label='Função'
                   options={profiles}

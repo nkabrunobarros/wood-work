@@ -16,6 +16,9 @@ export const UPDATE_WORKER_REQUEST = 'UPDATE_WORKER_REQUEST';
 export const UPDATE_WORKER_FAIL = 'UPDATE_WORKER_FAIL';
 export const UPDATE_WORKER_SUCCESS = 'UPDATE_WORKER_SUCCESS';
 
+export const DELETE_WORKER_REQUEST = 'DELETE_WORKER_REQUEST';
+export const DELETE_WORKER_SUCCESS = 'DELETE_WORKER_SUCCESS';
+export const DELETE_WORKER_FAIL = 'DELETE_WORKER_FAIL';
 export const ADD_WORKER_REQUEST = 'ADD_WORKER_REQUEST';
 export const ADD_WORKER_SUCCESS = 'ADD_WORKER_SUCCESS';
 export const ADD_WORKER_FAIL = 'ADD_WORKER_FAIL';
@@ -84,11 +87,25 @@ export const updateWorker = (data) => {
   return createAction({
     meta: null,
     request: {
-      data,
+      ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
       url: getApiURL(endpoints.DJANGOWORKERS + id),
     },
     types: [UPDATE_WORKER_REQUEST, UPDATE_WORKER_SUCCESS, UPDATE_WORKER_FAIL],
+  });
+};
+
+export const deleteWorker = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.DJANGOWORKERS + data),
+    },
+    types: [DELETE_WORKER_REQUEST, DELETE_WORKER_SUCCESS, DELETE_WORKER_FAIL],
   });
 };

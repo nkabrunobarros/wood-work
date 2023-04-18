@@ -1,5 +1,5 @@
 //  Nodes
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 //  Custom Components
 import Loader from '../components/loader/loader';
@@ -11,16 +11,32 @@ import AccountScreen from '../components/pages/account/account';
 import PropTypes from 'prop-types';
 
 //  Navigation
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import routes from '../navigation/routes';
+import * as clientsActionsRedux from '../store/actions/client';
+import * as countriesActionsRedux from '../store/actions/country';
+
+import axios from 'axios';
 
 //  Services
 
 const Account = ({ ...pageProps }) => {
-  let loaded = false;
   const user = useSelector((state) => state.auth.me);
+  const dispatch = useDispatch();
+  const getClient = (data) => dispatch(clientsActionsRedux.clientMe(data));
+  const [loaded, setLoaded] = useState(false);
+  const [owner, setOwner] = useState();
+  const reduxState = useSelector((state) => state);
+  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
-  if (user) loaded = true;
+  useEffect(() => {
+    const getData = async () => {
+      getClient().then((res) => setOwner(res.data[0]));
+      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
+    };
+
+    Promise.all([getData()]).then(() => setLoaded(true));
+  }, []);
 
   if (loaded) {
     const breadcrumbsPath = [
@@ -32,6 +48,7 @@ const Account = ({ ...pageProps }) => {
 
     const props = {
       user,
+      owner,
       breadcrumbsPath,
       pageProps
     };

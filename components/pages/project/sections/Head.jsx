@@ -7,7 +7,7 @@ import PrimaryBtn from '../../../buttons/primaryBtn';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../../navigation/routes';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
@@ -18,7 +18,7 @@ import ToastSet from '../../../utils/ToastSet';
 import FinishProjectModal from '../modal/finishProjectModal';
 
 const Head = (props) => {
-  const { order, pageProps, setOrder, finishProject, breadcrumbsPath } = props;
+  const { order, pageProps, setOrder, finishProject, breadcrumbsPath, isInternalPage } = props;
   const [changeToProdModal, setChangeToProdModal] = useState(false);
   const [changeToAssemblyModal, setChangeToAssemblyModal] = useState(false);
   const [changeToTransportModal, setChangeToTransportModal] = useState(false);
@@ -29,6 +29,7 @@ const Head = (props) => {
   const dispatch = useDispatch();
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateExpedition = (data) => dispatch(expeditionsActionsRedux.updateExpedition(data));
+  const reduxState = useSelector((state) => state);
 
   const commonProps = {
     sx: {
@@ -39,9 +40,9 @@ const Head = (props) => {
       padding: '.5rem',
       textAlign: 'center',
     },
-    md: 12 / 14,
-    sm: 12 / 14,
-    xs: 12 / 14
+    md: 12 / 12,
+    sm: 12 / 12,
+    xs: 12 / 12
   };
 
   const upperCells = {
@@ -85,6 +86,32 @@ const Head = (props) => {
     setChangeToFinishedModal(false);
     setFinishModal(true);
   }
+
+  const tableFirstCell = {
+    container: true,
+    sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
+    md: 2,
+    sm: 2,
+    xs: 2,
+    p: 0.5
+  };
+
+  const tableLastCell = {
+    container: true,
+    sx: { borderRight: '1px solid ', borderColor: 'divider' },
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
+
+  const tablemiddleCell = {
+    container: true,
+    md: 5,
+    sm: 5,
+    xs: 5,
+    p: 0.5
+  };
 
   return <Box id='pad'>
     <Notification />
@@ -163,14 +190,12 @@ const Head = (props) => {
           <Grid container { ...upperCells } md={2} sm={2} xs={2}>Informação</Grid>
         </Grid> */}
         <Grid container md={12} sm={12} xs={12} >
-          <Grid container { ...upperCells } md={(12 / 14) * 8} sm={(12 / 14) * 8} xs={(12 / 14) * 8}>Orçamento</Grid>
-          <Grid container { ...upperCells } md={(12 / 14) * 3} sm={(12 / 14) * 3} xs={(12 / 14) * 3}>Produção</Grid>
-          <Grid container { ...upperCells } md={(12 / 14) * 3} sm={(12 / 14) * 3} xs={(12 / 14) * 3}>Expedição</Grid>
+          <Grid container {...upperCells} md={(12 / 12) * 6} sm={(12 / 12) * 6} xs={(12 / 12) * 6}>Orçamento</Grid>
+          <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Produção</Grid>
+          <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Expedição</Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container { ...upperCells }><Typography variant='sm' >Referência</Typography> </Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Categoria</Typography> </Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Quantidade</Typography></Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Pedido</Typography> </Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Criação</Typography></Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
@@ -184,47 +209,74 @@ const Head = (props) => {
           <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
-          <Grid container { ...cells }><Typography variant='sm' >{`${order.budgetId.object?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{props.categories.find(ele => ele.id === order?.budgetId?.object?.category.value)?.label}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object.amount?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateRequest?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{moment(order?.budgetId?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateAgreedDelivery?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.price?.value} €</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateDelivery?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{`${order.name.value} ECL 2023/000100`}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateRequest?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{moment(order?.hasBudget?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateAgreedDelivery?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.price?.value} €</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDelivery?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.completed?.value || 0}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.budgetId?.object?.dateDeliveryProject?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
         </Grid>
       </Grid>
-      <Grid md={12} container>
-        <Grid md={12} sm={6}>
-          {internalPOV &&
-          <Box style={{ width: 'fit-content' }}>
-            <Typography color={'lightTextSm.main'} >Cliente</Typography>
-            <Tooltip title='Ver cliente'>
-              <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                <Typography color={'primary.main'}>{order.orderBy?.object?.legalName?.value}</Typography>
-              </a>
-            </Tooltip>
-          </Box>}
-        </Grid>
-        <Box>
-          <Typography color={'lightTextSm.main'} >Morada Entrega</Typography>
-          <Typography>
-            {order?.budgetId?.object?.deliveryAddress?.value?.streetAddress + ', '}
-            {order?.budgetId?.object?.deliveryAddress?.value?.postalCode + ', '}
-            {order?.budgetId?.object?.deliveryAddress?.value?.addressLocality + ', '}
-            {order?.budgetId?.object?.deliveryAddress?.value?.addressRegion + ', '}
-            {order?.budgetId?.object?.deliveryAddress?.value?.addressCountry}
-          </Typography>
-        </Box>
-        <Grid md={12} sm={6}>
-          <Typography color={'lightTextSm.main'} >Observações</Typography>
-          <Typography color={'lightTextSm.black'} >{order?.budgetId?.object?.obs?.value || 'Não tem observações.'}</Typography>
+      <Grid container md={12} p={1}>
+        <Grid container style={{ width: 'fit-content' }}>
+        <Grid container md={4} display={!isInternalPage && 'none'}>
+            <Grid md={12} sm={12} xs={12}>
+              <Typography color={'lightTextSm.main'}>Cliente</Typography>
+              <Tooltip title='Ver cliente'>
+                <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                  <Typography color={'primary.main'}>{`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}</Typography>
+                </a>
+              </Tooltip>
+            </Grid>
+          </Grid>
+          <Grid container md={8}>
+            <Grid container p={1}>
+              <Grid container md={12} sm={12} xs={12} >
+                {/* Headers */}
+                <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
+                  <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
+                  <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
+                  <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                </Grid>
+                {/* Postal Code */}
+                <Grid container md={12} sm={12} xs={12}>
+                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.postalCode}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.postalCode}</Typography></Grid>
+                </Grid>
+                {/* Street */}
+                <Grid container md={12} sm={12} xs={12}>
+                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
+                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.streetAddress}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.streetAddress}</Typography></Grid>
+                </Grid>
+                {/* addressLocality */}
+                <Grid container md={12} sm={12} xs={12}>
+                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
+                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressLocality}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.addressLocality}</Typography></Grid>
+                </Grid>
+                {/* addressRegion */}
+                <Grid container md={12} sm={12} xs={12}>
+                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
+                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressRegion}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.addressRegion}</Typography></Grid>
+                </Grid>
+                {/* addressCountry */}
+                <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
+                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

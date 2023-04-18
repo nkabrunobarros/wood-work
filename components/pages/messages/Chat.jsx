@@ -19,7 +19,7 @@ const Chat = (props) => {
     function loadMessages () {
       setLoaded(false);
 
-      typeof conversation?.messages === 'undefined' && getMessages(props.conversation?.budgetId?.object || props.conversation?.id).then((res) => {
+      typeof conversation?.messages === 'undefined' && getMessages(props.conversation?.hasBudget?.object || props.conversation?.id).then((res) => {
         const chats = [...props.chats];
 
         const chatsMsg = chats.map((chat, index) => {

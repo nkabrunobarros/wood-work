@@ -31,8 +31,8 @@ const Messages = ({ ...pageProps }) => {
       projects.data.map(async (project) => {
         const proj = { ...project };
 
-        await getBudget(project.budgetId.object).then((res) => {
-          proj.budgetId = res.data;
+        await getBudget(project.hasBudget.object).then((res) => {
+          proj.hasBudget = res.data;
           proj.name = { value: res.data.name.value };
         });
       });

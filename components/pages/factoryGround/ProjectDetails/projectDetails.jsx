@@ -1,23 +1,22 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { AppBar, Box, Card, CardActions, CardContent, Dialog, Grid, Grow, IconButton, Tab, TableSortLabel, Tabs, Toolbar, Typography } from '@mui/material';
-import { Check, X } from 'lucide-react';
-import moment from 'moment';
+import { AppBar, Box, Card, CardContent, Dialog, Grid, Grow, IconButton, Tab, TableSortLabel, Tabs, Toolbar, Typography } from '@mui/material';
+import { Check, HardDrive, Package, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import lenghtanyLogo from '../../../../public/Logotipo_Vetorizado.png';
+import lenghtanyLogo from '../../../../public/Logo-NKA.png';
 import woodWorkyLogo from '../../../../public/logo_bw_ww40_inv-big.png';
 import * as consumablesActionsRedux from '../../../../store/actions/consumable';
 import * as partsActionsRedux from '../../../../store/actions/part';
+import Content from '../../../content/content';
 import Loader from '../../../loader/loader';
 import TabPanel from '../../dashboard/TabPanel';
 import { Transition } from '../factoryGround';
 import { DoneBtn } from './buttons/DoneBtn';
 import { FinishBtn } from './buttons/FinishBtn';
 import { StartBtn } from './buttons/StartBtn';
-import { ClockTime } from './clock/ClockTime';
 
 export const OperationState = (props) => {
   const { part, field } = props;
@@ -413,7 +412,7 @@ const ProjectDetails = (props) => {
     <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }} >
       <Toolbar>
         <Grid container>
-          <Grid container md={1} sm={1} xs={1} p={1} >
+          <Grid container md={6} sm={6} xs={6} p={1} >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <IconButton
                 edge="start"
@@ -429,164 +428,147 @@ const ProjectDetails = (props) => {
                   alt={'lenghtanyLogo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 50 : 40}
+                  width={!detailOnly ? 100 : 80}
                   loading='lazy'
                 />
               </Box>
             </Box>
           </Grid>
-          <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            {!detailOnly && <Card sx={{ width: '100%' }}>
-              <CardContent className='fullCenter' sx={{ padding: 0.5 }}>
-                <Image
-                  alt='Project Card'
-                  width={40}
-                  height={40}
-                  src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png' />
-              </CardContent>
-              <CardActions>
-                <Typography sx={{ textAlign: 'center', width: '100%' }}>{me?.givenName?.value} {me?.familyName?.value}</Typography>
-              </CardActions>
-            </Card>}
-          </Grid>
-          <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            {!detailOnly && <TopCard title='Projeto' textCenter >{chosenProject?.name?.value}</TopCard>}
-          </Grid>
-          <Grid container md={2.5} sm={2.5} xs={2.5} p={1} >
-            {!detailOnly && <TopCard title='Maquina em uso' textCenter ><Typography variant='h5'>CNC</Typography> </TopCard> }
-          </Grid>
-          <Grid container md={2.5} sm={2.5} xs={2.5} p={1}>
-            {!detailOnly
-              ? <Card sx={{ width: '100%', height: '100%' }}>
-                <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center' }}>
-                  <Typography variant='subtitle'>Data</Typography>
-                </Box>
-                <CardContent>
-                  <Grid container md={12}>
-                    <Grid container md={12} sm={12} xs={12}>
-                      <Box sx={{ textAlign: 'center', width: '100%' }}>
-                        <Typography>{moment().format('dddd Do MMMM [de] YYYY')} <ClockTime /></Typography>
-                        {/* <Typography><ClockTime /></Typography> */}
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-              : <Box pr={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' }}>
-                <Typography variant='md'>{(me.first_name + ' ' + me.last_name) !== ' ' || me.username}</Typography>
-                {console.log(me)}
-              </Box>
-            }
-          </Grid>
-          <Grid container md={1} sm={1} xs={1} p={1} >
-            <Box className='fullCenter' sx={{ width: '100%' }}>
-              <Box p={detailOnly && 1}>
-                <Image
-                  src={woodWorkyLogo}
-                  alt={'woodWork Logo'}
-                  placeholder='blur'
-                  height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 50 : 40}
-                  loading='lazy'
-                />
-              </Box>
+          <Grid container md={6} sm={6} xs={6} p={1} justifyContent={'end'} alignItems='center' >
+            <Box pr={3}>
+              <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>
+            </Box>
+            <Box p={detailOnly && 1}>
+              <Image
+                src={woodWorkyLogo}
+                alt={'woodWork Logo'}
+                placeholder='blur'
+                height={!detailOnly ? 50 : 40}
+                width={!detailOnly ? 50 : 40}
+                loading='lazy'
+              />
             </Box>
           </Grid>
         </Grid>
       </Toolbar>
     </AppBar>
     {fullyLoaded
-      ? <Box>
-        <Tabs value={value} onChange={handleChange} sx={{ width: '100%' }}>
-          <Tab label="Produção" {...a11yProps(0)} sx={{ width: '100%' }}/>
-          <Tab label="Acessorios" {...a11yProps(1)} sx={{ width: '100%' }}/>
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <Grow in={true}>
-            <Box sx={{ height: '100%', overflowX: 'scroll' }}>
-              <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-                {/* Headers */}
-                <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Peso  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>orla  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Typography></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Typography></Box></Grid>
-                </Grid>
-                <Grid container md={12} sm={12} xs={12}>
-                  {projectParts
-                    .sort((a, b) => a.tag - b.tag)
-                    .map((part, rowIndex) => {
-                      return (
-                        <Grid
-                          {...rowProps}
-                          key={rowIndex}
-                          bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
-                          onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
-                        >
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
-                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                          <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
-                          <Grid {...cellProps} > <PartStatus part={part} /></Grid>
-                        </Grid>
-                      );
-                    })}
-                </Grid>
+      ? <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
+        <Content>
+          <Grid id='pad' container md={12} sm={12} xs={12}>
+            <Grid m={1} md={3} sm={3} xs={3}>
+              <Typography variant='titlexxl'>{chosenProject?.name?.value}</Typography>
+            </Grid>
+            <Grid container m={1} md={2} sm={2} xs={2} bgcolor={'lightGray.main'} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }}>
+              <Grid container md={12} sm={12} xs={12} color='primary.main' p={1}>
+                <Package />
+                <Typography variant='subtitle2'>Armazem</Typography></Grid>
+              <Grid container md={12} sm={12} xs={12} pl={2}>
+                <Typography variant='subtitle2' color='lightTextSm.main'>Armazem 2b</Typography>
               </Grid>
-            </Box>
-          </Grow>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Grow in={true}>
-            <Box sx={{ height: '100%', overflowX: 'scroll' }}>
-              <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-                {/* Headers */}
-                <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
-                  <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
-                </Grid>
-                <Grid container md={12} sm={12} xs={12}>
-                  {consumables
-                    .map((part, rowIndex) => {
-                      return (
-                        <Grid
-                          {...rowProps}
-                          key={rowIndex}
-                          bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
-                          onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
-                        >
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.name.replace(/_/g, ' ') } </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
-                          <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                        </Grid>
-                      );
-                    })}
-                </Grid>
+            </Grid>
+            <Grid container m={1} md={2} sm={2} xs={2} bgcolor={'lightGray.main'} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }}>
+              <Grid container md={12} sm={12} xs={12} color='primary.main' p={1}>
+                <HardDrive />
+                <Typography variant='subtitle2'>Maquina em uso</Typography></Grid>
+              <Grid container md={12} sm={12} xs={12} pl={2}>
+                <Typography variant='subtitle2' color='lightTextSm.main'>{projectParts.find(ele => ele.inProduction) ? 'Nesting2' : 'Nenhuma'}</Typography>
               </Grid>
-            </Box>
-          </Grow>
-        </TabPanel>
-      </Box>
+            </Grid>
+          </Grid>
+          <Grid container md={12} sm={12} xs={12}>
+            <Tabs value={value} onChange={handleChange} sx={{ width: '100%' }}>
+              <Tab label="Lista de Corte" {...a11yProps(0)} sx={{ width: '100%' }}/>
+              {/* <Tab label="Acessorios" {...a11yProps(1)} sx={{ width: '100%' }}/> */}
+            </Tabs>
+            <TabPanel value={value} index={0}>
+              <Grow in={true}>
+                <Box sx={{ height: '100%', overflowX: 'scroll' }}>
+                  <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+                    {/* Headers */}
+                    <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Peso  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Orla  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Typography></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Typography></Box></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      {projectParts
+                        .sort((a, b) => a.tag - b.tag)
+                        .map((part, rowIndex) => {
+                          return (
+                            <Grid
+                              {...rowProps}
+                              key={rowIndex}
+                              bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
+                              onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
+                            >
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
+                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                              <Grid {...cellProps} > <PartStatus part={part} /></Grid>
+                            </Grid>
+                          );
+                        })}
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grow>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <Grow in={true}>
+                <Box sx={{ height: '100%', overflowX: 'scroll' }}>
+                  <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+                    {/* Headers */}
+                    <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
+                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
+                    </Grid>
+                    <Grid container md={12} sm={12} xs={12}>
+                      {consumables
+                        .map((part, rowIndex) => {
+                          return (
+                            <Grid
+                              {...rowProps}
+                              key={rowIndex}
+                              bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
+                              onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
+                            >
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.name.replace(/_/g, ' ') } </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                              <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                            </Grid>
+                          );
+                        })}
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grow>
+            </TabPanel>
+          </Grid>
+        </Content>
+      </Grid>
 
       : <Loader center={true} />
     }

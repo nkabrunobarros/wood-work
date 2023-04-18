@@ -21,11 +21,6 @@ const DeliverBudgetModal = (props) => {
   function validateData () {
     let errors = false;
 
-    if (!amount.value) {
-      setAmount({ ...amount, error: 'Campo Obrigatório' });
-      errors = true;
-    }
-
     if (!price.value) {
       setPrice({ ...price, error: 'Campo Obrigatório' });
       errors = true;
@@ -42,10 +37,7 @@ const DeliverBudgetModal = (props) => {
     }
 
     !errors && onConfirm({
-      category,
       price,
-      amount,
-      obs,
       dateAgreedDelivery,
       dateDeliveryProject
     });
@@ -74,9 +66,10 @@ const DeliverBudgetModal = (props) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do projeto'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount?.value}/></Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category?.value}/></Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}>
+          {false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount?.value}/></Grid>
+          }
+          {false && <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category?.value}/></Grid>
+          }          <Grid container md={6} sm={6} xs={6} p={1}>
             <InputLabel>
             Data de entrega de projeto
               <Tooltip title='Obrigatório' >
@@ -114,7 +107,7 @@ const DeliverBudgetModal = (props) => {
 
             </Box>
           </Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>
+          { false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>}
         </Grid>
 
       </LocalizationProvider>
