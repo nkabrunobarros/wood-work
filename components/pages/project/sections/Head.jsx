@@ -141,7 +141,7 @@ const Head = (props) => {
       message={'Está prestes a terminar este projeto. Tem a certeza que quer continuar?'}
     />
     <Box style={{ display: 'flex', marginBottom: '1rem' }}>
-      <Typography variant='title'> {breadcrumbsPath[1].title}</Typography>
+      <Typography variant='title'> {breadcrumbsPath[1].title} - {order?.hasBudget?.object?.num?.value || 212453}</Typography>
       <Box pl={2}>
         {order.status?.value === 'drawing' && <Typography className='successBalloon'>Em desenho</Typography>}
         {order.status?.value === 'production' && <Typography className='warningBalloon'>Em produção</Typography>}
@@ -195,7 +195,7 @@ const Head = (props) => {
           <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Expedição</Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
-          <Grid container { ...upperCells }><Typography variant='sm' >Referência</Typography> </Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Número</Typography> </Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Pedido</Typography> </Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Criação</Typography></Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
@@ -209,7 +209,7 @@ const Head = (props) => {
           <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
-          <Grid container { ...cells }><Typography variant='sm' >{`${order.name.value} ECL 2023/000100`}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.num?.value || 212453}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateRequest?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{moment(order?.hasBudget?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateAgreedDelivery?.value}</Typography></Grid>
@@ -218,14 +218,14 @@ const Head = (props) => {
           <Grid container { ...cells }><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.completed?.value || 0}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime?.value}</Typography></Grid>
         </Grid>
       </Grid>
       <Grid container md={12} p={1}>
         <Grid container style={{ width: 'fit-content' }}>
-        <Grid container md={4} display={!isInternalPage && 'none'}>
+          <Grid container md={4} display={!isInternalPage && 'none'}>
             <Grid md={12} sm={12} xs={12}>
               <Typography color={'lightTextSm.main'}>Cliente</Typography>
               <Tooltip title='Ver cliente'>
@@ -233,6 +233,10 @@ const Head = (props) => {
                   <Typography color={'primary.main'}>{`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}</Typography>
                 </a>
               </Tooltip>
+            </Grid>
+            <Grid md={12} sm={12} xs={12}>
+              <Typography color={'lightTextSm.main'}>Tipo</Typography>
+              <Typography >{order.orderBy.object?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
             </Grid>
           </Grid>
           <Grid container md={8}>
@@ -248,31 +252,31 @@ const Head = (props) => {
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.postalCode}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.postalCode}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address.postalCode}</Typography></Grid>
                 </Grid>
                 {/* Street */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.streetAddress}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.streetAddress}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address?.streetAddress}</Typography></Grid>
                 </Grid>
                 {/* addressLocality */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressLocality}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.addressLocality}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address?.addressLocality}</Typography></Grid>
                 </Grid>
                 {/* addressRegion */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressRegion}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.deliveryAddress?.value?.addressRegion}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.delivery_address?.addressRegion}</Typography></Grid>
                 </Grid>
                 {/* addressCountry */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
                   <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.orderBy?.object?.delivery_address.addressCountry)?.name?.common}</Typography></Grid>
                 </Grid>
               </Grid>
             </Grid>

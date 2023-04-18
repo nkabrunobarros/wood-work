@@ -42,8 +42,6 @@ const Budget = ({ ...pageProps }) => {
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
 
-      console.log(furnitures);
-
       const groups = furnitures.reduce((accumulator, item) => {
         const groupName = item.group.value;
 
@@ -62,7 +60,6 @@ const Budget = ({ ...pageProps }) => {
 
       const result = Object.values(groups);
 
-      console.log(result);
       setFurnitures(result);
       thisBudget.orderBy.object = client;
       setBudget(thisBudget);
@@ -75,7 +72,8 @@ const Budget = ({ ...pageProps }) => {
         res.data.results.map((folder) => {
           const folder2 = { ...folder };
 
-          folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
+          folder2.files = resFiles.data.results.filter((file) => file.folder === folder.id);
+          // folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
           builtFolders.push(folder2);
         });
 

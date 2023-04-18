@@ -455,7 +455,7 @@ const Head = (props) => {
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
-                <Typography variant='title'>{breadcrumbsPath[1].title} - {budget?.num?.value}</Typography>
+                <Typography variant='title'>{breadcrumbsPath[1].title} - {budget?.num?.value || 212453}</Typography>
                 <Box pl={2}>
                   {budget.status?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
                   {budget.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
@@ -489,7 +489,7 @@ const Head = (props) => {
                 <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Expedição</Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
-                <Grid container {...upperCells}><Typography variant='sm' >Referência</Typography> </Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Número</Typography> </Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Pedido</Typography> </Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Criação</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
@@ -503,7 +503,7 @@ const Head = (props) => {
                 <Grid container {...upperCells}><Typography variant='sm' >Entregue</Typography></Grid>
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
-                <Grid container { ...cells }><Typography variant='sm' >{`${budget?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`}</Typography></Grid>
+                <Grid container { ...cells }><Typography variant='sm' >{budget.num?.value || 212453}</Typography></Grid>
                 <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateRequest} isInternalPage={isInternalPage} value={budget?.dateRequest?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateRequest' type='date' />
                 </Grid>

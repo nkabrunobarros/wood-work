@@ -93,13 +93,13 @@ const ProjectsScreen = (props) => {
       Cliente: client,
       Estado: producao,
       telemovel: telephone,
-      Referência: referencia
+      Numero: referencia
     });
   }, [number, producao, client, category, product, telephone, referencia]);
 
   useEffect(() => {
     setNumber(filters.Nome || '');
-    setReferência(filters.Referência || '');
+    setReferência(filters.Numero || '');
     setClient(filters.Cliente || '');
     setProducao(filters.Estado || '');
     setTelephone(filters.telemovel || '');
@@ -342,18 +342,6 @@ const ProjectsScreen = (props) => {
         <Content>
           <Grid id='pad' md={12} container>
             <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
-              <MyInput
-                fullWidth
-                label='Referência cliente'
-                id='Referência'
-                name='Referência'
-                autoComplete='name'
-                placeholder='Escrever Referência cliente'
-                value={referencia}
-                onChange={(e) => setReferência(e.target.value)}
-              />
-            </Grid>}
             <Grid container item md={3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
@@ -364,6 +352,18 @@ const ProjectsScreen = (props) => {
                 placeholder='Escrever Nome'
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
+              />
+            </Grid>
+            <Grid container item md={3} sm={6} xs={12} p={1}>
+              <MyInput
+                fullWidth
+                label='Número'
+                id='Numero'
+                name='Numero'
+                autoComplete='name'
+                placeholder='Escrever Número'
+                value={referencia}
+                onChange={(e) => setReferência(e.target.value)}
               />
             </Grid>
             {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
@@ -456,7 +456,7 @@ const ProjectsScreen = (props) => {
                 ]}
               />
             </Grid>
-            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
+            {isInternalPage && false && <Grid container item md={3} sm={6} xs={12} p={1}>
               <MyInput label='Número telefone' value={telephone} onChange={(e) => setTelephone(e.target.value)} />
             </Grid>}
             <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>

@@ -94,7 +94,7 @@ const Docs = (props) => {
                       <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
                     )}
                 </Box>
-                <Typography>{!isDragActive ? folder.folder_name : 'Carregar ficheiros para esta pasta'} </Typography>
+                <Typography>{!isDragActive ? folder.folder_name.replace('urn:ngsi-ld:Folder:', '') : 'Carregar ficheiros para esta pasta'} </Typography>
               </Grid>
               <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
             </Grid>

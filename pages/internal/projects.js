@@ -281,33 +281,33 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
+        id: 'Numero',
+        numeric: false,
+        disablePadding: false,
+        label: 'Número',
+        show: true,
+      },
+      {
         id: 'ClienteLabel',
         numeric: false,
         disablePadding: false,
         label: 'Cliente',
         show: true,
       },
-      {
-        id: 'Referência',
-        numeric: false,
-        disablePadding: false,
-        label: 'Referência',
-        show: true,
-      },
-      {
-        id: 'Categoria',
-        numeric: false,
-        disablePadding: false,
-        label: 'Categoria',
-        show: true,
-      },
-      {
-        id: 'amount.value',
-        numeric: false,
-        disablePadding: false,
-        label: 'Quantidade',
-        show: true,
-      },
+      // {
+      //   id: 'Categoria',
+      //   numeric: false,
+      //   disablePadding: false,
+      //   label: 'Categoria',
+      //   show: true,
+      // },
+      // {
+      //   id: 'amount.value',
+      //   numeric: false,
+      //   disablePadding: false,
+      //   label: 'Quantidade',
+      //   show: true,
+      // },
       {
         id: 'Estado',
         numeric: false,
@@ -374,7 +374,8 @@ const Projects = ({ ...pageProps }) => {
         Estado: bud?.status?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
-        Quantidade: bud?.amount?.value
+        Quantidade: bud?.amount?.value,
+        Numero: bud.num?.value || 212453,
 
       };
     });
@@ -395,6 +396,7 @@ const Projects = ({ ...pageProps }) => {
         Cliente: proj.orderBy.object,
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
+        Numero: thisBudget.num.value || 212453,
         Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         ExpeditionTime: thisExpedition?.expeditionTime.value,
         Complete: 0,

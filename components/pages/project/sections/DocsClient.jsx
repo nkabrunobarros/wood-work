@@ -79,7 +79,6 @@ const DocsClient = (props) => {
                 }
               >
                 <input {...getInputProps()} hidden multiple onChange={(e) => onDrop(e.target.files) } />
-
               </PrimaryBtn>
             </Box>
           </Box>
@@ -102,7 +101,7 @@ const DocsClient = (props) => {
                       </Box>
                       <Tooltip title='Clique para descarregar este ficheiro.'>
                         <Typography sx={{ cursor: 'pointer' }}>
-                          <a href={file?.file} download>{file?.file_name + file?.file_type}</a>
+                          <a href={file?.file} download target="_blank" rel="noreferrer">{file?.file_name + file?.file_type}</a>
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -117,7 +116,6 @@ const DocsClient = (props) => {
         </TableContainer>
       </Box>
     </Box>
-
   </>;
 };
 

@@ -34,7 +34,7 @@ const Profile = ({ ...props }) => {
     try {
       await deleteWorker(user.id.replace('urn:ngsi-ld:Worker:', '')).then(() => {
         Router.push(routes.private.internal.workers);
-        setDialogOpen(false)
+        setDialogOpen(false);
       });
     } catch (err) { console.log(err); }
   }

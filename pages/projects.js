@@ -188,27 +188,27 @@ const Orders = ({ ...pageProps }) => {
         label: 'Nome',
         show: true,
       },
+      {
+        id: 'Numero',
+        numeric: false,
+        disablePadding: false,
+        label: 'Número',
+        show: true,
+      },
       // {
-      //   id: 'Referência',
+      //   id: 'Categoria',
       //   numeric: false,
       //   disablePadding: false,
-      //   label: 'Referência',
+      //   label: 'Categoria',
       //   show: true,
       // },
-      {
-        id: 'Categoria',
-        numeric: false,
-        disablePadding: false,
-        label: 'Categoria',
-        show: true,
-      },
-      {
-        id: 'amount.value',
-        numeric: false,
-        disablePadding: false,
-        label: 'Quantidade',
-        show: true,
-      },
+      // {
+      //   id: 'amount.value',
+      //   numeric: false,
+      //   disablePadding: false,
+      //   label: 'Quantidade',
+      //   show: true,
+      // },
       {
         id: 'Estado',
         numeric: false,
@@ -263,6 +263,7 @@ const Orders = ({ ...pageProps }) => {
         Entregue: bud?.dateDelivery?.value,
         Categoria: categories.find(c => c.id === bud.category?.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
+        Numero: bud?.num?.value || 212453,
       };
     });
 
@@ -282,6 +283,7 @@ const Orders = ({ ...pageProps }) => {
         Projeto: thisBudget?.dateRequest?.value,
         Entregue: thisBudget?.dateDelivery?.value,
         Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
+        Numero: thisBudget?.num?.value || 212453,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         ExpeditionTime: '',
         Complete: 0,

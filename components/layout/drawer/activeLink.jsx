@@ -17,6 +17,7 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
     `${routes.private.internal.budget}[Id]`,
     `${routes.private.internal.newProject}`,
     `${routes.private.internal.editProject}[Id]`,
+    `${routes.private.internal.editBudget}[Id]`,
   ];
 
   const ordersPages = [

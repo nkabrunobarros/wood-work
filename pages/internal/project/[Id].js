@@ -149,10 +149,12 @@ const Order = ({ ...pageProps }) => {
         res.data.results.map((folder) => {
           const folder2 = { ...folder };
 
-          folder2.files = resFiles.data.results.filter((file) => file.budget === project.hasBudget.object && file.folder === folder.id);
+          folder2.files = resFiles.data.results.filter((file) => file.folder === folder.id);
+          // folder2.files = resFiles.data.results.filter((file) => file.budget === project.hasBudget.object && file.folder === folder.id);
           builtFolders.push(folder2);
         });
 
+        console.log(builtFolders);
         setFolders(builtFolders);
       });
 
