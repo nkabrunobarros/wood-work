@@ -29,6 +29,7 @@ import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
 import ToastSet from '../../../utils/ToastSet';
+import formatString from '../../../utils/FormatString';
 
 export const EditableCell = ({ active, onDoubleClick, value, type, name, options, onChange, isInternalPage }) => {
   const isCategory = name === 'category';
@@ -304,8 +305,8 @@ const Head = (props) => {
     //  5 -> Send email project was adjudicated
 
     try {
-      true && await newExpedition({
-        id: 'urn:ngsi-ld:expedition:' + budget.name.value,
+      await newExpedition({
+        id: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value),
         type: 'Expedition',
         expeditionTime: {
           type: 'Property',
@@ -321,24 +322,26 @@ const Head = (props) => {
         }
       });
 
-      const projRes = true && await newProject({
-        id: 'urn:ngsi-ld:Project:' + budget.name.value.replace(/ /g, '').toUpperCase(),
+      const projRes = await newProject({
+        id: 'urn:ngsi-ld:Project:' + formatString(budget.name.value),
         type: 'Project',
         orderBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id },
         name: { type: 'Property', value: budget.name.value },
         status: { type: 'Property', value: 'drawing' },
         hasBudget: { type: 'Relationship', object: budget.id },
         assemblyBy: { type: 'Relationship', object: ['urn:ngsi-ld:Worker:'] },
+        completed: { type: 'Property', value: '' },
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
-        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:expedition:' + budget.name.value },
+        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + budget.name.value.replace(/ /g, '_').toUpperCase() },
+        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + budget.name.value.replace(/ /g, '_').toUpperCase() },
         category: {
           type: 'Property',
           value: budget.category?.value
         }
       });
 
-      true && await newAssembly({
-        id: 'urn:ngsi-ld:Assembly:' + budget.name.value.toUpperCase(),
+      await newAssembly({
+        id: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value),
         type: 'Assembly',
         startTime: {
           type: 'Property',
@@ -362,7 +365,7 @@ const Head = (props) => {
         }
       });
 
-      true && await getCustomer(budget.orderBy.object.id.replace('urn:ngsi-ld:Owner:', '')).then(async (res) => {
+      await getCustomer(budget.orderBy.object.id.replace('urn:ngsi-ld:Owner:', '')).then(async (res) => {
         false && await budgetAdjudicated({
           subject: 'Projeto adjudicado!',
           html_message: emailTemplate({ clientName: `${res.data.user.first_name} ${res.data.user.last_name}`, msgBody: 'O seu Projeto passou a produção.' }),

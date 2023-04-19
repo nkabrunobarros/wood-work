@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/loader/loader';
 import AuthData from '../../../lib/AuthData';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
+import * as assemblysActionsRedux from '../../../store/actions/assembly';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import * as countriesActionsRedux from '../../../store/actions/country';
 import * as expeditionsActionsRedux from '../../../store/actions/expedition';
@@ -38,6 +39,7 @@ const Order = ({ ...pageProps }) => {
   const getProject = (data) => dispatch(projectsActionsRedux.project(data));
   const setDisplayedProject = (data) => dispatch(projectsActionsRedux.setDisplayedProject(data));
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
+  const getAssembly = (data) => dispatch(assemblysActionsRedux.assembly(data));
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getExpedition = (data) => dispatch(expeditionsActionsRedux.expedition(data));
   const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
@@ -115,6 +117,7 @@ const Order = ({ ...pageProps }) => {
 
       const project = (await getProject(router.query.Id)).data;
       const expedition = (await getExpedition(project.expedition.object)).data;
+      const assembly = (await getAssembly(project.assembly.object)).data;
       const budget = (await getBudget(project.hasBudget.object)).data;
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === project.hasBudget.object);
 
@@ -154,7 +157,6 @@ const Order = ({ ...pageProps }) => {
           builtFolders.push(folder2);
         });
 
-        console.log(builtFolders);
         setFolders(builtFolders);
       });
 
@@ -175,6 +177,7 @@ const Order = ({ ...pageProps }) => {
       thisOrder.hasBudget.object = budget;
       thisOrder.orderBy.object = client;
       thisOrder.expedition = expedition;
+      thisOrder.assembly = assembly;
       setDisplayedProject(thisOrder);
     };
 
@@ -373,8 +376,6 @@ const Order = ({ ...pageProps }) => {
         buildTime: 10
       },
     ];
-
-    console.log(furnitures);
 
     const props = {
       order: reduxState.projects.displayedProject,

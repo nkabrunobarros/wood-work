@@ -43,6 +43,7 @@ import ClientTab from './Tabs/clientTab';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
+import formatString from '../../utils/FormatString';
 
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, budgets, clients } = props;
@@ -57,18 +58,20 @@ const NewOrder = ({ ...props }) => {
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
 
   useEffect(() => {
-    let total = 0;
+    let totalPrice = 0;
+    let totalAmount = 0;
 
     lines.map((line) => {
       console.log(line);
 
       line.items.map((item) => {
-        total += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+        totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+        totalAmount += Number(item?.amount?.value);
       });
     });
 
-    budgetData.price.value = total;
-    setBudgetData({ ...budgetData, price: { ...budgetData.price, value: total } });
+    budgetData.price.value = totalPrice;
+    setBudgetData({ ...budgetData, price: { ...budgetData.price, value: totalPrice }, amount: { ...budgetData.price, value: totalAmount } });
   }, [lines]);
 
   const [clientUser, setClientUser] = useState('');
@@ -217,7 +220,7 @@ const NewOrder = ({ ...props }) => {
     setProcessing(true);
 
     const data = {
-      id: (budgetData.id + Math.random()) || `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`,
+      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`,
       type: 'Budget',
       name: {
         type: 'Property',
@@ -319,17 +322,6 @@ const NewOrder = ({ ...props }) => {
     okTxt: 'Ver projeto',
     cancelTxt: 'Criar novo projeto',
   };
-
-  function formatString (str) {
-    // Replace all spaces with underscores
-    str = str.replace(/ /g, '_');
-    // Replace accented characters
-    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    // Replace all non-alphanumeric characters except for underscores
-    str = str.replace(/[^a-zA-Z0-9_]/g, '');
-
-    return str;
-  }
 
   async function CreateFurnitures () {
     const items = lines.map(line => {

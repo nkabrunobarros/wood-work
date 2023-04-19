@@ -95,39 +95,39 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.status?.value) {
-        case 'waiting budget':
-          counts.waitingBudget++;
+      case 'waiting budget':
+        counts.waitingBudget++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'finished':
+        counts.concluded++;
 
-          break;
+        break;
       }
     });
 
@@ -376,6 +376,7 @@ const Projects = ({ ...pageProps }) => {
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Quantidade: bud?.amount?.value,
         Numero: bud.num?.value || 212453,
+        Cliente: bud.orderBy.object,
 
       };
     });
@@ -399,7 +400,7 @@ const Projects = ({ ...pageProps }) => {
         Numero: thisBudget.num.value || 212453,
         Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         ExpeditionTime: thisExpedition?.expeditionTime.value,
-        Complete: '',
+        Complete: proj.completed?.value,
         Projeto: thisBudget?.dateRequest?.value,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
         Termino: thisExpedition?.expeditionTime.value,

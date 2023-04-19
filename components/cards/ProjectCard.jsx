@@ -40,21 +40,12 @@ const ProjectCard = (props) => {
             </Grid>
             <Grid container md={6} sm={6} xs={6} p={1} justifyContent='end'>
               <Typography variant="md">
-                Feito: 0 / {proj?.amount?.value}
+                Feito: {proj?.completed?.value || 0} / {proj?.amount?.value || 0}
               </Typography></Grid>
           </Grid>
-
           <Typography variant="body2" color="text.secondary">
-
           </Typography>
         </CardContent>
-        {/* <CardActions>
-                <Button size="small" onClick={() => {
-                    setChosenProject(rowIndex + 1);
-                    console.log(rowIndex);
-                    }}>Escolher</Button>
-                <Button size="small">Finalizar Produção</Button>
-            </CardActions> */}
       </Card>
     </Grow>
 

@@ -35,10 +35,7 @@ export const assembly = (data) => {
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.ASSEMBLYS),
-      params: {
-        q: `belongsTo=="${data}"`,
-      }
+      url: getApiURL(endpoints.ASSEMBLYS + data),
     },
     types: [ASSEMBLYS_REQUEST, ASSEMBLYS_SUCCESS, ASSEMBLYS_FAIL],
   });

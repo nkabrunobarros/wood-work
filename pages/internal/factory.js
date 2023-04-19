@@ -35,7 +35,6 @@ const FactoryGround = () => {
     const props = {
       breadcrumbsPath,
       projects: [...reduxState?.projects?.inProduction ?? []],
-      machines: [...reduxState?.machines?.data ?? []],
     };
 
     return <FactoryGroundScreen {...props} />;

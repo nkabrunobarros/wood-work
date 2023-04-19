@@ -1,184 +1,94 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { AppBar, Box, Card, CardContent, Dialog, Grid, Grow, IconButton, Tab, TableSortLabel, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
-import { Check, CheckCircle, HardDrive, Package, Play, X } from 'lucide-react';
+import { AppBar, Box, Button, Dialog, Grid, Grow, IconButton, Menu, MenuItem, Tab, TableSortLabel, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import * as icons from 'lucide-react';
+import { Check, CheckCircle, Eye, HardDrive, MinusCircle, Package, Play, X } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import lenghtanyLogo from '../../../../public/Logo-NKA.png';
 import woodWorkyLogo from '../../../../public/logo_bw_ww40_inv-big.png';
 import * as consumablesActionsRedux from '../../../../store/actions/consumable';
-import * as machineTasksActionsRedux from '../../../../store/actions/machineTask';
+import * as machineActionsRedux from '../../../../store/actions/machine';
 import * as partsActionsRedux from '../../../../store/actions/part';
+import * as projectActionsRedux from '../../../../store/actions/project';
 import * as workerTasksActionsRedux from '../../../../store/actions/workerTask';
+import PrimaryBtn from '../../../buttons/primaryBtn';
 import Content from '../../../content/content';
+import Notification from '../../../dialogs/Notification';
 import Loader from '../../../loader/loader';
 import TabPanel from '../../dashboard/TabPanel';
 import { Transition } from '../factoryGround';
-import { DoneBtn } from './buttons/DoneBtn';
-import { FinishBtn } from './buttons/FinishBtn';
-import { StartBtn } from './buttons/StartBtn';
-
-export const OperationState = (props) => {
-  const { part, field } = props;
-  const isNest = field === 'nestingFlag';
-  const isCnc = field === 'cncFlag';
-  const isorla = field === 'orla';
-  const isFuroFace = field === 'f';
-
-  if (!part[field]) {
-    return null;
-  }
-
-  if (isNest) {
-    if (part.nestingFlag === true && part.inProduction === false) {
-      return <StartBtn {...props} />;
-    }
-
-    if (part.nestingFlag === true && part.inProduction === true) {
-      return <FinishBtn {...props} />;
-    }
-
-    if (part.nestingFlag === 'done') {
-      return <DoneBtn {...props} />;
-    }
-  }
-
-  if (isCnc) {
-    if (part.cncFlag === 'done' && (part.inProduction || part.inProduction === 'done')) {
-      return <DoneBtn {...props} />;
-    }
-
-    if (part.cncFlag === 'done' && (part.inProduction === false || part.inProduction === 'done')) {
-      return <DoneBtn {...props} />;
-    }
-
-    if (part.nestingFlag === false && part.cncFlag === true && part.inProduction === false) {
-      return <StartBtn {...props} />;
-    }
-
-    if (part.nestingFlag === true && part.cncFlag && part.inProduction === false) {
-      return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
-    }
-
-    if (part.nestingFlag === 'done' && part.cncFlag === true && part.inProduction === false) {
-      return <StartBtn {...props} />;
-    }
-
-    if (part.nestingFlag === true && part.cncFlag === true && part.inProduction === true) {
-      return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
-    }
-
-    if (part.nestingFlag === 'done' && part.cncFlag === true && part.inProduction === true) {
-      return <FinishBtn {...props} />;
-    }
-
-    if (part.nestingFlag === false && part.cncFlag === true && part.inProduction === true) {
-      return <FinishBtn {...props} />;
-    }
-  }
-
-  if (isorla) {
-    //  case nestingFlag and cncFlag true and not done
-    if (part.nestingFlag === true || part.cncFlag === true) return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
-
-    if (!part.nestingFlag && !part.cncFlag && part.orla === true && part.inProduction === false) return <StartBtn {...props} />;
-
-    if (!part.nestingFlag && !part.cncFlag && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (!part.nestingFlag && !part.cncFlag && part.orla === 'done') return <DoneBtn {...props} />;
-
-    //  case nestingFlag is done or not needed and cncFlag is done or not needed
-    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === true && part.inProduction === false) return <StartBtn {...props} />;
-
-    if (part.nestingFlag === 'done' && !part.cncFlag && part.orla && part.inProduction === false) return <StartBtn {...props} />;
-
-    if (!part.nestingFlag && part.cncFlag === 'done' && part.orla === true && part.inProduction === false) return <StartBtn {...props} />;
-
-    if (!part.nestingFlag && part.cncFlag === 'done' && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (!part.nestingFlag && part.cncFlag === 'done' && part.orla === 'done') return <DoneBtn {...props} />;
-
-    if (part.nestingFlag === 'done' && !part.cncFlag && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === true && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === 'done') return <DoneBtn {...props} />;
-
-    if (part.nestingFlag === 'done' && !part.cncFlag && part.orla === 'done') return <DoneBtn {...props} />;
-  }
-
-  if (isFuroFace) {
-    //  case nestingFlag and cncFlag true and not done
-    if (part.nestingFlag === true || part.cncFlag === true || part.orla === true) return <StartBtn {...props} msg={'Tem que fazer etapas anteriores 1º'} />;
-
-    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === 'done' && !part.inProduction) return <StartBtn {...props} />;
-
-    if (part.nestingFlag === false && part.cncFlag === 'done' && part.orla === 'done' && !part.inProduction) return <StartBtn {...props} />;
-
-    if (part.nestingFlag === false && part.cncFlag === false && part.orla === 'done' && !part.inProduction) return <StartBtn {...props} />;
-
-    if (part.nestingFlag === false && part.cncFlag === false && part.orla === false && !part.inProduction) return <StartBtn {...props} />;
-
-    //
-    if (part.nestingFlag === 'done' && part.cncFlag === 'done' && part.orla === 'done' && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (part.nestingFlag === false && part.cncFlag === 'done' && part.orla === 'done' && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (part.nestingFlag === false && part.cncFlag === false && part.orla === 'done' && part.inProduction === true) return <FinishBtn {...props} />;
-
-    if (part.nestingFlag === false && part.cncFlag === false && part.orla === false && part.inProduction === true) return <FinishBtn {...props} />;
-
-    //
-    if (part.f === 'done') return <DoneBtn {...props} />;
-  }
-
-  return null;
-};
-
-export const TopCard = (props) => {
-  const { title, children, textCenter } = props;
-
-  return <Card sx={{ width: '100%', height: '100%' }}>
-    <Box sx={{ border: '1px solid', borderColor: 'divider', padding: 1, textAlign: 'center', display: !title && 'none' }}>
-      <Typography variant='subtitle'>{title}</Typography>
-    </Box>
-    <CardContent>
-      <Grid container md={12}>
-        <Grid container md={12} sm={12} xs={12}>
-          <Box sx={{ textAlign: textCenter && 'center', width: '100%' }}>
-            {children}
-          </Box>
-        </Grid>
-      </Grid>
-    </CardContent>
-  </Card>;
-};
 
 export const PartStatus = ({ part }) => {
-  if (part.inProduction === 'done') return <Typography variant='sm' className='successBalloon'>Completo</Typography>;
-  else if (part.inProduction === true) return <Typography variant='sm' className='infoBalloon'>Em produção</Typography>;
+  const actions = {
+    isNest: part.nestingFlag,
+    isCnc: part.cncFlag,
+    isOrla: part.orla2 || part.orla3 || part.orla4 || part.orla5,
+    isFuroFace: part.f2 || part.f3 || part.f4 || part.f5,
+    isTupia: part.tupia,
+  };
+
+  let complete = true;
+
+  if (actions.isNest) {
+    const haveLogs = part.logs?.find(log => log.action.value === 'nestingFlag' && log.finishTime.value !== '');
+
+    if (!haveLogs) complete = false;
+  }
+
+  if (actions.isCnc) {
+    const haveLogs = part.logs?.find(log => log.action.value === 'cncFlag' && log.finishTime.value !== '');
+
+    if (!haveLogs) complete = false;
+  }
+
+  if (actions.isOrla) {
+    const haveLogs = part.logs?.find(log => log.action.value === 'orla' && log.finishTime.value !== '');
+
+    if (!haveLogs) complete = false;
+  }
+
+  if (actions.isFuroFace) {
+    const haveLogs = part.logs?.find(log => log.action.value === 'f' && log.finishTime.value !== '');
+
+    if (!haveLogs) complete = false;
+  }
+
+  if (actions.isTupia) {
+    const haveLogs = part.logs?.find(log => log.action.value === 'tupia' && log.finishTime.value !== '');
+
+    if (!haveLogs) complete = false;
+  }
+
+  if (complete) return <Typography variant='sm' className='successBalloon'>Completo</Typography>;
+  else if (part.logs?.find(ele => ele.finishTime.value === '')) return <Typography variant='sm' className='infoBalloon'>Em produção</Typography>;
 };
 
 const ProjectDetails = (props) => {
-  const { chosenProject, activeRow, setActiveRow, open, onClose, detailOnly } = props;
+  const { open, detailOnly, onClose } = props;
+  const [productionDetailModal, setProductionDetailModal] = useState(false);
   const reduxState = useSelector((state) => state);
   const me = reduxState.auth.me;
+  const [chosenProject, setChosenProject] = useState(props.chosenProject);
+  const [machines, setMachines] = useState(props.machines);
   const [consumables, setConsumables] = useState();
-  const [productionDetails, setProductionDetails] = useState({});
-  const [productionDetailsTest, setProductionDetailsTest] = useState(props.productionDetails || []);
   const [fullyLoaded, setFullyLoaded] = useState(false);
+  const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const getWorkerTasks = (data) => dispatch(workerTasksActionsRedux.workerTasks(data));
   const newWorkerTask = (data) => dispatch(workerTasksActionsRedux.newWorkerTask(data));
   const updateWorkerTask = (data) => dispatch(workerTasksActionsRedux.updateWorkerTask(data));
-  const newMachineTask = (data) => dispatch(machineTasksActionsRedux.newMachineTask(data));
   const getParts = (data) => dispatch(partsActionsRedux.parts(data));
   const newPart = (data) => dispatch(partsActionsRedux.newPart(data));
-  const getMachineTasks = (data) => dispatch(machineTasksActionsRedux.machineTasks(data));
+  const updateMachine = (data) => dispatch(machineActionsRedux.updateMachine(data));
   const getConsumables = (data) => dispatch(consumablesActionsRedux.projectConsumables(data));
+  const getMachines = (data) => dispatch(machineActionsRedux.machines(data));
+  const updateProject = (data) => dispatch(projectActionsRedux.updateProject(data));
+  const IconComponent = icons.Loader;
 
   const [projectParts, setProjectParts] = useState(props?.projectParts || [
     { id: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', partName: 'MC_MUEBLETV_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 1, nestingFlag: true, cncFlag: true, orla: true, f: true, obs: '', inProduction: false },
@@ -211,32 +121,32 @@ const ProjectDetails = (props) => {
 
   function createParts () {
     const newParts = [
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_DIR_FUNDO', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 1, nestingFlag: true, cncFlag: true, orla: true, f: true, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_ESQ_FUNDO', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 2, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_DIR_COSTA', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 3, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_DIR_FRT_INT', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 4, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_DIR_LAT_DIR', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 5, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_DIR_LAT_ESQ', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 6, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_ESQ_COSTA', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 7, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_ESQ_FRT_INT', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 8, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_ESQ_LAT_DIR', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 9, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_ESQ_LAT_ESQ', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 10, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A1_PAINEL2', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_PAINEL2', material: 'AG L Marmol Hades 19 CNC', amount: 1, lenght: 2400, width: 926, thickness: 19, tag: 11, nestingFlag: false, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A1_RIPAS_SUP_ME_1', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_RIPAS_SUP_ME_1', material: 'HDF 19 ', amount: 8, lenght: 540, width: 70, thickness: 19, tag: 12, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A1_RIPAS_SUP_ME_2', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_RIPAS_SUP_ME_2', material: 'HDF 19 ', amount: 8, lenght: 940, width: 70, thickness: 19, tag: 13, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A1_RIPAS_SUP_ME_3', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_RIPAS_SUP_ME_3', material: 'HDF 19 ', amount: 8, lenght: 540, width: 70, thickness: 19, tag: 14, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A1_PAINEL1', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_PAINEL1', material: 'MDF Folheado Carv 19', amount: 1, lenght: 2394, width: 560, thickness: 19, tag: 15, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A1_PAINEL3', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_PAINEL3', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 2400, width: 566, thickness: 19, tag: 16, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_CIMA', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_CIMA', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 1716, width: 466, thickness: 19, tag: 17, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_DIV_DIR', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_DIV_DIR', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 268, width: 444, thickness: 19, tag: 18, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_DIV_ESQ', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_DIV_ESQ', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 268, width: 444, thickness: 19, tag: 19, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_FUNDO', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_FUNDO', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 1678, width: 444, thickness: 19, tag: 20, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_DIR_FRENTE', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_FRENTE', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 400, width: 283, thickness: 19, tag: 21, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_GAV_ESQ_FRENTE', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_FRENTE', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 400, width: 283, thickness: 19, tag: 22, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_LAT_DIR', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_LAT_DIR', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 444, width: 287, thickness: 19, tag: 23, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_LAT_ESQ', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_LAT_ESQ', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 444, width: 287, thickness: 19, tag: 24, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_PORTA_BASC', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_PORTA_BASC', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 924, width: 283, thickness: 19, tag: 25, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false },
-      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: props.chosenProject.id, id: props.chosenProject.name.value + '_A2_RIPA_TRAS', partName: props.chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_RIPA_TRAS', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 907, width: 76, thickness: 19, tag: 26, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_DIR_FUNDO', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 1, nestingFlag: true, cncFlag: true, orla: true, f: true, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_ESQ_FUNDO', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_FUNDO', material: 'AG L Biscuit Nude 36W 10 ', amount: 1, lenght: 400, width: 338.5, thickness: 10, tag: 2, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_DIR_COSTA', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 3, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_DIR_FRT_INT', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 4, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_DIR_LAT_DIR', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 5, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_DIR_LAT_ESQ', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 6, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_ESQ_COSTA', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_COSTA', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 7, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_ESQ_FRT_INT', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_FRT_INT', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 326.5, width: 184.5, thickness: 16, tag: 8, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_ESQ_LAT_DIR', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_LAT_DIR', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 9, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_ESQ_LAT_ESQ', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_LAT_ESQ', material: 'AG L Biscuit Nude 36W 16 CNC', amount: 1, lenght: 406, width: 207.5, thickness: 16, tag: 10, nestingFlag: false, cncFlag: true, orla: false, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A1_PAINEL2', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_PAINEL2', material: 'AG L Marmol Hades 19 CNC', amount: 1, lenght: 2400, width: 926, thickness: 19, tag: 11, nestingFlag: false, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A1_RIPAS_SUP_ME_1', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_RIPAS_SUP_ME_1', material: 'HDF 19 ', amount: 8, lenght: 540, width: 70, thickness: 19, tag: 12, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A1_RIPAS_SUP_ME_2', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_RIPAS_SUP_ME_2', material: 'HDF 19 ', amount: 8, lenght: 940, width: 70, thickness: 19, tag: 13, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A1_RIPAS_SUP_ME_3', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_RIPAS_SUP_ME_3', material: 'HDF 19 ', amount: 8, lenght: 540, width: 70, thickness: 19, tag: 14, nestingFlag: false, cncFlag: false, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A1_PAINEL1', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_PAINEL1', material: 'MDF Folheado Carv 19', amount: 1, lenght: 2394, width: 560, thickness: 19, tag: 15, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A1_PAINEL3', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A1_PAINEL3', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 2400, width: 566, thickness: 19, tag: 16, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_CIMA', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_CIMA', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 1716, width: 466, thickness: 19, tag: 17, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_DIV_DIR', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_DIV_DIR', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 268, width: 444, thickness: 19, tag: 18, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_DIV_ESQ', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_DIV_ESQ', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 268, width: 444, thickness: 19, tag: 19, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_FUNDO', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_FUNDO', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 1678, width: 444, thickness: 19, tag: 20, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_DIR_FRENTE', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_DIR_FRENTE', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 400, width: 283, thickness: 19, tag: 21, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_GAV_ESQ_FRENTE', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_GAV_ESQ_FRENTE', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 400, width: 283, thickness: 19, tag: 22, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_LAT_DIR', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_LAT_DIR', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 444, width: 287, thickness: 19, tag: 23, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_LAT_ESQ', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_LAT_ESQ', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 444, width: 287, thickness: 19, tag: 24, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_PORTA_BASC', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_PORTA_BASC', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 924, width: 283, thickness: 19, tag: 25, nestingFlag: true, cncFlag: true, orla: true, f: false, obs: '', inProduction: false, weight: 1000 },
+      { tupia: true, orla2: true, orla3: true, orla4: true, orla5: true, f2: true, f3: true, f4: true, f5: true, belongsTo: chosenProject.id, id: chosenProject.name.value + '_A2_RIPA_TRAS', partName: chosenProject.id.replace('urn:ngsi-ld:Project:', '') + '_A2_RIPA_TRAS', material: 'MDF Folheado Carv 19 CNC', amount: 1, lenght: 907, width: 76, thickness: 19, tag: 26, nestingFlag: true, cncFlag: false, orla: true, f: false, obs: '', inProduction: false },
     ];
 
     const built = newParts.map((part) => {
@@ -246,14 +156,11 @@ const ProjectDetails = (props) => {
         a[key] = { type: 'Property', value: part[key] };
       });
 
-      console.log(a);
       a.id = 'urn:ngsi-ld:Part:' + a.id.value;
       a.type = 'Part';
 
       return a;
     });
-
-    console.log(built);
 
     true && built.map(async (part) => {
       await newPart(part);
@@ -262,16 +169,14 @@ const ProjectDetails = (props) => {
 
   useEffect(() => {
     async function load () {
-      const logsWorkerTasks = await getWorkerTasks().then((res) => {
-        return res.data.filter(ele => ele.onProject?.value === props.chosenProject.id);
-      });
+      getMachines().then((res) => setMachines(res.data));
 
-      const logsMachineTasks = await getMachineTasks().then((res) => {
-        return res.data.filter(ele => ele.onProject?.value === props.chosenProject.id);
+      const logsWorkerTasks = await getWorkerTasks().then((res) => {
+        return res.data.filter(ele => ele.onProject?.value === chosenProject.id);
       });
 
       await getParts(chosenProject.id).then((res) => {
-        const built = res.data.filter(ele => ele.belongsTo.value === props.chosenProject.id).map((part) => {
+        const built = res.data.filter(ele => ele.belongsTo.value === chosenProject.id).map((part) => {
           const part2 = { ...part };
 
           part2.logs = logsWorkerTasks.filter(ele => ele.executedInOn.object === part.id);
@@ -310,9 +215,9 @@ const ProjectDetails = (props) => {
   }, []);
 
   const cellProps = {
-    md: 0.85,
-    sm: 0.85,
-    xs: 0.85,
+    md: 0.8,
+    sm: 0.8,
+    xs: 0.8,
     paddingTop: '1rem',
     paddingBottom: '1rem',
     className: 'fullCenter',
@@ -330,85 +235,12 @@ const ProjectDetails = (props) => {
   };
 
   async function onStartPart (props) {
-    const { field, index } = props;
-    const old = [...projectParts];
-    const part = old[index];
-
-    // Set inProduction flag
-    part.inProduction = true;
-    setProjectParts(old);
-
-    // Add production Log
-    const productionLog = { ...productionDetails };
-
-    if (!productionLog[part.partName]) {
-      productionLog[part.partName] = {
-        startedAt: new Date(),
-        ref: part.partName,
-        material: part.material,
-        tag: part.tag
-      };
-    }
-
-    productionLog[part.partName].inProduction = true;
-
-    switch (field) {
-    case 'cncFlag':
-      productionLog[part.partName].cncFlagWorker = me.id;
-      productionLog[part.partName].cncFlagUsed = 'ab1';
-      productionLog[part.partName].cncFlagStarted = new Date();
-      part.isCnc = true;
-
-      break;
-    case 'nestingFlag':
-      productionLog[part.partName].nestingFlagWorker = me.id;
-      productionLog[part.partName].nestingFlagUsed = 'ab2';
-      productionLog[part.partName].nestingFlagStarted = new Date();
-      part.isNest = true;
-
-      break;
-    case 'orla':
-      productionLog[part.partName].orlaWorker = me.id;
-      productionLog[part.partName].orlaUsed = 'ab3';
-      productionLog[part.partName].orlaStarted = new Date();
-      part.isorla = true;
-
-      break;
-    case 'f':
-      productionLog[part.partName].furoFaceWorker = me.id;
-      productionLog[part.partName].furoFaceUsed = 'ab4';
-      productionLog[part.partName].furoFaceStarted = new Date();
-      part.isFuroFace = true;
-
-      break;
-    default:
-      break;
-    }
-
-    setProductionDetails(productionLog);
-
-    // Add production log test
-    const productionLogTest = [...productionDetailsTest];
-
-    if (!productionLogTest.find((log) => log.partId === part.partName && log.operation === field)) {
-      productionLogTest.push({
-        id: `${part.partName}_${field.toUpperCase()}`,
-        operation: field,
-        machineId: '123 ' + field,
-        workerId: me.id,
-        startedAt: new Date(),
-        partId: part.partName
-      });
-    }
-
-    setProductionDetailsTest(productionLogTest);
-
     const builtWorkerTask = {
       id: `urn:ngsi-ld:WorkerTask:${props.part.id || props.part.name}${me.id}${props.field}`,
       type: 'WorkerTask',
       onProject: {
         type: 'Property',
-        value: props.chosenProject.id
+        value: chosenProject.id
       },
       startTime: {
         type: 'Property',
@@ -434,96 +266,18 @@ const ProjectDetails = (props) => {
         type: 'Property',
         value: props.field
       },
+      machine: {
+        type: 'Property',
+        value: props.machine
+      },
     };
 
     const newWorkertask = await newWorkerTask(builtWorkerTask);
 
-    const builtMachineTask = {
-      id: `urn:ngsi-ld:MachineTask:${props.part.id}${props.machine}${props.field}`,
-      type: 'MachineTask',
-      onProject: {
-        type: 'Property',
-        value: props.chosenProject.id
-      },
-      startTime: {
-        type: 'Property',
-        value: moment().format('DD/MM/YYYY HH:mm:ss')
-      },
-      finishTime: {
-        type: 'Property',
-        value: ''
-      },
-      byMachine: {
-        type: 'Relationship',
-        object: props.machine
-      },
-      performedOn: {
-        type: 'Relationship',
-        object: props.part.id
-      }
-    };
-
-    false && await newMachineTask(builtMachineTask).then((res) => console.log(res));
+    await updateMachine({ id: props.machine, data: { currentlyOn: props.part.id } });
 
     return newWorkertask.data;
   }
-
-  function onFinishPart (props) {
-    const old = [...projectParts];
-
-    old[props.index].inProduction = false;
-    old[props.index][props.field] = 'done';
-
-    // Update productionLogs
-    const productionLog = { ...productionDetails };
-    const log = productionLog[old[props.index].partName];
-
-    log.inProduction = false;
-
-    if (props.field === 'cncFlag') {
-      if (!old[props.index].orla && !old[props.index].f)old[props.index].inProduction = 'done';
-
-      log.cncFlagEnded = new Date();
-
-      if (old[props.index].nestingFlag === false && old[props.index].orla === false && old[props.index].f === false) {
-        log.endedAt = new Date();
-      }
-    } else if (props.field === 'nestingFlag') {
-      if (!old[props.index].orla && !old[props.index].cncFlag && !old[props.index].f)old[props.index].inProduction = 'done';
-
-      log.nestingFlagEnded = new Date();
-
-      if (old[props.index].orla === false && old[props.index].f === false) {
-        log.endedAt = new Date();
-      }
-    } else if (props.field === 'orla') {
-      if (!old[props.index].f)old[props.index].inProduction = 'done';
-
-      log.orlaEnded = new Date();
-
-      if (old[props.index].f === false) {
-        log.endedAt = new Date();
-      }
-    } else if (props.field === 'f') {
-      old[props.index].inProduction = 'done';
-      log.furoFaceEnded = new Date();
-      log.endedAt = new Date();
-    }
-
-    setProjectParts(old);
-    setProductionDetails(productionLog);
-
-    // TESTES
-    const productionLogTest = [...productionDetailsTest];
-
-    const thisLog = productionLogTest.find(
-      (log) => log.id === `${old[props.index].partName}_${props.field.toUpperCase()}`
-    );
-
-    thisLog.endedAt = new Date();
-  }
-
-  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -545,291 +299,647 @@ const ProjectDetails = (props) => {
     };
 
     await updateWorkerTask({ data: built, id: props.id });
+    await updateMachine({ id: props.machine?.value, data: { currentlyOn: '' } });
   }
 
-  function changeFinishTime (logsArray, newFinishTime) {
-    const modifiedLogsArray = logsArray.map(log => {
-      const modifiedLog = { ...log };
+  async function onStartPartClick (props) {
+    const projectPartsCopy = [...projectParts];
+    const newLog = await onStartPart(props);
+    const partIndex = props.index;
+    const logsCopy = [...projectPartsCopy[partIndex].logs];
 
-      modifiedLog.finishTime.value = newFinishTime;
+    logsCopy.push(newLog);
 
-      return modifiedLog;
-    });
+    projectPartsCopy[partIndex] = {
+      ...projectPartsCopy[partIndex],
+      logs: logsCopy,
+    };
 
-    return modifiedLogsArray;
+    setProjectParts(projectPartsCopy);
   }
 
-  console.log(projectParts);
+  function validateAction (field, actions, actionsDone) {
+    let field2 = '';
 
-  const Test = (props) => {
+    switch (field) {
+    case 'nestingFlag': field2 = 'isNest';
+
+      break;
+    case 'cncFlag': field2 = 'isCnc';
+
+      break;
+    case 'orla': field2 = 'isOrla';
+
+      break;
+    case 'f': field2 = 'isFuroFace';
+
+      break;
+    case 'tupia': field2 = 'isTupia';
+
+      break;
+    }
+
+    const order = ['isNest', 'isCnc', 'isOrla', 'isFuroFace', 'isTupia'];
+    // Find the index of the current action in the order
+    const currentIndex = order.indexOf(field2);
+
+    // Check if the current action is in the correct order
+    for (let i = 0; i < currentIndex; i++) {
+      const action = order[i];
+
+      if (!actionsDone[action] && actions[action]) {
+        return `Tem que fazer ${action.replace('is', '')} antes`;
+      }
+    }
+
+    // Current action is valid
+    return null;
+  }
+
+  async function updateAmountProd () {
+    await updateProject({ id: chosenProject.id, data: { completed: Number(chosenProject.completed?.value) + 1 } });
+    setChosenProject({ ...chosenProject, completed: Number(chosenProject.completed?.value) + 1 });
+  }
+
+  const ActionStatus = (props) => {
     const { part, field } = props;
-    const cpy = [...projectParts];
-    const machines = props.machines?.filter(machine => machine?.machineType?.value?.toLowerCase()?.includes(props?.field?.replace('Flag', '')));
 
     if (!part[field]) return '';
 
-    const index = cpy[props.index].logs.findIndex((log) => log.action?.value === field);
-    const log = part.logs.find(log => log.action?.value === field);
+    const cpy = [...projectParts];
+    const thisMachines = machines?.filter(machine => machine?.machineType?.value?.toLowerCase()?.includes(props?.field?.replace('Flag', '')) && machine.currentlyOn?.value === '');
+
+    const actions = {
+      isNest: part.nestingFlag,
+      isCnc: part.cncFlag,
+      isOrla: part.orla2 || part.orla3 || part.orla4 || part.orla5,
+      isFuroFace: part.f2 || part.f3 || part.f4 || part.f5,
+      isTupia: part.tupia,
+    };
+
+    const actionsDone = getActionsDone(actions);
+
+    function getActionsDone (actions) {
+      const actionsDone = {};
+
+      if (actions.isNest) {
+        const haveLogs = part.logs?.find(log => log.action.value === 'nestingFlag' && log.finishTime.value !== '');
+
+        if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isNest = true;
+        else actionsDone.isNest = false;
+      }
+
+      if (actions.isCnc) {
+        const haveLogs = part.logs?.find(log => log.action.value === 'cncFlag' && log.finishTime.value !== '');
+
+        if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isCnc = true;
+        else actionsDone.isCnc = false;
+      }
+
+      if (actions.isOrla) {
+        const haveLogs = part.logs?.find(log => log.action.value === 'orla' && log.finishTime.value !== '');
+
+        if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isOrla = true;
+        else actionsDone.isOrla = false;
+      }
+
+      if (actions.isFuroFace) {
+        const haveLogs = part.logs?.find(log => log.action.value === 'f' && log.finishTime.value !== '');
+
+        if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isFuroFace = true;
+        else actionsDone.isFuroFace = false;
+      }
+
+      if (actions.isTupia) {
+        const haveLogs = part.logs?.find(log => log.action.value === 'tupia' && log.finishTime.value !== '');
+
+        if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isTupia = true;
+        else actionsDone.isTupia = false;
+      }
+
+      return actionsDone;
+    }
+
+    if (actions.isNest) {
+      const haveLogs = part.logs?.find(log => log.action.value === 'nestingFlag' && log.finishTime.value !== '');
+
+      if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isNest = true;
+      else actionsDone.isNest = false;
+    }
+
+    if (actions.isCnc) {
+      const haveLogs = part.logs?.find(log => log.action.value === 'cncFlag' && log.finishTime.value !== '');
+
+      if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isCnc = true;
+      else actionsDone.isCnc = false;
+    }
+
+    if (actions.isOrla) {
+      const haveLogs = part.logs?.find(log => log.action.value === 'orla' && log.finishTime.value !== '');
+
+      if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isOrla = true;
+      else actionsDone.isOrla = false;
+    }
+
+    if (actions.isFuroFace) {
+      const haveLogs = part.logs?.find(log => log.action.value === 'f' && log.finishTime.value !== '');
+
+      if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isFuroFace = true;
+      else actionsDone.isFuroFace = false;
+    }
+
+    if (actions.isTupia) {
+      const haveLogs = part.logs?.find(log => log.action.value === 'tupia' && log.finishTime.value !== '');
+
+      if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isTupia = true;
+      else actionsDone.isTupia = false;
+    }
+
+    const msg = validateAction(field, actions, actionsDone);
+    const index = cpy[props.index].logs?.findIndex((log) => log.action?.value === field);
+    const log = part.logs?.find(log => log.action?.value === field);
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
 
     if (!log && part[field]) {
-      return <>
-        <IconButton onClick={async () => {
-          const res = await onStartPart(props);
-          const bLogs = cpy[props.index].logs;
+      return detailOnly
+        ? <Tooltip title='Ainda não iniciou'>
+          <MinusCircle color='gray' />
+        </Tooltip>
+        : <Box>
+          <IconButton onClick={(e) => !msg && thisMachines[0] && handleClick(e)} >
+            <Tooltip title={ msg || (thisMachines && !thisMachines[0] ? 'Não há maquinas disponiveis' : 'Iniciar')} >
+              <Play />
+            </Tooltip>
+          </IconButton>
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={!!anchorEl}
+            onClose={() => setAnchorEl(null)}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          ><MenuItem disabled>Escolher Máquina</MenuItem>
+            {thisMachines?.map((mach, i) => <MenuItem key={i} onClick={() => {
+              setAnchorEl();
 
-          bLogs.push(res);
-          cpy[props.index].logs = bLogs;
-          setProjectParts(cpy);
-        }} >
-          <Tooltip title={!machines[0] ? 'Não há maquinas disponiveis' : (props.msg || 'Iniciar')} >
-            <Play />
-          </Tooltip>
-        </IconButton>
-      </>;
+              onStartPartClick({ ...props, machine: mach.id }).then(() => {
+                const updatedItem = machines.find(item => item.id === mach.id);
+                const updatedIndex = machines.findIndex(item => item.id === mach.id);
+
+                const newItems = [
+                  ...machines.slice(0, updatedIndex),
+                  { ...updatedItem, currentlyOn: { type: 'Property', value: part.id } },
+                  ...machines.slice(updatedIndex + 1),
+                ];
+
+                setMachines(newItems);
+                toast.success('Iniciado.');
+              });
+            }}>
+              {mach.name?.value || mach.id.replace('urn:ngsi-ld:Machine:', '') }
+            </MenuItem>
+            )}
+          </Menu>
+        </Box>;
     }
 
     if (log.finishTime.value === '') {
-      return <IconButton {...props} onClick={() => FinishPart(log).then(() => {
-        cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
-        setProjectParts(cpy);
-      })} >
-        <Tooltip title={'Terminar'} >
-          <CheckCircle color='green' />
+      return detailOnly
+        ? <Tooltip title='Em produção'>
+          <Box
+            className="rotating fullCenter"
+          >
+            <IconComponent strokeWidth={1.5} />
+          </Box>
         </Tooltip>
-      </IconButton>;
+        : <IconButton {...props} onClick={() => FinishPart(log).then(() => {
+          cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
+          setProjectParts(cpy);
+
+          const updatedItem = machines.find(item => item.id === cpy[props.index].logs[index].machine.value);
+          const updatedIndex = machines.findIndex(item => item.id === cpy[props.index].logs[index].machine.value);
+
+          const newItems = [
+            ...machines.slice(0, updatedIndex),
+            { ...updatedItem, currentlyOn: { type: 'Property', value: '' } },
+            ...machines.slice(updatedIndex + 1),
+          ];
+
+          setMachines(newItems);
+
+          let done = true;
+          const actionsDoneNow = getActionsDone(actions);
+
+          Object.keys(actionsDoneNow).map(key => {
+            if (!actionsDoneNow[key]) done = false;
+          });
+
+          done && updateAmountProd();
+          toast.success('Terminado.');
+        })} >
+          <Tooltip title={'Terminar'} >
+            <CheckCircle color='green' />
+          </Tooltip>
+        </IconButton>;
     }
 
-    return <Box onClick={() => {
-      cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
-      setProjectParts(cpy);
-    }}><IconButton >
-        <Tooltip title={'Feito'} >
-          <Check color='green' />
-        </Tooltip>
-      </IconButton>
-    </Box>;
+    return detailOnly
+      ? <Tooltip title='Completo'><Check color='green' /></Tooltip>
+      : <Box onClick={() => {
+        cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
+        setProjectParts(cpy);
+      }}>
+        <IconButton onClick={() => {
+        }} >
+          <Tooltip title={'Feito'} >
+            <Check color='green' />
+          </Tooltip>
+        </IconButton>
+      </Box>;
   };
 
-  return open && <Dialog
-    fullScreen
-    open={!!chosenProject}
-    onClose={() => onClose()}
-    TransitionComponent={Transition}
-    sx={{ display: !chosenProject && 'none' }}
-  >
-    <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }} >
-      <Toolbar>
-        <Grid container>
-          <Grid container md={6} sm={6} xs={6} p={1} >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={() => onClose()}
-                aria-label="close"
-              >
-                <X />
-              </IconButton>
+  const panelProps = {
+    container: true,
+    m: 1,
+    md: 12,
+    sm: 12,
+    xs: 12,
+    sx: { border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }
+  };
+
+  return <>
+    {detailOnly && <Grow in={true}>
+      <Box>
+        <Box id='pad'>
+          <Box style={{ display: 'flex', marginBottom: '1rem' }}>
+            <Typography variant='title'>Produção</Typography>
+            <Box style={{ marginLeft: 'auto' }}>
+              <PrimaryBtn
+                onClick={() => setProductionDetailModal(!productionDetailModal)}
+                icon={
+                  <Eye
+                  />
+                }
+                text='Ver detalhes'
+              />
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ width: '100%', overflow: 'scroll' }}>
+          {/* <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+            <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[0].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[1].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[2].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[3].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[4].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[5].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '1px solid', borderColor: 'divider' }}><Typography>{headCells[6].label}</Typography></Box></Grid>
+              <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%', borderRight: '0px solid', borderColor: 'divider' }}><Typography>{headCells[7].label}</Typography></Box></Grid>
+            </Grid>
+            <Grid container md={12} sm={12} xs={12} >
+            </Grid>
+          </Grid> */}
+          <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Nome </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Material  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Comp.  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Larg.  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Esp.  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Peso  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Nest.  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Cnc  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Orla  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Furo Face  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Tupia  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Obs  </Typography></Box></Grid>
+            <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box></Grid>
+          </Grid>
+          <Grid container md={12} sm={12} xs={12}>
+            {projectParts
+              .sort((a, b) => a.tag - b.tag)
+              .map((part, rowIndex) => {
+                const actions = {
+                  isNest: part.nestingFlag,
+                  isCnc: part.cncFlag,
+                  isOrla: part.orla2 || part.orla3 || part.orla4 || part.orla5,
+                  isFuroFace: part.f2 || part.f3 || part.f4 || part.f5,
+                  isTupia: part.tupia,
+                };
+
+                let done = true;
+
+                function getActionsDone (actions) {
+                  const actionsDone = {};
+
+                  if (actions.isNest) {
+                    const haveLogs = part.logs?.find(log => log.action.value === 'nestingFlag' && log.finishTime.value !== '');
+
+                    if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isNest = true;
+                    else actionsDone.isNest = false;
+                  }
+
+                  if (actions.isCnc) {
+                    const haveLogs = part.logs?.find(log => log.action.value === 'cncFlag' && log.finishTime.value !== '');
+
+                    if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isCnc = true;
+                    else actionsDone.isCnc = false;
+                  }
+
+                  if (actions.isOrla) {
+                    const haveLogs = part.logs?.find(log => log.action.value === 'orla' && log.finishTime.value !== '');
+
+                    if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isOrla = true;
+                    else actionsDone.isOrla = false;
+                  }
+
+                  if (actions.isFuroFace) {
+                    const haveLogs = part.logs?.find(log => log.action.value === 'f' && log.finishTime.value !== '');
+
+                    if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isFuroFace = true;
+                    else actionsDone.isFuroFace = false;
+                  }
+
+                  if (actions.isTupia) {
+                    const haveLogs = part.logs?.find(log => log.action.value === 'tupia' && log.finishTime.value !== '');
+
+                    if (haveLogs && haveLogs.finishTime.value !== '') actionsDone.isTupia = true;
+                    else actionsDone.isTupia = false;
+                  }
+
+                  return actionsDone;
+                }
+
+                const actionsDoneNow = getActionsDone(actions);
+
+                Object.keys(actionsDoneNow).map(key => {
+                  if (!actionsDoneNow[key]) done = false;
+                });
+
+                return !done && part.logs?.find(ele => ele.finishTime.value === '') && (
+                  <Grid
+                    {...rowProps}
+                    key={rowIndex}
+                    bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
+                  >
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
+                    <Grid {...cellProps} >
+                      <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'}/>
+                    </Grid>
+                    <Grid {...cellProps} >
+                      <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'}/>
+                    </Grid>
+                    <Grid {...cellProps} >
+                      <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'}/>
+                    </Grid>
+                    <Grid {...cellProps} >
+                      <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'}/>
+                    </Grid>
+                    <Grid {...cellProps} >
+                      <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'tupia'}/>
+                    </Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                    <Grid {...cellProps} > <PartStatus part={part} /></Grid>
+                  </Grid>
+                );
+              })}
+          </Grid>
+        </Box>
+      </Box>
+    </Grow>}
+    {(productionDetailModal || open) && <Dialog
+      fullScreen
+      open={!!chosenProject}
+      onClose={() => {
+        setProductionDetailModal(!productionDetailModal);
+        onClose && onClose();
+      }}
+      TransitionComponent={Transition}
+      sx={{ display: !chosenProject && 'none' }}
+    >
+      <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }} >
+        <Toolbar>
+          <Grid container>
+            <Grid container md={6} sm={6} xs={6} p={1} >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={() => {
+                    setProductionDetailModal(!productionDetailModal);
+                    onClose && onClose();
+                  }}
+                  aria-label="close"
+                >
+                  <X />
+                </IconButton>
+                <Box p={detailOnly && 1}>
+                  <Image
+                    src={lenghtanyLogo}
+                    alt={'lenghtanyLogo'}
+                    placeholder='blur'
+                    height={!detailOnly ? 50 : 40}
+                    width={!detailOnly ? 100 : 80}
+                    loading='lazy'
+                  />
+                </Box>
+              </Box>
+            </Grid>
+            <Grid container md={6} sm={6} xs={6} p={1} justifyContent={'end'} alignItems='center' >
+              <Box pr={3}>
+                <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>
+              </Box>
               <Box p={detailOnly && 1}>
                 <Image
-                  src={lenghtanyLogo}
-                  alt={'lenghtanyLogo'}
+                  src={woodWorkyLogo}
+                  alt={'woodWork Logo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 100 : 80}
+                  width={!detailOnly ? 50 : 40}
                   loading='lazy'
                 />
               </Box>
-            </Box>
+            </Grid>
           </Grid>
-          <Grid container md={6} sm={6} xs={6} p={1} justifyContent={'end'} alignItems='center' >
-            <Box pr={3}>
-              <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>
-            </Box>
-            <Box p={detailOnly && 1}>
-              <Image
-                src={woodWorkyLogo}
-                alt={'woodWork Logo'}
-                placeholder='blur'
-                height={!detailOnly ? 50 : 40}
-                width={!detailOnly ? 50 : 40}
-                loading='lazy'
-              />
-            </Box>
-          </Grid>
+        </Toolbar>
+      </AppBar>
+      <Notification />
+      {false && <Button onClick={() => createParts()}>Create</Button>}
+      {fullyLoaded
+        ? <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
+          <Content>
+            <Grid id='pad' container md={12} sm={12} xs={12}>
+              <Grid container md={3} sm={3} xs={3}>
+                <Typography variant='titlexxl'>{chosenProject?.name?.value}</Typography>
+              </Grid>
+              <Grid container md={3} sm={3} xs={3} p={1}>
+                <Box sx={{ width: '100%' }}>
+                  <Grid {...panelProps} p={1}>
+                    <Grid container md={12} sm={12} xs={12} color='primary.main' >
+                      <Package />
+                      <Typography variant='subtitle2'>Armazem</Typography></Grid>
+                    <Grid container md={12} sm={12} xs={12} pl={2}>
+                      <Typography variant='subtitle2' color='lightTextSm.main'>Armazem 2b</Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+              <Grid container md={3} sm={3} xs={3} p={1}>
+                <Box sx={{ width: '100%' }}>
+                  <Grid {...panelProps} p={1}>
+                    <Grid container md={12} sm={12} xs={12} color='primary.main' >
+                      <HardDrive />
+                      <Typography variant='subtitle2'>Maquinas disponiveis</Typography></Grid>
+                    {machines?.filter(ele => ele.currentlyOn?.value === '').map((machine) =>
+                      <Grid container key={machine.id} md={4} sm={4} xs={4} >
+                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine.name?.value}</Typography>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Box>
+              </Grid>
+              <Grid container md={3} sm={3} xs={3} p={1}>
+                <Box sx={{ width: '100%' }}>
+                  <Grid {...panelProps} p={1}>
+                    <Grid container md={12} sm={12} xs={12} color='primary.main' >
+                      <HardDrive />
+                      <Typography variant='subtitle2'>Maquinas em uso</Typography></Grid>
+                    {machines?.filter(ele => ele.currentlyOn?.value !== '').map((machine) =>
+                      <Grid container key={machine.id} md={4} sm={4} xs={4} >
+                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine.name?.value || machine.id.replace('urn:ngsi-ld:Machine:', '')}</Typography>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid container md={12} sm={12} xs={12}>
+              <Tabs value={value} onChange={handleChange} sx={{ width: '100%' }}>
+                <Tab label="Lista de Corte" {...a11yProps(0)} sx={{ width: '100%' }}/>
+                {/* <Tab label="Acessorios" {...a11yProps(1)} sx={{ width: '100%' }}/> */}
+              </Tabs>
+              <TabPanel value={value} index={0}>
+                <Grow in={true}>
+                  <Box sx={{ height: '100%', overflowX: 'scroll' }}>
+                    <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+                      {/* Headers */}
+                      <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Nome </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Material  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Comp.  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Larg.  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Esp.  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Peso  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Nest.  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Cnc  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Orla  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Furo Face  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Tupia  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> Obs  </Typography></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        {projectParts
+                          .sort((a, b) => a.tag - b.tag)
+                          .map((part, rowIndex) => {
+                            return (
+                              <Grid
+                                {...rowProps}
+                                key={rowIndex}
+                                bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
+                              >
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
+                                <Grid {...cellProps} >
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'}/>
+                                </Grid>
+                                <Grid {...cellProps} >
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'}/>
+                                </Grid>
+                                <Grid {...cellProps} >
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'}/>
+                                </Grid>
+                                <Grid {...cellProps} >
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'}/>
+                                </Grid>
+                                <Grid {...cellProps} >
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'tupia'}/>
+                                </Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                                <Grid {...cellProps} > <PartStatus part={part} /></Grid>
+                              </Grid>
+                            );
+                          })}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grow>
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <Grow in={true}>
+                  <Box sx={{ height: '100%', overflowX: 'scroll' }}>
+                    <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
+                      {/* Headers */}
+                      <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
+                        <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
+                      </Grid>
+                      <Grid container md={12} sm={12} xs={12}>
+                        {consumables
+                          .map((part, rowIndex) => {
+                            return (
+                              <Grid
+                                {...rowProps}
+                                key={rowIndex}
+                                bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
+                              >
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.name.replace(/_/g, ' ') } </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
+                              </Grid>
+                            );
+                          })}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grow>
+              </TabPanel>
+            </Grid>
+          </Content>
         </Grid>
-      </Toolbar>
-    </AppBar>
-    {/* <Button onClick={() => createParts()}>Create</Button> */}
-    {fullyLoaded
-      ? <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
-        <Content>
-          <Grid id='pad' container md={12} sm={12} xs={12}>
-            <Grid m={1} md={3} sm={3} xs={3}>
-              <Typography variant='titlexxl'>{chosenProject?.name?.value}</Typography>
-            </Grid>
-            <Grid container m={1} md={2} sm={2} xs={2} bgcolor={'lightGray.main'} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }}>
-              <Grid container md={12} sm={12} xs={12} color='primary.main' p={1}>
-                <Package />
-                <Typography variant='subtitle2'>Armazem</Typography></Grid>
-              <Grid container md={12} sm={12} xs={12} pl={2}>
-                <Typography variant='subtitle2' color='lightTextSm.main'>Armazem 2b</Typography>
-              </Grid>
-            </Grid>
-            <Grid container m={1} md={2} sm={2} xs={2} bgcolor={'lightGray.main'} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }}>
-              <Grid container md={12} sm={12} xs={12} color='primary.main' p={1}>
-                <HardDrive />
-                <Typography variant='subtitle2'>Maquina em uso</Typography></Grid>
-              <Grid container md={12} sm={12} xs={12} pl={2}>
-                <Typography variant='subtitle2' color='lightTextSm.main'>{projectParts.find(ele => ele.inProduction) ? 'Nesting2' : 'Nenhuma'}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid container md={12} sm={12} xs={12}>
-            <Tabs value={value} onChange={handleChange} sx={{ width: '100%' }}>
-              <Tab label="Lista de Corte" {...a11yProps(0)} sx={{ width: '100%' }}/>
-              {/* <Tab label="Acessorios" {...a11yProps(1)} sx={{ width: '100%' }}/> */}
-            </Tabs>
-            <TabPanel value={value} index={0}>
-              <Grow in={true}>
-                <Box sx={{ height: '100%', overflowX: 'scroll' }}>
-                  <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-                    {/* Headers */}
-                    <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Comp.  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Larg.  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Esp.  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Peso  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Etiqueta  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Nest.  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Cnc  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Orla  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Furo Face  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'>Obs  </TableSortLabel></Typography></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><Typography variant="sm"> <TableSortLabel active={false} direction='desc'> <Check /> </TableSortLabel></Typography></Box></Grid>
-                    </Grid>
-                    <Grid container md={12} sm={12} xs={12} sx={{ display: 'none' }}>
-                      {projectParts
-                        .sort((a, b) => a.tag - b.tag)
-                        .map((part, rowIndex) => {
-                          return (
-                            <Grid
-                              {...rowProps}
-                              key={rowIndex}
-                              bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
-                              onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
-                            >
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
-                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                              <Grid {...cellProps} > <OperationState {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'} onStart={onStartPart} onFinish={onFinishPart} /></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
-                              <Grid {...cellProps} > <PartStatus part={part} /></Grid>
-                            </Grid>
-                          );
-                        })}
-                      {projectParts.map((part) => {
-                        return part.logs.map((log) => {
-                          return log.action?.value;
-                        });
-                      })}
-                    </Grid>
-                    <Grid container md={12} sm={12} xs={12}>
-                      {projectParts
-                        .sort((a, b) => a.tag - b.tag)
-                        .map((part, rowIndex) => {
-                          return (
-                            <Grid
-                              {...rowProps}
-                              key={rowIndex}
-                              bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
-                              onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
-                            >
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
-                              <Grid {...cellProps} >
-                                <Test {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'} onStart={onStartPart} onFinish={onFinishPart}/>
-
-                              </Grid>
-                              <Grid {...cellProps} >
-                                <Test {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'} onStart={onStartPart} onFinish={onFinishPart}/>
-                              </Grid>
-                              <Grid {...cellProps} >
-                                <Test {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'} onStart={onStartPart} onFinish={onFinishPart}/>
-                              </Grid>
-                              <Grid {...cellProps} >
-                                <Test {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'} onStart={onStartPart} onFinish={onFinishPart}/>
-                              </Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
-                              <Grid {...cellProps} > <PartStatus part={part} /></Grid>
-                            </Grid>
-                          );
-                        })}
-                      {projectParts.map((part) => {
-                        return part.logs.map((log) => {
-                          return log.action?.value;
-                        });
-                      })}
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grow>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <Grow in={true}>
-                <Box sx={{ height: '100%', overflowX: 'scroll' }}>
-                  <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
-                    {/* Headers */}
-                    <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Nome </TableSortLabel></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Material  </TableSortLabel></Box></Grid>
-                      <Grid {...cellProps}><Box className='fullCenter' sx={{ width: '100%' }}><TableSortLabel active={false} direction='desc'>Qtd.  </TableSortLabel></Box></Grid>
-                    </Grid>
-                    <Grid container md={12} sm={12} xs={12}>
-                      {consumables
-                        .map((part, rowIndex) => {
-                          return (
-                            <Grid
-                              {...rowProps}
-                              key={rowIndex}
-                              bgcolor={rowIndex % 2 !== 0 ? (rowIndex === activeRow ? 'lightblue' : 'lightGray.edges') : (rowIndex === activeRow && 'lightblue')}
-                              onClick={() => rowIndex === activeRow ? setActiveRow() : setActiveRow(rowIndex)}
-                            >
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.name.replace(/_/g, ' ') } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
-                              <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                            </Grid>
-                          );
-                        })}
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grow>
-            </TabPanel>
-          </Grid>
-        </Content>
-      </Grid>
-
-      : <Loader center={true} />
-    }
-  </Dialog >;
+        : <Loader center={true} />
+      }
+    </Dialog>}
+  </>;
 };
 
 export default ProjectDetails;

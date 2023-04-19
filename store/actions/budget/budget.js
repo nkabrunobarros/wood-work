@@ -127,7 +127,7 @@ export const updateBudget = (data) => {
   return createAction({
     meta: null,
     request: {
-      data,
+      ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
       url: getApiURL(endpoints.BUDGETS + id),

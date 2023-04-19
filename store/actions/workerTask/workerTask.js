@@ -26,7 +26,9 @@ export const workerTasks = (data) => {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.WORKERTASKS),
-
+      params: {
+        limit: 400
+      }
     },
     types: [WORKERTASKS_REQUEST, WORKERTASKS_SUCCESS, WORKERTASKS_FAIL],
   });

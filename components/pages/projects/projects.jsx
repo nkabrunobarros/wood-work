@@ -182,7 +182,7 @@ const ProjectsScreen = (props) => {
 
     const data = {
       id: props,
-      status: { type: 'Property', value: isProject ? 'drawing' : 'waiting budget' }
+      data: { status: { type: 'Property', value: isProject ? 'drawing' : 'waiting budget' } }
     };
 
     try {

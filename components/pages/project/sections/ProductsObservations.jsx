@@ -4,7 +4,7 @@ import React from 'react';
 
 const ProductsObservations = (props) => {
   function cleanup (text) {
-    const a = text.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    const a = text?.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
     const cleanedText = a.replace(/[\u00e0\u2019\u00e9]/g, function (match) {
       return {

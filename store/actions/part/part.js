@@ -21,6 +21,9 @@ export const parts = (data) => {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.PARTS),
+      params: {
+        limit: 400
+      }
     },
     types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
   });

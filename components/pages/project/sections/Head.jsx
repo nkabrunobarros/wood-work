@@ -66,8 +66,10 @@ const Head = (props) => {
     try {
       await updateProject({
         id: order.id,
-        type: order.type,
-        status: { value: `${props}`, type: 'Property' }
+        data: {
+          type: order.type,
+          status: { value: `${props}`, type: 'Property' }
+        }
       }).then(async () => {
         setOrder({ ...order, status: { type: 'Property', value: `${props}` } });
         setChangeToProdModal(false);
@@ -196,8 +198,8 @@ const Head = (props) => {
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container { ...upperCells }><Typography variant='sm' >Número</Typography> </Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Pedido</Typography> </Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Criação</Typography></Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Data</Typography> </Grid>
+          <Grid container { ...upperCells }><Typography variant='sm' >Revisto a</Typography></Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Valor</Typography></Grid>
           <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
@@ -216,9 +218,9 @@ const Head = (props) => {
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.price?.value} €</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDelivery?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.completed?.value || 0}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime?.value}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.entryTime?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime?.value}</Typography></Grid>
         </Grid>
