@@ -39,11 +39,12 @@ import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
+import formatString from '../../utils/FormatString';
 import ClientTab from './Tabs/clientTab';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
+import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
-import formatString from '../../utils/FormatString';
 
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, budgets, clients } = props;
@@ -95,7 +96,6 @@ const NewOrder = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState([{
     category: { value: '', error: '' },
-    name: { value: '', error: '', required: true },
     amount: { value: 0, error: '' }
   }]);
 
@@ -122,13 +122,11 @@ const NewOrder = ({ ...props }) => {
     if (props.name === 'client') {
       const client = clients.find(ele => ele.id === props.value);
 
-      data.postalCode.error = '';
-      data.streetAddress.error = '';
-      data.postalCode.value = client?.delivery_address?.postalCode;
-      data.streetAddress.value = client?.delivery_address?.streetAddress || '';
-      data.addressLocality.value = client?.delivery_address?.addressLocality;
-      data.addressRegion.value = client?.delivery_address?.addressRegion;
-      data.addressCountry.value = client?.delivery_address?.addressCountry;
+      data.postalCode = { error: '', value: client?.delivery_address?.postalCode };
+      data.streetAddress = { error: '', value: client?.delivery_address?.streetAddress || '' };
+      data.addressLocality = { error: '', value: client?.delivery_address?.addressLocality };
+      data.addressRegion = { error: '', value: client?.delivery_address?.addressRegion };
+      data.addressCountry = { error: '', value: client?.delivery_address?.addressCountry };
     }
 
     data[props.name].value = props.value;
@@ -145,7 +143,7 @@ const NewOrder = ({ ...props }) => {
     obj.map((group) => {
       group.items.map((item) => {
         Object.entries(item).forEach(([, value]) => {
-          if (typeof value === 'object' && 'error' in value && value.value === '' && value.required) {
+          if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
             value.error = 'Campo obrigatorio';
             hasErrors = true;
           } else value.error = '';
@@ -192,17 +190,12 @@ const NewOrder = ({ ...props }) => {
           field[key].error = 'Campo Obrigatório';
           hasErrors = true;
         }
-
-        if (key === 'name' && field[key].value === field.category.value) {
-          field[key].error = 'Nome mal estruturado.';
-          hasErrors = true;
-        }
       });
 
       return field;
     });
 
-    hasErrors = ValidateLines();
+    if (ValidateLines()) hasErrors = true;
 
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
@@ -212,15 +205,13 @@ const NewOrder = ({ ...props }) => {
     }
 
     setDialogOpen(true);
-
-    return !hasErrors;
   }
 
   async function CreateOrder () {
     setProcessing(true);
 
     const data = {
-      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`,
+      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}${moment().diff(moment().startOf('day'), 'seconds')}`,
       type: 'Budget',
       name: {
         type: 'Property',
@@ -232,7 +223,7 @@ const NewOrder = ({ ...props }) => {
       },
       amount: {
         type: 'Property',
-        value: inputFields[0]?.amount.value
+        value: budgetData.amount.value
       },
       price: {
         type: 'Property',
@@ -277,7 +268,7 @@ const NewOrder = ({ ...props }) => {
       },
       dateDelivery: {
         type: 'Property',
-        value: moment(budgetData.dateDelivery.value).format('DD/MM/YYYY')
+        value: budgetData.dateDelivery?.value !== '' ? moment(budgetData.dateDelivery.value).format('DD/MM/YYYY') : ''
       },
       deliveryAddress: {
         type: 'Property',
@@ -291,18 +282,18 @@ const NewOrder = ({ ...props }) => {
       },
     };
 
-    await newBudget(data).then(() => {
+    await newBudget(data).then(async (res) => {
+      CreateFurnitures(res.data.id);
+
+      await newFolder({
+        folder_name: `urn:ngsi-ld:Folder:${formatString(budgetData.name.value)}`,
+        parent_folder: null,
+        user: clientUser,
+        budget: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`
+      });
+
       toast.success('Projeto Criado!');
     }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
-
-    CreateFurnitures();
-
-    await newFolder({
-      folder_name: `urn:ngsi-ld:Folder:${formatString(budgetData.name.value)}`,
-      parent_folder: null,
-      user: clientUser,
-      budget: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`
-    });
 
     // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
     setProcessing(false);
@@ -323,7 +314,7 @@ const NewOrder = ({ ...props }) => {
     cancelTxt: 'Criar novo projeto',
   };
 
-  async function CreateFurnitures () {
+  async function CreateFurnitures (budgetId) {
     const items = lines.map(line => {
       let lastGroup = '';
 
@@ -343,7 +334,7 @@ const NewOrder = ({ ...props }) => {
         valuesOnly.type = 'Furniture';
         valuesOnly.group = { value: line.name, type: 'Property' };
         valuesOnly.section = { value: lastGroup, type: 'Property' };
-        valuesOnly.hasBudget = { value: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, type: 'Property' };
+        valuesOnly.hasBudget = { value: budgetId, type: 'Property' };
 
         return valuesOnly;
       });
@@ -429,6 +420,21 @@ const NewOrder = ({ ...props }) => {
             </Content>
           </Grid>
           <Grid container md={12}>
+            <Content>
+              <ProductLinesTab2 {...props}
+                budgetData={budgetData}
+                onBudgetChange={onBudgetChange}
+                docs={{ uploadedFiles, setUploadedFiles }}
+                inputFields={inputFields}
+                setInputFields={setInputFields}
+                noDrop
+                lines={lines}
+                setLines={setLines}
+
+              />
+            </Content>
+          </Grid>
+          <Grid container md={12} display='none'>
             <Content>
               <ProductLinesTab {...props}
                 budgetData={budgetData}

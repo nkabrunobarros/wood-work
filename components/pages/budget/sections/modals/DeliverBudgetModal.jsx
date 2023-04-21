@@ -69,22 +69,7 @@ const DeliverBudgetModal = (props) => {
           {false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount?.value}/></Grid>
           }
           {false && <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category?.value}/></Grid>
-          }          <Grid container md={6} sm={6} xs={6} p={1}>
-            <InputLabel>
-            Data de entrega de projeto
-              <Tooltip title='Obrigatório' >
-                <span style={{ color: 'var(--red)' }}> *</span>
-              </Tooltip>
-            </InputLabel>
-            <DesktopDatePicker
-              inputFormat={'DD.MM.YYYY'}
-              value={dateDeliveryProject.value}
-              onChange={(e, newValue) => setDateDeliveryProject({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
-              // onChange={(newValue) => onBudgetChange(newValue)}
-              renderInput={(params) =>
-                <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD.MM.YYYY' }}/>}
-            />
-          </Grid>
+          }
           <Grid container md={6} sm={6} xs={6} p={1}>
             <Box sx={{ width: '100%' }}>
               <InputLabel>
@@ -106,6 +91,22 @@ const DeliverBudgetModal = (props) => {
               />
 
             </Box>
+          </Grid>
+          <Grid container md={6} sm={6} xs={6} p={1}>
+            <InputLabel>
+            Data de entrega de projeto
+              <Tooltip title='Obrigatório' >
+                <span style={{ color: 'var(--red)' }}> *</span>
+              </Tooltip>
+            </InputLabel>
+            <DesktopDatePicker
+              inputFormat={'DD.MM.YYYY'}
+              value={dateDeliveryProject.value}
+              onChange={(e, newValue) => setDateDeliveryProject({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
+              // onChange={(newValue) => onBudgetChange(newValue)}
+              renderInput={(params) =>
+                <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD.MM.YYYY' }}/>}
+            />
           </Grid>
           { false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>}
         </Grid>

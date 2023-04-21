@@ -45,18 +45,21 @@ const Clients = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Nome',
+        show: true,
       },
       {
         id: 'Email',
         numeric: false,
         disablePadding: true,
         label: 'Email',
+        show: true,
       },
       {
         id: 'actions',
         numeric: true,
         disablePadding: false,
         label: 'Ações',
+        show: true,
       },
     ];
 

@@ -28,7 +28,7 @@ import ActiveLink from './activeLink';
 import styles from '../../../styles/components/navbar.module.css';
 
 //  Image
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import Router from 'next/router';
@@ -40,13 +40,19 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [ecraOpen, setEcraOpen] = useState(false);
 
-  // const actions = [
-  //   { icon: <Typography variant='xs'>T</Typography>, name: 'Extra pequeno', value: 'xs' },
-  //   { icon: <Typography variant='sm'>T</Typography>, name: 'Pequeno', value: 'sm' },
-  //   { icon: <Typography variant='md'>T</Typography>, name: 'Normal', value: 'md' },
-  //   { icon: <Typography variant='xl'>T</Typography>, name: 'Grande', value: 'xl' },
-  //   { icon: <Typography variant='xxl'>T</Typography>, name: 'Maior', value: 'xxl' },
-  // ];
+  async function destroySessionCookie () {
+    destroyCookie(undefined, 'auth_token');
+    localStorage.removeItem('userToken');
+  }
+
+  function onLogout () {
+    destroySessionCookie().then(() => {
+      toggleDrawer();
+      logout();
+      Router.push(userPermissions.type === 'client' ? '/' : '/signin');
+    });
+  }
+
   return loggedUser && userPermissions && (
     <SwipeableDrawer
       disableSwipeToOpen={false}
@@ -86,7 +92,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
             <Image
               src={companyLogo}
               alt='company logo'
-              width={150}
+              width={75}
               height={75}
             />
           </Box>
@@ -191,11 +197,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                     </ActiveLink>
                   </MenuItem>
                   <MenuItem sx={{ padding: '0' }} onClick={() => {
-                    toggleDrawer();
-                    destroyCookie(undefined, 'auth_token');
-                    logout();
-                    localStorage.removeItem('userToken');
-                    Router.push(userPermissions.type === 'client' ? '/' : '/signin');
+                    onLogout();
                   }}>
                     <a
                       className={styles.navItemContainer}

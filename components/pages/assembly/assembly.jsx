@@ -20,15 +20,17 @@ const Assembly = (props) => {
           <Typography variant='title'>Escolha Projeto</Typography>
         </Grid>
       </Grid>
-      {projects
-        ? projects?.map((proj, i) =>
-          <Grid key={i} container md={3} sm={6} xs={12} p={1} >
-            <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
-          </Grid>
-        )
-        : <Grid container md={3} sm={6} xs={12} p={1} >
-          <ProjectCard proj={{ id: 1, name: { value: 'teste' }, amount: { value: 0 } }} setChosenProject={setChosenProject} {...props}/>
-        </Grid>}
+      <Grid container md={12} >
+        {projects
+          ? projects?.map((proj, i) =>
+            <Grid key={i} container md={3} sm={6} xs={12} p={1} >
+              <ProjectCard proj={proj} setChosenProject={setChosenProject} {...props}/>
+            </Grid>
+          )
+          : <Grid container md={3} sm={6} xs={12} p={1} >
+            <ProjectCard proj={{ id: 1, name: { value: 'teste' }, amount: { value: 0 } }} setChosenProject={setChosenProject} {...props}/>
+          </Grid>}
+      </Grid>
       <ProjectAssembly open={chosenProject} chosenProject={chosenProject} onClose={() => setChosenProject()} />
     </Grid>
   </>;

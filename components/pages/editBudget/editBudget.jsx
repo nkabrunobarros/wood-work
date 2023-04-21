@@ -41,9 +41,10 @@ import * as furnituresActionsRedux from '../../../store/actions/furniture';
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ToastSet from '../../utils/ToastSet';
+import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
-import ProductTab from './Tabs/productTab';
 import RequestTab from './Tabs/requestTab';
+import ConvertString from '../../utils/ConvertString';
 
 const EditBudget = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients, budget } = props;
@@ -69,7 +70,7 @@ const EditBudget = ({ ...props }) => {
   const [budgetData, setBudgetData] = useState({
     num: { value: budget?.num?.value, error: '', required: true },
     name: { value: budget?.name?.value, error: '', required: true },
-    obs: { value: budget?.obs?.value, type: 'area' },
+    obs: { value: ConvertString(budget?.obs?.value), type: 'area' },
     price: { value: budget?.price?.value, error: '' },
     client: { value: budget?.orderBy?.object.id, error: '', required: true },
     dateRequest: { value: moment(budget?.dateRequest?.value, 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
@@ -234,7 +235,6 @@ const EditBudget = ({ ...props }) => {
 
     const built = {
       ...onlyValues,
-      id: budget.id,
       type: 'Budget',
       approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
       dateDeliveryProject: { type: 'Property', value: moment(onlyValues.dateDeliveryProject?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateDeliveryProject?.value).format('DD/MM/YYYY') : '' },
@@ -263,7 +263,7 @@ const EditBudget = ({ ...props }) => {
     delete built.addressLocality;
     delete built.addressRegion;
     delete built.addressCountry;
-    true && await updateBudget(built).then((res) => console.log(res)).catch((err) => console.log(err));
+    await updateBudget({ id: budget.id, data: built }).then((res) => console.log(res)).catch((err) => console.log(err));
   }
 
   async function handleSave () {
@@ -461,15 +461,20 @@ const EditBudget = ({ ...props }) => {
                 lines={lines}
                 setLines={setLines}
               />
-              {false && <ProductTab {...props}
-                dragDrop={{ getRootProps, getInputProps, isDragActive }}
+            </Content>
+          </Grid>
+          <Grid container md={12}>
+            <Content>
+              <ObservationsTab {...props}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 docs={{ uploadedFiles, setUploadedFiles }}
                 inputFields={inputFields}
                 setInputFields={setInputFields}
                 noDrop
-              />}
+                lines={lines}
+                setLines={setLines}
+              />
             </Content>
           </Grid>
 

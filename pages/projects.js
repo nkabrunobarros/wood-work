@@ -140,7 +140,7 @@ const Orders = ({ ...pageProps }) => {
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--primary)',
+        color: 'var(--grayLight)',
       },
       {
         id: 'drawing',

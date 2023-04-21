@@ -19,17 +19,14 @@ import { toast } from 'react-toastify';
 //  Services
 import * as assemblysActionsRedux from '../../../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../../../store/actions/budget';
-import * as customersActionsRedux from '../../../../store/actions/customer';
-import * as emailActionsRedux from '../../../../store/actions/email';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
-import emailTemplate from '../../../../store/network/emailTemplate';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
-import ToastSet from '../../../utils/ToastSet';
 import formatString from '../../../utils/FormatString';
+import ToastSet from '../../../utils/ToastSet';
 
 export const EditableCell = ({ active, onDoubleClick, value, type, name, options, onChange, isInternalPage }) => {
   const isCategory = name === 'category';
@@ -86,8 +83,6 @@ const Head = (props) => {
   const newExpedition = (data) => dispatch(expeditionsActionsRedux.newExpedition(data));
   const newProject = (data) => dispatch(projectsActionsRedux.newProject(data));
   const newAssembly = (data) => dispatch(assemblysActionsRedux.newAssembly(data));
-  const budgetAdjudicated = (data) => dispatch(emailActionsRedux.budgetAdjudicated(data));
-  const getCustomer = (data) => dispatch(customersActionsRedux.customer(data));
   const reduxState = useSelector((state) => state);
 
   const commonProps = {
@@ -121,17 +116,15 @@ const Head = (props) => {
     const loading = toast.loading();
 
     const data = {
-      id: budget.id,
       status: { type: 'Property', value: 'waiting budget' },
       approvedDate: { type: 'Property', value: '' },
       name: { type: 'Property', value: budget.name.value },
       price: { type: 'Property', value: String(budget.price?.value)?.replace(/ /g, '').replace(/€/g, '') },
       amount: { type: 'Property', value: budget.amount?.value },
       approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
-
     };
 
-    await updateBudget(data)
+    await updateBudget({ id: budget.id, data })
       .then(() => {
         ToastSet(loading, 'Projeto alterado!', 'success');
         setActiveFields({});
@@ -167,7 +160,6 @@ const Head = (props) => {
     const loading = toast.loading();
 
     const data = {
-      id: budget.id,
       price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
       amount: { type: 'Property', value: budget.amount.value },
       category: { type: 'Property', value: budget.category.value },
@@ -179,7 +171,7 @@ const Head = (props) => {
 
     };
 
-    await updateBudget(data)
+    await updateBudget({ id: budget.id, data })
       .then(() => {
         ToastSet(loading, 'Projeto alterado!', 'success');
         setActiveFields({});
@@ -239,7 +231,7 @@ const Head = (props) => {
     const data = {
       ...budget,
       amount: { value: amount?.value || '0', type: 'Property' },
-      price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
+      price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
       status: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
       dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
@@ -250,8 +242,9 @@ const Head = (props) => {
     delete data.createdAt;
     delete data.modifiedAt;
     delete data.orderBy;
+    delete data.id;
 
-    await updateBudget(data).then(() => {
+    await updateBudget({ data, id: budget.id }).then(() => {
       setBudget({
         ...budget,
         amount: { value: amount.value, type: 'Property' },
@@ -303,7 +296,6 @@ const Head = (props) => {
     //  3 -> Create Expedition
     //  4 -> Create Assembly
     //  5 -> Send email project was adjudicated
-
     try {
       await newExpedition({
         id: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value),
@@ -332,8 +324,8 @@ const Head = (props) => {
         assemblyBy: { type: 'Relationship', object: ['urn:ngsi-ld:Worker:'] },
         completed: { type: 'Property', value: '' },
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
-        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + budget.name.value.replace(/ /g, '_').toUpperCase() },
-        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + budget.name.value.replace(/ /g, '_').toUpperCase() },
+        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
+        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
         category: {
           type: 'Property',
           value: budget.category?.value
@@ -365,24 +357,17 @@ const Head = (props) => {
         }
       });
 
-      await getCustomer(budget.orderBy.object.id.replace('urn:ngsi-ld:Owner:', '')).then(async (res) => {
-        false && await budgetAdjudicated({
-          subject: 'Projeto adjudicado!',
-          html_message: emailTemplate({ clientName: `${res.data.user.first_name} ${res.data.user.last_name}`, msgBody: 'O seu Projeto passou a produção.' }),
-          recipients: [res.data.user.id],
-          recipient_group: -1
-        });
-      });
-
       await updateBudget(
         {
           id: budget.id,
-          type: 'Budget',
-          name: { type: 'Property', value: budget.name.value },
-          approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
-          approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
-          status: { type: 'Property', value: 'adjudicated' },
-          amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
+          data: {
+            type: 'Budget',
+            name: { type: 'Property', value: budget.name.value },
+            approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
+            approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
+            status: { type: 'Property', value: 'adjudicated' },
+            amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
+          }
         }
       );
 
@@ -395,7 +380,7 @@ const Head = (props) => {
       // toast.error('Algo aconteceu. Por favor tente mais tarde.');
       setAdjudicateModal(false);
       toast.success('Projeto adjudicado! Passou para produção');
-      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + budget.name.value.replace(/ /g, '').toUpperCase());
+      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + formatString(budget.name.value));
     }
   }
 
@@ -434,6 +419,8 @@ const Head = (props) => {
   };
 
   const ActionButton = () => {
+    if (!isInternalPage) return;
+
     switch (budget?.status?.value) {
     case 'needs analysis': return <PrimaryBtn
       text={'Iniciar Orçamento'}

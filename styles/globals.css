@@ -126,6 +126,7 @@ a {
   border-radius: 50px;
   white-space: nowrap !important;
 }
+
 .blankBalloon {
   color: var(--grayLight);
   background: transparent;

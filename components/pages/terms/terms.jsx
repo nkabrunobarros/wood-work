@@ -22,7 +22,7 @@ import backgroundImg from '../../../public/Log_In.jpg';
 import { logout } from '../../../store/actions/auth';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);

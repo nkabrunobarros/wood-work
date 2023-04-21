@@ -24,9 +24,6 @@ const ProductTab = (props) => {
     setInputFields
   } = props;
 
-  const { getRootProps, getInputProps, isDragActive } = props.dragDrop;
-  const { uploadedFiles, setUploadedFiles } = props.docs;
-
   function addNewProduct () {
     setInputFields([...inputFields, {
       category: { value: '', error: '' },
@@ -164,22 +161,6 @@ const ProductTab = (props) => {
             <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={addNewProduct} > <Plus /> Adicionar</Button>
           </Grid>
         </Box>
-      </Grid>
-      <Grid container md={6} sx={{ borderLeft: '1px solid', borderColor: 'divider', paddingBottom: '1rem', display: noDrop && 'none' }}>
-        <Grid container md={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Typography variant='xl' sx={{ borderBottom: 1, borderColor: 'divider' }}></Typography>
-        </Grid>
-        <Grid container md={12} className='fullCenter' {...getRootProps()}>
-          <Box className='dragDrop' {...getRootProps()} sx={{ borderColor: uploadedFiles && 'var(--green)', color: uploadedFiles && 'var(--green)' }}>
-            {/* eslint-disable-next-line react/no-unknown-property */}
-            <input {...getInputProps()} type='file' hidden multiple directory="" webkitdirectory="" onChange={(e) => setUploadedFiles(e.target.files)} />
-            {
-              isDragActive
-                ? <p>Drop...</p>
-                : <p>{uploadedFiles ? `${Object.keys(uploadedFiles).length} ficheiros anexados` : 'Arraste para carregar ficheiros'}</p>
-            }
-          </Box>
-        </Grid>
       </Grid>
     </Grid>
   );

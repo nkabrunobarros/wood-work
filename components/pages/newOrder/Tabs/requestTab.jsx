@@ -26,7 +26,6 @@ const RequestTab = (props) => {
     clients,
     setClientUser,
     onClientChange,
-    client
   } = props;
 
   const [expanded, setExpanded] = useState(true);
@@ -62,11 +61,17 @@ const RequestTab = (props) => {
                         </IconButton>
                       </Tooltip>
                     </Box>
-                    <InputLabel htmlFor='email'>Cliente</InputLabel>
+                    <InputLabel htmlFor='email'>Cliente
+                      {budgetData.client.required && <Tooltip title='Obrigatório'>
+                        <span style={{ color: 'var(--red)' }}> *</span>
+                      </Tooltip>}
+                    </InputLabel>
                     <Autocomplete
                       name='client'
                       id='client'
                       fullWidth
+                      label='aa'
+                      error={true}
                       disablePortal
                       options={clients || []}
                       getOptionLabel={(option) => option.Nome}
@@ -84,9 +89,9 @@ const RequestTab = (props) => {
                       }}
                       renderInput={(params) => (
                         <TextField
-                          label={client?.error}
-                          error={client?.error}
-                          value={client?.value}
+                          label={budgetData.client?.error}
+                          error={budgetData.client?.error}
+                          value={budgetData.client?.value}
                           {...params}
                           placeholder="Escrever Nome Cliente"
                           inputProps={{
@@ -264,9 +269,10 @@ const RequestTab = (props) => {
                       </InputLabel>
                       {!!budgetData.addressCountry.error && <InputLabel error={!!budgetData.addressCountry.error} id={budgetData.addressCountry.id}>{budgetData.addressCountry.error}</InputLabel>}
                       <Select
+                        labelId={budgetData.addressCountry.id}
                         name='addressCountry'
-                        paceholder={budgetData.addressCountry.error}
-                        label={budgetData.addressCountry.error && budgetData.addressCountry.error}
+                        placeholder={budgetData.addressCountry.error}
+                        label={budgetData.addressCountry.error}
                         error={!!budgetData.addressCountry.error}
                         required={budgetData.addressCountry.required}
                         select
@@ -300,18 +306,17 @@ const RequestTab = (props) => {
                             </MenuItem>
                           )
                           : null}
-                        {countries?.filter((item) => item.cca2 !== 'PT').map((opt, i) => (
+                        {countries?.filter((item) => item.cca2 !== 'PT').sort((a, b) => (a.name?.common > b.name?.common) ? 1 : -1).map((opt, i) => (
                           !opt.hidden && <MenuItem key={i} value={opt.cca2}>
                             <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
                               {!!opt.cca2 &&
-                    <img
-                      loading='lazy'
-                      width='20'
-                      src={`https://flagcdn.com/w20/${opt.cca2.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
-                      alt=''
-                    />}
-                              {opt.cc2}
+                                <img
+                                  loading='lazy'
+                                  width='20'
+                                  src={`https://flagcdn.com/w20/${opt.cca2.toLowerCase()}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
+                                  alt=''
+                                />}
                               {opt?.name?.common}
                             </Box>
                           </MenuItem>

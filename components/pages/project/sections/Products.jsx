@@ -57,7 +57,7 @@ const Products = (props) => {
           onChange={() => handlePanelChange(line.id)}
           sx={{ width: '100%' }}>
           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-            <Typography>{line.name}</Typography>
+            <Typography variant="subtitle1">{line.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             {line.items.sort((a, b) => a?.num?.value - b?.num?.value).map((field, index) => {

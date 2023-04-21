@@ -241,7 +241,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
                         </MenuItem>
                       )
                       : null}
-                    {countries?.filter((item) => item.cca2 !== 'PT').map((opt, i) => (
+                    {countries?.filter((item) => item.cca2 !== 'PT').sort((a, b) => (a.name?.common > b.name?.common) ? 1 : -1).map((opt, i) => (
                       !opt.hidden && <MenuItem key={i} value={opt.cca2}>
                         <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
                           {!!opt.cca2 &&

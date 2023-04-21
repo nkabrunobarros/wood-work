@@ -18,7 +18,7 @@ import { ChevronDown, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Router from 'next/router';
 import backgroundImg from '../../../public/Log_In.jpg';
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 const Terms = ({ ...props }) => {
   const [windowWidth, setWindowHeight] = useState();

@@ -72,12 +72,14 @@ const Workers = () => {
         numeric: false,
         disablePadding: false,
         label: 'Nome',
+        show: true
       },
       {
         id: 'email.value',
         numeric: false,
         disablePadding: true,
         label: 'Email',
+        show: true
       },
       // {
       //   id: 'functionPerformed.value',
@@ -90,6 +92,7 @@ const Workers = () => {
         numeric: true,
         disablePadding: false,
         label: 'Ações',
+        show: true
       },
     ];
 

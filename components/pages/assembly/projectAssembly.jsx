@@ -6,7 +6,7 @@ import { Check, ChevronDown, Package, QrCode, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import lenghtanyLogo from '../../../public/Logo-NKA.png';
+import lenghtanyLogo from '../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';

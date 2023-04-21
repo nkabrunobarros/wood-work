@@ -9,7 +9,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import lenghtanyLogo from '../../../../public/Logo-NKA.png';
+import companyLogo from '../../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../../public/logo_bw_ww40_inv-big.png';
 import * as consumablesActionsRedux from '../../../../store/actions/consumable';
 import * as machineActionsRedux from '../../../../store/actions/machine';
@@ -72,12 +72,12 @@ const ProjectDetails = (props) => {
   const { open, detailOnly, onClose } = props;
   const [productionDetailModal, setProductionDetailModal] = useState(false);
   const reduxState = useSelector((state) => state);
-  const me = reduxState.auth.me;
   const [chosenProject, setChosenProject] = useState(props.chosenProject);
   const [machines, setMachines] = useState(props.machines);
   const [consumables, setConsumables] = useState();
   const [fullyLoaded, setFullyLoaded] = useState(false);
   const [value, setValue] = useState(0);
+  const me = reduxState.auth.me;
   const dispatch = useDispatch();
   const getWorkerTasks = (data) => dispatch(workerTasksActionsRedux.workerTasks(data));
   const newWorkerTask = (data) => dispatch(workerTasksActionsRedux.newWorkerTask(data));
@@ -218,8 +218,10 @@ const ProjectDetails = (props) => {
     md: 0.8,
     sm: 0.8,
     xs: 0.8,
-    paddingTop: '1rem',
-    paddingBottom: '1rem',
+    paddingTop: '.5rem',
+    paddingBottom: '.5rem',
+    paddingLeft: '.5rem',
+    paddingRight: '.5rem',
     className: 'fullCenter',
     container: true,
     overflow: 'hidden',
@@ -238,10 +240,7 @@ const ProjectDetails = (props) => {
     const builtWorkerTask = {
       id: `urn:ngsi-ld:WorkerTask:${props.part.id || props.part.name}${me.id}${props.field}`,
       type: 'WorkerTask',
-      onProject: {
-        type: 'Property',
-        value: chosenProject.id
-      },
+
       startTime: {
         type: 'Property',
         value: moment().format('DD/MM/YYYY HH:mm:ss')
@@ -269,6 +268,10 @@ const ProjectDetails = (props) => {
       machine: {
         type: 'Property',
         value: props.machine
+      },
+      onProject: {
+        type: 'Property',
+        value: chosenProject.id
       },
     };
 
@@ -737,50 +740,62 @@ const ProjectDetails = (props) => {
       TransitionComponent={Transition}
       sx={{ display: !chosenProject && 'none' }}
     >
-      <AppBar position='sticky' lenghtonent="nav" sx={{ backgroundColor: 'default.sides' }} >
-        <Toolbar>
-          <Grid container>
-            <Grid container md={6} sm={6} xs={6} p={1} >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <AppBar position='sticky' sx={{ backgroundColor: 'default.sides' }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex' }}>
+            <Box sx={{ p: 1, display: 'flex', alignItems: 'center' }}>
+              <Image
+                src={companyLogo}
+                alt={'company Logo'}
+                width={50}
+                height={50}
+                placeholder='blur'
+              />
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => {
+                  setProductionDetailModal(!productionDetailModal);
+                  onClose && onClose();
+                }}
+                aria-label="close"
+                sx={{ paddingLeft: '3rem' }}
+              >
+                <X />
+              </IconButton>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Tooltip title='Abrir Menu'>
                 <IconButton
-                  edge="start"
-                  color="inherit"
-                  onClick={() => {
-                    setProductionDetailModal(!productionDetailModal);
-                    onClose && onClose();
-                  }}
-                  aria-label="close"
+                  id='drawerToggleBtn'
+                  color='inherit'
+                  aria-label='open drawer'
+                  edge='start'
+                  sx={{ ml: 2 }}
                 >
-                  <X />
-                </IconButton>
-                <Box p={detailOnly && 1}>
-                  <Image
-                    src={lenghtanyLogo}
-                    alt={'lenghtanyLogo'}
-                    placeholder='blur'
-                    height={!detailOnly ? 50 : 40}
-                    width={!detailOnly ? 100 : 80}
-                    loading='lazy'
+                  <Menu
+                    style={{ color: 'var(--white)' }}
                   />
-                </Box>
-              </Box>
-            </Grid>
-            <Grid container md={6} sm={6} xs={6} p={1} justifyContent={'end'} alignItems='center' >
-              <Box pr={3}>
-                <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>
-              </Box>
-              <Box p={detailOnly && 1}>
-                <Image
-                  src={woodWorkyLogo}
-                  alt={'woodWork Logo'}
-                  placeholder='blur'
-                  height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 50 : 40}
-                  loading='lazy'
-                />
-              </Box>
-            </Grid>
-          </Grid>
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+          </Box>
+          <Box id='align' justifyContent={'end'}>
+            <Box pr={3}>
+              <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>
+            </Box>
+            <Box >
+              <Image
+                src={woodWorkyLogo}
+                alt={'App Logo'}
+                width={50}
+                height={50}
+                placeholder='blur'
+                loading='lazy'
+              />
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       <Notification />
@@ -792,7 +807,7 @@ const ProjectDetails = (props) => {
               <Grid container md={3} sm={3} xs={3}>
                 <Typography variant='titlexxl'>{chosenProject?.name?.value}</Typography>
               </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1}>
+              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: detailOnly && 'none' }} >
                 <Box sx={{ width: '100%' }}>
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
@@ -804,7 +819,7 @@ const ProjectDetails = (props) => {
                   </Grid>
                 </Box>
               </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1}>
+              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: detailOnly && 'none' }} >
                 <Box sx={{ width: '100%' }}>
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
@@ -818,7 +833,7 @@ const ProjectDetails = (props) => {
                   </Grid>
                 </Box>
               </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1}>
+              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: detailOnly && 'none' }} >
                 <Box sx={{ width: '100%' }}>
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
@@ -834,7 +849,7 @@ const ProjectDetails = (props) => {
               </Grid>
             </Grid>
             <Grid container md={12} sm={12} xs={12}>
-              <Tabs value={value} onChange={handleChange} sx={{ width: '100%' }}>
+              <Tabs value={value} onChange={handleChange} sx={{ width: '100%', display: detailOnly && 'none' }}>
                 <Tab label="Lista de Corte" {...a11yProps(0)} sx={{ width: '100%' }}/>
                 {/* <Tab label="Acessorios" {...a11yProps(1)} sx={{ width: '100%' }}/> */}
               </Tabs>

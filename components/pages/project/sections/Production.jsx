@@ -48,7 +48,7 @@ const Production = (props) => {
     open: false
   };
 
-  return <>
+  return props.open && <>
     <ProjectDetails
       {...propsHere}
       chosenProject={props.order}

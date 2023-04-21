@@ -52,6 +52,9 @@ const FilterItem = (data, item, col) => {
 
         return <Typography variant='md' className="errorBalloon">Não</Typography>;
 
+      case 'Comprimento': return item[`${col}`] + ' mm';
+      case 'Largura': return item[`${col}`] + ' mm';
+      case 'Espessura': return item[`${col}`] + ' mm';
       case 'desvio2': return calcDesvio(item[`${col}`]);
       case 'desvio': return calcDesvio(item[`${col}`]);
 
@@ -96,7 +99,7 @@ const FilterItem = (data, item, col) => {
         case 'needs analysis': return <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>;
         case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
         case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
-        case 'working': return <Tooltip title={`${item.status}`}><Typography variant='md' className="warningBalloon">Iniciada</Typography></Tooltip>;
+        case 'working': return <Typography variant='md' className="warningBalloon">Iniciada</Typography>;
         case 'drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
@@ -108,7 +111,11 @@ const FilterItem = (data, item, col) => {
 
       case 'stock': if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
 
-      case 'amount': if (item[col2[0]] > 0) return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
+      case 'amount': {
+        if (item[col2[0]] === 0) { return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="errorBalloon">Indisponivel</Typography></Tooltip>; }
+
+        return <Tooltip title={`${item[col2[0]]} unidade(s)`}><Typography variant='md' className="successBalloon">Disponivel</Typography></Tooltip>;
+      }
 
       default: if (['giveName', 'nome', 'name', 'custo'].find(ele => ele === col2[0])) return <Typography variant='md' color="link.main" className="link" >{item[col2[0]]}</Typography>;
 
@@ -180,8 +187,6 @@ const FilterItem = (data, item, col) => {
 
     default: return <Typography variant='md'>{displayWithStyle(item[col], col)}</Typography>;
     }
-  } else if (col === undefined) {
-    return <Typography variant='md'>{displayWithStyle(item, col)}</Typography>;
   }
 };
 

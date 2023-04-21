@@ -38,7 +38,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 import * as authActionsRedux from '../../../store/actions/auth';
 
@@ -573,14 +573,14 @@ const SignIn = (props) => {
         </DialogActions>
       </Dialog>
       <Box
-        style={{ width: windowWidth > 600 ? '160px' : '100px', position: 'absolute', right: '25px', top: '25px' }}
+        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
         <a
           target='#'
           href='http://mofreita.com/'
         >
           <Image
-            width={windowWidth > 600 ? 160 : 100}
+            width={windowWidth > 600 ? 80 : 50}
             alt='Company Logo'
             src={companyLogo}
             placeholder='blur'

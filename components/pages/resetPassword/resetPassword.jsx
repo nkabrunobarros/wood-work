@@ -12,7 +12,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
@@ -169,7 +169,7 @@ const ResetPassword = (props) => {
           href='http://mofreita.com/'
         >
           <Image
-            width={windowWidth > 600 ? 160 : 100}
+            width={windowWidth > 600 ? 80 : 50}
             alt='Company Logo'
             src={companyLogo}
             placeholder='blur'

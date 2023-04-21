@@ -94,13 +94,13 @@ const Docs = (props) => {
                       <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
                     )}
                 </Box>
-                <Typography>{!isDragActive ? folder.folder_name.replace('urn:ngsi-ld:Folder:', '') : 'Carregar ficheiros para esta pasta'} </Typography>
+                <Typography variant="subtitle2">{!isDragActive ? folder.folder_name.replace('urn:ngsi-ld:Folder:', '') : 'Carregar ficheiros para esta pasta'} </Typography>
               </Grid>
-              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
+              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}> <Typography variant="subtitle2">{moment(folder.created).format('DD/MM/YYYY')}</Typography></Grid>
             </Grid>
 
           </AccordionSummary>
-          <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('aqui')} />
+          <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('')} />
           <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
             {folder.files?.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Sem ficheiros ou pastas</Typography> : null}
             {folder.files?.filter(file => typeof file !== 'undefined').map((file) => (

@@ -65,6 +65,7 @@ const OrdersSimilar = () => {
         borderRight: false,
         label: 'Quantidade Produzida:12 Un',
         span: 5,
+        show: true
       },
       {
         id: 'orderAmount',
@@ -74,6 +75,7 @@ const OrdersSimilar = () => {
         borderRight: true,
         label: 'Quantidade Pedida:25 Un',
         span: 1,
+        show: true
       },
       {
         id: 'perUnit',
@@ -83,6 +85,7 @@ const OrdersSimilar = () => {
         borderRight: false,
         label: 'Por unidade',
         span: 5,
+        show: true
       },
     ];
 
@@ -99,30 +102,35 @@ const OrdersSimilar = () => {
         numeric: false,
         disablePadding: false,
         label: 'Nome Projeto',
+        show: true
       },
       {
         id: 'Cliente',
         numeric: false,
         disablePadding: true,
         label: 'Cliente',
+        show: true
       },
       {
         id: 'previsto1',
         numeric: false,
         disablePadding: false,
         label: 'Previsto',
+        show: true
       },
       {
         id: 'realizado1',
         numeric: false,
         disablePadding: false,
         label: 'Realizado',
+        show: true
       },
       {
         id: 'desvio',
         numeric: false,
         disablePadding: false,
         label: 'Desvio',
+        show: true
       },
       {
         id: 'previstoAtual',
@@ -131,30 +139,35 @@ const OrdersSimilar = () => {
         borderLeft: true,
         borderRight: true,
         label: 'Horas Atuais',
+        show: true
       },
       {
         id: 'product.craftTime',
         numeric: false,
         disablePadding: false,
         label: 'Previsto',
+        show: true
       },
       {
         id: 'Custo',
         numeric: false,
         disablePadding: false,
         label: 'Custo',
+        show: true
       },
       {
         id: 'realizado2',
         numeric: false,
         disablePadding: false,
         label: 'Realizado',
+        show: true
       },
       {
         id: 'desvio2',
         numeric: false,
         disablePadding: false,
         label: 'Desvio',
+        show: true
       },
       // {
       //   id: 'actions',
@@ -196,7 +209,6 @@ const OrdersSimilar = () => {
         const projAgreedDelivery = moment(thisBudget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
         const projDelivered = moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY');
 
-        console.log(projDelivered);
         // data[i].desvio = formatNum(item.previsto, item.realizado)
         item2.operacao = item.status.value;
         item2.previsto1 = `${projCreated.diff(projAgreedDelivery, datesDiferencesFormat) * -1 || 0} ${datesDiferencesFormat === 'days' ? 'dia(s)' : 'hora(s)'}`;

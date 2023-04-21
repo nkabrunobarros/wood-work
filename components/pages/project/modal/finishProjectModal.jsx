@@ -3,7 +3,7 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import companyLogo from '../../../../public/Logo-NKA.png';
+import companyLogo from '../../../../public/Logotipo_Vetorizado.png';
 
 // import companyLogo from '../../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../../public/logo_bw_ww40_inv-big.png';

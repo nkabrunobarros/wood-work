@@ -102,13 +102,13 @@ const DocsClient = (props) => {
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
                       <Tooltip title='Clique para descarregar este ficheiro.'>
-                        <Typography sx={{ cursor: 'pointer' }}>
+                        <Typography variant="subtitle2" sx={{ cursor: 'pointer' }}>
                           <a href={file?.file} download target="_blank" rel="noreferrer">{file?.file_name + file?.file_type}</a>
                         </Typography>
                       </Tooltip>
                     </Grid>
                     <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>
-                      <Typography>{moment(file.created).format('DD/MM/YYYY')}</Typography>
+                      <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY')}</Typography>
                     </Grid>
                   </Grid>)}
                 </Grid>

@@ -18,7 +18,7 @@ import Footer from '../../layout/footer/footer';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import * as emailActionsRedux from '../../../store/actions/email';
@@ -72,15 +72,14 @@ const ForgotPassword = (props) => {
       <CssBaseline />
       <Notification />
       <Box
-        style={{ width: windowWidth > 600 ? '160px' : '100px', position: 'absolute', right: '25px', top: '25px' }}
+        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
         <a href='http://mofreita.com/' target='#'>
           <Image
             alt='Background Image'
             src={companyLogo}
             placeholder='blur'
-            width={windowWidth > 600 ? 160 : 100}
-
+            width={windowWidth > 600 ? 80 : 50}
           />
         </a>
       </Box>

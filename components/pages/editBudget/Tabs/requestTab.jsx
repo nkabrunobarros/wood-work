@@ -295,16 +295,7 @@ const RequestTab = (props) => {
                       value={budgetData.price.value}
                     />
                   </Grid>
-                  <Grid container item sm={12} xs={12} p={1} >
-                    <MyInput
-                      label='Observações'
-                      type={budgetData.obs.type}
-                      name='obs'
-                      placeholder='Escrever observações'
-                      value={budgetData.obs.value}
-                      onChange={(e) => onBudgetChange(e.target)}
-                    />
-                  </Grid>
+
                 </Grid>
               </LocalizationProvider>
             </Grid>

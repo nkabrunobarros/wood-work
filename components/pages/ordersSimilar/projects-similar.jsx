@@ -363,7 +363,6 @@ const OrdersScreen = ({ ...props }) => {
               </Box>
             </Box>
           </Box>
-
           <AdvancedTable
             rows={rows}
             headCells={headCells}

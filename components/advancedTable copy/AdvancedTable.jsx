@@ -60,22 +60,21 @@ const AdvancedTable = ({
   onDelete,
   onReactivation
 }) => {
-  const [state, setState] = useState({
-    order: 'asc',
-    orderBy: headCells[0].id,
-    page: 0,
-    rowsPerPage: 10,
-    filteredItems: null,
-    data: {},
-    deleteItemId: '',
-    dialogOpen: false,
-    dialogOpenReactivation: false,
-    dialogMessage: '',
-    anchorEl: null,
-    cellsFilter: headCells,
-    loaded: true,
-  });
-
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState();
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filteredItems, setFilteredItems] = useState(rows);
+  const [data, setData] = useState({});
+  const [deleteItemId, setDeleteItemId] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpenReactivation, setDialogOpenReactivation] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [cellsFilter, setCellsFilter] = useState(headCells);
+  const [refresh, setRefresh] = useState(new Date());
+  const [loaded, setLoaded] = useState(false);
   const reduxState = useSelector((state) => state);
 
   useEffect(() => {
@@ -86,7 +85,7 @@ const AdvancedTable = ({
         clients: reduxState.clients?.data
       };
 
-      setState({ ...state, data: allData });
+      setData(allData);
     };
 
     const getWhatDisplaying = () => {
@@ -95,65 +94,71 @@ const AdvancedTable = ({
 
         break;
       case routes.private.internal.projectsSimilar:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?' });
+        setDialogMessage('Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?');
 
         break;
       case routes.private.internal.stocks:
 
         break;
       case routes.private.internal.clients:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?' });
+        setDialogMessage('Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?');
 
         break;
       case routes.private.internal.workers:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?' });
+        setDialogMessage('Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?');
 
         break;
       }
     };
 
     function RebuildHeadCellsWithFilterState () {
-      setState((prevState) => ({
-        ...prevState,
-        cellsFilter: prevState.cellsFilter.map((cell) => ({
-          ...cell,
-          show: true,
-        })),
-      }));
+      cellsFilter.map((cell, i) => {
+        const oldState = cellsFilter;
+        const newState = cellsFilter[i];
+
+        newState.show = true;
+        oldState[i] = newState;
+        setCellsFilter(oldState);
+      });
     }
 
-    Promise.all([getData(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => {
-      setState({ ...state, loaded: true });
-    });
+    Promise.all([getData(), RebuildHeadCellsWithFilterState(), getWhatDisplaying()]).then(() => setLoaded(true));
   }, []);
 
   function onDeleteClick (row) {
-    setState({ ...state, dialogOpen: true, deleteItemId: row.id });
+    setDialogOpen(true);
+
+    if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
+    else setDeleteItemId(row.id);
   }
 
-  console.log(state);
-
   function onReactivationClick (row) {
-    setState({ ...state, dialogOpenReactivation: true, deleteItemId: row.id });
+    setDialogOpenReactivation(true);
+
+    if (Router.asPath.includes('orders')) setDeleteItemId(row.id);
+    else setDeleteItemId(row.id);
   }
 
   function OnFilterChange (i) {
-    const oldState = state.cellsFilter;
-    const newState = state.cellsFilter[i];
+    const oldState = cellsFilter;
+    const newState = cellsFilter[i];
 
     newState.show = !newState.show;
     oldState[i] = newState;
-    setState({ ...state, cellsFilter: oldState });
+    setCellsFilter(oldState);
+    setRefresh(new Date());
   }
 
   function showAllHeaders () {
-    setState((prevState) => ({
-      ...prevState,
-      cellsFilter: prevState.cellsFilter.map((cell) => ({
-        ...cell,
-        show: true,
-      })),
-    }));
+    cellsFilter.map((cell, i) => {
+      const oldState = cellsFilter;
+      const newState = cellsFilter[i];
+
+      newState.show = true;
+      oldState[i] = newState;
+      setCellsFilter(oldState);
+      setRefresh(new Date());
+    });
   }
 
   function EnhancedTableHead (props) {
@@ -188,7 +193,7 @@ const AdvancedTable = ({
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {state.loaded
+                    {loaded
                       ? <>
                         {headCell.label}
                         {orderBy === headCell.id ? <Box component='span'></Box> : null}
@@ -205,7 +210,7 @@ const AdvancedTable = ({
         }
 
         <TableRow sx={{ backgroundColor: 'primary.main' }} >
-          {state.cellsFilter.map((headCell) => {
+          {cellsFilter.map((headCell) => {
             return headCell.show && <TableCell
               key={headCell.id}
               colSpan={headCell.span}
@@ -228,7 +233,7 @@ const AdvancedTable = ({
                 onClick={createSortHandler(headCell.id)}
                 sx={{ width: '100%', height: '100%', color: 'white' }}
               >
-                {state.loaded
+                {loaded
                   ? <>
                     {headCell.label}
                     {orderBy === headCell.id ? <Box component='span'></Box> : null}
@@ -254,18 +259,42 @@ const AdvancedTable = ({
   };
 
   const handleRequestSort = (event, property) => {
-    const isAsc = state.orderBy === property && state.order === 'asc';
+    const isAsc = orderBy === property && order === 'asc';
 
-    setState({ ...state, order: isAsc ? 'desc' : 'asc', orderBy: property });
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
-    setState({ ...state, page: newPage });
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setState({ ...state, page: 0, rowsPerPage: parseInt(event.target.value, 10) });
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
+
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   function descendingComparator (a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -311,13 +340,13 @@ const AdvancedTable = ({
   }
 
   useEffect(() => {
-    if (filters || rangeFilters) {
+    if (filters) {
       const filtered2 = rangeFilters ? filterByProperties(rows, rangeFilters) : rows;
       const filtered = MultiFilterArray(filtered2, filters);
 
-      setState({ ...state, filteredItems: filtered });
+      setFilteredItems([...filtered]);
     }
-  }, [filters, rows, rangeFilters]);
+  }, [filters, rangeFilters, rows]);
 
   function onFilterRemove (filterName) {
     const filtersToWork = { ...filters };
@@ -336,20 +365,20 @@ const AdvancedTable = ({
   return (
     <Box sx={{ width: '100%' }}>
       <ConfirmDialog
-        open={state.dialogOpen}
-        handleClose={() => setState({ ...state, dialogOpen: false })}
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
         onConfirm={() => {
-          !!onDelete && onDelete(state.deleteItemId);
-          setState({ ...state, dialogOpen: false });
-        }}
-        message={state.dialogMessage}
+          !!onDelete && onDelete(deleteItemId);
+          setDialogOpen(false);
+        } }
+        message={dialogMessage}
       />
       <ConfirmDialog
-        open={state.dialogOpenReactivation}
-        handleClose={() => setState({ ...state, dialogOpenReactivation: false }) }
+        open={dialogOpenReactivation}
+        handleClose={() => setDialogOpenReactivation(false)}
         onConfirm={() => {
-          !!onReactivation && onReactivation(state.deleteItemId);
-          setState({ ...state, dialogOpenReactivation: false });
+          !!onReactivation && onReactivation(deleteItemId);
+          setDialogOpenReactivation(false);
         } }
         message={'Está prestes a fazer uma reabertura. Tem certeza que quer continuar?'}
       />
@@ -368,7 +397,7 @@ const AdvancedTable = ({
           </Box>
           {noPagination
             ? null
-            : state.loaded
+            : loaded
               ? <>
                 <TablePagination
                   showFirstButton
@@ -376,9 +405,9 @@ const AdvancedTable = ({
                   component='div'
                   sx={{ marginLeft: 'auto' }}
                   rowsPerPageOptions={[5, 10, 25]}
-                  count={state.filteredItems ? state.filteredItems?.length : rows?.length}
-                  rowsPerPage={state.rowsPerPage}
-                  page={state.page}
+                  count={filteredItems ? filteredItems?.length : rows?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   labelRowsPerPage={'Mostrar'}
@@ -388,7 +417,7 @@ const AdvancedTable = ({
                 />
                 <Box>
                   <Tooltip title='Filtrar colunas'>
-                    <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setState({ ...state, anchorEl: e.currentTarget })}>
+                    <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
                       <Filter size={20} strokeWidth={1.5} />
                     </IconButton>
                   </Tooltip>
@@ -397,9 +426,9 @@ const AdvancedTable = ({
               : <Skeleton animation="wave" width='100%' />
           }
           <Popover
-            open={Boolean(state.anchorEl)}
-            anchorEl={state.anchorEl}
-            onClose={() => setState({ ...state, anchorEl: null })}
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={() => setAnchorEl(null)}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'left',
@@ -407,11 +436,11 @@ const AdvancedTable = ({
           >
             <Box p={1}>
               <Grid container>
-                <Grid >
+                <Grid id={refresh}>
                   <Grid id='align' container Item sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                    <Switch checked={!state.cellsFilter.find(item => item.show === false)} onClick={() => showAllHeaders()} />Mostrar todas
+                    <Switch checked={!cellsFilter.find(item => item.show === false)} onClick={() => showAllHeaders()} />Mostrar todas
                   </Grid>
-                  {state.cellsFilter.map((headCell, i) => {
+                  {cellsFilter.map((headCell, i) => {
                     return <Grid id='align' container item key={headCell.label} >
                       <Switch checked={headCell.show} onClick={() => OnFilterChange(i)} />{headCell.label}
                     </Grid>;
@@ -421,28 +450,37 @@ const AdvancedTable = ({
             </Box>
           </Popover>
         </Box>
-        <TableContainer >
+        <TableContainer>
           <Table aria-labelledby='tableTitle'>
             <EnhancedTableHead
-              order={state.order}
-              orderBy={state.orderBy}
+              numSelected={selected?.length}
+              order={order}
+              orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={state.filteredItems?.length}
+              rowCount={filteredItems?.length}
             />
-            {state.filteredItems && <TableBody>
-              {(stableSort(state.filteredItems, getComparator(state.order, state.orderBy)))
-                .slice(state.page * state.rowsPerPage, state.page * state.rowsPerPage + state.rowsPerPage)
+
+            <TableBody>
+              {(stableSort(filteredItems, getComparator(order, orderBy)))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+
+                  console.log(row);
+                  console.log(index);
 
                   return (
                     <TableRow
                       hover
+                      onClick={(event) => handleClick(event, row.id)}
                       role='checkbox'
+                      aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.id}
+                      selected={isItemSelected}
                     >
-                      {state.cellsFilter.map((headCell, index2) => {
+                      {cellsFilter.map((headCell, index2) => {
                         return headCell.show && <TableCell
                           id={labelId}
                           key={headCell.id}
@@ -455,7 +493,7 @@ const AdvancedTable = ({
                             borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
                           }}
                         >
-                          {state.loaded
+                          {loaded
                             ? <>
                               {headCell.id === 'actions' || headCell.id === 'actionsConf'
                                 ? (
@@ -520,7 +558,7 @@ const AdvancedTable = ({
                                     sx={{ cursor: clickRoute && 'pointer' }}
                                   >
                                     {FilterItem(
-                                      state.data,
+                                      data,
                                       row,
                                       headCell.id
                                     )}
@@ -533,12 +571,14 @@ const AdvancedTable = ({
                     </TableRow>
                   );
                 })}
-              {(state.page > 0 ? Math.max(0, (1 + state.page) * state.rowsPerPage - state.filteredItems?.length) : 0) > 0 && (
+              {(page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredItems?.length) : 0) > 0 && (
                 <TableRow>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
-            </TableBody>}
+              {JSON.stringify(filteredItems)}
+
+            </TableBody>
 
           </Table>
         </TableContainer>

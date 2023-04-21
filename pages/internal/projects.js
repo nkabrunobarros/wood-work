@@ -355,6 +355,8 @@ const Projects = ({ ...pageProps }) => {
         numeric: true,
         disablePadding: false,
         label: 'Ações',
+        show: true,
+
       },
     ];
 

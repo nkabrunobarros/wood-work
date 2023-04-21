@@ -6,7 +6,7 @@ import React from 'react';
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import companyLogo from '../../../public/Logo-NKA.png';
+import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import woodWorkyLogo from '../../../public/logo_bw_ww40_inv-big.png';
 import * as appStatesActions from '../../../store/actions/appState';
@@ -29,7 +29,7 @@ const Navbar = ({ ...pageProps }) => {
               <Image
                 src={companyLogo}
                 alt={'company Logo'}
-                width={100}
+                width={50}
                 height={50}
                 placeholder='blur'
               />
