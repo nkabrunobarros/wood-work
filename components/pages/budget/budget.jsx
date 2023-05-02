@@ -47,7 +47,7 @@ const BudgetPage = (props) => {
         </Content>
         {/* Messages */}
         <Content>
-          <Messages stylesMessage={stylesMessage}{...props} />
+          <Messages stylesMessage={stylesMessage} {...props} isInternalPage={isInternalPage} />
         </Content>
         {/* Docs Cliente */}
         <Content id={refresh}>

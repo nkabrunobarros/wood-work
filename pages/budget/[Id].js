@@ -39,10 +39,6 @@ const Budget = ({ ...pageProps }) => {
       const furnitures3 = (await getFurnitures()).data;
       const furnitures = furnitures3.filter(ele => ele.hasBudget?.value === router.query.Id);
 
-      furnitures3.map((f) => {
-        console.log(f.hasBudget.value);
-      });
-
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);

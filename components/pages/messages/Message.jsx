@@ -10,7 +10,11 @@ export const Message = (props) => {
   const { msg } = props;
   const reduxState = useSelector((state) => state);
   const loggedUser = reduxState.auth.me;
-  const sender = loggedUser?.id === msg.by;
+  let sender;
+
+  if (!props.isInternalPage) sender = loggedUser?.id === msg.by;
+  else sender = props.budget.orderBy.object.user.id !== msg.by;
+
   const styles = MessagesStyles({ theme: 'light', sender });
 
   return (
