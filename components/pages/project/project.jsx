@@ -21,7 +21,6 @@ import DocsClient from './sections/DocsClient';
 import Head from './sections/Head';
 import Messages from './sections/Messages';
 import Production from './sections/Production';
-import Production2 from './sections/Production2';
 import Products from './sections/Products';
 import ProductsObservations from './sections/ProductsObservations';
 
@@ -51,14 +50,10 @@ const Order = ({ ...props }) => {
         <Content>
           <ProductsObservations open={isInternalPage} styles={styles} {...props} />
         </Content>
-        {/* Production section */}
+        {/* Production per furniture section */}
         <Content>
           <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
         </Content>
-        {/* Production per furniture section */}
-        {false && <Content>
-          <Production2 {...props} open={isInternalPage && order.status.value !== 'drawing'} />
-        </Content>}
         {/* Docs */}
         <Content>
           <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />

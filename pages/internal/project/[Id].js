@@ -16,8 +16,8 @@ import OrderScreen from '../../../components/pages/project/project';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/loader/loader';
 import AuthData from '../../../lib/AuthData';
-import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as assemblysActionsRedux from '../../../store/actions/assembly';
+import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import * as countriesActionsRedux from '../../../store/actions/country';
 import * as expeditionsActionsRedux from '../../../store/actions/expedition';
@@ -42,7 +42,7 @@ const Order = ({ ...pageProps }) => {
   const getAssembly = (data) => dispatch(assemblysActionsRedux.assembly(data));
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getExpedition = (data) => dispatch(expeditionsActionsRedux.expedition(data));
-  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.budgetFolders(data));
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const [furnitures, setFurnitures] = useState();
@@ -119,41 +119,57 @@ const Order = ({ ...pageProps }) => {
       const expedition = (await getExpedition(project.expedition.object)).data;
       const assembly = (await getAssembly(project.assembly.object)).data;
       const budget = (await getBudget(project.hasBudget.object)).data;
-      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === project.hasBudget.object);
 
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
-      const groups = furnitures.reduce((accumulator, item) => {
-        const groupName = item.group?.value;
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === project.hasBudget.object);
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
+      const built = [];
+      let currentGroup = null;
+      let currentSubGroup = null;
 
-        if (!accumulator[groupName]) {
-          accumulator[groupName] = {
-            id: `group${Object.keys(accumulator).length}`,
-            name: groupName,
-            items: []
+      furnitures2.map((item) => {
+        if (item.furnitureType.value === 'group') {
+          // Create a new group object
+          currentGroup = {
+            ...item,
+            subgroups: [],
           };
+
+          // Add the group object to the result array
+          built.push(currentGroup);
+          // Reset the current sub-group object
+          currentSubGroup = null;
+        } else if (item.furnitureType.value === 'subGroup') {
+          // Create a new sub-group object
+          currentSubGroup = {
+            ...item,
+            items: [],
+          };
+
+          // Add the sub-group object to the current group's subgroups array
+          currentGroup.subgroups.push(currentSubGroup);
+        } else {
+          // Add the furniture item to the current sub-group's items array
+          currentSubGroup?.items?.push({
+            ...item
+          });
         }
+      });
 
-        accumulator[groupName].items.push(item);
-
-        return accumulator;
-      }, {});
-
-      const result = Object.values(groups);
-
-      setFurnitures(result);
+      setFurnitures(built);
 
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
 
-      getFolders().then(async (res) => {
+      getFolders(project.hasBudget.object).then(async (res) => {
         const builtFolders = [];
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
 
         res.data.results.map((folder) => {
           const folder2 = { ...folder };
+          const foundRows = resFiles?.data?.results.filter(row => folder2.files.includes(row.id));
 
-          folder2.files = resFiles.data.results.filter((file) => file.folder === folder.id);
-          // folder2.files = resFiles.data.results.filter((file) => file.budget === project.hasBudget.object && file.folder === folder.id);
+          folder2.files = foundRows;
           builtFolders.push(folder2);
         });
 

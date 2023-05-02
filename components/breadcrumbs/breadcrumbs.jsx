@@ -43,7 +43,7 @@ const CustomBreadcrumbs = ({ path }) => {
             href={crumb.href}
             className={styles.breadcrumb}
           >
-            <Typography color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>
+            <Typography variant='subtitle1' color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>
           </Link>
         ))}
       </Breadcrumbs>

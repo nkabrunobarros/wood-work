@@ -12,7 +12,7 @@ import AccessoryForm from './FormRows/AccessoryForm';
 import FurnitureForm from './FormRows/FurnitureForm';
 import GroupForm from './FormRows/GroupForm';
 
-const ProductLinesTab = (props) => {
+const ProductLinesTab2 = (props) => {
   const {
     pageProps,
     categories,
@@ -29,15 +29,27 @@ const ProductLinesTab = (props) => {
   };
 
   //  Add group
-  function addGroup () {
-    if (!newGroupName) return;
-
-    setLines([...lines, {
+  function addGroup (props) {
+    const newGroup = {
       id: 'group' + lines.length,
       type: 'group',
       name: newGroupName,
-      items: []
-    }]);
+      items: [],
+    };
+
+    if (props + 1 <= 0) {
+      setLines([newGroup, ...lines]);
+    } else if (props >= lines.length) {
+      setLines([...lines, newGroup]);
+    } else {
+      const updatedLines = [
+        ...lines.slice(0, props + 1),
+        newGroup,
+        ...lines.slice(props + 1),
+      ];
+
+      setLines(updatedLines);
+    }
 
     setNewGroupName('');
     setExpanded('group' + lines.length);
@@ -51,7 +63,7 @@ const ProductLinesTab = (props) => {
       ...prevLines[props],
       items: [...lines[props]?.items,
         {
-          rowType: { value: 'furniture', error: '', hidden: true },
+          furnitureType: { value: 'furniture', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Nome' },
           description: { id: 'description', value: '', error: '', label: 'Descrição', type: 'area' },
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
@@ -67,22 +79,6 @@ const ProductLinesTab = (props) => {
     setLines(prevLines);
   }
 
-  //  Add furniture type separator to group
-  function addNewLineGroup (props) {
-    const prevLines = [...lines];
-
-    prevLines[props] = {
-      ...prevLines[props],
-      items: [...lines[props]?.items,
-        {
-          rowType: { value: 'group', error: '', hidden: true },
-          name: { id: 'name', value: '', error: '', required: true, label: 'Secção' },
-        }]
-    };
-
-    setLines(prevLines);
-  }
-
   //  Add accessory type row to group
   function addNewLineAccessory (props) {
     const prevLines = [...lines];
@@ -91,7 +87,7 @@ const ProductLinesTab = (props) => {
       ...prevLines[props],
       items: [...lines[props]?.items,
         {
-          rowType: { value: 'accessory', error: '', hidden: true },
+          furnitureType: { value: 'accessory', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Nome' },
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
           obs: { id: 'obs', value: '', error: '', label: 'Observações', type: 'area' },
@@ -144,6 +140,13 @@ const ProductLinesTab = (props) => {
     });
   };
 
+  const isBtnEnabled = (() => {
+    const lastLine = lines[lines.length - 1];
+    const lastItem = lastLine?.items?.[lastLine.items?.length - 1];
+
+    return !!(lines.length && !(lastItem?.name?.value && lastItem?.amount?.value && lastLine.name));
+  })();
+
   return (
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
@@ -158,22 +161,11 @@ const ProductLinesTab = (props) => {
         }} >
           <Grid container sx={{ height: 'fit-content' }}>
             <Grid container md={12} sm={12} xs={12}>
-              {/* Add group */}
-              <Grid container md={12} pb={2}>
-                <Grid container md={4}>
-                  <MyInput label='Novo grupo' placeholder={'Nome'} value={newGroupName} onChange={(e) => setNewGroupName(e.target.value)} />
-                </Grid>
-                <Grid container md={4} alignItems={'end'} >
-                  <Box>
-                    <Button sx={{ marginLeft: '1rem', border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={addGroup} > <Plus /> Gravar Grupo</Button>
-                  </Box>
-                </Grid>
-              </Grid>
               {/* Lines */}
               {lines.map((line, i) => {
                 return <Grow key={i} in={true}><Accordion key={i} expanded={expanded === line.id} onChange={handleChange(line.id)} sx={{ width: '100%' }}>
-                  <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-                    <Grid container justifyContent={'space-between'}>
+                  <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ borderBottom: expanded === line.id && '1px solid', borderColor: expanded === line.id && 'divider' }}>
+                    <Grid container justifyContent={'space-between'} alignItems={'center'}>
                       <Typography>{line.name}</Typography>
                       <Box pr={2}>
                         <Tooltip title='Remover este grupo'>
@@ -185,23 +177,35 @@ const ProductLinesTab = (props) => {
                     </Grid>
                   </AccordionSummary>
                   <AccordionDetails>
+                    <Grid container md={3} sm={3} xs={3} p={1} >
+                      <MyInput required label='Nome de grupo' placeholder={'Nome'} value={line.name} onChange={(e) => setLines([...lines.slice(0, i), { ...lines[i], name: e.target.value }, ...lines.slice(i + 1)])} />
+                    </Grid>
                     {line.items.map((field, index) => {
                       return <Grow key={index}in={true}>
                         <Box>
-                          {field?.rowType?.value === 'group' && <GroupForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
-                          {field?.rowType?.value === 'furniture' && <FurnitureForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
-                          {field?.rowType?.value === 'accessory' && <AccessoryForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                          {field?.furnitureType?.value === 'group' && <GroupForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                          {field?.furnitureType?.value === 'furniture' && <FurnitureForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                          {field?.furnitureType?.value === 'accessory' && <AccessoryForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
                         </Box>
                       </Grow>;
                     })}
-                    <Grid container md={12} sm={12} xs={12} pt={4}>
-                      { false && <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addNewLineGroup(i)} > <Plus /> Adicionar Separador</Button>}
-                      <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px', marginRight: '1rem' }} onClick={() => addNewLineProduct(i)} > <Plus /> Adicionar Móvel</Button>
-                      <Button sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addNewLineAccessory(i)} > <Plus /> Adicionar Acessório</Button>
+                    <Grid container md={12} sm={12} xs={12} pt={line.items.length !== 0 && 2}>
+                      <Button disabled={!((line.items[line.items.length - 1]?.name.value && line.items[line.items.length - 1]?.amount.value) || (line.name && line.items.length === 0))} sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px', marginRight: '1rem' }} onClick={() => addNewLineProduct(i)} > <Plus /> Adicionar Móvel</Button>
+                      <Button disabled={!((line.items[line.items.length - 1]?.name.value && line.items[line.items.length - 1]?.amount.value) || (line.name && line.items.length === 0))} sx={{ border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addNewLineAccessory(i)} > <Plus /> Adicionar Acessório</Button>
+                      <Button disabled={isBtnEnabled} sx={{ marginLeft: '1rem', border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={() => addGroup(i)} > <Plus />Novo grupo</Button>
                     </Grid>
                   </AccordionDetails>
-                </Accordion></Grow>;
+                </Accordion>
+                </Grow>;
               })}
+              {/* Add group */}
+              <Grid container md={12} pb={0}>
+                <Grid container md={4} alignItems={'end'} display={lines.length > 0 && 'none'}>
+                  <Box>
+                    <Button disabled={isBtnEnabled} sx={{ marginLeft: '1rem', border: '1px solid', borderColor: 'primary', color: 'primary', borderRadius: '50px' }} onClick={addGroup} > <Plus />Novo grupo</Button>
+                  </Box>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -210,7 +214,7 @@ const ProductLinesTab = (props) => {
   );
 };
 
-ProductLinesTab.propTypes = {
+ProductLinesTab2.propTypes = {
   chosenBudget: PropTypes.object,
   budgetData: PropTypes.object,
   pageProps: PropTypes.object,
@@ -228,4 +232,4 @@ ProductLinesTab.propTypes = {
   setInputFields: PropTypes.func,
 };
 
-export default ProductLinesTab;
+export default ProductLinesTab2;

@@ -131,8 +131,6 @@ const AdvancedTable = ({
     setState({ ...state, dialogOpen: true, deleteItemId: row.id });
   }
 
-  console.log(state);
-
   function onReactivationClick (row) {
     setState({ ...state, dialogOpenReactivation: true, deleteItemId: row.id });
   }

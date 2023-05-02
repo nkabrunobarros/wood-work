@@ -92,26 +92,18 @@ const Head = (props) => {
   const tableFirstCell = {
     container: true,
     sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
-    md: 2,
-    sm: 2,
-    xs: 2,
+    md: 3,
+    sm: 3,
+    xs: 3,
     p: 0.5
   };
 
   const tableLastCell = {
     container: true,
     sx: { borderRight: '1px solid ', borderColor: 'divider' },
-    md: 5,
-    sm: 5,
-    xs: 5,
-    p: 0.5
-  };
-
-  const tablemiddleCell = {
-    container: true,
-    md: 5,
-    sm: 5,
-    xs: 5,
+    md: 9,
+    sm: 9,
+    xs: 9,
     p: 0.5
   };
 
@@ -230,8 +222,8 @@ const Head = (props) => {
           <Grid container md={4} display={!isInternalPage && 'none'}>
             <Grid md={12} sm={12} xs={12}>
               <Typography color={'lightTextSm.main'}>Cliente</Typography>
-              <Tooltip title='Ver cliente'>
-                <Typography color={'primary.main'}>
+              <Tooltip title='Ver cliente' >
+                <Typography color={'primary.main'} sx={{ width: 'fit-content' }}>
                   <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
                     {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}
                   </a>
@@ -249,37 +241,31 @@ const Head = (props) => {
                 {/* Headers */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                   <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                  <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
                   <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                 </Grid>
                 {/* Postal Code */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
-                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.postalCode}</Typography></Grid>
                   <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.postalCode}</Typography></Grid>
                 </Grid>
                 {/* Street */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
-                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.streetAddress}</Typography></Grid>
                   <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.streetAddress}</Typography></Grid>
                 </Grid>
                 {/* addressLocality */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
-                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressLocality}</Typography></Grid>
                   <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.addressLocality}</Typography></Grid>
                 </Grid>
                 {/* addressRegion */}
                 <Grid container md={12} sm={12} xs={12}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
-                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{order.orderBy?.object?.address?.addressRegion}</Typography></Grid>
                   <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.addressRegion}</Typography></Grid>
                 </Grid>
                 {/* addressCountry */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
-                  <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
                   <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.hasBudget?.object?.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
                 </Grid>
               </Grid>

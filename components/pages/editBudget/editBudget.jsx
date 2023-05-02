@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 //  Nodes
 import Router from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 //  Material Ui
 import { ButtonGroup, Grid, Typography } from '@mui/material';
@@ -40,11 +40,12 @@ import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
+import ConvertString from '../../utils/ConvertString';
 import ToastSet from '../../utils/ToastSet';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
+import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
-import ConvertString from '../../utils/ConvertString';
 
 const EditBudget = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients, budget } = props;
@@ -84,7 +85,24 @@ const EditBudget = ({ ...props }) => {
     addressCountry: { value: budget?.deliveryAddress?.value?.addressCountry, error: '', required: true },
   });
 
-  const [lines, setLines] = useState(props.furnitures);
+  const [lines, setLines] = useState(props.furnitures2);
+
+  useEffect(() => {
+    let totalPrice = 0;
+    let totalAmount = 0;
+
+    lines.map((group) => {
+      group.subGroups?.map((subgroup) => {
+        subgroup.items.map(item => {
+          totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+          totalAmount += Number(item?.amount?.value);
+        });
+      });
+    });
+
+    budgetData.price.value = totalPrice;
+    setBudgetData({ ...budgetData, price: { ...budgetData.price, value: totalPrice }, amount: { ...budgetData.price, value: totalAmount } });
+  }, [lines]);
 
   const [inputFields, setInputFields] = useState([{
     category: { value: '', error: '' },
@@ -133,21 +151,24 @@ const EditBudget = ({ ...props }) => {
     let hasErrors = false;
 
     //  if there are 0 items in the 1st group, return true = errors
-    if (obj[0]?.items?.length === 0 || typeof obj[0]?.items === 'undefined') return true;
+    if (obj[0]?.subGroups?.length === 0 || typeof obj[0]?.subGroups === 'undefined') return true;
 
     obj.map((group) => {
-      group.items.map((item) => {
-        Object.entries(item).forEach(([, value]) => {
-          if (typeof value === 'object' && 'error' in value && value.value === '' && value.required) {
-            value.error = 'Campo obrigatorio';
-            hasErrors = true;
-          } else if (typeof value === 'object') { value.error = ''; }
+      group.subGroups.map((subgroup) => {
+        subgroup.items.map((item) => {
+          Object.entries(item).forEach(([, value]) => {
+            if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
+              value.error = 'Campo obrigatorio';
+              hasErrors = true;
+            } else if (typeof value === 'object') {
+              value.error = '';
+            }
+          });
         });
       });
     });
 
     setLines(obj);
-    console.log(hasErrors);
 
     return hasErrors;
   }
@@ -192,7 +213,7 @@ const EditBudget = ({ ...props }) => {
     hasErrors = ValidateLines();
 
     if (hasErrors) {
-      toast.error('Prencha todos os campos.');
+      toast.error('Preencha todos os campos.');
       setBudgetData(data);
 
       return !hasErrors;
@@ -253,8 +274,7 @@ const EditBudget = ({ ...props }) => {
           addressCountry: budgetData.addressCountry.value,
         }
       },
-      price: { value: onlyValues.price?.value?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-
+      price: { value: String(onlyValues.price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
     };
 
     delete built.client;
@@ -263,121 +283,165 @@ const EditBudget = ({ ...props }) => {
     delete built.addressLocality;
     delete built.addressRegion;
     delete built.addressCountry;
-    await updateBudget({ id: budget.id, data: built }).then((res) => console.log(res)).catch((err) => console.log(err));
+    await updateBudget({ id: budget.id, data: built }).catch((err) => console.log(err));
   }
 
   async function handleSave () {
     const loading = toast.loading();
 
-    const items = lines.map(line => {
-      let lastGroup = '';
+    const currentItems = lines.map(group => {
+      const items = [{
+        id: group.id,
+        furnitureType: { type: 'Property', value: 'group' },
+        name: { type: 'Property', value: group.name.value },
+        hasBudget: { value: budget.id, type: 'Property' },
+        type: 'Furniture'
+      }];
 
-      const lines = line.items.map(item => {
-        if (item.rowType.value === 'group') { lastGroup = item.name.value; console.log(item.name); }
+      delete items[0].subGroups;
 
-        const valuesOnly = {};
+      const lines = group.subGroups?.map(subgroup => {
+        //  Aqui tenho cada subgrupo com os items dentro
 
-        Object.keys(item).map(key => {
-          valuesOnly[key] = {
-            type: 'Property',
-            value: typeof item[key].value !== 'undefined' ? item[key].value : item[key]
-          };
+        const items = [{
+          id: subgroup.id,
+          furnitureType: { type: 'Property', value: 'subGroup' },
+          name: { type: 'Property', value: subgroup.name.value },
+          hasBudget: { value: budget.id, type: 'Property' },
+          type: 'Furniture'
+        }];
+
+        delete items[0].items;
+
+        const items2 = subgroup.items.map((item) => {
+          const valuesOnly = {};
+
+          Object.keys(item).map(key => {
+            valuesOnly[key] = {
+              type: 'Property',
+              value: typeof item[key].value !== 'undefined' ? item[key].value : item[key]
+            };
+          });
+
+          valuesOnly.id = item.id;
+          valuesOnly.type = 'Furniture';
+          valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
+          valuesOnly.group = { value: group.name.value, type: 'Property' };
+          valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+
+          return valuesOnly;
         });
 
-        valuesOnly.id = valuesOnly.id?.value;
-        valuesOnly.type = 'Furniture';
-        valuesOnly.group = { value: line.name, type: 'Property' };
-        valuesOnly.section = { value: lastGroup, type: 'Property' };
-        valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
-
-        return valuesOnly;
+        return items.concat(...items2);
       });
 
-      return lines;
+      return items.concat(...lines);
     });
 
-    const oldItems = props.furnitures.map(line => {
-      let lastGroup = '';
+    const oldItems = props.furnitures2.map(group => {
+      const items = [{
+        id: group.id,
+        furnitureType: { type: 'Property', value: 'group' },
+        name: { type: 'Property', value: group.name.value },
+        hasBudget: { value: budget.id, type: 'Property' },
+        type: 'Furniture'
+      }];
 
-      const lines = line.items.map(item => {
-        if (item.rowType.value === 'group') { lastGroup = item.name.value; console.log(item.name); }
+      delete items[0].subGroups;
 
-        const valuesOnly = {};
+      const lines = group.subGroups?.map(subgroup => {
+        //  Aqui tenho cada subgrupo com os items dentro
 
-        Object.keys(item).map(key => {
-          valuesOnly[key] = {
-            type: 'Property',
-            value: typeof item[key].value !== 'undefined' ? item[key].value : item[key]
-          };
+        const items = [{
+          id: subgroup.id,
+          furnitureType: { type: 'Property', value: 'subGroup' },
+          name: { type: 'Property', value: subgroup.name.value },
+          hasBudget: { value: budget.id, type: 'Property' },
+          type: 'Furniture'
+        }];
+
+        delete items[0].items;
+
+        const items2 = subgroup.items.map((item) => {
+          const valuesOnly = {};
+
+          Object.keys(item).map(key => {
+            valuesOnly[key] = {
+              type: 'Property',
+              value: typeof item[key].value !== 'undefined' ? item[key].value : item[key]
+            };
+          });
+
+          valuesOnly.id = item.id;
+          valuesOnly.type = 'Furniture';
+          valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
+          valuesOnly.group = { value: group.name.value, type: 'Property' };
+          valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+
+          return valuesOnly;
         });
 
-        valuesOnly.id = valuesOnly.id?.value;
-        valuesOnly.type = 'Furniture';
-        valuesOnly.group = { value: line.name, type: 'Property' };
-        valuesOnly.section = { value: lastGroup, type: 'Property' };
-        valuesOnly.hasBudget = { value: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, type: 'Property' };
-
-        return valuesOnly;
+        return items.concat(...items2);
       });
 
-      return lines;
+      return items.concat(...lines);
     });
 
-    const mergedArray = items.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
-      return { ...item, num: index, id: item.id || 'new_urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
+    const currentItemsArray = currentItems.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
+      return {
+        ...item,
+        lineNumber: { value: index, type: 'Property' },
+        id: item.id || 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + formatString(item.group.value) + '_' + formatString(item.subGroup.value) + '_' + formatString(item.name.value) + moment().diff(moment().startOf('day'), 'seconds') + '_new',
+      };
     });
 
     const mergedArrayOld = oldItems.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
-      return { ...item, num: index, id: item.id || 'new_urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
+      return { ...item, lineNumber: { value: index, type: 'Property' }, id: item.id || 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index + '_new' };
     });
 
     const toDelete = mergedArrayOld.filter((row1) => {
-      const index = mergedArray.findIndex((row2) => row2.id === row1.id);
+      const index = currentItemsArray.findIndex((row2) => row2.id === row1.id);
 
       return index === -1;
     });
 
-    await UpdateBudgetData();
-    await DeleteRows(toDelete);
+    const toCreate = currentItemsArray
+      .filter((ele) => ele.id?.includes('_new'))
+      .map((ele) => ({ ...ele, id: ele.id.replace('_new', '') }));
 
-    const toCreate = mergedArray.filter((ele) => ele.id?.includes('new_'));
-
-    await CreateBudgetRows(toCreate);
-
-    // eslint-disable-next-line consistent-return
-    const toUpdate = mergedArray.filter((row1) => {
+    const toUpdate = currentItemsArray.filter((row1) => {
       const index = mergedArrayOld.find((row2) => row2.id === row1.id);
 
-      if (JSON.stringify(row1) !== JSON.stringify(index)) {
+      if ((JSON.stringify(row1) !== JSON.stringify(index)) && !row1.id.includes('_new')) {
         return row1;
       }
 
-      return row1;
+      return !row1.id.includes('_new') && row1;
     });
 
+    await UpdateBudgetData();
+    await DeleteRows(toDelete);
+    await CreateBudgetRows(toCreate);
     await UpdateRows(toUpdate);
     ToastSet(loading, 'Projeto atualizado.', 'success');
     Router.push(breadcrumbsPath[1].href);
   }
 
   async function DeleteRows (rows) {
-    console.log(rows);
-
     try {
-      rows.map(async (row) => await deleteFurniture(row.id).then((res) => console.log(res)).catch((err) => console.log(err)));
+      rows.map(async (row) => await deleteFurniture(row.id).catch((err) => console.log(err)));
 
       return true;
     } catch (err) { return false; }
   }
 
   async function UpdateRows (rows) {
-    console.log(rows);
-
     try {
-      rows.map(async (item, index) => {
-        item.num = index;
-        console.log(item.num);
-        await updateFurniture(item).then((result) => console.log(result)).catch((err) => console.log(err));
+      rows.map(async (item) => {
+        const id = item.id;
+
+        delete item.id;
+        await updateFurniture({ id, data: item }).catch((err) => console.log(err));
       });
     } catch (err) {
       console.log(err);
@@ -385,11 +449,9 @@ const EditBudget = ({ ...props }) => {
   }
 
   async function CreateBudgetRows (rows) {
-    console.log(rows);
-
     try {
       rows.map(async (item) => {
-        await newFurniture(item).then((result) => console.log(result)).catch((err) => console.log(err));
+        await newFurniture(item).catch((err) => console.log(err));
       });
     } catch (err) {
       console.log(err);
@@ -415,7 +477,6 @@ const EditBudget = ({ ...props }) => {
         {/* What do do after Create Modal */}
         <ConfirmDialog {...successModalProps} />
         <Content>
-
           <Grid container md={12} sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
             <Grid container md={10} sm={10} xs={12}>
               <Typography variant='titlexxl'>{breadcrumbsPath[1].title}</Typography>
@@ -450,7 +511,8 @@ const EditBudget = ({ ...props }) => {
           </Grid>
           <Grid container md={12}>
             <Content>
-              <ProductLinesTab {...props}
+              <ProductLinesTab2
+                {...props}
                 dragDrop={{ getRootProps, getInputProps, isDragActive }}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
@@ -463,6 +525,21 @@ const EditBudget = ({ ...props }) => {
               />
             </Content>
           </Grid>
+          {false && <Grid container md={12}>
+            <Content>
+              <ProductLinesTab {...props}
+                dragDrop={{ getRootProps, getInputProps, isDragActive }}
+                budgetData={budgetData}
+                onBudgetChange={onBudgetChange}
+                docs={{ uploadedFiles, setUploadedFiles }}
+                inputFields={inputFields}
+                setInputFields={setInputFields}
+                noDrop
+                lines={lines}
+                setLines={setLines}
+              />
+            </Content>
+          </Grid>}
           <Grid container md={12}>
             <Content>
               <ObservationsTab {...props}

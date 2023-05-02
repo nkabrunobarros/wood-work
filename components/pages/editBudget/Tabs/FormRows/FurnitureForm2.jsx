@@ -3,21 +3,26 @@
 import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
 import React from 'react';
 
-//  PropTypes
-//  Page Component Styles
-
-//  Actions
 import { X } from 'lucide-react';
 import FormGenerator from '../../../../formGenerator';
-// import CurrencyInput from '../../../inputs/CurrencyInput';
 
-const FurnitureForm = (props) => {
+const FurnitureForm2 = (props) => {
   function onChange (index, e) {
-    props.onChange({ index: props.index, e, lineIndex: props.lineIndex });
+    props.onChange({
+      subGroupIndex: props.subGroupIndex,
+      groupIndex: props.groupIndex,
+      itemIndex: props.itemIndex,
+      newValue: e.target.value,
+      property: e.target.name
+    });
   }
 
   function removeThisRow () {
-    props.onRemove({ index: props.index, lineIndex: props.lineIndex });
+    props.onRemove({
+      subGroupIndex: props.subGroupIndex,
+      groupIndex: props.groupIndex,
+      itemIndex: props.itemIndex
+    });
   }
 
   return <Grid container>
@@ -34,11 +39,11 @@ const FurnitureForm = (props) => {
       perRow={4}
       fields={Object.keys(props.field).map((key) => {
         return props.field[key];
-      })}
+      }).sort((a, b) => a.displayOrder - b.displayOrder)}
       onFormChange={onChange}
     />
 
   </Grid>;
 };
 
-export default FurnitureForm;
+export default FurnitureForm2;

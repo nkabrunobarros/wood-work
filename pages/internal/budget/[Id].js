@@ -41,26 +41,41 @@ const Budget = ({ ...pageProps }) => {
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
+      const built = [];
+      let currentGroup = null;
+      let currentSubGroup = null;
 
-      const groups = furnitures.reduce((accumulator, item) => {
-        const groupName = item.group.value;
-
-        if (!accumulator[groupName]) {
-          accumulator[groupName] = {
-            id: `group${Object.keys(accumulator).length}`,
-            name: groupName,
-            items: []
+      furnitures2.map((item) => {
+        if (item.furnitureType.value === 'group') {
+          // Create a new group object
+          currentGroup = {
+            ...item,
+            subgroups: [],
           };
+
+          // Add the group object to the result array
+          built.push(currentGroup);
+          // Reset the current sub-group object
+          currentSubGroup = null;
+        } else if (item.furnitureType.value === 'subGroup') {
+          // Create a new sub-group object
+          currentSubGroup = {
+            ...item,
+            items: [],
+          };
+
+          // Add the sub-group object to the current group's subgroups array
+          currentGroup.subgroups.push(currentSubGroup);
+        } else {
+          // Add the furniture item to the current sub-group's items array
+          currentSubGroup?.items?.push({
+            ...item
+          });
         }
+      });
 
-        accumulator[groupName].items.push(item);
-
-        return accumulator;
-      }, {});
-
-      const result = Object.values(groups);
-
-      setFurnitures(result);
+      setFurnitures(built);
       thisBudget.orderBy.object = client;
       setBudget(thisBudget);
       setDisplayingBudget(thisBudget);

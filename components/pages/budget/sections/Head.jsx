@@ -117,15 +117,11 @@ const Head = (props) => {
 
     const data = {
       status: { type: 'Property', value: 'waiting budget' },
-      approvedDate: { type: 'Property', value: '' },
-      name: { type: 'Property', value: budget.name.value },
-      price: { type: 'Property', value: String(budget.price?.value)?.replace(/ /g, '').replace(/€/g, '') },
-      amount: { type: 'Property', value: budget.amount?.value },
-      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
     };
 
     await updateBudget({ id: budget.id, data })
       .then(() => {
+        setInitiateBudgeting(false);
         ToastSet(loading, 'Projeto alterado!', 'success');
         setActiveFields({});
 
@@ -140,16 +136,6 @@ const Head = (props) => {
         });
       })
       .catch(() => {
-        setOld({
-          ...budget,
-          status: { type: 'Property', value: 'waiting budget' },
-        });
-
-        setBudget({
-          ...budget,
-          status: { type: 'Property', value: 'waiting budget' },
-        });
-
         setInitiateBudgeting(false);
         ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
       });
@@ -162,13 +148,8 @@ const Head = (props) => {
     const data = {
       price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
       amount: { type: 'Property', value: budget.amount.value },
-      category: { type: 'Property', value: budget.category.value },
       dateAgreedDelivery: { type: 'Property', value: budget.dateAgreedDelivery.value },
       dateRequest: { type: 'Property', value: budget.dateRequest.value },
-      approvedDate: { type: 'Property', value: budget.approvedDate.value },
-      name: { type: 'Property', value: budget.name.value },
-      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
-
     };
 
     await updateBudget({ id: budget.id, data })
@@ -194,35 +175,14 @@ const Head = (props) => {
           dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
         });
       })
-      .catch((err) => {
-        if (JSON.stringify(err).includes('approvedBy')) {
-          setActiveFields({});
-
-          setOld({
-            ...budget,
-            price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
-            amount: { ...budget.amount, value: budget.amount.value },
-            category: { ...budget.category, value: budget.category.value },
-            dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
-            dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
-          });
-
-          setBudget({
-            ...budget,
-            price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
-            amount: { ...budget.amount, value: budget.amount.value },
-            category: { ...budget.category, value: budget.category.value },
-            dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
-            dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
-          });
-
-          ToastSet(loading, 'Projeto alterado!', 'success');
-        } else ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
+      .catch(() => {
+        setActiveFields({});
+        ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
       });
   }
 
   async function handleConfirmation ({
-    amount, obs, price, category,
+    price,
     dateAgreedDelivery,
     dateDeliveryProject
   }) {
@@ -230,13 +190,11 @@ const Head = (props) => {
 
     const data = {
       ...budget,
-      amount: { value: amount?.value || '0', type: 'Property' },
       price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
       status: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
       dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
       dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
-      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
     };
 
     delete data.createdAt;
@@ -247,10 +205,7 @@ const Head = (props) => {
     await updateBudget({ data, id: budget.id }).then(() => {
       setBudget({
         ...budget,
-        amount: { value: amount.value, type: 'Property' },
-        obs: { value: obs.value, type: 'Property' },
-        price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-        category: { value: category.value, type: 'Property' },
+        price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
         status: { value: 'waiting adjudication', type: 'Property' },
         dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
         dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
@@ -259,10 +214,7 @@ const Head = (props) => {
 
       setOld({
         ...budget,
-        amount: { value: amount.value, type: 'Property' },
-        obs: { value: obs.value, type: 'Property' },
-        price: { value: price.value.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-        category: { value: category.value, type: 'Property' },
+        price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
         status: { value: 'waiting adjudication', type: 'Property' },
         dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
         dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
@@ -272,20 +224,8 @@ const Head = (props) => {
       setDeliverModal(false);
       ToastSet(processing, 'Projeto entregue', 'success');
     }).catch((err) => {
-      if (JSON.stringify(err).includes('approvedBy')) {
-        setDeliverModal(false);
-        ToastSet(processing, 'Projeto entregue', 'success');
-
-        setBudget({
-          ...budget,
-          status: { value: 'waiting adjudication', type: 'Property' },
-        });
-
-        setOld({
-          ...budget,
-          status: { value: 'waiting adjudication', type: 'Property' },
-        });
-      }
+      console.log(err);
+      ToastSet(processing, 'Projeto não entregue. Se o problema persistir, contacte a gerência.', 'error');
     });
   }
 
@@ -321,8 +261,7 @@ const Head = (props) => {
         name: { type: 'Property', value: budget.name.value },
         status: { type: 'Property', value: 'drawing' },
         hasBudget: { type: 'Relationship', object: budget.id },
-        assemblyBy: { type: 'Relationship', object: ['urn:ngsi-ld:Worker:'] },
-        completed: { type: 'Property', value: '' },
+        produced: { type: 'Property', value: '0' },
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
         expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
         assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
@@ -361,12 +300,9 @@ const Head = (props) => {
         {
           id: budget.id,
           data: {
-            type: 'Budget',
-            name: { type: 'Property', value: budget.name.value },
             approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
-            approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy.object.id },
+            approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + reduxState.auth.me.id },
             status: { type: 'Property', value: 'adjudicated' },
-            amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
           }
         }
       );
@@ -376,11 +312,8 @@ const Head = (props) => {
       toast.success('Projeto adjudicado! Passou para produção');
       Router.push(routes.private.internal.project + projRes.data.id);
     } catch (err) {
-      // setAdjudicateModal(false);
-      // toast.error('Algo aconteceu. Por favor tente mais tarde.');
       setAdjudicateModal(false);
-      toast.success('Projeto adjudicado! Passou para produção');
-      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + formatString(budget.name.value));
+      toast.error('Algo aconteceu. Por favor tente mais tarde.');
     }
   }
 
@@ -395,26 +328,18 @@ const Head = (props) => {
   const tableFirstCell = {
     container: true,
     sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
-    md: 2,
-    sm: 2,
-    xs: 2,
+    md: 3,
+    sm: 3,
+    xs: 3,
     p: 0.5
   };
 
   const tableLastCell = {
     container: true,
     sx: { borderRight: '1px solid ', borderColor: 'divider' },
-    md: 5,
-    sm: 5,
-    xs: 5,
-    p: 0.5
-  };
-
-  const tablemiddleCell = {
-    container: true,
-    md: 5,
-    sm: 5,
-    xs: 5,
+    md: 9,
+    sm: 9,
+    xs: 9,
     p: 0.5
   };
 
@@ -562,37 +487,31 @@ const Head = (props) => {
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                         <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                        <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
                         <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                       </Grid>
                       {/* Postal Code */}
                       <Grid container md={12} sm={12} xs={12}>
                         <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
-                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.postalCode}</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.postalCode}</Typography></Grid>
                       </Grid>
                       {/* Street */}
                       <Grid container md={12} sm={12} xs={12}>
                         <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
-                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.streetAddress}</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.streetAddress}</Typography></Grid>
                       </Grid>
                       {/* addressLocality */}
                       <Grid container md={12} sm={12} xs={12}>
                         <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
-                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.addressLocality}</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressLocality}</Typography></Grid>
                       </Grid>
                       {/* addressRegion */}
                       <Grid container md={12} sm={12} xs={12}>
                         <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
-                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{budget.orderBy?.object?.address?.addressRegion}</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressRegion}</Typography></Grid>
                       </Grid>
                       {/* addressCountry */}
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                         <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
-                        <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === budget.orderBy?.object?.address?.addressCountry)?.name.common}</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === budget.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
                       </Grid>
                     </Grid>

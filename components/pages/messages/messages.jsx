@@ -114,7 +114,7 @@ const Messages = (props) => {
             <Box container className='conversationsBox' justifyContent='end'>
               <Grid md={12} sx={{ maxHeight: '70vh', minHeight: '70vh' }}>
                 <ConversationsToolbar windowWidth={windowWidth} isInternalPage={isInternalPage} styles={styles} {...props} onSearch={setConversationFilter} />
-                <Box sx={{ overflow: 'scroll', maxHeight: '85%', pt: '1rem' }}>
+                <Box sx={{ overflow: 'scroll', maxHeight: '50vh', minHeight: '50vh', pt: '1rem' }}>
                   <ConversationsList {...props} isInternalPage={isInternalPage} conversations={chats.filter(ele => ele.filterName.toLowerCase().toString().includes(conversationFilter.toLowerCase()))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/>
                   {/* <ConversationsList {...props} isInternalPage={isInternalPage} conversations={chats.filter(ele => ele.filterName.toLowerCase().toString().includes(conversationFilter.toLowerCase()))} activeRow={activeRow} onRowClick={setActiveRow} windowWidth={windowWidth}/> */}
                 </Box>

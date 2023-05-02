@@ -10,6 +10,9 @@ export const PARTS_SUCCESS = 'PARTS_SUCCESS';
 export const NEW_PART_REQUEST = 'NEW_PART_REQUEST';
 export const NEW_PART_FAIL = 'NEW_PART_FAIL';
 export const NEW_PART_SUCCESS = 'NEW_PART_SUCCESS';
+export const UPDATE_PART_REQUEST = 'UPDATE_PART_REQUEST';
+export const UPDATE_PART_FAIL = 'UPDATE_PART_FAIL';
+export const UPDATE_PART_SUCCESS = 'UPDATE_PART_SUCCESS';
 
 export const parts = (data) => {
   const { auth_token: userToken } = parseCookies();
@@ -59,5 +62,23 @@ export const newPart = (data) => {
       url: getApiURL(endpoints.PARTS),
     },
     types: [NEW_PART_REQUEST, NEW_PART_SUCCESS, NEW_PART_FAIL],
+  });
+};
+
+export const updatePart = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      ...data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'PATCH',
+      url: getApiURL(endpoints.PARTS + id),
+    },
+    types: [UPDATE_PART_REQUEST, UPDATE_PART_SUCCESS, UPDATE_PART_FAIL],
   });
 };

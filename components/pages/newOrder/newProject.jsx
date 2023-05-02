@@ -33,7 +33,7 @@ import Loader from '../../loader/loader';
 
 //  Device "Detector"
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
@@ -47,7 +47,7 @@ import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, budgets, clients } = props;
+  const { breadcrumbsPath, pageProps, clients } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -57,17 +57,18 @@ const NewOrder = ({ ...props }) => {
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
   const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
+  const reduxState = useSelector((state) => state);
 
   useEffect(() => {
     let totalPrice = 0;
     let totalAmount = 0;
 
-    lines.map((line) => {
-      console.log(line);
-
-      line.items.map((item) => {
-        totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
-        totalAmount += Number(item?.amount?.value);
+    lines.map((group) => {
+      group.subGroups?.map((subgroup) => {
+        subgroup.items.map(item => {
+          totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+          totalAmount += Number(item?.amount?.value);
+        });
       });
     });
 
@@ -138,20 +139,25 @@ const NewOrder = ({ ...props }) => {
     let hasErrors = false;
 
     //  if there are 0 items in the 1st group, return true = errors
-    if (obj[0]?.items?.length === 0 || typeof obj[0]?.items === 'undefined') return true;
+    if (obj[0]?.subGroups?.length === 0 || typeof obj[0]?.subGroups === 'undefined') return true;
 
     obj.map((group) => {
-      group.items.map((item) => {
-        Object.entries(item).forEach(([, value]) => {
-          if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
-            value.error = 'Campo obrigatorio';
-            hasErrors = true;
-          } else value.error = '';
+      console.log(group);
+
+      group.subGroups.map((subgroup) => {
+        subgroup.items.map((item) => {
+          Object.entries(item).forEach(([, value]) => {
+            if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
+              value.error = 'Campo obrigatorio';
+              hasErrors = true;
+            } else value.error = '';
+          });
         });
       });
     });
 
     setLines(obj);
+    console.log(hasErrors);
 
     return hasErrors;
   }
@@ -168,13 +174,6 @@ const NewOrder = ({ ...props }) => {
           if (date.isValid()) data[prop].error = '';
           else {
             data[prop].error = 'Data Invalida';
-            hasErrors = true;
-          }
-        }
-
-        if (prop === 'name') {
-          if (budgets.find((element) => element.name.value.toLowerCase() === data[prop].value.toLowerCase()) !== undefined) {
-            data[prop].error = 'Nome já usado';
             hasErrors = true;
           }
         }
@@ -227,7 +226,7 @@ const NewOrder = ({ ...props }) => {
       },
       price: {
         type: 'Property',
-        value: budgetData.price.value
+        value: String(budgetData.price.value)
       },
       approvedDate: {
         type: 'Property',
@@ -252,7 +251,6 @@ const NewOrder = ({ ...props }) => {
       category: {
         type: 'Property',
         value: inputFields[0]?.category.value || ''
-        // value: budgetData.category.value || ''
       },
       status: {
         type: 'Property',
@@ -261,6 +259,10 @@ const NewOrder = ({ ...props }) => {
       orderBy: {
         type: 'Relationship',
         object: 'urn:ngsi-ld:Owner:' + budgetData.client.value
+      },
+      approvedBy: {
+        type: 'Relationship',
+        object: 'urn:ngsi-ld:Worker:' + reduxState.auth.me.id
       },
       belongsTo: {
         type: 'Relationship',
@@ -286,10 +288,10 @@ const NewOrder = ({ ...props }) => {
       CreateFurnitures(res.data.id);
 
       await newFolder({
-        folder_name: `urn:ngsi-ld:Folder:${formatString(budgetData.name.value)}`,
+        folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
         parent_folder: null,
         user: clientUser,
-        budget: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`
+        budget: `urn:ngsi-ld:Budget:${data.id.replace('urn:ngsi-ld:Budget:', '')}`
       });
 
       toast.success('Projeto Criado!');
@@ -315,35 +317,59 @@ const NewOrder = ({ ...props }) => {
   };
 
   async function CreateFurnitures (budgetId) {
-    const items = lines.map(line => {
-      let lastGroup = '';
+    const items = lines.map(group => {
+      const items = [{
+        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id,
+        furnitureType: { type: 'Property', value: 'group' },
+        name: { type: 'Property', value: group.name },
+        hasBudget: { value: budgetId, type: 'Property' },
+        type: 'Furniture'
+      }];
 
-      const lines = line.items.map(item => {
-        if (item.rowType.value === 'group') { lastGroup = item.name.value; console.log(item.name); }
+      delete items[0].subGroups;
 
-        const valuesOnly = {};
+      const lines = group.subGroups?.map(subgroup => {
+        //  Aqui tenho cada subgrupo com os items dentro
 
-        Object.keys(item).map(key => {
-          valuesOnly[key] = {
-            type: 'Property',
-            value: item[key].value
-          };
+        const items = [{
+          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id,
+          furnitureType: { type: 'Property', value: 'subGroup' },
+          name: { type: 'Property', value: subgroup.name },
+          hasBudget: { value: budgetId, type: 'Property' },
+          type: 'Furniture'
+        }];
+
+        delete items[0].items;
+
+        const items2 = subgroup.items.map((item) => {
+          const valuesOnly = {};
+
+          Object.keys(item).map(key => {
+            valuesOnly[key] = {
+              type: 'Property',
+              value: item[key].value
+            };
+          });
+
+          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value);
+          valuesOnly.type = 'Furniture';
+          valuesOnly.subGroup = { value: subgroup.name, type: 'Property' };
+          valuesOnly.group = { value: group.name, type: 'Property' };
+          valuesOnly.hasBudget = { value: budgetId, type: 'Property' };
+          valuesOnly.produced = { value: false, type: 'Property' };
+          valuesOnly.assembled = { value: false, type: 'Property' };
+
+          return valuesOnly;
         });
 
-        valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_';
-        valuesOnly.type = 'Furniture';
-        valuesOnly.group = { value: line.name, type: 'Property' };
-        valuesOnly.section = { value: lastGroup, type: 'Property' };
-        valuesOnly.hasBudget = { value: budgetId, type: 'Property' };
-
-        return valuesOnly;
+        return items.concat(...items2);
       });
 
-      return lines;
+      return items.concat(...lines);
     });
 
-    const mergedArray = items.reduce((mergedArray, array) => mergedArray.concat(array), []).map((item, index) => {
-      return { ...item, num: index, id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + index };
+    const mergedArray = [].concat(...items).map((item, index) => {
+      return { ...item, lineNumber: index };
     });
 
     try {
@@ -434,7 +460,7 @@ const NewOrder = ({ ...props }) => {
               />
             </Content>
           </Grid>
-          <Grid container md={12} display='none'>
+          {false && <Grid container md={12} >
             <Content>
               <ProductLinesTab {...props}
                 budgetData={budgetData}
@@ -448,7 +474,7 @@ const NewOrder = ({ ...props }) => {
 
               />
             </Content>
-          </Grid>
+          </Grid>}
           <Grid container md={12}>
             <Content>
               <ObservationsTab {...props}

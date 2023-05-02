@@ -1,5 +1,6 @@
 /* eslint-disable array-callback-return */
 //  Page Component
+import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,11 +9,10 @@ import BudgetScreen from '../../components/pages/budget/budget';
 import routes from '../../navigation/routes';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
+import * as countriesActionsRedux from '../../store/actions/country';
 import * as filesActionsRedux from '../../store/actions/file';
 import * as foldersActionsRedux from '../../store/actions/folder';
 import * as furnituresActionsRedux from '../../store/actions/furniture';
-import axios from 'axios';
-import * as countriesActionsRedux from '../../store/actions/country';
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const Budget = ({ ...pageProps }) => {
   const setDisplayingBudget = (data) => dispatch(budgetsActionsRedux.setDisplayingBudget(data));
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
-  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.budgetFolders(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const [furnitures, setFurnitures] = useState();
   const reduxState = useSelector((state) => state);
@@ -36,43 +36,63 @@ const Budget = ({ ...pageProps }) => {
       const budget = (await getBudget(router.query.Id)).data;
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
-      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
+      const furnitures3 = (await getFurnitures()).data;
+      const furnitures = furnitures3.filter(ele => ele.hasBudget?.value === router.query.Id);
+
+      furnitures3.map((f) => {
+        console.log(f.hasBudget.value);
+      });
 
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
-      const groups = furnitures.reduce((accumulator, item) => {
-        const groupName = item.group.value;
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
+      const built = [];
+      let currentGroup = null;
+      let currentSubGroup = null;
 
-        if (!accumulator[groupName]) {
-          accumulator[groupName] = {
-            id: `group${Object.keys(accumulator).length}`,
-            name: groupName,
-            items: []
+      furnitures2.map((item) => {
+        if (item.furnitureType.value === 'group') {
+          // Create a new group object
+          currentGroup = {
+            ...item,
+            subgroups: [],
           };
+
+          // Add the group object to the result array
+          built.push(currentGroup);
+          // Reset the current sub-group object
+          currentSubGroup = null;
+        } else if (item.furnitureType.value === 'subGroup') {
+          // Create a new sub-group object
+          currentSubGroup = {
+            ...item,
+            items: [],
+          };
+
+          // Add the sub-group object to the current group's subgroups array
+          currentGroup.subgroups.push(currentSubGroup);
+        } else {
+          // Add the furniture item to the current sub-group's items array
+          currentSubGroup?.items?.push({
+            ...item
+          });
         }
+      });
 
-        accumulator[groupName].items.push(item);
-
-        return accumulator;
-      }, {});
-
-      const result = Object.values(groups);
-
-      setFurnitures(result);
+      setFurnitures(built);
       thisBudget.orderBy.object = client;
       setBudget(thisBudget);
       setDisplayingBudget(thisBudget);
 
-      await getFolders().then(async (res) => {
+      await getFolders(router.query.Id).then(async (res) => {
         const builtFolders = [];
         const resFiles = await getFiles(router.query.Id);
 
-        console.log(res.data);
-
         res.data.results.map((folder) => {
           const folder2 = { ...folder };
+          const foundRows = resFiles?.data?.results.filter(row => folder2.files.includes(row.id));
 
-          folder2.files = resFiles.data.results.filter((file) => file.budget === router.query.Id && file.folder === folder.id);
+          folder2.files = foundRows;
           builtFolders.push(folder2);
         });
 

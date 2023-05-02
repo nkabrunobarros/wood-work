@@ -27,6 +27,9 @@ const DocsClient = (props) => {
     setConfirmUploadModal(true);
   }, []);
 
+  console.log(userFiles);
+  console.log(props.folders);
+
   const { getInputProps } = useDropzone({ onDrop });
 
   async function handleFilesUpload () {

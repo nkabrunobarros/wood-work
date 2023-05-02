@@ -50,7 +50,7 @@ const ProductLinesTab = (props) => {
       ...prevLines[props],
       items: [...lines[props]?.items,
         {
-          rowType: { value: 'furniture', error: '', hidden: true },
+          furnitureType: { value: 'furniture', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Nome' },
           description: { id: 'description', value: '', error: '', label: 'Descrição', type: 'area' },
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
@@ -76,7 +76,7 @@ const ProductLinesTab = (props) => {
       ...prevLines[props],
       items: [...lines[props]?.items,
         {
-          rowType: { value: 'group', error: '', hidden: true },
+          furnitureType: { value: 'group', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Secção' },
         }]
     };
@@ -92,7 +92,7 @@ const ProductLinesTab = (props) => {
       ...prevLines[props],
       items: [...lines[props]?.items,
         {
-          rowType: { value: 'accessory', error: '', hidden: true },
+          furnitureType: { value: 'accessory', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Nome' },
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
           obs: { id: 'obs', value: '', error: '', label: 'Observações', type: 'area' },
@@ -189,9 +189,9 @@ const ProductLinesTab = (props) => {
                     {line.items.map((field, index) => {
                       return <Grow key={index}in={true}>
                         <Box>
-                          {field?.rowType?.value === 'group' && <GroupForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
-                          {field?.rowType?.value === 'furniture' && <FurnitureForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
-                          {field?.rowType?.value === 'accessory' && <AccessoryForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                          {field?.furnitureType?.value === 'group' && <GroupForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                          {field?.furnitureType?.value === 'furniture' && <FurnitureForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                          {field?.furnitureType?.value === 'accessory' && <AccessoryForm field={field} index={index} lineIndex={i} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
                         </Box>
                       </Grow>;
                     })}

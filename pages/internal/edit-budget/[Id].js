@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 //  Nodes
 import React, { useEffect, useState } from 'react';
 
@@ -41,6 +42,7 @@ const EditProject = ({ ...pageProps }) => {
   const router = useRouter();
   const [furnitures, setFurnitures] = useState();
   const [budget, setBudget] = useState();
+  const [furnitures2, setFurnitures2] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -56,14 +58,70 @@ const EditProject = ({ ...pageProps }) => {
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
+      const built = [];
+      let currentGroup = null;
+      let currentSubGroup = null;
+
+      furnitures2.map((item) => {
+        if (item.furnitureType.value === 'group') {
+          // Create a new group object
+          currentGroup = {
+            ...item,
+            name: { required: true, value: item.name.value, error: '' },
+            furnitureType: { required: true, value: item.furnitureType.value, error: '' },
+            subGroups: [],
+          };
+
+          // Add the group object to the result array
+          built.push(currentGroup);
+          // Reset the current sub-group object
+          currentSubGroup = null;
+        } else if (item.furnitureType.value === 'subGroup') {
+          // Create a new sub-group object
+          currentSubGroup = {
+            ...item,
+            name: { required: true, value: item.name.value, error: '' },
+            furnitureType: { required: true, value: item.furnitureType.value, error: '' },
+            items: [],
+          };
+
+          // Add the sub-group object to the current group's subgroups array
+          currentGroup.subGroups.push(currentSubGroup);
+        } else {
+          // Add the furniture item to the current sub-group's items array
+          currentSubGroup?.items?.push({
+            ...item,
+            furnitureType: { ...item.furnitureType, value: 'furniture', error: '', hidden: true },
+            name: { ...item.name, id: 'name', error: '', required: true, label: 'Nome', displayOrder: 0 },
+            description: { ...item.description, id: 'description', error: '', label: 'Descrição', type: 'area', displayOrder: 1 },
+            amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 2 },
+            obs: { ...item.obs, id: 'obs', error: '', label: 'Observações', type: 'area', displayOrder: 3 },
+            width: { ...item.width, id: 'width', error: '', label: 'Largura', displayOrder: 5 },
+            height: { ...item.height, id: 'height', error: '', label: 'Altura', displayOrder: 6 },
+            thickness: { ...item.thickness, id: 'thickness', error: '', label: 'Profundidade', displayOrder: 7 },
+            price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 8 },
+            category: { ...item.category, hidden: true, id: 'category', error: '', options: categories, label: 'Categoria', displayOrder: 99 },
+
+            hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 99, error: '' },
+            group: { ...item.group, hidden: true, displayOrder: 99, error: '' },
+            subGroup: { ...item.subGroup, hidden: true, displayOrder: 99, error: '' },
+            lineNumber: { ...item.num, hidden: true, displayOrder: 99, error: '' },
+            produced: { ...item.produced, hidden: true, displayOrder: 99, error: '' },
+            assembled: { ...item.assembled, hidden: true, displayOrder: 99, error: '' },
+          });
+        }
+      });
+
+      setFurnitures2(built);
 
       const groups = furnitures.reduce((accumulator, item) => {
-        const groupName = item.group.value;
+        const groupName = item.group?.value;
 
         if (!accumulator[groupName]) {
           accumulator[groupName] = {
             id: `group${Object.keys(accumulator).length}`,
-            rowType: 'group',
+            furnitureType: 'group',
             name: groupName,
             items: []
           };
@@ -78,7 +136,7 @@ const EditProject = ({ ...pageProps }) => {
             };
 
             newObj = {
-              rowType: { ...newObj.rowType, value: 'furniture', error: '', hidden: true },
+              furnitureType: { ...newObj.furnitureType, value: 'furniture', error: '', hidden: true },
               name: { ...newObj.name, id: 'name', error: '', required: true, label: 'Nome' },
               description: { ...newObj.description, id: 'description', error: '', label: 'Descrição', type: 'area' },
               amount: { ...newObj.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number' },
@@ -89,13 +147,10 @@ const EditProject = ({ ...pageProps }) => {
               price: { ...newObj.price, id: 'price', error: '', label: 'Valor', type: 'currency' },
               category: { ...newObj.category, hidden: true, id: 'category', error: '', options: categories, label: 'Categoria' },
 
-              section: { ...newObj.category, hidden: true },
               hasBudget: { ...newObj.hasBudget, hidden: true },
               group: { ...newObj.group, hidden: true },
               num: { ...newObj.num, hidden: true },
             };
-
-            console.log(newObj);
           } else {
             newObj[key] = value;
           }
@@ -151,6 +206,7 @@ const EditProject = ({ ...pageProps }) => {
       categories,
       countries: [...reduxState?.countries?.data || []],
       furnitures,
+      furnitures2,
       budget
     };
 

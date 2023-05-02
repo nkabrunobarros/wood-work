@@ -35,7 +35,7 @@ export const furnitures = (data) => {
       method: 'GET',
       url: getApiURL(endpoints.FURNITURES),
       params: {
-        limit: 200
+        limit: 600
       }
     },
     types: [FURNITURES_REQUEST, FURNITURES_SUCCESS, FURNITURES_FAIL],
@@ -81,7 +81,7 @@ export const updateFurniture = (data) => {
   return createAction({
     meta: null,
     request: {
-      data,
+      ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
       url: getApiURL(endpoints.FURNITURES + id),

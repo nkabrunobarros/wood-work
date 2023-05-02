@@ -59,6 +59,7 @@ export const myBudgets = (data) => {
       params: {
         options: 'sysAttrs',
         q: 'status!="adjudicated"',
+        limit: 200
       }
     },
     types: [BUDGETS_REQUEST, BUDGETS_SUCCESS, BUDGETS_FAIL],

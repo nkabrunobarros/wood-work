@@ -52,7 +52,7 @@ const Orders = ({ ...pageProps }) => {
 
       if (!reduxState.clients?.data) { await getClients(); }
 
-      if (!reduxState.expeditions?.data) { await getExpeditions().then((res) => console.log(res)); }
+      if (!reduxState.expeditions?.data) { await getExpeditions(); }
 
       await getBudgets();
     } catch (err) {
@@ -272,9 +272,6 @@ const Orders = ({ ...pageProps }) => {
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
       const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
-
-      console.log(proj.expedition.object);
-      console.log(thisExpedition);
 
       return {
         ...proj,

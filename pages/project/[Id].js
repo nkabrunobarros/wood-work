@@ -51,34 +51,52 @@ const Order = ({ ...pageProps }) => {
 
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
-      const groups = furnitures.reduce((accumulator, item) => {
-        const groupName = item.group.value;
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
+      const built = [];
+      let currentGroup = null;
+      let currentSubGroup = null;
 
-        if (!accumulator[groupName]) {
-          accumulator[groupName] = {
-            id: `group${Object.keys(accumulator).length}`,
-            name: groupName,
-            items: []
+      // eslint-disable-next-line array-callback-return
+      furnitures2.map((item) => {
+        if (item.furnitureType.value === 'group') {
+          // Create a new group object
+          currentGroup = {
+            ...item,
+            subgroups: [],
           };
+
+          // Add the group object to the result array
+          built.push(currentGroup);
+          // Reset the current sub-group object
+          currentSubGroup = null;
+        } else if (item.furnitureType.value === 'subGroup') {
+          // Create a new sub-group object
+          currentSubGroup = {
+            ...item,
+            items: [],
+          };
+
+          // Add the sub-group object to the current group's subgroups array
+          currentGroup.subgroups.push(currentSubGroup);
+        } else {
+          // Add the furniture item to the current sub-group's items array
+          currentSubGroup.items.push({
+            ...item
+          });
         }
+      });
 
-        accumulator[groupName].items.push(item);
+      setFurnitures(built);
 
-        return accumulator;
-      }, {});
-
-      const result = Object.values(groups);
-
-      setFurnitures(result);
-
-      getFolders().then(async (res) => {
+      getFolders(project.hasBudget.object).then(async (res) => {
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
 
         // eslint-disable-next-line array-callback-return
         const builtFolders = res.data.results.map((folder) => {
           const folder2 = { ...folder };
+          const foundRows = resFiles?.data?.results.filter(row => folder2.files.includes(row.id));
 
-          folder2.files = resFiles.data.results.filter((file) => file.budget === project.hasBudget.object && file.folder === folder.id);
+          folder2.files = foundRows;
           // builtFolders.push(folder2);
 
           return folder2;

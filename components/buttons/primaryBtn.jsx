@@ -3,7 +3,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Button, Grow, Tooltip } from '@mui/material';
+import { Box, Button, Grow, Tooltip } from '@mui/material';
 
 const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps }) => {
   const style = {
@@ -18,7 +18,7 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
     <Grow in={true}>
       <Tooltip title={title || ''}>
         <Button {...otherProps} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
-          {icon}
+          {icon && <Box className='fullCenter' pr={0.5}>{icon}</Box>}
           {text}
           {/* Children is for file Inputs */}
           {children}
