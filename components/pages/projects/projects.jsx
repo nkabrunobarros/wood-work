@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 //  Nodes
 import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -174,8 +175,6 @@ const ProjectsScreen = (props) => {
   }
 
   async function onReactivationItem (props) {
-    console.log(props);
-
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
     const isProject = props.includes('urn:ngsi-ld:Project:');
@@ -217,12 +216,6 @@ const ProjectsScreen = (props) => {
   async function onDeleteItem (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
-
-    const data = {
-      id: props,
-      status: { type: 'Property', value: 'canceled' }
-    };
-
     const toDelete = items.find(ele => ele.id === props)?.status?.value === 'canceled';
     // eslint-disable-next-line react/prop-types
     const isProject = props.includes('urn:ngsi-ld:Project:');
@@ -232,7 +225,7 @@ const ProjectsScreen = (props) => {
     try {
       toDelete
         ? await deleteItem(props)
-        : await updateItem(data);
+        : await updateItem({ id: props, data: { status: { type: 'Property', value: 'canceled' } } });
     } catch (err) {
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
     }
@@ -280,7 +273,7 @@ const ProjectsScreen = (props) => {
     try {
       toDelete
         ? await deleteProject(props)
-        : await updateProject(data);
+        : await updateProject({ id: data.id, data: { status: { type: 'Property', value: 'canceled' } } });
     } catch (err) {
       console.log(err);
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
@@ -524,22 +517,6 @@ const ProjectsScreen = (props) => {
       <Footer/>
     </>
   );
-};
-
-ProjectsScreen.propTypes = {
-  panelsInfo: PropTypes.object,
-  breadcrumbsPath: PropTypes.array,
-  clients: PropTypes.array,
-  detailPage: PropTypes.string,
-  detailPageBudgetTab: PropTypes.string,
-  editPage: PropTypes.string,
-  cards: PropTypes.arrayOf(PropTypes.object),
-  headCells: PropTypes.array,
-  budgets: PropTypes.array,
-  headCellsBudget: PropTypes.array,
-  headCellsProjects: PropTypes.array,
-  projects: PropTypes.array,
-  items: PropTypes.array,
 };
 
 export default ProjectsScreen;

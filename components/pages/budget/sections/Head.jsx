@@ -480,6 +480,10 @@ const Head = (props) => {
                       </Typography>
                     </Tooltip>
                   </Grid>
+                  <Grid md={12} sm={12} xs={12}>
+                    <Typography color={'lightTextSm.main'}>Tipo</Typography>
+                    <Typography >{budget.orderBy.object?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
+                  </Grid>
                 </Grid>
                 <Grid container md={8}>
                   <Grid container p={1}>

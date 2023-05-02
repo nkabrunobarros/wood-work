@@ -116,9 +116,9 @@ const Order = ({ ...pageProps }) => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
       const project = (await getProject(router.query.Id)).data;
-      const expedition = (await getExpedition(project.expedition.object)).data;
-      const assembly = (await getAssembly(project.assembly.object)).data;
-      const budget = (await getBudget(project.hasBudget.object)).data;
+      const expedition = project.expedition?.object && (await getExpedition(project.expedition?.object)).data;
+      const assembly = project.assembly?.object && (await getAssembly(project.assembly?.object)).data;
+      const budget = project.hasBudget.object && (await getBudget(project.hasBudget.object)).data;
 
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
