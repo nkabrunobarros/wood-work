@@ -110,7 +110,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                 ? (
                   <React.Fragment key={i * 100}>
                     {/* {userPermissions?.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === userPermissions?.description.toLowerCase()) && ele.action === 'READ') && */}
-                    {userPermissions?.permissions_orion.find(ele => (ele.codename === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase())) &&
+                    {userPermissions?.permissions_orion.find(ele => (ele === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase())) &&
                     IsInternal(userPermissions?.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
                       ? (
                         <>
