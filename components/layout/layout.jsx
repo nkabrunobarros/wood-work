@@ -45,7 +45,6 @@ async function ValidateToken (path) {
     const decodedToken = jwt.decode(token);
 
     return !!decodedToken;
-    // return !moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment();
   }
 }
 
