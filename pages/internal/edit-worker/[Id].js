@@ -25,7 +25,7 @@ const EditWorker = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      !reduxState.workers.data && await getWorker(router.query.Id);
+      await getWorker(router.query.Id);
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

@@ -28,10 +28,10 @@ import Content from '../../content/content';
 import Select from '../../inputs/select';
 
 //  Utils
-import CanDo from '../../utils/CanDo';
+// import CanDo from '../../utils/CanDo';
 
 //  Navigation
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
@@ -73,8 +73,8 @@ const ProjectsScreen = (props) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [items, setItems] = useState(props.items);
   const [budgets, setBudgets] = useState(props.budgets);
-  const reduxState = useSelector((state) => state);
-  const userPermissions = reduxState.auth.userPermissions;
+  // const reduxState = useSelector((state) => state);
+  // const userPermissions = reduxState.auth.userPermissions;
 
   const ClearFilters = () => {
     setProduct('');
@@ -462,7 +462,7 @@ const ProjectsScreen = (props) => {
           <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
             <PrimaryBtn
-              hidden={!CanDo(['write', 'projects', userPermissions]) || !isInternalPage}
+              hidden={!isInternalPage}
               text='Adicionar projeto'
               onClick={() => Router.push(routes.private.internal.newProject)}
             />

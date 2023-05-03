@@ -39,7 +39,7 @@ export const login = (data) => {
         ...data,
         client_id: process.env.NEXT_PUBLIC_CLIENT_ID,
         client_secret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
-        scope: 'read',
+        // scope: 'read',
         grant_type: 'password'
       },
       headers: {},

@@ -123,13 +123,13 @@ const Order = ({ ...pageProps }) => {
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === project.hasBudget.object);
-      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
       const built = [];
       let currentGroup = null;
       let currentSubGroup = null;
 
       furnitures2.map((item) => {
-        if (item.furnitureType.value === 'group') {
+        if (item.furnitureType?.value === 'group') {
           // Create a new group object
           currentGroup = {
             ...item,
@@ -140,7 +140,7 @@ const Order = ({ ...pageProps }) => {
           built.push(currentGroup);
           // Reset the current sub-group object
           currentSubGroup = null;
-        } else if (item.furnitureType.value === 'subGroup') {
+        } else if (item.furnitureType?.value === 'subGroup') {
           // Create a new sub-group object
           currentSubGroup = {
             ...item,
@@ -148,7 +148,7 @@ const Order = ({ ...pageProps }) => {
           };
 
           // Add the sub-group object to the current group's subgroups array
-          currentGroup.subgroups.push(currentSubGroup);
+          currentGroup?.subgroups?.push(currentSubGroup);
         } else {
           // Add the furniture item to the current sub-group's items array
           currentSubGroup?.items?.push({
@@ -161,7 +161,7 @@ const Order = ({ ...pageProps }) => {
 
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
 
-      getFolders(project.hasBudget.object).then(async (res) => {
+      false && getFolders(project.hasBudget.object).then(async (res) => {
         const builtFolders = [];
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
 
@@ -202,7 +202,7 @@ const Order = ({ ...pageProps }) => {
   }, []);
 
   if (loaded &&
-    reduxState.projects.displayedProject && folders
+    reduxState.projects.displayedProject
   ) {
     const headCellsUpperOrderDetail = [
       {

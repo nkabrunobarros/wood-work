@@ -122,7 +122,8 @@ const newWorker = ({ ...props }) => {
       optLabel: 'legalName',
       error: '',
       required: true,
-      tooltip: ''
+      tooltip: '',
+      hidden: true
     },
   ]
   );

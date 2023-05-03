@@ -71,18 +71,14 @@ const FactoryGround = ({ ...props }) => {
                       }}>
                         <CardContent>
                           <Grid container md={12} sm={12} xs={12} >
-                            <Grid container md={6} sm={6} xs={6} >
+                            <Grid container md={12} sm={12} xs={12} >
                               <Tooltip title='Movel'>
                                 <Typography fontWeight={'bold'} variant="h5">
                                   {furnit.name.value}
                                 </Typography>
                               </Tooltip>
                             </Grid>
-                            <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'} >
-                              <Tooltip title='Quantidade ainda para produzir'>
-                                <Typography variant='subtitle1' color='primary'>A Produzir: {furnit.produced?.value ? '0' : furnit.amount.value}</Typography>
-                              </Tooltip>
-                            </Grid>
+
                             <Grid container md={6} sm={6} xs={6} pb={0.5} >
                               <Tooltip title='Projeto'>
                                 <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{proj?.name?.value}</Typography>
@@ -103,9 +99,12 @@ const FactoryGround = ({ ...props }) => {
                                 <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Subgrupo: </a>{furnit?.subGroup?.value || 'cozinha'}</Typography>
                               </Tooltip>
                             </Grid>
-                          </Grid>
-                          <Grid container md={12} sm={12} xs={12} >
-                            <Grid container md={6} sm={6} xs={6} >
+                            <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                              <Tooltip title='Quantidade ainda para produzir'>
+                                <Typography variant='subtitle1' color='primary'>A Produzir: {furnit.produced?.value ? '0' : furnit.amount.value}</Typography>
+                              </Tooltip>
+                            </Grid>
+                            <Grid container md={6} sm={6} xs={6} justifyContent={'end'}>
                               <Tooltip title='Quantidade Pedida'>
                                 <Typography variant="subtitle1" color='lightTextSm.main'>
                                 Quantidade Pedida: {furnit.amount.value}
@@ -180,7 +179,6 @@ const FactoryGround = ({ ...props }) => {
           }
           )}
         </Grid>
-
       </Grid>
     </Grid>
   </>;

@@ -5,7 +5,7 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  Material Ui
-import { ButtonGroup, Grid, Typography } from '@mui/material';
+import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
 //  Icons
@@ -287,7 +287,7 @@ const NewOrder = ({ ...props }) => {
     await newBudget(data).then(async (res) => {
       CreateFurnitures(res.data.id);
 
-      await newFolder({
+      true && await newFolder({
         folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
         parent_folder: null,
         user: clientUser,
@@ -446,6 +446,7 @@ const NewOrder = ({ ...props }) => {
             </Content>
           </Grid>
           <Grid container md={12}>
+            <Button onClick={() => CreateFurnitures()}>Test</Button>
             <Content>
               <ProductLinesTab2 {...props}
                 budgetData={budgetData}

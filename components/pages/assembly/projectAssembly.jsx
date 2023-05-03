@@ -125,7 +125,7 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
                   alt={'lenghtanyLogo'}
                   placeholder='blur'
                   height={!detailOnly ? 50 : 40}
-                  width={!detailOnly ? 100 : 80}
+                  width={!detailOnly ? 50 : 40}
                   loading='lazy'
                 />
               </Box>

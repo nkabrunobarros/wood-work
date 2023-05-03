@@ -846,7 +846,7 @@ const FurnitureDetails = (props) => {
         </Toolbar>
       </AppBar>
       <Notification />
-      {!props?.projectParts && true && <Button onClick={() => createParts()}>Create</Button>}
+      {!props?.projectParts && false && <Button onClick={() => createParts()}>Create</Button>}
       {fullyLoaded
         ? <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
           {!detailOnly && <CustomBreadcrumbs path={[

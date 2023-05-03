@@ -42,8 +42,7 @@ const Docs = (props) => {
   function renderAccordionFolders (folders, parentId = null) {
     const [imExpanded, setImExpanded] = useState(false);
 
-    return folders
-      .filter((folder) => folder.parent_folder === parentId)
+    return folders?.filter((folder) => folder.parent_folder === parentId)
       .map((folder) => (
         <Accordion expanded={imExpanded} onChange={() => setImExpanded(!imExpanded)} key={folder.id} {...getRootProps()} ondrop={() => console.log('')}sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
           <AccordionSummary expandIcon={<ChevronDown />} >

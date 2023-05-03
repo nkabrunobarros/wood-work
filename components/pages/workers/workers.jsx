@@ -14,9 +14,9 @@ import {
   InputLabel,
   OutlinedInput
 } from '@mui/material';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as workersActionsRedux from '../../../store/actions/worker';
@@ -24,7 +24,6 @@ import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
-import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const Workers = ({ ...props }) => {
@@ -37,9 +36,11 @@ const Workers = ({ ...props }) => {
     headCellsWorkers,
   } = props;
 
+  const path = useRouter();
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
-  const userPermissions = useSelector((state) => state.auth.userPermissions);
+  // const userPermissions = useSelector((state) => state.auth.userPermissions);
   //  States
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -171,7 +172,8 @@ const Workers = ({ ...props }) => {
             >
               <div>
                 <PrimaryBtn
-                  hidden={!CanDo(['write', 'workers', userPermissions])}
+                  hidden={!isInternalPage}
+                  // hidden={!CanDo(['write', 'workers', userPermissions])}
                   text='Adicionar'
                   onClick={() => Router.push(`${newRoute}`)}
                 />

@@ -219,7 +219,7 @@ const Leftovers = (props) => {
             </Card>
           </Grid>
           {/* Date & Time */}
-          <Grid md={3} xs={3} p={1} sx={{ display: 'none' }}>
+          <Grid md={3} xs={3} p={1} display='none' >
             <Box bgcolor={'default.main'} className="fullCenter infoContainerLeftOvers" sx={{ height: '100%' }}>
               {currentPanel < 0
                 ? <>
@@ -352,7 +352,7 @@ const Leftovers = (props) => {
         </Grid>
       </Grid>
 
-    </Grid >;
+    </Grid >
   </>;
 };
 
