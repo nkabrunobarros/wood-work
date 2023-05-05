@@ -41,7 +41,10 @@ const Budget = ({ ...pageProps }) => {
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
-      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
+
+      console.log(furnitures);
+
+      const furnitures2 = furnitures.sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
       const built = [];
       let currentGroup = null;
       let currentSubGroup = null;
@@ -66,7 +69,7 @@ const Budget = ({ ...pageProps }) => {
           };
 
           // Add the sub-group object to the current group's subgroups array
-          currentGroup.subgroups.push(currentSubGroup);
+          currentGroup?.subgroups.push(currentSubGroup);
         } else {
           // Add the furniture item to the current sub-group's items array
           currentSubGroup?.items?.push({

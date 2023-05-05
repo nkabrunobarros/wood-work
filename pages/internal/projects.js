@@ -371,9 +371,9 @@ const Projects = ({ ...pageProps }) => {
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
       const thisClient = clients.find(ele => ele.id === bud.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
 
-      return bud?.status?.value !== 'adjudicated' && {
+      return bud?.budgetStatus?.value !== 'adjudicated' && {
         ...bud,
-        Estado: bud?.status?.value,
+        Estado: bud?.budgetStatus?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
         Quantidade: bud?.amount?.value,
@@ -410,6 +410,8 @@ const Projects = ({ ...pageProps }) => {
     });
 
     const merged = [...projects, ...filteredBudgets];
+
+    console.log(merged);
 
     const props = {
       items: merged,

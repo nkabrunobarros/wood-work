@@ -13,8 +13,6 @@ const Products2 = (props) => {
   const theme = reduxState.appStates.theme;
   const [sectionExpanded, setSectionExpanded] = useState(false);
 
-  console.log(furnitures);
-
   const toggleValueInArray = (value, array) => {
     const index = array.indexOf(value);
 

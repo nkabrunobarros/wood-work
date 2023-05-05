@@ -36,7 +36,7 @@ const DocsClient = (props) => {
 
     data.append('folder', props.folders.find(ele => ele.folder_name === budget.id.replace('Budget', 'Folder')).id);
     [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
-    data.append('budget', budget.id);
+    // data.append('budget', budget.id);
 
     try {
       await uploadFiles(data).then(async (res) => {
@@ -46,34 +46,36 @@ const DocsClient = (props) => {
         });
       });
     } catch (error) {
-      if (error.response.data.non_field_errors[0] === 'A file with the same name already exists in the parent folder') toast.error('Este ficheiro já existe.');
+      if (error?.response?.data?.non_field_errors) if (error?.response?.data?.non_field_errors[0] === 'A file with the same name already exists in the parent folder') toast.error('Este ficheiro já existe.');
+
+      toast.error('Algo aconteceu. Por favor tente mais tarde');
     }
 
     setConfirmUploadModal(false);
   }
 
-  async function handleFileClick () {
-    fetch('https://docs.google.com/spreadsheets/d/1_JI3oX6paFDfHdx0mUWbBqatx1Fw8SL7/edit#ghttps://docs.google.com/spreadsheets/d/1_JI3oX6paFDfHdx0mUWbBqatx1Fw8SL7/edit?usp=sharing&ouid=107951653271019838541&rtpof=true&sd=trueid=1994250179')
-      .then((res) => { console.log(res); })
-      // .then((res) => res.blob())
-      .then((res) => {
-        const blobUrl = window.URL.createObjectURL(new Blob([res.blob()]));
-        const fileName = 'teste.jpg';
-        const aTag = document.createElement('a');
+  // async function handleFileClick () {
+  //   fetch('https://docs.google.com/spreadsheets/d/1_JI3oX6paFDfHdx0mUWbBqatx1Fw8SL7/edit#ghttps://docs.google.com/spreadsheets/d/1_JI3oX6paFDfHdx0mUWbBqatx1Fw8SL7/edit?usp=sharing&ouid=107951653271019838541&rtpof=true&sd=trueid=1994250179')
+  //     .then((res) => { console.log(res); })
+  //     // .then((res) => res.blob())
+  //     .then((res) => {
+  //       const blobUrl = window.URL.createObjectURL(new Blob([res.blob()]));
+  //       const fileName = 'teste.jpg';
+  //       const aTag = document.createElement('a');
 
-        aTag.href = blobUrl;
-        aTag.setAttribute('download', fileName);
-        document.body.appendChild(aTag);
-        aTag.click();
-        aTag.remove();
-        toast.success('Consegui buscar ficheiro.');
-        console.log(res);
-      })
-      .catch((err) => {
-        toast.error('Algo aconteceu. Por favor tente mais tarde.');
-        console.log(err);
-      });
-  }
+  //       aTag.href = blobUrl;
+  //       aTag.setAttribute('download', fileName);
+  //       document.body.appendChild(aTag);
+  //       aTag.click();
+  //       aTag.remove();
+  //       toast.success('Consegui buscar ficheiro.');
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       toast.error('Algo aconteceu. Por favor tente mais tarde.');
+  //       console.log(err);
+  //     });
+  // }
 
   return <>
     <Notification />
@@ -123,9 +125,6 @@ const DocsClient = (props) => {
                       <Box color='primary.main' alignItems='center'>
                         <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
-                      {false && <Tooltip title='get'>
-                        <Typography sx={{ cursor: 'pointer' }}><a onClick={() => handleFileClick(file)} >{file.file_name + file.file_type}</a></Typography>
-                      </Tooltip>}
                       <Tooltip title='Clique para descarregar este ficheiro.'>
                         <Typography><a href={file?.file} download target='_blank' rel="noreferrer">{file?.file_name + file?.file_type}</a></Typography>
                       </Tooltip>

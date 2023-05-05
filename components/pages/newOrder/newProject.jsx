@@ -5,7 +5,7 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  Material Ui
-import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
+import { ButtonGroup, Grid, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
 //  Icons
@@ -28,8 +28,6 @@ import Notification from '../../dialogs/Notification';
 
 //  Loader
 import Loader from '../../loader/loader';
-
-//  Utils
 
 //  Device "Detector"
 import moment from 'moment';
@@ -210,7 +208,7 @@ const NewOrder = ({ ...props }) => {
     setProcessing(true);
 
     const data = {
-      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}${moment().diff(moment().startOf('day'), 'seconds')}`,
+      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, // ${moment().diff(moment().startOf('day'), 'seconds')}
       type: 'Budget',
       name: {
         type: 'Property',
@@ -252,7 +250,7 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: inputFields[0]?.category.value || ''
       },
-      status: {
+      budgetStatus: {
         type: 'Property',
         value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'needs analysis'
       },
@@ -287,7 +285,7 @@ const NewOrder = ({ ...props }) => {
     await newBudget(data).then(async (res) => {
       CreateFurnitures(res.data.id);
 
-      true && await newFolder({
+      false && await newFolder({
         folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
         parent_folder: null,
         user: clientUser,
@@ -369,7 +367,7 @@ const NewOrder = ({ ...props }) => {
     });
 
     const mergedArray = [].concat(...items).map((item, index) => {
-      return { ...item, lineNumber: index };
+      return { ...item, lineNumber: { type: 'Property', value: index } };
     });
 
     try {
@@ -446,7 +444,6 @@ const NewOrder = ({ ...props }) => {
             </Content>
           </Grid>
           <Grid container md={12}>
-            <Button onClick={() => CreateFurnitures()}>Test</Button>
             <Content>
               <ProductLinesTab2 {...props}
                 budgetData={budgetData}

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { QuestionMark } from '@mui/icons-material';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import CurrencyInput from '../../../../inputs/CurrencyInput';
 import MyInput from '../../../../inputs/myInput';
@@ -11,8 +12,8 @@ import MySelect from '../../../../inputs/select';
 
 const DeliverBudgetModal = (props) => {
   const { open, onConfirm, handleClose, budget, categories } = props;
-  const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: budget.dateAgreedDelivery?.value, error: '' });
-  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: budget.dateDeliveryProject?.value, error: '' });
+  const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: moment(budget.dateAgreedDelivery?.value, 'DD/MM/YYYY'), error: '' });
+  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: moment(budget.dateDeliveryProject?.value, 'DD/MM/YYYY'), error: '' });
   const [category, setCategory] = useState({ value: budget.category?.value, error: '' });
   const [price, setPrice] = useState({ value: budget.price?.value, error: '' });
   const [amount, setAmount] = useState({ value: budget.amount?.value, error: '' });

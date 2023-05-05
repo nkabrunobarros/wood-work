@@ -161,7 +161,9 @@ const Order = ({ ...pageProps }) => {
 
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
 
-      false && getFolders(project.hasBudget.object).then(async (res) => {
+      getFolders(project.hasBudget.object).then(async (res) => {
+        console.log(res);
+
         const builtFolders = [];
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
 
@@ -173,6 +175,7 @@ const Order = ({ ...pageProps }) => {
           builtFolders.push(folder2);
         });
 
+        console.log(builtFolders);
         setFolders(builtFolders);
       });
 

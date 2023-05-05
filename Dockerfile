@@ -32,6 +32,6 @@ COPY --from=BUILDER /usr/src/app/.next/standalone ./standalone
 COPY --from=BUILDER /usr/src/app/public /usr/src/app/standalone/public
 COPY --from=BUILDER /usr/src/app/.next/static /usr/src/app/standalone/.next/static
 
-EXPOSE 3000
-ENV PORT 3000
+EXPOSE 3001
+ENV PORT 3001
 CMD ["node", "./standalone/server.js"]

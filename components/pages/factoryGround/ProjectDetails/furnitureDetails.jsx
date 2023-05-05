@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { AppBar, Box, Button, Dialog, Grid, Grow, IconButton, Menu, MenuItem, Tab, TableSortLabel, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Button, Dialog, Grid, Grow, IconButton, Menu, Tab, TableSortLabel, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import * as icons from 'lucide-react';
 import { Check, CheckCircle, Eye, HardDrive, MinusCircle, Package, Play, X } from 'lucide-react';
 import moment from 'moment';
@@ -22,6 +22,7 @@ import CustomBreadcrumbs from '../../../breadcrumbs/breadcrumbs';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 import Content from '../../../content/content';
 import Notification from '../../../dialogs/Notification';
+import MySelect from '../../../inputs/select';
 import Loader from '../../../loader/loader';
 import formatString from '../../../utils/FormatString';
 import TabPanel from '../../dashboard/TabPanel';
@@ -77,12 +78,17 @@ export const PartStatus = ({ part }) => {
 const FurnitureDetails = (props) => {
   const { open, detailOnly, onClose, furnitureProject } = props;
   const [productionDetailModal, setProductionDetailModal] = useState(false);
+  const [myMachine, setMyMachine] = useState();
   const reduxState = useSelector((state) => state);
   const [chosenFurniture, setChosenFurniture] = useState(props.chosenFurniture);
   const [machines, setMachines] = useState(props.machines);
   const [consumables, setConsumables] = useState();
   const [fullyLoaded, setFullyLoaded] = useState(false);
   const [value, setValue] = useState(0);
+  const [activeWorkerTasks, setActiveWorkerTasks] = useState();
+
+  console.log(activeWorkerTasks);
+
   const me = reduxState.auth.me;
   const dispatch = useDispatch();
   const getWorkerTasks = (data) => dispatch(workerTasksActionsRedux.workerTasks(data));
@@ -132,15 +138,15 @@ const FurnitureDetails = (props) => {
       { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_COSTA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA1', material: 'HDF 3', amount: 1, lenght: '1471', width: '1000', thickness: '3', tag: 1, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
       { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_COSTA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA2', material: 'HDF 3', amount: 1, lenght: '1476', width: '1000', thickness: '3', tag: 2, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
       { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_COSTA', material: 'HDF 6', amount: 1, lenght: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', material: 'HDF 6', amount: 4, lenght: '830', width: '80', thickness: '6', tag: 6, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', material: 'HDF 6', amount: 1, lenght: '830', width: '200', thickness: '6', tag: 7, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS1', material: 'HDF 10', amount: 1, lenght: '2150', width: '100', thickness: '10', tag: 8, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS2', material: 'HDF 10', amount: 1, lenght: '2181', width: '100', thickness: '10', tag: 9, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 10, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA2_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 11, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-    //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', material: 'HDF 10 CNC', amount: 1, lenght: '2621', width: '1106', thickness: '10', tag: 12, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', material: 'HDF 6', amount: 4, lenght: '830', width: '80', thickness: '6', tag: 6, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', material: 'HDF 6', amount: 1, lenght: '830', width: '200', thickness: '6', tag: 7, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS1', material: 'HDF 10', amount: 1, lenght: '2150', width: '100', thickness: '10', tag: 8, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS2', material: 'HDF 10', amount: 1, lenght: '2181', width: '100', thickness: '10', tag: 9, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 10, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA2_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 11, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', material: 'HDF 10 CNC', amount: 1, lenght: '2621', width: '1106', thickness: '10', tag: 12, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', material: 'HDF 10 CNC', amount: 1, lenght: '2590', width: '1106', thickness: '10', tag: 13, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', material: 'HDF 10 CNC', amount: 1, lenght: '1069', width: '306', thickness: '10', tag: 14, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', material: 'HDF 10', amount: 2, lenght: '793', width: '50', thickness: '10', tag: 15, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
@@ -207,9 +213,37 @@ const FurnitureDetails = (props) => {
 
   useEffect(() => {
     async function load () {
-      getMachines().then((res) => setMachines(res.data));
+      getMachines().then((res) => {
+        const machines = res.data.map((ele) => {
+          return { ...ele, Nome: ele.name?.value || ele.id.replace('urn:ngsi-ld:Machine:', '') };
+        });
+
+        const grouped = {};
+
+        machines.forEach((item) => {
+          const machineType = item.machineType.value;
+
+          if (grouped[machineType]) {
+            grouped[machineType].push(item);
+          } else {
+            grouped[machineType] = [item];
+          }
+        });
+
+        const result = [];
+
+        Object.keys(grouped).forEach((machineType) => {
+          result.push({ subheader: true, Nome: machineType });
+          result.push(...grouped[machineType]);
+        });
+
+        console.log(result);
+        setMachines(result);
+      });
 
       const logsWorkerTasks = await getWorkerTasks().then((res) => {
+        setActiveWorkerTasks(res.data.filter(ele => ele.finishTime?.value === ''));
+
         return res.data.filter(ele => ele.onProject?.value === chosenFurniture.id);
       });
 
@@ -426,12 +460,12 @@ const FurnitureDetails = (props) => {
   }
 
   const ActionStatus = (props) => {
-    const { part, field } = props;
+    const { part, field, disabled } = props;
 
     if (!part[field]) return '';
 
     const cpy = [...projectParts];
-    const thisMachines = machines?.filter(machine => machine?.machineType?.value?.toLowerCase()?.includes(props?.field?.replace('Flag', '')) && machine.currentlyOn?.value === '');
+    const thisMachines = machines?.filter(machine => machine?.machineType?.value?.toLowerCase()?.includes(props?.field?.replace('Flag', '')) && machine?.currentlyOn?.value === '');
 
     const actions = {
       isNest: part.nestingFlag,
@@ -522,11 +556,6 @@ const FurnitureDetails = (props) => {
     const msg = validateAction(field, actions, actionsDone);
     const index = cpy[props.index].logs?.findIndex((log) => log.action?.value === field);
     const log = part.logs?.find(log => log.action?.value === field);
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
 
     if (!log && part[field]) {
       return detailOnly
@@ -534,32 +563,11 @@ const FurnitureDetails = (props) => {
           <MinusCircle color='gray' />
         </Tooltip>
         : <Box>
-          <IconButton onClick={(e) => !msg && thisMachines[0] && handleClick(e)} >
-            <Tooltip title={ msg || (thisMachines && !thisMachines[0] ? 'Não há maquinas disponiveis' : 'Iniciar')} >
-              <Play />
-            </Tooltip>
-          </IconButton>
-          <Menu
-            id="demo-positioned-menu"
-            aria-labelledby="demo-positioned-button"
-            anchorEl={anchorEl}
-            open={!!anchorEl}
-            onClose={() => setAnchorEl(null)}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-          ><MenuItem disabled>Escolher Máquina</MenuItem>
-            {thisMachines?.map((mach, i) => <MenuItem key={i} onClick={() => {
-              setAnchorEl();
-
-              onStartPartClick({ ...props, machine: mach.id }).then(() => {
-                const updatedItem = machines.find(item => item.id === mach.id);
-                const updatedIndex = machines.findIndex(item => item.id === mach.id);
+          <IconButton onClick={() => {
+            if (!msg && thisMachines[0]) {
+              onStartPartClick({ ...props, machine: myMachine.id }).then(() => {
+                const updatedItem = machines.find(item => item.id === myMachine.id);
+                const updatedIndex = machines.findIndex(item => item.id === myMachine.id);
 
                 const newItems = [
                   ...machines.slice(0, updatedIndex),
@@ -570,11 +578,12 @@ const FurnitureDetails = (props) => {
                 setMachines(newItems);
                 toast.success('Iniciado.');
               });
-            }}>
-              {mach.name?.value || mach.id.replace('urn:ngsi-ld:Machine:', '') }
-            </MenuItem>
-            )}
-          </Menu>
+            }
+          }} disabled={disabled} >
+            <Tooltip title={ msg || (thisMachines && !thisMachines[0] ? 'Não há maquinas disponiveis' : 'Iniciar')} >
+              <Play />
+            </Tooltip>
+          </IconButton>
         </Box>;
     }
 
@@ -587,12 +596,12 @@ const FurnitureDetails = (props) => {
             <IconComponent strokeWidth={1.5} />
           </Box>
         </Tooltip>
-        : <IconButton {...props} onClick={() => FinishPart(log).then(() => {
+        : <IconButton {...props} disabled={disabled} onClick={() => FinishPart(log).then(() => {
           cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
           setProjectParts(cpy);
 
-          const updatedItem = machines.find(item => item.id === cpy[props.index].logs[index].machine.value);
-          const updatedIndex = machines.findIndex(item => item.id === cpy[props.index].logs[index].machine.value);
+          const updatedItem = machines.find(item => item.id === cpy[props.index].logs[index].machine?.value);
+          const updatedIndex = machines.findIndex(item => item.id === cpy[props.index].logs[index].machine?.value);
 
           const newItems = [
             ...machines.slice(0, updatedIndex),
@@ -807,7 +816,7 @@ const FurnitureDetails = (props) => {
                   onClose && onClose();
                 }}
                 aria-label="close"
-                sx={{ marginLeft: '3rem' }}
+                sx={{ marginLeft: '2rem' }}
               >
                 <X />
               </IconButton>
@@ -860,10 +869,42 @@ const FurnitureDetails = (props) => {
           ]} />}
           <Content>
             <Grid id='pad' container md={12} sm={12} xs={12}>
-              <Grid container md={3} sm={3} xs={3}>
-                <Typography variant='titlexxl'>{chosenFurniture?.name?.value}</Typography>
+              <Grid container md={4} sm={6} xs={6}>
+                <Grid container md={12} sm={12} xs={12} pb={0.5} >
+                  <Typography variant='titlexxl'>{chosenFurniture?.name?.value}</Typography>
+                </Grid>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                  <Tooltip title='Cliente'>
+                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{furnitureProject?.client.user?.first_name} {furnitureProject?.client.user?.last_name}</Typography>
+                  </Tooltip>
+                </Grid>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                  <Tooltip title='Projeto'>
+                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{furnitureProject?.name?.value}</Typography>
+                  </Tooltip>
+                </Grid>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                  <Tooltip title='Grupo'>
+                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Grupo: </a>{chosenFurniture?.group?.value}</Typography>
+                  </Tooltip>
+                </Grid>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                  <Tooltip title='Subgrupo'>
+                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Subgrupo: </a>{chosenFurniture?.subGroup?.value || 'cozinha'}</Typography>
+                  </Tooltip>
+                </Grid>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                  <Tooltip title='Quantidade Pedida'>
+                    <Typography variant="subtitle1" color='primary'>
+                      Quantidade Pedida: {chosenFurniture.amount.value}
+                    </Typography>
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: detailOnly && 'none' }} >
+              <Grid container md={4} sm={6} xs={6} p={4} >
+                <MySelect options={machines} value={myMachine?.id} label={'Maquina'} optionLabel={'Nome'} onChange={(e) => setMyMachine(machines.find(ele => ele.id === e.target.value))} />
+              </Grid>
+              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: 'none' }} >
                 <Box sx={{ width: '100%' }}>
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
@@ -875,29 +916,29 @@ const FurnitureDetails = (props) => {
                   </Grid>
                 </Box>
               </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: detailOnly && 'none' }} >
+              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: 'none' }} >
                 <Box sx={{ width: '100%' }}>
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
                       <HardDrive />
                       <Typography variant='subtitle2'>Maquinas disponiveis</Typography></Grid>
                     {machines?.filter(ele => ele.currentlyOn?.value === '').map((machine) =>
-                      <Grid container key={machine.id} md={4} sm={4} xs={4} >
-                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine.name?.value}</Typography>
+                      <Grid container key={machine?.id} md={4} sm={4} xs={4} >
+                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine?.name?.value}</Typography>
                       </Grid>
                     )}
                   </Grid>
                 </Box>
               </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: detailOnly && 'none' }} >
+              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: 'none' }} >
                 <Box sx={{ width: '100%' }}>
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
                       <HardDrive />
                       <Typography variant='subtitle2'>Maquinas em uso</Typography></Grid>
                     {machines?.filter(ele => ele.currentlyOn?.value !== '').map((machine) =>
-                      <Grid container key={machine.id} md={4} sm={4} xs={4} >
-                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine.name?.value || machine.id.replace('urn:ngsi-ld:Machine:', '')}</Typography>
+                      <Grid container key={machine?.id} md={4} sm={4} xs={4} >
+                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine?.name?.value || machine?.id?.replace('urn:ngsi-ld:Machine:', '')}</Typography>
                       </Grid>
                     )}
                   </Grid>
@@ -950,19 +991,19 @@ const FurnitureDetails = (props) => {
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'nestingFlag'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('nesting')} field={'nestingFlag'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'cncFlag'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('cnc')} field={'cncFlag'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'orla'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('orla')} field={'orla'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'f'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('furo')} field={'f'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'tupia'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('tupia')} field={'tupia'}/>
                                 </Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
                                 <Grid {...cellProps} > <PartStatus part={part} /></Grid>

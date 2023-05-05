@@ -151,6 +151,7 @@ const Account = ({ ...props }) => {
           </Grid>
         </Content>
       </Grid>
+
       <Footer/>
     </>
   );

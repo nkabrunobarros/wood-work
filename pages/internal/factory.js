@@ -41,7 +41,13 @@ const FactoryGround = () => {
         ]);
 
         const budget = budgetData.data;
-        const furnitures = furnituresData.data.filter(ele => ele.hasBudget?.value === project.hasBudget?.object && ele.furnitureType?.value === 'furniture').sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
+
+        const furnitures = furnituresData.data
+          .filter(ele => ele.hasBudget?.value === project.hasBudget?.object && ele.furnitureType?.value === 'furniture')
+          .filter(ele => !ele.produced?.value)
+          .filter(ele => ele.furnitureType?.value === 'furniture')
+          .sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
+
         const client = clientData.data;
 
         return {
@@ -52,12 +58,14 @@ const FactoryGround = () => {
         };
       }));
 
-      setProjs(projectBudgets.sort((a, b) => {
-        const aDate = moment(a.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
-        const bDate = moment(b.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
+      setProjs(projectBudgets
+        .filter(project => project.furnitures.length > 0)
+        .sort((a, b) => {
+          const aDate = moment(a.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
+          const bDate = moment(b.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
 
-        return aDate - bDate;
-      }));
+          return aDate - bDate;
+        }));
 
       setLoaded(true);
     }

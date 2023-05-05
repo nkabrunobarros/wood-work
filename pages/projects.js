@@ -324,7 +324,6 @@ Orders.propTypes = {
   detailPage: PropTypes.string.isRequired,
   editPage: PropTypes.string.isRequired,
   internalPOV: PropTypes.boolean,
-  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasFullyLoaded: PropTypes.bool,
 };
 

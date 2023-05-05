@@ -40,17 +40,35 @@ const Docs = (props) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop, noClick: true });
 
   function renderAccordionFolders (folders, parentId = null) {
-    const [imExpanded, setImExpanded] = useState(false);
+    const [expandedGroups, setExpandedGroups] = useState([]);
+
+    const toggleValueInArray = (value, array) => {
+      const index = array.indexOf(value);
+
+      if (index === -1) {
+        return [...array, value];
+      }
+
+      return [...array.slice(0, index), ...array.slice(index + 1)];
+    };
+
+    const handleChange = (expandedGroups, setExpandedGroups) => (panel) => {
+      setExpandedGroups((prevExpandedGroups) =>
+        toggleValueInArray(panel, prevExpandedGroups)
+      );
+    };
+
+    const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
 
     return folders
       .filter((folder) => folder.parent_folder === parentId)
       .map((folder) => (
-        <Accordion expanded={imExpanded} onChange={() => setImExpanded(!imExpanded)} key={folder.id} {...getRootProps()} ondrop={() => console.log('')}sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
+        <Accordion expanded={expandedGroups.includes(folder.id)} onChange={() => handlePanelChange(folder.id)} key={folder.id} {...getRootProps()} ondrop={() => console.log('')}sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
           <AccordionSummary expandIcon={<ChevronDown />} >
             <Grid container bgcolor={'default.main'} >
               <Grid container md={6} sm={6} xs={6} alignItems='center'>
                 <Box id='align' color='primary.main' >
-                  {imExpanded
+                  {expandedGroups.includes(folder.id)
                     ? (
                       <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
                     )
@@ -58,7 +76,7 @@ const Docs = (props) => {
                       <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
                     )}
                 </Box>
-                <Typography>{folder.folder_name.replace('urn:ngsi-ld:Folder:', '') === budget.id.replace('urn:ngsi-ld:Budget:', '') ? 'Pasta Cliente' : folder.folder_name.replace('urn:ngsi-ld:Folder:', '')} </Typography>
+                <Typography>{folder.folder_name} </Typography>
               </Grid>
               <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
             </Grid>
