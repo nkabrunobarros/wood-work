@@ -94,7 +94,7 @@ const ProductLinesTab2 = (props) => {
       ];
 
       setLines(updatedLines);
-      handlePanelChange('group' + lines.length + 1);
+      handlePanelChange(newGroup.id);
     }
   }
 
@@ -137,7 +137,6 @@ const ProductLinesTab2 = (props) => {
           height: { id: 'height', value: '', error: '', label: 'Altura' },
           thickness: { id: 'thickness', value: '', error: '', label: 'Profundidade' },
           price: { id: 'price', value: '', error: '', label: 'Valor', type: 'currency' },
-          category: { hidden: true, id: 'category', value: '', error: '', options: categories, label: 'Categoria' },
         },
       ],
     };

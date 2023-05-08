@@ -105,7 +105,7 @@ const Profile = ({ ...props }) => {
                   <Typography item color='lightTextSm.black' >{user?.givenName?.value}</Typography>
                 </Grid>
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                  <Typography item color='lightTextSm.main'>Ultimo Nome</Typography>
+                  <Typography item color='lightTextSm.main'>Último Nome</Typography>
                   <Typography item color='lightTextSm.black' >{user?.familyName?.value}</Typography>
                 </Grid>
 

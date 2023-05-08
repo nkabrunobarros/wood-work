@@ -91,7 +91,7 @@ const Orders = ({ ...pageProps }) => {
     };
 
     reduxState.budgets?.data?.forEach((bud) => {
-      switch (bud.status?.value) {
+      switch (bud.budgetStatus?.value) {
       case 'waiting budget':
         counts.waitingBudget++;
 
@@ -132,7 +132,7 @@ const Orders = ({ ...pageProps }) => {
       {
         id: 'waiting budget',
         num: 1,
-        title: 'Em Orçamentação',
+        title: 'Pendente Orçamentação',
         amount: counts.waitingBudget,
         icon: (
           <PackageCheck
@@ -145,7 +145,7 @@ const Orders = ({ ...pageProps }) => {
       {
         id: 'drawing',
         num: 2,
-        title: 'Em Desenho',
+        title: 'Pendente Desenho',
         amount: counts.drawing,
         icon: (
           <LayoutTemplate
@@ -158,7 +158,7 @@ const Orders = ({ ...pageProps }) => {
       {
         id: 'production',
         num: 3,
-        title: 'Em Produção',
+        title: 'Pendente Produção',
         amount: counts.production,
         icon: (
           <Layers
@@ -171,7 +171,7 @@ const Orders = ({ ...pageProps }) => {
       {
         id: 'testing',
         num: 4,
-        title: 'Em Montagem',
+        title: 'Pendente Montagem',
         amount: counts.testing,
         icon: <AlertOctagon
           size={pageProps?.globalVars?.iconSizeXl}
@@ -256,7 +256,7 @@ const Orders = ({ ...pageProps }) => {
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
       return bud?.status?.value !== 'adjudicated' && {
         ...bud,
-        Estado: bud?.status?.value,
+        Estado: bud?.budgetStatus?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
         Projeto: bud?.dateRequest?.value,
@@ -291,8 +291,9 @@ const Orders = ({ ...pageProps }) => {
     }
     );
 
-    const merged = [...projects, ...filteredBudgets.filter((ele) => ele.status !== 'adjudicated')];
+    const merged = [...projects, ...filteredBudgets.filter((ele) => ele.Estado !== 'adjudicated')];
 
+    console.log(merged);
     merged.sort((a, b) => a.Projeto?.localeCompare(b.Projeto));
 
     const props = {

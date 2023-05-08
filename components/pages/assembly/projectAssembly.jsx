@@ -174,7 +174,7 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
               >
                 <Grid container md={12} sm={12} xs={12} alignItems='center'>
                   <Grid container md={2.4} sm={2.4} xs={6}>
-                    <Typography variant='sm' sx={{ pointerEvents: 'auto' }}><a style={{ fontWeight: 'bold' }}>Modulo:</a> {mod.name}</Typography>
+                    <Typography variant='sm' sx={{ pointerEvents: 'auto' }}><a style={{ fontWeight: 'bold' }}>Módulo:</a> {mod.name}</Typography>
                   </Grid>
                   <Grid container md={2.4} sm={2.4} xs={6}>
                     <Typography variant='sm' sx={{ pointerEvents: 'auto' }}><a style={{ fontWeight: 'bold' }}>Montado por:</a> {mod.assemblyBy}</Typography>
@@ -197,7 +197,7 @@ const ProjectAssembly = ({ chosenProject, open, onClose, detailOnly }) => {
                     <PrimaryBtn text={'Iniciar'} otherProps={{ color: 'success' }} disabled={mod.inAssembly || mod.complete}/>
                     <PrimaryBtn text={'Terminar'} otherProps={{ color: 'error' }} disabled={!mod.inAssembly || mod.complete}/>
                   </ButtonGroup>
-                  {mod.complete && <Tooltip title='Imprimir código QR modulo.'>
+                  {mod.complete && <Tooltip title='Imprimir código QR módulo.'>
                     <IconButton>
                       <QrCode />
                     </IconButton>

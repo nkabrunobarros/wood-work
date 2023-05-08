@@ -51,7 +51,7 @@ const DeliverBudgetModal = (props) => {
     aria-describedby='alert-dialog-description'
   >
     <DialogTitle color="link.main" id='alert-dialog-title' >
-     Entrega de orçamento
+     Entrega do Orçamento
     </DialogTitle>
     <Divider />
     <DialogContent>
@@ -74,7 +74,7 @@ const DeliverBudgetModal = (props) => {
           <Grid container md={6} sm={6} xs={6} p={1}>
             <Box sx={{ width: '100%' }}>
               <InputLabel>
-            Data de entrega orçamento
+            Entrega do orçamento
                 <Tooltip title='Obrigatório' >
                   <span style={{ color: 'var(--red)' }}> *</span>
                 </Tooltip>
@@ -86,7 +86,6 @@ const DeliverBudgetModal = (props) => {
 
                 value={dateAgreedDelivery.value}
                 onChange={(e, newValue) => setDateAgreedDelivery({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
-                // onChange={(newValue) => onBudgetChange(newValue)}
                 renderInput={(params) =>
                   <TextField fullWidth sx={{ width: '100%' }} {...params} error={dateAgreedDelivery.error} inputProps={{ sx: { color: dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: dateAgreedDelivery.error || 'DD.MM.YYYY' }}/>}
               />
@@ -95,7 +94,7 @@ const DeliverBudgetModal = (props) => {
           </Grid>
           <Grid container md={6} sm={6} xs={6} p={1}>
             <InputLabel>
-            Data de entrega de projeto
+              Entrega do projeto
               <Tooltip title='Obrigatório' >
                 <span style={{ color: 'var(--red)' }}> *</span>
               </Tooltip>

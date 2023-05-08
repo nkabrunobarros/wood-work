@@ -31,13 +31,14 @@ const ProductLinesTab = (props) => {
   function addGroup () {
     if (!newGroupName) return;
 
-    setLines([...lines, {
+    const data = {
       id: 'group' + lines.length,
       type: 'group',
       name: newGroupName,
       items: []
-    }]);
+    };
 
+    setLines([...lines, data]);
     setNewGroupName('');
     setExpanded('group' + lines.length);
   }
@@ -65,8 +66,6 @@ const ProductLinesTab = (props) => {
 
     setLines(prevLines);
   }
-
-  console.log(lines);
 
   //  Add furniture type separator to group
   function addNewLineGroup (props) {

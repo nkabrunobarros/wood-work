@@ -57,7 +57,7 @@ const EditClient = ({ ...props }) => {
       },
       {
         id: 'user.last_name',
-        label: 'Ultimo Nome',
+        label: 'Último Nome',
         value: client.user.last_name,
         error: '',
         tooltip: ''
@@ -83,7 +83,7 @@ const EditClient = ({ ...props }) => {
       },
       {
         id: 'address.postalCode',
-        label: 'Codigo Postal',
+        label: 'Código Postal',
         value: client.address.postalCode,
         error: '',
         required: true,
@@ -125,7 +125,7 @@ const EditClient = ({ ...props }) => {
       },
       {
         id: 'delivery_address.postalCode',
-        label: 'Codigo Postal de Entrega',
+        label: 'Código Postal de Entrega',
         value: client.delivery_address.postalCode,
         error: '',
         required: true,

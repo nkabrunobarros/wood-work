@@ -1,9 +1,9 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { AppBar, Box, Button, Dialog, Grid, Grow, IconButton, Menu, Tab, TableSortLabel, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Button, Dialog, Grid, Grow, IconButton, Menu, Popover, Tab, TableSortLabel, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import * as icons from 'lucide-react';
-import { Check, CheckCircle, Eye, HardDrive, MinusCircle, Package, Play, X } from 'lucide-react';
+import { Check, CheckCircle, Eye, MinusCircle, Play, X } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -84,11 +84,9 @@ const FurnitureDetails = (props) => {
   const [machines, setMachines] = useState(props.machines);
   const [consumables, setConsumables] = useState();
   const [fullyLoaded, setFullyLoaded] = useState(false);
+  const [openPopover, setOpenPopover] = useState(null);
   const [value, setValue] = useState(0);
   const [activeWorkerTasks, setActiveWorkerTasks] = useState();
-
-  console.log(activeWorkerTasks);
-
   const me = reduxState.auth.me;
   const dispatch = useDispatch();
   const getWorkerTasks = (data) => dispatch(workerTasksActionsRedux.workerTasks(data));
@@ -135,18 +133,18 @@ const FurnitureDetails = (props) => {
 
   function createParts () {
     const newParts2 = [
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_COSTA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA1', material: 'HDF 3', amount: 1, lenght: '1471', width: '1000', thickness: '3', tag: 1, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_COSTA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA2', material: 'HDF 3', amount: 1, lenght: '1476', width: '1000', thickness: '3', tag: 2, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_COSTA', material: 'HDF 6', amount: 1, lenght: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', material: 'HDF 6', amount: 4, lenght: '830', width: '80', thickness: '6', tag: 6, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', material: 'HDF 6', amount: 1, lenght: '830', width: '200', thickness: '6', tag: 7, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS1', material: 'HDF 10', amount: 1, lenght: '2150', width: '100', thickness: '10', tag: 8, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS2', material: 'HDF 10', amount: 1, lenght: '2181', width: '100', thickness: '10', tag: 9, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 10, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA2_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 11, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', material: 'HDF 10 CNC', amount: 1, lenght: '2621', width: '1106', thickness: '10', tag: 12, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      { obs: 'Esta tabua tem que ser cortada assim', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_COSTA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA1', material: 'HDF 3', amount: 1, lenght: '1471', width: '1000', thickness: '3', tag: 1, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_COSTA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA2', material: 'HDF 3', amount: 1, lenght: '1476', width: '1000', thickness: '3', tag: 2, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_COSTA', material: 'HDF 6', amount: 1, lenght: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', material: 'HDF 6', amount: 4, lenght: '830', width: '80', thickness: '6', tag: 6, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: 'Esta peça é para colar com a seguinte', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', material: 'HDF 6', amount: 1, lenght: '830', width: '200', thickness: '6', tag: 7, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { obs: 'Colar esta peça com a anterior', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS1', material: 'HDF 10', amount: 1, lenght: '2150', width: '100', thickness: '10', tag: 8, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS2', material: 'HDF 10', amount: 1, lenght: '2181', width: '100', thickness: '10', tag: 9, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 10, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_C_GAVETA2_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 11, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', material: 'HDF 10 CNC', amount: 1, lenght: '2621', width: '1106', thickness: '10', tag: 12, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', material: 'HDF 10 CNC', amount: 1, lenght: '2590', width: '1106', thickness: '10', tag: 13, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', material: 'HDF 10 CNC', amount: 1, lenght: '1069', width: '306', thickness: '10', tag: 14, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     //   { complete: false, belongsTo: chosenFurniture.id, partName: chosenFurniture.name.value + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', material: 'HDF 10', amount: 2, lenght: '793', width: '50', thickness: '10', tag: 15, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
@@ -213,7 +211,7 @@ const FurnitureDetails = (props) => {
 
   useEffect(() => {
     async function load () {
-      getMachines().then((res) => {
+      const machines = await getMachines().then((res) => {
         const machines = res.data.map((ele) => {
           return { ...ele, Nome: ele.name?.value || ele.id.replace('urn:ngsi-ld:Machine:', '') };
         });
@@ -237,21 +235,25 @@ const FurnitureDetails = (props) => {
           result.push(...grouped[machineType]);
         });
 
-        console.log(result);
         setMachines(result);
+
+        return result;
       });
 
       const logsWorkerTasks = await getWorkerTasks().then((res) => {
         setActiveWorkerTasks(res.data.filter(ele => ele.finishTime?.value === ''));
 
+        // console.log(machines.find(ele => ele.id === logsWorkerTasks.filter(ele => ele.finishTime?.value === '')?.find(ele => ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id)?.machine?.value));
         return res.data.filter(ele => ele.onProject?.value === chosenFurniture.id);
       });
+
+      setMyMachine(machines.find(ele => ele.id === logsWorkerTasks.filter(ele => ele.finishTime?.value === '')?.find(ele => ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id)?.machine?.value));
 
       await getParts(chosenFurniture.id).then((res) => {
         const built = res.data.filter(ele => ele.belongsTo.value === chosenFurniture.id).map((part) => {
           const part2 = { ...part };
 
-          part2.logs = logsWorkerTasks.filter(ele => ele.executedInOn.object === part.id);
+          part2.logs = logsWorkerTasks.filter(ele => ele.executedOn.object === part.id);
 
           Object.keys(part2).map((key) => {
             part2[key] = part2[key].type === 'Property' ? part2[key].value : (part2[key].type === 'Relationship' ? part2[key].object : part2[key]);
@@ -329,7 +331,7 @@ const FurnitureDetails = (props) => {
         type: 'Relationship',
         object: 'urn:ngsi-ld:Worker:' + me.id
       },
-      executedInOn: {
+      executedOn: {
         type: 'Relationship',
         object: props.part.id
       },
@@ -374,6 +376,7 @@ const FurnitureDetails = (props) => {
     };
 
     await updateWorkerTask({ data: built, id: props.id });
+    setMyMachine({ ...myMachine, currentlyOn: { ...myMachine.currentlyOn, value: '' } });
     await updateMachine({ id: props.machine?.value, data: { currentlyOn: '' } });
   }
 
@@ -461,6 +464,12 @@ const FurnitureDetails = (props) => {
 
   const ActionStatus = (props) => {
     const { part, field, disabled } = props;
+    let undisabled = disabled;
+
+    if (myMachine?.currentlyOn?.value === part.id) {
+      undisabled = false;
+      console.log(undisabled);
+    }
 
     if (!part[field]) return '';
 
@@ -579,7 +588,7 @@ const FurnitureDetails = (props) => {
                 toast.success('Iniciado.');
               });
             }
-          }} disabled={disabled} >
+          }} disabled={undisabled} >
             <Tooltip title={ msg || (thisMachines && !thisMachines[0] ? 'Não há maquinas disponiveis' : 'Iniciar')} >
               <Play />
             </Tooltip>
@@ -596,7 +605,7 @@ const FurnitureDetails = (props) => {
             <IconComponent strokeWidth={1.5} />
           </Box>
         </Tooltip>
-        : <IconButton {...props} disabled={disabled} onClick={() => FinishPart(log).then(() => {
+        : <IconButton {...props} disabled={undisabled} onClick={() => FinishPart(log).then(() => {
           cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
           setProjectParts(cpy);
 
@@ -622,34 +631,35 @@ const FurnitureDetails = (props) => {
           toast.success('Terminado.');
         })} >
           <Tooltip title={'Terminar'} >
-            <CheckCircle color='green' />
+            <CheckCircle color={!disabled ? 'green' : 'gray'} />
           </Tooltip>
         </IconButton>;
     }
 
     return detailOnly
-      ? <Tooltip title='Completo'><Check color='green' /></Tooltip>
+      ? <Tooltip title='Completo'>
+        <Check color='green' />
+      </Tooltip>
       : <Box onClick={() => {
         cpy[props.index].logs[index].finishTime.value = moment().format('DD/MM/YYYY HH:mm:ss');
         setProjectParts(cpy);
       }}>
-        <IconButton onClick={() => {
+        <IconButton disabled={undisabled} onClick={() => {
         }} >
           <Tooltip title={'Feito'} >
-            <Check color='green' />
+            <Check color={!disabled ? 'green' : 'gray'} />
           </Tooltip>
         </IconButton>
       </Box>;
   };
 
-  const panelProps = {
-    container: true,
-    m: 1,
-    md: 12,
-    sm: 12,
-    xs: 12,
-    sx: { border: '1px solid', borderColor: 'divider', borderRadius: '8px', backgroundColor: 'lightGray.main' }
-  };
+  function test ({ field }) {
+    if (!myMachine?.machineType?.value?.toLowerCase().includes(field)) return true;
+
+    if (myMachine?.currentlyOn?.value) return true;
+
+    return false;
+  }
 
   return <>
 
@@ -855,7 +865,6 @@ const FurnitureDetails = (props) => {
         </Toolbar>
       </AppBar>
       <Notification />
-      {!props?.projectParts && false && <Button onClick={() => createParts()}>Create</Button>}
       {fullyLoaded
         ? <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }} >
           {!detailOnly && <CustomBreadcrumbs path={[
@@ -868,32 +877,43 @@ const FurnitureDetails = (props) => {
             }
           ]} />}
           <Content>
+            <Popover
+              open={openPopover?.target}
+              anchorEl={openPopover?.target}
+              onClose={() => setOpenPopover(null)}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <Typography sx={{ p: 2 }}>{openPopover?.msg}</Typography>
+            </Popover>
             <Grid id='pad' container md={12} sm={12} xs={12}>
               <Grid container md={4} sm={6} xs={6}>
                 <Grid container md={12} sm={12} xs={12} pb={0.5} >
                   <Typography variant='titlexxl'>{chosenFurniture?.name?.value}</Typography>
                 </Grid>
-                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                <Grid container md={6} sm={6} xs={6} pb={0.5} display={detailOnly && 'none'} >
                   <Tooltip title='Cliente'>
-                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{furnitureProject?.client.user?.first_name} {furnitureProject?.client.user?.last_name}</Typography>
+                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{furnitureProject?.client?.user?.first_name} {furnitureProject?.client?.user?.last_name}</Typography>
                   </Tooltip>
                 </Grid>
-                <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} display={detailOnly && 'none'} justifyContent={'end'}>
                   <Tooltip title='Projeto'>
                     <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{furnitureProject?.name?.value}</Typography>
                   </Tooltip>
                 </Grid>
-                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                <Grid container md={6} sm={6} xs={6} pb={0.5} display={detailOnly && 'none'} >
                   <Tooltip title='Grupo'>
                     <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Grupo: </a>{chosenFurniture?.group?.value}</Typography>
                   </Tooltip>
                 </Grid>
-                <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                <Grid container md={6} sm={6} xs={6} pb={0.5} display={detailOnly && 'none'} justifyContent={'end'}>
                   <Tooltip title='Subgrupo'>
                     <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Subgrupo: </a>{chosenFurniture?.subGroup?.value || 'cozinha'}</Typography>
                   </Tooltip>
                 </Grid>
-                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                <Grid container md={6} sm={6} xs={6} pb={0.5} display={detailOnly && 'none'} >
                   <Tooltip title='Quantidade Pedida'>
                     <Typography variant="subtitle1" color='primary'>
                       Quantidade Pedida: {chosenFurniture.amount.value}
@@ -901,48 +921,15 @@ const FurnitureDetails = (props) => {
                   </Tooltip>
                 </Grid>
               </Grid>
-              <Grid container md={4} sm={6} xs={6} p={4} >
-                <MySelect options={machines} value={myMachine?.id} label={'Maquina'} optionLabel={'Nome'} onChange={(e) => setMyMachine(machines.find(ele => ele.id === e.target.value))} />
-              </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: 'none' }} >
-                <Box sx={{ width: '100%' }}>
-                  <Grid {...panelProps} p={1}>
-                    <Grid container md={12} sm={12} xs={12} color='primary.main' >
-                      <Package />
-                      <Typography variant='subtitle2'>Armazem</Typography></Grid>
-                    <Grid container md={12} sm={12} xs={12} pl={2}>
-                      <Typography variant='subtitle2' color='lightTextSm.main'>Armazem 2b</Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: 'none' }} >
-                <Box sx={{ width: '100%' }}>
-                  <Grid {...panelProps} p={1}>
-                    <Grid container md={12} sm={12} xs={12} color='primary.main' >
-                      <HardDrive />
-                      <Typography variant='subtitle2'>Maquinas disponiveis</Typography></Grid>
-                    {machines?.filter(ele => ele.currentlyOn?.value === '').map((machine) =>
-                      <Grid container key={machine?.id} md={4} sm={4} xs={4} >
-                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine?.name?.value}</Typography>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Box>
-              </Grid>
-              <Grid container md={3} sm={3} xs={3} p={1} sx={{ display: 'none' }} >
-                <Box sx={{ width: '100%' }}>
-                  <Grid {...panelProps} p={1}>
-                    <Grid container md={12} sm={12} xs={12} color='primary.main' >
-                      <HardDrive />
-                      <Typography variant='subtitle2'>Maquinas em uso</Typography></Grid>
-                    {machines?.filter(ele => ele.currentlyOn?.value !== '').map((machine) =>
-                      <Grid container key={machine?.id} md={4} sm={4} xs={4} >
-                        <Typography variant='subtitle2' color='lightTextSm.main'>{machine?.name?.value || machine?.id?.replace('urn:ngsi-ld:Machine:', '')}</Typography>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Box>
+              <Grid container md={4} sm={6} xs={6} p={4} display={detailOnly && 'none'} >
+                <MySelect options={machines.filter((mach) => {
+                  const isExecuting = activeWorkerTasks.find(
+                    ele => ele.machine.value === mach.id && ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id
+                  );
+
+                  return !isExecuting || isExecuting.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id;
+                })
+                } value={myMachine?.id} label={'Maquina'} optionLabel={'Nome'} onChange={(e) => setMyMachine(machines.find(ele => ele.id === e.target.value))} />
               </Grid>
             </Grid>
             <Grid container md={12} sm={12} xs={12}>
@@ -991,21 +978,27 @@ const FurnitureDetails = (props) => {
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('nesting')} field={'nestingFlag'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly}
+                                    disabled={test({ part, field: 'nesting' })}
+                                    field={'nestingFlag'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('cnc')} field={'cncFlag'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'cnc' })} field={'cncFlag'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('orla')} field={'orla'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'orla' })} field={'orla'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('furo')} field={'f'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'furo' })} field={'f'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={!myMachine?.machineType?.value?.toLowerCase()?.includes('tupia')} field={'tupia'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'tupia' })} field={'tupia'}/>
                                 </Grid>
-                                <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                                <Grid {...cellProps} >
+                                  <Tooltip title={part.obs}>
+                                    <Typography variant='sm'>{ part.obs && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.obs })}><icons.FileText /></IconButton> } </Typography>
+                                  </Tooltip>
+                                </Grid>
                                 <Grid {...cellProps} > <PartStatus part={part} /></Grid>
                               </Grid>
                             );
@@ -1047,6 +1040,7 @@ const FurnitureDetails = (props) => {
               </TabPanel>
             </Grid>
           </Content>
+          {!props?.projectParts && true && <Button sx={{ color: 'red', width: 'fit-content' }} onClick={() => createParts()}>Create</Button>}
         </Grid>
         : <Loader center={true} />
       }

@@ -222,7 +222,7 @@ const Head = (props) => {
       });
 
       setDeliverModal(false);
-      ToastSet(processing, 'Projeto entregue', 'success');
+      ToastSet(processing, 'Orçamento entregue', 'success');
     }).catch((err) => {
       console.log(err);
       ToastSet(processing, 'Projeto não entregue. Se o problema persistir, contacte a gerência.', 'error');
@@ -344,7 +344,7 @@ const Head = (props) => {
 
     switch (budget?.budgetStatus?.value) {
     case 'needs analysis': return <PrimaryBtn
-      text={'Iniciar Orçamento'}
+      text={'Iniciar Orçamentação'}
       onClick={() => setInitiateBudgeting(true) }
       icon={
         <CheckCircleOutline
@@ -354,7 +354,7 @@ const Head = (props) => {
       }
     />;
     case 'waiting budget': return <PrimaryBtn
-      text={'Entregar orçamento' }
+      text={'Entregar Orçamento' }
       onClick={() => setDeliverModal(!deliverModal) }
       icon={
         <CheckCircleOutline
@@ -487,11 +487,11 @@ const Head = (props) => {
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                         <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                        <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                        <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                       </Grid>
                       {/* Postal Code */}
                       <Grid container md={12} sm={12} xs={12}>
-                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Código Postal</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.postalCode}</Typography></Grid>
                       </Grid>
                       {/* Street */}

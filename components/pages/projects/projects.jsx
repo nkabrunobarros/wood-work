@@ -335,30 +335,6 @@ const ProjectsScreen = (props) => {
         <Content>
           <Grid id='pad' md={12} container>
             <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-            <Grid container item md={3} sm={6} xs={12} p={1}>
-              <MyInput
-                fullWidth
-                label='Nome'
-                id='name'
-                name='name'
-                autoComplete='name'
-                placeholder='Escrever Nome'
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-              />
-            </Grid>
-            <Grid container item md={3} sm={6} xs={12} p={1}>
-              <MyInput
-                fullWidth
-                label='Número'
-                id='Numero'
-                name='Numero'
-                autoComplete='name'
-                placeholder='Escrever Número'
-                value={referencia}
-                onChange={(e) => setReferência(e.target.value)}
-              />
-            </Grid>
             {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
               <InputLabel htmlFor='email'>Cliente</InputLabel>
               <Autocomplete
@@ -396,6 +372,31 @@ const ProjectsScreen = (props) => {
               />
             </Grid>}
             <Grid container item md={3} sm={6} xs={12} p={1}>
+              <MyInput
+                fullWidth
+                label='Nome'
+                id='name'
+                name='name'
+                autoComplete='name'
+                placeholder='Escrever Nome'
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              />
+            </Grid>
+            <Grid container item md={3} sm={6} xs={12} p={1}>
+              <MyInput
+                fullWidth
+                label='Número'
+                id='Numero'
+                name='Numero'
+                autoComplete='name'
+                placeholder='Escrever Número'
+                value={referencia}
+                onChange={(e) => setReferência(e.target.value)}
+              />
+            </Grid>
+
+            <Grid container item md={3} sm={6} xs={12} p={1}>
               <Select
                 label='Estado'
                 fullWidth
@@ -408,16 +409,20 @@ const ProjectsScreen = (props) => {
                   },
                   {
                     id: 'needs analysis',
-                    label: 'Análise Necessidades'
+                    label: 'Pendente Análise Necessidades'
                   },
                   {
                     id: 'waiting budget',
-                    label: 'Espera Orçamento'
+                    label: 'Pendente Orçamento'
                   },
                   {
                     id: 'waiting adjudication',
-                    label: 'Espera Adjudicação'
+                    label: 'Pendente Adjudicação'
                   },
+                  // {
+                  //   id: ['waiting adjudication', 'needs analysis', 'waiting budget'],
+                  //   label: 'Pré Adjudicação'
+                  // },
                   {
                     id: 'canceled',
                     label: 'Cancelado'
@@ -428,19 +433,23 @@ const ProjectsScreen = (props) => {
                   },
                   {
                     id: 'drawing',
-                    label: 'Em Desenho'
+                    label: 'Pendente Desenho'
                   },
                   {
                     id: 'production',
-                    label: 'Em Produção'
+                    label: 'Pendente Produção'
                   },
                   {
                     id: 'testing',
-                    label: 'Em Montagem'
+                    label: 'Pendente Montagem'
+                  },
+                  {
+                    id: 'packaging',
+                    label: 'Pendente Embalamento'
                   },
                   {
                     id: 'transport',
-                    label: 'Em Transporte'
+                    label: 'Pendente Transporte'
                   },
                   {
                     id: 'finished',

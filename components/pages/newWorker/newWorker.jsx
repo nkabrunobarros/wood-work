@@ -91,7 +91,7 @@ const newWorker = ({ ...props }) => {
     },
     {
       id: 'user.last_name',
-      label: 'Ultimo Nome',
+      label: 'Último Nome',
       value: '',
       error: '',
       tooltip: ''
@@ -153,12 +153,13 @@ const newWorker = ({ ...props }) => {
     const qs = require('qs');
     const data = qs.stringify({ ...builtWorker });
 
-    await newWorker(data).then((res) => Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id)).catch((err) => onError(err));
-    setProcessing(false);
+    await newWorker(data).then((res) => { setProcessing(false); Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id); }).catch((err) => onError(err));
   }
 
   function onError (error) {
     const errorKeys = Object.keys(error.response.data);
+
+    setProcessing(false);
 
     const updatedFields = inputFields.map((field) => {
       const [key, subKey] = field.id.split('.');
@@ -225,7 +226,7 @@ const newWorker = ({ ...props }) => {
         input.error = 'Email mal estruturado';
         hasErrors = true;
       } else if (
-        input.value.length < 9 &&
+        input?.value?.length < 9 &&
         input.type === 'phone' &&
         input.required
       ) {

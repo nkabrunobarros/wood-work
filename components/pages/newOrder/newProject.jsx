@@ -94,7 +94,6 @@ const NewOrder = ({ ...props }) => {
   });
 
   const [inputFields, setInputFields] = useState([{
-    category: { value: '', error: '' },
     amount: { value: 0, error: '' }
   }]);
 
@@ -110,13 +109,6 @@ const NewOrder = ({ ...props }) => {
         data[props.name].error = 'Data Invalida';
       }
     } else data[props.name].error = '';
-
-    if (props.name === 'category') {
-      if (data[props.name].value === '' || data.name.value === '') data.name.value = props.value + data.name.value;
-      else data.name.value = data.name.value.replace(data.category.value, props.value);
-
-      data.name.error = '';
-    }
 
     if (props.name === 'client') {
       const client = clients.find(ele => ele.id === props.value);
@@ -246,13 +238,9 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: budgetData.obs.value
       },
-      category: {
-        type: 'Property',
-        value: inputFields[0]?.category.value || ''
-      },
       budgetStatus: {
         type: 'Property',
-        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'needs analysis'
+        value: budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'needs analysis'
       },
       orderBy: {
         type: 'Relationship',
@@ -282,9 +270,9 @@ const NewOrder = ({ ...props }) => {
       },
     };
 
-    await newBudget(data).then(async (res) => {
-      CreateFurnitures(res.data.id);
+    CreateFurnitures(data.id);
 
+    await newBudget(data).then(async () => {
       false && await newFolder({
         folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
         parent_folder: null,

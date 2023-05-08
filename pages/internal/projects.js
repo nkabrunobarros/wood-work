@@ -17,7 +17,7 @@ import * as clientsActionsRedux from '../../store/actions/client';
 import * as expeditionsActionsRedux from '../../store/actions/expedition';
 import * as projectsActionsRedux from '../../store/actions/project';
 //  Icons
-import { Check, Layers, LayoutTemplate, PackagePlus, Settings, Truck } from 'lucide-react';
+import { Layers, LayoutTemplate, PackageCheck, PackagePlus, Settings, Truck } from 'lucide-react';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
@@ -94,9 +94,13 @@ const Projects = ({ ...pageProps }) => {
     };
 
     reduxState.budgets?.data?.forEach((bud) => {
-      switch (bud.status?.value) {
+      switch (bud.budgetStatus?.value) {
+      case 'needs analysis':
+        counts.waitingAdjudication++;
+
+        break;
       case 'waiting budget':
-        counts.waitingBudget++;
+        counts.waitingAdjudication++;
 
         break;
       case 'waiting adjudication':
@@ -141,9 +145,9 @@ const Projects = ({ ...pageProps }) => {
 
     const cards = [
       {
-        id: 'waiting adjudication',
+        id: ['waiting adjudication', 'needs analysis', 'waiting budget'],
         num: 1,
-        title: 'Por adjudicar',
+        title: 'Pré Adjudicação',
         amount: counts.waitingAdjudication,
         icon: (
           <Layers
@@ -156,7 +160,7 @@ const Projects = ({ ...pageProps }) => {
       {
         id: 'drawing',
         num: 2,
-        title: 'Em Desenho',
+        title: 'Pendente Desenho',
         amount: counts.drawing,
         icon: (
           <LayoutTemplate
@@ -169,7 +173,7 @@ const Projects = ({ ...pageProps }) => {
       {
         id: 'production',
         num: 3,
-        title: 'Em Produção',
+        title: 'Pendente Produção',
         amount: counts.production,
         icon: (
           <PackagePlus
@@ -182,7 +186,7 @@ const Projects = ({ ...pageProps }) => {
       {
         id: 'testing',
         num: 4,
-        title: 'Em Montagem',
+        title: 'Pendente Montagem',
         amount: counts.testing,
         icon: (
           <Settings
@@ -193,9 +197,22 @@ const Projects = ({ ...pageProps }) => {
         color: 'var(--babyblue)',
       },
       {
+        id: 'packaging',
+        num: 4,
+        title: 'Pendente Embalamento',
+        amount: counts.testing,
+        icon: (
+          <PackageCheck
+            size={pageProps?.globalVars?.iconSizeXl}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--babyblue)',
+      },
+      {
         id: 'transport',
         num: 5,
-        title: 'Em Expedição',
+        title: 'Pendente Expedição',
         amount: counts.expedition,
         icon: (
           <Truck
@@ -205,19 +222,19 @@ const Projects = ({ ...pageProps }) => {
         ),
         color: 'var(--yellow)',
       },
-      {
-        num: 6,
-        id: 'finished',
-        title: 'Terminados',
-        amount: counts.concluded,
-        icon: (
-          <Check
-            size={pageProps?.globalVars?.iconSizeXl}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-          />
-        ),
-        color: 'var(--green)',
-      },
+      // {
+      //   num: 6,
+      //   id: 'finished',
+      //   title: 'Terminados',
+      //   amount: counts.concluded,
+      //   icon: (
+      //     <Check
+      //       size={pageProps?.globalVars?.iconSizeXl}
+      //       strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+      //     />
+      //   ),
+      //   color: 'var(--green)',
+      // },
     ];
 
     const headCellsBudget = [
@@ -274,6 +291,13 @@ const Projects = ({ ...pageProps }) => {
 
     const headCellsProjects = [
       {
+        id: 'ClienteLabel',
+        numeric: false,
+        disablePadding: false,
+        label: 'Cliente',
+        show: true,
+      },
+      {
         id: 'Nome',
         numeric: false,
         disablePadding: false,
@@ -285,13 +309,6 @@ const Projects = ({ ...pageProps }) => {
         numeric: false,
         disablePadding: false,
         label: 'Número',
-        show: true,
-      },
-      {
-        id: 'ClienteLabel',
-        numeric: false,
-        disablePadding: false,
-        label: 'Cliente',
         show: true,
       },
       // {
@@ -379,6 +396,7 @@ const Projects = ({ ...pageProps }) => {
         Quantidade: bud?.amount?.value,
         Numero: bud.num?.value || 212453,
         Cliente: bud.orderBy.object,
+        Projeto: bud?.dateRequest?.value,
 
       };
     });
@@ -410,8 +428,6 @@ const Projects = ({ ...pageProps }) => {
     });
 
     const merged = [...projects, ...filteredBudgets];
-
-    console.log(merged);
 
     const props = {
       items: merged,

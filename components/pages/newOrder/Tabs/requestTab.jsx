@@ -149,7 +149,7 @@ const RequestTab = (props) => {
                   {/* Date agreed delivery */}
                   <Grid container md={6} sm={6} xs={12} p={1}>
                     <InputLabel >
-                       Data acordada de entrega de orçamento
+                      Entrega acordada do orçamento
                       {budgetData.dateAgreedDelivery.required && <Tooltip title='Obrigatório' >
                         <span style={{ color: 'var(--red)' }}> *</span>
                       </Tooltip>}
@@ -167,7 +167,7 @@ const RequestTab = (props) => {
                   {/* Date budget Delivery */}
                   <Grid container item sm={6} xs={12} p={1}>
                     <InputLabel >
-                      Data de entrega do orçamento
+                      Entrega do orçamento
                       {budgetData.dateDelivery.required && <Tooltip title='Obrigatório' >
                         <span style={{ color: 'var(--red)' }}> *</span>
                       </Tooltip>}
@@ -186,7 +186,7 @@ const RequestTab = (props) => {
                   {/* Date agree delivery Project */}
                   <Grid container item sm={6} xs={12} p={1}>
                     <InputLabel >
-               Data de entrega de projeto
+                      Entrega acordada do projeto
                       {budgetData.dateDeliveryProject.required && <Tooltip title='Obrigatório' >
                         <span style={{ color: 'var(--red)' }}> *</span>
                       </Tooltip>}
@@ -219,11 +219,11 @@ const RequestTab = (props) => {
                   {/* Postal Code */}
                   <Grid container item sm={3} xs={12} p={1} >
                     <MyInput
-                      label='Codigo Postal'
+                      label='Código Postal'
                       required={budgetData.postalCode.required}
                       error={budgetData.postalCode.error}
                       name='postalCode'
-                      paceholder='Escrever Codigo Postal'
+                      paceholder='Escrever Código Postal'
                       value={budgetData.postalCode.value}
                       onChange={(e) => onBudgetChange(e.target)}
                       maxLength={15}

@@ -74,7 +74,7 @@ const Account = ({ ...props }) => {
                     <Typography item color='lightTextSm.black' >{user?.first_name}</Typography>
                   </Grid>
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                    <Typography item color='lightTextSm.main'>Ultimo Nome</Typography>
+                    <Typography item color='lightTextSm.main'>Último Nome</Typography>
                     <Typography item color='lightTextSm.black' >{user?.last_name}</Typography>
                   </Grid>
 
@@ -111,12 +111,12 @@ const Account = ({ ...props }) => {
                     {/* Headers */}
                     <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                       <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                      <Grid {...tablemiddleCell} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
-                      <Grid {...tableLastCell} justifyContent={'center'} sx={{ border: 'none' }}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
+                      <Grid {...tableLastCell} sx={{ border: 'none' }}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                     </Grid>
                     {/* Postal Code */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Código Postal</Typography></Grid>
                       <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.postalCode}</Typography></Grid>
                       <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.postalCode}</Typography></Grid>
                     </Grid>

@@ -289,7 +289,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
             adornmentIcon={(field.id === 'postalCode2' || field.id === 'address.postalCode2') &&
               <>
                 {postalCodeInfo
-                  ? <Tooltip title='Detalhes Codigo Postal' >
+                  ? <Tooltip title='Detalhes Código Postal' >
                     <Verified color="var(--green)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
                   </Tooltip>
                   : <Tooltip title='Validar' >
