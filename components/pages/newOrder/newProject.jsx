@@ -82,7 +82,7 @@ const NewOrder = ({ ...props }) => {
     obs: { value: '', type: 'area' },
     price: { value: '', error: '' },
     client: { value: '', error: '', required: true },
-    dateRequest: { value: '', error: '', required: true, type: 'date' },
+    dateRequest: { value: moment(moment(), 'DD.MM.YYYY'), error: '', required: true, type: 'date' },
     dateDelivery: { value: '', error: '', required: false, type: 'date' },
     dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
     dateDeliveryProject: { value: '', error: '', required: false, type: 'date' },

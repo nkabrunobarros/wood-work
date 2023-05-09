@@ -243,7 +243,6 @@ const FurnitureDetails = (props) => {
       const logsWorkerTasks = await getWorkerTasks().then((res) => {
         setActiveWorkerTasks(res.data.filter(ele => ele.finishTime?.value === ''));
 
-        // console.log(machines.find(ele => ele.id === logsWorkerTasks.filter(ele => ele.finishTime?.value === '')?.find(ele => ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id)?.machine?.value));
         return res.data.filter(ele => ele.onProject?.value === chosenFurniture.id);
       });
 
@@ -394,6 +393,7 @@ const FurnitureDetails = (props) => {
     };
 
     setProjectParts(projectPartsCopy);
+    setMyMachine({ ...myMachine, currentlyOn: { ...myMachine.currentlyOn, value: props.part.id } });
   }
 
   function validateAction (field, actions, actionsDone) {
@@ -468,7 +468,6 @@ const FurnitureDetails = (props) => {
 
     if (myMachine?.currentlyOn?.value === part.id) {
       undisabled = false;
-      console.log(undisabled);
     }
 
     if (!part[field]) return '';
@@ -631,7 +630,7 @@ const FurnitureDetails = (props) => {
           toast.success('Terminado.');
         })} >
           <Tooltip title={'Terminar'} >
-            <CheckCircle color={!disabled ? 'green' : 'gray'} />
+            <CheckCircle color={!undisabled ? 'green' : 'gray'} />
           </Tooltip>
         </IconButton>;
     }
@@ -647,13 +646,13 @@ const FurnitureDetails = (props) => {
         <IconButton disabled={undisabled} onClick={() => {
         }} >
           <Tooltip title={'Feito'} >
-            <Check color={!disabled ? 'green' : 'gray'} />
+            <Check color={!undisabled ? 'green' : 'gray'} />
           </Tooltip>
         </IconButton>
       </Box>;
   };
 
-  function test ({ field }) {
+  function isActive ({ field }) {
     if (!myMachine?.machineType?.value?.toLowerCase().includes(field)) return true;
 
     if (myMachine?.currentlyOn?.value) return true;
@@ -914,9 +913,9 @@ const FurnitureDetails = (props) => {
                   </Tooltip>
                 </Grid>
                 <Grid container md={6} sm={6} xs={6} pb={0.5} display={detailOnly && 'none'} >
-                  <Tooltip title='Quantidade Pedida'>
+                  <Tooltip title='Quantidade'>
                     <Typography variant="subtitle1" color='primary'>
-                      Quantidade Pedida: {chosenFurniture.amount.value}
+                      Quantidade: {chosenFurniture.amount.value}
                     </Typography>
                   </Tooltip>
                 </Grid>
@@ -979,20 +978,20 @@ const FurnitureDetails = (props) => {
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.tag } </Typography></Grid>
                                 <Grid {...cellProps} >
                                   <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly}
-                                    disabled={test({ part, field: 'nesting' })}
+                                    disabled={isActive({ part, field: 'nesting' })}
                                     field={'nestingFlag'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'cnc' })} field={'cncFlag'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={isActive({ part, field: 'cnc' })} field={'cncFlag'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'orla' })} field={'orla'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={isActive({ part, field: 'orla' })} field={'orla'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'furo' })} field={'f'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={isActive({ part, field: 'furo' })} field={'f'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={test({ part, field: 'tupia' })} field={'tupia'}/>
+                                  <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={isActive({ part, field: 'tupia' })} field={'tupia'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
                                   <Tooltip title={part.obs}>

@@ -15,7 +15,6 @@ import FurnitureForm2 from './FormRows/FurnitureForm2';
 const ProductLinesTab2 = (props) => {
   const {
     pageProps,
-    categories,
     lines, setLines
   } = props;
 
@@ -158,7 +157,6 @@ const ProductLinesTab2 = (props) => {
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
           obs: { id: 'obs', value: '', error: '', label: 'Observações', type: 'area' },
           price: { id: 'price', value: '', error: '', label: 'Valor', type: 'currency' },
-          category: { hidden: true, id: 'category', value: '', error: '', options: categories, label: 'Categoria' },
         },
       ],
     };

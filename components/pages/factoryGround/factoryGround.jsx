@@ -100,12 +100,9 @@ const FactoryGround = ({ ...props }) => {
                               </Tooltip>
                             </Grid>
                             <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                              {/* <Tooltip title='Quantidade ainda para produzir'>
-                                <Typography variant='subtitle1' color='primary'>A Produzir: {furnit.produced?.value ? '0' : furnit.amount.value}</Typography>
-                              </Tooltip> */}
                               <Tooltip title='Quantidade Pedida'>
                                 <Typography variant="subtitle1" color='primary'>
-                                Quantidade Pedida: {furnit.amount.value}
+                                Quantidade: {furnit.amount.value}
                                 </Typography>
                               </Tooltip>
                             </Grid>

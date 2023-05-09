@@ -15,7 +15,6 @@ import GroupForm from './FormRows/GroupForm';
 const ProductLinesTab2 = (props) => {
   const {
     pageProps,
-    categories,
     lines,
     setLines,
   } = props;
@@ -72,7 +71,6 @@ const ProductLinesTab2 = (props) => {
           height: { id: 'height', value: '', error: '', label: 'Altura' },
           thickness: { id: 'thickness', value: '', error: '', label: 'Profundidade' },
           price: { id: 'price', value: '', error: '', label: 'Valor', type: 'currency' },
-          category: { hidden: true, id: 'category', value: '', error: '', options: categories, label: 'Categoria' },
         }]
     };
 
@@ -92,7 +90,6 @@ const ProductLinesTab2 = (props) => {
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
           obs: { id: 'obs', value: '', error: '', label: 'Observações', type: 'area' },
           price: { id: 'price', value: '', error: '', label: 'Valor', type: 'currency' },
-          category: { hidden: true, id: 'category', value: '', error: '', options: categories, label: 'Categoria' },
         }]
     };
 
