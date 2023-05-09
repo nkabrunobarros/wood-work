@@ -21,13 +21,13 @@ export const workerTasks = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.WORKERTASKS),
       params: {
-        limit: 400
+        limit: 400,
+        q: `onProject=="${data}"`,
       }
     },
     types: [WORKERTASKS_REQUEST, WORKERTASKS_SUCCESS, WORKERTASKS_FAIL],

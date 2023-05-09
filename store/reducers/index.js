@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import { LOGOUT } from '../actions/logout';
 import appStates from './appStates';
+import assemblys from './assemblys';
 import auth from './auth';
 import budgets from './budgets';
 import clients from './clients';
@@ -12,12 +13,13 @@ import folders from './folders';
 import furnitures from './furnitures';
 import leftovers from './leftovers';
 import machines from './machines';
+import modules from './modules';
 import organizations from './organizations';
+import packages from './packages';
 import parts from './parts';
 import permissions from './permissions';
 import projects from './projects';
 import workers from './workers';
-import assembly from './assemblys';
 
 const appReducer = combineReducers({
   auth,
@@ -33,10 +35,12 @@ const appReducer = combineReducers({
   emails,
   folders,
   machines,
-  assembly,
+  assemblys,
   leftovers,
   countries,
   furnitures,
+  modules,
+  packages
 });
 
 const rootReducer = (state, action) => {

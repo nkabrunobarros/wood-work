@@ -7,11 +7,9 @@ import { Calendar } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Navbar from '../../layout/navbar/navbar';
 import FurnitureDetails from './ProjectDetails/furnitureDetails';
-import ProjectDetails from './ProjectDetails/projectDetails';
 
 const FactoryGround = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
-  const [chosenProject, setChosenProject] = useState();
   const [chosenFurniture, setChosenFurniture] = useState();
   const [furnitureProject, setFurnitureProject] = useState();
 
@@ -30,13 +28,6 @@ const FactoryGround = ({ ...props }) => {
       chosenFurniture={chosenFurniture}
       setChosenProject={setChosenFurniture}
       onClose={setChosenFurniture}
-    />}
-    {chosenProject && <ProjectDetails
-      {...props}
-      open={chosenProject}
-      chosenProject={chosenProject}
-      setChosenProject={setChosenProject}
-      onClose={setChosenProject}
     />}
     <Navbar />
 

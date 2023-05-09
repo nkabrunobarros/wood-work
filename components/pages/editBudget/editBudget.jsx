@@ -44,7 +44,6 @@ import ConvertString from '../../utils/ConvertString';
 import ToastSet from '../../utils/ToastSet';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
-import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
 
 const EditBudget = ({ ...props }) => {
@@ -510,22 +509,6 @@ const EditBudget = ({ ...props }) => {
           </Grid>
           <Grid container md={12}>
             <Content>
-              <ProductLinesTab2
-                {...props}
-                dragDrop={{ getRootProps, getInputProps, isDragActive }}
-                budgetData={budgetData}
-                onBudgetChange={onBudgetChange}
-                docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
-                noDrop
-                lines={lines}
-                setLines={setLines}
-              />
-            </Content>
-          </Grid>
-          {false && <Grid container md={12}>
-            <Content>
               <ProductLinesTab {...props}
                 dragDrop={{ getRootProps, getInputProps, isDragActive }}
                 budgetData={budgetData}
@@ -538,7 +521,7 @@ const EditBudget = ({ ...props }) => {
                 setLines={setLines}
               />
             </Content>
-          </Grid>}
+          </Grid>
           <Grid container md={12}>
             <Content>
               <ObservationsTab {...props}

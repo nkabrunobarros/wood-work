@@ -36,18 +36,12 @@ const FactoryGround = () => {
       const projectBudgets = await Promise.all(projects.map(async (project) => {
         const [budgetData, furnituresData, clientData] = await Promise.all([
           getBudget(project.hasBudget.object),
-          getFurnitures(),
+          getFurnitures({ hasBudget: project.hasBudget.object, furnitureType: 'furniture', produced: false }),
           getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))
         ]);
 
         const budget = budgetData.data;
-
-        const furnitures = furnituresData.data
-          .filter(ele => ele.hasBudget?.value === project.hasBudget?.object && ele.furnitureType?.value === 'furniture')
-          .filter(ele => !ele.produced?.value)
-          .filter(ele => ele.furnitureType?.value === 'furniture')
-          .sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
-
+        const furnitures = [...furnituresData.data].sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
         const client = clientData.data;
 
         return {

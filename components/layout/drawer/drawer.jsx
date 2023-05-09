@@ -53,7 +53,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
     });
   }
 
-  return loggedUser && userPermissions && (
+  return (
     <SwipeableDrawer
       disableSwipeToOpen={false}
       onOpen={() => toggleDrawer()}
@@ -66,7 +66,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
         keepMounted: true, // Better open performance on mobile.
       }}
     >
-      { true && <Box
+      <Box
         sx={{ backgroundColor: 'default.sides' }}
         style={{
           display: 'flex',
@@ -96,7 +96,6 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
               height={75}
             />
           </Box>
-
           <Divider
             color='white'
             width='100%'
@@ -104,40 +103,39 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
           />
         </Box>
         <Box className='scrollableZone'>
-          {navLinks.map((item, i) => (
-            <React.Fragment key={i}>
-              {loggedUser
-                ? (
-                  <React.Fragment key={i * 100}>
-                    {/* {userPermissions?.permissions.find(ele => (ele.subject === item.allowed || item.allowed.toLowerCase() === userPermissions?.description.toLowerCase()) && ele.action === 'READ') && */}
-                    {userPermissions?.permissions_orion.find(ele => (ele === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase())) &&
-                    IsInternal(userPermissions?.description) === Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''))
-                      ? (
-                        <>
-                          <MenuItem id={item.id} sx={{ padding: '0' }}>
-                            <ActiveLink
-                              key={i}
-                              href={item.url}
-                              handleDrawerToggle={toggleDrawer}
-                              page={item.title}
-                            >
-                              {item.icon}
-                              <div style={{ paddingRight: '.5rem' }} />
-                              {item.title}
-                            </ActiveLink>
-                          </MenuItem>
-                          {item.underline && <Divider
-                            color='white'
-                            width='100%'
-                          />}
-                        </>
-                      )
-                      : null}
-                  </React.Fragment>
-                )
-                : null}
-            </React.Fragment>
-          ))}
+          {navLinks
+            .filter(item => {
+              if (!loggedUser) return false;
+
+              if (!userPermissions) return false;
+
+              const canAccess = userPermissions?.permissions_orion.find(
+                ele => ele === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase()
+              );
+
+              const isInternal = IsInternal(userPermissions?.description);
+              const isInternalUrl = Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''));
+
+              return canAccess && isInternal === isInternalUrl;
+            })
+            .map((item, i) => (
+              <Box key={i}>
+                <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }}>
+                  <ActiveLink
+                    href={item.url}
+                    handleDrawerToggle={toggleDrawer}
+                    page={item.title}
+                  >
+                    {item.icon}
+                    <div style={{ paddingRight: '.5rem' }} />
+                    {item.title}
+                  </ActiveLink>
+                </MenuItem>
+                {item.underline && (
+                  <Divider color='white' width='100%' />
+                )}
+              </Box>
+            ))}
           {/* Definições */}
           <MenuItem sx={{ padding: '0', display: 'none' }}>
             <Box
@@ -164,7 +162,6 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
           </MenuItem>
           <Collapse in={settingsOpen} sx={{ backgroundColor: localStorage.getItem('theme') === 'light' ? 'primary.light' : '#121212' }}>
             <MenuItem sx={{ padding: '0' }}>
-
               <a className={styles.navItemContainer} onClick={() => setEcraOpen(!ecraOpen)}>
                 <Box id='align'>
                   <Moon color={'white'} size={16} />
@@ -176,7 +173,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
               </a>
             </MenuItem>
           </Collapse>
-          <div style={{ position: 'relative', float: 'bottom', width: '100%' }}>
+          <Box style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             {loggedUser
               ? (
                 <>
@@ -209,9 +206,9 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                 </>
               )
               : null}
-          </div>
+          </Box>
         </Box>
-      </Box>}
+      </Box>
     </SwipeableDrawer>
   );
 };

@@ -4,54 +4,55 @@ import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
 import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
-export const PARTS_REQUEST = 'PARTS_REQUEST';
-export const PARTS_FAIL = 'PARTS_FAIL';
-export const PARTS_SUCCESS = 'PARTS_SUCCESS';
-export const NEW_PART_REQUEST = 'NEW_PART_REQUEST';
-export const NEW_PART_FAIL = 'NEW_PART_FAIL';
-export const NEW_PART_SUCCESS = 'NEW_PART_SUCCESS';
-export const UPDATE_PART_REQUEST = 'UPDATE_PART_REQUEST';
-export const UPDATE_PART_FAIL = 'UPDATE_PART_FAIL';
-export const UPDATE_PART_SUCCESS = 'UPDATE_PART_SUCCESS';
 
-export const parts = (data) => {
+export const MODULES_REQUEST = 'MODULES_REQUEST';
+export const MODULES_FAIL = 'MODULES_FAIL';
+export const MODULES_SUCCESS = 'MODULES_SUCCESS';
+export const NEW_MODULE_REQUEST = 'NEW_MODULE_REQUEST';
+export const NEW_MODULE_FAIL = 'NEW_MODULE_FAIL';
+export const NEW_MODULE_SUCCESS = 'NEW_MODULE_SUCCESS';
+export const UPDATE_MODULE_REQUEST = 'UPDATE_MODULE_REQUEST';
+export const UPDATE_MODULE_FAIL = 'UPDATE_MODULE_FAIL';
+export const UPDATE_MODULE_SUCCESS = 'UPDATE_MODULE_SUCCESS';
+
+export const modules = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.PARTS),
-      params: {
-        limit: 400
-      }
-    },
-    types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
-  });
-};
-
-export const projectParts = (data) => {
-  const { auth_token: userToken } = parseCookies();
-
-  return createAction({
-    meta: null,
-    data,
-    request: {
-      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
-      method: 'GET',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.MODULES),
       params: {
         limit: 400,
-        q: GenerateQueryFilters(data),
+        q: data && GenerateQueryFilters(data),
+
       }
     },
-    types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
+    types: [MODULES_REQUEST, MODULES_SUCCESS, MODULES_FAIL],
   });
 };
 
-export const newPart = (data) => {
+export const projectModules = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    data,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'GET',
+      url: getApiURL(endpoints.MODULES),
+      params: {
+        q: `belongsTo=="${data}"`,
+      }
+    },
+    types: [MODULES_REQUEST, MODULES_SUCCESS, MODULES_FAIL],
+  });
+};
+
+export const newModule = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -60,13 +61,13 @@ export const newPart = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'POST',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.MODULES),
     },
-    types: [NEW_PART_REQUEST, NEW_PART_SUCCESS, NEW_PART_FAIL],
+    types: [NEW_MODULE_REQUEST, NEW_MODULE_SUCCESS, NEW_MODULE_FAIL],
   });
 };
 
-export const updatePart = (data) => {
+export const updateModule = (data) => {
   const { auth_token: userToken } = parseCookies();
   const id = data?.id;
 
@@ -78,8 +79,8 @@ export const updatePart = (data) => {
       ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
-      url: getApiURL(endpoints.PARTS + id),
+      url: getApiURL(endpoints.MODULES + id),
     },
-    types: [UPDATE_PART_REQUEST, UPDATE_PART_SUCCESS, UPDATE_PART_FAIL],
+    types: [UPDATE_MODULE_REQUEST, UPDATE_MODULE_SUCCESS, UPDATE_MODULE_FAIL],
   });
 };

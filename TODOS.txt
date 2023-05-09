@@ -1,0 +1,61 @@
+[x]: Montagem (assembly)
+
+[ ]: Listagem
+[ ]GET modules
+[ ]    where {
+[ ]        parts are all produced
+[x]        FinishTime === "" 
+[ ]    }
+
+[ ] on Module assembly Start
+    
+[ ]PATCH module[id]
+[ ]    startTime: now()
+
+[ ]  extra:
+[ ]        caso seja o primeiro dos modulos do projeto a ser montado, PATCH a assembly[project.assembly.id] 
+[ ]            startTime: now()
+
+[ ]on Module assembly Finish
+
+[ ] PATCH module[id]
+[ ]   FinishTime: now()
+
+[ ]    extra: 
+[ ]        caso seja o ultimo dos modulos do projeto a ser montado, 
+[ ]            PATCH a assembly[project.assembly.id] 
+[ ]                FinishTime: now()
+[ ]            PATCH a project[project.id]
+[ ]                status: 'packaging'
+
+## Entra em fase de montagem
+
+## Montagem (packaging)
+
+[x]: Listagem
+[x] GET modules
+[x]    where {
+[x]        finishTime !== ""
+[x]    }
+
+
+
+
+
+
+
+
+
+
+
+Upload de ficheiros (Alterar caso seja necessario remover a pasta target, a pasta de upload agora é fixa, "VF DO CLIENTE")
+
+Stocks
+    Todos endpoints
+Montagems
+    Aplicar os endpoints (sujeito a modificação do modelo de dados)
+Embalamento
+    Estrutura final de modelo de dados
+Sobrantes
+    Endpoints (envio de imagem e tratamento de resultados)
+Gestão de armazem ?

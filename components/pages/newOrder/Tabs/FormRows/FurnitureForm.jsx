@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
+import { Box, Divider, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 
 //  PropTypes
@@ -11,18 +11,28 @@ import { X } from 'lucide-react';
 import FormGenerator from '../../../../formGenerator';
 // import CurrencyInput from '../../../inputs/CurrencyInput';
 
-const FurnitureForm = (props) => {
+const FurnitureForm2 = (props) => {
   function onChange (index, e) {
-    props.onChange({ index: props.index, e, lineIndex: props.lineIndex });
+    props.onChange({
+      subGroupIndex: props.subGroupIndex,
+      groupIndex: props.groupIndex,
+      itemIndex: props.itemIndex,
+      newValue: e.target.value,
+      property: e.target.name
+    });
   }
 
   function removeThisRow () {
-    props.onRemove({ index: props.index, lineIndex: props.lineIndex });
+    props.onRemove({
+      subGroupIndex: props.subGroupIndex,
+      groupIndex: props.groupIndex,
+      itemIndex: props.itemIndex
+    });
   }
 
   return <Grid container>
-
     {props.index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%' }} /></Box>}
+    <Typography variant='subtitle1' pl={1}> Móvel</Typography>
     <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >
@@ -41,4 +51,4 @@ const FurnitureForm = (props) => {
   </Grid>;
 };
 
-export default FurnitureForm;
+export default FurnitureForm2;

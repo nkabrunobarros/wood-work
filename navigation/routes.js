@@ -27,6 +27,8 @@ const routes = {
       profile: '/internal/account',
       error: '/404',
 
+      packing: '/internal/packing',
+
       leftovers: '/internal/leftovers',
 
       dashboards: '/internal/dashboards',

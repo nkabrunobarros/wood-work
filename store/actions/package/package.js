@@ -3,18 +3,18 @@ import { parseCookies } from 'nookies';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
-import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
-export const PARTS_REQUEST = 'PARTS_REQUEST';
-export const PARTS_FAIL = 'PARTS_FAIL';
-export const PARTS_SUCCESS = 'PARTS_SUCCESS';
-export const NEW_PART_REQUEST = 'NEW_PART_REQUEST';
-export const NEW_PART_FAIL = 'NEW_PART_FAIL';
-export const NEW_PART_SUCCESS = 'NEW_PART_SUCCESS';
-export const UPDATE_PART_REQUEST = 'UPDATE_PART_REQUEST';
-export const UPDATE_PART_FAIL = 'UPDATE_PART_FAIL';
-export const UPDATE_PART_SUCCESS = 'UPDATE_PART_SUCCESS';
 
-export const parts = (data) => {
+export const PACKAGES_REQUEST = 'PACKAGES_REQUEST';
+export const PACKAGES_FAIL = 'PACKAGES_FAIL';
+export const PACKAGES_SUCCESS = 'PACKAGES_SUCCESS';
+export const NEW_PACKAGE_REQUEST = 'NEW_PACKAGE_REQUEST';
+export const NEW_PACKAGE_FAIL = 'NEW_PACKAGE_FAIL';
+export const NEW_PACKAGE_SUCCESS = 'NEW_PACKAGE_SUCCESS';
+export const UPDATE_PACKAGE_REQUEST = 'UPDATE_PACKAGE_REQUEST';
+export const UPDATE_PACKAGE_FAIL = 'UPDATE_PACKAGE_FAIL';
+export const UPDATE_PACKAGE_SUCCESS = 'UPDATE_PACKAGE_SUCCESS';
+
+export const packages = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -23,16 +23,16 @@ export const parts = (data) => {
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.PACKAGES),
       params: {
         limit: 400
       }
     },
-    types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
+    types: [PACKAGES_REQUEST, PACKAGES_SUCCESS, PACKAGES_FAIL],
   });
 };
 
-export const projectParts = (data) => {
+export const projectPackages = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -41,17 +41,16 @@ export const projectParts = (data) => {
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.PACKAGES),
       params: {
-        limit: 400,
-        q: GenerateQueryFilters(data),
+        q: `belongsTo=="${data}"`,
       }
     },
-    types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],
+    types: [PACKAGES_REQUEST, PACKAGES_SUCCESS, PACKAGES_FAIL],
   });
 };
 
-export const newPart = (data) => {
+export const newPackage = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -60,13 +59,13 @@ export const newPart = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'POST',
-      url: getApiURL(endpoints.PARTS),
+      url: getApiURL(endpoints.PACKAGES),
     },
-    types: [NEW_PART_REQUEST, NEW_PART_SUCCESS, NEW_PART_FAIL],
+    types: [NEW_PACKAGE_REQUEST, NEW_PACKAGE_SUCCESS, NEW_PACKAGE_FAIL],
   });
 };
 
-export const updatePart = (data) => {
+export const updatePackage = (data) => {
   const { auth_token: userToken } = parseCookies();
   const id = data?.id;
 
@@ -78,8 +77,8 @@ export const updatePart = (data) => {
       ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
-      url: getApiURL(endpoints.PARTS + id),
+      url: getApiURL(endpoints.PACKAGES + id),
     },
-    types: [UPDATE_PART_REQUEST, UPDATE_PART_SUCCESS, UPDATE_PART_FAIL],
+    types: [UPDATE_PACKAGE_REQUEST, UPDATE_PACKAGE_SUCCESS, UPDATE_PACKAGE_FAIL],
   });
 };

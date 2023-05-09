@@ -1,20 +1,11 @@
-//  Custom Components
-
-//  Page Component
-import AssemblysScreen from '../../components/pages/assembly/assembly';
-
-//  Proptypes
-import PropTypes from 'prop-types';
-
-//  Navigation
-import Loader from '../../components/loader/loader';
-import routes from '../../navigation/routes';
-//  Services
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../../components/loader/loader';
+import PackingScreen from '../../components/pages/packing/packing';
+import routes from '../../navigation/routes';
 import * as modulesActionsRedux from '../../store/actions/module';
 
-const Assembly = ({ ...pageProps }) => {
+const Packing = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
@@ -22,7 +13,7 @@ const Assembly = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      await getModules({ finishTime: '' }).then((res) => console.log(res));
+      await getModules().then((res) => console.log(res));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -31,8 +22,8 @@ const Assembly = ({ ...pageProps }) => {
   if (loaded) {
     const breadcrumbsPath = [
       {
-        title: 'Montagens',
-        href: `${routes.private.internal.assemblys}`,
+        title: 'Embalamentos',
+        href: `${routes.private.internal.packing}`,
       },
     ];
 
@@ -40,16 +31,13 @@ const Assembly = ({ ...pageProps }) => {
       breadcrumbsPath,
       pageProps,
       modules: reduxState.modules.data,
+
     };
 
-    return <AssemblysScreen {...props} />;
+    return <PackingScreen {...props} />;
   }
 
   return <Loader center={true} />;
 };
 
-Assembly.propTypes = {
-  breadcrumbsPath: PropTypes.array,
-};
-
-export default Assembly;
+export default Packing;

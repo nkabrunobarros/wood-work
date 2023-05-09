@@ -93,7 +93,7 @@ const EditProject = ({ ...pageProps }) => {
             // Add the furniture item to the current sub-group's items array
             currentSubGroup?.items?.push({
               ...item,
-              furnitureType: { ...item.furnitureType, value: 'furniture', error: '', hidden: true },
+              furnitureType: { ...item.furnitureType, value: 'furniture', error: '', hidden: true, displayOrder: 22 },
               name: { ...item.name, id: 'name', error: '', required: true, label: 'Nome', displayOrder: 0 },
               description: { ...item.description, id: 'description', error: '', label: 'Descrição', type: 'area', displayOrder: 1 },
               amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 2 },
@@ -102,7 +102,6 @@ const EditProject = ({ ...pageProps }) => {
               height: { ...item.height, id: 'height', error: '', label: 'Altura', displayOrder: 6 },
               thickness: { ...item.thickness, id: 'thickness', error: '', label: 'Profundidade', displayOrder: 7 },
               price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 8 },
-              category: { ...item.category, hidden: true, id: 'category', error: '', options: categories, label: 'Categoria', displayOrder: 99 },
 
               hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 99, error: '' },
               group: { ...item.group, hidden: true, displayOrder: 99, error: '' },

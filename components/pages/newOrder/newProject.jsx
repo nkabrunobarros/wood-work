@@ -38,10 +38,8 @@ import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
 import formatString from '../../utils/FormatString';
-import ClientTab from './Tabs/clientTab';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
-import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
@@ -408,17 +406,6 @@ const NewOrder = ({ ...props }) => {
           </Grid>
         </Content>
         <Grid container sx={{ width: '100%' }}>
-          {false && <Grid container md={12}>
-            <Content>
-              <ClientTab {...props}
-                client={budgetData.client}
-                onClientChange={onBudgetChange}
-                setClientUser={setClientUser}
-                onProcessing={setProcessing}
-                noDetail
-              />
-            </Content>
-          </Grid>}
           <Grid container md={12}>
             <Content>
               <RequestTab {...props}
@@ -431,22 +418,7 @@ const NewOrder = ({ ...props }) => {
               />
             </Content>
           </Grid>
-          <Grid container md={12}>
-            <Content>
-              <ProductLinesTab2 {...props}
-                budgetData={budgetData}
-                onBudgetChange={onBudgetChange}
-                docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
-                noDrop
-                lines={lines}
-                setLines={setLines}
-
-              />
-            </Content>
-          </Grid>
-          {false && <Grid container md={12} >
+          <Grid container md={12} >
             <Content>
               <ProductLinesTab {...props}
                 budgetData={budgetData}
@@ -460,7 +432,7 @@ const NewOrder = ({ ...props }) => {
 
               />
             </Content>
-          </Grid>}
+          </Grid>
           <Grid container md={12}>
             <Content>
               <ObservationsTab {...props}

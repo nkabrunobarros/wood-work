@@ -376,6 +376,15 @@ const Head = (props) => {
     }
   };
 
+  const ascii = /^[ -~]+$/;
+  const str = 'Héllo wörld! ç';
+
+  if (!ascii.test(str)) {
+    const parsed = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    console.log(parsed);
+  }
+
   return (
     <>
       <Notification />
@@ -394,7 +403,7 @@ const Head = (props) => {
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
-                <Typography variant='title'>{breadcrumbsPath[1].title} </Typography>
+                <Typography variant='title'>{breadcrumbsPath[1].title}  </Typography>
                 <Box pl={2}>
                   {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
                   {budget.budgetStatus?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}

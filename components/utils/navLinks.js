@@ -1,4 +1,4 @@
-import { Archive, Factory, MessageCircle, Network, Scan, Table, Users } from 'lucide-react';
+import { Archive, Factory, MessageCircle, Network, PackageCheck, Scan, Table, Users } from 'lucide-react';
 import React from 'react';
 import routes from '../../navigation/routes';
 
@@ -68,6 +68,14 @@ export const navLinks = [
     url: routes.private.internal.assemblys,
     icon: <Network strokeWidth='1' size={20} />,
     allowed: 'assemblys',
+    allowed_: 'access_assembly',
+  },
+  {
+    title: 'Embalamentos',
+    id: 'packing',
+    url: routes.private.internal.packing,
+    icon: <PackageCheck strokeWidth='1' size={20} />,
+    allowed: 'packing',
     allowed_: 'access_assembly',
   },
   {
