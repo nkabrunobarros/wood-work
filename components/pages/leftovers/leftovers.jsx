@@ -29,7 +29,7 @@ const Leftovers = (props) => {
           <Grid container md={12} sm={12} xs={12}>
             <Grid container md={9} sm={9} xs={9} >
               {/* <Canvas /> */}
-              {true && <Image src={tabuas} />}
+              {false && <Image src={tabuas} />}
             </Grid>
             <Grid container md={3} sm={3} xs={3} >
               <Box>

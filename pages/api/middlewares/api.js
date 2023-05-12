@@ -36,11 +36,7 @@ const api = () => () => (next) => async (action) => {
     if (error.response?.data?.detail === ('Invalid token header. No credentials provided.' || 'Authentication credentials were not provided.')) {
       destroyCookie(null, 'auth_token');
 
-      return [
-        {
-          destination: '/signin', // Matched parameters can be used in the destination
-          permanent: false,
-        }];
+      return error;
     }
 
     next(failAction);
