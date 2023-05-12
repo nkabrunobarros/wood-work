@@ -37,3 +37,5 @@ yarn lint
 docker build -t mofreita:dev .
 docker tag mofreita:dev registry.nka.pt/nka/mofreita:dev
 docker push registry.nka.pt/nka/mofreita:dev
+
+a
