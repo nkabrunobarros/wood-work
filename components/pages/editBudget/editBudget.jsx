@@ -44,7 +44,6 @@ import ConvertString from '../../utils/ConvertString';
 import ToastSet from '../../utils/ToastSet';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
-import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
 
 const EditBudget = ({ ...props }) => {
@@ -105,7 +104,6 @@ const EditBudget = ({ ...props }) => {
   }, [lines]);
 
   const [inputFields, setInputFields] = useState([{
-    category: { value: '', error: '' },
     name: { value: '', error: '', required: true },
     amount: { value: 0, error: '' }
   }]);
@@ -125,7 +123,7 @@ const EditBudget = ({ ...props }) => {
 
     if (props.name === 'category') {
       if (data[props.name].value === '' || data.name.value === '') data.name.value = props.value + data.name.value;
-      else data.name.value = data.name.value.replace(data.category.value, props.value);
+      else data.name.value = data.name.value.replace(data.category?.value, props.value);
 
       data.name.error = '';
     }
@@ -161,6 +159,8 @@ const EditBudget = ({ ...props }) => {
               value.error = 'Campo obrigatorio';
               hasErrors = true;
             } else if (typeof value === 'object') {
+              console.log(value);
+              console.log(item);
               value.error = '';
             }
           });
@@ -198,11 +198,6 @@ const EditBudget = ({ ...props }) => {
       Object.keys(field).map((key) => {
         if (field[key].required && field[key].value === '') {
           field[key].error = 'Campo Obrigatório';
-          hasErrors = true;
-        }
-
-        if (key === 'name' && field[key].value === field.category.value) {
-          field[key].error = 'Nome mal estruturado.';
           hasErrors = true;
         }
       });
@@ -308,7 +303,8 @@ const EditBudget = ({ ...props }) => {
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name.value },
           hasBudget: { value: budget.id, type: 'Property' },
-          type: 'Furniture'
+          type: 'Furniture',
+
         }];
 
         delete items[0].items;
@@ -328,6 +324,8 @@ const EditBudget = ({ ...props }) => {
           valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
           valuesOnly.group = { value: group.name.value, type: 'Property' };
           valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+          valuesOnly.produced = { value: false, type: 'Property' };
+          valuesOnly.assembled = { value: false, type: 'Property' };
 
           return valuesOnly;
         });
@@ -450,9 +448,7 @@ const EditBudget = ({ ...props }) => {
 
   async function CreateBudgetRows (rows) {
     try {
-      rows.map(async (item) => {
-        await newFurniture(item).catch((err) => console.log(err));
-      });
+      await newFurniture(rows).catch((err) => console.log(err));
     } catch (err) {
       console.log(err);
     }
@@ -511,22 +507,6 @@ const EditBudget = ({ ...props }) => {
           </Grid>
           <Grid container md={12}>
             <Content>
-              <ProductLinesTab2
-                {...props}
-                dragDrop={{ getRootProps, getInputProps, isDragActive }}
-                budgetData={budgetData}
-                onBudgetChange={onBudgetChange}
-                docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
-                noDrop
-                lines={lines}
-                setLines={setLines}
-              />
-            </Content>
-          </Grid>
-          {false && <Grid container md={12}>
-            <Content>
               <ProductLinesTab {...props}
                 dragDrop={{ getRootProps, getInputProps, isDragActive }}
                 budgetData={budgetData}
@@ -539,7 +519,7 @@ const EditBudget = ({ ...props }) => {
                 setLines={setLines}
               />
             </Content>
-          </Grid>}
+          </Grid>
           <Grid container md={12}>
             <Content>
               <ObservationsTab {...props}

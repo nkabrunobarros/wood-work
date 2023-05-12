@@ -20,7 +20,7 @@ const NewMsgInput = (props) => {
     setLoadMessage(new Date());
 
     newMessageText !== '' && props.conversation && await newMessage({
-      to: 'user_Xw9Jz3BbzBO4GlZ2',
+      to: 'user_pAbaEjM8KBVzKdyw',
       by: loggedUser?.id,
       project: props.conversation?.hasBudget?.object || props.conversation?.id,
       text: newMessageText

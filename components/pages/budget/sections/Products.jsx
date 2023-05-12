@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 import { UnfoldLessOutlined, UnfoldMoreOutlined } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, ButtonGroup, Divider, Grid, Grow, Typography } from '@mui/material';
@@ -12,8 +13,6 @@ const Products2 = (props) => {
   const reduxState = useSelector((state) => state);
   const theme = reduxState.appStates.theme;
   const [sectionExpanded, setSectionExpanded] = useState(false);
-
-  console.log(furnitures);
 
   const toggleValueInArray = (value, array) => {
     const index = array.indexOf(value);
@@ -38,7 +37,21 @@ const Products2 = (props) => {
   }
 
   function expandAll () {
-    setExpandedGroups(furnitures.map((x) => x.id));
+    const ids = [];
+
+    furnitures.map((x) => {
+      ids.push(x.id);
+
+      x.subgroups.map((subgroup) => {
+        ids.push(subgroup.id);
+
+        subgroup.items.map((item) => {
+          ids.push(item.id);
+        });
+      });
+    });
+
+    setExpandedGroups(ids);
   }
 
   function collapseAllSubgroups (groupIndex) {
@@ -67,19 +80,28 @@ const Products2 = (props) => {
 
   return <>
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
-      <AccordionSummary sx={{ background: 'lightGray.main', paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography variant='title'>Produtos</Typography>
+      <AccordionSummary sx={{
+        background: 'lightGray.main',
+        paddingLeft: '24px',
+        borderBottom: '1px solid',
+        borderColor: 'divider'
+      }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produtos</Typography></Grid>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
           <Grid container md={12} sm={12} xs={12} justifyContent={'end'} sx={{ }}>
             <ButtonGroup>
-              <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir grupos'} />
-              <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar grupos'} />
+              <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
+              <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
             </ButtonGroup>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
             {/* Lines */}
+            {console.log(furnitures)}
             {furnitures.map((group, groupIndex) => {
               return <Grow key={groupIndex} in={true}>
                 <Accordion
@@ -87,7 +109,8 @@ const Products2 = (props) => {
                   onChange={() => handlePanelChange(group.id)}
                   sx={{ width: '100%' }}>
                   <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-                    <Typography>{group.name.value}</Typography>
+                    <Typography variant='subtitle1' color={'lightTextSm.main'}>Grupo - </Typography>
+                    <Typography variant='subtitle1' color='primary'>{group.name.value}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box display='flex' justifyContent={'end'}>
@@ -100,7 +123,8 @@ const Products2 = (props) => {
                       return <Grow in key={subgroup.id}>
                         <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
                           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
-                            <Grid container justifyContent={'space-between'} alignItems={'center'}>
+                            <Grid container alignItems={'center'}>
+                              <Typography variant='subtitle1'color={'lightTextSm.main'} >Subgrupo - </Typography>
                               <Typography variant='subtitle1' >{subgroup.name.value}</Typography>
                             </Grid>
                           </AccordionSummary>
@@ -113,6 +137,7 @@ const Products2 = (props) => {
                                     <Divider sx={{ width: '100%' }} />
                                   </Box>}
                                   <Grid container md={12} sm={12} xs={12}>
+                                    <Typography variant='subtitle2'color={'lightTextSm.main'} >{item.furnitureType.value === 'furniture' ? 'Móvel' : 'Acessório'} - </Typography>
                                     <Typography variant='subtitle2' fontWeight={'bold'}>{item.amount?.value} {item.name?.value} {item?.description?.value && ','} {item?.description?.value}</Typography>
                                   </Grid>
                                   <Grid container md={12} sm={12} xs={12} p={1}>

@@ -3,6 +3,7 @@ import { parseCookies } from 'nookies';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 
 export const WORKERTASKS_REQUEST = 'WORKERTASKS_REQUEST';
 export const WORKERTASKS_FAIL = 'WORKERTASKS_FAIL';
@@ -21,13 +22,13 @@ export const workerTasks = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.WORKERTASKS),
       params: {
-        limit: 400
+        limit: 400,
+        q: data && GenerateQueryFilters(data),
       }
     },
     types: [WORKERTASKS_REQUEST, WORKERTASKS_SUCCESS, WORKERTASKS_FAIL],

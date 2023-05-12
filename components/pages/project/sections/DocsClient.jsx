@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
 import { Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
-import { FilePlus, Image } from 'lucide-react';
+import { FilePlus, FileText } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
@@ -14,8 +14,8 @@ import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
-  const { pageProps, styles, order, isInternalPage } = props;
-  const [userFiles, setUserFiles] = useState(props.folders?.find(ele => ele.folder_name === order.hasBudget.object?.id?.replace('Budget', 'Folder'))?.files);
+  const { pageProps, styles, isInternalPage } = props;
+  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === 'VF do Cliente')?.files);
   const [newFiles, setNewFiles] = useState();
   const [confirmUploadModal, setConfirmUploadModal] = useState(false);
   const dispatch = useDispatch();
@@ -33,9 +33,9 @@ const DocsClient = (props) => {
     const FormData = require('form-data');
     const data = new FormData();
 
-    data.append('folder', props.folders.find(ele => ele.folder_name === order.hasBudget.object.id.replace('Budget', 'Folder')).id);
+    data.append('folder', props.folders.find(ele => ele.folder_name === 'VF do Cliente')?.id);
     [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
-    data.append('budget', order.hasBudget.object.id);
+    // data.append('budget', order.hasBudget.object.id);
 
     try {
       await uploadFiles(data).then(async (res) => {
@@ -53,6 +53,25 @@ const DocsClient = (props) => {
     setConfirmUploadModal(false);
   }
 
+  async function handleFileClick (file) {
+    fetch(file.file)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = `${file.file_name}${file.file_type}`; // Change this to the desired file name if needed
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 0);
+      });
+  }
+
   return <>
     <Notification />
     <ConfirmDialog
@@ -67,7 +86,10 @@ const DocsClient = (props) => {
       <Box className={styles.tableContainer}>
         <Box id='pad' style={{ display: 'flex' }}>
           <Box style={{ flex: 1 }}>
-            <Typography variant='title'>Documentos {isInternalPage && 'Cliente'} </Typography>
+            <Grid container md={12} sm={12} xs={12}>
+              <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Documentos {isInternalPage && 'Cliente'}</Typography></Grid>
+              <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Documentos carregados {isInternalPage && 'do cliente'}</Typography></Grid>
+            </Grid>
           </Box>
           <Box className='flex'>
             <Box>
@@ -96,19 +118,17 @@ const DocsClient = (props) => {
             <TableBody >
               <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
                 <Grid container >
-                  {userFiles?.map(file => <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                  {userFiles?.sort((a, b) => a.file_name - b.file_name).map(file => <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                     <Grid container md={6} sm={6} xs={6} alignItems='center'>
                       <Box color='primary.main' alignItems='center'>
-                        <Image strokeWidth='1' style={{ marginRight: '1rem' }} />
+                        <FileText strokeWidth='1' style={{ marginRight: '1rem' }} />
                       </Box>
                       <Tooltip title='Clique para descarregar este ficheiro.'>
-                        <Typography variant="subtitle2" sx={{ cursor: 'pointer' }}>
-                          <a href={file?.file} download target="_blank" rel="noreferrer">{file?.file_name + file?.file_type}</a>
-                        </Typography>
+                        <Typography variant="subtitle2" sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
                       </Tooltip>
                     </Grid>
                     <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>
-                      <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY')}</Typography>
+                      <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:MM')} </Typography>
                     </Grid>
                   </Grid>)}
                 </Grid>

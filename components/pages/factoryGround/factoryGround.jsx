@@ -7,11 +7,9 @@ import { Calendar } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Navbar from '../../layout/navbar/navbar';
 import FurnitureDetails from './ProjectDetails/furnitureDetails';
-import ProjectDetails from './ProjectDetails/projectDetails';
 
 const FactoryGround = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
-  const [chosenProject, setChosenProject] = useState();
   const [chosenFurniture, setChosenFurniture] = useState();
   const [furnitureProject, setFurnitureProject] = useState();
 
@@ -31,13 +29,6 @@ const FactoryGround = ({ ...props }) => {
       setChosenProject={setChosenFurniture}
       onClose={setChosenFurniture}
     />}
-    {chosenProject && <ProjectDetails
-      {...props}
-      open={chosenProject}
-      chosenProject={chosenProject}
-      setChosenProject={setChosenProject}
-      onClose={setChosenProject}
-    />}
     <Navbar />
 
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
@@ -50,7 +41,7 @@ const FactoryGround = ({ ...props }) => {
           {projects
             .map((proj, i) => {
               return <>
-                {projects[i - 1]?.budget.dateDeliveryProject.value !== proj.budget.dateDeliveryProject.value && <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
+                {proj.furnitures.length > 0 && projects[i - 1]?.budget.dateDeliveryProject.value !== proj.budget.dateDeliveryProject.value && <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
                   <Box container md={12} sm={12} xs={12} color='lightTextSm.main'>
                     <Calendar strokeWidth={1.5} />
                   </Box>
@@ -80,13 +71,13 @@ const FactoryGround = ({ ...props }) => {
                             </Grid>
 
                             <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                              <Tooltip title='Projeto'>
-                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{proj?.name?.value}</Typography>
+                              <Tooltip title='Cliente'>
+                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
                               </Tooltip>
                             </Grid>
                             <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
-                              <Tooltip title='Cliente'>
-                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
+                              <Tooltip title='Projeto'>
+                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{proj?.name?.value}</Typography>
                               </Tooltip>
                             </Grid>
                             <Grid container md={6} sm={6} xs={6} pb={0.5} >
@@ -100,16 +91,13 @@ const FactoryGround = ({ ...props }) => {
                               </Tooltip>
                             </Grid>
                             <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                              <Tooltip title='Quantidade ainda para produzir'>
-                                <Typography variant='subtitle1' color='primary'>A Produzir: {furnit.produced?.value ? '0' : furnit.amount.value}</Typography>
+                              <Tooltip title='Quantidade Pedida'>
+                                <Typography variant="subtitle1" color='primary'>
+                                Quantidade: {furnit.amount.value}
+                                </Typography>
                               </Tooltip>
                             </Grid>
                             <Grid container md={6} sm={6} xs={6} justifyContent={'end'}>
-                              <Tooltip title='Quantidade Pedida'>
-                                <Typography variant="subtitle1" color='lightTextSm.main'>
-                                Quantidade Pedida: {furnit.amount.value}
-                                </Typography>
-                              </Tooltip>
                             </Grid>
                           </Grid>
                         </CardContent>

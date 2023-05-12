@@ -5,7 +5,7 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  Material Ui
-import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
+import { ButtonGroup, Grid, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
 //  Icons
@@ -29,8 +29,6 @@ import Notification from '../../dialogs/Notification';
 //  Loader
 import Loader from '../../loader/loader';
 
-//  Utils
-
 //  Device "Detector"
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,10 +38,8 @@ import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import Navbar from '../../layout/navbar/navbar';
 import formatString from '../../utils/FormatString';
-import ClientTab from './Tabs/clientTab';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
-import ProductLinesTab2 from './Tabs/productLinesTab2';
 import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
@@ -84,7 +80,7 @@ const NewOrder = ({ ...props }) => {
     obs: { value: '', type: 'area' },
     price: { value: '', error: '' },
     client: { value: '', error: '', required: true },
-    dateRequest: { value: '', error: '', required: true, type: 'date' },
+    dateRequest: { value: moment(moment(), 'DD.MM.YYYY'), error: '', required: true, type: 'date' },
     dateDelivery: { value: '', error: '', required: false, type: 'date' },
     dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
     dateDeliveryProject: { value: '', error: '', required: false, type: 'date' },
@@ -96,7 +92,6 @@ const NewOrder = ({ ...props }) => {
   });
 
   const [inputFields, setInputFields] = useState([{
-    category: { value: '', error: '' },
     amount: { value: 0, error: '' }
   }]);
 
@@ -112,13 +107,6 @@ const NewOrder = ({ ...props }) => {
         data[props.name].error = 'Data Invalida';
       }
     } else data[props.name].error = '';
-
-    if (props.name === 'category') {
-      if (data[props.name].value === '' || data.name.value === '') data.name.value = props.value + data.name.value;
-      else data.name.value = data.name.value.replace(data.category.value, props.value);
-
-      data.name.error = '';
-    }
 
     if (props.name === 'client') {
       const client = clients.find(ele => ele.id === props.value);
@@ -142,8 +130,6 @@ const NewOrder = ({ ...props }) => {
     if (obj[0]?.subGroups?.length === 0 || typeof obj[0]?.subGroups === 'undefined') return true;
 
     obj.map((group) => {
-      console.log(group);
-
       group.subGroups.map((subgroup) => {
         subgroup.items.map((item) => {
           Object.entries(item).forEach(([, value]) => {
@@ -210,7 +196,7 @@ const NewOrder = ({ ...props }) => {
     setProcessing(true);
 
     const data = {
-      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}${moment().diff(moment().startOf('day'), 'seconds')}`,
+      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, // ${moment().diff(moment().startOf('day'), 'seconds')}
       type: 'Budget',
       name: {
         type: 'Property',
@@ -248,13 +234,9 @@ const NewOrder = ({ ...props }) => {
         type: 'Property',
         value: budgetData.obs.value
       },
-      category: {
+      budgetStatus: {
         type: 'Property',
-        value: inputFields[0]?.category.value || ''
-      },
-      status: {
-        type: 'Property',
-        value: inputFields[0]?.category.value && inputFields[0]?.amount.value && budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'needs analysis'
+        value: budgetData.price.value && budgetData.dateDelivery.value && budgetData.dateDeliveryProject.value ? 'waiting adjudication' : 'needs analysis'
       },
       orderBy: {
         type: 'Relationship',
@@ -284,10 +266,10 @@ const NewOrder = ({ ...props }) => {
       },
     };
 
-    await newBudget(data).then(async (res) => {
-      CreateFurnitures(res.data.id);
+    await newBudget(data).then(async () => {
+      CreateFurnitures(data.id);
 
-      true && await newFolder({
+      false && await newFolder({
         folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
         parent_folder: null,
         user: clientUser,
@@ -322,7 +304,7 @@ const NewOrder = ({ ...props }) => {
         id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id,
         furnitureType: { type: 'Property', value: 'group' },
         name: { type: 'Property', value: group.name },
-        hasBudget: { value: budgetId, type: 'Property' },
+        hasBudget: { object: budgetId, type: 'Relationship' },
         type: 'Furniture'
       }];
 
@@ -335,8 +317,10 @@ const NewOrder = ({ ...props }) => {
           id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name },
-          hasBudget: { value: budgetId, type: 'Property' },
-          type: 'Furniture'
+          hasBudget: { object: budgetId, type: 'Relationship' },
+          type: 'Furniture',
+          group: { value: group.name, type: 'Property' }
+
         }];
 
         delete items[0].items;
@@ -355,7 +339,7 @@ const NewOrder = ({ ...props }) => {
           valuesOnly.type = 'Furniture';
           valuesOnly.subGroup = { value: subgroup.name, type: 'Property' };
           valuesOnly.group = { value: group.name, type: 'Property' };
-          valuesOnly.hasBudget = { value: budgetId, type: 'Property' };
+          valuesOnly.hasBudget = { object: budgetId, type: 'Relationship' };
           valuesOnly.produced = { value: false, type: 'Property' };
           valuesOnly.assembled = { value: false, type: 'Property' };
 
@@ -369,13 +353,34 @@ const NewOrder = ({ ...props }) => {
     });
 
     const mergedArray = [].concat(...items).map((item, index) => {
-      return { ...item, lineNumber: index };
+      const normalizedItem = { ...item, lineNumber: { type: 'Property', value: index } };
+
+      if (normalizedItem.name && normalizedItem.name.value) {
+        const normalizedNameValue = normalizedItem.name.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedName = { ...normalizedItem.name, value: normalizedNameValue };
+
+        normalizedItem.name = normalizedName;
+      }
+
+      if (normalizedItem.group && normalizedItem.group.value) {
+        const normalizedGroupNameValue = normalizedItem.group.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedGroup = { ...normalizedItem.group, value: normalizedGroupNameValue };
+
+        normalizedItem.group = normalizedGroup;
+      }
+
+      if (normalizedItem.subGroup && normalizedItem.subGroup.value) {
+        const normalizedSubGroupNameValue = normalizedItem.subGroup.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedSubGroup = { ...normalizedItem.subGroup, value: normalizedSubGroupNameValue };
+
+        normalizedItem.subGroup = normalizedSubGroup;
+      }
+
+      return normalizedItem;
     });
 
     try {
-      mergedArray.map(async (item) => {
-        await newFurniture(item).then((result) => console.log(result));
-      });
+      await newFurniture(mergedArray).then((result) => console.log(result));
     } catch (err) {
       console.log(err);
     }
@@ -422,17 +427,6 @@ const NewOrder = ({ ...props }) => {
           </Grid>
         </Content>
         <Grid container sx={{ width: '100%' }}>
-          {false && <Grid container md={12}>
-            <Content>
-              <ClientTab {...props}
-                client={budgetData.client}
-                onClientChange={onBudgetChange}
-                setClientUser={setClientUser}
-                onProcessing={setProcessing}
-                noDetail
-              />
-            </Content>
-          </Grid>}
           <Grid container md={12}>
             <Content>
               <RequestTab {...props}
@@ -445,23 +439,7 @@ const NewOrder = ({ ...props }) => {
               />
             </Content>
           </Grid>
-          <Grid container md={12}>
-            <Button onClick={() => CreateFurnitures()}>Test</Button>
-            <Content>
-              <ProductLinesTab2 {...props}
-                budgetData={budgetData}
-                onBudgetChange={onBudgetChange}
-                docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
-                noDrop
-                lines={lines}
-                setLines={setLines}
-
-              />
-            </Content>
-          </Grid>
-          {false && <Grid container md={12} >
+          <Grid container md={12} >
             <Content>
               <ProductLinesTab {...props}
                 budgetData={budgetData}
@@ -475,7 +453,7 @@ const NewOrder = ({ ...props }) => {
 
               />
             </Content>
-          </Grid>}
+          </Grid>
           <Grid container md={12}>
             <Content>
               <ObservationsTab {...props}

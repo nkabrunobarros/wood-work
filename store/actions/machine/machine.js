@@ -1,5 +1,6 @@
 // Network
 import { parseCookies } from 'nookies';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
@@ -19,11 +20,14 @@ export const machines = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.MACHINES),
+      params: {
+        limit: 600,
+        q: data && GenerateQueryFilters(data),
+      }
     },
     types: [MACHINES_REQUEST, MACHINES_SUCCESS, MACHINES_FAIL],
   });

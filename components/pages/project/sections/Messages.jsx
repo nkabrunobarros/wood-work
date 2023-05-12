@@ -81,7 +81,7 @@ const Messages = (props) => {
   return <>
     <Box
       id='pad'
-      style={{
+      sx={{
         display: 'flex',
         alignItems: 'center',
         borderBottom: '1px solid',

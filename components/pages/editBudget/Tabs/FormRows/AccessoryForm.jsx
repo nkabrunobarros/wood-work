@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
+import { Box, Divider, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 
 //  PropTypes
@@ -13,17 +13,27 @@ import FormGenerator from '../../../../formGenerator';
 
 const AccessoryForm = (props) => {
   function onChange (index, e) {
-    props.onChange({ index: props.index, e, lineIndex: props.lineIndex });
+    props.onChange({
+      subGroupIndex: props.subGroupIndex,
+      groupIndex: props.groupIndex,
+      itemIndex: props.itemIndex,
+      newValue: e.target.value,
+      property: e.target.name
+    });
   }
 
   function removeThisRow () {
-    props.onRemove({ index: props.index, lineIndex: props.lineIndex });
+    props.onRemove({
+      subGroupIndex: props.subGroupIndex,
+      groupIndex: props.groupIndex,
+      itemIndex: props.itemIndex
+    });
   }
 
   return <Grid container>
-
     {props.index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%' }} /></Box>}
-    <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex].items?.length === 1 && 'none' }}>
+    <Typography variant='subtitle1' pl={1}> Acessório</Typography>
+    <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >
           <X color='red' />
@@ -34,7 +44,7 @@ const AccessoryForm = (props) => {
       perRow={4}
       fields={Object.keys(props.field).map((key) => {
         return props.field[key];
-      })}
+      }).sort((a, b) => (a.displayOrder > b.displayOrder) ? 1 : -1)}
       onFormChange={onChange}
     />
 

@@ -31,6 +31,7 @@ const endpoints = {
   ACTIVATE: 'accounts/activate/',
   WORKERTASKS: 'worker-task/',
   MACHINETASKS: 'machine-task/',
+  MODULES: 'module/',
 };
 
 export default endpoints;

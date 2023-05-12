@@ -45,7 +45,6 @@ async function ValidateToken (path) {
     const decodedToken = jwt.decode(token);
 
     return !!decodedToken;
-    // return !moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment();
   }
 }
 
@@ -78,12 +77,12 @@ const Layout = ({ children }) => {
       const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
       const isClientPage = Object.values(routes.private).includes(path.route.replace('[Id]', ''));
 
-      if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER') || me?.response?.status === 403) {
-        setNoAccess(true);
+      if ((me?.me?.role === 'CUSTOMER' && me.me.tos === false)) {
+        Router.push('/terms');
       }
 
-      if ((me?.me?.role === 'CUSTOMER' && me.me.tos === false) && false) {
-        // Router.push('/terms');
+      if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER') || me?.response?.status === 403) {
+        setNoAccess(true);
       }
 
       // check cookie

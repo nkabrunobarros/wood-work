@@ -64,7 +64,7 @@ const projects = createReducer(initialState, (builder) => {
       ...state,
       errors: null,
       loading: false,
-      data: state.data ? state.data.push(action.data) : action.data,
+      data: state.data?.length > 0 ? state.data.push(action.data) : [action.data],
     }))
     .addCase(projectActions.NEW_PROJECT_FAIL, (state, action) => ({
       ...state,

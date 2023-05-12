@@ -2,147 +2,120 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
+import { ArrowDropDown, ArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
-import { ChevronDown, FileText, Folder, FolderOpen } from 'lucide-react';
+import { ChevronDown, FileText } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import * as filesActionsRedux from '../../../../store/actions/file';
-import * as foldersActionsRedux from '../../../../store/actions/folder';
-import ConfirmDialog from '../../../dialogs/ConfirmDialog';
+import React, { useState } from 'react';
 import Notification from '../../../dialogs/Notification';
-import MySelect from '../../../inputs/select';
 
 const Docs = (props) => {
-  const [newFiles, setNewFiles] = useState();
-  const [uploadFolder, setUploadFolder] = useState();
-  const [confirmUploadModal, setConfirmUploadModal] = useState(false);
   const [sectionExpanded, setSectionExpanded] = useState(true);
-  const dispatch = useDispatch();
-  const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
-  const [folders, setFolders] = useState(props.folders);
-  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
-  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const folders = props.folders;
+  const [expandedGroups, setExpandedGroups] = useState([]);
+
+  const toggleValueInArray = (value, array) => {
+    const index = array.indexOf(value);
+
+    if (index === -1) {
+      return [...array, value];
+    }
+
+    return [...array.slice(0, index), ...array.slice(index + 1)];
+  };
+
+  const handleChange = (expandedGroups, setExpandedGroups) => (panel) => {
+    setExpandedGroups((prevExpandedGroups) =>
+      toggleValueInArray(panel, prevExpandedGroups)
+    );
+  };
+
+  const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
 
   const {
-    budget,
     open,
   } = props;
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setNewFiles(acceptedFiles);
-    setConfirmUploadModal(true);
-  }, []);
+  async function handleFileClick (file) {
+    fetch(file.file)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, noClick: true });
+        a.href = url;
+        a.download = `${file.file_name}${file.file_type}`; // Change this to the desired file name if needed
+        document.body.appendChild(a);
+        a.click();
 
-  function renderAccordionFolders (folders, parentId = null) {
-    const [imExpanded, setImExpanded] = useState(false);
-
-    return folders
-      .filter((folder) => folder.parent_folder === parentId)
-      .map((folder) => (
-        <Accordion expanded={imExpanded} onChange={() => setImExpanded(!imExpanded)} key={folder.id} {...getRootProps()} ondrop={() => console.log('')}sx={{ padding: 0, margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
-          <AccordionSummary expandIcon={<ChevronDown />} >
-            <Grid container bgcolor={'default.main'} >
-              <Grid container md={6} sm={6} xs={6} alignItems='center'>
-                <Box id='align' color='primary.main' >
-                  {imExpanded
-                    ? (
-                      <FolderOpen strokeWidth='1' style={{ marginRight: '1rem' }} />
-                    )
-                    : (
-                      <Folder strokeWidth='1' style={{ marginRight: '1rem' }} />
-                    )}
-                </Box>
-                <Typography>{folder.folder_name.replace('urn:ngsi-ld:Folder:', '') === budget.id.replace('urn:ngsi-ld:Budget:', '') ? 'Pasta Cliente' : folder.folder_name.replace('urn:ngsi-ld:Folder:', '')} </Typography>
-              </Grid>
-              <Grid container md={6} sm={6} xs={6} justifyContent='center' p={1}>{moment(folder.created).format('DD/MM/YYYY')}</Grid>
-            </Grid>
-          </AccordionSummary>
-          <input {...getInputProps()} type='file' hidden multiple webkitdirectory mozdirectory directory onDrag={() => console.log()} onChange={() => console.log('')} />
-          <AccordionDetails sx={{ background: '#FAFAFA', padding: 0, paddingLeft: 1 }} >
-            {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle'>Vazia</Typography> : null}
-            {folder.files.filter(file => typeof file !== 'undefined').map((file) => (
-              <Box key={file?.id} display='flex' alignItems={'center'} p={1}>
-                <FileText
-                  strokeWidth='1'
-                  style={{ marginRight: '1rem' }}
-                />
-                <Tooltip title='Clique para descarregar este ficheiro.'>
-                  <Typography sx={{ cursor: 'pointer' }}><a href={file?.file} download target='_blank' rel="noreferrer">{file?.file_name + file?.file_type}</a></Typography>
-                </Tooltip>
-              </Box>
-            ))}
-            <Box bgcolor='lightGray.secondary'>
-              {renderAccordionFolders(folders, folder.id)}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
-
-      ));
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 0);
+      });
   }
 
-  const RefreshFolders = async () => {
-    getFolders().then(async (res) => {
-      const builtFolders = [];
+  function renderAccordionFolders (folders, parentId = null) {
+    return folders?.filter((folder) => folder.parent_folder === parentId)
+      .map((folder) => {
+        // check if this is the root folder
+        if (parentId === null && folder.parent_folder === null) {
+          // skip the root folder and only render its children
+          return renderAccordionFolders(folders, folder.id);
+        }
 
-      await getFiles(budget.id).then((resFiles) => {
-        res.data.results.map((folder) => {
-          const folder2 = { ...folder };
+        return (
+          <Accordion expanded={expandedGroups.includes(folder.id)}
+            onChange={() => handlePanelChange(folder.id)} key={folder.id}
+            sx={{ padding: 0, paddingLeft: '2rem', margin: 0, boxShadow: 'none', border: '0.5px solid', borderColor: 'divider' }}>
+            <AccordionSummary sx={{ height: '20px', backgroundColor: 'white' }} >
+              <Grid container bgcolor={'default.main'} >
+                <Grid container md={12} sm={12} xs={12} alignItems='center'>
+                  <Box id='align' color='primary.main' >
+                    {expandedGroups.includes(folder.id)
+                      ? (
+                        <ArrowDropDown strokeWidth='1' style={{ marginRight: '1rem' }} />
+                      )
+                      : (
+                        <ArrowRight strokeWidth='1' style={{ marginRight: '1rem' }} />
+                      )}
+                  </Box>
+                  <Typography variant="subtitle2">{folder.folder_name} </Typography>
+                </Grid>
+              </Grid>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: 0, backgroundColor: '#F4F4F4', borderRadius: '8px' }} >
+              {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography> : null}
+              {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file) => (
+                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem' }} key={file?.id} alignItems={'center'} p={1}>
+                  <Grid container md={9} sm={9} xs={9} sx={{ }} >
+                    <FileText
+                      strokeWidth='1'
+                      style={{ marginRight: '1rem' }}
+                    />
+                    <Tooltip title='Clique para descarregar este ficheiro.'>
+                      <Typography sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
+                    </Tooltip>
+                  </Grid>
+                  <Grid container md={3} sm={3} xs={3} sx={{ }} >
+                    <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:MM')} </Typography>
+                  </Grid>
 
-          folder2.files = [...folder.files].map((file) => {
-            const thisFile = resFiles.data.results.find((ele) => ele.id === file);
-
-            return thisFile;
-          });
-
-          builtFolders.push(folder2);
-        });
-
-        setFolders(builtFolders);
+                </Grid>
+              ))}
+              <Box bgcolor='lightGray.secondary'>
+                {renderAccordionFolders(folders, folder.id)}
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        );
       });
-    });
-  };
-
-  async function handleFilesUpload () {
-    const FormData = require('form-data');
-    const data = new FormData();
-
-    data.append('folder', uploadFolder);
-    newFiles.map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
-
-    try {
-      await uploadFiles(data).then(() => {
-        RefreshFolders();
-        toast.success('Ficheiros carregados.');
-      });
-
-      setConfirmUploadModal(false);
-    } catch (error) {
-      toast.error(error);
-    }
-
-    setConfirmUploadModal(false);
   }
 
   return open && <>
     <Notification />
-    <ConfirmDialog
-      open={confirmUploadModal}
-      handleClose={() => setConfirmUploadModal(false)}
-      onConfirm={() => handleFilesUpload()}
-      message={'Carregados ' + newFiles?.length + ' ficheiros. Em que pasta deseja os guardar?' }
-      icon='Check'
-      iconType='success'
-      inputs={<Box>
-        <MySelect label='Escolha a pasta destino' options={folders} optionLabel='folder_name' onChange={(e) => setUploadFolder(e.target.value)} />
-      </Box>}
-    />
-    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
+    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }} >
       <AccordionSummary sx={{ background: 'lightGray.main', paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Typography variant='title'>Documentos</Typography>
       </AccordionSummary>

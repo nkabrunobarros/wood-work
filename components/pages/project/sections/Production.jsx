@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 import { UnfoldLessOutlined, UnfoldMoreOutlined } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, ButtonGroup, Grid, Grow, Typography } from '@mui/material';
@@ -39,7 +40,21 @@ const Production = (props) => {
   }
 
   function expandAll () {
-    setExpandedGroups(furnitures.map((x) => x.id));
+    const ids = [];
+
+    furnitures.map((x) => {
+      ids.push(x.id);
+
+      x.subgroups.map((subgroup) => {
+        ids.push(subgroup.id);
+
+        subgroup.items.map((item) => {
+          ids.push(item.id);
+        });
+      });
+    });
+
+    setExpandedGroups(ids);
   }
 
   function collapseAllSubgroups (groupIndex) {
@@ -77,15 +92,23 @@ const Production = (props) => {
       detailOnly
     />}
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
-      <AccordionSummary sx={{ background: 'lightGray.main', paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography variant='title'>Produção</Typography>
+      <AccordionSummary sx={{
+        background: 'lightGray.main',
+        paddingLeft: '24px',
+        borderBottom: '1px solid',
+        borderColor: 'divider'
+      }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produção</Typography></Grid>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Detalhes de produção dos produtos</Typography></Grid>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
           <Grid container md={12} sm={12} xs={12} justifyContent={'end'} sx={{ }}>
             <ButtonGroup>
-              <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir grupos'} />
-              <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar grupos'} />
+              <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
+              <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
             </ButtonGroup>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
@@ -97,6 +120,7 @@ const Production = (props) => {
                   onChange={() => handlePanelChange(group.id)}
                   sx={{ width: '100%' }}>
                   <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+                    <Typography variant='subtitle1' color={'lightTextSm.main'}>Grupo - </Typography>
                     <Typography variant='subtitle1' color='primary'>{group.name.value}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -110,7 +134,8 @@ const Production = (props) => {
                       return <Grow in key={subgroup.id}>
                         <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
                           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
-                            <Grid container justifyContent={'space-between'} alignItems={'center'}>
+                            <Grid container alignItems={'center'}>
+                              <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                               <Typography variant='subtitle1' >{subgroup.name.value}</Typography>
                             </Grid>
                           </AccordionSummary>
@@ -118,9 +143,9 @@ const Production = (props) => {
                             {/* Linhas de moveis/furniture */}
                             <Grid container md={12} sm={12} xs={12}>
                               <Grid container md={12} sm={12} xs={12} color='white' sx={{ background: theme.palette.primary.main, p: 1 }}>
-                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Nome</Typography></Grid>
+                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Móvel</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Quantidade Pedida</Typography></Grid>
-                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>A produzir</Typography></Grid>
+                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Estado</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'></Typography></Grid>
                               </Grid>
                               {subgroup.items.map((item, itemIndex) => {
@@ -128,7 +153,9 @@ const Production = (props) => {
                                   <Grid container md={12} sm={12} xs={12} sx={{ p: 1 }}>
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.name?.value}</Typography></Grid>
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.amount?.value}</Typography></Grid>
-                                    <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.completed?.value || 0}</Typography></Grid>
+                                    <Grid container md={3} sm={3} xs={3}>
+                                      {!item.produced?.value ? <Box><Typography className='warningBalloon'>Em produção</Typography></Box> : <Box><Typography className='successBalloon'>Terminado</Typography> </Box>}
+                                    </Grid>
                                     <Grid container md={3} sm={3} xs={3} justifyContent={'end'}><Typography varitant='subtitle1'><PrimaryBtn text='Ver detalhes' icon={<Eye />} onClick={() => {
                                       setChosenFurniture(item);
                                       setFurnitureProject(props.order);

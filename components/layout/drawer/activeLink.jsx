@@ -8,97 +8,48 @@ import routes from '../../../navigation/routes';
 
 function ActiveLink ({ children, href, handleDrawerToggle, page }) {
   const path = useRouter();
-  const orderSimilarPages = [`${routes.private.internal.projectsSimilar}`];
-  const messagesPages = [`${routes.private.messages}`, `${routes.private.internal.messages}`];
 
-  const projectsPages = [
-    `${routes.private.internal.projects}`,
-    `${routes.private.internal.project}[Id]`,
-    `${routes.private.internal.budget}[Id]`,
-    `${routes.private.internal.newProject}`,
-    `${routes.private.internal.editProject}[Id]`,
-    `${routes.private.internal.editBudget}[Id]`,
-  ];
+  const pageSections = {
+    projects: 'Projetos',
+    projectsSimilar: 'Projetos Similares',
+    project: 'Projetos',
+    budget: 'Projetos',
+    newProject: 'Projetos',
+    editProject: 'Projetos',
+    editBudget: 'Projetos',
+    orders: 'Projetos',
+    stocks: 'Stock',
+    stock: 'Stock',
+    editStock: 'Stock',
+    clients: 'Clientes',
+    client: 'Clientes',
+    editClient: 'Clientes',
+    newClient: 'Clientes',
+    workers: 'Utilizadores',
+    worker: 'Utilizadores',
+    editWorker: 'Utilizadores',
+    newWorker: 'Utilizadores',
+    leftovers: 'Sobrantes',
+    factoryLevel: 'Chão de Fabrica',
+    packingList: 'Embalamentos',
+    newPackage: 'Embalamentos',
+    packing: 'Embalamentos',
+    assemblys: 'Montagens',
+    profile: 'Conta',
+    messages: 'Mensagens',
+    dashboards: 'Painel de Controlo',
+  };
 
-  const ordersPages = [
-    `${routes.private.projects}`,
-    `${routes.private.project}[Id]`,
-    `${routes.private.budget}[Id]`,
-  ];
+  const currentSection = Object.entries(pageSections).find(([page]) => {
+    const regex = new RegExp(`^${routes.private.internal[page]}(\\[.+\\])?$`);
+    const regex2 = new RegExp(`^${routes.private[page]}(\\[.+\\])?$`);
 
-  const stockPages = [
-    `${routes.private.internal.stocks}`,
-    `${routes.private.internal.stock}[Id]`,
-    `${routes.private.internal.editStock}[Id]`,
-  ];
-
-  const clientsPages = [
-    `${routes.private.internal.clients}`,
-    `${routes.private.internal.client}[Id]`,
-    `${routes.private.internal.editClient}[Id]`,
-    `${routes.private.internal.newClient}`,
-  ];
-
-  const workersPages = [
-    `${routes.private.internal.workers}`,
-    `${routes.private.internal.worker}[Id]`,
-    `${routes.private.internal.editWorker}[Id]`,
-    `${routes.private.internal.newWorker}`,
-  ];
-
-  const leftoversPages = [
-    `${routes.private.internal.leftovers}`,
-  ];
-
-  const factoryPages = [
-    `${routes.private.internal.factoryLevel}`,
-  ];
-
-  const assemblyPages = [
-    `${routes.private.internal.assemblys}`,
-  ];
-
-  const profilePages = [
-    `${routes.private.profile}`,
-    `${routes.private.internal.profile}`
-  ];
-
-  const dashboardPages = [`${routes.private.internal.dashboards}`];
-  let currentSection = '';
-
-  if (ordersPages.includes(path.route)) currentSection = 'Projetos';
-
-  if (projectsPages.includes(path.route)) currentSection = 'Projetos';
-
-  if (orderSimilarPages.includes(path.route)) currentSection = 'Projetos Similares';
-
-  if (stockPages.includes(path.route)) currentSection = 'Stock';
-
-  if (clientsPages.includes(path.route)) currentSection = 'Clientes';
-
-  if (workersPages.includes(path.route)) currentSection = 'Utilizadores';
-
-  if (profilePages.includes(path.route)) currentSection = 'Conta';
-
-  if (messagesPages.includes(path.route)) currentSection = 'Mensagens';
-
-  if (dashboardPages.includes(path.route)) currentSection = 'Painel de Controlo';
-
-  if (leftoversPages.includes(path.route)) currentSection = 'Sobrantes';
-
-  if (assemblyPages.includes(path.route)) currentSection = 'Montagens';
-
-  if (factoryPages.includes(path.route)) currentSection = 'Chão de Fabrica';
+    return regex.test(path.route) || regex2.test(path.route);
+  })?.[1] ?? '';
 
   const style = {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'start',
-    alignItems: 'center',
-    borderLeft:
-      page === currentSection
-        ? '5px solid var(--white)'
-        : '5px solid transparent',
+    borderLeft: '5px solid',
+    borderColor: page === currentSection ? 'var(--white)' : 'transparent',
   };
 
   const handleClick = (e) => {

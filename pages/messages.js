@@ -82,7 +82,7 @@ const Messages = ({ ...pageProps }) => {
       pageProps,
       // eslint-disable-next-line consistent-return
       chats: [...merged].filter((item) => {
-        if (item.status?.value === 'adjudicated' || item.status?.value === 'canceled') {
+        if (item.budgetStatus?.value === 'adjudicated' || item.status?.value === 'canceled') {
           console.log();
         } else return item;
       }).map((item) => {

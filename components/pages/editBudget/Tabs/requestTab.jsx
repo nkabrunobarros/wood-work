@@ -64,7 +64,7 @@ const RequestTab = (props) => {
                   <Grid container md={6} sm={6} xs={12} p={1}>
                     <MyInput
                       onChange={(e) => onBudgetChange(e.target)}
-                      label='Numero'
+                      label='Número'
                       error={budgetData.num.error}
                       required={budgetData.num.required}
                       name='num'
@@ -168,11 +168,11 @@ const RequestTab = (props) => {
                   {/* Postal Code */}
                   <Grid container item sm={3} xs={12} p={1} >
                     <MyInput
-                      label='Codigo Postal'
+                      label='Código Postal'
                       required={budgetData.postalCode.required}
                       error={budgetData.postalCode.error}
                       name='postalCode'
-                      paceholder='Escrever Codigo Postal'
+                      paceholder='Escrever Código Postal'
                       value={budgetData.postalCode.value}
                       onChange={(e) => onBudgetChange(e.target)}
                       maxLength={15}

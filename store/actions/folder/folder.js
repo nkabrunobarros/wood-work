@@ -81,6 +81,7 @@ export const budgetFolders = (data) => {
       url: getApiURL(endpoints.FOLDERS),
       params: {
         options: 'sysAttrs',
+        limit: 600,
         budget: data
       }
     },

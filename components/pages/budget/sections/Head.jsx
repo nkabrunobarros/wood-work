@@ -116,7 +116,7 @@ const Head = (props) => {
     const loading = toast.loading();
 
     const data = {
-      status: { type: 'Property', value: 'waiting budget' },
+      budgetStatus: { type: 'Property', value: 'waiting budget' },
     };
 
     await updateBudget({ id: budget.id, data })
@@ -127,12 +127,12 @@ const Head = (props) => {
 
         setOld({
           ...budget,
-          status: { type: 'Property', value: 'waiting budget' },
+          budgetStatus: { type: 'Property', value: 'waiting budget' },
         });
 
         setBudget({
           ...budget,
-          status: { type: 'Property', value: 'waiting budget' },
+          budgetStatus: { type: 'Property', value: 'waiting budget' },
         });
       })
       .catch(() => {
@@ -191,7 +191,7 @@ const Head = (props) => {
     const data = {
       ...budget,
       price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-      status: { value: 'waiting adjudication', type: 'Property' },
+      budgetStatus: { value: 'waiting adjudication', type: 'Property' },
       dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
       dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
       dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
@@ -206,7 +206,7 @@ const Head = (props) => {
       setBudget({
         ...budget,
         price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-        status: { value: 'waiting adjudication', type: 'Property' },
+        budgetStatus: { value: 'waiting adjudication', type: 'Property' },
         dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
         dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
         dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
@@ -215,14 +215,14 @@ const Head = (props) => {
       setOld({
         ...budget,
         price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-        status: { value: 'waiting adjudication', type: 'Property' },
+        budgetStatus: { value: 'waiting adjudication', type: 'Property' },
         dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
         dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
         dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
       });
 
       setDeliverModal(false);
-      ToastSet(processing, 'Projeto entregue', 'success');
+      ToastSet(processing, 'Orçamento entregue', 'success');
     }).catch((err) => {
       console.log(err);
       ToastSet(processing, 'Projeto não entregue. Se o problema persistir, contacte a gerência.', 'error');
@@ -265,10 +265,6 @@ const Head = (props) => {
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
         expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
         assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
-        category: {
-          type: 'Property',
-          value: budget.category?.value
-        }
       });
 
       await newAssembly({
@@ -302,7 +298,7 @@ const Head = (props) => {
           data: {
             approvedDate: { type: 'Property', value: moment().format('DD/MM/YYYY') },
             approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + reduxState.auth.me.id },
-            status: { type: 'Property', value: 'adjudicated' },
+            budgetStatus: { type: 'Property', value: 'adjudicated' },
           }
         }
       );
@@ -346,9 +342,9 @@ const Head = (props) => {
   const ActionButton = () => {
     if (!isInternalPage) return;
 
-    switch (budget?.status?.value) {
+    switch (budget?.budgetStatus?.value) {
     case 'needs analysis': return <PrimaryBtn
-      text={'Iniciar Orçamento'}
+      text={'Iniciar Orçamentação'}
       onClick={() => setInitiateBudgeting(true) }
       icon={
         <CheckCircleOutline
@@ -358,7 +354,7 @@ const Head = (props) => {
       }
     />;
     case 'waiting budget': return <PrimaryBtn
-      text={'Entregar orçamento' }
+      text={'Entregar Orçamento' }
       onClick={() => setDeliverModal(!deliverModal) }
       icon={
         <CheckCircleOutline
@@ -398,12 +394,12 @@ const Head = (props) => {
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
               <Box id='align'>
-                <Typography variant='title'>{breadcrumbsPath[1].title} </Typography>
+                <Typography variant='title'>{breadcrumbsPath[1].title}  </Typography>
                 <Box pl={2}>
-                  {budget.status?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
-                  {budget.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
-                  {budget.status?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
-                  {budget.status?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
+                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
+                  {budget.budgetStatus?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
+                  {budget.budgetStatus?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
+                  {budget.budgetStatus?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
                 </Box>
               </Box>
             </Grid>
@@ -447,14 +443,14 @@ const Head = (props) => {
               </Grid>
               <Grid container md={12} sm={12} xs={12}>
                 <Grid container { ...cells }><Typography variant='sm' >{budget.num?.value || 212453}</Typography></Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.dateRequest?.value && budget?.budgetStatus?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateRequest?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateRequest} isInternalPage={isInternalPage} value={budget?.dateRequest?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateRequest' type='date' />
                 </Grid>
                 <Grid container { ...cells }><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.dateAgreedDelivery?.value && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateAgreedDelivery?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.dateAgreedDelivery?.value && budget?.budgetStatus?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.dateAgreedDelivery?.value && 'primary.light'}>
                   <EditableCell active={activeFields.dateAgreedDelivery} isInternalPage={isInternalPage} value={budget?.dateAgreedDelivery?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='dateAgreedDelivery' type='date' />
                 </Grid>
-                <Grid container { ...cells } className={isInternalPage && !budget?.price?.value && budget?.status?.value !== 'canceled' && budget?.status?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.price?.value && 'primary.light'}>
+                <Grid container { ...cells } className={isInternalPage && !budget?.price?.value && budget?.budgetStatus?.value !== 'canceled' && budget?.budgetStatus?.value !== 'canceled' && 'breathingBackgroundWarning'} bgcolor={isInternalPage && !budget?.price?.value && 'primary.light'}>
                   <EditableCell active={activeFields.price} isInternalPage={isInternalPage} value={budget?.price?.value} onChange={(e) => onFieldChange(e)} onDoubleClick={onCellDoubleClick} name='price' type='currency' />
                 </Grid>
                 <Grid container { ...cells }><Typography variant='sm' >{budget?.dateDelivery?.value}</Typography></Grid>
@@ -491,11 +487,11 @@ const Head = (props) => {
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                         <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                        <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                        <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                       </Grid>
                       {/* Postal Code */}
                       <Grid container md={12} sm={12} xs={12}>
-                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                        <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Código Postal</Typography></Grid>
                         <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{budget.deliveryAddress?.value?.postalCode}</Typography></Grid>
                       </Grid>
                       {/* Street */}

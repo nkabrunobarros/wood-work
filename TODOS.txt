@@ -1,60 +1,61 @@
-Pendentes
-    Nova estrutura de projetos, orçamentos, montagem...
-    Estrutura de produção
+[x]: Montagem (assembly)
 
-    Cliente
-    Endpoint de envio de imagem para sobrantes
+[ ]: Listagem
+[ ]GET modules
+[ ]    where {
+[ ]        parts are all produced
+[x]        FinishTime === "" 
+[ ]    }
 
+[ ] on Module assembly Start
     
-Bugs
-    Cliente não consegue buscar mensagens enviados por admin, recebe apenas as que envia
-    Criar worker dá erro
+[ ]PATCH module[id]
+[ ]    startTime: now()
 
-    Cliente
-    Upload de ficheiros como cliente
+[ ]  extra:
+[ ]        caso seja o primeiro dos modulos do projeto a ser montado, PATCH a assembly[project.assembly.id] 
+[ ]            startTime: now()
 
-    Messages    
-        ao fazer filtro e selecionar 1 chat, seleciona o chat errado (prob: index's)
+[ ]on Module assembly Finish
 
+[ ] PATCH module[id]
+[ ]   FinishTime: now()
 
-Em falta
-    Especificação da API
-        parâmetros especiais de endpoints
-    Propriedades das entidades
-    descrição dos endpoints
-    campos obrigatorios por endpoint
-    resposta por endpoint
-    comportamentos extras por endpoint
+[ ]    extra: 
+[ ]        caso seja o ultimo dos modulos do projeto a ser montado, 
+[ ]            PATCH a assembly[project.assembly.id] 
+[ ]                FinishTime: now()
+[ ]            PATCH a project[project.id]
+[ ]                status: 'packaging'
 
-    Entidade file
-    Entidade folder
-    Entidade message
-    Definição de senha
+## Entra em fase de montagem
 
+## Montagem (packaging)
 
-
-PERGUNTAS!
-
-qual a diferença entre 
-    "Worker - list": "http://woodwork4.ddns.net/ww4/api/v1/accounts/worker/",
-    "worker": "http://woodwork4.ddns.net/ww4/api/v1/worker/",
-qual a diferença entre 
-    "owner": "http://woodwork4.ddns.net/ww4/api/v1/owner/",
-    "Customer - list": "http://woodwork4.ddns.net/ww4/api/v1/accounts/customer/",
-
-
-qual dos dois utilizar
+[x]: Listagem
+[x] GET modules
+[x]    where {
+[x]        finishTime !== ""
+[x]    }
 
 
 
 
-Estados
 
-'waiting budget',
-'waiting adjudication',
-'canceled',
-'drawing',
-'production',
-'testing',
-'transport',
-'finished',
+
+
+
+
+
+
+Upload de ficheiros (Alterar caso seja necessario remover a pasta target, a pasta de upload agora é fixa, "VF DO CLIENTE")
+
+Stocks
+    Todos endpoints
+Montagems
+    Aplicar os endpoints (sujeito a modificação do modelo de dados)
+Embalamento
+    Estrutura final de modelo de dados
+Sobrantes
+    Endpoints (envio de imagem e tratamento de resultados)
+Gestão de armazem ?

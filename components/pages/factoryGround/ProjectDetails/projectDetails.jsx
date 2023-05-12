@@ -179,7 +179,7 @@ const ProjectDetails = (props) => {
         const built = res.data.filter(ele => ele.belongsTo.value === chosenProject.id).map((part) => {
           const part2 = { ...part };
 
-          part2.logs = logsWorkerTasks.filter(ele => ele.executedInOn.object === part.id);
+          part2.logs = logsWorkerTasks.filter(ele => ele.executedOn.object === part.id);
 
           Object.keys(part2).map((key) => {
             part2[key] = part2[key].type === 'Property' ? part2[key].value : (part2[key].type === 'Relationship' ? part2[key].object : part2[key]);
@@ -257,7 +257,7 @@ const ProjectDetails = (props) => {
         type: 'Relationship',
         object: 'urn:ngsi-ld:Worker:' + me.id
       },
-      executedInOn: {
+      executedOn: {
         type: 'Relationship',
         object: props.part.id
       },

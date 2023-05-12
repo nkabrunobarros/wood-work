@@ -33,15 +33,15 @@ const FactoryGround = () => {
 
       const projects = projectsData.data;
 
-      const projectBudgets = await Promise.all(projects.map(async (project) => {
+      const projectBudgets = await Promise.all(projects?.map(async (project) => {
         const [budgetData, furnituresData, clientData] = await Promise.all([
           getBudget(project.hasBudget.object),
-          getFurnitures(),
+          getFurnitures({ hasBudget: project.hasBudget.object, furnitureType: 'furniture', produced: false }),
           getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))
         ]);
 
         const budget = budgetData.data;
-        const furnitures = furnituresData.data.filter(ele => ele.hasBudget?.value === project.hasBudget?.object && ele.furnitureType?.value === 'furniture').sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
+        const furnitures = [...furnituresData.data].sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
         const client = clientData.data;
 
         return {
@@ -52,12 +52,14 @@ const FactoryGround = () => {
         };
       }));
 
-      setProjs(projectBudgets.sort((a, b) => {
-        const aDate = moment(a.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
-        const bDate = moment(b.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
+      setProjs(projectBudgets
+        .filter(project => project.furnitures?.length > 0)
+        .sort((a, b) => {
+          const aDate = moment(a.budget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
+          const bDate = moment(b.budget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
 
-        return aDate - bDate;
-      }));
+          return aDate - bDate;
+        }));
 
       setLoaded(true);
     }

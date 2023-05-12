@@ -145,10 +145,10 @@ const Head = (props) => {
         {order.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
       </Box>
       <Box style={{ marginLeft: 'auto' }}>
-        <PrimaryBtn
+        {false && <PrimaryBtn
           text='Gerar Etiquetas'
           hidden={!(internalPOV && order.status.value === 'production')}
-          icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />
+          icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />}
         <PrimaryBtn
           text='Passar a produção'
           onClick={() => setChangeToProdModal(true) }
@@ -211,7 +211,7 @@ const Head = (props) => {
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDelivery?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.completed?.value || 0}</Typography></Grid>
+          <Grid container { ...cells }><Typography variant='sm' >{order?.produced?.value || 0}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.entryTime?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
           <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime?.value}</Typography></Grid>
@@ -241,11 +241,11 @@ const Head = (props) => {
                 {/* Headers */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                   <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                  <Grid {...tableLastCell} sx={{ border: 'none' }} justifyContent={'center'}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                  <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
                 </Grid>
                 {/* Postal Code */}
                 <Grid container md={12} sm={12} xs={12}>
-                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Codigo Postal</Typography></Grid>
+                  <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Código Postal</Typography></Grid>
                   <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{order.hasBudget?.object?.deliveryAddress?.value?.postalCode}</Typography></Grid>
                 </Grid>
                 {/* Street */}

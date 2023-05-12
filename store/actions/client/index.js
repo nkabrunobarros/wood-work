@@ -15,11 +15,16 @@ export {
   DELETE_CLIENT_SUCCESS,
   DELETE_CLIENT_FAIL,
   SET_DISPLAYED_CLIENT,
+  UPDATE_TOS_REQUEST,
+  UPDATE_TOS_SUCCESS,
+  UPDATE_TOS_FAIL,
   clients,
+  acceptTos,
   client,
   newClient,
   updateClient,
   setDisplayedClient,
   deleteClient,
-  clientMe
+  clientMe,
+  getCustomer
 } from './client';

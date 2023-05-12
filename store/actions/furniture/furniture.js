@@ -1,5 +1,6 @@
 // Network
 import { parseCookies } from 'nookies';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
@@ -29,13 +30,13 @@ export const furnitures = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.FURNITURES),
       params: {
-        limit: 600
+        limit: 600,
+        q: data && GenerateQueryFilters(data),
       }
     },
     types: [FURNITURES_REQUEST, FURNITURES_SUCCESS, FURNITURES_FAIL],

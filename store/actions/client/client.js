@@ -26,6 +26,10 @@ export const DELETE_CLIENT_FAIL = 'DELETE_CLIENT_FAIL';
 
 export const SET_DISPLAYED_CLIENT = 'SET_DISPLAYED_CLIENT';
 
+export const UPDATE_TOS_REQUEST = 'UPDATE_TOS_REQUEST';
+export const UPDATE_TOS_SUCCESS = 'UPDATE_TOS_SUCCESS';
+export const UPDATE_TOS_FAIL = 'UPDATE_TOS_FAIL';
+
 export const clients = (data) => {
   const { auth_token: userToken } = parseCookies();
 
@@ -85,6 +89,41 @@ export const updateClient = (data) => {
       url: getApiURL(endpoints.CUSTOMER + id),
     },
     types: [UPDATE_CLIENT_REQUEST, UPDATE_CLIENT_SUCCESS, UPDATE_CLIENT_FAIL],
+  });
+};
+
+export const acceptTos = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      ...data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'POST',
+      url: getApiURL(endpoints.CUSTOMER + id + '/change_tos/'),
+    },
+    types: [UPDATE_TOS_REQUEST, UPDATE_TOS_SUCCESS, UPDATE_TOS_FAIL],
+  });
+};
+
+export const getCustomer = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      ...data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'POST',
+      url: getApiURL('accounts/get-customer/'),
+    },
+    types: [UPDATE_TOS_REQUEST, UPDATE_TOS_SUCCESS, UPDATE_TOS_FAIL],
   });
 };
 

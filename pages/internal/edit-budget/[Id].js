@@ -89,27 +89,44 @@ const EditProject = ({ ...pageProps }) => {
           // Add the sub-group object to the current group's subgroups array
           currentGroup.subGroups.push(currentSubGroup);
         } else {
-          // Add the furniture item to the current sub-group's items array
-          currentSubGroup?.items?.push({
-            ...item,
-            furnitureType: { ...item.furnitureType, value: 'furniture', error: '', hidden: true },
-            name: { ...item.name, id: 'name', error: '', required: true, label: 'Nome', displayOrder: 0 },
-            description: { ...item.description, id: 'description', error: '', label: 'Descrição', type: 'area', displayOrder: 1 },
-            amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 2 },
-            obs: { ...item.obs, id: 'obs', error: '', label: 'Observações', type: 'area', displayOrder: 3 },
-            width: { ...item.width, id: 'width', error: '', label: 'Largura', displayOrder: 5 },
-            height: { ...item.height, id: 'height', error: '', label: 'Altura', displayOrder: 6 },
-            thickness: { ...item.thickness, id: 'thickness', error: '', label: 'Profundidade', displayOrder: 7 },
-            price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 8 },
-            category: { ...item.category, hidden: true, id: 'category', error: '', options: categories, label: 'Categoria', displayOrder: 99 },
+          if (item.furnitureType.value === 'furniture') {
+            // Add the furniture item to the current sub-group's items array
+            currentSubGroup?.items?.push({
+              ...item,
+              furnitureType: { ...item.furnitureType, value: 'furniture', error: '', hidden: true, displayOrder: 22 },
+              name: { ...item.name, id: 'name', error: '', required: true, label: 'Nome', displayOrder: 0 },
+              description: { ...item.description, id: 'description', error: '', label: 'Descrição', type: 'area', displayOrder: 1 },
+              amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 2 },
+              obs: { ...item.obs, id: 'obs', error: '', label: 'Observações', type: 'area', displayOrder: 3 },
+              width: { ...item.width, id: 'width', error: '', label: 'Largura', displayOrder: 5 },
+              height: { ...item.height, id: 'height', error: '', label: 'Altura', displayOrder: 6 },
+              thickness: { ...item.thickness, id: 'thickness', error: '', label: 'Profundidade', displayOrder: 7 },
+              price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 8 },
 
-            hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 99, error: '' },
-            group: { ...item.group, hidden: true, displayOrder: 99, error: '' },
-            subGroup: { ...item.subGroup, hidden: true, displayOrder: 99, error: '' },
-            lineNumber: { ...item.num, hidden: true, displayOrder: 99, error: '' },
-            produced: { ...item.produced, hidden: true, displayOrder: 99, error: '' },
-            assembled: { ...item.assembled, hidden: true, displayOrder: 99, error: '' },
-          });
+              hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 99, error: '' },
+              group: { ...item.group, hidden: true, displayOrder: 99, error: '' },
+              subGroup: { ...item.subGroup, hidden: true, displayOrder: 99, error: '' },
+              lineNumber: { ...item.num, hidden: true, displayOrder: 99, error: '' },
+              produced: { ...item.produced, hidden: true, displayOrder: 99, error: '' },
+              assembled: { ...item.assembled, hidden: true, displayOrder: 99, error: '' },
+            });
+          } else {
+            currentSubGroup?.items?.push({
+              ...item,
+              furnitureType: { ...item.furnitureType, value: 'accessory', displayOrder: 99, error: '', hidden: true },
+              name: { ...item.name, id: 'name', error: '', required: true, label: 'Nome', displayOrder: 0 },
+              amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 1 },
+              obs: { ...item.obs, id: 'obs', error: '', label: 'Observações', type: 'area', displayOrder: 2 },
+              price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 3 },
+
+              hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 993, error: '' },
+              group: { ...item.group, hidden: true, displayOrder: 9921, error: '' },
+              subGroup: { ...item.subGroup, hidden: true, displayOrder: 9941, error: '' },
+              lineNumber: { ...item.num, hidden: true, displayOrder: 9329, error: '' },
+              produced: { ...item.produced, hidden: true, displayOrder: 94239, error: '' },
+              assembled: { ...item.assembled, hidden: true, displayOrder: 94329, error: '' },
+            });
+          }
         }
       });
 
