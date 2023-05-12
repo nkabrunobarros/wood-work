@@ -47,7 +47,7 @@ const Order = ({ ...pageProps }) => {
       // const expedition = (await getExpedition(project.expedition.object)).data;
       const budget = (await getBudget(project.hasBudget.object)).data;
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
-      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === project.hasBudget.object);
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.object === project.hasBudget.object);
 
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 

@@ -33,7 +33,7 @@ const FactoryGround = () => {
 
       const projects = projectsData.data;
 
-      const projectBudgets = await Promise.all(projects.map(async (project) => {
+      const projectBudgets = await Promise.all(projects?.map(async (project) => {
         const [budgetData, furnituresData, clientData] = await Promise.all([
           getBudget(project.hasBudget.object),
           getFurnitures({ hasBudget: project.hasBudget.object, furnitureType: 'furniture', produced: false }),
@@ -53,10 +53,10 @@ const FactoryGround = () => {
       }));
 
       setProjs(projectBudgets
-        .filter(project => project.furnitures.length > 0)
+        .filter(project => project.furnitures?.length > 0)
         .sort((a, b) => {
-          const aDate = moment(a.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
-          const bDate = moment(b.budget.dateDeliveryProject.value, 'DD/MM/YYYY');
+          const aDate = moment(a.budget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
+          const bDate = moment(b.budget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
 
           return aDate - bDate;
         }));

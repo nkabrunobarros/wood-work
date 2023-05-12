@@ -135,7 +135,7 @@ const SignIn = (props) => {
             setLoading(false);
 
             // eslint-disable-next-line no-constant-condition
-            if (user.role === 'CUSTOMER' && user.tos === false && false) router.push('/terms');
+            if (user.role === 'CUSTOMER' && user.tos === false) router.push('/terms');
             else router.push(loginSuccessRoute);
           }
         }).catch((err) => console.log(err));

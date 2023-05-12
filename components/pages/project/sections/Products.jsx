@@ -1,8 +1,8 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
-import { Construction, Engineering, UnfoldLessOutlined, UnfoldMoreOutlined } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Box, ButtonGroup, Divider, Grid, Grow, Typography } from '@mui/material';
-import { ChevronDown } from 'lucide-react';
+import { UnfoldLessOutlined, UnfoldMoreOutlined } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, ButtonGroup, Divider, Grid, Grow, Tooltip, Typography } from '@mui/material';
+import { ChevronDown, HardHat } from 'lucide-react';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PrimaryBtn from '../../../buttons/primaryBtn';
@@ -85,13 +85,23 @@ const Products2 = (props) => {
       return found;
     });
 
-    return found[0] && order.status.value !== 'drawing' && <Engineering sx={{ color: 'red', marginLeft: '1rem' }} />;
+    return found[0] && order.status.value !== 'drawing' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
   }
+
+  console.log(furnitures);
 
   return <>
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
-      <AccordionSummary sx={{ background: 'lightGray.main', paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography variant='title'>Produtos</Typography>
+      <AccordionSummary sx={{
+        background: 'lightGray.main',
+        paddingLeft: '24px',
+        borderBottom: '1px solid',
+        borderColor: 'divider'
+      }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produtos</Typography></Grid>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
@@ -128,7 +138,7 @@ const Products2 = (props) => {
                             <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                             <Typography variant='subtitle1' > {subgroup.name.value}</Typography>
                             {order.status.value !== 'drawing' && <Box >
-                              { subgroup.items.find(ele => ele.produced?.value === false) && <Engineering sx={{ color: 'red', marginLeft: '1rem' }} />}
+                              { subgroup.items.find(ele => ele.produced?.value === false) && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>}
                             </Box>}
                           </AccordionSummary>
                           <AccordionDetails>
@@ -143,7 +153,7 @@ const Products2 = (props) => {
                                   <Grid container md={12} sm={12} xs={12}>
                                     <Typography variant='subtitle2' fontWeight={'bold'}>{item.amount?.value} {item.name?.value} {item?.description?.value && ','} {item?.description?.value}</Typography>
                                     {!item.produced?.value && order.status.value !== 'drawing' && <Box className="fullCenter" >
-                                      <Construction sx={{ color: 'red', marginLeft: '1rem' }} />
+                                      <Tooltip title='Em Produção'><Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip></Tooltip>
                                     </Box>}
                                   </Grid>
                                   <Grid container md={12} sm={12} xs={12} p={1}>

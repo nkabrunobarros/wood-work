@@ -3,6 +3,7 @@ import { parseCookies } from 'nookies';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 
 export const WORKERTASKS_REQUEST = 'WORKERTASKS_REQUEST';
 export const WORKERTASKS_FAIL = 'WORKERTASKS_FAIL';
@@ -27,7 +28,7 @@ export const workerTasks = (data) => {
       url: getApiURL(endpoints.WORKERTASKS),
       params: {
         limit: 400,
-        q: `onProject=="${data}"`,
+        q: data && GenerateQueryFilters(data),
       }
     },
     types: [WORKERTASKS_REQUEST, WORKERTASKS_SUCCESS, WORKERTASKS_FAIL],

@@ -1,5 +1,6 @@
 // Network
 import { parseCookies } from 'nookies';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
@@ -39,13 +40,14 @@ export const projects = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.PROJECTS),
       params: {
-        options: 'sysAttrs'
+        options: 'sysAttrs',
+        q: data && GenerateQueryFilters(data),
+
       }
     },
     types: [PROJECTS_REQUEST, PROJECTS_SUCCESS, PROJECTS_FAIL],
@@ -57,13 +59,12 @@ export const project = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.PROJECTS + data),
       params: {
-        options: 'sysAttrs'
+        options: 'sysAttrs',
       }
     },
     types: [PROJECT_REQUEST, PROJECT_SUCCESS, PROJECT_FAIL],

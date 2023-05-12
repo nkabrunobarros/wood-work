@@ -92,8 +92,16 @@ const Production = (props) => {
       detailOnly
     />}
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
-      <AccordionSummary sx={{ background: 'lightGray.main', paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography variant='title'>Produção</Typography>
+      <AccordionSummary sx={{
+        background: 'lightGray.main',
+        paddingLeft: '24px',
+        borderBottom: '1px solid',
+        borderColor: 'divider'
+      }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produção</Typography></Grid>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Detalhes de produção dos produtos</Typography></Grid>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
@@ -146,7 +154,7 @@ const Production = (props) => {
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.name?.value}</Typography></Grid>
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.amount?.value}</Typography></Grid>
                                     <Grid container md={3} sm={3} xs={3}>
-                                      {!item.produced?.value ? <Typography className='warningBalloon'>Em produção</Typography> : <Typography className='successBalloon'>Terminado</Typography> }
+                                      {!item.produced?.value ? <Box><Typography className='warningBalloon'>Em produção</Typography></Box> : <Box><Typography className='successBalloon'>Terminado</Typography> </Box>}
                                     </Grid>
                                     <Grid container md={3} sm={3} xs={3} justifyContent={'end'}><Typography varitant='subtitle1'><PrimaryBtn text='Ver detalhes' icon={<Eye />} onClick={() => {
                                       setChosenFurniture(item);

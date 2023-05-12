@@ -154,6 +154,7 @@ const ProductLinesTab = (props) => {
         {
           furnitureType: { value: 'accessory', error: '', hidden: true },
           name: { id: 'name', value: '', error: '', required: true, label: 'Nome' },
+          description: { id: 'description', value: '', error: '', label: 'Descrição', type: 'area' },
           amount: { id: 'amount', value: '', error: '', required: true, label: 'Quantidade', type: 'number' },
           obs: { id: 'obs', value: '', error: '', label: 'Observações', type: 'area' },
           price: { id: 'price', value: '', error: '', label: 'Valor', type: 'currency' },

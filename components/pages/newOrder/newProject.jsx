@@ -130,8 +130,6 @@ const NewOrder = ({ ...props }) => {
     if (obj[0]?.subGroups?.length === 0 || typeof obj[0]?.subGroups === 'undefined') return true;
 
     obj.map((group) => {
-      console.log(group);
-
       group.subGroups.map((subgroup) => {
         subgroup.items.map((item) => {
           Object.entries(item).forEach(([, value]) => {
@@ -268,9 +266,9 @@ const NewOrder = ({ ...props }) => {
       },
     };
 
-    CreateFurnitures(data.id);
-
     await newBudget(data).then(async () => {
+      CreateFurnitures(data.id);
+
       false && await newFolder({
         folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
         parent_folder: null,
@@ -306,7 +304,7 @@ const NewOrder = ({ ...props }) => {
         id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id,
         furnitureType: { type: 'Property', value: 'group' },
         name: { type: 'Property', value: group.name },
-        hasBudget: { value: budgetId, type: 'Property' },
+        hasBudget: { object: budgetId, type: 'Relationship' },
         type: 'Furniture'
       }];
 
@@ -319,8 +317,10 @@ const NewOrder = ({ ...props }) => {
           id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name },
-          hasBudget: { value: budgetId, type: 'Property' },
-          type: 'Furniture'
+          hasBudget: { object: budgetId, type: 'Relationship' },
+          type: 'Furniture',
+          group: { value: group.name, type: 'Property' }
+
         }];
 
         delete items[0].items;
@@ -339,7 +339,7 @@ const NewOrder = ({ ...props }) => {
           valuesOnly.type = 'Furniture';
           valuesOnly.subGroup = { value: subgroup.name, type: 'Property' };
           valuesOnly.group = { value: group.name, type: 'Property' };
-          valuesOnly.hasBudget = { value: budgetId, type: 'Property' };
+          valuesOnly.hasBudget = { object: budgetId, type: 'Relationship' };
           valuesOnly.produced = { value: false, type: 'Property' };
           valuesOnly.assembled = { value: false, type: 'Property' };
 
@@ -353,13 +353,34 @@ const NewOrder = ({ ...props }) => {
     });
 
     const mergedArray = [].concat(...items).map((item, index) => {
-      return { ...item, lineNumber: { type: 'Property', value: index } };
+      const normalizedItem = { ...item, lineNumber: { type: 'Property', value: index } };
+
+      if (normalizedItem.name && normalizedItem.name.value) {
+        const normalizedNameValue = normalizedItem.name.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedName = { ...normalizedItem.name, value: normalizedNameValue };
+
+        normalizedItem.name = normalizedName;
+      }
+
+      if (normalizedItem.group && normalizedItem.group.value) {
+        const normalizedGroupNameValue = normalizedItem.group.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedGroup = { ...normalizedItem.group, value: normalizedGroupNameValue };
+
+        normalizedItem.group = normalizedGroup;
+      }
+
+      if (normalizedItem.subGroup && normalizedItem.subGroup.value) {
+        const normalizedSubGroupNameValue = normalizedItem.subGroup.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizedSubGroup = { ...normalizedItem.subGroup, value: normalizedSubGroupNameValue };
+
+        normalizedItem.subGroup = normalizedSubGroup;
+      }
+
+      return normalizedItem;
     });
 
     try {
-      mergedArray.map(async (item) => {
-        await newFurniture(item).then((result) => console.log(result));
-      });
+      await newFurniture(mergedArray).then((result) => console.log(result));
     } catch (err) {
       console.log(err);
     }

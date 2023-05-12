@@ -376,15 +376,6 @@ const Head = (props) => {
     }
   };
 
-  const ascii = /^[ -~]+$/;
-  const str = 'Héllo wörld! ç';
-
-  if (!ascii.test(str)) {
-    const parsed = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-    console.log(parsed);
-  }
-
   return (
     <>
       <Notification />

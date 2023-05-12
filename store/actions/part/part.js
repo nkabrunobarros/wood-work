@@ -1,9 +1,9 @@
 // Network
 import { parseCookies } from 'nookies';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
-import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 export const PARTS_REQUEST = 'PARTS_REQUEST';
 export const PARTS_FAIL = 'PARTS_FAIL';
 export const PARTS_SUCCESS = 'PARTS_SUCCESS';
@@ -19,13 +19,14 @@ export const parts = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.PARTS),
       params: {
-        limit: 400
+        limit: 400,
+        q: GenerateQueryFilters(data),
+
       }
     },
     types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],

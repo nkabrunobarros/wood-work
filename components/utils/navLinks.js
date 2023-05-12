@@ -72,10 +72,10 @@ export const navLinks = [
   },
   {
     title: 'Embalamentos',
-    id: 'packing',
-    url: routes.private.internal.packing,
+    id: 'packingList',
+    url: routes.private.internal.packingList,
     icon: <PackageCheck strokeWidth='1' size={20} />,
-    allowed: 'packing',
+    allowed: 'packingList',
     allowed_: 'access_assembly',
   },
   {

@@ -2,16 +2,33 @@
 FROM node:18.12.1-alpine3.15 AS DEPENDENCIES
 LABEL author="Bruno Barros bruno.barros@nka.pt"
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    build-base \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    musl-dev \
+    giflib-dev
+
 WORKDIR /usr/src/app
 COPY package.json ./
 COPY yarn.lock ./
 
 RUN yarn
 
+# Build Builder
 FROM node:18.12.1-alpine3.15 AS BUILDER
 LABEL author="Bruno Barros bruno.barros@nka.pt"
-
+RUN apk add --no-cache \
+    build-base \
+    python3 \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    musl-dev \
+    giflib-dev
 WORKDIR /usr/src/app
 COPY --from=DEPENDENCIES /usr/src/app/node_modules ./node_modules
 COPY . .
@@ -22,6 +39,14 @@ RUN yarn build
 # Build production
 FROM node:18.12.1-alpine3.15 AS PRODUCTION
 LABEL author="Bruno Barros bruno.barros@nka.pt"
+RUN apk add --no-cache \
+    build-base \
+    python3 \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    musl-dev \
+    giflib-dev
 
 WORKDIR /usr/src/app
 

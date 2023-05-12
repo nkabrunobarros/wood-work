@@ -54,7 +54,7 @@ const Navbar = ({ ...pageProps }) => {
             </Box>
 
           </Box>
-          <Box>DEV</Box>
+          <Box display={'none'}>DEV</Box>
           <Box id='align' justifyContent={'end'}>
             <Box pr={3}>
               <Typography variant='md' sx={{ display: !reduxState.auth.me && 'none' }}>{reduxState.auth.me?.name?.value || reduxState.auth.me?.givenName?.value || (reduxState.auth.me?.first_name !== '' ? reduxState.auth.me?.first_name + ' ' + reduxState.auth.me?.last_name : reduxState.auth.me.username)}</Typography>

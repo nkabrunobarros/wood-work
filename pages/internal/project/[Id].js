@@ -15,7 +15,6 @@ import OrderScreen from '../../../components/pages/project/project';
 
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/loader/loader';
-import AuthData from '../../../lib/AuthData';
 import * as assemblysActionsRedux from '../../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
@@ -33,7 +32,6 @@ const Order = ({ ...pageProps }) => {
   const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [loaded, setLoaded] = useState(false);
-  const [productionDetail, setProductionDetail] = useState();
   const [folders, setFolders] = useState();
   const dispatch = useDispatch();
   const getProject = (data) => dispatch(projectsActionsRedux.project(data));
@@ -47,39 +45,6 @@ const Order = ({ ...pageProps }) => {
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const [furnitures, setFurnitures] = useState();
   const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
-
-  //  Dummy
-  const productionDetailRes = [
-    {
-      id: 'MC_MUEBLETV_A1_PAINEL3_NEST',
-      operation: 'nest',
-      machineId: '123 nest',
-      workerId: 'urn:ngsi-ld:Worker:worker_pAbaEjM8KBVzKdyw',
-      startedAt: '2023-04-16T14:34:46.279Z',
-      workerName: 'Bruno Barros',
-      partId: 'MC_MUEBLETV_A1_PAINEL3',
-    },
-    {
-      id: 'MC_MUEBLETV_A2_CIMA_NEST',
-      partName: 'MC_MUEBLETV_A2_CIMA_NEST',
-      operation: 'nest',
-      machineId: '123 nest',
-      workerId: 'urn:ngsi-ld:Worker:worker_pAbaEjM8KBVzKdyw',
-      startedAt: '2023-04-1614:34:48.718Z',
-      partId: 'MC_MUEBLETV_A2_CIMA',
-      workerName: 'Bruno Barros',
-      endedAt: '2023-04-16T14:34:49.755Z',
-    },
-    {
-      id: 'MC_MUEBLETV_A2_CIMA_CNC',
-      operation: 'cnc',
-      machineId: '123 cnc',
-      workerId: 'urn:ngsi-ld:Worker:worker_pAbaEjM8KBVzKdyw',
-      workerName: 'Bruno Barros',
-      startedAt: '2023-04-16T14:34:50.275Z',
-      partId: 'MC_MUEBLETV_A2_CIMA',
-    },
-  ];
 
   //  Dummy
   const projectParts = [
@@ -113,8 +78,6 @@ const Order = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-
       const project = (await getProject(router.query.Id)).data;
       const expedition = project.expedition?.object && (await getExpedition(project.expedition?.object)).data;
       const assembly = project.assembly?.object && (await getAssembly(project.assembly?.object)).data;
@@ -122,7 +85,7 @@ const Order = ({ ...pageProps }) => {
 
       !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
-      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === project.hasBudget.object);
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.object === project.hasBudget.object);
       const furnitures2 = furnitures.sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
       const built = [];
       let currentGroup = null;
@@ -180,16 +143,6 @@ const Order = ({ ...pageProps }) => {
       });
 
       //  Build production Detail
-      const builtLogs = [];
-
-      productionDetailRes.map((log) => {
-        const a = log;
-
-        a.part = projectParts.find((p) => p.partName === log.partId);
-        builtLogs.push(log);
-      });
-
-      setProductionDetail(builtLogs);
 
       const thisOrder = JSON.parse(JSON.stringify({ ...project }));
 
@@ -205,7 +158,7 @@ const Order = ({ ...pageProps }) => {
   }, []);
 
   if (loaded &&
-    reduxState.projects.displayedProject
+    reduxState.projects.displayedProject && folders
   ) {
     const headCellsUpperOrderDetail = [
       {
@@ -404,7 +357,6 @@ const Order = ({ ...pageProps }) => {
       headCellsUpperOrderDetail,
       headCellsOrderDetail,
       headCellsMessages,
-      productionDetail,
       headCellsDocs,
       pageProps,
       projectParts,

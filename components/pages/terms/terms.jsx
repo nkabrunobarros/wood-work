@@ -22,7 +22,10 @@ import backgroundImg from '../../../public/Log_In.jpg';
 import { logout } from '../../../store/actions/auth';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+import Notification from '../../dialogs/Notification';
 
 const Terms = ({ ...props }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -30,7 +33,8 @@ const Terms = ({ ...props }) => {
   // eslint-disable-next-line react/prop-types
   const { readOnly } = props;
   const dispatch = useDispatch();
-  const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
+  const acceptTos = (data) => dispatch(ClientsActionsRedux.acceptTos(data));
+  const getCustomer = (data) => dispatch(ClientsActionsRedux.getCustomer(data));
   const reduxState = useSelector((state) => state);
 
   if (typeof window !== 'undefined') {
@@ -54,15 +58,18 @@ const Terms = ({ ...props }) => {
 
     const formData = new FormData();
 
-    formData.append('tos', true);
+    formData.append('tos', false);
 
-    await updateClient({ data: formData, id: reduxState.auth.me?.id })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await getCustomer({ data: { user_id: reduxState.auth.me?.id } }).then(async (res) => {
+      await acceptTos({ data: { tos: true }, id: res.data.customer })
+        .then(() => {
+          Router.push(routes.private.projects);
+        })
+        .catch(() => {
+          toast.error('Algo aconteceu. Por favor tente mais tarde');
+        });
+    });
+
     // const data = new FormData(event.currentTarget);
   };
 
@@ -75,6 +82,7 @@ const Terms = ({ ...props }) => {
   return (
     <Grid container component='main' sx={{ height: '100%', width: '100%' }}>
       <CssBaseline />
+      <Notification />
       {windowWidth > 600 && <Grid item xs={0} sm={6} md={7}>
         <div
           style={{
@@ -127,14 +135,14 @@ const Terms = ({ ...props }) => {
           </div>
         )}
         <Box
-          style={{ width: windowWidth > 600 ? '160px' : '100px', position: 'absolute', right: '25px', top: '25px' }}
+          style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
         >
           <a
             target='#'
             href='http://mofreita.com/'
           >
             <Image
-              width={windowWidth > 600 ? 160 : 100}
+              width={windowWidth > 600 ? 80 : 50}
               alt='Company Logo'
               src={companyLogo}
               placeholder='blur'

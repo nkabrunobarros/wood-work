@@ -11,6 +11,7 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
 
   const pageSections = {
     projects: 'Projetos',
+    projectsSimilar: 'Projetos Similares',
     project: 'Projetos',
     budget: 'Projetos',
     newProject: 'Projetos',
@@ -30,6 +31,8 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
     newWorker: 'Utilizadores',
     leftovers: 'Sobrantes',
     factoryLevel: 'Chão de Fabrica',
+    packingList: 'Embalamentos',
+    newPackage: 'Embalamentos',
     packing: 'Embalamentos',
     assemblys: 'Montagens',
     profile: 'Conta',
@@ -39,8 +42,9 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
 
   const currentSection = Object.entries(pageSections).find(([page]) => {
     const regex = new RegExp(`^${routes.private.internal[page]}(\\[.+\\])?$`);
+    const regex2 = new RegExp(`^${routes.private[page]}(\\[.+\\])?$`);
 
-    return regex.test(path.route);
+    return regex.test(path.route) || regex2.test(path.route);
   })?.[1] ?? '';
 
   const style = {
