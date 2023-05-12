@@ -448,7 +448,8 @@ const EditBudget = ({ ...props }) => {
 
   async function CreateBudgetRows (rows) {
     try {
-      await newFurniture(rows).catch((err) => console.log(err));
+      // await newFurniture(rows).catch((err) => console.log(err));
+      rows.map(async (item) => await newFurniture(item).then((result) => console.log(result)));
     } catch (err) {
       console.log(err);
     }

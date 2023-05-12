@@ -380,7 +380,8 @@ const NewOrder = ({ ...props }) => {
     });
 
     try {
-      await newFurniture(mergedArray).then((result) => console.log(result));
+      // await newFurniture(mergedArray).catch((err) => console.log(err));
+      mergedArray.map(async (item) => await newFurniture(item).then((result) => console.log(result)));
     } catch (err) {
       console.log(err);
     }

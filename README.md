@@ -29,13 +29,11 @@ docker build -t mofreita:1 .
 
 ## DEV
 ./node_modules/.bin/eslint --fix .
-docker build -t mofreita:dev .
-docker run -d -p 127.0.0.1:3000:3000 mofreita:dev
+docker build -t mofreita:1 .
+docker run -d -p 127.0.0.1:3000:3000 mofreita:1
 ## Prod
 ./node_modules/.bin/eslint --fix .
 yarn lint
-docker build -t mofreita:dev .
-docker tag mofreita:dev registry.nka.pt/nka/mofreita:dev
-docker push registry.nka.pt/nka/mofreita:dev
-
-a
+docker build -t mofreita:1 .
+docker tag mofreita:1 registry.nka.pt/nka/mofreita:1
+docker push registry.nka.pt/nka/mofreita:1
