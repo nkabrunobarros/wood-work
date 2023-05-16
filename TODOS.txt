@@ -39,17 +39,6 @@
 [x]    }
 
 
-
-
-
-
-
-
-
-
-
-Upload de ficheiros (Alterar caso seja necessario remover a pasta target, a pasta de upload agora é fixa, "VF DO CLIENTE")
-
 Stocks
     Todos endpoints
 Montagems
@@ -59,3 +48,52 @@ Embalamento
 Sobrantes
     Endpoints (envio de imagem e tratamento de resultados)
 Gestão de armazem ?
+
+
+// Portal Cliente
+[x] Email
+[x] Reset de password
+[x] Login
+[ ] Aceitação de termos (funciona na versão dev, API não está em prod)
+[x] Lista de projetos
+[x] Filtros de projetos
+[x] Detalhe de projeto
+    [x] Info de projeto
+    [x] Produtos
+    [x] Observações
+    [x] Mensagems
+    [x] Documentos
+[x] Mensagens
+[x] Conta
+
+
+// Portal Interno
+[x] Login
+[x] Lista de projetos
+[x] Filtros de projetos
+[x] Detalhe de projeto
+    [x] Info de projeto
+    [x] Produtos
+    [x] Observações
+    [x] Produção
+    [x] Documentos
+    [x] Mensagems
+    [x] Documentos Cliente
+
+[ ] Projetos Similares
+[ ] Stock
+[x] Chão de fábrica
+[ ] Montagems (Ecrã desenvolvido, a buscar modulos e a fazer patch a eles, inicio e fim, no momento que a API crie os modulos, começa a funcionar)
+[ ] Embalamentos (Ecrãs desenvolvidos)
+[ ] Sobrantes (Ecrã desenvolvido)
+
+[x] Lista de Clientes
+[x] Detalhe de Cliente
+[x] Editar de Cliente
+[x] Novo Cliente
+
+[x] Lista de Utilizadores
+[x] Detalhe de Utilizador
+[x] Editar de Utilizador
+[x] Novo Utilizador
+[x] Conta

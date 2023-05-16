@@ -71,7 +71,7 @@ EditableCell.propTypes = {
 };
 
 const Head = (props) => {
-  const { breadcrumbsPath, isInternalPage, pageProps } = props;
+  const { isInternalPage, pageProps } = props;
   const [deliverModal, setDeliverModal] = useState(false);
   const [initiateBudgeting, setInitiateBudgeting] = useState(false);
   const [adjudicateModal, setAdjudicateModal] = useState(false);
@@ -393,13 +393,25 @@ const Head = (props) => {
         <Box container >
           <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
             <Grid container md={6} sm={6} xs={6}>
+              <Grid container md={12} sm={12} xs={12} display={!isInternalPage && 'none'}>
+                <Typography variant="sm" color="lightTextSm.main" >
+                  {'Cliente '}
+                  {budget.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
+                  <Tooltip title='Ver cliente'>
+
+                    <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                      {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}
+                    </a>
+                  </Tooltip>
+                </Typography>
+              </Grid>
               <Box id='align'>
-                <Typography variant='title'>{breadcrumbsPath[1].title}  </Typography>
-                <Box pl={2}>
-                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>}
-                  {budget.budgetStatus?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
-                  {budget.budgetStatus?.value === 'waiting adjudication' && <Typography className='infoBalloon'>Espera adjudicação</Typography>}
-                  {budget.budgetStatus?.value === 'waiting budget' && <Typography className='blankBalloon'>Espera orçamento</Typography>}
+                <Typography variant='title'>{budget.name.value}</Typography>
+                <Box pl={2} display='flex' alignItems='center'>
+                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="goldenBalloon">Análise Necessidades</Typography>}
+                  {budget.budgetStatus?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
+                  {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Espera adjudicação</Typography>}
+                  {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='blankBalloon'>Espera orçamento</Typography>}
                 </Box>
               </Box>
             </Grid>
@@ -465,7 +477,7 @@ const Head = (props) => {
             </Grid>
             <Grid container md={12} p={1}>
               <Grid container style={{ width: 'fit-content' }}>
-                <Grid container md={4} display={!isInternalPage && 'none'}>
+                <Grid container md={4} display={'none'}>
                   <Grid md={12} sm={12} xs={12}>
                     <Typography color={'lightTextSm.main'}>Cliente</Typography>
                     <Tooltip title='Ver cliente'>

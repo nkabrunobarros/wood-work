@@ -25,6 +25,7 @@ import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
+import CanDo from '../../utils/CanDo';
 
 const Clients = ({ ...props }) => {
   const {
@@ -68,7 +69,9 @@ const Clients = ({ ...props }) => {
     const loading = toast.loading('');
 
     try {
-      await deleteClient(props).then((res) => console.log(res));
+      await deleteClient(props).then(() => {
+        ToastSet(loading, 'Cliente Removido!', 'error');
+      });
     } catch (err) {
       console.log(err);
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
@@ -181,6 +184,7 @@ const Clients = ({ ...props }) => {
               <Box>
                 <PrimaryBtn
                   text='Adicionar'
+                  hidden={!CanDo('add_owner')}
                   onClick={() => Router.push(`${newRoute}`)}
                 />
               </Box>

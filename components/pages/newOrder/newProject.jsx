@@ -61,7 +61,7 @@ const NewOrder = ({ ...props }) => {
 
     lines.map((group) => {
       group.subGroups?.map((subgroup) => {
-        subgroup.items.map(item => {
+        subgroup.items.filter(ele => ele.furnitureType.value === 'furniture').map(item => {
           totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
           totalAmount += Number(item?.amount?.value);
         });
@@ -143,7 +143,6 @@ const NewOrder = ({ ...props }) => {
     });
 
     setLines(obj);
-    console.log(hasErrors);
 
     return hasErrors;
   }
@@ -270,8 +269,8 @@ const NewOrder = ({ ...props }) => {
       CreateFurnitures(data.id);
 
       false && await newFolder({
-        folder_name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
-        parent_folder: null,
+        name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
+        parent: null,
         user: clientUser,
         budget: `urn:ngsi-ld:Budget:${data.id.replace('urn:ngsi-ld:Budget:', '')}`
       });
@@ -379,8 +378,11 @@ const NewOrder = ({ ...props }) => {
       return normalizedItem;
     });
 
+    mergedArray.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
+
     try {
-      await newFurniture(mergedArray).then((result) => console.log(result));
+      mergedArray.map(async (ele) => await newFurniture({ ...ele, id: ele.id + formatString(budgetData.name.value) }));
+      // await newFurniture(mergedArray).then((result) => console.log(result));
     } catch (err) {
       console.log(err);
     }

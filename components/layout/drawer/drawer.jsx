@@ -41,8 +41,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const [ecraOpen, setEcraOpen] = useState(false);
 
   async function destroySessionCookie () {
-    destroyCookie(undefined, 'auth_token');
-    localStorage.removeItem('userToken');
+    destroyCookie(null, 'auth_token');
   }
 
   function onLogout () {

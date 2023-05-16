@@ -28,6 +28,7 @@ import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import ToastSet from '../../utils/ToastSet';
 
 export const functions = [
   {
@@ -67,7 +68,6 @@ export const functions = [
 const newWorker = ({ ...props }) => {
   const { breadcrumbsPath, organizations } = props;
   //  Dialog
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [cleaningInputs, setCleaningInputs] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -131,85 +131,6 @@ const newWorker = ({ ...props }) => {
   const dispatch = useDispatch();
   const newWorker = (data) => dispatch(workersActionsRedux.newWorker(data));
 
-  async function CreateWorker () {
-    //  open success modal && success toast
-    setDialogOpen(false);
-    setProcessing(true);
-
-    const builtWorker = {
-      active: true,
-      performanceRole: 2,
-    };
-
-    inputFields.map((ele) => {
-      builtWorker[ele.id] = ele.value;
-    });
-
-    builtWorker['user.username'] = builtWorker['user.email'];
-    builtWorker['user.password'] = 'ChangeMe';
-    builtWorker['user.password_confirm'] = 'ChangeMe';
-    builtWorker.hasOrganization = builtWorker.hasOrganization.replace('urn:ngsi-ld:Organization:', '');
-
-    const qs = require('qs');
-    const data = qs.stringify({ ...builtWorker });
-
-    await newWorker(data).then((res) => { setProcessing(false); Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id); }).catch((err) => onError(err));
-  }
-
-  function onError (error) {
-    const errorKeys = Object.keys(error.response.data);
-
-    setProcessing(false);
-
-    const updatedFields = inputFields.map((field) => {
-      const [key, subKey] = field.id.split('.');
-
-      if (errorKeys.includes(key) && error.response.data[key][subKey]) {
-        switch (error.response.data[key][subKey][0]) {
-        case 'A user with that username already exists.':
-          return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
-        case 'User with this email address already exists.':
-          return { ...field, error: 'Já existe um utilizador com este Email.' };
-        case 'This field is required.':
-          return { ...field, error: 'Campo Obrigatório.' };
-        default:
-          return { ...field, error: error.response.data[key][subKey][0] };
-        }
-      }
-
-      return field;
-    });
-
-    setInputFields(updatedFields);
-
-    if (error.response.status === 400) {
-      toast.warning('Erros no formulário.');
-    } else {
-      toast.error('Algo aconteceu. Por favor tente mais tarde.');
-    }
-  }
-
-  const ClearFields = () => {
-    setCleaningInputs(true);
-
-    setTimeout(() => {
-      setCleaningInputs(false);
-      setSuccessOpen(false);
-      setInputFields(inputFields.map(input => ({ ...input, error: '', value: '' })));
-    }, 500);
-  };
-
-  const handleFormChange = (i, e) => {
-    setInputFields(prevInputFields => {
-      const data = [...prevInputFields];
-
-      data[i].value = e.target.value;
-      data[i].error = '';
-
-      return data;
-    });
-  };
-
   function ValidateFields () {
     let hasErrors = false;
     const data = [...inputFields];
@@ -245,8 +166,90 @@ const newWorker = ({ ...props }) => {
       return true;
     }
 
-    setDialogOpen(true);
+    handleSave();
   }
+
+  async function handleSave () {
+    setProcessing(true);
+
+    const loading = toast.loading('');
+
+    const builtWorker = {
+      active: true,
+      performanceRole: 2,
+    };
+
+    inputFields.map((ele) => {
+      builtWorker[ele.id] = ele.value;
+    });
+
+    builtWorker['user.username'] = builtWorker['user.email'];
+    builtWorker['user.password'] = 'ChangeMe';
+    builtWorker['user.password_confirm'] = 'ChangeMe';
+    builtWorker.hasOrganization = builtWorker.hasOrganization.replace('urn:ngsi-ld:Organization:', '');
+
+    const qs = require('qs');
+    const data = qs.stringify({ ...builtWorker });
+
+    await newWorker(data)
+      .then((res) => {
+        ToastSet(loading, 'Utilizador Criado!', 'success');
+        setProcessing(false);
+        Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id);
+      }).catch((error) => {
+        const errorKeys = Object.keys(error.response.data);
+
+        setProcessing(false);
+
+        const updatedFields = inputFields.map((field) => {
+          const [key, subKey] = field.id.split('.');
+
+          if (errorKeys.includes(key) && error.response.data[key][subKey]) {
+            switch (error.response.data[key][subKey][0]) {
+            case 'A user with that username already exists.':
+              return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
+            case 'User with this email address already exists.':
+              return { ...field, error: 'Já existe um utilizador com este Email.' };
+            case 'This field is required.':
+              return { ...field, error: 'Campo Obrigatório.' };
+            default:
+              return { ...field, error: error.response.data[key][subKey][0] };
+            }
+          }
+
+          return field;
+        });
+
+        setInputFields(updatedFields);
+
+        if (error.response.status === 400) {
+          ToastSet(loading, 'Erros no formulário.', 'error');
+        } else {
+          ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+        }
+      });
+  }
+
+  const ClearFields = () => {
+    setCleaningInputs(true);
+
+    setTimeout(() => {
+      setCleaningInputs(false);
+      setSuccessOpen(false);
+      setInputFields(inputFields.map(input => ({ ...input, error: '', value: '' })));
+    }, 500);
+  };
+
+  const handleFormChange = (i, e) => {
+    setInputFields(prevInputFields => {
+      const data = [...prevInputFields];
+
+      data[i].value = e.target.value;
+      data[i].error = '';
+
+      return data;
+    });
+  };
 
   return (
     <>
@@ -254,14 +257,7 @@ const newWorker = ({ ...props }) => {
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <Notification />
-        {/* Situational Panels */}
-        <ConfirmDialog
-          open={dialogOpen}
-          handleClose={() => setDialogOpen(false)}
-          onConfirm={() => CreateWorker()}
-          message='Está prestes a criar um novo utlizador, tem certeza que quer continuar?'
-          icon='AlertOctagon'
-        />
+
         {processing && <Loader center={true} backdrop />}
         {/* What to do after Create Modal */}
         <ConfirmDialog

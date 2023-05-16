@@ -1,17 +1,9 @@
-/* eslint-disable array-callback-return */
-//  Nodes
 import React, { useEffect, useState } from 'react';
 
-//  Navigation
 import routes from '../../navigation/routes';
 
-//  Page Component
 import ProjectsScreen from '../../components/pages/projects/projects';
 
-//  Proptypes
-
-//  Actions
-import * as appStatesActions from '../../store/actions/appState';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
 import * as expeditionsActionsRedux from '../../store/actions/expedition';
@@ -21,66 +13,37 @@ import { Layers, LayoutTemplate, PackageCheck, PackagePlus, Settings, Truck } fr
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
-// import useWindowFocus from '../../components/utils/useWindowFocus';
-import AuthData from '../../lib/AuthData';
 import { categories } from './new-project';
-
-//  Preloader
-// import Loader from '../../components/loader/loader';
 
 const Projects = ({ ...pageProps }) => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
-  //  dispatch actions
   const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
-  const setLoading = (data) => dispatch(appStatesActions.setLoading(data));
-  const setLastRefreshed = () => dispatch(appStatesActions.setLastRefreshed());
   const [loaded, setLoaded] = useState(false);
-  // const focused = useWindowFocus();
-  const shouldRefresh = moment().diff(moment(reduxState.appStates.lastRefreshed), 'seconds') > 30;
 
-  async function fetchData (dispatch) {
+  async function fetchData() {
     let errors = false;
-    let loadedSomething = false;
 
     try {
-      await setLoading(true);
-      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       await getProjects();
-
-      if (!reduxState.expeditions?.data || shouldRefresh) { await getExpeditions(); loadedSomething = true; }
-
+      await getExpeditions();
       await getBudgets();
-
-      if (!reduxState.clients?.data || shouldRefresh) { await getClients(); loadedSomething = true; }
-
-      setTimeout(() => {
-        setLoading(false);
-      }, '500');
-
-      (loadedSomething || shouldRefresh) && await setLastRefreshed();
+      await getClients();
     } catch (err) { errors = true; }
 
     return !errors;
   }
 
   useEffect(() => {
-    async function loadData () {
-      setLoaded(await fetchData(dispatch));
+    async function loadData() {
+      setLoaded(await fetchData());
     }
 
     loadData();
   }, []);
-  // useEffect(() => {
-  //   async function loadData () {
-  //     setLoaded(await fetchData(dispatch));
-  //   }
-
-  //   focused && loadData();
-  // }, [focused]);
 
   if (loaded) {
     const counts = {
@@ -95,43 +58,43 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.budgetStatus?.value) {
-      case 'needs analysis':
-        counts.waitingAdjudication++;
+        case 'needs analysis':
+          counts.waitingAdjudication++;
 
-        break;
-      case 'waiting budget':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting budget':
+          counts.waitingAdjudication++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
@@ -151,7 +114,7 @@ const Projects = ({ ...pageProps }) => {
         amount: counts.waitingAdjudication,
         icon: (
           <Layers
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -164,7 +127,7 @@ const Projects = ({ ...pageProps }) => {
         amount: counts.drawing,
         icon: (
           <LayoutTemplate
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -177,7 +140,7 @@ const Projects = ({ ...pageProps }) => {
         amount: counts.production,
         icon: (
           <PackagePlus
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -190,7 +153,7 @@ const Projects = ({ ...pageProps }) => {
         amount: counts.testing,
         icon: (
           <Settings
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -203,11 +166,11 @@ const Projects = ({ ...pageProps }) => {
         amount: counts.testing,
         icon: (
           <PackageCheck
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--babyblue)',
+        color: '#9c27b0',
       },
       {
         id: 'transport',
@@ -216,7 +179,7 @@ const Projects = ({ ...pageProps }) => {
         amount: counts.expedition,
         icon: (
           <Truck
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -229,7 +192,7 @@ const Projects = ({ ...pageProps }) => {
       //   amount: counts.concluded,
       //   icon: (
       //     <Check
-      //       size={pageProps?.globalVars?.iconSizeXl}
+      //       size={'60%'}
       //       strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
       //     />
       //   ),
@@ -311,20 +274,6 @@ const Projects = ({ ...pageProps }) => {
         label: 'Número',
         show: true,
       },
-      // {
-      //   id: 'Categoria',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Categoria',
-      //   show: true,
-      // },
-      // {
-      //   id: 'amount.value',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Quantidade',
-      //   show: true,
-      // },
       {
         id: 'Estado',
         numeric: false,
@@ -354,17 +303,17 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'Produced',
-        numeric: false,
-        disablePadding: false,
-        label: 'Qtd. Prod.',
-        show: true,
-      },
-      {
         id: 'ExpeditionTime',
         numeric: false,
         disablePadding: false,
         label: 'Entrada Expedição',
+        show: true,
+      },
+      {
+        id: 'EntregaProj',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrega Acordada',
         show: true,
       },
       {
@@ -373,7 +322,6 @@ const Projects = ({ ...pageProps }) => {
         disablePadding: false,
         label: 'Ações',
         show: true,
-
       },
     ];
 

@@ -66,10 +66,10 @@ const Docs = (props) => {
   }
 
   function renderAccordionFolders (folders, parentId = null) {
-    return folders?.filter((folder) => folder.parent_folder === parentId)
+    return folders?.filter((folder) => folder.parent === parentId)
       .map((folder) => {
         // check if this is the root folder
-        if (parentId === null && folder.parent_folder === null) {
+        if (parentId === null && folder.parent === null) {
           // skip the root folder and only render its children
           return renderAccordionFolders(folders, folder.id);
         }
@@ -90,12 +90,12 @@ const Docs = (props) => {
                         <ArrowRight strokeWidth='1' style={{ marginRight: '1rem' }} />
                       )}
                   </Box>
-                  <Typography variant="subtitle2">{folder.folder_name} </Typography>
+                  <Typography variant="subtitle2">{folder.name} </Typography>
                 </Grid>
               </Grid>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: 0, backgroundColor: '#F4F4F4', borderRadius: '8px' }} >
-              {folder.files.length === 0 && folders.find(fold => fold.parent_folder === folder.id) === undefined ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography> : null}
+              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography> : null}
               {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file) => (
                 <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem' }} key={file?.id} alignItems={'center'} p={1}>
                   <Grid container md={9} sm={9} xs={9} sx={{ }} >
@@ -115,6 +115,7 @@ const Docs = (props) => {
               ))}
               <Box bgcolor='lightGray.secondary'>
                 {renderAccordionFolders(folders, folder.id)}
+
               </Box>
             </AccordionDetails>
           </Accordion>

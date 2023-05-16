@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Notification from '../../dialogs/Notification';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
 
@@ -363,6 +364,8 @@ const newPacking = (props) => {
         </Grid>
       </Grid>
     </Grid>
+    <Footer/>
+
   </>;
 };
 

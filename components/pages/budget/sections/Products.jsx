@@ -101,7 +101,6 @@ const Products2 = (props) => {
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
             {/* Lines */}
-            {console.log(furnitures)}
             {furnitures.map((group, groupIndex) => {
               return <Grow key={groupIndex} in={true}>
                 <Accordion

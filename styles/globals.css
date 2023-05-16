@@ -154,6 +154,15 @@ a {
   white-space: nowrap !important;
 }
 
+.secondaryBalloon {
+  color: #9c27b0;
+  background: #9c27b033;
+  border: 1px solid #9c27b0;
+  padding: 0.5rem;
+  border-radius: 50px;
+  white-space: nowrap !important;
+}
+
 .dot {
   height: 8px;
   width: 8px;

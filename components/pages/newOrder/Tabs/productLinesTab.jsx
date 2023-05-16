@@ -15,7 +15,7 @@ import FurnitureForm from './FormRows/FurnitureForm';
 const ProductLinesTab = (props) => {
   const {
     pageProps,
-    lines, setLines
+    lines, setLines,
   } = props;
 
   const [expandedGroups, setExpandedGroups] = useState([]);
@@ -45,7 +45,7 @@ const ProductLinesTab = (props) => {
   function addSubGroup (groupIndex, subGroupIndex) {
     setLines(prevLines => {
       const newSubGroup = {
-        id: `subgroup${groupIndex}${subGroupIndex || prevLines[groupIndex].subGroups.length}`,
+        id: `subgroup${groupIndex}${subGroupIndex + 1 || prevLines[groupIndex].subGroups.length}`,
         furnitureType: 'subgroup',
         name: '',
         items: []
@@ -75,7 +75,7 @@ const ProductLinesTab = (props) => {
   //  Add group
   function addGroup (props) {
     const newGroup = {
-      id: 'group' + lines.length,
+      id: 'group' + (lines.length + 1),
       furnitureType: 'group',
       name: '',
       subGroups: [],
@@ -94,6 +94,16 @@ const ProductLinesTab = (props) => {
 
       setLines(updatedLines);
       handlePanelChange(newGroup.id);
+
+      setExpandedGroups((prevExpandedGroups) =>
+        toggleValueInArray(newGroup.id, prevExpandedGroups)
+      );
+
+      setExpandedGroups(prevState => {
+        const updatedExpandedGroups = [...prevState, newGroup.id];
+
+        return updatedExpandedGroups;
+      });
     }
   }
 

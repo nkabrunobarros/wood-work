@@ -16,23 +16,42 @@ import routes from '../../navigation/routes';
 //  Services
 import moment from 'moment/moment';
 import AuthData from '../../lib/AuthData';
+import * as assemblyActionsRedux from '../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
 import * as expeditionsActionsRedux from '../../store/actions/expedition';
+import * as furnituresActionsRedux from '../../store/actions/furniture';
 import * as projectsActionsRedux from '../../store/actions/project';
+import * as workerTasksActionsRedux from '../../store/actions/workerTask';
 
 //  Utils
 
 const OrdersSimilar = () => {
   //  Data States
   const [loaded, setLoaded] = useState(false);
+  const [projects, setProjects] = useState();
   const [datesDiferencesFormat, setDatesDiferencesFormat] = useState('days');
   const reduxState = useSelector((state) => state);
   const dispatch = useDispatch();
   const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
-  const getExpeditions = () => dispatch(expeditionsActionsRedux.expeditions());
+  const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
+  const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
+  const getExpedition = (data) => dispatch(expeditionsActionsRedux.expedition(data));
+  const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
+  const getWorkerTasks = (data) => dispatch(workerTasksActionsRedux.workerTasks(data));
+  const getAssembly = (data) => dispatch(assemblyActionsRedux.assembly(data));
+
+  function getTaskTimeRange (tasks) {
+    const startTimes = tasks.map(task => moment(task.startTime.value, 'DD/MM/YYYY HH:mm:ss'));
+    const finishTimes = tasks.map(task => moment(task.finishTime.value, 'DD/MM/YYYY HH:mm:ss'));
+    const minStartTime = new Date(Math.min(...startTimes));
+    const maxFinishTime = new Date(Math.max(...finishTimes));
+
+    return { minStartTime: moment(minStartTime).format('DD/MM/YYYY HH:mm'), maxFinishTime: moment(maxFinishTime).format('DD/MM/YYYY HH:mm') };
+  }
 
   useEffect(() => {
     async function getData () {
@@ -40,7 +59,56 @@ const OrdersSimilar = () => {
       !reduxState.clients.data && await getClients();
       !reduxState.expeditions.data && await getExpeditions();
       !reduxState.budgets.data && await getBudgets();
-      await getProjects();
+
+      const projects = (await getProjects()).data;
+
+      const projectBudgets = await Promise.all(projects?.map(async (project) => {
+        const [budgetData, assemblyData, expeditionData, furnituresData, clientData] = await Promise.all([
+          getBudget(project.hasBudget.object),
+          getAssembly(project.assembly.object),
+          getExpedition(project.expedition.object),
+          getFurnitures({ hasBudget: project.hasBudget.object, furnitureType: 'furniture', produced: false }),
+          getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))
+        ]);
+
+        const { data: logsWorkerTasks } = await getWorkerTasks({ onProject: project.id });
+        const budget = budgetData.data;
+        const expedition = expeditionData.data;
+        const assembly = assemblyData.data;
+
+        const furnitures = [...furnituresData.data]
+          .sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1)
+          .filter((ele) => ele.furnitureType.value === 'furniture' && ele.hasBudget.object === project.hasBudget.object)
+          .map((furni) => {
+            const { minStartTime, maxFinishTime } = getTaskTimeRange(logsWorkerTasks.filter(ele => ele.onFurniture?.value === furni.id));
+
+            return {
+              ...furni,
+              beginProd: { value: minStartTime !== 'Invalid date' ? minStartTime : '' },
+              endProd: { value: maxFinishTime !== 'Invalid date' ? maxFinishTime : '' },
+            };
+          });
+
+        const client = clientData.data;
+        const projAgreedDelivery = moment(budget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
+        const projCreated = moment(project.createdAt);
+        const previsto1 = `${projCreated.diff(projAgreedDelivery, datesDiferencesFormat) * -1 || 0} ${datesDiferencesFormat === 'days' ? 'dia(s)' : 'hora(s)'}`;
+
+        return {
+          ...project,
+          begin: { value: moment(project.createdAt).format('DD/MM/YYYY') },
+          end: { value: expedition?.expeditionTime?.value ? moment(expedition?.expeditionTime?.value).format('DD/MM/YYYY') : '' },
+          beginAssembly: { value: assembly?.startTime.value },
+          endAssembly: { value: assembly?.finishTime.value },
+          budget,
+          predicted: previsto1,
+          client,
+          assembly,
+          furnitures
+        };
+      }));
+
+      setProjects(projectBudgets);
     }
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -198,15 +266,15 @@ const OrdersSimilar = () => {
 
     const clients = [...reduxState.clients?.data ?? []];
 
-    const projects = [...reduxState.projects.data]?.map(
+    const projects1 = [...reduxState.projects.data]?.map(
       // eslint-disable-next-line array-callback-return
       (item) => {
         const item2 = { ...item };
         const thisClient = clients.find(ele => ele.id === item.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
         const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === item?.expedition?.object);
         const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === item?.hasBudget?.object);
-        const projCreated = moment(item.createdAt);
         const projAgreedDelivery = moment(thisBudget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
+        const projCreated = moment(item.createdAt);
         const projDelivered = moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY');
 
         // data[i].desvio = formatNum(item.previsto, item.realizado)
@@ -228,7 +296,8 @@ const OrdersSimilar = () => {
 
     //  Page Props
     const props = {
-      items: projects,
+      items: projects1,
+      projects,
       breadcrumbsPath,
       detailPage,
       editPage,

@@ -56,7 +56,7 @@ const EditProject = ({ ...pageProps }) => {
 
       const budget = (await getBudget(router.query.Id)).data;
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
-      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.object === router.query.Id);
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
       const built = [];

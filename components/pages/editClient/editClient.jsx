@@ -35,6 +35,7 @@ import { useDispatch } from 'react-redux';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import routes from '../../../navigation/routes';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, client } = props;
@@ -192,10 +193,10 @@ const EditClient = ({ ...props }) => {
       return true;
     }
 
-    setDialogOpen(true);
+    handleSave();
   }
 
-  async function onConfirm () {
+  async function handleSave () {
     const builtClient = {
       id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
     };
@@ -205,29 +206,18 @@ const EditClient = ({ ...props }) => {
     inputFields.map((ele) => {
       builtClient[ele.id] = {};
 
-      const a = false;
+      if (ele.id !== 'user.email') formData.append(ele.id, ele.value);
 
-      // if (ele.options) {
-      if (a) {
-        // builtWorker[ele.id].type = 'Relationship';
-        // builtWorker[ele.id].object = ele.value;
-      } else {
-        if (ele.type === 'password') ele.value = 'ChangeMe';
-
-        if (ele.id !== 'user.email') formData.append(ele.id, ele.value);
-
-        builtClient[ele.id] = ele.value;
-      }
+      builtClient[ele.id] = ele.value;
     });
 
     await updateClient({ data: formData, id: client?.id })
       .then(() => {
         toast.success('Atualizado.');
-        setDialogOpen(false);
+        Router.push(routes.private.internal.client + builtClient.id);
       })
       .catch((err) => {
         onError(err);
-        setDialogOpen(false);
       });
   }
 
@@ -288,7 +278,7 @@ const EditClient = ({ ...props }) => {
         <ConfirmDialog
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
-          onConfirm={() => onConfirm()}
+          handleSave={() => handleSave()}
           icon='AlertOctagon'
           message={'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'}
         />

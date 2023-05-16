@@ -78,22 +78,26 @@ export const PartStatus = ({ part }) => {
 const FurnitureDetails = (props) => {
   const { open, detailOnly, onClose, furnitureProject } = props;
   const reduxState = useSelector((state) => state);
-  // const [state, setState] = useState({
-  //   open: props.open,
-  //   detailOnly: props.detailOnly,
-  //   onClose: props.onClose,
-  //   furnitureProject: props.furnitureProject,
-  //   productionDetailModal: false,
-  //   myMachine: null,
-  //   chosenFurniture: props.chosenFurniture,
-  //   machines: props.machines,
-  //   consumables: null,
-  //   fullyLoaded: false,
-  //   openPopover: null,
-  //   value: 0,
-  //   activeWorkerTasks: '',
-  //   me: reduxState.auth.me
-  // });
+
+  const [state, setState] = useState({
+    open: props.open,
+    detailOnly: props.detailOnly,
+    onClose: props.onClose,
+    furnitureProject: props.furnitureProject,
+    productionDetailModal: false,
+    myMachine: null,
+    chosenFurniture: props.chosenFurniture,
+    machines: props.machines,
+    consumables: null,
+    fullyLoaded: false,
+    openPopover: null,
+    value: 0,
+    activeWorkerTasks: '',
+    me: reduxState.auth.me
+  });
+
+  console.log(state);
+
   const [productionDetailModal, setProductionDetailModal] = useState(false);
   const [myMachine, setMyMachine] = useState();
   const [chosenFurniture, setChosenFurniture] = useState(props.chosenFurniture);
@@ -181,14 +185,14 @@ const FurnitureDetails = (props) => {
 
         setConsumables(consumables);
 
-        // setState({
-        //   ...state,
-        //   machines: result,
-        //   consumables,
-        //   projectParts: builtParts,
-        //   myMachine: activeLogWorkerTask ? mappedMachines.find((ele) => ele.id === activeLogWorkerTask.machine?.value) : null,
-        //   activeWorkerTasks: logsWorkerTasks.filter((ele) => !ele.finishTime?.value)
-        // });
+        setState({
+          ...state,
+          machines: result,
+          consumables,
+          projectParts: builtParts,
+          myMachine: activeLogWorkerTask ? mappedMachines.find((ele) => ele.id === activeLogWorkerTask.machine?.value) : null,
+          activeWorkerTasks: logsWorkerTasks.filter((ele) => !ele.finishTime?.value)
+        });
       } catch (error) {
         console.error(error);
       } finally {
@@ -375,10 +379,6 @@ const FurnitureDetails = (props) => {
         type: 'Property',
         value: furnitureProject.id
       },
-      onFurniture: {
-        type: 'Property',
-        value: chosenFurniture.id
-      },
     };
 
     const newWorkertask = await newWorkerTask(builtWorkerTask);
@@ -409,7 +409,7 @@ const FurnitureDetails = (props) => {
 
     await updateWorkerTask({ data: built, id: props.id });
     setMyMachine({ ...myMachine, currentlyOn: { ...myMachine.currentlyOn, value: '' } });
-    // setState({ ...state, myMachine: { ...state.myMachine, currentlyOn: { ...myMachine.currentlyOn, value: '' } } });
+    setState({ ...state, myMachine: { ...state.myMachine, currentlyOn: { ...myMachine.currentlyOn, value: '' } } });
     await updateMachine({ id: props.machine?.value, data: { currentlyOn: '' } });
   }
 
@@ -428,7 +428,7 @@ const FurnitureDetails = (props) => {
 
     setProjectParts(projectPartsCopy);
     setMyMachine({ ...myMachine, currentlyOn: { ...myMachine.currentlyOn, value: props.part.id } });
-    // setState({ ...state, myMachine: { ...state.myMachine, currentlyOn: { ...myMachine.currentlyOn, value: props.part.id } } });
+    setState({ ...state, myMachine: { ...state.myMachine, currentlyOn: { ...myMachine.currentlyOn, value: props.part.id } } });
   }
 
   function validateAction (field, actions, actionsDone) {
@@ -963,7 +963,7 @@ const FurnitureDetails = (props) => {
                   return !isExecuting || isExecuting.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id;
                 })
                 } value={myMachine?.id} label={'Maquina'} optionLabel={'Nome'} onChange={(e) => {
-                  // setState({ ...state, myMachine: state.machines?.find(ele => ele.id === e.target.value) });
+                  setState({ ...state, myMachine: state.machines?.find(ele => ele.id === e.target.value) });
                   setMyMachine(machines.find(ele => ele.id === e.target.value));
                 }} />
               </Grid>

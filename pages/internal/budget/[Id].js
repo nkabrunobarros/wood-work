@@ -106,7 +106,7 @@ const Budget = ({ ...pageProps }) => {
         href: `${routes.private.internal.projects}`,
       },
       {
-        title: `${budget.name.value}`,
+        title: `${budget.orderBy.object.user.first_name} ${budget.orderBy.object.user.last_name} - ${budget.name.value}`,
         href: `${routes.private.internal.budget}`,
       },
     ];

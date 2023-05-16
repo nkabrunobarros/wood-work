@@ -11,7 +11,7 @@ import {
   User
 } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import routes from '../../../navigation/routes';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import CustomBreadcrumbs from '../../breadcrumbs';
@@ -26,7 +26,6 @@ const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
 
@@ -63,6 +62,7 @@ const Profile = ({ ...props }) => {
                 <Box className='flex'>
                   <Box>
                     <PrimaryBtn text='Editar'
+                      hidden={!CanDo('change_worker')}
                       onClick={() => Router.push(`${routes.private.internal.editWorker}${user?.id}`)}
                       icon={
                         <Edit
@@ -73,7 +73,7 @@ const Profile = ({ ...props }) => {
                   </Box>
                   <Box>
                     <PrimaryBtn
-                      hidden={!CanDo(['delete', 'workers', auth.userPermissions])}
+                      hidden={!CanDo('delete_worker')}
                       onClick={() => setDialogOpen(true)}
                       text='Apagar'
                       icon={

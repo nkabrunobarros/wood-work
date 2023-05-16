@@ -93,7 +93,7 @@ const EditBudget = ({ ...props }) => {
     lines.map((group) => {
       group.subGroups?.map((subgroup) => {
         subgroup.items.map(item => {
-          totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+          totalPrice += Number((item?.price?.value || '0€')?.replace(/ /g, '').replace(/€/g, ''));
           totalAmount += Number(item?.amount?.value);
         });
       });
@@ -439,6 +439,7 @@ const EditBudget = ({ ...props }) => {
         const id = item.id;
 
         delete item.id;
+        delete item.hasBudget;
         await updateFurniture({ id, data: item }).catch((err) => console.log(err));
       });
     } catch (err) {
@@ -448,7 +449,7 @@ const EditBudget = ({ ...props }) => {
 
   async function CreateBudgetRows (rows) {
     try {
-      await newFurniture(rows).catch((err) => console.log(err));
+      rows.length > 0 && await newFurniture(rows).catch((err) => console.log(err));
     } catch (err) {
       console.log(err);
     }

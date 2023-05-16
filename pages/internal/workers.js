@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import { functions } from '../../components/pages/newWorker/newWorker';
 import WorkersScreen from '../../components/pages/workers/workers';
-import AuthData from '../../lib/AuthData';
 
 //  Navigation
 import routes from '../../navigation/routes';
@@ -23,8 +22,7 @@ const Workers = () => {
 
   useEffect(() => {
     const getData = async () => {
-      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      !reduxState.workers.data && await getWorkers();
+      await getWorkers();
       // !reduxState.permissions.data && await getPermissions();
     };
 

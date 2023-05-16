@@ -14,6 +14,7 @@ import Notification from '../../dialogs/Notification';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
 import ModuleCard from './ModuleCard';
+import Footer from '../../layout/footer/footer';
 
 const Assembly = (props) => {
   const dispatch = useDispatch();
@@ -35,21 +36,21 @@ const Assembly = (props) => {
       },
     };
 
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 1; index++) {
       axios.request({
         ...config,
         data: {
           id: 'urn:ngsi-ld:Module:' + index + moment().diff(moment().startOf('day'), 'seconds'),
           type: 'Module',
-          name: { type: 'Property', value: 'Modulo ' + index + moment().diff(moment().startOf('day'), 'seconds') },
+          name: { type: 'Property', value: 'Modulo 1' + index + moment().diff(moment().startOf('day'), 'seconds') },
           startTime: { type: 'Property', value: '' },
           finishTime: { type: 'Property', value: '' },
           assemblyBy: { type: 'Property', value: '' },
           client: { type: 'Property', value: 'Bruno Barros' },
-          furniture: { type: 'Property', value: 'Mueble B' },
-          project: { type: 'Property', value: 'Completo' },
-          group: { type: 'Property', value: 'Glisy' },
-          subGroup: { type: 'Property', value: 'Open Space' },
+          furniture: { type: 'Property', value: 'Mesa' },
+          project: { type: 'Property', value: 'Porto' },
+          group: { type: 'Property', value: 'Apartamento 3C' },
+          subGroup: { type: 'Property', value: 'Cozinha' },
           amount: { type: 'Property', value: '4' },
         }
       })
@@ -120,6 +121,8 @@ const Assembly = (props) => {
         <Button onClick={() => CreateModules()} sx={{ color: 'transparent' }}>CreateModules</Button>
       </Grid>
     </Grid>
+    <Footer/>
+
   </>;
 };
 

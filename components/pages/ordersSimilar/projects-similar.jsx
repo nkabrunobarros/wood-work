@@ -6,6 +6,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Autocomplete,
   Box,
   Button,
@@ -15,7 +18,7 @@ import {
   MenuItem, TextField, Tooltip, Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ArrowLeftRight, Filter, X } from 'lucide-react';
+import { ArrowLeftRight, ChevronDown, ChevronUp, Filter, X } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 
@@ -30,20 +33,18 @@ import Navbar from '../../layout/navbar/navbar';
 
 const OrdersScreen = ({ ...props }) => {
   const {
-    items,
     breadcrumbsPath,
     woodTypes,
     products,
+    projects,
     clients,
     operations,
     headCells,
-    headCellsUpper,
     detailPage,
     setDatesDiferencesFormat,
     datesDiferencesFormat
   } = props;
 
-  const rows = items;
   //  Modal State
   const [modal, setModal] = useState(false);
   // Filters States
@@ -132,6 +133,38 @@ const OrdersScreen = ({ ...props }) => {
   useEffect(() => {
     // ApplyFilters();
   }, [client, product, operation, orderId]);
+
+  const cellProps = {
+    sm: 12 / 10,
+    md: 12 / 10,
+    xs: 12 / 10,
+    container: true,
+    p: 2,
+    onClick: () => {
+      // e.stopPropagation();
+    },
+    // sx: { cursor: 'auto' }
+  };
+
+  const toggleValueInArray = (value, array) => {
+    const index = array.indexOf(value);
+
+    if (index === -1) {
+      return [...array, value];
+    }
+
+    return [...array.slice(0, index), ...array.slice(index + 1)];
+  };
+
+  const [expandedGroups, setExpandedGroups] = useState([]);
+
+  const handleChange = (expandedGroups, setExpandedGroups) => (panel) => {
+    setExpandedGroups((prevExpandedGroups) =>
+      toggleValueInArray(panel, prevExpandedGroups)
+    );
+  };
+
+  const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
 
   return (
     <>
@@ -363,13 +396,87 @@ const OrdersScreen = ({ ...props }) => {
               </Box>
             </Box>
           </Box>
-          <AdvancedTable
-            rows={rows}
+          {false && <AdvancedTable
+            rows={props.items}
             headCells={headCells}
-            headCellsUpper={headCellsUpper}
+            // headCellsUpper={headCellsUpper}
             filters={filters}
             clickRoute={detailPage}
-          />
+          />}
+          <Grid container md={12} sm={12} xs={12}>
+            <Grid container md={12} sm={12} xs={12} bgcolor={'primary.main'} color='white'>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Cliente</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Nome</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Num</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Previsto</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Realizado</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Qtd. Móveis</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Inicio</Typography> </Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Fim </Typography> </Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'></Typography> </Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Desvio</Typography></Grid>
+            </Grid>
+            {projects?.map((proj, index) => {
+              return <>
+                <Accordion
+                  expanded={expandedGroups.includes(proj.id)}
+                  onChange={() => handlePanelChange(proj.id)}
+                  sx={{ width: '100%' }}>
+                  <AccordionSummary sx={{ padding: 0, height: '20px' }} aria-controls="panel1d-content" id="panel1d-header"
+                    bgcolor={index % 2 !== 0 && 'lightGray.edges'}
+                  >
+                    <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.client.user.first_name} {proj.client.user.last_name}</Typography></Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.name.value}</Typography></Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.budget.num.value}</Typography></Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.predicted}</Typography></Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.done}</Typography></Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.amount.value}</Typography></Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.begin?.value}</Typography> </Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> {proj.end?.value}</Typography> </Grid>
+                      <Grid {...cellProps}><Typography variant='subtitle2'> Desvio</Typography></Grid>
+                      <Grid {...cellProps} onClick={() => {}} justifyContent={'end'} sx={{ cursor: 'pointer' }}>
+                        <Tooltip title={expandedGroups.includes(proj.id) ? 'Fechar detalhes' : 'Mostrar detalhes'}>
+                          <IconButton> {expandedGroups.includes(proj.id) ? <ChevronUp /> : <ChevronDown /> } </IconButton>
+                        </Tooltip>
+                      </Grid>
+                    </Grid>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box sx={{ width: '100%' }}>
+                      {/* <Divider sx={{ marginTop: '1rem', marginBottom: '1rem', borderBottomWidth: 2 }} /> */}
+                    </Box>
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }} >
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade</Typography> </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Prod.</Typography> </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Prod.</Typography> </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Mont.</Typography> </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Mont.</Typography> </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Emb.</Typography>  </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Emb.</Typography>  </Box></Grid>
+                      <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor total</Typography> </Box></Grid>
+                      <Grid {...cellProps}><Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor por móvel</Typography></Grid>
+                    </Grid>
+                    {proj.furnitures?.map((furni, index) => {
+                      return <Grid key={furni.id} container md={12} sm={12} xs={12} bgcolor={index % 2 !== 0 && 'lightGray.edges'}>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.name.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.amount.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.beginProd?.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.endProd?.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.beginAssembly?.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.endAssembly?.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.beginPackaging?.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.endPackaging?.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.price.value}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'>{furni.price.value && parseInt(furni.price.value.replace(/\D/g, '')) / furni.amount.value + '€'} </Typography></Grid>
+                      </Grid>;
+                    })}
+                  </AccordionDetails>
+                </Accordion>
+              </>;
+            })}
+          </Grid>
         </Content>
       </Grid>
       <Footer/>
@@ -379,6 +486,7 @@ const OrdersScreen = ({ ...props }) => {
 
 OrdersScreen.propTypes = {
   tableCols: PropTypes.array,
+  projects: PropTypes.array,
   panelsInfo: PropTypes.object,
   detailPage: PropTypes.string,
   editPage: PropTypes.string,

@@ -11,10 +11,13 @@ import Select from '../../inputs/select';
 
 //  PropTypes
 import {
+  Autocomplete,
+  Box,
   InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  TextField
 } from '@mui/material';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -24,6 +27,7 @@ import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const Workers = ({ ...props }) => {
@@ -36,8 +40,6 @@ const Workers = ({ ...props }) => {
     headCellsWorkers,
   } = props;
 
-  const path = useRouter();
-  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
   // const userPermissions = useSelector((state) => state.auth.userPermissions);
@@ -104,14 +106,36 @@ const Workers = ({ ...props }) => {
             <a className='headerTitleSm'>Filtros</a>
             <div className='filters'>
               <div className='filterContainer'>
-                <Select
-                  label={'Nome'}
-                  options={workers.filter((item) => item.active && item)}
-                  optionValue={'Nome'}
-                  optionLabel={'Nome'}
-                  onChange={(event) => setNome(event.target.value)}
+                <InputLabel htmlFor='email'>Utilizador</InputLabel>
+                <Autocomplete
+                  name='client'
+                  id='client'
+                  fullWidth
+                  disablePortal
+                  options={workers.sort((a, b) =>
+                    a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                  )}
+                  getOptionLabel={(option) => option.Nome }
+                  getOptionValue={(option) => option.id}
+                  onChange={(e, value) => setNome(value?.Nome || '')}
+                  renderOption={(props, option) => {
+                    return (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        {option.Nome}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      value={nome}
+                      {...params}
+                      placeholder="Escrever Nome Utilizador"
+                      inputProps={{
+                        ...params.inputProps,
+                      }}
+                    />
+                  )}
                 />
-
               </div>
               <div className='filterContainer'>
                 <InputLabel htmlFor='email'>Email</InputLabel>
@@ -172,8 +196,7 @@ const Workers = ({ ...props }) => {
             >
               <div>
                 <PrimaryBtn
-                  hidden={!isInternalPage}
-                  // hidden={!CanDo(['write', 'workers', userPermissions])}
+                  hidden={!CanDo('add_worker')}
                   text='Adicionar'
                   onClick={() => Router.push(`${newRoute}`)}
                 />

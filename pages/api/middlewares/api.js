@@ -6,12 +6,12 @@ import { buildURL } from '../../../store/network/config';
 
 export const CALL_API = Symbol('CALL_API');
 
-const api = () => () => (next) => async (action) => {
+const api = () => () => (dispatch) => async (action) => {
   const { [CALL_API]: callAPI } = action;
   const { auth_token: userToken } = parseCookies();
 
   if (callAPI === undefined) {
-    return next(action);
+    return dispatch(action);
   }
 
   const { meta, request, types } = callAPI;
@@ -21,27 +21,29 @@ const api = () => () => (next) => async (action) => {
   const actionWith = (payload) => ({ ...action, ...payload });
   const requestAction = actionWith({ type: REQUEST, meta });
 
-  next(requestAction);
+  dispatch(requestAction);
 
   try {
     const response = await axios(requestOptions);
     const successAction = actionWith({ type: SUCCESS, meta, payload: response });
 
-    next(successAction);
+    dispatch(successAction);
 
     return response;
   } catch (error) {
-    const failAction = actionWith({ type: FAIL, meta, payload: error.response || error });
+    if (error.response.status === 403 || error.response.status === 401) {
+      const failAction = actionWith({ type: FAIL, meta, payload: error.response || error });
 
-    if (error.response?.data?.detail === ('Invalid token header. No credentials provided.' || 'Authentication credentials were not provided.')) {
-      destroyCookie(null, 'auth_token');
+      if (error.response?.data?.detail === ('Invalid token header. No credentials provided.' || 'Authentication credentials were not provided.')) {
+        destroyCookie(null, 'auth_token');
 
-      return error;
+        return error;
+      }
+
+      dispatch(failAction);
     }
 
-    next(failAction);
-
-    throw error;
+    return error;
   }
 };
 

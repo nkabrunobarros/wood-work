@@ -37,7 +37,6 @@ export const expedition = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',

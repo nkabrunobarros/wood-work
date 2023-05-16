@@ -1,33 +1,20 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-//  Nodes
 import React, { useEffect, useState } from 'react';
-
-//  Navigation
 import routes from '../navigation/routes';
-
-//  Page Component
 import OrdersScreen from '../components/pages/projects/projects';
-
-//  Proptypes
 import PropTypes from 'prop-types';
-
-//  Actions
+import { Layers, LayoutTemplate, Network, PackageCheck, PackagePlus, Truck } from 'lucide-react';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../components/loader/loader';
 import * as budgetsActionsRedux from '../store/actions/budget';
 import * as clientsActionsRedux from '../store/actions/client';
 import * as expeditionsActionsRedux from '../store/actions/expedition';
 import * as projectsActionsRedux from '../store/actions/project';
-//  Icons
-import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../components/loader/loader';
 
 const Orders = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
-  //  dispatch actions
   const getProjects = (data) => dispatch(projectsActionsRedux.myProjects(data));
   const getBudgets = (data) => dispatch(budgetsActionsRedux.myBudgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
@@ -42,7 +29,7 @@ const Orders = ({ ...pageProps }) => {
     { label: 'Sala de estar', id: 'MS_' }
   ];
 
-  async function fetchData () {
+  async function fetchData() {
     let errors = false;
 
     try {
@@ -64,7 +51,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData () {
+    async function loadData() {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -92,55 +79,55 @@ const Orders = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.budgetStatus?.value) {
-      case 'waiting budget':
-        counts.waitingBudget++;
+        case 'waiting budget':
+          counts.waitingBudget++;
 
-        break;
-      case 'waiting adjudication':
-        counts.waitingAdjudication++;
+          break;
+        case 'waiting adjudication':
+          counts.waitingAdjudication++;
 
-        break;
+          break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-      case 'drawing':
-        counts.drawing++;
+        case 'drawing':
+          counts.drawing++;
 
-        break;
-      case 'production':
-        counts.production++;
+          break;
+        case 'production':
+          counts.production++;
 
-        break;
-      case 'transport':
-        counts.expedition++;
+          break;
+        case 'transport':
+          counts.expedition++;
 
-        break;
-      case 'testing':
-        counts.testing++;
+          break;
+        case 'testing':
+          counts.testing++;
 
-        break;
-      case 'finished':
-        counts.concluded++;
+          break;
+        case 'finished':
+          counts.concluded++;
 
-        break;
+          break;
       }
     });
 
     const cards = [
       {
-        id: 'waiting budget',
+        id: ['waiting adjudication', 'needs analysis', 'waiting budget'],
         num: 1,
-        title: 'Pendente Orçamentação',
-        amount: counts.waitingBudget,
+        title: 'Pré Adjudicação',
+        amount: counts.waitingAdjudication,
         icon: (
-          <PackageCheck
-            size={pageProps?.globalVars?.iconSizeXl}
+          <Layers
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--grayLight)',
+        color: 'var(--primary)',
       },
       {
         id: 'drawing',
@@ -149,7 +136,7 @@ const Orders = ({ ...pageProps }) => {
         amount: counts.drawing,
         icon: (
           <LayoutTemplate
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -161,8 +148,8 @@ const Orders = ({ ...pageProps }) => {
         title: 'Pendente Produção',
         amount: counts.production,
         icon: (
-          <Layers
-            size={pageProps?.globalVars?.iconSizeXl}
+          <PackagePlus
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
@@ -173,11 +160,53 @@ const Orders = ({ ...pageProps }) => {
         num: 4,
         title: 'Pendente Montagem',
         amount: counts.testing,
-        icon: <AlertOctagon
-          size={pageProps?.globalVars?.iconSizeXl}
-          strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />,
+        icon: (
+          <Network
+            size={'60%'}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
         color: 'var(--babyblue)',
       },
+      {
+        id: 'packaging',
+        num: 4,
+        title: 'Pendente Embalamento',
+        amount: counts.testing,
+        icon: (
+          <PackageCheck
+            size={'60%'}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
+        color: '#9c27b0',
+      },
+      {
+        id: 'transport',
+        num: 5,
+        title: 'Pendente Expedição',
+        amount: counts.expedition,
+        icon: (
+          <Truck
+            size={'60%'}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
+        color: 'var(--yellow)',
+      },
+      // {
+      //   num: 6,
+      //   id: 'finished',
+      //   title: 'Terminados',
+      //   amount: counts.concluded,
+      //   icon: (
+      //     <Check
+      //       size={'60%'}
+      //       strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+      //     />
+      //   ),
+      //   color: 'var(--green)',
+      // },
     ];
 
     const headCellsProjects = [

@@ -313,6 +313,7 @@ const AdvancedTable = ({
       const filtered2 = rangeFilters ? filterByProperties(rows, rangeFilters) : rows;
       const filtered = MultiFilterArray(filtered2, filters);
 
+      console.log(filters);
       setState({ ...state, filteredItems: filtered });
     }
   }, [filters, rows, rangeFilters]);

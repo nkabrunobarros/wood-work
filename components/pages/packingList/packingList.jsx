@@ -8,6 +8,7 @@ import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Navbar from '../../layout/navbar/navbar';
+import Footer from '../../layout/footer/footer';
 
 const PackingList = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
@@ -70,6 +71,8 @@ const PackingList = ({ ...props }) => {
         </Grid>
       </Grid>
     </Grid>
+    <Footer/>
+
   </>;
 };
 

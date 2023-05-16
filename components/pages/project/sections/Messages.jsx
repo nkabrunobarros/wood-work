@@ -43,7 +43,7 @@ const Messages = (props) => {
     if (newMessageText === '') return;
 
     await newMessage({
-      to: loggedUser.role === 'CUSTOMER' ? 'user_Xw9Jz3BbzBO4GlZ2' : order.orderBy.object.user.id,
+      to: loggedUser.role === 'CUSTOMER' ? 'user_pAbaEjM8KBVzKdyw' : order.orderBy.object.user.id,
       by: loggedUser?.id,
       project: order.hasBudget?.object.id,
       text: newMessageText

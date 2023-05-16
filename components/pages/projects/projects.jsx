@@ -1,7 +1,11 @@
+/* eslint-disable react/prop-types */
 import {
   Autocomplete,
-  Box, Grid,
+  Box, Chip, Grid,
   InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
   TextField,
   Typography
 } from '@mui/material';
@@ -9,7 +13,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
@@ -20,7 +24,7 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/InfoCard';
 import Content from '../../content/content';
 import MyInput from '../../inputs/myInput';
-import Select from '../../inputs/select';
+import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
@@ -55,13 +59,69 @@ const ProjectsScreen = (props) => {
   const [referencia, setReferência] = useState('');
   const [items, setItems] = useState(props.items);
 
+  const States = [
+    {
+      subheader: true,
+      label: '--- Orçamento'
+    },
+    {
+      id: 'needs analysis',
+      label: 'Pendente Análise Necessidades'
+    },
+    {
+      id: 'waiting budget',
+      label: 'Pendente Orçamentação'
+    },
+    {
+      id: 'waiting adjudication',
+      label: 'Pendente Adjudicação'
+    },
+    {
+      id: 'canceled',
+      label: 'Cancelado',
+      notDefault: true
+    },
+    {
+      subheader: true,
+      label: '--- Projeto'
+    },
+    {
+      id: 'drawing',
+      label: 'Pendente Desenho'
+    },
+    {
+      id: 'production',
+      label: 'Pendente Produção'
+    },
+    {
+      id: 'testing',
+      label: 'Pendente Montagem'
+    },
+    {
+      id: 'packaging',
+      label: 'Pendente Embalamento'
+    },
+    {
+      id: 'transport',
+      label: 'Pendente Expedição'
+    },
+    {
+      id: 'finished',
+      label: 'Terminado',
+      notDefault: true
+    },
+  ];
+
+  const [personName, setPersonName] = useState(States.filter(ele => ele.subheader !== true).filter(ele => ele.notDefault !== true).map(ele => ele.id));
+
   const ClearFilters = () => {
     setProduct('');
     setReferência('');
     setNumber('');
     setClient('');
     setCategory('');
-    setProducao('');
+    setProducao(States.filter(ele => ele.subheader !== true).filter(ele => ele.notDefault !== true).map(ele => ele.id));
+    setPersonName(States.filter(ele => ele.subheader !== true).filter(ele => ele.notDefault !== true).map(ele => ele.id));
     setFilters({});
   };
 
@@ -71,11 +131,11 @@ const ProjectsScreen = (props) => {
     setFilters({
       Nome: number,
       Cliente: client,
-      Estado: producao,
+      Estado: personName,
       telemovel: telephone,
       Numero: referencia
     });
-  }, [number, producao, client, category, product, telephone, referencia]);
+  }, [number, producao, client, category, product, telephone, referencia, personName]);
 
   useEffect(() => {
     setNumber(filters.Nome || '');
@@ -184,6 +244,28 @@ const ProjectsScreen = (props) => {
     }
   }
 
+  const theme = useSelector((state) => state.appStates.theme);
+
+  function getStyles (name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   return (
     <>
       <Navbar />
@@ -195,8 +277,8 @@ const ProjectsScreen = (props) => {
         {/* Statistics Cards */}
         <Grid container md={12} sx={12} xs={12}>
           {cards?.map((card) => (
-            <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1} onClick={() => {
-              setProducao(card.id);
+            <Grid container item key={card.num} lg={4} md={4} sm={6} xs={12} p={1} onClick={() => {
+              setPersonName(Array.isArray(card.id) ? card.id : [card.id]);
             }}>
               <InfoCard
                 amount={card.amount}
@@ -211,43 +293,45 @@ const ProjectsScreen = (props) => {
         <Content>
           <Grid id='pad' md={12} container>
             <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
-              <InputLabel htmlFor='email'>Cliente</InputLabel>
-              <Autocomplete
-                name='client'
-                id='client'
-                fullWidth
-                disablePortal
-                options={clients.sort((a, b) =>
-                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-                )}
-                getOptionLabel={(option) => option.Nome }
-                getOptionValue={(option) => option.id}
-                onChange={(e, value) => {
+            {isInternalPage && <Grid container item md={4} sm={6} xs={12} p={1}>
+              <Box sx={{ width: '100%' }}>
+                <InputLabel htmlFor='email'>Cliente</InputLabel>
+                <Autocomplete
+                  name='client'
+                  id='client'
+                  fullWidth
+                  disablePortal
+                  options={clients.sort((a, b) =>
+                    a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                  )}
+                  getOptionLabel={(option) => option.Nome }
+                  getOptionValue={(option) => option.id}
+                  onChange={(e, value) => {
                   // eslint-disable-next-line react/prop-types
-                  setClient(value?.id || '');
-                }}
-                renderOption={(props, option) => {
-                  return (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.Nome}
-                    </Box>
-                  );
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    value={client}
-                    {...params}
-                    placeholder="Escrever Nome Cliente"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
+                    setClient(value?.id || '');
+                  }}
+                  renderOption={(props, option) => {
+                    return (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        {option.Nome}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      value={client}
+                      {...params}
+                      placeholder="Escrever Nome Cliente"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </Box>
             </Grid>}
-            <Grid container item md={3} sm={6} xs={12} p={1}>
+            <Grid container item md={4} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Nome'
@@ -259,7 +343,7 @@ const ProjectsScreen = (props) => {
                 onChange={(e) => setNumber(e.target.value)}
               />
             </Grid>
-            <Grid container item md={3} sm={6} xs={12} p={1}>
+            <Grid container item md={4} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Número'
@@ -272,63 +356,75 @@ const ProjectsScreen = (props) => {
               />
             </Grid>
 
-            <Grid container item md={3} sm={6} xs={12} p={1}>
-              <Select
+            <Grid container item md={4} sm={6} xs={12} p={1} display='none'>
+              <MySelect
                 label='Estado'
                 fullWidth
                 value={producao}
                 onChange={(e) => setProducao(e.target.value)}
-                options={[
-                  {
-                    subheader: true,
-                    label: '--- Orçamento'
-                  },
-                  {
-                    id: 'needs analysis',
-                    label: 'Pendente Análise Necessidades'
-                  },
-                  {
-                    id: 'waiting budget',
-                    label: 'Pendente Orçamento'
-                  },
-                  {
-                    id: 'waiting adjudication',
-                    label: 'Pendente Adjudicação'
-                  },
-                  {
-                    id: 'canceled',
-                    label: 'Cancelado'
-                  },
-                  {
-                    subheader: true,
-                    label: '--- Projeto'
-                  },
-                  {
-                    id: 'drawing',
-                    label: 'Pendente Desenho'
-                  },
-                  {
-                    id: 'production',
-                    label: 'Pendente Produção'
-                  },
-                  {
-                    id: 'testing',
-                    label: 'Pendente Montagem'
-                  },
-                  {
-                    id: 'packaging',
-                    label: 'Pendente Embalamento'
-                  },
-                  {
-                    id: 'transport',
-                    label: 'Pendente Expedição'
-                  },
-                  {
-                    id: 'finished',
-                    label: 'Terminado'
-                  },
-                ]}
+                options={States}
               />
+            </Grid>
+            <Grid container item md={3} sm={6} xs={12} p={1} display='none'>
+              <InputLabel id="state-select">Estado</InputLabel>
+              <Select
+                labelId="state-select"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, overflow: 'auto', height: '35px', position: 'sticky' }}>
+                    {selected.map((value) => {
+                      return <Chip key={value} label={States.filter(ele => ele.subheader !== true).find(ele => ele.id === value)?.label} />;
+                    })}
+                  </Box>
+                )}
+                sx={{ width: '100%', height: '56px' }}
+              >
+                {States.map((value) => (
+                  <MenuItem
+                    key={value.id}
+                    value={value.id}
+                    disabled={value.subheader}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {value.label}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </Grid>
+            <Grid container item md={12} sm={6} xs={12} p={1}>
+              <Grid container item md={12} sm={6} xs={12}>
+                <InputLabel id="state-select">Estado</InputLabel>
+              </Grid>
+              <Select
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={States.filter(ele => ele.subheader !== true).find(ele => ele.id === value)?.label.replace('Pendente', '')} />
+                    ))}
+                  </Box>
+                )}
+                sx={{ width: 'fit-content', minWidth: '32.5%' }}
+              >
+                {States.map((value) => (
+                  <MenuItem
+                    key={value.id}
+                    value={value.id}
+                    disabled={value.subheader}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {value.label}
+                  </MenuItem>
+                ))}
+              </Select>
+
             </Grid>
             <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
               <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />

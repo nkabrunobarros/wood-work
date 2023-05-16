@@ -1,16 +1,6 @@
 # Build Image
-FROM node:18.12.1-alpine3.15 AS DEPENDENCIES
+FROM node:18.16-bullseye-slim AS DEPENDENCIES
 LABEL author="Bruno Barros bruno.barros@nka.pt"
-
-RUN apk add --no-cache \
-    libc6-compat \
-    python3 \
-    build-base \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    musl-dev \
-    giflib-dev
 
 WORKDIR /usr/src/app
 COPY package.json ./
@@ -19,16 +9,9 @@ COPY yarn.lock ./
 RUN yarn
 
 # Build Builder
-FROM node:18.12.1-alpine3.15 AS BUILDER
+FROM node:18.16-bullseye-slim AS BUILDER
 LABEL author="Bruno Barros bruno.barros@nka.pt"
-RUN apk add --no-cache \
-    build-base \
-    python3 \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    musl-dev \
-    giflib-dev
+
 WORKDIR /usr/src/app
 COPY --from=DEPENDENCIES /usr/src/app/node_modules ./node_modules
 COPY . .
@@ -36,17 +19,9 @@ COPY . .
 ENV NODE_ENV production
 RUN yarn build
 
-# Build production
-FROM node:18.12.1-alpine3.15 AS PRODUCTION
+#Build production
+FROM node:18.16-bullseye-slim AS PRODUCTION
 LABEL author="Bruno Barros bruno.barros@nka.pt"
-RUN apk add --no-cache \
-    build-base \
-    python3 \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    musl-dev \
-    giflib-dev
 
 WORKDIR /usr/src/app
 

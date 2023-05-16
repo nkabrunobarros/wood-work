@@ -31,6 +31,7 @@ import EmailValidation from '../../utils/EmailValidation';
 //  PropTypes
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import routes from '../../../navigation/routes';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
@@ -54,14 +55,6 @@ const NewClient = ({ ...props }) => {
 
   const [inputFields, setInputFields] = useState(
     [
-      // {
-      //   id: 'user.username',
-      //   label: 'Nome Utilizador',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: 'Dado utilizado para login.',
-      // },
       {
         id: 'user.first_name',
         label: 'Primeiro Nome',
@@ -77,14 +70,6 @@ const NewClient = ({ ...props }) => {
         error: '',
         tooltip: ''
       },
-      // {
-      //   id: 'name',
-      //   label: 'Nome',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
       {
         id: 'user.email',
         type: 'email',
@@ -103,23 +88,6 @@ const NewClient = ({ ...props }) => {
         tooltip: '',
         hidden: true,
       },
-      // {
-      //   id: 'telephone',
-      //   label: 'Telefone',
-      //   value: '',
-      //   error: '',
-      //   type: 'phone',
-      //   required: true,
-      //   tooltip: ''
-      // },
-      // {
-      //   id: 'vat',
-      //   label: 'Numero Identificação Fiscal (Nif)',
-      //   value: '',
-      //   error: '',
-      //   required: false,
-      //   tooltip: '',
-      // },
       {
         id: 'address.streetAddress',
         label: 'Rua',
@@ -266,7 +234,7 @@ const NewClient = ({ ...props }) => {
       return true;
     }
 
-    setDialogOpen(true);
+    handleSave();
   }
 
   async function handleSave () {
@@ -293,11 +261,10 @@ const NewClient = ({ ...props }) => {
 
     const data = qs.stringify({ ...builtClient2 });
 
-    await newClient(data).then(() => {
-      ClearFields();
+    await newClient(data).then((res) => {
       ToastSet(loading, 'Cliente Criado!', 'success');
-    })
-      .catch((err) => { onError(err, loading); });
+      Router.push(routes.private.internal.client + res.data.id);
+    }).catch((err) => { onError(err, loading); });
 
     setDialogOpen(false);
   }
@@ -351,13 +318,6 @@ const NewClient = ({ ...props }) => {
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
     }
   }
-
-  const ClearFields = () => {
-    const data = [...inputFields];
-
-    data.map((ele) => ele.value = '');
-    setInputFields(data);
-  };
 
   const handleFormChange = (i, e) => {
     const data = [...inputFields];

@@ -18,7 +18,7 @@ import ToastSet from '../../../utils/ToastSet';
 import FinishProjectModal from '../modal/finishProjectModal';
 
 const Head = (props) => {
-  const { order, pageProps, setOrder, finishProject, breadcrumbsPath, isInternalPage } = props;
+  const { order, isInternalPage, pageProps, setOrder, finishProject } = props;
   const [changeToProdModal, setChangeToProdModal] = useState(false);
   const [changeToAssemblyModal, setChangeToAssemblyModal] = useState(false);
   const [changeToTransportModal, setChangeToTransportModal] = useState(false);
@@ -135,15 +135,31 @@ const Head = (props) => {
       message={'Está prestes a terminar este projeto. Tem a certeza que quer continuar?'}
     />
     <Box style={{ display: 'flex', marginBottom: '1rem' }}>
-      <Typography variant='title'> {breadcrumbsPath[1].title}</Typography>
-      <Box pl={2}>
-        {order.status?.value === 'drawing' && <Typography className='successBalloon'>Em desenho</Typography>}
-        {order.status?.value === 'production' && <Typography className='warningBalloon'>Em produção</Typography>}
-        {order.status?.value === 'testing' && <Typography className='infoBalloon'>Em montagem</Typography>}
-        {order.status?.value === 'transport' && <Typography className='alertBalloon'>Em transporte</Typography>}
-        {order.status?.value === 'finished' && <Typography className='successBalloon'>Terminado</Typography>}
-        {order.status?.value === 'canceled' && <Typography className='errorBalloon'>Cancelado</Typography>}
-      </Box>
+      <Grid container md={12} sm={12} xs={12}>
+
+        <Typography variant="sm" color="lightTextSm.main" display={!isInternalPage && 'none'}>
+          {'Cliente '}
+          {order.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
+          <Tooltip title='Ver cliente'>
+
+            <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+              {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}
+            </a>
+          </Tooltip>
+        </Typography>
+        <Grid container md={12} sm={12} xs={12}>
+          <Typography variant='title'>{order.name.value}</Typography>
+          <Box display={'flex'} alignItems='center' pl={2}>
+            {order.status?.value === 'drawing' && <Typography variant='sm' className='successBalloon'>Em desenho</Typography>}
+            {order.status?.value === 'production' && <Typography variant='sm' className='warningBalloon'>Em produção</Typography>}
+            {order.status?.value === 'testing' && <Typography variant='sm' className='infoBalloon'>Em montagem</Typography>}
+            {order.status?.value === 'transport' && <Typography variant='sm' className='alertBalloon'>Em transporte</Typography>}
+            {order.status?.value === 'finished' && <Typography variant='sm' className='successBalloon'>Terminado</Typography>}
+            {order.status?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
+          </Box>
+        </Grid>
+      </Grid>
+
       <Box style={{ marginLeft: 'auto' }}>
         {false && <PrimaryBtn
           text='Gerar Etiquetas'
@@ -219,7 +235,7 @@ const Head = (props) => {
       </Grid>
       <Grid container md={12} p={1}>
         <Grid container style={{ width: 'fit-content' }}>
-          <Grid container md={4} display={!isInternalPage && 'none'}>
+          <Grid container md={4} display={'none'}>
             <Grid md={12} sm={12} xs={12}>
               <Typography color={'lightTextSm.main'}>Cliente</Typography>
               <Tooltip title='Ver cliente' >

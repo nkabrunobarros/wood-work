@@ -21,30 +21,34 @@ import styles from '../../../styles/NewOrder.module.css';
 //  Icons
 import { Edit, Map, Trash, User } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
+import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import ToastSet from '../../utils/ToastSet';
+import CanDo from '../../utils/CanDo';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, editRoute, pageProps, client } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
-  const updateClient = (data) => dispatch(ClientsActionsRedux.updateClient(data));
+  const deleteClient = (data) => dispatch(ClientsActionsRedux.deleteClient(data));
   const reduxState = useSelector((state) => state);
 
   async function onDelete () {
-    const data = {
-      id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
-      is_active: false,
-    };
+    const loading = toast.loading('');
 
     try {
-      await updateClient(data).then((res) => {
-        console.log(res);
-        // Router.push(routes.private.internal.clients)
+      await deleteClient(client?.id.replace('urn:ngsi-ld:Owner:', '')).then(() => {
+        ToastSet(loading, 'Cliente Removido!', 'success');
+        Router.push(routes.private.internal.clients);
       });
-    } catch (err) { }
+    } catch (err) {
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde ', 'error');
+    }
   }
 
   const tableFirstCell = {
@@ -82,6 +86,7 @@ const EditClient = ({ ...props }) => {
         message={'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'}
       />
       <Navbar />
+      <Notification />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -92,6 +97,7 @@ const EditClient = ({ ...props }) => {
               <ButtonGroup>
                 <PrimaryBtn
                   text='Editar'
+                  hidden={!CanDo('change_owner')}
                   icon={
                     <Edit
                       strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
@@ -102,6 +108,7 @@ const EditClient = ({ ...props }) => {
                 />
                 <PrimaryBtn
                   text='Apagar'
+                  hidden={!CanDo('delete_owner')}
                   onClick={() => setDialogOpen(true)}
                   icon={
                     <Trash

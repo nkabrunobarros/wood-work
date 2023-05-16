@@ -32,7 +32,7 @@ const Stock = ({ ...props }) => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <Box id='align' style={{ flex: 1 }}>
-              <a className='headerTitleXl'>{stock.material}</a>
+              <a className='headerTitleXl'>{stock?.material}</a>
               <Box className='spacer' />
               <Tooltip title={`${stock?.qtd} unidade(s)`}>
 
@@ -43,7 +43,7 @@ const Stock = ({ ...props }) => {
             </Box>
             <Box style={{ display: 'flex' }}>
               <ButtonGroup>
-                <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock.id)} icon={<Edit strokeWidth='1' />} />
+                <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock?.id)} icon={<Edit strokeWidth='1' />} />
                 <PrimaryBtn text='Apagar' icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} light />
               </ButtonGroup>
             </Box>

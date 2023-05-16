@@ -96,12 +96,13 @@ const FilterItem = (data, item, col) => {
 
       case 'Estado': {
         switch (item?.Estado?.toLowerCase()) {
-        case 'needs analysis': return <Typography variant='md' className="goldenBalloon">Análise Necessidades</Typography>;
+        case 'needs analysis': return <Typography variant='md' className="goldenBalloon">Análise necessidades</Typography>;
         case 'waiting budget': return <Typography variant='md' className="blankBalloon">Espera orçamento</Typography>;
         case 'waiting adjudication': return <Typography variant='md' className="infoBalloon">Espera adjudicação</Typography>;
         case 'working': return <Typography variant='md' className="warningBalloon">Iniciada</Typography>;
         case 'drawing': return <Typography variant='md' className="successBalloon">Em desenho</Typography>;
         case 'production': return <Typography variant='md' className="warningBalloon">Em produção</Typography>;
+        case 'packaging': return <Typography variant='md' className="secondaryBalloon">Em montagem</Typography>;
         case 'testing': return <Typography variant='md' className="infoBalloon">Em montagem</Typography>;
         case 'transport': return <Typography variant='md' className="alertBalloon">Em transporte</Typography>;
         case 'finished': return <Typography variant='md' className="successBalloon">Terminado</Typography>;

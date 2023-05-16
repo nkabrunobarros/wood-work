@@ -9,7 +9,7 @@ import Content from '../../content/content';
 import Notification from '../../dialogs/Notification';
 import MyInput from '../../inputs/myInput';
 import Navbar from '../../layout/navbar/navbar';
-// import Canvas from './Canvas';
+import Canvas from './Canvas';
 
 const Leftovers = (props) => {
   // eslint-disable-next-line react/prop-types
@@ -28,7 +28,7 @@ const Leftovers = (props) => {
           {/* Content */}
           <Grid container md={12} sm={12} xs={12}>
             <Grid container md={9} sm={9} xs={9} >
-              {/* <Canvas /> */}
+              <Canvas />
               {false && <Image src={tabuas} />}
             </Grid>
             <Grid container md={3} sm={3} xs={3} >
