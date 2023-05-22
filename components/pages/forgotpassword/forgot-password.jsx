@@ -133,7 +133,7 @@ const ForgotPassword = (props) => {
               id='email'
               name='email'
               autoComplete='email'
-              placeholder='email'
+              // placeholder='email'
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}

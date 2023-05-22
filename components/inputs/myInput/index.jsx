@@ -75,7 +75,7 @@ const MyInput = ({
         label={error || variant ? label : ''}
         fullWidth={fullWidth}
         inputProps={{
-          maxLength: maxLength || type === 'area' ? 2000 : 255,
+          maxLength: maxLength || (type === 'area' ? 2000 : 255),
         }}
         sx={{
           width: width || (halfWidth && '50%'),

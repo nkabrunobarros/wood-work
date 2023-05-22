@@ -123,10 +123,16 @@ const NewOrder = ({ ...props }) => {
 
     if (lines.length === 0) {
       toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+
+      return true;
     } else if (lines[0].subGroups.length === 0) {
       toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+
+      return true;
     } else if (lines[0].subGroups[0].items.length === 0) {
       toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+
+      return true;
     }
 
     //  if there are 0 items in the 1st group, return true = errors
