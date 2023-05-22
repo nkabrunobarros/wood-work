@@ -29,8 +29,9 @@ docker build -t mofreita:1 .
 
 ## DEV
 ./node_modules/.bin/eslint --fix .
-docker build -t mofreita:1 .
-docker run -d -p 127.0.0.1:3000:3000 mofreita:1
+docker build -t mofreita:dev .
+docker run -d -p 127.0.0.1:3000:3000 mofreita:dev
+
 ## Prod
 ./node_modules/.bin/eslint --fix .
 yarn lint

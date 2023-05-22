@@ -11,7 +11,7 @@ import {
   User
 } from 'lucide-react';
 import Router, { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import routes from '../../../navigation/routes';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import CustomBreadcrumbs from '../../breadcrumbs';
@@ -26,7 +26,6 @@ const Profile = ({ ...props }) => {
   const { user, breadcrumbsPath, pageProps } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
 
@@ -63,6 +62,7 @@ const Profile = ({ ...props }) => {
                 <Box className='flex'>
                   <Box>
                     <PrimaryBtn text='Editar'
+                      hidden={!CanDo('change_worker')}
                       onClick={() => Router.push(`${routes.private.internal.editWorker}${user?.id}`)}
                       icon={
                         <Edit
@@ -73,7 +73,7 @@ const Profile = ({ ...props }) => {
                   </Box>
                   <Box>
                     <PrimaryBtn
-                      hidden={!CanDo(['delete', 'workers', auth.userPermissions])}
+                      hidden={!CanDo('delete_worker')}
                       onClick={() => setDialogOpen(true)}
                       text='Apagar'
                       icon={
@@ -93,29 +93,32 @@ const Profile = ({ ...props }) => {
                 <Typography id='align' item color='lightTextSm.main'><User
                   strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
                   size={pageProps?.globalVars?.iconSize}
-                />  Dados Gerais</Typography>
+                />
+                <Box pl={1}>Dados Gerais</Box>
+
+                </Typography>
               </Grid>
               <Grid container item>
                 {/* <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                    <Typography item color='lightTextSm.main'>Nome Utilizador</Typography>
-                    <Typography item color='lightTextSm.black' >{client?.user?.username}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Nome Utilizador</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.user?.username}</Typography>
                   </Grid> */}
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                  <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
-                  <Typography item color='lightTextSm.black' >{user?.givenName?.value}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.main'>Primeiro Nome</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.givenName?.value}</Typography>
                 </Grid>
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                  <Typography item color='lightTextSm.main'>Último Nome</Typography>
-                  <Typography item color='lightTextSm.black' >{user?.familyName?.value}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.main'>Último Nome</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.familyName?.value}</Typography>
                 </Grid>
 
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
-                  <Typography item color='lightTextSm.main'>Email</Typography>
-                  <Typography item color='lightTextSm.black' >{user?.email?.value}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.main'>Email</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.email?.value}</Typography>
                 </Grid>
                 {/* <Grid item xs={6} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Observações </Typography>
-                    <Typography item color='lightTextSm.black' >{client?.obs?.value}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Observações </Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.obs?.value}</Typography>
                   </Grid> */}
               </Grid>
             </Grid>

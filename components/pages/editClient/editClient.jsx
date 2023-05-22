@@ -32,6 +32,7 @@ import styles from '../../../styles/NewOrder.module.css';
 import FormGenerator from '../../formGenerator';
 
 import { useDispatch } from 'react-redux';
+import routes from '../../../navigation/routes';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
@@ -70,7 +71,8 @@ const EditClient = ({ ...props }) => {
         error: '',
         disabled: true,
         required: true,
-        tooltip: ''
+        tooltip: '',
+        lineBreak: true,
       },
       {
         id: 'address.streetAddress',
@@ -112,7 +114,7 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         type: 'country',
-
+        lineBreak: true,
       },
       {
         id: 'delivery_address.streetAddress',
@@ -121,7 +123,8 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         tooltip: '',
-        maxLength: 50
+        maxLength: 50,
+        hidden: true,
       },
       {
         id: 'delivery_address.postalCode',
@@ -130,7 +133,8 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         tooltip: '',
-        maxLength: 15
+        maxLength: 15,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressLocality',
@@ -138,7 +142,8 @@ const EditClient = ({ ...props }) => {
         value: client.delivery_address.addressLocality,
         error: '',
         required: true,
-        maxLength: 25
+        maxLength: 25,
+        hidden: true,
 
       },
       {
@@ -146,7 +151,8 @@ const EditClient = ({ ...props }) => {
         label: 'Região de Entrega',
         value: client.delivery_address.addressRegion,
         error: '',
-        maxLength: 25
+        maxLength: 25,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressCountry',
@@ -155,7 +161,7 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         type: 'country',
-
+        hidden: true,
       },
     ]
   );
@@ -192,10 +198,10 @@ const EditClient = ({ ...props }) => {
       return true;
     }
 
-    setDialogOpen(true);
+    handleSave();
   }
 
-  async function onConfirm () {
+  async function handleSave () {
     const builtClient = {
       id: client?.id.replace('urn:ngsi-ld:Owner:', ''),
     };
@@ -205,29 +211,18 @@ const EditClient = ({ ...props }) => {
     inputFields.map((ele) => {
       builtClient[ele.id] = {};
 
-      const a = false;
+      if (ele.id !== 'user.email') formData.append(ele.id, ele.value);
 
-      // if (ele.options) {
-      if (a) {
-        // builtWorker[ele.id].type = 'Relationship';
-        // builtWorker[ele.id].object = ele.value;
-      } else {
-        if (ele.type === 'password') ele.value = 'ChangeMe';
-
-        if (ele.id !== 'user.email') formData.append(ele.id, ele.value);
-
-        builtClient[ele.id] = ele.value;
-      }
+      builtClient[ele.id] = ele.value;
     });
 
     await updateClient({ data: formData, id: client?.id })
       .then(() => {
         toast.success('Atualizado.');
-        setDialogOpen(false);
+        Router.push(routes.private.internal.client + builtClient.id);
       })
       .catch((err) => {
         onError(err);
-        setDialogOpen(false);
       });
   }
 
@@ -288,7 +283,7 @@ const EditClient = ({ ...props }) => {
         <ConfirmDialog
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
-          onConfirm={() => onConfirm()}
+          handleSave={() => handleSave()}
           icon='AlertOctagon'
           message={'Está prestes a alterar a informação do cliente, tem certeza que quer continuar?'}
         />

@@ -1,7 +1,12 @@
+/* eslint-disable react/prop-types */
 import {
   Autocomplete,
-  Box, Grid,
+  Box, Chip,
+  Grid,
   InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
   TextField,
   Typography
 } from '@mui/material';
@@ -9,7 +14,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
@@ -20,9 +25,9 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/InfoCard';
 import Content from '../../content/content';
 import MyInput from '../../inputs/myInput';
-import Select from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const ProjectsScreen = (props) => {
@@ -30,7 +35,6 @@ const ProjectsScreen = (props) => {
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
-  const deleteProject = (data) => dispatch(projectsActionsRedux.deleteProject(data));
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const deleteBudget = (data) => dispatch(budgetsActionsRedux.deleteBudget(data));
 
@@ -55,13 +59,69 @@ const ProjectsScreen = (props) => {
   const [referencia, setReferência] = useState('');
   const [items, setItems] = useState(props.items);
 
+  const States = [
+    {
+      subheader: true,
+      label: '--- Orçamento'
+    },
+    {
+      id: 'needs analysis',
+      label: 'Pendente Análise Necessidades'
+    },
+    {
+      id: 'waiting budget',
+      label: 'Pendente Orçamentação'
+    },
+    {
+      id: 'waiting adjudication',
+      label: 'Pendente Adjudicação'
+    },
+    {
+      id: 'canceled',
+      label: 'Cancelado',
+      notDefault: true
+    },
+    {
+      subheader: true,
+      label: '--- Projeto'
+    },
+    {
+      id: 'drawing',
+      label: 'Pendente Desenho'
+    },
+    {
+      id: 'production',
+      label: 'Pendente Produção'
+    },
+    {
+      id: 'testing',
+      label: 'Pendente Montagem'
+    },
+    {
+      id: 'packing',
+      label: 'Pendente Embalamento'
+    },
+    {
+      id: 'transport',
+      label: 'Pendente Expedição'
+    },
+    {
+      id: 'finished',
+      label: 'Terminado',
+      notDefault: true
+    },
+  ];
+
+  const [personName, setPersonName] = useState(States.filter(ele => ele.subheader !== true).filter(ele => ele.notDefault !== true).map(ele => ele.id));
+
   const ClearFilters = () => {
     setProduct('');
     setReferência('');
     setNumber('');
     setClient('');
     setCategory('');
-    setProducao('');
+    setProducao(States.filter(ele => ele.subheader !== true).filter(ele => ele.notDefault !== true).map(ele => ele.id));
+    setPersonName(States.filter(ele => ele.subheader !== true).filter(ele => ele.notDefault !== true).map(ele => ele.id));
     setFilters({});
   };
 
@@ -71,11 +131,11 @@ const ProjectsScreen = (props) => {
     setFilters({
       Nome: number,
       Cliente: client,
-      Estado: producao,
+      Estado: personName,
       telemovel: telephone,
       Numero: referencia
     });
-  }, [number, producao, client, category, product, telephone, referencia]);
+  }, [number, producao, client, category, product, telephone, referencia, personName]);
 
   useEffect(() => {
     setNumber(filters.Nome || '');
@@ -141,18 +201,12 @@ const ProjectsScreen = (props) => {
   async function onDeleteItem (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
-    const toDelete = items.find(ele => ele.id === props)?.status?.value === 'canceled';
-    // eslint-disable-next-line react/prop-types
-    const isProject = props.includes('urn:ngsi-ld:Project:');
-    const deleteItem = isProject ? deleteProject : deleteBudget;
-    const updateItem = isProject ? updateProject : updateBudget;
+    const toDelete = items.find(ele => ele.id === props);
 
-    try {
-      toDelete
-        ? await deleteItem(props)
-        : await updateItem({ id: props, data: { status: { type: 'Property', value: 'canceled' } } });
-    } catch (err) {
-      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+    if (toDelete.type === 'Project') {
+      await deleteBudget(toDelete.hasBudget.object);
+    } else {
+      await deleteBudget(props);
     }
 
     const old = [...items];
@@ -164,25 +218,32 @@ const ProjectsScreen = (props) => {
 
         updatedItems.splice(index, 1);
         setItems(updatedItems);
-        ToastSet(loading, 'Projeto apagado do sistema.', 'success');
+        ToastSet(loading, 'Projeto apagado.', 'success');
       }
-    } else if (index !== -1) {
-      const updatedItem = {
-        ...items[index], // Copy the existing item
-        status: { type: 'Property', value: 'canceled' },
-        Estado: 'canceled'
-      };
-
-      const updatedItems = [
-        ...items.slice(0, index), // Copy the items before the updated item
-        updatedItem, // Add the updated item
-        ...items.slice(index + 1) // Copy the items after the updated item
-      ];
-
-      setItems(updatedItems);
-      ToastSet(loading, 'Projeto cancelado.', 'success');
     }
   }
+
+  const theme = useSelector((state) => state.appStates.theme);
+
+  function getStyles (name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme?.typography?.fontWeightRegular
+          : theme?.typography?.fontWeightMedium,
+    };
+  }
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
 
   return (
     <>
@@ -195,8 +256,8 @@ const ProjectsScreen = (props) => {
         {/* Statistics Cards */}
         <Grid container md={12} sx={12} xs={12}>
           {cards?.map((card) => (
-            <Grid container item key={card.num} lg={isInternalPage ? 4 : 3} md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1} onClick={() => {
-              setProducao(card.id);
+            <Grid container item key={card.num} lg={4} md={4} sm={6} xs={12} p={1} onClick={() => {
+              setPersonName(Array.isArray(card.id) ? card.id : [card.id]);
             }}>
               <InfoCard
                 amount={card.amount}
@@ -211,127 +272,99 @@ const ProjectsScreen = (props) => {
         <Content>
           <Grid id='pad' md={12} container>
             <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
-            {isInternalPage && <Grid container item md={3} sm={6} xs={12} p={1}>
-              <InputLabel htmlFor='email'>Cliente</InputLabel>
-              <Autocomplete
-                name='client'
-                id='client'
-                fullWidth
-                disablePortal
-                options={clients.sort((a, b) =>
-                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-                )}
-                getOptionLabel={(option) => option.Nome }
-                getOptionValue={(option) => option.id}
-                onChange={(e, value) => {
+            {isInternalPage && <Grid container item md={4} sm={6} xs={12} p={1}>
+              <Box sx={{ width: '100%' }}>
+                <InputLabel htmlFor='email'>Cliente</InputLabel>
+                <Autocomplete
+                  name='client'
+                  id='client'
+                  fullWidth
+                  disablePortal
+                  options={clients.sort((a, b) =>
+                    a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                  )}
+                  getOptionLabel={(option) => option.Nome }
+                  getOptionValue={(option) => option.id}
+                  onChange={(e, value) => {
                   // eslint-disable-next-line react/prop-types
-                  setClient(value?.id || '');
-                }}
-                renderOption={(props, option) => {
-                  return (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.Nome}
-                    </Box>
-                  );
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    value={client}
-                    {...params}
-                    placeholder="Escrever Nome Cliente"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
+                    setClient(value?.id || '');
+                  }}
+                  renderOption={(props, option) => {
+                    return (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        {option.Nome}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      value={client}
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </Box>
             </Grid>}
-            <Grid container item md={3} sm={6} xs={12} p={1}>
+            <Grid container item md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Nome'
                 id='name'
                 name='name'
                 autoComplete='name'
-                placeholder='Escrever Nome'
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
               />
             </Grid>
-            <Grid container item md={3} sm={6} xs={12} p={1}>
+            <Grid container item md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Número'
+                type='number'
                 id='Numero'
                 name='Numero'
                 autoComplete='name'
-                placeholder='Escrever Número'
                 value={referencia}
                 onChange={(e) => setReferência(e.target.value)}
               />
             </Grid>
-
-            <Grid container item md={3} sm={6} xs={12} p={1}>
+            <Grid container item md={isInternalPage ? 12 : 6} sm={12} xs={12} p={1}>
+              <Grid container item md={12} sm={6} xs={12}>
+                <InputLabel id="state-select">Estado</InputLabel>
+              </Grid>
               <Select
-                label='Estado'
-                fullWidth
-                value={producao}
-                onChange={(e) => setProducao(e.target.value)}
-                options={[
-                  {
-                    subheader: true,
-                    label: '--- Orçamento'
-                  },
-                  {
-                    id: 'needs analysis',
-                    label: 'Pendente Análise Necessidades'
-                  },
-                  {
-                    id: 'waiting budget',
-                    label: 'Pendente Orçamento'
-                  },
-                  {
-                    id: 'waiting adjudication',
-                    label: 'Pendente Adjudicação'
-                  },
-                  {
-                    id: 'canceled',
-                    label: 'Cancelado'
-                  },
-                  {
-                    subheader: true,
-                    label: '--- Projeto'
-                  },
-                  {
-                    id: 'drawing',
-                    label: 'Pendente Desenho'
-                  },
-                  {
-                    id: 'production',
-                    label: 'Pendente Produção'
-                  },
-                  {
-                    id: 'testing',
-                    label: 'Pendente Montagem'
-                  },
-                  {
-                    id: 'packaging',
-                    label: 'Pendente Embalamento'
-                  },
-                  {
-                    id: 'transport',
-                    label: 'Pendente Expedição'
-                  },
-                  {
-                    id: 'finished',
-                    label: 'Terminado'
-                  },
-                ]}
-              />
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={States.filter(ele => ele.subheader !== true).find(ele => ele.id === value)?.label.replace('Pendente', '')} />
+                    ))}
+                  </Box>
+                )}
+                sx={{ width: 'fit-content', minWidth: '32.5%' }}
+              >
+                {States.map((value) => (
+                  <MenuItem
+                    key={value.id}
+                    value={value.id}
+                    disabled={value.subheader}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {value.label}
+                  </MenuItem>
+                ))}
+              </Select>
+
             </Grid>
             <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
-              <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
+              <PrimaryBtn text={'Repor'} light onClick={() => ClearFilters()} />
             </Grid>
           </Grid>
         </Content>
@@ -340,8 +373,8 @@ const ProjectsScreen = (props) => {
           <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
             <PrimaryBtn
-              hidden={!isInternalPage}
-              text='Adicionar projeto'
+              hidden={!(isInternalPage && CanDo('add_project'))}
+              text='Adicionar'
               onClick={() => Router.push(routes.private.internal.newProject)}
             />
           </Box>

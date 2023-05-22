@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //  Custom Components
 import Loader from '../../components/loader/loader';
-import { functions } from '../../components/pages/newWorker/newWorker';
 import WorkersScreen from '../../components/pages/workers/workers';
-import AuthData from '../../lib/AuthData';
 
 //  Navigation
 import routes from '../../navigation/routes';
@@ -16,15 +14,13 @@ import * as workersActionsRedux from '../../store/actions/worker';
 
 const Workers = () => {
   const [loaded, setLoaded] = useState(false);
-  const profiles = functions;
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getWorkers = (data) => dispatch(workersActionsRedux.workers(data));
 
   useEffect(() => {
     const getData = async () => {
-      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      !reduxState.workers.data && await getWorkers();
+      await getWorkers();
       // !reduxState.permissions.data && await getPermissions();
     };
 
@@ -102,7 +98,6 @@ const Workers = () => {
 
     const props = {
       breadcrumbsPath,
-      profiles,
       editRoute,
       detailRoute,
       headCells,

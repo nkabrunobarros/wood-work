@@ -82,10 +82,10 @@ const ModuleCard = ({ module, me, onActionClick }) => {
           <Grid container md={12} sm={12} xs={12}>
             <Divider sx={{ width: '100%' }} />
           </Grid>
-          <Grid container md={12} sm={12} xs={12} pt={3}>
+          <Grid container md={12} sm={12} xs={12} pt={3} >
             {!module.startTime?.value
-              ? <PrimaryBtn disabled={isActionDisabled(module)} onClick={() => onActionClick(module)} text="Iniciar" color={'success'} icon={<PlayCircle strokeWidth={1.5} size={18} />} fullWidth sx={{ minHeight: '55px' }} />
-              : <PrimaryBtn disabled={isActionDisabled(module)} onClick={() => onActionClick(module)} text="Terminar" color={'error'} icon={<CheckCircle strokeWidth={1.5} size={18} />} fullWidth sx={{ minHeight: '55px' }} />
+              ? <PrimaryBtn disabled={isActionDisabled(module)} onClick={() => onActionClick(module)} text="Iniciar" color={'success'} icon={<PlayCircle strokeWidth={1.5} size={18} />} fullWidth sx={{ minHeight: '55px', with: '100%' }} />
+              : <PrimaryBtn disabled={isActionDisabled(module)} onClick={() => onActionClick(module)} text="Terminar" color={'error'} icon={<CheckCircle strokeWidth={1.5} size={18} />} fullWidth sx={{ minHeight: '55px', with: '100%' }} />
             }
           </Grid>
         </Grid>

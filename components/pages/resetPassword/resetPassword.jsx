@@ -132,7 +132,7 @@ const ResetPassword = (props) => {
       data.id = props.params.uidb64 + '/' + props.params.token;
 
       await updatePassword(data).then((res) => {
-        if (res.data === 'The token is valid. The Operation has occurred successfully.') {
+        if (res.data === 'The token is valid. The Operation has occurred successfully.' || res.data === 'Token has no effect on activation but password was reset.') {
           Router.push(props.params.profile !== '2' ? routes.public.signInInternal : routes.public.signIn);
           setSubmiting(false);
         }

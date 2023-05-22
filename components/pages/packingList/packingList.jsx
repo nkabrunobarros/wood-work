@@ -7,6 +7,7 @@ import { Calendar } from 'lucide-react';
 import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import CustomBreadcrumbs from '../../breadcrumbs';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 
 const PackingList = ({ ...props }) => {
@@ -45,14 +46,18 @@ const PackingList = ({ ...props }) => {
                     }}>
                       <CardContent>
                         <Grid container md={12} sm={12} xs={12} >
-                          <Grid container md={12} sm={12} xs={12} >
+                          <Grid container md={6} sm={6} xs={6} >
                             <Tooltip title='Projeto'>
                               <Typography fontWeight={'bold'} variant="h5">
                                 {proj.name.value}
                               </Typography>
                             </Tooltip>
                           </Grid>
-
+                          <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
+                            <Tooltip title='Número'>
+                              <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Número: </a>{proj?.budget.num?.value}</Typography>
+                            </Tooltip>
+                          </Grid>
                           <Grid container md={6} sm={6} xs={6} pb={0.5} >
                             <Tooltip title='Cliente'>
                               <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
@@ -70,6 +75,8 @@ const PackingList = ({ ...props }) => {
         </Grid>
       </Grid>
     </Grid>
+    <Footer/>
+
   </>;
 };
 

@@ -1,6 +1,9 @@
+import { useSelector } from 'react-redux';
 
 const CanDo = (props) => {
-  return !!props[2]?.permissions_orion.find(ele => ele === props[0].toUpperCase() && ele?.subject === props[1]?.toLowerCase());
+  const permissions = useSelector((state) => state?.auth?.userPermissions?.permissions_orion);
+
+  return permissions?.find(ele => ele === props);
 };
 
 export default CanDo;

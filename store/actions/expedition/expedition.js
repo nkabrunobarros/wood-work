@@ -37,7 +37,6 @@ export const expedition = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
@@ -71,7 +70,7 @@ export const updateExpedition = (data) => {
   return createAction({
     meta: null,
     request: {
-      data,
+      ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
       url: getApiURL(endpoints.EXPEDITIONS + id),

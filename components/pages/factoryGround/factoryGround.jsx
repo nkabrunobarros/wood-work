@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 import { Calendar } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import FurnitureDetails from './ProjectDetails/furnitureDetails';
 
@@ -169,6 +170,7 @@ const FactoryGround = ({ ...props }) => {
         </Grid>
       </Grid>
     </Grid>
+    <Footer/>
   </>;
 };
 

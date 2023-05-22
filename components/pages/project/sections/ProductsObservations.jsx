@@ -22,7 +22,7 @@ const ProductsObservations = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Grid id='pad' container>
-          <Grid container md={12} sm={12} xs={12} p={1} >
+          <Grid container md={12} sm={12} xs={12} p={1} sx={{ whiteSpace: 'pre-wrap' }}>
             <Typography variant='subtitle2'>{ConvertString(props.order.hasBudget.object.obs?.value)}</Typography>
           </Grid>
         </Grid>

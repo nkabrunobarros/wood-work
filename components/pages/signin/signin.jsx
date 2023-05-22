@@ -112,6 +112,8 @@ const SignIn = (props) => {
         setCookie(undefined, 'auth_token', res.data.access_token);
 
         await me2(res.data.access_token).then(async (res) => {
+          console.log(res);
+
           const user = res?.data[0] || res?.data;
           let active;
 
@@ -134,8 +136,10 @@ const SignIn = (props) => {
             ToastSet(loadingNotification, 'A entrar', 'success');
             setLoading(false);
 
+            const a = false;
+
             // eslint-disable-next-line no-constant-condition
-            if (user.role === 'CUSTOMER' && user.tos === false) router.push('/terms');
+            if (user.role === 'CUSTOMER' && user.tos === false && a) router.push('/terms');
             else router.push(loginSuccessRoute);
           }
         }).catch((err) => console.log(err));

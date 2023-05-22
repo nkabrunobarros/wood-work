@@ -133,7 +133,7 @@ const Production = (props) => {
                     {group.subgroups?.map((subgroup) => {
                       return <Grow in key={subgroup.id}>
                         <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
-                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
+                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                             <Grid container alignItems={'center'}>
                               <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                               <Typography variant='subtitle1' >{subgroup.name.value}</Typography>
@@ -142,7 +142,7 @@ const Production = (props) => {
                           <AccordionDetails sx={{ p: 0 }}>
                             {/* Linhas de moveis/furniture */}
                             <Grid container md={12} sm={12} xs={12}>
-                              <Grid container md={12} sm={12} xs={12} color='white' sx={{ background: theme.palette.primary.main, p: 1 }}>
+                              <Grid container md={12} sm={12} xs={12} color='white' sx={{ background: theme?.palette.primary.main, p: 1 }}>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Móvel</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Quantidade Pedida</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Estado</Typography></Grid>
@@ -154,7 +154,7 @@ const Production = (props) => {
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.name?.value}</Typography></Grid>
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.amount?.value}</Typography></Grid>
                                     <Grid container md={3} sm={3} xs={3}>
-                                      {!item.produced?.value ? <Box><Typography className='warningBalloon'>Em produção</Typography></Box> : <Box><Typography className='successBalloon'>Terminado</Typography> </Box>}
+                                      {!item.produced?.value ? <Box><Typography variant='sm' className='warningBalloon'>Em produção</Typography></Box> : <Box><Typography variant='sm' className='successBalloon'>Terminado</Typography> </Box>}
                                     </Grid>
                                     <Grid container md={3} sm={3} xs={3} justifyContent={'end'}><Typography varitant='subtitle1'><PrimaryBtn text='Ver detalhes' icon={<Eye />} onClick={() => {
                                       setChosenFurniture(item);

@@ -22,27 +22,28 @@ const Account = ({ ...props }) => {
   const tableFirstCell = {
     container: true,
     sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
-    md: 2,
-    sm: 2,
-    xs: 2,
+    md: 4,
+    sm: 4,
+    xs: 4,
     p: 0.5
   };
 
-  const tableLastCell = {
-    container: true,
-    sx: { borderRight: '1px solid ', borderColor: 'divider' },
-    md: 5,
-    sm: 5,
-    xs: 5,
-    p: 0.5
-  };
+  // const tableLastCell = {
+  //   container: true,
+  //   sx: { borderRight: '1px solid ', borderColor: 'divider' },
+  //   md: 5,
+  //   sm: 5,
+  //   xs: 5,
+  //   p: 0.5
+  // };
 
   const tablemiddleCell = {
     container: true,
-    md: 5,
-    sm: 5,
-    xs: 5,
-    p: 0.5
+    md: 8,
+    sm: 8,
+    xs: 8,
+    p: 0.5,
+    sx: { borderRight: '1px solid ', borderColor: 'divider' }
   };
 
   return (
@@ -62,33 +63,36 @@ const Account = ({ ...props }) => {
                   <Typography id='align' item color='lightTextSm.main'><User
                     strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
                     size={pageProps?.globalVars?.iconSize}
-                  />  Dados Gerais</Typography>
+                  />
+                  <Box pl={1}>Dados Gerais</Box>
+
+                  </Typography>
                 </Grid>
                 <Grid container item>
                   {/* <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                    <Typography item color='lightTextSm.main'>Nome Utilizador</Typography>
-                    <Typography item color='lightTextSm.black' >{user?.user?.username}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Nome Utilizador</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.username}</Typography>
                   </Grid> */}
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                    <Typography item color='lightTextSm.main'>Primeiro Nome</Typography>
-                    <Typography item color='lightTextSm.black' >{user?.first_name}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Primeiro Nome</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.first_name}</Typography>
                   </Grid>
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
-                    <Typography item color='lightTextSm.main'>Último Nome</Typography>
-                    <Typography item color='lightTextSm.black' >{user?.last_name}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Último Nome</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.last_name}</Typography>
                   </Grid>
 
                   <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
-                    <Typography item color='lightTextSm.main'>Email</Typography>
-                    <Typography item color='lightTextSm.black' >{user?.email}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Email</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.email}</Typography>
                   </Grid>
-                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1} display={user?.role !== 'CUSTOMER' && 'none'}>
-                    <Typography item color='lightTextSm.main'>Tipo cliente </Typography>
-                    <Typography item color='lightTextSm.black' >{owner?.isCompany?.value ? 'Empresarial' : 'Particular'}</Typography>
-                  </Grid>
+                  {/* <Grid item md={6} sm={6} xs={12} pb={1} pt={1} display={user?.role !== 'CUSTOMER' && 'none'}>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Tipo cliente </Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{owner?.isCompany?.value ? 'Empresarial' : 'Particular'}</Typography>
+                  </Grid> */}
                   {/* <Grid item xs={6} md={6} sm={6}>
-                    <Typography item color='lightTextSm.main'>Observações </Typography>
-                    <Typography item color='lightTextSm.black' >{user?.obs?.value}</Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.main'>Observações </Typography>
+                    <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.obs?.value}</Typography>
                   </Grid> */}
                 </Grid>
               </Grid>
@@ -97,52 +101,54 @@ const Account = ({ ...props }) => {
               <Grid container p={2} bgcolor={'lightGray.main'} className={styles.clientContainer}>
                 <Grid container item p={1}>
                   <Grid container item xs={12}>
-                    <Typography id='align' item color='lightTextSm.main'>
+                    <Typography id='align' variant='subtitle1' color='lightTextSm.main'>
                       <Map
                         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
                         size={pageProps?.globalVars?.iconSize}
                       />
-                      Moradas
+
+                      <Box pl={1}>Morada</Box>
+
                     </Typography>
                   </Grid>
-                </Grid>{console.log(owner)}
+                </Grid>
                 <Grid container p={1}>
                   <Grid container md={12} sm={12} xs={12} >
                     {/* Headers */}
                     <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
-                      <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.main'></Typography>Principal</Grid>
-                      <Grid {...tableLastCell} sx={{ border: 'none' }}><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                      {/* <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
+                      <Grid {...tablemiddleCell}><Typography item variant="subtitle2"color='lightTextSm.main'></Typography>Principal</Grid>
+                      <Grid {...tableLastCell} sx={{ border: 'none' }}><Typography item variant="subtitle2"color='lightTextSm.main'></Typography>Entrega</Grid> */}
                     </Grid>
                     {/* Postal Code */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Código Postal</Typography></Grid>
-                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.postalCode}</Typography></Grid>
-                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.postalCode}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Código Postal</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.address?.value?.postalCode}</Typography></Grid>
+                      {/* <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.delivery_address?.value?.postalCode}</Typography></Grid> */}
                     </Grid>
                     {/* Street */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Rua</Typography></Grid>
-                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.streetAddress}</Typography></Grid>
-                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.streetAddress}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Rua</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.address?.value?.streetAddress}</Typography></Grid>
+                      {/* <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.delivery_address?.value?.streetAddress}</Typography></Grid> */}
                     </Grid>
                     {/* addressLocality */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Localidade</Typography></Grid>
-                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.addressLocality}</Typography></Grid>
-                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.addressLocality}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Localidade</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.address?.value?.addressLocality}</Typography></Grid>
+                      {/* <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.delivery_address?.value?.addressLocality}</Typography></Grid> */}
                     </Grid>
                     {/* addressRegion */}
                     <Grid container md={12} sm={12} xs={12}>
-                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>Região</Typography></Grid>
-                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{owner?.address?.value?.addressRegion}</Typography></Grid>
-                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{owner?.delivery_address?.value?.addressRegion}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Região</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.address?.value?.addressRegion}</Typography></Grid>
+                      {/* <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{owner?.delivery_address?.value?.addressRegion}</Typography></Grid> */}
                     </Grid>
                     {/* addressCountry */}
                     <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                      <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
-                      <Grid {...tablemiddleCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data?.find(ele => ele.cca2 === owner?.address?.value?.addressCountry)?.name?.common}</Typography></Grid>
-                      <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data?.find(ele => ele.cca2 === owner?.delivery_address?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>País</Typography></Grid>
+                      <Grid {...tablemiddleCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{reduxState.countries.data?.find(ele => ele.cca2 === owner?.address?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                      {/* <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{reduxState.countries.data?.find(ele => ele.cca2 === owner?.delivery_address?.value?.addressCountry)?.name?.common}</Typography></Grid> */}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -151,7 +157,6 @@ const Account = ({ ...props }) => {
           </Grid>
         </Content>
       </Grid>
-
       <Footer/>
     </>
   );

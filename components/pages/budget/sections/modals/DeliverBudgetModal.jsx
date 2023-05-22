@@ -82,12 +82,12 @@ const DeliverBudgetModal = (props) => {
               </InputLabel>
               <DesktopDatePicker
                 sx={{ width: '100%' }}
-                inputFormat={'DD.MM.YYYY'}
+                inputFormat={'DD/MM/YYYY'}
 
                 value={dateAgreedDelivery.value}
                 onChange={(e, newValue) => setDateAgreedDelivery({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
                 renderInput={(params) =>
-                  <TextField fullWidth sx={{ width: '100%' }} {...params} error={dateAgreedDelivery.error} inputProps={{ sx: { color: dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: dateAgreedDelivery.error || 'DD.MM.YYYY' }}/>}
+                  <TextField fullWidth sx={{ width: '100%' }} {...params} error={dateAgreedDelivery.error} inputProps={{ sx: { color: dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
               />
 
             </Box>
@@ -100,12 +100,12 @@ const DeliverBudgetModal = (props) => {
               </Tooltip>
             </InputLabel>
             <DesktopDatePicker
-              inputFormat={'DD.MM.YYYY'}
+              inputFormat={'DD/MM/YYYY'}
               value={dateDeliveryProject.value}
               onChange={(e, newValue) => setDateDeliveryProject({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
               // onChange={(newValue) => onBudgetChange(newValue)}
               renderInput={(params) =>
-                <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD.MM.YYYY' }}/>}
+                <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
             />
           </Grid>
           { false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>}

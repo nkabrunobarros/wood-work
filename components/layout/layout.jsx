@@ -10,16 +10,13 @@ import React, { useEffect, useState } from 'react';
 import routes from '../../navigation/routes';
 
 //  Custom Components
-import jwt from 'jsonwebtoken';
 // import { navLinks } from '../utils/navLinks';
 
-import { Box, Fab } from '@mui/material';
-import { ChevronUp } from 'lucide-react';
-import { parseCookies } from 'nookies';
-import { useDispatch, useSelector } from 'react-redux';
+import { destroyCookie, parseCookies } from 'nookies';
+import { useDispatch } from 'react-redux';
+import FloatingButton from '../../components/floatingButton/FloatingButton';
 import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
-import styles from '../../styles/404.module.css';
 
 const noLayoutScreens = [
   `${routes.public.signIn}`,
@@ -35,24 +32,10 @@ const noLayoutScreens = [
   `${routes.private.error}`,
 ];
 
-async function ValidateToken (path) {
-  const { auth_token: token } = parseCookies();
-
-  !token && !noLayoutScreens.includes(path.route.replace('[Id]', '')) && Router.push('/');
-
-  // Case token is valid
-  if (token) {
-    const decodedToken = jwt.decode(token);
-
-    return !!decodedToken;
-  }
-}
-
 const Layout = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [noAccess, setNoAccess] = useState(false);
-  const reduxState = useSelector((state) => state);
   const path = useRouter();
   const dispatch = useDispatch();
 
@@ -69,30 +52,38 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    async function load () {
-      let me = reduxState.auth.me;
+    const { auth_token: authToken } = parseCookies();
+    const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
+    const isClientPage = Object.values(routes.private).includes(path.route.replace('[Id]', ''));
 
-      if (!reduxState.auth.me || !reduxState.auth.userPermissions) me = await AuthData(dispatch);
+    const verifyToken = async () => {
+      if (!authToken) {
+        // Token not found, redirect to login page
+        !noLayoutScreens.includes(path.route.replace('[Id]', '')) && Router.push(isInternalPage ? '/signin' : isClientPage && '/');
 
-      const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
-      const isClientPage = Object.values(routes.private).includes(path.route.replace('[Id]', ''));
-
-      if ((me?.me?.role === 'CUSTOMER' && me.me.tos === false)) {
-        Router.push('/terms');
+        return;
       }
 
-      if ((isInternalPage && me?.me?.role === 'CUSTOMER') || (isClientPage && me?.me?.role !== 'CUSTOMER') || me?.response?.status === 403) {
-        setNoAccess(true);
+      try {
+        const meRes = await AuthData(dispatch);
+
+        if ((isInternalPage && meRes?.me?.role === 'CUSTOMER') || (isClientPage && meRes?.me?.role !== 'CUSTOMER') || meRes?.response?.status === 403) {
+          setNoAccess(true);
+        }
+        // If the token is valid, do nothing
+      } catch (error) {
+        console.log(error);
+
+        if (error.response?.status === 403) {
+          // Invalid token, delete cookie and redirect to login page
+          destroyCookie(null, 'auth_token');
+          Router.push('/signin');
+        }
       }
+    };
 
-      // check cookie
-      const isValid = await ValidateToken(path);
-
-      setLoaded(isValid);
-    }
-
-    Promise.all([load()]).then(() => setLoaded(true));
     window.addEventListener('scroll', listenToScroll);
+    Promise.all([verifyToken()]).then(() => setLoaded(true));
 
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
@@ -101,16 +92,8 @@ const Layout = ({ children }) => {
     ? <PageNotFound noAccess />
     : loaded && <>
       {children}
-      <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
-        <Fab
-          aria-label="like"
-          size={'medium'}
-          color={'primary'}
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-        >
-          <ChevronUp color="white" />
-        </Fab>
-      </Box></>;
+      <FloatingButton isVisible={isVisible}/>
+    </>;
 
   // return <Loader center={true} />;
 };

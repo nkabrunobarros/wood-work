@@ -56,7 +56,7 @@ const EditProject = ({ ...pageProps }) => {
 
       const budget = (await getBudget(router.query.Id)).data;
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
-      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.value === router.query.Id);
+      const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.object === router.query.Id);
       const thisBudget = JSON.parse(JSON.stringify({ ...budget }));
       const furnitures2 = furnitures.sort((a, b) => (a.lineNumber.value > b.lineNumber.value) ? 1 : -1);
       const built = [];
@@ -70,6 +70,8 @@ const EditProject = ({ ...pageProps }) => {
             ...item,
             name: { required: true, value: item.name.value, error: '' },
             furnitureType: { required: true, value: item.furnitureType.value, error: '' },
+            lineNumber: { ...item.lineNumber, hidden: true, error: '', required: false },
+
             subGroups: [],
           };
 
@@ -122,7 +124,7 @@ const EditProject = ({ ...pageProps }) => {
               hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 993, error: '' },
               group: { ...item.group, hidden: true, displayOrder: 9921, error: '' },
               subGroup: { ...item.subGroup, hidden: true, displayOrder: 9941, error: '' },
-              lineNumber: { ...item.num, hidden: true, displayOrder: 9329, error: '' },
+              lineNumber: { ...item.lineNumber, hidden: true, displayOrder: 9329, error: '' },
               produced: { ...item.produced, hidden: true, displayOrder: 94239, error: '' },
               assembled: { ...item.assembled, hidden: true, displayOrder: 94329, error: '' },
             });
@@ -164,6 +166,7 @@ const EditProject = ({ ...pageProps }) => {
               price: { ...newObj.price, id: 'price', error: '', label: 'Valor', type: 'currency' },
               category: { ...newObj.category, hidden: true, id: 'category', error: '', options: categories, label: 'Categoria' },
 
+              lineNumber: { ...newObj.lineNumber, hidden: true, error: '', required: false },
               hasBudget: { ...newObj.hasBudget, hidden: true },
               group: { ...newObj.group, hidden: true },
               num: { ...newObj.num, hidden: true },

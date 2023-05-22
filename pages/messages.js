@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../components/loader/loader';
 import MessagesScreen from '../components/pages/messages/messages';
 
-import PropTypes from 'prop-types';
 import routes from '../navigation/routes';
 
 //  Page Component
@@ -26,16 +25,22 @@ const Messages = ({ ...pageProps }) => {
   useEffect(() => {
     async function load () {
       try {
-        const projects = await getProjects();
+        const projects = (await getProjects(
+          [{ key: 'status', value: 'finished', operator: '!=' }]
+        )).data.filter(ele => ele.status.value !== 'finished');
 
-        projects.data.map(async (project) => {
-          const proj = { ...project };
+        const builtProjects = await Promise.all(projects?.map(async (project) => {
+          const [budgetData] = await Promise.all([
+            getBudget(project.hasBudget.object),
+          ]);
 
-          await getBudget(project.hasBudget.object).then((res) => {
-            proj.hasBudget = res.data;
-            proj.name = { value: res.data.name.value };
-          });
-        });
+          const budget = budgetData.data;
+
+          return {
+            ...project,
+            hasBudget: { ...project.hasBudget, object: budget },
+          };
+        }));
 
         const budgetsRes = await getBudgets();
 
@@ -47,7 +52,16 @@ const Messages = ({ ...pageProps }) => {
           return bud;
         });
 
-        setMerged([...projects.data, ...budgets]);
+        setMerged([...builtProjects, ...budgets].map((ele) => {
+          if (ele.type === 'Project') {
+            return { ...ele, primeiroContacto: ele.hasBudget.object.dateRequest.value, filterName: ele.name.value };
+          }
+
+          return { ...ele, primeiroContacto: ele.dateRequest?.value, filterName: ele.name.value };
+          // eslint-disable-next-line consistent-return
+        }).filter((item) => {
+          if (item.budgetStatus?.value !== 'adjudicated' && item.status?.value !== 'canceled') return item;
+        }).sort((a, b) => a.primeiroContacto - b.primeiroContacto));
       } catch (err) {
         console.log(err);
       }
@@ -57,18 +71,6 @@ const Messages = ({ ...pageProps }) => {
   }, []);
 
   if (loaded) {
-    const headCellsMessages = [
-      {
-        id: 'message',
-        label: 'Mensagem',
-      },
-      {
-        id: 'createdAt',
-        label: 'Data',
-      },
-      {},
-    ];
-
     const breadcrumbsPath = [
       {
         title: 'Mensagens',
@@ -78,35 +80,15 @@ const Messages = ({ ...pageProps }) => {
 
     const props = {
       breadcrumbsPath,
-      headCellsMessages,
       pageProps,
       // eslint-disable-next-line consistent-return
-      chats: [...merged].filter((item) => {
-        if (item.budgetStatus?.value === 'adjudicated' || item.status?.value === 'canceled') {
-          console.log();
-        } else return item;
-      }).map((item) => {
-        const item2 = { ...item };
-
-        item2.filterName = `${item.name.value.replace(/_/g, ' ')}`;
-
-        return item2;
-      }),
+      chats: [...merged],
     };
 
     return <MessagesScreen {...props} />;
   }
 
   return <Loader center={true} />;
-};
-
-Messages.propTypes = {
-  dummy: PropTypes.array,
-  breadcrumbsPath: PropTypes.array,
-  headCellsMessages: PropTypes.array,
-  conversations: PropTypes.array,
-  pageProps: PropTypes.any,
-
 };
 
 export default Messages;

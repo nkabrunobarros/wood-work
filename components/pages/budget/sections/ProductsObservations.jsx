@@ -1,8 +1,7 @@
-/* eslint-disable react/prop-types */
 import { Accordion, AccordionDetails, AccordionSummary, Grid, Typography } from '@mui/material';
 import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
-import ConvertString from '../../../utils/ConvertString';
+import PropTypes from 'prop-types';
 
 const ProductsObservations = (props) => {
   const [sectionExpanded, setSectionExpanded] = useState(false);
@@ -22,13 +21,17 @@ const ProductsObservations = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Grid id='pad' container>
-          <Grid container md={12} sm={12} xs={12} p={1} >
-            <Typography variant='subtitle2'>{ConvertString(props.budget.obs?.value)}</Typography>
+          <Grid container md={12} sm={12} xs={12} p={1} sx={{ whiteSpace: 'pre-wrap' }}>
+            <Typography variant='subtitle2'>{props.budget.obs?.value}</Typography>
           </Grid>
         </Grid>
       </AccordionDetails>
     </Accordion>
   </>;
+};
+
+ProductsObservations.propTypes = {
+  budget: PropTypes.object
 };
 
 export default ProductsObservations;

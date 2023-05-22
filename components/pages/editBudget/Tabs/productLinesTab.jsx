@@ -314,7 +314,7 @@ const ProductLinesTab = (props) => {
 
                           return <Grow in key={subgroup.id}>
                             <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
-                              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
+                              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                                 <Grid container justifyContent={'space-between'} alignItems={'center'}>
                                   <Typography variant='subtitle1' >{subgroup.name.value}</Typography>
                                   <Box pr={2}>
@@ -394,8 +394,6 @@ ProductLinesTab.propTypes = {
   noDrop: PropTypes.bool,
   onObsChange: PropTypes.func,
   obs: PropTypes.string,
-  inputFields: PropTypes.array,
-  setInputFields: PropTypes.func,
 };
 
 export default ProductLinesTab;

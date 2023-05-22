@@ -93,7 +93,7 @@ const EditBudget = ({ ...props }) => {
     lines.map((group) => {
       group.subGroups?.map((subgroup) => {
         subgroup.items.map(item => {
-          totalPrice += Number(item?.price?.value?.replace(/ /g, '').replace(/€/g, ''));
+          totalPrice += Number((item?.price?.value || '0€')?.replace(/ /g, '').replace(/€/g, ''));
           totalAmount += Number(item?.amount?.value);
         });
       });
@@ -102,11 +102,6 @@ const EditBudget = ({ ...props }) => {
     budgetData.price.value = totalPrice;
     setBudgetData({ ...budgetData, price: { ...budgetData.price, value: totalPrice }, amount: { ...budgetData.price, value: totalAmount } });
   }, [lines]);
-
-  const [inputFields, setInputFields] = useState([{
-    name: { value: '', error: '', required: true },
-    amount: { value: 0, error: '' }
-  }]);
 
   function onBudgetChange (props) {
     const data = { ...budgetData };
@@ -148,6 +143,14 @@ const EditBudget = ({ ...props }) => {
     const obj = [...lines];
     let hasErrors = false;
 
+    if (lines.length === 0) {
+      toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+    } else if (lines[0].subGroups.length === 0) {
+      toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+    } else if (lines[0].subGroups[0].items.length === 0) {
+      toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+    }
+
     //  if there are 0 items in the 1st group, return true = errors
     if (obj[0]?.subGroups?.length === 0 || typeof obj[0]?.subGroups === 'undefined') return true;
 
@@ -157,10 +160,9 @@ const EditBudget = ({ ...props }) => {
           Object.entries(item).forEach(([, value]) => {
             if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
               value.error = 'Campo obrigatorio';
-              hasErrors = true;
-            } else if (typeof value === 'object') {
               console.log(value);
-              console.log(item);
+              hasErrors = true;
+            } else if (typeof value === 'object' && 'error' in value) {
               value.error = '';
             }
           });
@@ -169,6 +171,7 @@ const EditBudget = ({ ...props }) => {
     });
 
     setLines(obj);
+    hasErrors && toast.error('Preencha todos os campos.');
 
     return hasErrors;
   }
@@ -194,19 +197,6 @@ const EditBudget = ({ ...props }) => {
       }
     });
 
-    inputFields.map((field) => {
-      Object.keys(field).map((key) => {
-        if (field[key].required && field[key].value === '') {
-          field[key].error = 'Campo Obrigatório';
-          hasErrors = true;
-        }
-      });
-
-      return field;
-    });
-
-    hasErrors = ValidateLines();
-
     if (hasErrors) {
       toast.error('Preencha todos os campos.');
       setBudgetData(data);
@@ -214,7 +204,9 @@ const EditBudget = ({ ...props }) => {
       return !hasErrors;
     }
 
-    setDialogOpen(true);
+    if (ValidateLines()) return false;
+
+    handleSave();
 
     return !hasErrors;
   }
@@ -258,7 +250,6 @@ const EditBudget = ({ ...props }) => {
       dateRequest: { type: 'Property', value: moment(onlyValues.dateRequest?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateRequest?.value).format('DD/MM/YYYY') : '' },
       dateAgreedDelivery: { type: 'Property', value: moment(onlyValues.dateAgreedDelivery?.value).format('DD/MM/YYYY') !== 'Invalid date' ? moment(onlyValues.dateAgreedDelivery?.value).format('DD/MM/YYYY') : '' },
       amount: { type: 'Property', value: '0' },
-      approvedBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + onlyValues.client.value },
       deliveryAddress: {
         type: 'Property',
         value: {
@@ -418,8 +409,8 @@ const EditBudget = ({ ...props }) => {
     });
 
     await UpdateBudgetData();
-    await DeleteRows(toDelete);
-    await CreateBudgetRows(toCreate);
+    toDelete && await DeleteRows(toDelete);
+    toCreate && await CreateBudgetRows(toCreate);
     await UpdateRows(toUpdate);
     ToastSet(loading, 'Projeto atualizado.', 'success');
     Router.push(breadcrumbsPath[1].href);
@@ -439,6 +430,7 @@ const EditBudget = ({ ...props }) => {
         const id = item.id;
 
         delete item.id;
+        delete item.hasBudget;
         await updateFurniture({ id, data: item }).catch((err) => console.log(err));
       });
     } catch (err) {
@@ -447,9 +439,11 @@ const EditBudget = ({ ...props }) => {
   }
 
   async function CreateBudgetRows (rows) {
+    const fixed = rows.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
+
     try {
-      // await newFurniture(rows).catch((err) => console.log(err));
-      rows.map(async (item) => await newFurniture(item).then((result) => console.log(result)));
+      rows.length > 0 && fixed.map(async (ele) => await newFurniture(ele).catch((err) => console.log(err)));
+      // rows.length > 0 && await newFurniture(fixed).catch((err) => console.log(err));
     } catch (err) {
       console.log(err);
     }
@@ -506,6 +500,9 @@ const EditBudget = ({ ...props }) => {
               />
             </Content>
           </Grid>
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TextField type='time'></TextField>
+          </LocalizationProvider> */}
           <Grid container md={12}>
             <Content>
               <ProductLinesTab {...props}
@@ -513,8 +510,6 @@ const EditBudget = ({ ...props }) => {
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
                 noDrop
                 lines={lines}
                 setLines={setLines}
@@ -527,8 +522,6 @@ const EditBudget = ({ ...props }) => {
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
                 noDrop
                 lines={lines}
                 setLines={setLines}

@@ -85,13 +85,13 @@ const RequestTab = (props) => {
                     </InputLabel>
 
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       maxDate={dayjs().endOf('day')}
                       value={budgetData.dateRequest.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
                       // onChange={(newValue) => onBudgetChange(newValue)}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateRequest.error} inputProps={{ sx: { color: budgetData.dateRequest.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateRequest.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateRequest.error} inputProps={{ sx: { color: budgetData.dateRequest.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateRequest.error || 'DD/MM/YYYY' }}/>}
 
                     />
                   </Grid>
@@ -105,12 +105,12 @@ const RequestTab = (props) => {
 
                     </InputLabel>
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
                       value={budgetData.dateAgreedDelivery.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateAgreedDelivery' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateAgreedDelivery.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   {/* Date budget Delivery */}
@@ -123,13 +123,13 @@ const RequestTab = (props) => {
 
                     </InputLabel>
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       value={budgetData.dateDelivery.value}
                       minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
 
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDelivery' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDelivery.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDelivery.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   {/* Date agree delivery Project */}
@@ -142,12 +142,12 @@ const RequestTab = (props) => {
 
                     </InputLabel>
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       minDate={moment.utc().startOf('day')}
                       value={budgetData.dateDeliveryProject.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDeliveryProject' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateDeliveryProject.error} inputProps={{ sx: { color: budgetData.dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDeliveryProject.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateDeliveryProject.error} inputProps={{ sx: { color: budgetData.dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />

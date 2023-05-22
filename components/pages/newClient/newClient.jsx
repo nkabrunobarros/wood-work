@@ -13,24 +13,22 @@ import Content from '../../content/content';
 //  PropTypes
 
 import {
-  Box, ButtonGroup, Card,
-  Tooltip, Typography
+  Box, ButtonGroup,
+  Typography
 } from '@mui/material';
-import { Building2, ChevronLeft, Save, User, X } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import Router from 'next/router';
-import SwipeableViews from 'react-swipeable-views';
 import { toast } from 'react-toastify';
-import { useTheme } from 'styled-components';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
-import TabPanel from '../../tapPanel/TabPanel';
 import EmailValidation from '../../utils/EmailValidation';
 
 //  PropTypes
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import routes from '../../../navigation/routes';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
@@ -47,21 +45,9 @@ const NewClient = ({ ...props }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   //  Errors states
   const [generatePassword, setGeneratePassword] = useState(true);
-  const [selectTypeInstituition, setSelectTypeInstituition] = useState();
-  //  Step states
-  const theme = useTheme();
-  const [activeStep, setActiveStep] = useState(0);
 
   const [inputFields, setInputFields] = useState(
     [
-      // {
-      //   id: 'user.username',
-      //   label: 'Nome Utilizador',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: 'Dado utilizado para login.',
-      // },
       {
         id: 'user.first_name',
         label: 'Primeiro Nome',
@@ -77,14 +63,6 @@ const NewClient = ({ ...props }) => {
         error: '',
         tooltip: ''
       },
-      // {
-      //   id: 'name',
-      //   label: 'Nome',
-      //   value: '',
-      //   error: '',
-      //   required: true,
-      //   tooltip: ''
-      // },
       {
         id: 'user.email',
         type: 'email',
@@ -92,34 +70,9 @@ const NewClient = ({ ...props }) => {
         value: '',
         error: '',
         required: true,
-        tooltip: ''
-      },
-      {
-        id: 'isCompany',
-        label: 'Email',
-        value: selectTypeInstituition === 'empresa',
-        error: '',
-        required: true,
         tooltip: '',
-        hidden: true,
+
       },
-      // {
-      //   id: 'telephone',
-      //   label: 'Telefone',
-      //   value: '',
-      //   error: '',
-      //   type: 'phone',
-      //   required: true,
-      //   tooltip: ''
-      // },
-      // {
-      //   id: 'vat',
-      //   label: 'Numero Identificação Fiscal (Nif)',
-      //   value: '',
-      //   error: '',
-      //   required: false,
-      //   tooltip: '',
-      // },
       {
         id: 'address.streetAddress',
         label: 'Rua',
@@ -163,76 +116,60 @@ const NewClient = ({ ...props }) => {
         required: true,
       },
       {
+        id: 'isCompany',
+        label: 'Particular',
+        value: false,
+        error: '',
+        required: true,
+        tooltip: '',
+        type: 'checkbox',
+      },
+      {
         id: 'delivery_address.streetAddress',
         label: 'Rua de Entrega',
         value: '',
         error: '',
-        required: true,
         tooltip: '',
-        maxLength: 50
-
+        maxLength: 50,
+        hidden: true,
       },
       {
         id: 'delivery_address.postalCode',
         label: 'Código Postal de Entrega',
         value: '',
         error: '',
-        required: true,
         tooltip: '',
-        maxLength: 15
-
+        maxLength: 15,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressLocality',
         label: 'Localidade de Entrega',
         value: '',
         error: '',
-        required: true,
-        maxLength: 25
-
+        maxLength: 25,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressRegion',
         label: 'Região de Entrega',
         value: '',
         error: '',
-        required: false,
-        maxLength: 25
-
+        maxLength: 25,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressCountry',
         label: 'País de Entrega',
         value: '',
         error: '',
-        required: true,
         type: 'country',
-      },
-      {
-        id: 'ownerType',
-        label: 'Tipo Cliente',
-        value: 'owner',
-        error: '',
-        options: [
-          { id: 'owner', label: 'Potential' },
-          { id: 'buyer', label: 'Buyer' },
-        ],
         hidden: true,
-        required: true,
-        tooltip: 'Isto ainda nao está aplicado no fireware.'
       },
-      // {
-      //   id: 'user.password',
-      //   label: 'Senha',
-      //   value: 'ChangeMe',
-      //   error: '',
-      //   type: 'password',
-      //   required: true,
-      //   tooltip: 'Trocar para senha autogerada',
-      //   hidden: true,
-      // },
     ]
   );
+
+  console.log(inputFields);
 
   function ValidateFields () {
     let hasErrors = false;
@@ -266,7 +203,7 @@ const NewClient = ({ ...props }) => {
       return true;
     }
 
-    setDialogOpen(true);
+    handleSave();
   }
 
   async function handleSave () {
@@ -279,7 +216,7 @@ const NewClient = ({ ...props }) => {
     };
 
     inputFields.map((ele) => {
-      if (ele.type === 'password') ele.value = 'ChangeMe';
+      if (ele.type === 'checkbox') ele.value = !ele.value;
 
       if (ele.value !== '') {
         builtClient2[ele.id] = {};
@@ -288,16 +225,19 @@ const NewClient = ({ ...props }) => {
     });
 
     builtClient2['user.username'] = builtClient2['user.email'];
+    builtClient2['delivery_address.streetAddress'] = builtClient2['address.streetAddress'];
+    builtClient2['delivery_address.postalCode'] = builtClient2['address.postalCode'];
+    builtClient2['delivery_address.addressLocality'] = builtClient2['address.addressLocality'];
+    builtClient2['delivery_address.addressRegion'] = builtClient2['address.addressRegion'];
+    builtClient2['delivery_address.addressCountry'] = builtClient2['address.addressCountry'];
     builtClient2.country = builtClient2['address.addressCountry'];
-    // builtClient2['user.password_confirm'] = builtClient2['user.password'];
 
     const data = qs.stringify({ ...builtClient2 });
 
-    await newClient(data).then(() => {
-      ClearFields();
+    await newClient(data).then((res) => {
       ToastSet(loading, 'Cliente Criado!', 'success');
-    })
-      .catch((err) => { onError(err, loading); });
+      Router.push(routes.private.internal.client + res.data.id);
+    }).catch((err) => { onError(err, loading); });
 
     setDialogOpen(false);
   }
@@ -352,34 +292,15 @@ const NewClient = ({ ...props }) => {
     }
   }
 
-  const ClearFields = () => {
-    const data = [...inputFields];
-
-    data.map((ele) => ele.value = '');
-    setInputFields(data);
-  };
-
   const handleFormChange = (i, e) => {
     const data = [...inputFields];
 
-    data[i].value = e.target.value;
+    if (e.target.type === 'checkbox') {
+      data[i].value = e.target.checked;
+    } else data[i].value = e.target.value;
+
     data[i].error = '';
     setInputFields(data);
-  };
-
-  //  Handle tipeClient step
-  const handleStepChange = (index) => {
-    setActiveStep(index);
-  };
-
-  const panelProps = {
-    sx: {
-      width: '100%',
-      backgroundColor: 'var(--primary)',
-      color: 'white',
-      minHeight: '60vh'
-    },
-    className: 'fullCenter hoverOpacity link',
   };
 
   return (
@@ -397,89 +318,47 @@ const NewClient = ({ ...props }) => {
           message='Está prestes a criar um novo cliente, tem certeza que quer continuar?'
           icon='AlertOctagon'
         />
-
-        <SwipeableViews
-          axis={theme?.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={activeStep}
-          onChangeIndex={handleStepChange}
-        >
-          <TabPanel value={activeStep} index={0}>
-            <Grid container md={12} sm={12} xs={12}>
-              <Grid container md={6} sm={6} xs={12} pt={'2rem'} pl={'2rem'} pr={'2rem'}>
-                <Card
-                  {...panelProps}
-                  onClick={() => {
-                    setSelectTypeInstituition('particular');
-                    setActiveStep(1);
-                  }}
-                >
-                  <User size={100} strokeWidth={1} color='white' />
-                  <Typography variant='title' color='white'>Particular</Typography>
-                </Card>
-              </Grid>
-              <Grid container md={6} sm={6} xs={12} pt={'2rem'} pl={'2rem'} pr={'2rem'} >
-                <Card
-                  onClick={() => {
-                    setSelectTypeInstituition('empresa');
-                    setActiveStep(1);
-                  }}
-                  {...panelProps}
-                >
-                  <Building2 size={100} strokeWidth={1} color='white'/>
-                  <Typography variant='title' color='white'>Empresa</Typography>
-                </Card>
-              </Grid>
-            </Grid>
-          </TabPanel>
-          <TabPanel value={activeStep} index={1}>
-            {/* Case clientType is chosen */}
-            <Content>{console.log()}
-              <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-                <Typography variant='title'>Novo Cliente {selectTypeInstituition === 'empresa' ? ' Empresarial' : ' Particular'} </Typography>
-                <Box sx={{ marginLeft: 'auto' }}>
-                  <ButtonGroup>
-                    <PrimaryBtn
-                      text='Guardar'
-                      icon={
-                        <Save
-                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                          size={pageProps?.globalVars?.iconSize}
-                        />
-                      }
-                      onClick={ValidateFields}
+        <Content>
+          <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+            <Typography variant='title'>Novo Cliente</Typography>
+            <Box sx={{ marginLeft: 'auto' }}>
+              <ButtonGroup>
+                <PrimaryBtn
+                  text='Guardar'
+                  icon={
+                    <Save
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                      size={pageProps?.globalVars?.iconSize}
                     />
-                    <PrimaryBtn
-                      text='Cancelar'
-                      icon={
-                        <X
-                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                          size={pageProps?.globalVars?.iconSize}
-                        />
-                      }
-                      light
-                      onClick={() => Router.back()}
-                    />
-                  </ButtonGroup>
-                </Box>
-              </Box>
-              <Grid container sx={{ padding: '24px' }}>
-                <Tooltip title='Clique para voltar'>
-                  <Typography variant='md' p={'8px'}>
-                    <a id='align' className='link' onClick={() => setActiveStep(0)}> <ChevronLeft /> Voltar</a>
-                  </Typography>
-                </Tooltip>
-                <FormGenerator
-                  fields={inputFields}
-                  onFormChange={handleFormChange}
-                  optionalData={{
-                    generatePassword,
-                    setGeneratePassword,
-                  }}
+                  }
+                  onClick={ValidateFields}
                 />
-              </Grid>
-            </Content>
-          </TabPanel>
-        </SwipeableViews>
+                <PrimaryBtn
+                  text='Cancelar'
+                  icon={
+                    <X
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                      size={pageProps?.globalVars?.iconSize}
+                    />
+                  }
+                  light
+                  onClick={() => Router.back()}
+                />
+              </ButtonGroup>
+            </Box>
+          </Box>
+          <Grid container sx={{ padding: '24px' }}>
+            <FormGenerator
+              fields={inputFields}
+              perRow={3}
+              onFormChange={handleFormChange}
+              optionalData={{
+                generatePassword,
+                setGeneratePassword,
+              }}
+            />
+          </Grid>
+        </Content>
       </Grid>
       <Footer/>
     </>

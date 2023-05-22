@@ -11,7 +11,7 @@ import { X } from 'lucide-react';
 import FormGenerator from '../../../../formGenerator';
 // import CurrencyInput from '../../../inputs/CurrencyInput';
 
-const AccessoryForm = (props) => {
+const Form = (props) => {
   function onChange (index, e) {
     props.onChange({
       subGroupIndex: props.subGroupIndex,
@@ -31,10 +31,8 @@ const AccessoryForm = (props) => {
   }
 
   return <Grid container>
-
-    {props.index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%' }} /></Box>}
-    <Typography variant='subtitle1' pl={1}> Acessório</Typography>
-
+    {props.index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%', backgroundColor: 'primary.main' }} /></Box>}
+    <Typography variant='subtitle1' pl={1}> {props.field.furnitureType.value === 'furniture' ? 'Móvel' : 'Accessório'}</Typography>
     <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >
@@ -53,4 +51,4 @@ const AccessoryForm = (props) => {
   </Grid>;
 };
 
-export default AccessoryForm;
+export default Form;

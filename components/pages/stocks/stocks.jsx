@@ -81,7 +81,6 @@ const Stock = ({ ...props }) => {
                   <TextField
                     {...params}
                     fullWidth
-                    placeholder='Material'
                     onChange={(event, value) => onMaterialChange({ event, value })}
                   />
                 )}

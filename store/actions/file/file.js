@@ -113,7 +113,6 @@ export const budgetFiles = (data) => {
       url: getApiURL(endpoints.FILES),
       params: {
         options: 'sysAttrs',
-        q: `budget=="${data}"`,
       }
     },
     types: [FILES_REQUEST, FILES_SUCCESS, FILES_FAIL],

@@ -9,6 +9,7 @@
     "lint": "next lint",
     "static": "next build && next export",
     "prod": "./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:1 . && docker tag mofreita:1 registry.nka.pt/nka/mofreita:1 && docker push registry.nka.pt/nka/mofreita:1"
+    "prod1": "./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:1 . && docker tag mofreita:1 registry.nka.pt/nka/mofreita:1 && docker push registry.nka.pt/nka/mofreita:1"
   },
   "browser": {
     "fs": false,
@@ -28,6 +29,7 @@
     "apexcharts": "^3.35.5",
     "array-move": "^4.0.0",
     "axios": "^0.27.2",
+    "canvas": "^2.11.2",
     "dayjs": "^1.11.7",
     "eslint": ">=5.16.0",
     "html5-qrcode": "^2.3.4",

@@ -24,6 +24,7 @@ import * as clientsActionsRedux from '../../../store/actions/client';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const Clients = ({ ...props }) => {
@@ -68,7 +69,9 @@ const Clients = ({ ...props }) => {
     const loading = toast.loading('');
 
     try {
-      await deleteClient(props).then((res) => console.log(res));
+      await deleteClient(props).then(() => {
+        ToastSet(loading, 'Cliente Removido!', 'error');
+      });
     } catch (err) {
       console.log(err);
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
@@ -100,32 +103,28 @@ const Clients = ({ ...props }) => {
               <Box className='filterContainer'>
                 <InputLabel htmlFor='email'>Cliente</InputLabel>
                 <Autocomplete
-                  name='client'
-                  id='client'
+                  name="client"
+                  id="client"
                   fullWidth
                   disablePortal
-                  options={clients.sort((a, b) =>
-                    a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-                  )}
-                  getOptionLabel={(option) => option.Nome }
+                  options={clients.sort((a, b) => (a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0))}
+                  getOptionLabel={(option) => option.Nome}
                   getOptionValue={(option) => option.id}
                   onChange={(e, value) => setNome(value?.Nome || '')}
-                  renderOption={(props, option) => {
-                    return (
-                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        {option.Nome}
-                      </Box>
-                    );
-                  }}
+                  renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      {option.Nome}
+                    </Box>
+                  )}
                   renderInput={(params) => (
                     <TextField
-                      value={nome}
                       {...params}
-                      placeholder="Escrever Nome Cliente"
                       inputProps={{
                         ...params.inputProps,
                         autoComplete: 'new-password', // disable autocomplete and autofill
                       }}
+                      value={nome}
+                      onChange={(e) => setNome(e.target.value)}
                     />
                   )}
                 />
@@ -137,7 +136,6 @@ const Clients = ({ ...props }) => {
                   id='email'
                   name='email'
                   autoComplete='email'
-                  placeholder='Escrever Email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -181,6 +179,7 @@ const Clients = ({ ...props }) => {
               <Box>
                 <PrimaryBtn
                   text='Adicionar'
+                  hidden={!CanDo('add_owner')}
                   onClick={() => Router.push(`${newRoute}`)}
                 />
               </Box>

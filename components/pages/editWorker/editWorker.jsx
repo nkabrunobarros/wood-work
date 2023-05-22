@@ -7,7 +7,6 @@ import * as workersActionsRedux from '../../../store/actions/worker';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
-import MyInput from '../../inputs/myInput';
 
 //  PropTypes
 import PropTypes from 'prop-types';
@@ -19,9 +18,7 @@ import { Save, User, X } from 'lucide-react';
 
 //  Material UI
 import {
-  Box,
-  Button,
-  CircularProgress
+  Box
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -34,63 +31,112 @@ import Notification from '../../dialogs/Notification';
 // import PhoneInput from '../../inputs/phoneInput/PhoneInput';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
+import FormGenerator from '../../formGenerator';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import EmailValidation from '../../utils/EmailValidation';
 
 const EditUser = ({ ...props }) => {
   const { breadcrumbsPath, pageProps } = props;
   const dispatch = useDispatch();
   const updateWorker = (data) => dispatch(workersActionsRedux.updateWorker(data));
 
-  const [user, setUser] = useState({
-    givenName: { value: props.user?.givenName?.value, error: '' },
-    familyName: { value: props.user?.familyName?.value, error: '' },
-    email: { value: props.user?.email?.value, error: '' },
-    // functionPerformed: { value: props.user?.functionPerformed?.value, error: '' },
-  });
+  const [inputFields, setInputFields] = useState([
+    {
+      id: 'user.first_name',
+      label: 'Primeiro Nome',
+      value: props.user.givenName.value,
+      error: '',
+      required: true,
+      tooltip: ''
+    },
+    {
+      id: 'user.last_name',
+      label: 'Último Nome',
+      value: props.user.familyName.value,
+      error: '',
+      tooltip: ''
+    },
+    {
+      id: 'user.email',
+      label: 'Email',
+      value: props.user.email.value,
+      error: '',
+      type: 'email',
+      required: true,
+      disabled: true,
+    },
+  ]
+  );
 
-  //  Snackbar Notification
-  const [cleaningInputs, setCleaningInputs] = useState(false);
+  function ValidateFields () {
+    let hasErrors = false;
+    const data = [...inputFields];
 
-  function Validate () {
-    const thisUser = { ...user };
-    let errors = false;
-
-    // eslint-disable-next-line array-callback-return
-    Object.keys(thisUser).map(key => {
-      if (thisUser[key].value === '' || thisUser[key].value === undefined) { thisUser[key].error = 'Campo obrigatorio'; errors = true; }
+    data.forEach((input) => {
+      if (input.required && input.value === '') {
+        input.error = 'Campo Obrigatório';
+        hasErrors = true;
+      } else if (
+        input.required &&
+        input.id === 'email' &&
+        !EmailValidation(input.value)
+      ) {
+        input.error = 'Email mal estruturado';
+        hasErrors = true;
+      } else if (
+        input?.value?.length < 9 &&
+        input.type === 'phone' &&
+        input.required
+      ) {
+        input.error = 'Número mal estruturado';
+        hasErrors = true;
+      } else {
+        input.error = '';
+      }
     });
 
-    setUser(thisUser);
-    !errors && handleUpdate();
+    setInputFields(data);
+
+    if (hasErrors) {
+      toast.error('Preencha todos os campos.');
+
+      return true;
+    }
+
+    handleUpdate();
   }
 
   async function handleUpdate () {
     const loading = toast.loading('');
     const formData = new FormData();
 
-    formData.append('user.first_name', user.givenName.value);
-    formData.append('user.last_name', user.familyName.value);
+    // eslint-disable-next-line array-callback-return
+    inputFields.map((field) => {
+      formData.append(field.id, field.value);
+    });
 
     await updateWorker({ data: formData, id: props?.user?.id.replace('urn:ngsi-ld:Worker:', '') })
-      .then(() => ToastSet(loading, 'Utilizador atualizado.', 'success'))
-      .catch(() => ToastSet(loading, 'Atualização falhou.', 'error'));
+      .then(() => {
+        ToastSet(loading, 'Utilizador atualizado!', 'success');
+        Router.push(routes.private.internal.worker + props.user.id);
+      })
+      .catch(() => {
+        ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+      });
   }
 
-  const ClearFields = () => {
-    setTimeout(() => {
-      setCleaningInputs(false);
-    }, 500);
+  const handleFormChange = (i, e) => {
+    setInputFields(prevInputFields => {
+      const data = [...prevInputFields];
+
+      data[i].value = e.target.value;
+      data[i].error = '';
+
+      return data;
+    });
   };
-
-  function onFieldChange ({ target }) {
-    const user2 = { ...user };
-
-    if (!user2[target.name])user2[target.name] = {};
-
-    user2[target.name] = { value: target.value, error: '' };
-    setUser(user2);
-  }
 
   return (
     <>
@@ -117,7 +163,7 @@ const EditUser = ({ ...props }) => {
                     size={pageProps?.globalVars?.iconSize}
                   />
                 }
-                onClick={Validate}
+                onClick={ValidateFields}
               />
               <PrimaryBtn
                 text='Cancelar'
@@ -139,18 +185,12 @@ const EditUser = ({ ...props }) => {
             <span>Dados de Utilizador</span>
           </a>
           <Grid id='pad' container md={12} sm={12} xs={12}>
-            <Grid container md={12} sm={12} xs={12}>
-              <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Primeiro Nome' name='givenName' onChange={(e) => onFieldChange(e)} value={user?.givenName?.value} error={user?.givenName?.error} /></Grid>
-              <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Último Nome' name='familyName' onChange={(e) => onFieldChange(e)} value={user?.familyName?.value} error={user?.familyName?.error} /></Grid>
-              <Grid container md={4} sm={6} xs={12} p={0.5}><MyInput label='Email' name='email' onChange={(e) => onFieldChange(e)} value={user?.email?.value} error={user?.email?.error} disabled/></Grid>
-              {/* <Grid container md={4} sm={4} xs={12} p={0.5}><MySelect label='Função' name='functionPerformed' onChange={(e) => onFieldChange(e)} value={user?.functionPerformed?.value} error={user?.functionPerformed?.error} options={functions} optionLabel='label' optionValue={'value'} /></Grid> */}
-            </Grid>
+            <FormGenerator
+              perRow={3}
+              fields={inputFields}
+              onFormChange={handleFormChange}
+            />
           </Grid>
-          <Box style={{ display: 'flex' }}>
-            <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-              {cleaningInputs ? <CircularProgress size={26} /> : 'Restaurar'}
-            </Button>
-          </Box>
         </Content>
       </Grid>
       <Footer/>

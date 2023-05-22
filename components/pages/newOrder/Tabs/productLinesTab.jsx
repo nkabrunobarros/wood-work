@@ -5,17 +5,15 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, Grow,
 import React, { useState } from 'react';
 
 //  PropTypes
-import { ChevronDown, Package, Plus, X } from 'lucide-react';
+import { ChevronDown, Plus, X } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import MyInput from '../../../inputs/myInput';
-import AccessoryForm from './FormRows/AccessoryForm';
-import FurnitureForm from './FormRows/FurnitureForm';
+import Form from './FormRows/Form';
 
 const ProductLinesTab = (props) => {
   const {
-    pageProps,
-    lines, setLines
+    lines, setLines,
   } = props;
 
   const [expandedGroups, setExpandedGroups] = useState([]);
@@ -33,19 +31,19 @@ const ProductLinesTab = (props) => {
     return [...array.slice(0, index), ...array.slice(index + 1)];
   };
 
-  const handleChange = (expandedGroups, setExpandedGroups) => (panel) => {
+  const handleChange = (setExpandedGroups) => (panel) => {
     setExpandedGroups((prevExpandedGroups) =>
       toggleValueInArray(panel, prevExpandedGroups)
     );
   };
 
-  const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
+  const handlePanelChange = handleChange(setExpandedGroups);
 
   //  Add subGroup
   function addSubGroup (groupIndex, subGroupIndex) {
     setLines(prevLines => {
       const newSubGroup = {
-        id: `subgroup${groupIndex}${subGroupIndex || prevLines[groupIndex].subGroups.length}`,
+        id: `subgroup${groupIndex}${subGroupIndex + 1 || prevLines[groupIndex].subGroups.length}`,
         furnitureType: 'subgroup',
         name: '',
         items: []
@@ -75,7 +73,7 @@ const ProductLinesTab = (props) => {
   //  Add group
   function addGroup (props) {
     const newGroup = {
-      id: 'group' + lines.length,
+      id: 'group' + (lines.length + 1),
       furnitureType: 'group',
       name: '',
       subGroups: [],
@@ -94,9 +92,20 @@ const ProductLinesTab = (props) => {
 
       setLines(updatedLines);
       handlePanelChange(newGroup.id);
+
+      setExpandedGroups((prevExpandedGroups) =>
+        toggleValueInArray(newGroup.id, prevExpandedGroups)
+      );
+
+      setExpandedGroups(prevState => {
+        const updatedExpandedGroups = [...prevState, newGroup.id];
+
+        return updatedExpandedGroups;
+      });
     }
   }
 
+  //  On Subgroup Name change
   function onSubgroupNameChange (subGroupIndex, groupIndex, newValue) {
     setLines(prevRows => {
       const updatedSubgroups = [...prevRows[groupIndex].subGroups]; // clone the subGroups array
@@ -221,7 +230,7 @@ const ProductLinesTab = (props) => {
     });
   };
 
-  //  On Row remove
+  //  On Group remove
   const removeThisGroup = (props) => {
     setLines(prevData => {
       const newData = [...prevData];
@@ -262,7 +271,7 @@ const ProductLinesTab = (props) => {
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Typography id='align' className='headerTitleSm'>
-          <Package size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Produtos
+          Produtos
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -292,7 +301,7 @@ const ProductLinesTab = (props) => {
                       </AccordionSummary>
                       <AccordionDetails sx={{ padding: '2rem' }}>
                         <Grid container md={3} pb={2}>
-                          <MyInput required label='Grupo' placeholder={'Nome'} value={group.name} onChange={(e) => setLines([...lines.slice(0, groupIndex), { ...lines[groupIndex], name: e.target.value }, ...lines.slice(groupIndex + 1)])} />
+                          <MyInput required label='Grupo' value={group.name} onChange={(e) => setLines([...lines.slice(0, groupIndex), { ...lines[groupIndex], name: e.target.value }, ...lines.slice(groupIndex + 1)])} />
                         </Grid>
                         {/* Grupos de divisão/subGroups */}
                         {group.subGroups.map((subgroup, subGroupIndex) => {
@@ -301,7 +310,7 @@ const ProductLinesTab = (props) => {
 
                           return <Grow in key={subgroup.id}>
                             <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
-                              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
+                              <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                                 <Grid container justifyContent={'space-between'} alignItems={'center'}>
                                   <Typography variant='subtitle1' >{subgroup.name}</Typography>
                                   <Box pr={2}>
@@ -315,14 +324,13 @@ const ProductLinesTab = (props) => {
                               </AccordionSummary>
                               <AccordionDetails>
                                 <Grid container md={3} pb={2}>
-                                  <MyInput required label='Subgrupo' placeholder={'Nome'} value={subgroup.name} onChange={(e) => onSubgroupNameChange(subGroupIndex, groupIndex, e.target.value)} />
+                                  <MyInput required label='Subgrupo' value={subgroup.name} onChange={(e) => onSubgroupNameChange(subGroupIndex, groupIndex, e.target.value)} />
                                 </Grid>
                                 {/* Linhas de moveis/furniture */}
                                 {subgroup.items.map((row, itemIndex) => {
                                   return <Grow key={itemIndex}in={true}>
                                     <Box>
-                                      {row?.furnitureType?.value === 'furniture' && <FurnitureForm field={row} groupIndex={groupIndex} subGroupIndex={subGroupIndex} itemIndex={itemIndex} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
-                                      {row?.furnitureType?.value === 'accessory' && <AccessoryForm field={row} groupIndex={groupIndex} subGroupIndex={subGroupIndex} itemIndex={itemIndex} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />}
+                                      <Form field={row} groupIndex={groupIndex} subGroupIndex={subGroupIndex} itemIndex={itemIndex} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />
                                     </Box>
                                   </Grow>;
                                 })}
@@ -369,21 +377,9 @@ const ProductLinesTab = (props) => {
 };
 
 ProductLinesTab.propTypes = {
-  chosenBudget: PropTypes.object,
-  budgetData: PropTypes.object,
-  pageProps: PropTypes.object,
-  uploadedFiles: PropTypes.array,
-  onTabChange: PropTypes.func,
-  onBudgetChange: PropTypes.func,
-  setUploadedFiles: PropTypes.func,
-  docs: PropTypes.any,
-  currentTab: PropTypes.number,
-  noDrop: PropTypes.bool,
-  onObsChange: PropTypes.func,
-  obs: PropTypes.string,
-  categories: PropTypes.string,
-  inputFields: PropTypes.array,
-  setInputFields: PropTypes.func,
+  pageProps: PropTypes.any,
+  lines: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setLines: PropTypes.func.isRequired
 };
 
 export default ProductLinesTab;

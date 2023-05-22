@@ -1,5 +1,6 @@
 // Network
 import { parseCookies } from 'nookies';
+import GenerateQueryFilters from '../../../components/utils/GenerateQueryFilters';
 import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
@@ -37,7 +38,8 @@ export const projectConsumables = (data) => {
       method: 'GET',
       url: getApiURL(endpoints.CONSUMABLES),
       params: {
-        q: `belongsTo=="${data}"`,
+        limit: 400,
+        q: GenerateQueryFilters(data),
       }
     },
     types: [CONSUMABLES_REQUEST, CONSUMABLES_SUCCESS, CONSUMABLES_FAIL],

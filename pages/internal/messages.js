@@ -117,18 +117,6 @@ const Messages = ({ ...pageProps }) => {
         ].createdAt;
     });
 
-    const headCellsMessages = [
-      {
-        id: 'message',
-        label: 'Mensagem',
-      },
-      {
-        id: 'createdAt',
-        label: 'Data',
-      },
-      {},
-    ];
-
     const breadcrumbsPath = [
       {
         title: 'Mensagens',
@@ -138,7 +126,6 @@ const Messages = ({ ...pageProps }) => {
 
     const props = {
       breadcrumbsPath,
-      headCellsMessages,
       conversations,
       pageProps,
       chats: [...merged].map((item) => {
@@ -159,7 +146,6 @@ const Messages = ({ ...pageProps }) => {
 Messages.propTypes = {
   dummy: PropTypes.array,
   breadcrumbsPath: PropTypes.array,
-  headCellsMessages: PropTypes.array,
   conversations: PropTypes.array,
   pageProps: PropTypes.any,
 

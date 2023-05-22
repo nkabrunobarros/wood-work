@@ -7,65 +7,54 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
-import Select from '../../inputs/select';
 
 //  PropTypes
 import {
+  Autocomplete,
+  Box,
   InputLabel,
-  OutlinedInput
+  TextField,
+  Typography
 } from '@mui/material';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import routes from '../../../navigation/routes';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
+import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const Workers = ({ ...props }) => {
   const {
     breadcrumbsPath,
-    profiles,
     editRoute,
     detailRoute,
     newRoute,
     headCellsWorkers,
   } = props;
 
-  const path = useRouter();
-  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
-  // const userPermissions = useSelector((state) => state.auth.userPermissions);
-  //  States
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [workers, setWorkers] = useState(props.workers);
-  const [profilesFilter, setProfilesFilter] = useState('');
 
   const [filters, setFilters] = useState({
     Nome: nome,
     Email: email,
-    Perfil: profilesFilter,
   });
 
   useEffect(() => {
     setFilters({
       Nome: nome,
       Email: email,
-      Perfil: profilesFilter,
     });
-  }, [nome, email, profilesFilter]);
-
-  const ClearFilters = () => {
-    setNome('');
-    setEmail('');
-    setProfilesFilter('');
-  };
+  }, [nome, email]);
 
   async function onDelete (props) {
     const loading = toast.loading('');
@@ -100,55 +89,45 @@ const Workers = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         {/* Filters */}
         <Content>
-          <div id='pad'>
-            <a className='headerTitleSm'>Filtros</a>
-            <div className='filters'>
-              <div className='filterContainer'>
-                <Select
-                  label={'Nome'}
-                  options={workers.filter((item) => item.active && item)}
-                  optionValue={'Nome'}
-                  optionLabel={'Nome'}
-                  onChange={(event) => setNome(event.target.value)}
-                />
-
-              </div>
-              <div className='filterContainer'>
-                <InputLabel htmlFor='email'>Email</InputLabel>
-                <OutlinedInput
-                  fullWidth
-                  id='email'
-                  name='email'
-                  autoComplete='email'
-                  placeholder='Escrever um email'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className={'filterContainer'}>
-                {Router.route !== routes.private.internal.clients && false &&
-                <Select
-                  label='Função'
-                  options={profiles}
-                  value={profilesFilter}
-                  optionLabel='label'
-                  optionValue='value'
-                  onChange={(e) => setProfilesFilter(e.target.value)}
-                />
-                }
-              </div>
-
-            </div>
-            <div
-              style={{
-                width: 'fit-content',
-                marginLeft: 'auto',
-                paddingTop: '1rem',
-              }}
-            >
-              <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
-            </div>
-          </div>
+          <Grid id='pad' container md={12} sm={12} xs={12}>
+            <Grid container md={12} sm={12} xs={12}>
+              <Typography variant='title'>Filtros</Typography>
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <InputLabel htmlFor='email'>Utilizador</InputLabel>
+              <Autocomplete
+                name='client'
+                id='client'
+                fullWidth
+                disablePortal
+                options={workers.sort((a, b) =>
+                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                )}
+                getOptionLabel={(option) => option.Nome }
+                getOptionValue={(option) => option.id}
+                onChange={(e, value) => setNome(value?.Nome || '')}
+                renderOption={(props, option) => {
+                  return (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      {option.Nome}
+                    </Box>
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    value={nome}
+                    {...params}
+                    inputProps={{
+                      ...params.inputProps,
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <MyInput label="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
+            </Grid>
+          </Grid>
         </Content>
 
         <Content>
@@ -172,8 +151,7 @@ const Workers = ({ ...props }) => {
             >
               <div>
                 <PrimaryBtn
-                  hidden={!isInternalPage}
-                  // hidden={!CanDo(['write', 'workers', userPermissions])}
+                  hidden={!CanDo('add_worker')}
                   text='Adicionar'
                   onClick={() => Router.push(`${newRoute}`)}
                 />

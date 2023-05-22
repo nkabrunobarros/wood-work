@@ -7,7 +7,7 @@ function MultiFilterArray (array, filters) {
     const isMatch = filterKeys.every((key) => {
       if (Array.isArray(filters[key])) {
         return filters[key].some((filterValue) => {
-          return String(item[key]).toLowerCase()?.includes(filterValue?.toLowerCase());
+          return String(item[key]).toLowerCase()?.includes(String(filterValue)?.toLowerCase());
         });
       }
 

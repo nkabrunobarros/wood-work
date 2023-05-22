@@ -27,7 +27,6 @@ import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
 import formatString from '../../../utils/FormatString';
 import ToastSet from '../../../utils/ToastSet';
-import HeaderGrid from './components/HeaderGrid';
 
 export const EditableCell = ({ active, onDoubleClick, value, type, name, options, onChange, isInternalPage }) => {
   const isCategory = name === 'category';
@@ -85,117 +84,32 @@ const Head = (props) => {
   const newAssembly = (data) => dispatch(assemblysActionsRedux.newAssembly(data));
   const reduxState = useSelector((state) => state);
 
-  const upperGrids = [
-    {
-      title: 'Orçamento',
-      colls: [
-        {
-          label: 'Número',
-          value: budget.num?.value
-        },
-        {
-          label: 'Data',
-          value: budget?.dateRequest?.value
-        },
-        {
-          label: 'Revisto a',
-          value: moment(budget?.createdAt).format('DD/MM/YYYY')
-        },
-        {
-          label: 'Entrega Acordada',
-          value: budget?.dateAgreedDelivery?.value
-        },
-        {
-          label: 'Valor',
-          value: budget?.price?.value
-        },
-        {
-          label: 'Entregue',
-          value: budget?.dateDelivery?.value
-        },
-      ]
+  const commonProps = {
+    sx: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      border: '1px solid',
+      borderColor: 'divider',
+      padding: '.5rem',
+      textAlign: 'center',
     },
-    {
-      title: 'Desenho',
-      colls: [
-        {
-          label: 'Inicio',
-          value: ''
-        },
-        {
-          label: 'Fim',
-          value: ''
-        },
-      ]
-    },
-  ];
+    md: 12 / 12,
+    sm: 12 / 12,
+    xs: 12 / 12
+  };
 
-  const lowerGrids = [
-    {
-      title: 'Produção',
-      colls: [
-        {
-          label: 'Início',
-          value: ''
-        },
-        {
-          label: 'Fim',
-          value: ''
-        },
-        {
-          label: 'Quantidade',
-          value: ''
-        },
-      ]
+  const upperCells = {
+    ...commonProps,
+    sx: {
+      ...commonProps.sx,
+      backgroundColor: '#F9F9F9',
+      textAlign: 'center',
     },
-    {
-      title: 'Montagem',
-      colls: [
-        {
-          label: 'Inicio',
-          value: ''
-        },
-        {
-          label: 'Fim',
-          value: ''
-        },
-      ]
-    },
-    {
-      title: 'Embalamento',
-      colls: [
-        {
-          label: 'Inicio',
-          value: ''
-        },
-        {
-          label: 'Fim',
-          value: ''
-        },
-        {
-          label: 'Quantidade',
-          value: ''
-        },
-      ]
-    },
-    {
-      title: 'Expedição',
-      colls: [
-        {
-          label: 'Início',
-          value: ''
-        },
-        {
-          label: 'Entrega Acordada',
-          value: budget.dateDeliveryProject?.value
-        },
-        {
-          label: 'Fim',
-          value: ''
-        },
-      ]
-    },
-  ];
+  };
+
+  const cells = {
+    ...commonProps,
+  };
 
   async function InitiateBudgeting () {
     const loading = toast.loading();
@@ -326,10 +240,6 @@ const Head = (props) => {
           type: 'Property',
           value: ''
         },
-        deliveryTime: {
-          type: 'Property',
-          value: ''
-        },
         deliveryFlag: {
           type: 'Property',
           value: 0
@@ -351,7 +261,6 @@ const Head = (props) => {
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
         expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
         assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
-        startedProduction: { type: 'Property', value: '' },
       });
 
       await newAssembly({
@@ -487,10 +396,10 @@ const Head = (props) => {
               <Box id='align'>
                 <Typography variant='title'>{budget.name.value}</Typography>
                 <Box pl={2} display='flex' alignItems='center'>
-                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Análise Necessidades</Typography>}
+                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="goldenBalloon">Análise Necessidades</Typography>}
                   {budget.budgetStatus?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
                   {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Espera adjudicação</Typography>}
-                  {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='waitingBudgetBalloon'>Espera orçamento</Typography>}
+                  {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='blankBalloon'>Espera orçamento</Typography>}
                 </Box>
               </Box>
             </Grid>
@@ -500,20 +409,54 @@ const Head = (props) => {
                 hidden={!(JSON.stringify(old) !== JSON.stringify(budget) && isInternalPage)}
                 text={'Guardar alterações'}
                 onClick={handleUpdate}
-                sx={{ mr: 1 }}
                 icon={
                   <Save
                     strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
                     size={pageProps?.globalVars?.iconSize}
                   />
                 }
+                sx={{ mr: 1 }}
               />
               <ActionButton />
             </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
-            <HeaderGrid grids={ upperGrids }/>
-            <HeaderGrid grids={ lowerGrids }/>
+            <Grid container md={12} p={1} >
+              <Grid container md={12} sm={12} xs={12} >
+                <Grid container {...upperCells} md={(12 / 12) * 6} sm={(12 / 12) * 6} xs={(12 / 12) * 6}>Orçamento</Grid>
+                <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Produção</Grid>
+                <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Expedição</Grid>
+              </Grid>
+              <Grid container md={12} sm={12} xs={12}>
+                <Grid container {...upperCells}><Typography variant='sm' >Número</Typography> </Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Data</Typography> </Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Revisto a</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Valor</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Entregue</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Inicio</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Fim</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Quantidade</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Entrada</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Entregue</Typography></Grid>
+              </Grid>
+              <Grid container md={12} sm={12} xs={12}>
+                <Grid container { ...cells }><Typography variant='sm' >{budget.num?.value}</Typography></Grid>
+                <Grid container { ...cells }><Typography variant='sm' >{budget?.dateRequest?.value}</Typography> </Grid>
+                <Grid container { ...cells }><Typography variant='sm' >{moment(budget?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
+                <Grid container { ...cells }><Typography variant='sm' >{budget?.dateAgreedDelivery?.value}</Typography> </Grid>
+                <Grid container { ...cells }><Typography variant='sm' >{budget?.price?.value}</Typography> </Grid>
+                <Grid container { ...cells }><Typography variant='sm' >{budget?.dateDelivery?.value}</Typography></Grid>
+                <Grid container { ...cells }></Grid>
+                <Grid container { ...cells } ><Typography variant='sm' >{budget.dateDeliveryProject?.value}</Typography></Grid>
+                <Grid container { ...cells } ></Grid>
+                <Grid container { ...cells } ></Grid>
+                <Grid container { ...cells } ></Grid>
+                <Grid container { ...cells } ></Grid>
+              </Grid>
+
+            </Grid>
             <Grid container md={12} p={1}>
               <Grid container style={{ width: 'fit-content' }}>
                 <Grid container md={4} display={'none'}>

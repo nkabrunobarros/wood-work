@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Layer, Stage } from 'react-konva';
 import PolygonAnnotation from './PolygonAnnotation';
 
-const videoSource = 'http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTabuas.2870037b.jpeg&w=828&q=75';
+const videoSource = 'https://i.etsystatic.com/13326222/r/il/eba19a/2652256044/il_570xN.2652256044_f0qi.jpg';
 
 const Canvas = () => {
   const [image, setImage] = useState();

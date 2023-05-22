@@ -1,140 +1,133 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 import {
-  Autocomplete,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
-  Button,
-  ButtonGroup,
   Chip,
   IconButton,
-  MenuItem, TextField, Tooltip, Typography
+  Tooltip, Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ArrowLeftRight, Filter, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 
-import PrimaryBtn from '../../buttons/primaryBtn';
-import hasData from '../../utils/hasData';
-
-import AdvancedTable from '../../advancedTable/AdvancedTable';
+import moment from 'moment';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import FilterPopUp from './FilterPopup';
 
-// const MyDataGrid = dynamic(() => import('../../datagrid/DataGrid'), { ssr: false })
-
-const OrdersScreen = ({ ...props }) => {
+const ProjectsSimilarScreen = ({ ...props }) => {
   const {
-    items,
     breadcrumbsPath,
-    woodTypes,
-    products,
-    clients,
-    operations,
-    headCells,
-    headCellsUpper,
-    detailPage,
-    setDatesDiferencesFormat,
-    datesDiferencesFormat
+    projects,
   } = props;
 
-  const rows = items;
-  //  Modal State
-  const [modal, setModal] = useState(false);
   // Filters States
-  const [client, setClient] = useState('');
-  const [woodType, setWoodType] = useState(null);
-  const [totalTime, setTotalTime] = useState('');
-  const [orderId, setOrderId] = useState('');
-  const [product, setProduct] = useState('');
-  const [totalArea, setTotalArea] = useState('');
-  const [cost, setCost] = useState('');
-  const [operation, setOperation] = useState(null);
-  const [filters, setFilters] = useState({});
-  const [costDenominator, setCostDenominator] = useState('equal');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [appliedFilters, setAppliedFilters] = useState();
 
-  const handleClick = () => {
-    setModal(!modal);
+  const handleClick = (event) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const onClientChange = (value) => {
-    if (value === null) setClient('');
-    else setClient(value.id);
+  const cellProps = {
+    sm: 12 / 10,
+    md: 12 / 10,
+    xs: 12 / 10,
+    container: true,
+    alignItems: 'center',
+    p: 2,
   };
 
-  const onWoodTypeChange = (value) => {
-    if (value === null) setWoodType('');
-    else setWoodType(value.id);
-  };
+  const toggleValueInArray = (value, array) => {
+    const index = array.indexOf(value);
 
-  const onProductChange = (value) => {
-    if (value === null) setProduct('');
-    else setProduct(value.id);
-  };
-
-  const onOperationChange = (value) => {
-    if (value === null) setOperation('');
-    else setOperation(value.value);
-  };
-
-  const ApplyFilters = () => {
-    // Set Filters
-    setFilters({
-      cliente: client,
-      productId: product,
-      numEncomenda: orderId,
-      operation,
-      cost,
-      totalArea,
-      totalTime,
-      woodType
-    });
-  };
-
-  const ClearFilters = () => {
-    setClient('');
-    setWoodType(null);
-    setProduct('');
-    setOperation(null);
-    setTotalTime('');
-    setOrderId('');
-    setTotalArea('');
-    setCost('');
-
-    setFilters({
-      cliente: '',
-      productId: '',
-      setOrderId: '',
-    });
-  };
-
-  const DisplayBalloonFilter = (item, property, onRemove) => {
-    if (hasData(item)) {
-      if (property === 'client') { item = clients.find((element) => element.id === item); }
-
-      if (property === 'product') { item = products.find((element) => element.id === item); }
-
-      return (
-        <Chip
-          label={typeof item === 'object' ? <> {item.nome}</> : <> {item}</>}
-          deleteIcon={<X />}
-          onDelete={onRemove}
-        />
-      );
+    if (index === -1) {
+      return [...array, value];
     }
+
+    return [...array.slice(0, index), ...array.slice(index + 1)];
   };
 
-  useEffect(() => {
-    // ApplyFilters();
-  }, [client, product, operation, orderId]);
+  const [expandedGroups, setExpandedGroups] = useState([]);
+
+  const handleChange = (expandedGroups, setExpandedGroups) => (panel) => {
+    setExpandedGroups((prevExpandedGroups) =>
+      toggleValueInArray(panel, prevExpandedGroups)
+    );
+  };
+
+  const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
+
+  const filteredArray = projects.filter((ele) => {
+    const filtersKeys = Object.keys(appliedFilters || {});
+
+    if (filtersKeys.length === 0) {
+      return true; // Return true to keep the element when there are no filters applied
+    }
+
+    // Check if all non-empty filter values match the corresponding values in the element
+    return filtersKeys.every((key) => {
+      const filterValue = appliedFilters[key];
+
+      if (typeof filterValue === 'object') {
+        // Handle the object filters
+        const elementValue = ele[key];
+
+        if (filterValue.value === '') {
+          return true; // Skip filtering for empty filter values
+        }
+
+        const operator = filterValue.operator.toLowerCase();
+        const filterDate = moment(filterValue.value, 'DD/MM/YYYY');
+
+        if (moment(elementValue, 'DD/MM/YYYY').isValid()) {
+          const elementDate = moment(elementValue, 'DD/MM/YYYY');
+
+          if (operator === 'bigger') {
+            return elementDate.isAfter(filterDate);
+          } else if (operator === 'smaller') {
+            return elementDate.isBefore(filterDate);
+          } else if (operator === 'equal') {
+            return elementDate.isSame(filterDate, 'day');
+          }
+        }
+
+        // Compare other values using the specified operator
+        if (operator === 'bigger') {
+          return elementValue > filterValue.value;
+        } else if (operator === 'smaller') {
+          return elementValue < filterValue.value;
+        } else if (operator === 'equal') {
+          return elementValue === filterValue.value;
+        }
+
+        return true; // Return true if the operator is not recognized
+      }
+
+      // Skip filtering for empty filter values
+      if (filterValue === '') {
+        return true;
+      }
+
+      // Check if the element has the filter key and the value matches
+      // eslint-disable-next-line no-prototype-builtins
+      return ele.hasOwnProperty(key) && ele[key].toLowerCase().includes(filterValue.toLowerCase());
+    });
+  });
 
   return (
     <>
+      <FilterPopUp setAppliedFilters={setAppliedFilters} open={anchorEl} onClose={() => setAnchorEl(null)} {...props} />
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -147,31 +140,6 @@ const OrdersScreen = ({ ...props }) => {
               <Box>
                 <Typography variant='title' >{breadcrumbsPath[0].title}</Typography>
               </Box>
-              <Box className='activeFilterBalloonContainer'>
-                {/* Filter Balloons here */}
-                {DisplayBalloonFilter(filters.cliente, 'client', () =>
-                  setClient('')
-                )}
-                {DisplayBalloonFilter(filters.woodType, 'woodType', () =>
-                  setWoodType(null)
-                )}
-                {DisplayBalloonFilter(filters.productId, 'product', () =>
-                  setProduct('')
-                )}
-                {DisplayBalloonFilter(filters.operacao, 'operacao', () =>
-                  setOperation(null)
-                )}
-                {DisplayBalloonFilter(filters.totalTime, 'totalTime', () =>
-                  setTotalTime('')
-                )}
-                {DisplayBalloonFilter(filters.orderId, 'orderId', () =>
-                  setOrderId('')
-                )}
-                {DisplayBalloonFilter(filters.totalArea, 'totalArea', () =>
-                  setTotalArea('')
-                )}
-                {DisplayBalloonFilter(filters.cost, 'cost', () => setCost(''))}
-              </Box>
             </Box>
             <Box
               style={{
@@ -182,194 +150,94 @@ const OrdersScreen = ({ ...props }) => {
                 fontSize: 'small',
               }}
             >
-              {modal
-                ? (
-                  <Box className='filterPopupMain'>
-                    <Typography variant="h2" className='black' style={{ marginLeft: '1rem' }}>
-                  Filtros
-                      <Button sx={{ float: 'right' }} onClick={handleClick}>
-                        <X />
-                      </Button>
-                    </Typography>
-                    <Box
-                      style={{
-                        display: 'flex',
-                        flex: 1,
-                      }}
-                    >
-                      <Box className='filterPopupCol'>
-                        <Autocomplete
-                          name='client'
-                          id='client'
-                          fullWidth
-                          disablePortal
-                          options={clients.sort((a, b) =>
-                            a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-                          )}
-                          getOptionLabel={(option) => option.Nome }
-                          getOptionValue={(option) => option.id}
-                          onChange={(e, value) => onClientChange(value)}
-                          renderOption={(props, option) => {
-                            return (
-                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                {option.Nome}
-                              </Box>
-                            );
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              value={client}
-                              {...params}
-                              variant="standard"
-                              placeholder="Cliente"
-                              inputProps={{
-                                ...params.inputProps,
-                                autoComplete: 'new-password', // disable autocomplete and autofill
-                              }}
-                            />
-                          )}
-                        />
-                        <Autocomplete
-                          id='country-select-demo'
-                          options={woodTypes}
-                          autoHighlight
-                          value={woodType || null}
-                          onChange={(event, value) => onWoodTypeChange(value)}
-                          getOptionLabel={(option) => option.description}
-                          renderInput={(params) => (
-                            <TextField
-                              variant='standard'
-                              {...params}
-                              value={woodType}
-                              label='Tipo de Madeira'
-                            />
-                          )}
-                        />
-                        <TextField
-                          id='standard-basic'
-                          label='Tempo total'
-                          variant='standard'
-                          value={totalTime}
-                          onChange={(e) => setTotalTime(e.target.value)}
-                        />
-                        <TextField
-                          id='standard-basic'
-                          label='Projeto'
-                          variant='standard'
-                          value={orderId}
-                          onChange={(e) => setOrderId(e.target.value)}
-                        />
-                      </Box>
-                      <Box className='filterPopupCol'>
-                        <Autocomplete
-                          disablePortal
-                          id='combo-box-demo'
-                          options={products}
-                          getOptionLabel={(option) => option.name}
-                          onChange={(event, value) => onProductChange(value)}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              fullWidth
-                              variant='standard'
-                              value={product}
-                              onChange={(event) =>
-                                setClient(event.target.value)
-                              }
-                              placeholder='Produto'
-                            />
-                          )}
-                        />
-                        <TextField
-                          id='standard-basic'
-                          label='Area total'
-                          variant='standard'
-                          value={totalArea}
-                          onChange={(e) => setTotalArea(e.target.value)}
-                        />
-                        <Box sx={{ display: 'flex' }}>
-
-                          <Box>
-                            <TextField
-                              label='Custo'
-                              variant='standard'
-                              value={cost}
-                              onChange={(e) => setCost(e.target.value)}
-                            />
-
-                          </Box>
-                          <Box>
-                            <TextField
-                              value={costDenominator}
-                              select
-                              label='  '
-                              variant='standard'
-                              SelectProps={{ IconComponent: () => null }}
-                              onChange={(e) => setCostDenominator(e.target.value)}
-                            >
-                              <MenuItem value='equal'>{'='}</MenuItem>
-                              <MenuItem value='bigger'>{'=>'}</MenuItem>
-                              <MenuItem value='smaller'>{'<='}</MenuItem>
-                            </TextField>
-                          </Box>
-                        </Box>
-                        <Autocomplete
-                          id='country-select-demo'
-                          options={operations}
-                          autoHighlight
-                          onChange={(event, value) => onOperationChange(value)}
-                          value={operation || null}
-                          renderInput={(params) => (
-                            <TextField
-                              variant='standard'
-                              {...params}
-                              label='Operação'
-                              value={operation}
-                            />
-                          )}
-                        />
-                      </Box>
-                    </Box>
-                    <Box id='pad'>
-                      <ButtonGroup>
-                        <PrimaryBtn text='Aplicar Filtros' onClick={ApplyFilters} />
-                        <PrimaryBtn
-                          text='Redefinir'
-                          light
-                          noBorder
-                          onClick={ClearFilters}
-                        />
-                      </ButtonGroup>
-                    </Box>
-                  </Box>
-                )
-                : null}
             </Box>
             <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Box style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-                <Box display='flex' alignItems='center'>
-                  <Tooltip title={`Trocar para ${datesDiferencesFormat === 'days' ? 'horas' : 'dias'}`}>
-                    <IconButton onClick={() => setDatesDiferencesFormat(datesDiferencesFormat === 'days' ? 'hours' : 'days')} >
-                      <Box color='primary.main' >
-                        <ArrowLeftRight />
-                      </Box>
-                    </IconButton>
-                  </Tooltip>
-                  <Typography variant='subtitle2'>{datesDiferencesFormat === 'days' ? 'Dia(s)' : 'Hora(s)'}</Typography>
-                </Box>
                 <IconButton onClick={handleClick}>
                   <Filter />
                 </IconButton>
               </Box>
             </Box>
           </Box>
-          <AdvancedTable
-            rows={rows}
-            headCells={headCells}
-            headCellsUpper={headCellsUpper}
-            filters={filters}
-            clickRoute={detailPage}
-          />
+          <Grid container md={12} sm={12} xs={12}>
+            {false && Object.keys(appliedFilters || {}).map((key) => {
+              return appliedFilters[key] !== '' && <Chip key={key} label={key} onDelete={() => setAppliedFilters({ ...appliedFilters, [key]: '' })}/>;
+            })}
+            <Grid container md={12} sm={12} xs={12} bgcolor={'primary.main'} color='white'>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Cliente</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Nome</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Num</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Previsto</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Realizado</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Qtd. Móveis</Typography></Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Inicio</Typography> </Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Fim </Typography> </Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Desvio</Typography> </Grid>
+              <Grid {...cellProps}justifyContent={'end'}><Typography variant='subtitle2'>Móveis</Typography></Grid>
+            </Grid>
+            {filteredArray
+              .map((proj, index) => {
+                return <>
+                  <Accordion
+                    expanded={expandedGroups.includes(proj.id)}
+                    onChange={() => handlePanelChange(proj.id)}
+                    sx={{ width: '100%' }}>
+                    <AccordionSummary sx={{ padding: 0, height: '20px' }} aria-controls="panel1d-content" id="panel1d-header"
+                      bgcolor={index % 2 !== 0 && 'lightGray.edges'}
+                    >
+                      <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.ClienteLabel}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Nome}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Número}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Previsto}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Realizado}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Quantidade}</Typography></Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Inicio}</Typography> </Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Fim}</Typography> </Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2' className={proj.Desvio.includes('-') ? 'errorBalloon' : 'successBalloon'}> {proj.desvio}</Typography></Grid>
+                        <Grid {...cellProps} onClick={() => {}} justifyContent={'end'} sx={{ cursor: 'pointer' }}>
+                          <Tooltip title={expandedGroups.includes(proj.id) ? 'Fechar Móveis' : 'Mostrar Móveis'}>
+                            <IconButton> {expandedGroups.includes(proj.id) ? <ChevronUp /> : <ChevronDown /> } </IconButton>
+                          </Tooltip>
+                        </Grid>
+                      </Grid>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box sx={{ width: '100%' }}>
+                        {/* <Divider sx={{ marginTop: '1rem', marginBottom: '1rem', borderBottomWidth: 2 }} /> */}
+                      </Box>
+                      <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }} >
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Prod.</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Prod.</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Mont.</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Mont.</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Emb.</Typography>  </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Emb.</Typography>  </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor total</Typography> </Box></Grid>
+                        <Grid {...cellProps}><Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor por móvel</Typography></Grid>
+                      </Grid>
+                      {proj.furnitures?.map((furni, index) => {
+                        return <Grid key={furni.id} container md={12} sm={12} xs={12} bgcolor={index % 2 !== 0 && 'lightGray.edges'}>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.name.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.amount.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.beginProd?.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.endProd?.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.beginAssembly?.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.endAssembly?.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.beginPackaging?.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.endPackaging?.value}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.price?.value || '0€'}</Typography></Grid>
+                          {console.log(furni?.price?.value)}
+                          <Grid {...cellProps}><Typography variant='sm'>{furni.price?.value ? Number(parseInt(furni?.price?.value) / furni?.amount?.value).toFixed(2) + '€' : '0€'} </Typography></Grid>
+                        </Grid>;
+                      })}
+                    </AccordionDetails>
+                  </Accordion>
+                </>;
+              })}
+          </Grid>
         </Content>
       </Grid>
       <Footer/>
@@ -377,8 +245,9 @@ const OrdersScreen = ({ ...props }) => {
   );
 };
 
-OrdersScreen.propTypes = {
+ProjectsSimilarScreen.propTypes = {
   tableCols: PropTypes.array,
+  projects: PropTypes.array,
   panelsInfo: PropTypes.object,
   detailPage: PropTypes.string,
   editPage: PropTypes.string,
@@ -395,4 +264,4 @@ OrdersScreen.propTypes = {
   datesDiferencesFormat: PropTypes.string,
 };
 
-export default OrdersScreen;
+export default ProjectsSimilarScreen;

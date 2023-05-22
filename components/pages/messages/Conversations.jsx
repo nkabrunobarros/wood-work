@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import MessagesStyles from './MessagesStyles';
 
 export const ChatRow = (props) => {
-  const { chat, index, activeRow, windowWidth, onRowClick } = props;
+  const { chat, index, activeRow, onRowClick } = props;
   // const [anchorEl, setAnchorEl] = useState(null);
   const [hovering, setHovering] = useState(false);
   const theme = localStorage.getItem('theme');
@@ -13,20 +13,11 @@ export const ChatRow = (props) => {
 
   return (
     <Grid container md={12} p={1} sx={styles.conversationRow} onClick={() => onRowClick(index)} onMouseOver={() => setHovering(true)} onMouseOut={() => setHovering(false)} >
-      {windowWidth > 900 &&
-          <>
-            <Grid container md={12} >
-              <Grid>
-                <Typography variant='md' color='primary.main'>
-                  {chat.filterName || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
-                </Typography>
-              </Grid>
-              <Grid>
-                {/* <Typography variant='sm' color='lightTextSm.black' >{chat.message} <span>.</span> <Typography variant='xs' sx={styles.timeAgo}>{chat.createdAt && moment(chat.createdAt).fromNow()}</Typography></Typography> */}
-              </Grid>
-            </Grid>
-          </>
-      }
+      <Grid container md={12} >
+        <Typography variant='md' color='primary.main'>
+          {chat.filterName || chat.id.replace('urn:ngsi-ld:Budget:', '').replace('urn:ngsi-ld:Project:', '')}
+        </Typography>
+      </Grid>
     </Grid>
   );
 };

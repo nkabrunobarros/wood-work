@@ -17,11 +17,12 @@ const InfoCard = ({ title, icon, amount, color }) => {
   return (
     <Grow in={true}>
       <Tooltip title={`Ver ${title}`}>
-        <Grid bgcolor={'default.main'} md={12} className={styles.card} style={style}>
-          <Grid container item md={2}>{icon}</Grid>
-          <Grid container item md={10} className='fullCenter'>
-            <Grid><Typography variant='md' className={styles.cardTitle}>{title}</Typography></Grid>
-            <Grid><Typography variant='xxl'>{amount} {'Projeto(s)'}</Typography></Grid>
+        <Grid container bgcolor={'default.main'} md={12} sm={12} xs={12} className={styles.card} style={style}>
+          <Grid container md={3} sm={3} xs={12} justifyContent={'center'} alignItems={'center'} sx={{ height: '100%', maxHeight: '75px' }}>{icon}</Grid>
+          <Grid container md={9} sm={9} xs={12} justifyContent={'center'} alignItems={'center'}>
+
+            <Grid container justifyContent={'center'} alignItems={'center'} md={12} sm={12} xs={12} ><Typography variant='md' className={styles.cardTitle}>{title}</Typography></Grid>
+            <Grid container justifyContent={'center'} alignItems={'center'} md={12} sm={12} xs={12} ><Typography variant='xxl'>{amount} {'Projeto(s)'}</Typography></Grid>
           </Grid>
         </Grid>
       </Tooltip>

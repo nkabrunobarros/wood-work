@@ -10,47 +10,41 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as filesActionsRedux from '../../../../store/actions/file';
 import PrimaryBtn from '../../../buttons/primaryBtn';
-import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
   const { pageProps, styles, isInternalPage } = props;
-  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.folder_name === 'VF do Cliente')?.files);
-  const [newFiles, setNewFiles] = useState();
-  const [confirmUploadModal, setConfirmUploadModal] = useState(false);
+  const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.name === 'VF do Cliente')?.files);
   const dispatch = useDispatch();
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const getFile = (data) => dispatch(filesActionsRedux.file(data));
 
   const onDrop = useCallback((acceptedFiles) => {
-    setNewFiles(acceptedFiles);
-    setConfirmUploadModal(true);
+    handleFilesUpload(acceptedFiles);
   }, []);
 
   const { getInputProps } = useDropzone({ onDrop });
 
-  async function handleFilesUpload () {
+  async function handleFilesUpload (newFiles) {
     const FormData = require('form-data');
     const data = new FormData();
 
-    data.append('folder', props.folders.find(ele => ele.folder_name === 'VF do Cliente').id);
-    [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i : ''}`, file));
-    // data.append('budget', budget.id);
+    data.append('folder', props.folders.find(ele => ele.name === 'VF do Cliente').id);
+    [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i + 1 : ''}`, file));
 
     try {
       await uploadFiles(data).then(async (res) => {
         await getFile(res.data.id).then((res) => {
           setUserFiles([...userFiles, res.data]);
-          toast.success('Ficheiros carregados.');
         });
+
+        toast.success('Ficheiros carregados.');
       });
     } catch (error) {
       if (error?.response?.data?.non_field_errors) if (error?.response?.data?.non_field_errors[0] === 'A file with the same name already exists in the parent folder') toast.error('Este ficheiro já existe.');
 
       toast.error('Algo aconteceu. Por favor tente mais tarde');
     }
-
-    setConfirmUploadModal(false);
   }
 
   async function handleFileClick (file) {
@@ -74,14 +68,6 @@ const DocsClient = (props) => {
 
   return <>
     <Notification />
-    <ConfirmDialog
-      open={confirmUploadModal}
-      handleClose={() => setConfirmUploadModal(false)}
-      onConfirm={() => handleFilesUpload()}
-      message={'Carregado ' + newFiles?.length + ' ficheiro(s). Proceder com upload?' }
-      icon='Check'
-      iconType='success'
-    />
     <Box className={styles.docsMain}>
       <Box className={styles.tableContainer}>
         <Box id='pad' style={{ display: 'flex' }}>

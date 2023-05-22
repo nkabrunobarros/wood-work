@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 //  Services
 // import countryService from '../../services/countries/country-service';
 import { useDispatch, useSelector } from 'react-redux';
-import AuthData from '../../lib/AuthData';
 import * as clientsActionsRedux from '../../store/actions/client';
 
 const Clients = ({ ...pageProps }) => {
@@ -30,9 +29,7 @@ const Clients = ({ ...pageProps }) => {
   // const profiles = []
   useEffect(() => {
     const getData = async () => {
-      (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
       await getClients();
-      // if (!reduxState.clients.data) await getClients();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

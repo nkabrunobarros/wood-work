@@ -1,33 +1,20 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-//  Nodes
-import React, { useEffect, useState } from 'react';
-
-//  Navigation
-import routes from '../navigation/routes';
-
-//  Page Component
-import OrdersScreen from '../components/pages/projects/projects';
-
-//  Proptypes
+import { Layers, LayoutTemplate, Network, PackageCheck, PackagePlus, Truck } from 'lucide-react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
-
-//  Actions
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../components/loader/loader';
+import OrdersScreen from '../components/pages/projects/projects';
+import routes from '../navigation/routes';
 import * as budgetsActionsRedux from '../store/actions/budget';
 import * as clientsActionsRedux from '../store/actions/client';
 import * as expeditionsActionsRedux from '../store/actions/expedition';
 import * as projectsActionsRedux from '../store/actions/project';
-//  Icons
-import { AlertOctagon, Layers, LayoutTemplate, PackageCheck } from 'lucide-react';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../components/loader/loader';
 
 const Orders = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
-  //  dispatch actions
   const getProjects = (data) => dispatch(projectsActionsRedux.myProjects(data));
   const getBudgets = (data) => dispatch(budgetsActionsRedux.myBudgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
@@ -46,14 +33,9 @@ const Orders = ({ ...pageProps }) => {
     let errors = false;
 
     try {
-      if (!reduxState.projects?.data) {
-        await getProjects(reduxState.auth.me.id);
-      }
-
-      if (!reduxState.clients?.data) { await getClients(); }
-
-      if (!reduxState.expeditions?.data) { await getExpeditions(); }
-
+      await getProjects(reduxState.auth.me.id);
+      await getClients();
+      await getExpeditions();
       await getBudgets();
     } catch (err) {
       console.log(err);
@@ -87,13 +69,18 @@ const Orders = ({ ...pageProps }) => {
       production: 0,
       expedition: 0,
       concluded: 0,
+      packing: 0,
       testing: 0,
     };
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.budgetStatus?.value) {
+      case 'needs analysis':
+        counts.waitingAdjudication++;
+
+        break;
       case 'waiting budget':
-        counts.waitingBudget++;
+        counts.waitingAdjudication++;
 
         break;
       case 'waiting adjudication':
@@ -121,6 +108,10 @@ const Orders = ({ ...pageProps }) => {
         counts.testing++;
 
         break;
+      case 'packing':
+        counts.packing++;
+
+        break;
       case 'finished':
         counts.concluded++;
 
@@ -130,17 +121,17 @@ const Orders = ({ ...pageProps }) => {
 
     const cards = [
       {
-        id: 'waiting budget',
+        id: ['waiting adjudication', 'needs analysis', 'waiting budget'],
         num: 1,
-        title: 'Pendente Orçamentação',
-        amount: counts.waitingBudget,
+        title: 'Pré Adjudicação',
+        amount: counts.waitingAdjudication,
         icon: (
-          <PackageCheck
-            size={pageProps?.globalVars?.iconSizeXl}
+          <Layers
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--grayLight)',
+        color: '#225EE8',
       },
       {
         id: 'drawing',
@@ -149,11 +140,11 @@ const Orders = ({ ...pageProps }) => {
         amount: counts.drawing,
         icon: (
           <LayoutTemplate
-            size={pageProps?.globalVars?.iconSizeXl}
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--green)',
+        color: '#602778',
       },
       {
         id: 'production',
@@ -161,22 +152,51 @@ const Orders = ({ ...pageProps }) => {
         title: 'Pendente Produção',
         amount: counts.production,
         icon: (
-          <Layers
-            size={pageProps?.globalVars?.iconSizeXl}
+          <PackagePlus
+            size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--orange)',
+        color: '#02B0FA',
       },
       {
         id: 'testing',
         num: 4,
         title: 'Pendente Montagem',
         amount: counts.testing,
-        icon: <AlertOctagon
-          size={pageProps?.globalVars?.iconSizeXl}
-          strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />,
-        color: 'var(--babyblue)',
+        icon: (
+          <Network
+            size={'60%'}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
+        color: '#2C9200',
+      },
+      {
+        id: 'packing',
+        num: 4,
+        title: 'Pendente Embalamento',
+        amount: counts.packing,
+        icon: (
+          <PackageCheck
+            size={'60%'}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
+        color: '#DF9100',
+      },
+      {
+        id: 'transport',
+        num: 5,
+        title: 'Pendente Expedição',
+        amount: counts.expedition,
+        icon: (
+          <Truck
+            size={'60%'}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+          />
+        ),
+        color: '#BB3D03',
       },
     ];
 
@@ -195,20 +215,6 @@ const Orders = ({ ...pageProps }) => {
         label: 'Número',
         show: true,
       },
-      // {
-      //   id: 'Categoria',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Categoria',
-      //   show: true,
-      // },
-      // {
-      //   id: 'amount.value',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Quantidade',
-      //   show: true,
-      // },
       {
         id: 'Estado',
         numeric: false,
@@ -217,40 +223,40 @@ const Orders = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'Projeto',
+        id: 'PrimeiroContacto',
         numeric: false,
         disablePadding: false,
         label: 'Data',
         show: true,
       },
       {
-        id: 'Inicio',
+        id: 'InicioProd',
         numeric: false,
         disablePadding: false,
-        label: 'Início',
+        label: 'Início Prod.',
         show: true,
       },
       {
-        id: 'Termino',
+        id: 'TerminoProd',
         numeric: false,
         disablePadding: false,
-        label: 'Fim',
+        label: 'Fim Prod.',
         show: true,
       },
-      // {
-      //   id: 'Complete',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Qtd. Prod.',
-      //   show: true,
-      // },
-      // {
-      //   id: 'ExpeditionTime',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Entrada Expedição',
-      //   show: true,
-      // },
+      {
+        id: 'ExpeditionTime',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrada Expedição',
+        show: true,
+      },
+      {
+        id: 'EntregaProj',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrega Acordada',
+        show: true,
+      },
     ];
 
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
@@ -259,11 +265,12 @@ const Orders = ({ ...pageProps }) => {
         Estado: bud?.budgetStatus?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
-        Projeto: bud?.dateRequest?.value,
+        PrimeiroContacto: bud?.dateRequest?.value,
         Entregue: bud?.dateDelivery?.value,
         Categoria: categories.find(c => c.id === bud.category?.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
-        Numero: bud?.num?.value || 212453,
+        Numero: bud?.num?.value,
+        EntregaProj: bud?.dateDeliveryProject?.value,
       };
     });
 
@@ -280,21 +287,21 @@ const Orders = ({ ...pageProps }) => {
         budget: thisBudget,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
         Termino: thisExpedition?.deliveryTime?.value,
-        Projeto: thisBudget?.dateRequest?.value,
         Entregue: thisBudget?.dateDelivery?.value,
-        Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         Numero: thisBudget?.num?.value || 212453,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
-        ExpeditionTime: '',
-        Complete: '',
+        EntregaProj: thisBudget?.dateDeliveryProject?.value,
+        PrimeiroContacto: thisBudget?.dateRequest?.value,
+        InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        ExpeditionTime: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        TerminoProd: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
       };
     }
     );
 
     const merged = [...projects, ...filteredBudgets.filter((ele) => ele.Estado !== 'adjudicated')];
 
-    console.log(merged);
-    merged.sort((a, b) => a.Projeto?.localeCompare(b.Projeto));
+    merged.sort((a, b) => a.PrimeiroContacto?.localeCompare(b.PrimeiroContacto));
 
     const props = {
       counts,
@@ -319,13 +326,6 @@ const Orders = ({ ...pageProps }) => {
 Orders.propTypes = {
   categories: PropTypes.array.isRequired,
   counts: PropTypes.object.isRequired,
-  headCells: PropTypes.array.isRequired,
-  breadcrumbsPath: PropTypes.array.isRequired,
-  clients: PropTypes.array.isRequired,
-  detailPage: PropTypes.string.isRequired,
-  editPage: PropTypes.string.isRequired,
-  internalPOV: PropTypes.boolean,
-  hasFullyLoaded: PropTypes.bool,
 };
 
 export default Orders;

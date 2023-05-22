@@ -30,6 +30,8 @@ export const folders = (data) => {
       url: getApiURL(endpoints.FOLDERS),
       params: {
         options: 'sysAttrs',
+        limit: 200,
+        ...data
       }
     },
     types: [FOLDERS_REQUEST, FOLDERS_SUCCESS, FOLDERS_FAIL],

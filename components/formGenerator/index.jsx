@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { Box, Divider, FormControl, Grid, InputLabel, MenuItem, Paper, Popover, Select, styled, Tooltip } from '@mui/material';
+import { Box, Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Paper, Popover, Select, styled, Tooltip } from '@mui/material';
 import { HelpCircle, Verified } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import MyInput from '../inputs/myInput';
@@ -46,7 +46,7 @@ import CurrencyInput from '../inputs/CurrencyInput';
 const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const placeholderDefault = 'Escrever';
+  // const placeholderDefault = 'Escrever';
   const optData = props.optionalData || {};
   const reduxState = useSelector((state) => state);
   const [countries, setCountries] = useState(reduxState.countries.data);
@@ -118,7 +118,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
         if (field?.hidden) return null;
 
         if (field?.options) {
-          return <Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+          return <><Grid key={index} md={ perRow ? (12 / perRow) : 3} sm={ 6 } xs={12} container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
             <MySelect
               fullWidth
               name={field.id}
@@ -132,10 +132,12 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               optionValue={field.optValue}
               optionLabel={field.optLabel}
               disabled={field.disabled}
-              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              placeholder={field.placeholder }
               tooltip={field.tooltip}
             />
-          </Grid>;
+          </Grid>
+          {field.lineBreak && <Grid container md={12} sm={12} xs={12}></Grid>}
+          </>;
         }
 
         if (field?.type === 'phone') {
@@ -150,7 +152,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               options={countries}
               required={field.required}
               value={field.value}
-              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              placeholder={field.placeholder }
               error={field.error}
               onChange={(e) => onFormChange(index, e)}
               tooltip={field.tooltip}
@@ -160,7 +162,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
         }
 
         if (field?.type === 'currency') {
-          return <Grid key={index}
+          return <><Grid key={index}
             md={ perRow ? (12 / perRow) : 3}
             sm={ perRow !== 1 ? 6 : 12}
             xs={ perRow !== 1 ? 12 : 12}
@@ -171,14 +173,40 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               options={countries}
               required={field.required}
               value={field.value}
-              placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+              placeholder={field.placeholder }
               error={field.error}
               onChange={(e) => onFormChange(index, e)}
               tooltip={field.tooltip}
               disabled={field.disabled}
             />
 
-          </Grid>;
+          </Grid>
+          {field.lineBreak && <Grid container md={12} sm={12} xs={12}></Grid>}
+          </>;
+        }
+
+        if (field?.type === 'checkbox') {
+          return <><Grid key={index}
+            md={ perRow ? (12 / perRow) : 3}
+            sm={ perRow !== 1 ? 6 : 12}
+            xs={ perRow !== 1 ? 12 : 12}
+            container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+            <FormControlLabel
+              control={<Checkbox />}
+              name={field.id}
+              label={field.label}
+              // required={field.required}
+              checked={field.value}
+              placeholder={field.placeholder }
+              error={field.error}
+              onChange={(e) => onFormChange(index, e)}
+              tooltip={field.tooltip}
+              disabled={field.disabled}
+            />
+
+          </Grid>
+          {field.lineBreak && <Grid container md={12} sm={12} xs={12}></Grid>}
+          </>;
         }
 
         if (field?.type === 'country') {
@@ -186,65 +214,66 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
 
           portugal = countries?.find((option) => option.cca2 === 'PT');
 
-          return <Grid key={index}
-            md={ perRow ? (12 / perRow) : 3}
-            sm={ perRow !== 1 ? 6 : 12}
-            xs={ perRow !== 1 ? 12 : 12}
-            container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
-            <Tooltip title={field.tooltip || ''} >
-              <Box sx={{ width: '100%' }}>
+          return <>
+            <Grid key={index}
+              md={ perRow ? (12 / perRow) : 3}
+              sm={ perRow !== 1 ? 6 : 12}
+              xs={ perRow !== 1 ? 12 : 12}
+              container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+              <Tooltip title={field.tooltip || ''} >
+                <Box sx={{ width: '100%' }}>
 
-                <InputLabel htmlFor={field.label}>
-                  {field.label}
-                  {field.required &&
+                  <InputLabel htmlFor={field.label}>
+                    {field.label}
+                    {field.required &&
               <Tooltip title='Obrigatório' >
                 <span style={{ color: 'var(--red)' }}> *</span>
               </Tooltip>}
-                </InputLabel>
-                <FormControl fullWidth>
-                  {!!field.error && <InputLabel error={!!field.error} id={field.id}>{field.error}</InputLabel>}
-                  <Select
-                    placeholder={field.error}
-                    label={field.error && field.error}
-                    error={!!field.error}
-                    required={field.required}
-                    select
-                    name={field.name}
-                    disabled={field.disabled}
-                    id={field.id}
-                    fullWidth={field.fullWidth || false}
-                    value={field.value}
-                    onChange={(e) => onFormChange(index, e)}
-                    sx={{ width: field.width && field.width }}
-                    style={{ width: '100%' }}
-                  >
-                    <MenuItem value="" disabled>
+                  </InputLabel>
+                  <FormControl fullWidth>
+                    {!!field.error && <InputLabel error={!!field.error} id={field.id}>{field.error}</InputLabel>}
+                    <Select
+                      placeholder={field.error}
+                      label={field.error && field.error}
+                      error={!!field.error}
+                      required={field.required}
+                      select
+                      name={field.name}
+                      disabled={field.disabled}
+                      id={field.id}
+                      fullWidth={field.fullWidth || false}
+                      value={field.value}
+                      onChange={(e) => onFormChange(index, e)}
+                      sx={{ width: field.width && field.width }}
+                      style={{ width: '100%' }}
+                    >
+                      <MenuItem value="" disabled>
             Escolha uma opcao
-                    </MenuItem>
-                    {portugal && portugal.cca2 === 'PT'
-                      ? (
-                        <MenuItem value={portugal.cca2}>
-                          <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }}>
-                            {!!portugal.cca2 && (
-                              <Image
-                                loading="lazy"
-                                width={20}
-                                height={16}
-                                src={`https://flagcdn.com/w20/${portugal.cca2.toLowerCase()}.png`}
-                                srcSet={`https://flagcdn.com/w40/${portugal.cca2.toLowerCase()}.png 2x`}
-                                alt=""
-                              />
-                            )}
-                            {portugal.cc2}
-                            {portugal?.name?.common}
-                          </Box>
-                        </MenuItem>
-                      )
-                      : null}
-                    {countries?.filter((item) => item.cca2 !== 'PT').sort((a, b) => (a.name?.common > b.name?.common) ? 1 : -1).map((opt, i) => (
-                      !opt.hidden && <MenuItem key={i} value={opt.cca2}>
-                        <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
-                          {!!opt.cca2 &&
+                      </MenuItem>
+                      {portugal && portugal.cca2 === 'PT'
+                        ? (
+                          <MenuItem value={portugal.cca2}>
+                            <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }}>
+                              {!!portugal.cca2 && (
+                                <Image
+                                  loading="lazy"
+                                  width={20}
+                                  height={16}
+                                  src={`https://flagcdn.com/w20/${portugal.cca2.toLowerCase()}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${portugal.cca2.toLowerCase()}.png 2x`}
+                                  alt=""
+                                />
+                              )}
+                              {portugal.cc2}
+                              {portugal?.name?.common}
+                            </Box>
+                          </MenuItem>
+                        )
+                        : null}
+                      {countries?.filter((item) => item.cca2 !== 'PT').sort((a, b) => (a.name?.common > b.name?.common) ? 1 : -1).map((opt, i) => (
+                        !opt.hidden && <MenuItem key={i} value={opt.cca2}>
+                          <Box sx={{ '& > img': { mr: 2, flexShrink: 0 } }} >
+                            {!!opt.cca2 &&
                     <img
                       loading='lazy'
                       width='20'
@@ -252,21 +281,23 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
                       srcSet={`https://flagcdn.com/w40/${opt.cca2.toLowerCase()}.png 2x`}
                       alt=''
                     />}
-                          {opt.cc2}
-                          {opt?.name?.common}
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
+                            {opt.cc2}
+                            {opt?.name?.common}
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
 
-            </Tooltip>
-          </Grid>;
+              </Tooltip>
+            </Grid>
+            {field.lineBreak && <Grid container md={12} sm={12} xs={12}></Grid>}
+          </>;
         }
 
         //  Default case regular text input
-        return field.id && <Grid key={index}
+        return field.id && <><Grid key={index}
           md={ perRow ? (12 / perRow) : 3}
           sm={ perRow !== 1 ? 6 : 12}
           xs={ perRow !== 1 ? 12 : 12}
@@ -285,7 +316,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               (field.id === 'postalCode2' || field.id === 'address.postalCode2') && ValidatePostalCode(null);
             }}
             maxLength={field.maxLength}
-            placeholder={field.placeholder || `${placeholderDefault} ${field.label}`}
+            placeholder={field.placeholder }
             adornmentIcon={(field.id === 'postalCode2' || field.id === 'address.postalCode2') &&
               <>
                 {postalCodeInfo
@@ -299,7 +330,9 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               </>
             }
           />
-        </Grid>;
+        </Grid>
+        {field.lineBreak && <Grid container md={12} sm={12} xs={12}></Grid>}
+        </>;
       })}
     </Grid>
   </>;

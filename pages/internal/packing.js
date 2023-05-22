@@ -23,7 +23,8 @@ const Packing = () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
       const [projectsData] = await Promise.all([
-        getProjects({ status: 'production' }),
+        getProjects([{ key: 'status', value: 'drawing', operator: '!=' }]),
+        // getProjects({ status: 'production' }),
       ]);
 
       const projects = projectsData.data;
