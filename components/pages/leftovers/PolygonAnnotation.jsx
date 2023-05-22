@@ -80,10 +80,10 @@ const PolygonAnnotation = (props) => {
     >
       <Line
         points={flattenedPoints}
-        stroke={reduxState.appStates.theme.palette.primary.main}
+        stroke={reduxState.appStates.theme?.palette.primary.main}
         strokeWidth={3}
         closed={isFinished}
-        fill={reduxState.appStates.theme.palette.primary.lightest}
+        fill={reduxState.appStates.theme?.palette.primary.lightest}
       />
       {
         points.map((point, index) => {
@@ -105,8 +105,8 @@ const PolygonAnnotation = (props) => {
               x={x}
               y={y}
               radius={20}
-              fill={reduxState.appStates.theme.palette.primary.lightest}
-              stroke={reduxState.appStates.theme.palette.primary.main}
+              fill={reduxState.appStates.theme?.palette.primary.lightest}
+              stroke={reduxState.appStates.theme?.palette.primary.main}
               strokeWidth={2}
               draggable
               onDragMove={handlePointDragMove}

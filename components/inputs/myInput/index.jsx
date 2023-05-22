@@ -35,6 +35,15 @@ const MyInput = ({
   maxLength,
   rows
 }) => {
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+
+    // If the type is "number" and the input value is less than 0, set it to 0
+    if (type === 'number') {
+      inputValue >= 0 && onChange && onChange(event, inputValue);
+    } else { onChange && onChange(event, inputValue); }
+  };
+
   return <Box sx={{ width: '100%' }}>
     {variant !== 'standard' && (
       <Tooltip title={tooltip || ''}>
@@ -54,24 +63,23 @@ const MyInput = ({
       {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}
       <OutlinedInput
         aria-labelledby={id}
-        variant={variant}
+        variant={variant || 'outlined' }
         name={name}
         type={type}
         multiline={type === 'area'}
         id={id}
         error={error}
         value={value}
-        onChange={onChange}
+        onChange={handleInputChange}
         required
-        label={error}
+        label={error || variant ? label : ''}
         fullWidth={fullWidth}
         inputProps={{
-          maxLength: maxLength || 255,
+          maxLength: maxLength || type === 'area' ? 2000 : 255,
         }}
         sx={{
           width: width || (halfWidth && '50%'),
         }}
-
         rows={rows || 4}
         style={style}
         placeholder={placeholder || ''}
@@ -103,9 +111,9 @@ const MyInput = ({
           </InputAdornment>
         )}
       />
-      {maxLength && <Tooltip title='Tamanho máximo'>
+      {(maxLength || type === 'area') && <Tooltip title='Tamanho máximo'>
         <FormHelperText sx={{ display: 'flex', justifyContent: 'end' }} >
-          {value?.length} / {maxLength} caracteres
+          {value?.length} / {maxLength || 2000} caracteres
         </FormHelperText>
       </Tooltip>
       }

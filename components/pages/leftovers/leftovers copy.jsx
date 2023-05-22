@@ -228,7 +228,7 @@ const Leftovers = (props) => {
                     <Grid container className='fullCenter'>
                       <Box>
                         {/* <Typography item color='lightTextSm.main'>Data</Typography> */}
-                        <Typography item color='lightTextSm.black' >{moment(clock).format('DD.MM.YYYY')}</Typography>
+                        <Typography item color='lightTextSm.black' >{moment(clock).format('DD/MM/YYYY')}</Typography>
                       </Box>
                     </Grid>
                     <Divider />
@@ -247,7 +247,7 @@ const Leftovers = (props) => {
                   <Grid >
                     <Grid container className='fullCenter'>
                     Data
-                      {moment(clock).format('DD.MM.YYYY')}
+                      {moment(clock).format('DD/MM/YYYY')}
                     </Grid>
                     <Divider />
                     <Grid container className='fullCenter'>{moment(clock).format('HH:mm')}</Grid>

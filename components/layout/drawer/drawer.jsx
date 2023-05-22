@@ -119,7 +119,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
             })
             .map((item, i) => (
               <Box key={i}>
-                <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }}>
+                <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }} onClick={() => Router.push(item.url)}>
                   <ActiveLink
                     href={item.url}
                     handleDrawerToggle={toggleDrawer}
@@ -181,9 +181,12 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                     width='100%'
                     style={{ marginTop: '1rem', marginBottom: '1rem' }}
                   />
-                  <MenuItem sx={{ padding: '0' }}>
+                  <MenuItem sx={{ padding: '0' }} onClick={() => {
+                    toggleDrawer();
+                    Router.push(IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`);
+                  }} >
                     <ActiveLink
-                      handleDrawerToggle={toggleDrawer}
+                      // handleDrawerToggle={toggleDrawer}
                       href={IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
                       page={'Conta'}
                     >

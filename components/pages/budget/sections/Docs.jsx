@@ -1,6 +1,3 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
 import { ArrowDropDown, ArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
@@ -14,8 +11,6 @@ const Docs = (props) => {
   const [sectionExpanded, setSectionExpanded] = useState(true);
   const folders = props.folders;
   const [expandedGroups, setExpandedGroups] = useState([]);
-
-  console.log(props.folders);
 
   const toggleValueInArray = (value, array) => {
     const index = array.indexOf(value);
@@ -60,8 +55,10 @@ const Docs = (props) => {
 
   function renderAccordionFolders (folders, parentId = null) {
     return folders?.filter((folder) => folder.parent === parentId)
+      .sort((a, b) => b.name - a.name)
       .map((folder) => {
         // check if this is the root folder
+
         if (parentId === null && folder.parent === null) {
           // skip the root folder and only render its children
           return renderAccordionFolders(folders, folder.id);
@@ -133,6 +130,7 @@ const Docs = (props) => {
             <TableBody >
               <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
                 {renderAccordionFolders(folders)}
+
               </Box>
             </TableBody>
           </Table>

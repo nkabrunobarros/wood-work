@@ -15,7 +15,7 @@ const ConversationsToolbar = (props) => {
 
       </Toolbar>
       <Toolbar sx={{ padding: '.5rem !important' }}>
-        {windowWidth > 900 && <OutlinedInput
+        {windowWidth > 1 && <OutlinedInput
           required
           fullWidth
           placeholder='Pesquisa'
@@ -28,7 +28,7 @@ const ConversationsToolbar = (props) => {
           }
         />}
         <ButtonGroup sx={{ display: 'none' }}>
-          {windowWidth > 900 &&
+          {windowWidth > 1 &&
               <Tooltip title='Nova Conversa'>
                 <IconButton>
                   <Plus

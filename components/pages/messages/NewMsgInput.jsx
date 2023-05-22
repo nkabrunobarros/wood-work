@@ -20,9 +20,9 @@ const NewMsgInput = (props) => {
     setLoadMessage(new Date());
 
     newMessageText !== '' && props.conversation && await newMessage({
-      to: 'user_pAbaEjM8KBVzKdyw',
+      to: (props.conversation.approvedBy?.object || props.conversation.hasBudget?.object?.approvedBy?.object).replace('urn:ngsi-ld:Owner:', '').replace('urn:ngsi-ld:Worker:', ''),
       by: loggedUser?.id,
-      project: props.conversation?.hasBudget?.object || props.conversation?.id,
+      project: props.conversation?.hasBudget?.object.id || props.conversation?.id,
       text: newMessageText
     }).then((res) => {
       const chats = [...props.chats];

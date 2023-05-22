@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
-function MultiFilterArray(array, filters) {
+function MultiFilterArray (array, filters) {
   const filterKeys = Object.keys(filters);
 
   return array.filter((item) => {

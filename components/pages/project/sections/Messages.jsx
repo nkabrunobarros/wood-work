@@ -43,7 +43,7 @@ const Messages = (props) => {
     if (newMessageText === '') return;
 
     await newMessage({
-      to: loggedUser.role === 'CUSTOMER' ? 'user_pAbaEjM8KBVzKdyw' : order.orderBy.object.user.id,
+      to: loggedUser.role === 'CUSTOMER' ? order.hasBudget?.object?.approvedBy?.object.replace('urn:ngsi-ld:Owner:', '').replace('urn:ngsi-ld:Worker:', '') : order.orderBy.object.user.id,
       by: loggedUser?.id,
       project: order.hasBudget?.object.id,
       text: newMessageText
@@ -147,7 +147,6 @@ const Messages = (props) => {
 
 Messages.propTypes = {
   pageProps: PropTypes.any,
-  headCellsMessages: PropTypes.any,
   styles: PropTypes.any,
   stylesMessage: PropTypes.any,
 };

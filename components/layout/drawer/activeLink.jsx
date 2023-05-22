@@ -6,7 +6,7 @@ import styles from '../../../styles/components/navbar.module.css';
 
 import routes from '../../../navigation/routes';
 
-function ActiveLink ({ children, href, handleDrawerToggle, page }) {
+function ActiveLink ({ children, url, handleDrawerToggle, page }) {
   const path = useRouter();
 
   const pageSections = {
@@ -54,15 +54,14 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
 
   const handleClick = (e) => {
     e.preventDefault();
-    path.push(href);
   };
 
   return (
     <a
-      key={href}
+      key={url}
       onClick={(e) => {
+        handleDrawerToggle && handleDrawerToggle();
         handleClick(e);
-        handleDrawerToggle();
       }}
       className={styles.navItemContainer}
       style={style}
@@ -74,7 +73,7 @@ function ActiveLink ({ children, href, handleDrawerToggle, page }) {
 
 ActiveLink.propTypes = {
   children: PropTypes.any,
-  href: PropTypes.string,
+  url: PropTypes.string,
   handleDrawerToggle: PropTypes.func,
   page: PropTypes.string,
 };

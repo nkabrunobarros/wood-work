@@ -24,8 +24,8 @@ import * as clientsActionsRedux from '../../../store/actions/client';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
-import ToastSet from '../../utils/ToastSet';
 import CanDo from '../../utils/CanDo';
+import ToastSet from '../../utils/ToastSet';
 
 const Clients = ({ ...props }) => {
   const {
@@ -103,32 +103,28 @@ const Clients = ({ ...props }) => {
               <Box className='filterContainer'>
                 <InputLabel htmlFor='email'>Cliente</InputLabel>
                 <Autocomplete
-                  name='client'
-                  id='client'
+                  name="client"
+                  id="client"
                   fullWidth
                   disablePortal
-                  options={clients.sort((a, b) =>
-                    a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
-                  )}
-                  getOptionLabel={(option) => option.Nome }
+                  options={clients.sort((a, b) => (a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0))}
+                  getOptionLabel={(option) => option.Nome}
                   getOptionValue={(option) => option.id}
                   onChange={(e, value) => setNome(value?.Nome || '')}
-                  renderOption={(props, option) => {
-                    return (
-                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        {option.Nome}
-                      </Box>
-                    );
-                  }}
+                  renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      {option.Nome}
+                    </Box>
+                  )}
                   renderInput={(params) => (
                     <TextField
-                      value={nome}
                       {...params}
-                      placeholder="Escrever Nome Cliente"
                       inputProps={{
                         ...params.inputProps,
                         autoComplete: 'new-password', // disable autocomplete and autofill
                       }}
+                      value={nome}
+                      onChange={(e) => setNome(e.target.value)}
                     />
                   )}
                 />
@@ -140,7 +136,6 @@ const Clients = ({ ...props }) => {
                   id='email'
                   name='email'
                   autoComplete='email'
-                  placeholder='Escrever Email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />

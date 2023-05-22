@@ -357,10 +357,10 @@ const AdvancedTable = ({
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Box className='tableChips'>
           <Box>
-            {Object.keys(filters || {})?.map((x) => {
+            {false && Object.keys(filters || {})?.map((x) => {
               if (filters[x]) return <Chip key={x} label={x} onDelete={() => onFilterRemove(x)} />;
             })}
-            {Object.keys(rangeFilters || {})?.map((x) => {
+            {false && Object.keys(rangeFilters || {})?.map((x) => {
               if (JSON.stringify(rangeFilters[x].values) !== JSON.stringify([rangeFilters[x].min, rangeFilters[x].max])) return <Chip key={x} label={x} onDelete={() => onFilterSizeRemove(x)} />;
             })}
 

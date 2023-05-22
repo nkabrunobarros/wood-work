@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import routes from '../navigation/routes';
-import OrdersScreen from '../components/pages/projects/projects';
-import PropTypes from 'prop-types';
 import { Layers, LayoutTemplate, Network, PackageCheck, PackagePlus, Truck } from 'lucide-react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/loader/loader';
+import OrdersScreen from '../components/pages/projects/projects';
+import routes from '../navigation/routes';
 import * as budgetsActionsRedux from '../store/actions/budget';
 import * as clientsActionsRedux from '../store/actions/client';
 import * as expeditionsActionsRedux from '../store/actions/expedition';
@@ -29,18 +29,13 @@ const Orders = ({ ...pageProps }) => {
     { label: 'Sala de estar', id: 'MS_' }
   ];
 
-  async function fetchData() {
+  async function fetchData () {
     let errors = false;
 
     try {
-      if (!reduxState.projects?.data) {
-        await getProjects(reduxState.auth.me.id);
-      }
-
-      if (!reduxState.clients?.data) { await getClients(); }
-
-      if (!reduxState.expeditions?.data) { await getExpeditions(); }
-
+      await getProjects(reduxState.auth.me.id);
+      await getClients();
+      await getExpeditions();
       await getBudgets();
     } catch (err) {
       console.log(err);
@@ -51,7 +46,7 @@ const Orders = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData() {
+    async function loadData () {
       setLoaded(await fetchData(dispatch));
     }
 
@@ -74,44 +69,53 @@ const Orders = ({ ...pageProps }) => {
       production: 0,
       expedition: 0,
       concluded: 0,
+      packing: 0,
       testing: 0,
     };
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.budgetStatus?.value) {
-        case 'waiting budget':
-          counts.waitingBudget++;
+      case 'needs analysis':
+        counts.waitingAdjudication++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting budget':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
+
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'packing':
+        counts.packing++;
 
-          break;
+        break;
+      case 'finished':
+        counts.concluded++;
+
+        break;
       }
     });
 
@@ -127,7 +131,7 @@ const Orders = ({ ...pageProps }) => {
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--primary)',
+        color: '#225EE8',
       },
       {
         id: 'drawing',
@@ -140,7 +144,7 @@ const Orders = ({ ...pageProps }) => {
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--green)',
+        color: '#602778',
       },
       {
         id: 'production',
@@ -153,7 +157,7 @@ const Orders = ({ ...pageProps }) => {
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--orange)',
+        color: '#02B0FA',
       },
       {
         id: 'testing',
@@ -166,20 +170,20 @@ const Orders = ({ ...pageProps }) => {
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--babyblue)',
+        color: '#2C9200',
       },
       {
-        id: 'packaging',
+        id: 'packing',
         num: 4,
         title: 'Pendente Embalamento',
-        amount: counts.testing,
+        amount: counts.packing,
         icon: (
           <PackageCheck
             size={'60%'}
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: '#9c27b0',
+        color: '#DF9100',
       },
       {
         id: 'transport',
@@ -192,21 +196,8 @@ const Orders = ({ ...pageProps }) => {
             strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
           />
         ),
-        color: 'var(--yellow)',
+        color: '#BB3D03',
       },
-      // {
-      //   num: 6,
-      //   id: 'finished',
-      //   title: 'Terminados',
-      //   amount: counts.concluded,
-      //   icon: (
-      //     <Check
-      //       size={'60%'}
-      //       strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-      //     />
-      //   ),
-      //   color: 'var(--green)',
-      // },
     ];
 
     const headCellsProjects = [
@@ -224,20 +215,6 @@ const Orders = ({ ...pageProps }) => {
         label: 'Número',
         show: true,
       },
-      // {
-      //   id: 'Categoria',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Categoria',
-      //   show: true,
-      // },
-      // {
-      //   id: 'amount.value',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Quantidade',
-      //   show: true,
-      // },
       {
         id: 'Estado',
         numeric: false,
@@ -246,40 +223,40 @@ const Orders = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'Projeto',
+        id: 'PrimeiroContacto',
         numeric: false,
         disablePadding: false,
         label: 'Data',
         show: true,
       },
       {
-        id: 'Inicio',
+        id: 'InicioProd',
         numeric: false,
         disablePadding: false,
-        label: 'Início',
+        label: 'Início Prod.',
         show: true,
       },
       {
-        id: 'Termino',
+        id: 'TerminoProd',
         numeric: false,
         disablePadding: false,
-        label: 'Fim',
+        label: 'Fim Prod.',
         show: true,
       },
-      // {
-      //   id: 'Complete',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Qtd. Prod.',
-      //   show: true,
-      // },
-      // {
-      //   id: 'ExpeditionTime',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Entrada Expedição',
-      //   show: true,
-      // },
+      {
+        id: 'ExpeditionTime',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrada Expedição',
+        show: true,
+      },
+      {
+        id: 'EntregaProj',
+        numeric: false,
+        disablePadding: false,
+        label: 'Entrega Acordada',
+        show: true,
+      },
     ];
 
     const budgets = [...reduxState.budgets?.data ?? []].map((bud) => {
@@ -288,11 +265,12 @@ const Orders = ({ ...pageProps }) => {
         Estado: bud?.budgetStatus?.value,
         Nome: bud?.name?.value.replace(/_/g, ' '),
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
-        Projeto: bud?.dateRequest?.value,
+        PrimeiroContacto: bud?.dateRequest?.value,
         Entregue: bud?.dateDelivery?.value,
         Categoria: categories.find(c => c.id === bud.category?.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
-        Numero: bud?.num?.value || 212453,
+        Numero: bud?.num?.value,
+        EntregaProj: bud?.dateDeliveryProject?.value,
       };
     });
 
@@ -309,21 +287,21 @@ const Orders = ({ ...pageProps }) => {
         budget: thisBudget,
         Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
         Termino: thisExpedition?.deliveryTime?.value,
-        Projeto: thisBudget?.dateRequest?.value,
         Entregue: thisBudget?.dateDelivery?.value,
-        Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         Numero: thisBudget?.num?.value || 212453,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
-        ExpeditionTime: '',
-        Complete: '',
+        EntregaProj: thisBudget?.dateDeliveryProject?.value,
+        PrimeiroContacto: thisBudget?.dateRequest?.value,
+        InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        ExpeditionTime: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        TerminoProd: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
       };
     }
     );
 
     const merged = [...projects, ...filteredBudgets.filter((ele) => ele.Estado !== 'adjudicated')];
 
-    console.log(merged);
-    merged.sort((a, b) => a.Projeto?.localeCompare(b.Projeto));
+    merged.sort((a, b) => a.PrimeiroContacto?.localeCompare(b.PrimeiroContacto));
 
     const props = {
       counts,
@@ -348,13 +326,6 @@ const Orders = ({ ...pageProps }) => {
 Orders.propTypes = {
   categories: PropTypes.array.isRequired,
   counts: PropTypes.object.isRequired,
-  headCells: PropTypes.array.isRequired,
-  breadcrumbsPath: PropTypes.array.isRequired,
-  clients: PropTypes.array.isRequired,
-  detailPage: PropTypes.string.isRequired,
-  editPage: PropTypes.string.isRequired,
-  internalPOV: PropTypes.boolean,
-  hasFullyLoaded: PropTypes.bool,
 };
 
 export default Orders;

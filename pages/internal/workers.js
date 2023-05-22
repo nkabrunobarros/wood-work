@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //  Custom Components
 import Loader from '../../components/loader/loader';
-import { functions } from '../../components/pages/newWorker/newWorker';
 import WorkersScreen from '../../components/pages/workers/workers';
 
 //  Navigation
@@ -15,7 +14,6 @@ import * as workersActionsRedux from '../../store/actions/worker';
 
 const Workers = () => {
   const [loaded, setLoaded] = useState(false);
-  const profiles = functions;
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getWorkers = (data) => dispatch(workersActionsRedux.workers(data));
@@ -100,7 +98,6 @@ const Workers = () => {
 
     const props = {
       breadcrumbsPath,
-      profiles,
       editRoute,
       detailRoute,
       headCells,

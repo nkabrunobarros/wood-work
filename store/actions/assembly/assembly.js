@@ -10,6 +10,9 @@ export const ASSEMBLYS_SUCCESS = 'ASSEMBLYS_SUCCESS';
 export const NEW_ASSEMBLY_REQUEST = 'NEW_ASSEMBLY_REQUEST';
 export const NEW_ASSEMBLY_FAIL = 'NEW_ASSEMBLY_FAIL';
 export const NEW_ASSEMBLY_SUCCESS = 'NEW_ASSEMBLY_SUCCESS';
+export const UPDATE_ASSEMBLY_REQUEST = 'UPDATE_ASSEMBLY_REQUEST';
+export const UPDATE_ASSEMBLY_SUCCESS = 'UPDATE_ASSEMBLY_SUCCESS';
+export const UPDATE_ASSEMBLY_FAIL = 'UPDATE_ASSEMBLY_FAIL';
 
 export const assemblys = (data) => {
   const { auth_token: userToken } = parseCookies();
@@ -52,5 +55,23 @@ export const newAssembly = (data) => {
       url: getApiURL(endpoints.ASSEMBLYS),
     },
     types: [NEW_ASSEMBLY_REQUEST, NEW_ASSEMBLY_SUCCESS, NEW_ASSEMBLY_FAIL],
+  });
+};
+
+export const updateAssembly = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      ...data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'PATCH',
+      url: getApiURL(endpoints.ASSEMBLYS + id),
+    },
+    types: [UPDATE_ASSEMBLY_REQUEST, UPDATE_ASSEMBLY_SUCCESS, UPDATE_ASSEMBLY_FAIL],
   });
 };

@@ -1,86 +1,33 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable array-callback-return */
 //  Nodes
-import CssBaseline from '@mui/material/CssBaseline';
-import React, { useState } from 'react';
-
-import Grid from '@mui/material/Grid';
-import CustomBreadcrumbs from '../../breadcrumbs';
-import PrimaryBtn from '../../buttons/primaryBtn';
-import Content from '../../content/content';
-
-//  PropTypes
-
 import {
-  Box, Button, CircularProgress
+  Box
 } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
 import { Save, X } from 'lucide-react';
 import Router from 'next/router';
-import ConfirmDialog from '../../dialogs/ConfirmDialog';
-import Loader from '../../loader/loader';
-import EmailValidation from '../../utils/EmailValidation';
-
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as workersActionsRedux from '../../../store/actions/worker';
+import CustomBreadcrumbs from '../../breadcrumbs';
+import PrimaryBtn from '../../buttons/primaryBtn';
+import Content from '../../content/content';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import Loader from '../../loader/loader';
+import EmailValidation from '../../utils/EmailValidation';
 import ToastSet from '../../utils/ToastSet';
-
-export const functions = [
-  {
-    label: 'CNC',
-    value: 'CNC',
-  },
-  {
-    label: 'Nesting',
-    value: 'Nesting',
-  },
-  {
-    label: 'Manual Cut',
-    value: 'Manual Cut',
-  },
-  {
-    label: 'Assembly',
-    value: 'Assembly',
-  },
-  {
-    label: 'Manager',
-    value: 'Manager',
-  },
-  {
-    label: 'Designer',
-    value: 'Designer',
-  },
-  {
-    label: 'Budgeting',
-    value: 'Budgeting',
-  },
-  {
-    value: 'Warehouse',
-    label: 'Warehouse'
-  }
-];
 
 const newWorker = ({ ...props }) => {
   const { breadcrumbsPath, organizations } = props;
   //  Dialog
-  const [successOpen, setSuccessOpen] = useState(false);
-  const [cleaningInputs, setCleaningInputs] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState([
-    // {
-    //   id: 'user.username',
-    //   label: 'Nome Utilizador',
-    //   value: '',
-    //   error: '',
-    //   required: true,
-    //   tooltip: 'Dado utilizado para login.',
-    // },
     {
       id: 'user.first_name',
       label: 'Primeiro Nome',
@@ -104,16 +51,6 @@ const newWorker = ({ ...props }) => {
       type: 'email',
       required: true
     },
-    // {
-    //   id: 'functionPerformed',
-    //   label: 'Função',
-    //   value: '',
-    //   error: '',
-    //   required: true,
-    //   options: permissions,
-    //   optLabel: 'name',
-    //   optValue: 'id'
-    // },
     {
       id: 'hasOrganization',
       label: 'Organização',
@@ -179,6 +116,7 @@ const newWorker = ({ ...props }) => {
       performanceRole: 2,
     };
 
+    // eslint-disable-next-line array-callback-return
     inputFields.map((ele) => {
       builtWorker[ele.id] = ele.value;
     });
@@ -230,16 +168,6 @@ const newWorker = ({ ...props }) => {
       });
   }
 
-  const ClearFields = () => {
-    setCleaningInputs(true);
-
-    setTimeout(() => {
-      setCleaningInputs(false);
-      setSuccessOpen(false);
-      setInputFields(inputFields.map(input => ({ ...input, error: '', value: '' })));
-    }, 500);
-  };
-
   const handleFormChange = (i, e) => {
     setInputFields(prevInputFields => {
       const data = [...prevInputFields];
@@ -259,18 +187,6 @@ const newWorker = ({ ...props }) => {
         <Notification />
 
         {processing && <Loader center={true} backdrop />}
-        {/* What to do after Create Modal */}
-        <ConfirmDialog
-          open={successOpen}
-          handleClose={() => ClearFields()}
-          onConfirm={() => Router.push(`${routes.private.internal.workers}`)}
-          message={'Utilizador criado com sucesso, que deseja fazer a agora?'}
-          icon='Verified'
-          iconType='success'
-          okTxt='Ver Utilizador'
-          cancelTxt='Criar novo utilizador'
-        />
-
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
           <div
@@ -303,11 +219,6 @@ const newWorker = ({ ...props }) => {
                 fields={inputFields}
                 onFormChange={handleFormChange}
               />
-              <Grid container md={12} >
-                <Button onClick={ClearFields} style={{ marginLeft: 'auto' }}>
-                  {cleaningInputs ? <CircularProgress size={26} /> : 'Limpar'}
-                </Button>
-              </Grid>
             </Grid>
           </Box>
         </Content>

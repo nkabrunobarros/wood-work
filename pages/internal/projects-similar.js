@@ -15,6 +15,7 @@ import routes from '../../navigation/routes';
 
 //  Services
 import moment from 'moment/moment';
+import displayDateDifference from '../../components/utils/DisplayDateDifference';
 import AuthData from '../../lib/AuthData';
 import * as assemblyActionsRedux from '../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../store/actions/budget';
@@ -67,7 +68,7 @@ const OrdersSimilar = () => {
           getBudget(project.hasBudget.object),
           getAssembly(project.assembly.object),
           getExpedition(project.expedition.object),
-          getFurnitures({ hasBudget: project.hasBudget.object, furnitureType: 'furniture', produced: false }),
+          getFurnitures({ hasBudget: project.hasBudget.object, furnitureType: 'furniture' }),
           getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))
         ]);
 
@@ -78,7 +79,6 @@ const OrdersSimilar = () => {
 
         const furnitures = [...furnituresData.data]
           .sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1)
-          .filter((ele) => ele.furnitureType.value === 'furniture' && ele.hasBudget.object === project.hasBudget.object)
           .map((furni) => {
             const { minStartTime, maxFinishTime } = getTaskTimeRange(logsWorkerTasks.filter(ele => ele.onFurniture?.value === furni.id));
 
@@ -90,21 +90,34 @@ const OrdersSimilar = () => {
           });
 
         const client = clientData.data;
-        const projAgreedDelivery = moment(budget?.dateDeliveryProject?.value, 'DD/MM/YYYY');
         const projCreated = moment(project.createdAt);
-        const previsto1 = `${projCreated.diff(projAgreedDelivery, datesDiferencesFormat) * -1 || 0} ${datesDiferencesFormat === 'days' ? 'dia(s)' : 'hora(s)'}`;
+        const predicted = displayDateDifference(projCreated, budget?.dateDeliveryProject?.value);
+        const done = displayDateDifference(projCreated, expedition?.deliveryTime?.value);
+        const desvio = displayDateDifference(projCreated, budget?.dateDeliveryProject?.value);
 
         return {
           ...project,
           begin: { value: moment(project.createdAt).format('DD/MM/YYYY') },
-          end: { value: expedition?.expeditionTime?.value ? moment(expedition?.expeditionTime?.value).format('DD/MM/YYYY') : '' },
+          end: { value: expedition?.expeditionTime?.value ? moment(expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY') : '' },
           beginAssembly: { value: assembly?.startTime.value },
           endAssembly: { value: assembly?.finishTime.value },
           budget,
-          predicted: previsto1,
+          predicted,
+          done,
           client,
           assembly,
-          furnitures
+          furnitures,
+          desvio,
+          Desvio: desvio,
+          Realizado: done,
+          Número: budget.num.value,
+          Nome: project.name.value,
+          ClienteLabel: client.user.first_name + ' ' + client.user.last_name,
+          Cliente: client.id,
+          Previsto: predicted,
+          Quantidade: project.amount.value,
+          Inicio: moment(project.createdAt).format('DD/MM/YYYY'),
+          Fim: expedition?.expeditionTime?.value ? moment(expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY') : '',
         };
       }));
 
@@ -123,147 +136,8 @@ const OrdersSimilar = () => {
       },
     ];
 
-    //  Table upper cols
-    const headCellsUpper = [
-      {
-        id: 'amountProduced',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: false,
-        borderRight: false,
-        label: 'Quantidade Produzida:12 Un',
-        span: 5,
-        show: true
-      },
-      {
-        id: 'orderAmount',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: true,
-        borderRight: true,
-        label: 'Quantidade Pedida:25 Un',
-        span: 1,
-        show: true
-      },
-      {
-        id: 'perUnit',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: false,
-        borderRight: false,
-        label: 'Por unidade',
-        span: 5,
-        show: true
-      },
-    ];
-
-    //  Table lower cols
-    const headCells = [
-      // {
-      //   id: 'id',
-      //   numeric: false,
-      //   disablePadding: false,
-      //   label: 'Nome',
-      // },
-      {
-        id: 'Nome',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nome Projeto',
-        show: true
-      },
-      {
-        id: 'Cliente',
-        numeric: false,
-        disablePadding: true,
-        label: 'Cliente',
-        show: true
-      },
-      {
-        id: 'previsto1',
-        numeric: false,
-        disablePadding: false,
-        label: 'Previsto',
-        show: true
-      },
-      {
-        id: 'realizado1',
-        numeric: false,
-        disablePadding: false,
-        label: 'Realizado',
-        show: true
-      },
-      {
-        id: 'desvio',
-        numeric: false,
-        disablePadding: false,
-        label: 'Desvio',
-        show: true
-      },
-      {
-        id: 'previstoAtual',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: true,
-        borderRight: true,
-        label: 'Horas Atuais',
-        show: true
-      },
-      {
-        id: 'product.craftTime',
-        numeric: false,
-        disablePadding: false,
-        label: 'Previsto',
-        show: true
-      },
-      {
-        id: 'Custo',
-        numeric: false,
-        disablePadding: false,
-        label: 'Custo',
-        show: true
-      },
-      {
-        id: 'realizado2',
-        numeric: false,
-        disablePadding: false,
-        label: 'Realizado',
-        show: true
-      },
-      {
-        id: 'desvio2',
-        numeric: false,
-        disablePadding: false,
-        label: 'Desvio',
-        show: true
-      },
-      // {
-      //   id: 'actions',
-      //   numeric: true,
-      //   disablePadding: false,
-      //   label: 'Ações',
-      // },
-    ];
-
     const detailPage = routes.private.internal.project;
     const editPage = routes.private.internal.editProject;
-
-    //  Dummy Operation types
-    const operations = [
-      {
-        label: 'Corte',
-        value: 'Corte',
-      },
-      {
-        label: 'Montagem',
-        value: 'Montagem',
-      },
-      {
-        label: 'Colagem',
-        value: 'Colagem',
-      },
-    ];
-
     const clients = [...reduxState.clients?.data ?? []];
 
     const projects1 = [...reduxState.projects.data]?.map(
@@ -311,9 +185,6 @@ const OrdersSimilar = () => {
       }),
       woodTypes: [],
       products: [],
-      operations,
-      headCellsUpper,
-      headCells,
       setDatesDiferencesFormat,
       datesDiferencesFormat
     };

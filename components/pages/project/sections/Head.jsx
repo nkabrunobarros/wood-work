@@ -10,11 +10,13 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../../navigation/routes';
+import * as assemblyActionsRedux from '../../../../store/actions/assembly';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import ToastSet from '../../../utils/ToastSet';
+import HeaderGrid from '../../budget/sections/components/HeaderGrid';
 import FinishProjectModal from '../modal/finishProjectModal';
 
 const Head = (props) => {
@@ -27,36 +29,123 @@ const Head = (props) => {
   const path = useRouter();
   const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
+  const updateAssembly = (data) => dispatch(assemblyActionsRedux.updateAssembly(data));
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateExpedition = (data) => dispatch(expeditionsActionsRedux.updateExpedition(data));
   const reduxState = useSelector((state) => state);
 
-  const commonProps = {
-    sx: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      border: '1px solid',
-      borderColor: 'divider',
-      padding: '.5rem',
-      textAlign: 'center',
+  const upperGrids = [
+    {
+      title: 'Orçamento',
+      colls: [
+        {
+          label: 'Número',
+          value: order.hasBudget?.object?.num?.value
+        },
+        {
+          label: 'Data',
+          value: order.hasBudget?.object?.dateRequest?.value
+        },
+        {
+          label: 'Revisto a',
+          value: moment(order.hasBudget?.object?.createdAt).format('DD/MM/YYYY')
+        },
+        {
+          label: 'Entrega Acordada',
+          value: order.hasBudget?.object?.dateAgreedDelivery?.value
+        },
+        {
+          label: 'Valor',
+          value: order.hasBudget?.object?.price?.value
+        },
+        {
+          label: 'Entregue',
+          value: order.hasBudget?.object?.dateDelivery?.value
+        },
+      ]
     },
-    md: 12 / 12,
-    sm: 12 / 12,
-    xs: 12 / 12
-  };
-
-  const upperCells = {
-    ...commonProps,
-    sx: {
-      ...commonProps.sx,
-      backgroundColor: '#F9F9F9',
-      textAlign: 'center',
+    {
+      title: 'Desenho',
+      colls: [
+        {
+          label: 'Inicio',
+          value: moment(order.createdAt).format('DD/MM/YYYY')
+        },
+        {
+          label: 'Fim',
+          value: order.startedProduction?.value && moment(order.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+      ]
     },
-  };
+  ];
 
-  const cells = {
-    ...commonProps,
-  };
+  const lowerGrids = [
+    {
+      title: 'Produção',
+      colls: [
+        {
+          label: 'Início',
+          value: order?.startedProduction?.value && moment(order?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Fim',
+          value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Quantidade',
+          value: ''
+        },
+      ]
+    },
+    {
+      title: 'Montagem',
+      colls: [
+        {
+          label: 'Inicio',
+          value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Fim',
+          value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+
+        },
+      ]
+    },
+    {
+      title: 'Embalamento',
+      colls: [
+        {
+          label: 'Inicio',
+          value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Fim',
+          value: order?.packing?.startTime?.value
+        },
+        {
+          label: 'Quantidade',
+          value: order?.packing?.packed?.value
+        },
+      ]
+    },
+    {
+      title: 'Expedição',
+      colls: [
+        {
+          label: 'Início',
+          value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Entrega Acordada',
+          value: order.hasBudget?.object?.dateDeliveryProject?.value && moment(order.hasBudget?.object?.dateDeliveryProject?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Fim',
+          value: order?.expedition?.deliveryTime?.value && moment(order?.expedition?.deliveryTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+      ]
+    },
+  ];
 
   async function handleChangeToProd (props) {
     setChangeToProdModal(false);
@@ -92,20 +181,112 @@ const Head = (props) => {
   const tableFirstCell = {
     container: true,
     sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
-    md: 3,
-    sm: 3,
-    xs: 3,
+    md: 4,
+    sm: 4,
+    xs: 4,
     p: 0.5
   };
 
   const tableLastCell = {
     container: true,
     sx: { borderRight: '1px solid ', borderColor: 'divider' },
-    md: 9,
-    sm: 9,
-    xs: 9,
+    md: 8,
+    sm: 8,
+    xs: 8,
     p: 0.5
   };
+
+  async function handleChangeToProduction () {
+    await updateProject({
+      id: order.id,
+      data: {
+        status: { type: 'Property', value: 'production' },
+        startedProduction: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') },
+      }
+    }).then(() => {
+      setOrder({
+        ...order,
+        status: { ...order.status, value: 'production' },
+        startedProduction: { ...order.startedProduction, value: moment().format('DD/MM/YYYY HH:mm:ss') }
+      });
+
+      toast.success('Projeto passou a produção.');
+    });
+  }
+
+  async function handleChangeToAssembly () {
+    await updateProject({
+      id: order.id,
+      data: {
+        status: { type: 'Property', value: 'testing' },
+      }
+    }).then(async () => {
+      setOrder({
+        ...order,
+        status: { ...order.status, value: 'testing' },
+      });
+
+      if (!order.assembly.startTime.value) await updateAssembly({ id: order.assembly.id, data: { startTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
+
+      toast.success('Projeto passou a montagem.');
+    });
+  }
+
+  async function handleChangeToPacking () {
+    await updateProject({
+      id: order.id,
+      data: {
+        status: { type: 'Property', value: 'packing' },
+      }
+    }).then(async () => {
+      await updateAssembly({ id: order.assembly.id, data: { finishTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
+
+      setOrder({
+        ...order,
+        status: { ...order.status, value: 'packing' },
+      });
+
+      toast.success('Projeto passou a embalamento.');
+    });
+  }
+
+  async function handleChangeToTransport () {
+    await updateProject({
+      id: order.id,
+      data: {
+        status: { type: 'Property', value: 'transport' },
+      }
+    }).then(async () => {
+      await updateExpedition({ id: order.expedition.id, data: { expeditionTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
+
+      setOrder({
+        ...order,
+        status: { ...order.status, value: 'transport' },
+        expedition: { ...order.expedition, expeditionTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } }
+      });
+
+      toast.success('Projeto passou a expedição.');
+    });
+  }
+
+  async function handleChangeToFinished () {
+    await updateProject({
+      id: order.id,
+      data: {
+        status: { type: 'Property', value: 'finished' },
+      }
+    }).then(async () => {
+      await updateExpedition({ id: order.expedition.id, data: { deliveryTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
+
+      setOrder({
+        ...order,
+        status: { ...order.status, value: 'finished' },
+        expedition: { ...order.expedition, deliveryTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } }
+      });
+
+      toast.success('Projeto passou a expedição.');
+    });
+  }
 
   return <Box id='pad'>
     <Notification />
@@ -150,43 +331,51 @@ const Head = (props) => {
         <Grid container md={12} sm={12} xs={12}>
           <Typography variant='title'>{order.name.value}</Typography>
           <Box display={'flex'} alignItems='center' pl={2}>
-            {order.status?.value === 'drawing' && <Typography variant='sm' className='successBalloon'>Em desenho</Typography>}
-            {order.status?.value === 'production' && <Typography variant='sm' className='warningBalloon'>Em produção</Typography>}
-            {order.status?.value === 'testing' && <Typography variant='sm' className='infoBalloon'>Em montagem</Typography>}
-            {order.status?.value === 'transport' && <Typography variant='sm' className='alertBalloon'>Em transporte</Typography>}
+            {order.status?.value === 'drawing' && <Typography variant='sm' className='drawingBalloon'>Pendente desenho</Typography>}
+            {order.status?.value === 'production' && <Typography variant='sm' className='productionBalloon'>Pendente produção</Typography>}
+            {order.status?.value === 'testing' && <Typography variant='sm' className='assemblyBalloon'>Pendente montagem</Typography>}
+            {order.status?.value === 'packing' && <Typography variant='sm' className='packingBalloon'>Pendente Embalamento</Typography>}
+            {order.status?.value === 'transport' && <Typography variant='sm' className='expeditionBalloon'>Pendente transporte</Typography>}
             {order.status?.value === 'finished' && <Typography variant='sm' className='successBalloon'>Terminado</Typography>}
             {order.status?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
           </Box>
         </Grid>
       </Grid>
 
-      <Box style={{ marginLeft: 'auto' }}>
+      <Box >
         {false && <PrimaryBtn
           text='Gerar Etiquetas'
           hidden={!(internalPOV && order.status.value === 'production')}
           icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />}
         <PrimaryBtn
           text='Passar a produção'
-          onClick={() => setChangeToProdModal(true) }
+          onClick={() => handleChangeToProduction() }
           hidden={!(internalPOV && order.status.value === 'drawing')}
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />
         <PrimaryBtn
           text='Passar a montagem'
-          onClick={() => setChangeToAssemblyModal(true) }
+          onClick={() => handleChangeToAssembly() }
           hidden={!(internalPOV && order.status.value === 'production')}
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
-          text='Passar a transporte'
-          onClick={() => setChangeToTransportModal(true) }
+          text='Passar a embalamento'
+          onClick={() => handleChangeToPacking() }
           hidden={!(internalPOV && order.status.value === 'testing')}
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
+          text='Passar a expedição'
+          onClick={() => handleChangeToTransport() }
+          hidden={!(internalPOV && order.status.value === 'packing')}
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
+          sx={{ marginLeft: 1 }}
+        />
+        <PrimaryBtn
           text='Terminar projeto'
-          onClick={() => setChangeToFinishedModal(true) }
+          onClick={() => handleChangeToFinished() }
           hidden={!(internalPOV && order.status.value === 'transport')}
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
@@ -194,45 +383,10 @@ const Head = (props) => {
       </Box>
     </Box>
     <Grid container md={12}>
-      <Grid container md={12} p={1} >
-        {/* <Grid container md={12} sm={12} xs={12} >
-          <Grid container { ...upperCells } md={10} sm={10} xs={10}>Datas</Grid>
-          <Grid container { ...upperCells } md={2} sm={2} xs={2}>Informação</Grid>
-        </Grid> */}
-        <Grid container md={12} sm={12} xs={12} >
-          <Grid container {...upperCells} md={(12 / 12) * 6} sm={(12 / 12) * 6} xs={(12 / 12) * 6}>Orçamento</Grid>
-          <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Produção</Grid>
-          <Grid container {...upperCells} md={(12 / 12) * 3} sm={(12 / 12) * 3} xs={(12 / 12) * 3}>Expedição</Grid>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12}>
-          <Grid container { ...upperCells }><Typography variant='sm' >Número</Typography> </Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Data</Typography> </Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Revisto a</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Valor</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Inicio</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Fim</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Quantidade</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Entrada</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Entrega Acordada</Typography></Grid>
-          <Grid container { ...upperCells }><Typography variant='sm' >Entregue</Typography></Grid>
-        </Grid>
-        <Grid container md={12} sm={12} xs={12}>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.num?.value || 212453}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateRequest?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{moment(order?.hasBudget?.object?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateAgreedDelivery?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.price?.value} €</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDelivery?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{moment(order?.createdAt).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value).format('DD/MM/YYYY')}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.produced?.value || 0}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.entryTime?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.hasBudget?.object?.dateDeliveryProject?.value}</Typography></Grid>
-          <Grid container { ...cells }><Typography variant='sm' >{order?.expedition?.expeditionTime?.value}</Typography></Grid>
-        </Grid>
-      </Grid>
+
+      <HeaderGrid grids={ upperGrids }/>
+      <HeaderGrid grids={ lowerGrids }/>
+
       <Grid container md={12} p={1}>
         <Grid container style={{ width: 'fit-content' }}>
           <Grid container md={4} display={'none'}>
@@ -257,7 +411,7 @@ const Head = (props) => {
                 {/* Headers */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
                   <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
-                  <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item color='lightTextSm.main'></Typography>Entrega</Grid>
+                  {/* <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item color='lightTextSm.main'></Typography>Entrega</Grid> */}
                 </Grid>
                 {/* Postal Code */}
                 <Grid container md={12} sm={12} xs={12}>
@@ -282,7 +436,7 @@ const Head = (props) => {
                 {/* addressCountry */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                   <Grid {...tableFirstCell}><Typography item color='lightTextSm.black'>País</Typography></Grid>
-                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState.countries.data.find(ele => ele.cca2 === order.hasBudget?.object?.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
+                  <Grid {...tableLastCell}><Typography item color='lightTextSm.black'>{reduxState?.countries?.data?.find(ele => ele.cca2 === order.hasBudget?.object?.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
                 </Grid>
               </Grid>
             </Grid>

@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Divid
 import React, { useState } from 'react';
 
 //  PropTypes
-import { Calendar, ChevronDown, UserPlus } from 'lucide-react';
+import { ChevronDown, UserPlus } from 'lucide-react';
 import PropTypes from 'prop-types';
 //  Page Component Styles
 import styles from '../../../../styles/NewOrder.module.css';
@@ -24,7 +24,6 @@ const RequestTab = (props) => {
     onBudgetChange,
     countries,
     clients,
-    setClientUser,
     onClientChange,
   } = props;
 
@@ -37,7 +36,7 @@ const RequestTab = (props) => {
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Typography id='align' className='headerTitleSm'>
-          <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto
+          Projeto
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -77,7 +76,6 @@ const RequestTab = (props) => {
                       getOptionLabel={(option) => option.Nome}
                       getOptionValue={(option) => option.user.id}
                       onChange={(e, value) => {
-                        setClientUser(value?.user?.id);
                         onClientChange({ value: value?.id || '', name: 'client' });
                       }}
                       renderOption={(props, option) => {
@@ -93,7 +91,6 @@ const RequestTab = (props) => {
                           error={budgetData.client?.error}
                           value={budgetData.client?.value}
                           {...params}
-                          placeholder="Escrever Nome Cliente"
                           inputProps={{
                             ...params.inputProps,
                             autoComplete: 'new-password', // disable autocomplete and autofill
@@ -136,13 +133,13 @@ const RequestTab = (props) => {
                     </InputLabel>
 
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       maxDate={dayjs().endOf('day')}
                       value={budgetData.dateRequest.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
                       // onChange={(newValue) => onBudgetChange(newValue)}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateRequest.error} inputProps={{ sx: { color: budgetData.dateRequest.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateRequest.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateRequest.error} inputProps={{ sx: { color: budgetData.dateRequest.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateRequest.error || 'DD/MM/YYYY' }}/>}
 
                     />
                   </Grid>
@@ -156,12 +153,12 @@ const RequestTab = (props) => {
 
                     </InputLabel>
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
                       value={budgetData.dateAgreedDelivery.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateAgreedDelivery' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateAgreedDelivery.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   {/* Date budget Delivery */}
@@ -174,13 +171,13 @@ const RequestTab = (props) => {
 
                     </InputLabel>
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       value={budgetData.dateDelivery.value}
                       minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
 
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDelivery' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDelivery.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDelivery.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   {/* Date agree delivery Project */}
@@ -193,12 +190,12 @@ const RequestTab = (props) => {
 
                     </InputLabel>
                     <DesktopDatePicker
-                      inputFormat={'DD.MM.YYYY'}
+                      inputFormat={'DD/MM/YYYY'}
                       minDate={moment.utc().startOf('day')}
                       value={budgetData.dateDeliveryProject.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDeliveryProject' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateDeliveryProject.error} inputProps={{ sx: { color: budgetData.dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDeliveryProject.error || 'DD.MM.YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateDeliveryProject.error} inputProps={{ sx: { color: budgetData.dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
@@ -324,14 +321,6 @@ const RequestTab = (props) => {
                       </Select>
 
                     </Box>
-                    {/* <MyInput
-                  label='Pais'
-                  required={budgetData.addressCountry?.required}
-                  error={budgetData.addressCountry.error}
-                  name='addressCountry'
-                  value={budgetData.addressCountry.value}
-                  onChange={(e) => onBudgetChange(e.target)}
-                /> */}
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
@@ -346,17 +335,6 @@ const RequestTab = (props) => {
                       value={budgetData.price.value}
                     />
                   </Grid>
-                  {false && <Grid container item sm={12} xs={12} p={1} >
-                    <MyInput
-                      label='Observações'
-                      type={budgetData.obs.type}
-                      name='obs'
-                      paceholder='Escrever observações'
-                      className={styles.textarea}
-                      value={budgetData.obs.value}
-                      onChange={(e) => onBudgetChange(e.target)}
-                    />
-                  </Grid>}
                 </Grid>
               </LocalizationProvider>
             </Grid>
@@ -374,7 +352,6 @@ RequestTab.propTypes = {
   onBudgetChange: PropTypes.any,
   countries: PropTypes.array,
   clients: PropTypes.array,
-  setClientUser: PropTypes.func,
   onClientChange: PropTypes.func,
   client: PropTypes.object,
 };

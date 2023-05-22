@@ -26,11 +26,11 @@
 [ ]            PATCH a assembly[project.assembly.id] 
 [ ]                FinishTime: now()
 [ ]            PATCH a project[project.id]
-[ ]                status: 'packaging'
+[ ]                status: 'packing'
 
 ## Entra em fase de montagem
 
-## Montagem (packaging)
+## Montagem (packing)
 
 [x]: Listagem
 [x] GET modules

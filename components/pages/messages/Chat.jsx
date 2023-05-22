@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 //  PropTypes
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ const Chat = (props) => {
     function loadMessages () {
       setLoaded(false);
 
-      typeof conversation?.messages === 'undefined' && getMessages(props.conversation?.hasBudget?.object || props.conversation?.id).then((res) => {
+      typeof conversation?.messages === 'undefined' && getMessages(props.conversation?.hasBudget?.object.id || props.conversation?.id).then((res) => {
         const chats = [...props.chats];
 
         const chatsMsg = chats.map((chat, index) => {
@@ -43,9 +43,9 @@ const Chat = (props) => {
 
   return loaded
     ? (
-      <div id='messagesContainer'>
+      <Grid container pt={'1rem'} id='messagesContainer' >
         {!!conversation?.messages && conversation?.messages.sort((a, b) => moment(a.created).diff(moment(b.created))).map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)}
-      </div>
+      </Grid>
     )
     : <Box id='messagesContainer' display='flex' alignItems={'center'} justifyContent='center' sx={{ height: '100%' }}><Loader noPos/></Box>;
 };

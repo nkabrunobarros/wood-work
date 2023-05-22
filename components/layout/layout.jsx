@@ -12,13 +12,11 @@ import routes from '../../navigation/routes';
 //  Custom Components
 // import { navLinks } from '../utils/navLinks';
 
-import { Box, Fab } from '@mui/material';
-import { ChevronUp } from 'lucide-react';
 import { destroyCookie, parseCookies } from 'nookies';
 import { useDispatch } from 'react-redux';
+import FloatingButton from '../../components/floatingButton/FloatingButton';
 import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
-import styles from '../../styles/404.module.css';
 
 const noLayoutScreens = [
   `${routes.public.signIn}`,
@@ -94,16 +92,8 @@ const Layout = ({ children }) => {
     ? <PageNotFound noAccess />
     : loaded && <>
       {children}
-      <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
-        <Fab
-          aria-label="like"
-          size={'medium'}
-          color={'primary'}
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-        >
-          <ChevronUp color="white" />
-        </Fab>
-      </Box></>;
+      <FloatingButton isVisible={isVisible}/>
+    </>;
 
   // return <Loader center={true} />;
 };

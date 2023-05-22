@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import {
   Autocomplete,
-  Box, Chip, Grid,
+  Box, Chip,
+  Grid,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -24,9 +25,9 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/InfoCard';
 import Content from '../../content/content';
 import MyInput from '../../inputs/myInput';
-import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const ProjectsScreen = (props) => {
@@ -34,7 +35,6 @@ const ProjectsScreen = (props) => {
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
-  const deleteProject = (data) => dispatch(projectsActionsRedux.deleteProject(data));
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const deleteBudget = (data) => dispatch(budgetsActionsRedux.deleteBudget(data));
 
@@ -98,7 +98,7 @@ const ProjectsScreen = (props) => {
       label: 'Pendente Montagem'
     },
     {
-      id: 'packaging',
+      id: 'packing',
       label: 'Pendente Embalamento'
     },
     {
@@ -201,18 +201,12 @@ const ProjectsScreen = (props) => {
   async function onDeleteItem (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
-    const toDelete = items.find(ele => ele.id === props)?.status?.value === 'canceled';
-    // eslint-disable-next-line react/prop-types
-    const isProject = props.includes('urn:ngsi-ld:Project:');
-    const deleteItem = isProject ? deleteProject : deleteBudget;
-    const updateItem = isProject ? updateProject : updateBudget;
+    const toDelete = items.find(ele => ele.id === props);
 
-    try {
-      toDelete
-        ? await deleteItem(props)
-        : await updateItem({ id: props, data: { status: { type: 'Property', value: 'canceled' } } });
-    } catch (err) {
-      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+    if (toDelete.type === 'Project') {
+      await deleteBudget(toDelete.hasBudget.object);
+    } else {
+      await deleteBudget(props);
     }
 
     const old = [...items];
@@ -224,23 +218,8 @@ const ProjectsScreen = (props) => {
 
         updatedItems.splice(index, 1);
         setItems(updatedItems);
-        ToastSet(loading, 'Projeto apagado do sistema.', 'success');
+        ToastSet(loading, 'Projeto apagado.', 'success');
       }
-    } else if (index !== -1) {
-      const updatedItem = {
-        ...items[index], // Copy the existing item
-        status: { type: 'Property', value: 'canceled' },
-        Estado: 'canceled'
-      };
-
-      const updatedItems = [
-        ...items.slice(0, index), // Copy the items before the updated item
-        updatedItem, // Add the updated item
-        ...items.slice(index + 1) // Copy the items after the updated item
-      ];
-
-      setItems(updatedItems);
-      ToastSet(loading, 'Projeto cancelado.', 'success');
     }
   }
 
@@ -250,8 +229,8 @@ const ProjectsScreen = (props) => {
     return {
       fontWeight:
         personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
+          ? theme?.typography?.fontWeightRegular
+          : theme?.typography?.fontWeightMedium,
     };
   }
 
@@ -321,7 +300,6 @@ const ProjectsScreen = (props) => {
                     <TextField
                       value={client}
                       {...params}
-                      placeholder="Escrever Nome Cliente"
                       inputProps={{
                         ...params.inputProps,
                         autoComplete: 'new-password', // disable autocomplete and autofill
@@ -331,71 +309,30 @@ const ProjectsScreen = (props) => {
                 />
               </Box>
             </Grid>}
-            <Grid container item md={4} sm={6} xs={12} p={1}>
+            <Grid container item md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Nome'
                 id='name'
                 name='name'
                 autoComplete='name'
-                placeholder='Escrever Nome'
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
               />
             </Grid>
-            <Grid container item md={4} sm={6} xs={12} p={1}>
+            <Grid container item md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
               <MyInput
                 fullWidth
                 label='Número'
+                type='number'
                 id='Numero'
                 name='Numero'
                 autoComplete='name'
-                placeholder='Escrever Número'
                 value={referencia}
                 onChange={(e) => setReferência(e.target.value)}
               />
             </Grid>
-
-            <Grid container item md={4} sm={6} xs={12} p={1} display='none'>
-              <MySelect
-                label='Estado'
-                fullWidth
-                value={producao}
-                onChange={(e) => setProducao(e.target.value)}
-                options={States}
-              />
-            </Grid>
-            <Grid container item md={3} sm={6} xs={12} p={1} display='none'>
-              <InputLabel id="state-select">Estado</InputLabel>
-              <Select
-                labelId="state-select"
-                multiple
-                value={personName}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, overflow: 'auto', height: '35px', position: 'sticky' }}>
-                    {selected.map((value) => {
-                      return <Chip key={value} label={States.filter(ele => ele.subheader !== true).find(ele => ele.id === value)?.label} />;
-                    })}
-                  </Box>
-                )}
-                sx={{ width: '100%', height: '56px' }}
-              >
-                {States.map((value) => (
-                  <MenuItem
-                    key={value.id}
-                    value={value.id}
-                    disabled={value.subheader}
-                    style={getStyles(name, personName, theme)}
-                  >
-                    {value.label}
-                  </MenuItem>
-                ))}
-              </Select>
-
-            </Grid>
-            <Grid container item md={12} sm={6} xs={12} p={1}>
+            <Grid container item md={isInternalPage ? 12 : 6} sm={12} xs={12} p={1}>
               <Grid container item md={12} sm={6} xs={12}>
                 <InputLabel id="state-select">Estado</InputLabel>
               </Grid>
@@ -427,7 +364,7 @@ const ProjectsScreen = (props) => {
 
             </Grid>
             <Grid container item md={12} sx={{ display: 'flex', justifyContent: 'end' }}>
-              <PrimaryBtn text={'Limpar'} light onClick={() => ClearFilters()} />
+              <PrimaryBtn text={'Repor'} light onClick={() => ClearFilters()} />
             </Grid>
           </Grid>
         </Content>
@@ -436,8 +373,8 @@ const ProjectsScreen = (props) => {
           <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
             <PrimaryBtn
-              hidden={!isInternalPage}
-              text='Adicionar projeto'
+              hidden={!(isInternalPage && CanDo('add_project'))}
+              text='Adicionar'
               onClick={() => Router.push(routes.private.internal.newProject)}
             />
           </Box>

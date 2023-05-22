@@ -32,10 +32,10 @@ import styles from '../../../styles/NewOrder.module.css';
 import FormGenerator from '../../formGenerator';
 
 import { useDispatch } from 'react-redux';
+import routes from '../../../navigation/routes';
 import * as ClientsActionsRedux from '../../../store/actions/client';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
-import routes from '../../../navigation/routes';
 
 const EditClient = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, client } = props;
@@ -71,7 +71,8 @@ const EditClient = ({ ...props }) => {
         error: '',
         disabled: true,
         required: true,
-        tooltip: ''
+        tooltip: '',
+        lineBreak: true,
       },
       {
         id: 'address.streetAddress',
@@ -113,7 +114,7 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         type: 'country',
-
+        lineBreak: true,
       },
       {
         id: 'delivery_address.streetAddress',
@@ -122,7 +123,8 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         tooltip: '',
-        maxLength: 50
+        maxLength: 50,
+        hidden: true,
       },
       {
         id: 'delivery_address.postalCode',
@@ -131,7 +133,8 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         tooltip: '',
-        maxLength: 15
+        maxLength: 15,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressLocality',
@@ -139,7 +142,8 @@ const EditClient = ({ ...props }) => {
         value: client.delivery_address.addressLocality,
         error: '',
         required: true,
-        maxLength: 25
+        maxLength: 25,
+        hidden: true,
 
       },
       {
@@ -147,7 +151,8 @@ const EditClient = ({ ...props }) => {
         label: 'Região de Entrega',
         value: client.delivery_address.addressRegion,
         error: '',
-        maxLength: 25
+        maxLength: 25,
+        hidden: true,
       },
       {
         id: 'delivery_address.addressCountry',
@@ -156,7 +161,7 @@ const EditClient = ({ ...props }) => {
         error: '',
         required: true,
         type: 'country',
-
+        hidden: true,
       },
     ]
   );

@@ -15,7 +15,7 @@ const FactoryGround = () => {
   const [loaded, setLoaded] = useState(false);
   const [projs, setProjs] = useState([]);
   const reduxState = useSelector((state) => state);
-  const getProjects = (data) => dispatch(projectsActionsRedux.projectsInProduction(data));
+  const getProjects = (data) => dispatch(projectsActionsRedux.projects(data));
   const getMachines = (data) => dispatch(machinesActionsRedux.machines(data));
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
@@ -27,7 +27,9 @@ const FactoryGround = () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
 
       const [projectsData] = await Promise.all([
-        getProjects(),
+        getProjects([
+          { key: 'status', value: 'drawing', operator: '!=' },
+        ]),
         getMachines()
       ]);
 

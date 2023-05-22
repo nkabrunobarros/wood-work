@@ -134,7 +134,7 @@ const Products2 = (props) => {
                     {group.subgroups?.map((subgroup) => {
                       return <Grow in key={subgroup.id}>
                         <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
-                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
+                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                             <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                             <Typography variant='subtitle1' > {subgroup.name.value}</Typography>
                             {order.status.value !== 'drawing' && <Box >

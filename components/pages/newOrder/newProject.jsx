@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 //  Nodes
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  Material Ui
@@ -33,10 +33,11 @@ import Loader from '../../loader/loader';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
-import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
+import routes from '../../../navigation/routes';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import formatString from '../../utils/FormatString';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
@@ -44,16 +45,16 @@ import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients } = props;
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
   const [lines, setLines] = useState([]);
   const dispatch = useDispatch();
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
-  const newFolder = (data) => dispatch(foldersActionsRedux.newFolder(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
   const reduxState = useSelector((state) => state);
+  const path = useRouter();
+  const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
   useEffect(() => {
     let totalPrice = 0;
@@ -72,15 +73,13 @@ const NewOrder = ({ ...props }) => {
     setBudgetData({ ...budgetData, price: { ...budgetData.price, value: totalPrice }, amount: { ...budgetData.price, value: totalAmount } });
   }, [lines]);
 
-  const [clientUser, setClientUser] = useState('');
-
   const [budgetData, setBudgetData] = useState({
     num: { value: '', error: '', required: true },
     name: { value: '', error: '', required: true },
     obs: { value: '', type: 'area' },
     price: { value: '', error: '' },
     client: { value: '', error: '', required: true },
-    dateRequest: { value: moment(moment(), 'DD.MM.YYYY'), error: '', required: true, type: 'date' },
+    dateRequest: { value: moment(moment(), 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
     dateDelivery: { value: '', error: '', required: false, type: 'date' },
     dateAgreedDelivery: { value: '', error: '', required: true, type: 'date' },
     dateDeliveryProject: { value: '', error: '', required: false, type: 'date' },
@@ -90,10 +89,6 @@ const NewOrder = ({ ...props }) => {
     addressRegion: { value: '', error: '', required: false },
     addressCountry: { value: '', error: '', required: true },
   });
-
-  const [inputFields, setInputFields] = useState([{
-    amount: { value: 0, error: '' }
-  }]);
 
   function onBudgetChange (props) {
     const data = { ...budgetData };
@@ -111,11 +106,11 @@ const NewOrder = ({ ...props }) => {
     if (props.name === 'client') {
       const client = clients.find(ele => ele.id === props.value);
 
-      data.postalCode = { error: '', value: client?.delivery_address?.postalCode };
-      data.streetAddress = { error: '', value: client?.delivery_address?.streetAddress || '' };
-      data.addressLocality = { error: '', value: client?.delivery_address?.addressLocality };
-      data.addressRegion = { error: '', value: client?.delivery_address?.addressRegion };
-      data.addressCountry = { error: '', value: client?.delivery_address?.addressCountry };
+      data.postalCode = { error: '', value: client?.address?.postalCode };
+      data.streetAddress = { error: '', value: client?.address?.streetAddress || '' };
+      data.addressLocality = { error: '', value: client?.address?.addressLocality };
+      data.addressRegion = { error: '', value: client?.address?.addressRegion };
+      data.addressCountry = { error: '', value: client?.address?.addressCountry };
     }
 
     data[props.name].value = props.value;
@@ -125,6 +120,14 @@ const NewOrder = ({ ...props }) => {
   function ValidateLines () {
     const obj = [...lines];
     let hasErrors = false;
+
+    if (lines.length === 0) {
+      toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+    } else if (lines[0].subGroups.length === 0) {
+      toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+    } else if (lines[0].subGroups[0].items.length === 0) {
+      toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+    }
 
     //  if there are 0 items in the 1st group, return true = errors
     if (obj[0]?.subGroups?.length === 0 || typeof obj[0]?.subGroups === 'undefined') return true;
@@ -143,6 +146,7 @@ const NewOrder = ({ ...props }) => {
     });
 
     setLines(obj);
+    hasErrors && toast.error('Prencha todos os campos.');
 
     return hasErrors;
   }
@@ -168,19 +172,6 @@ const NewOrder = ({ ...props }) => {
       }
     });
 
-    inputFields.map((field) => {
-      Object.keys(field).map((key) => {
-        if (field[key].required && field[key].value === '') {
-          field[key].error = 'Campo Obrigatório';
-          hasErrors = true;
-        }
-      });
-
-      return field;
-    });
-
-    if (ValidateLines()) hasErrors = true;
-
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
       setBudgetData(data);
@@ -188,7 +179,9 @@ const NewOrder = ({ ...props }) => {
       return !hasErrors;
     }
 
-    setDialogOpen(true);
+    if (ValidateLines()) return false;
+
+    CreateOrder();
   }
 
   async function CreateOrder () {
@@ -267,20 +260,12 @@ const NewOrder = ({ ...props }) => {
 
     await newBudget(data).then(async () => {
       CreateFurnitures(data.id);
-
-      false && await newFolder({
-        name: `urn:ngsi-ld:Folder:${data.id.replace('urn:ngsi-ld:Budget:', '')}`,
-        parent: null,
-        user: clientUser,
-        budget: `urn:ngsi-ld:Budget:${data.id.replace('urn:ngsi-ld:Budget:', '')}`
-      });
-
       toast.success('Projeto Criado!');
+      Router.push(routes.private.internal.budget + data.id);
     }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
 
     // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
     setProcessing(false);
-    setDialogOpen(false);
   }
 
   function ClearAll () {
@@ -378,11 +363,11 @@ const NewOrder = ({ ...props }) => {
       return normalizedItem;
     });
 
-    mergedArray.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
+    const fixed = mergedArray.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
 
     try {
-      mergedArray.map(async (ele) => await newFurniture({ ...ele, id: ele.id + formatString(budgetData.name.value) }));
-      // await newFurniture(mergedArray).then((result) => console.log(result));
+      fixed.map(async (ele) => await newFurniture(ele));
+      // await newFurniture(fixed).then((result) => console.log(result));
     } catch (err) {
       console.log(err);
     }
@@ -396,13 +381,6 @@ const NewOrder = ({ ...props }) => {
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         {/* Confirm Create Order Modal */}
-        <ConfirmDialog
-          open={dialogOpen}
-          handleClose={() => setDialogOpen(false)}
-          onConfirm={() => CreateOrder()}
-          message={'Está prestes a criar um projeto, tem certeza que quer continuar?'}
-          icon='AlertOctagon'
-        />
         {processing && <Loader center={true} backdrop />}
         {/* What do do after Create Modal */}
         <ConfirmDialog {...successModalProps} />
@@ -415,6 +393,7 @@ const NewOrder = ({ ...props }) => {
               <ButtonGroup>
                 <PrimaryBtn
                   onClick={() => ValidateData()}
+                  hidden={!isInternalPage && !CanDo('add_project')}
                   text={'Guardar'}
                   icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
                 />
@@ -435,7 +414,6 @@ const NewOrder = ({ ...props }) => {
                 onProcessing={setProcessing}
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
-                setClientUser={setClientUser}
                 onClientChange={onBudgetChange}
 
               />
@@ -447,8 +425,6 @@ const NewOrder = ({ ...props }) => {
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
                 noDrop
                 lines={lines}
                 setLines={setLines}
@@ -462,8 +438,6 @@ const NewOrder = ({ ...props }) => {
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 docs={{ uploadedFiles, setUploadedFiles }}
-                inputFields={inputFields}
-                setInputFields={setInputFields}
                 noDrop
                 lines={lines}
                 setLines={setLines}

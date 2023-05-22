@@ -130,108 +130,11 @@ const Order = ({ ...pageProps }) => {
       },
     ];
 
-    const headCellsOrderDetail = [
-      {
-        id: 'startAt',
-        label: 'Cliente',
-      },
-      {
-        id: 'startAt',
-        label: 'Real',
-      },
-      {
-        id: 'startAt',
-        label: 'Inicio',
-        borderLeft: true,
-      },
-      {
-        id: 'endAt',
-        label: 'Fim',
-        borderRight: true,
-      },
-      {
-        id: 'time',
-        disablePadding: false,
-        label: 'Tempo',
-      },
-    ];
-
-    const headCellsUpperProductionDetail = [
-      {
-        id: 'amountDone',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: false,
-        borderRight: false,
-        label: `Quantidade Produzida: ${reduxState.projects.displayedProject?.completed || 0} Un`,
-        span: 4,
-      },
-      {
-        id: 'orderedAmount',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: true,
-        borderRight: true,
-        label: `Quantidade Pedida: ${reduxState.projects.displayedProject?.amount?.amount?.value} Un`,
-        span: 1,
-      },
-      {
-        id: 'perUnit',
-        numeric: false,
-        disablePadding: false,
-        borderLeft: false,
-        borderRight: false,
-        label: 'Por Unidade',
-        span: 3,
-      },
-    ];
-
-    const headCellsMessages = [
-      {
-        id: 'mensagem',
-        label: 'Mensagem',
-        width: '80%',
-      },
-      {
-        id: 'date',
-        label: 'Data',
-        width: '10%',
-      },
-      {
-        id: 'actions',
-        label: 'Ações',
-        width: '10%',
-      },
-    ];
-
-    const headCellsDocs = [
-      {
-        id: 'nome',
-        label: 'Nome',
-        width: '80%',
-      },
-      {
-        id: 'date',
-        label: 'Data',
-        width: '10%',
-      },
-      {
-        id: 'actions',
-        label: 'Ações',
-        width: '10%',
-      },
-      {},
-    ];
-
     const props = {
       order: reduxState.projects.displayedProject,
       breadcrumbsPath,
-      headCellsOrderDetail,
-      headCellsDocs,
       pageProps,
-      headCellsUpperProductionDetail,
       folders,
-      headCellsMessages,
       categories,
       furnitures
     };

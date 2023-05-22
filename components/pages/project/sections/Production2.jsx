@@ -109,7 +109,7 @@ const Production2 = (props) => {
                     {group.subgroups?.map((subgroup) => {
                       return <Grow in key={subgroup.id}>
                         <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
-                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
+                          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                             <Grid container justifyContent={'space-between'} alignItems={'center'}>
                               <Typography variant='subtitle1' >{subgroup.name.value}</Typography>
                             </Grid>
@@ -117,7 +117,7 @@ const Production2 = (props) => {
                           <AccordionDetails sx={{ p: 0 }}>
                             {/* Linhas de moveis/furniture */}
                             <Grid container md={12} sm={12} xs={12}>
-                              <Grid container md={12} sm={12} xs={12} color='white' sx={{ background: theme.palette.primary.main, p: 1 }}>
+                              <Grid container md={12} sm={12} xs={12} color='white' sx={{ background: theme?.palette.primary.main, p: 1 }}>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Nome</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Quantidade Pedida</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>A produzir</Typography></Grid>
