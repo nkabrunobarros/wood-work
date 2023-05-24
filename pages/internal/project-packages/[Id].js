@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/loader/loader';
-import NewPackagingScreen from '../../../components/pages/newPacking/newPacking';
+import NewPackagingScreen from '../../../components/pages/projectPackages/projectPackages';
 import routes from '../../../navigation/routes';
 import * as modulesActionsRedux from '../../../store/actions/module';
 import * as parsActionsRedux from '../../../store/actions/part';
@@ -36,14 +36,8 @@ const NewPackaging = ({ ...pageProps }) => {
         href: `${routes.private.internal.packingList}`,
       },
       {
-        title: `${project.name?.value}`,
+        title: `${project?.name?.value}`,
         href: `${routes.private.internal.packingList}`,
-        // title: `Embalamentos Projeto ${project.name?.value}`,
-        // href: `${routes.private.internal.projectPackages}${project.id}`,
-      },
-      {
-        title: 'Novo embalamento',
-        href: `${routes.private.internal.newPackage}`,
       },
     ];
 

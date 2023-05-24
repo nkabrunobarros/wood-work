@@ -20,6 +20,7 @@ import parts from './parts';
 import permissions from './permissions';
 import projects from './projects';
 import workers from './workers';
+import stocks from './stocks';
 
 const appReducer = combineReducers({
   auth,
@@ -40,7 +41,8 @@ const appReducer = combineReducers({
   countries,
   furnitures,
   modules,
-  packages
+  packages,
+  stocks
 });
 
 const rootReducer = (state, action) => {

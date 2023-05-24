@@ -28,6 +28,7 @@ const routes = {
       error: '/404',
 
       packingList: '/internal/packing',
+      projectPackages: '/internal/project-packages/',
       newPackage: '/internal/new-package/',
 
       leftovers: '/internal/leftovers',

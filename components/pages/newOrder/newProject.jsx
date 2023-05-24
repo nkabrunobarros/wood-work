@@ -11,9 +11,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 //  Icons
 import { Save, X } from 'lucide-react';
 
-//  Actions
-//  Page Component Styles
-
 //  Breadcrumbs Component
 import CustomBreadcrumbs from '../../breadcrumbs';
 
@@ -42,6 +39,7 @@ import formatString from '../../utils/FormatString';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
+import Footer from '../../layout/footer/footer';
 
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients } = props;
@@ -49,6 +47,7 @@ const NewOrder = ({ ...props }) => {
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
   const [lines, setLines] = useState([]);
+  const [linesErrors, setLinesErrors] = useState({ group: false, subGroup: false, item: false });
   const dispatch = useDispatch();
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
@@ -106,11 +105,11 @@ const NewOrder = ({ ...props }) => {
     if (props.name === 'client') {
       const client = clients.find(ele => ele.id === props.value);
 
-      data.postalCode = { error: '', value: client?.address?.postalCode };
-      data.streetAddress = { error: '', value: client?.address?.streetAddress || '' };
-      data.addressLocality = { error: '', value: client?.address?.addressLocality };
-      data.addressRegion = { error: '', value: client?.address?.addressRegion };
-      data.addressCountry = { error: '', value: client?.address?.addressCountry };
+      data.postalCode = { ...data.postalCode, error: '', value: client?.address?.postalCode };
+      data.streetAddress = { ...data.streetAddress, error: '', value: client?.address?.streetAddress };
+      data.addressLocality = { ...data.addressLocality, error: '', value: client?.address?.addressLocality };
+      data.addressRegion = { ...data.addressRegion, error: '', value: client?.address?.addressRegion };
+      data.addressCountry = { ...data.addressCountry, error: '', value: client?.address?.addressCountry };
     }
 
     data[props.name].value = props.value;
@@ -123,14 +122,17 @@ const NewOrder = ({ ...props }) => {
 
     if (lines.length === 0) {
       toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, group: true });
 
       return true;
     } else if (lines[0].subGroups.length === 0) {
       toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, subGroup: true });
 
       return true;
     } else if (lines[0].subGroups[0].items.length === 0) {
       toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, item: true });
 
       return true;
     }
@@ -382,7 +384,7 @@ const NewOrder = ({ ...props }) => {
   return (
     <>
       <Navbar />
-      <Grid component='main'sx={{ padding: '0rem 2rem 0rem 2rem' }} >
+      <Grid component='main'sx={{ padding: '0rem 2rem 4rem 2rem' }} >
         <CssBaseline />
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -434,7 +436,8 @@ const NewOrder = ({ ...props }) => {
                 noDrop
                 lines={lines}
                 setLines={setLines}
-
+                linesErrors={linesErrors}
+                setLinesErrors={setLinesErrors}
               />
             </Content>
           </Grid>
@@ -452,7 +455,7 @@ const NewOrder = ({ ...props }) => {
           </Grid>
         </Grid>
       </Grid >
-
+      <Footer />
     </>
   );
 };

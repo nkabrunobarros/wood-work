@@ -192,7 +192,7 @@ const ProjectsSimilarScreen = ({ ...props }) => {
                         <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Previsto}</Typography></Grid>
                         <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Realizado}</Typography></Grid>
                         <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Quantidade}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Inicio}</Typography> </Grid>
+                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.begin.value}</Typography> </Grid>
                         <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Fim}</Typography> </Grid>
                         <Grid {...cellProps}><Typography variant='subtitle2' className={proj.Desvio.includes('-') ? 'errorBalloon' : 'successBalloon'}> {proj.desvio}</Typography></Grid>
                         <Grid {...cellProps} onClick={() => {}} justifyContent={'end'} sx={{ cursor: 'pointer' }}>
@@ -229,7 +229,6 @@ const ProjectsSimilarScreen = ({ ...props }) => {
                           <Grid {...cellProps}><Typography variant='sm'>{furni.beginPackaging?.value}</Typography></Grid>
                           <Grid {...cellProps}><Typography variant='sm'>{furni.endPackaging?.value}</Typography></Grid>
                           <Grid {...cellProps}><Typography variant='sm'>{furni.price?.value || '0€'}</Typography></Grid>
-                          {console.log(furni?.price?.value)}
                           <Grid {...cellProps}><Typography variant='sm'>{furni.price?.value ? Number(parseInt(furni?.price?.value) / furni?.amount?.value).toFixed(2) + '€' : '0€'} </Typography></Grid>
                         </Grid>;
                       })}
@@ -246,22 +245,11 @@ const ProjectsSimilarScreen = ({ ...props }) => {
 };
 
 ProjectsSimilarScreen.propTypes = {
-  tableCols: PropTypes.array,
   projects: PropTypes.array,
-  panelsInfo: PropTypes.object,
-  detailPage: PropTypes.string,
-  editPage: PropTypes.string,
   clients: PropTypes.array,
-  headCells: PropTypes.array,
-  headCellsUpper: PropTypes.array,
-  items: PropTypes.arrayOf(PropTypes.object),
   products: PropTypes.arrayOf(PropTypes.object),
-  woodTypes: PropTypes.arrayOf(PropTypes.object),
-  operations: PropTypes.arrayOf(PropTypes.object),
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object),
   pageProps: PropTypes.object,
-  setDatesDiferencesFormat: PropTypes.func,
-  datesDiferencesFormat: PropTypes.string,
 };
 
 export default ProjectsSimilarScreen;

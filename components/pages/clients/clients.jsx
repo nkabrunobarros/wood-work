@@ -107,13 +107,13 @@ const Clients = ({ ...props }) => {
                   id="client"
                   fullWidth
                   disablePortal
-                  options={clients.sort((a, b) => (a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0))}
-                  getOptionLabel={(option) => option.Nome}
+                  options={clients.sort((a, b) => (a.NomeDropdown > b.NomeDropdown ? 1 : a.NomeDropdown < b.NomeDropdown ? -1 : 0))}
+                  getOptionLabel={(option) => option.NomeDropdown}
                   getOptionValue={(option) => option.id}
                   onChange={(e, value) => setNome(value?.Nome || '')}
                   renderOption={(props, option) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.Nome}
+                      {option.NomeDropdown}
                     </Box>
                   )}
                   renderInput={(params) => (

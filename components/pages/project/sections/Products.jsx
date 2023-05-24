@@ -80,15 +80,13 @@ const Products2 = (props) => {
 
   function isReady (group) {
     const found = group.subgroups.map((subgroup) => {
-      const found = subgroup.items.find(ele => ele.produced?.value === false);
+      const found = subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').find(ele => ele.produced?.value === false);
 
       return found;
     });
 
     return found[0] && order.status.value !== 'drawing' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
   }
-
-  console.log(furnitures);
 
   return <>
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
@@ -100,7 +98,7 @@ const Products2 = (props) => {
       }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produtos</Typography></Grid>
-          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid>
+          {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid> */}
         </Grid>
       </AccordionSummary>
       <AccordionDetails>
@@ -138,7 +136,7 @@ const Products2 = (props) => {
                             <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                             <Typography variant='subtitle1' > {subgroup.name.value}</Typography>
                             {order.status.value !== 'drawing' && <Box >
-                              { subgroup.items.find(ele => ele.produced?.value === false) && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>}
+                              { subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').find(ele => ele.produced?.value === false) && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>}
                             </Box>}
                           </AccordionSummary>
                           <AccordionDetails>
@@ -147,12 +145,12 @@ const Products2 = (props) => {
                               return <Grow key={itemIndex}in={true}>
                                 <Grid container>
                                   {itemIndex !== 0 && <Box p={4} sx={{ width: '100%' }} >
-                                    <Divider sx={{ width: '100%' }} />
+                                    <Divider sx={{ width: '100%', backgroundColor: 'primary.main' }} />
                                   </Box>}
                                   <Typography variant='subtitle1' > {item.furnitureType.value === 'furniture' ? 'Móvel' : 'Acessório'} </Typography>
                                   <Grid container md={12} sm={12} xs={12}>
                                     <Typography variant='subtitle2' fontWeight={'bold'}>{item.amount?.value} {item.name?.value} {item?.description?.value && ','} {item?.description?.value}</Typography>
-                                    {!item.produced?.value && order.status.value !== 'drawing' && <Box className="fullCenter" >
+                                    {!item.produced?.value && order.status.value !== 'drawing' && item.furnitureType.value === 'furniture' && <Box className="fullCenter" >
                                       <Tooltip title='Em Produção'><Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip></Tooltip>
                                     </Box>}
                                   </Grid>

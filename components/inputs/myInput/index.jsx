@@ -72,7 +72,7 @@ const MyInput = ({
         value={value}
         onChange={handleInputChange}
         required
-        label={error || variant ? label : ''}
+        label={error || (variant ? label : '')}
         fullWidth={fullWidth}
         inputProps={{
           maxLength: maxLength || (type === 'area' ? 2000 : 255),

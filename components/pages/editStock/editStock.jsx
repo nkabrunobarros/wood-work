@@ -13,10 +13,12 @@ import { Box, Divider, Tooltip } from '@mui/material';
 import styles from '../../../styles/StockDetail.module.css';
 import MyInput from '../../inputs/myInput';
 import Navbar from '../../layout/navbar/navbar';
+import Router from 'next/router';
+import routes from '../../../navigation/routes';
 
 const EditStock = ({ ...props }) => {
   const { stock, breadcrumbsPath, pageProps } = props;
-  const [newStock, setNewStock] = useState(stock);
+  const [newStock, setNewStock] = useState(props.stock);
 
   function OnFieldChange (props) {
     setNewStock({ ...newStock, [props.target.name]: props.target.value });
@@ -37,7 +39,7 @@ const EditStock = ({ ...props }) => {
             justifyContent='space-between'
           >
             <Box id='align'>
-              <a className='headerTitleXl'>{stock.material}</a>
+              <a className='headerTitleXl'>{stock?.material}</a>
               <Box className='spacer' />
               <Tooltip title={`${stock?.qtd} unidade(s)`}>
 
@@ -46,7 +48,9 @@ const EditStock = ({ ...props }) => {
                   : <a className="errorBalloon">Indisponivel</a>}
               </Tooltip>
             </Box>
-            <PrimaryBtn text='Guardar' icon={<Save strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} />
+            <PrimaryBtn text='Guardar'
+              onClick={() => Router.push(routes.private.internal.stock + stock.id)}
+              icon={<Save strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} />
           </Box>
           <Grid container id='pad' className='flex'>
             {/* Product Info panels */}

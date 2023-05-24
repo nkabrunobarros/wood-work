@@ -21,7 +21,6 @@ const Workers = () => {
   useEffect(() => {
     const getData = async () => {
       await getWorkers();
-      // !reduxState.permissions.data && await getPermissions();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -35,33 +34,6 @@ const Workers = () => {
       },
     ];
 
-    const headCells = [
-      {
-        id: 'nome',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nome',
-      },
-      {
-        id: 'email',
-        numeric: false,
-        disablePadding: true,
-        label: 'Email',
-      },
-      {
-        id: 'functionPerformed.object.description',
-        numeric: true,
-        disablePadding: false,
-        label: 'Perfil',
-      },
-      {
-        id: 'actions',
-        numeric: true,
-        disablePadding: false,
-        label: 'Ações',
-      },
-    ];
-
     const headCellsWorkers = [
       {
         id: 'Nome',
@@ -71,18 +43,12 @@ const Workers = () => {
         show: true
       },
       {
-        id: 'email.value',
+        id: 'Email',
         numeric: false,
         disablePadding: true,
         label: 'Email',
         show: true
       },
-      // {
-      //   id: 'functionPerformed.value',
-      //   numeric: true,
-      //   disablePadding: false,
-      //   label: 'Função',
-      // },
       {
         id: 'actions',
         numeric: true,
@@ -100,12 +66,12 @@ const Workers = () => {
       breadcrumbsPath,
       editRoute,
       detailRoute,
-      headCells,
       newRoute,
       workers: reduxState.workers?.data.map((worker) => {
         const worker2 = { ...worker };
 
         worker2.Nome = worker.givenName?.value + ' ' + worker.familyName?.value;
+        worker2.NomeDropdown = worker.givenName?.value + ' ' + worker.familyName?.value + ' - ' + worker.email?.value;
         worker2.Email = worker.email?.value;
         worker2.Perfil = worker.functionPerformed?.value;
 

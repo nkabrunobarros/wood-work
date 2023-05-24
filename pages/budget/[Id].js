@@ -1,14 +1,12 @@
 /* eslint-disable array-callback-return */
 //  Page Component
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Loader from '../../components/loader/loader';
 import BudgetScreen from '../../components/pages/budget/budget';
 import routes from '../../navigation/routes';
 import * as budgetsActionsRedux from '../../store/actions/budget';
-import * as countriesActionsRedux from '../../store/actions/country';
 import * as filesActionsRedux from '../../store/actions/file';
 import * as foldersActionsRedux from '../../store/actions/folder';
 import * as furnituresActionsRedux from '../../store/actions/furniture';
@@ -65,24 +63,19 @@ export const buildFurnturesStructure = (array) => {
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
-  // const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [budget, setBudget] = useState();
   const [loaded, setLoaded] = useState(false);
   const [folders, setFolders] = useState([]);
-  const reduxState = useSelector((state) => state);
   const [furnitures, setFurnitures] = useState();
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
   const setDisplayingBudget = (data) => dispatch(budgetsActionsRedux.setDisplayingBudget(data));
   const getFiles = (data) => dispatch(filesActionsRedux.files(data));
   const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
-  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
   useEffect(() => {
     const getData = async () => {
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
-
       const budgetData = await getBudget(router.query.Id);
 
       const [furnituresData, foldersData] = await Promise.all([

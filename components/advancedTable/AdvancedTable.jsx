@@ -73,7 +73,7 @@ const AdvancedTable = ({
     dialogMessage: '',
     anchorEl: null,
     cellsFilter: headCells,
-    loaded: true,
+    loaded: false,
   });
 
   const reduxState = useSelector((state) => state);
@@ -313,7 +313,6 @@ const AdvancedTable = ({
       const filtered2 = rangeFilters ? filterByProperties(rows, rangeFilters) : rows;
       const filtered = MultiFilterArray(filtered2, filters);
 
-      console.log(filters);
       setState({ ...state, filteredItems: filtered });
     }
   }, [filters, rows, rangeFilters]);
@@ -441,7 +440,7 @@ const AdvancedTable = ({
                       tabIndex={-1}
                       key={row.id}
                     >
-                      {state.cellsFilter.map((headCell, index2) => {
+                      {state.cellsFilter.map((headCell) => {
                         return headCell.show && <TableCell
                           id={labelId}
                           key={headCell.id}
@@ -515,7 +514,7 @@ const AdvancedTable = ({
                                       } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
                                     }
                                     }
-                                    color={index2 === 0 && 'primary.main'}
+                                    // color={index2 === 0 && 'primary.main'}
                                     sx={{ cursor: clickRoute && 'pointer' }}
                                   >
                                     {FilterItem(

@@ -34,6 +34,7 @@ function ActiveLink ({ children, url, handleDrawerToggle, page }) {
     packingList: 'Embalamentos',
     newPackage: 'Embalamentos',
     packing: 'Embalamentos',
+    projectPackages: 'Embalamentos',
     assemblys: 'Montagens',
     profile: 'Conta',
     messages: 'Mensagens',

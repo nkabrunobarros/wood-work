@@ -52,7 +52,7 @@ const SignIn = (props) => {
     forgotPasswordRoute
   } = props;
 
-  const [username, setUsername] = useState(Router.route === '/' ? 'bruno.barros@nka.pt' : 'admin');
+  const [username, setUsername] = useState(Router.route === '/' ? 'bruno.barros@nka.pt' : 'admin@email.com');
   // const [email, setEmail] = useState(Router.route === '/' ? 'geral@nka.pt' : 'bruno.barros@nka.pt');
   const [password, setPassword] = useState(Router.route === '/' ? 'ChangeMe1' : 'zo5JhUY7xzgg5Jk');
   const [loading, setLoading] = useState(false);
@@ -108,8 +108,17 @@ const SignIn = (props) => {
     const loadingNotification = toast.loading('');
 
     try {
+      // eslint-disable-next-line consistent-return
       await loginRedux({ username, password }).then(async (res) => {
-        setCookie(undefined, 'auth_token', res.data.access_token);
+        setLoading(false);
+
+        if (res?.response?.status === 400) {
+          if (res.response?.data?.error_description === 'Invalid credentials given.') return ToastSet(loadingNotification, 'Credenciais erradas.', 'error');
+
+          return ToastSet(loadingNotification, 'Algo aconteceu. Por favor tente mais tarde', 'error');
+        }
+
+        setCookie(undefined, 'auth_token', res?.data?.access_token);
 
         await me2(res.data.access_token).then(async (res) => {
           console.log(res);
@@ -167,7 +176,6 @@ const SignIn = (props) => {
           <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
             <XCircle size={80} color='var(--red)' />
           </Box>
-
           <DialogContentText id='alert-dialog-description'>
             Esta conta está bloqueada. Se não é suposto, por favor entre em  <a className='link' href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`}>contacto</a> com o responsavel.
           </DialogContentText>

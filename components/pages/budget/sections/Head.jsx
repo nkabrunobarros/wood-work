@@ -340,20 +340,6 @@ const Head = (props) => {
         }
       });
 
-      const projRes = await newProject({
-        id: 'urn:ngsi-ld:Project:' + formatString(budget.name.value),
-        type: 'Project',
-        orderBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id },
-        name: { type: 'Property', value: budget.name.value },
-        status: { type: 'Property', value: 'drawing' },
-        hasBudget: { type: 'Relationship', object: budget.id },
-        produced: { type: 'Property', value: '0' },
-        amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
-        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
-        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
-        startedProduction: { type: 'Property', value: '' },
-      });
-
       await newAssembly({
         id: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value),
         type: 'Assembly',
@@ -371,13 +357,31 @@ const Head = (props) => {
         },
         belongsTo: {
           type: 'Relationship',
-          object: projRes.data.id
+          object: 'urn:ngsi-ld:Project:' + formatString(budget.name.value)
         },
         orderBy: {
           type: 'Relationship',
           object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id
         }
       });
+
+      const built = {
+        id: 'urn:ngsi-ld:Project:' + formatString(budget.name.value),
+        type: 'Project',
+        orderBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id },
+        name: { type: 'Property', value: budget.name.value },
+        status: { type: 'Property', value: 'drawing' },
+        hasBudget: { type: 'Relationship', object: budget.id },
+        produced: { type: 'Property', value: '0' },
+        amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
+        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
+        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
+        startedProduction: { type: 'Property', value: '' },
+      };
+
+      await newProject(built)
+        .then((res) => console.log(res))
+        .catch((res) => console.log(res));
 
       await updateBudget(
         {
@@ -390,11 +394,11 @@ const Head = (props) => {
         }
       );
 
-      //  Send email
       setAdjudicateModal(false);
       toast.success('Projeto adjudicado! Passou para produção');
-      Router.push(routes.private.internal.project + projRes.data.id);
+      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + formatString(budget.name.value));
     } catch (err) {
+      console.log(err);
       setAdjudicateModal(false);
       toast.error('Algo aconteceu. Por favor tente mais tarde.');
     }
@@ -537,7 +541,7 @@ const Head = (props) => {
                     <Grid container md={12} sm={12} xs={12} >
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0, borderColor: 'divider' }}>
-                        <Grid {...tableFirstCell} sx={{ border: 'none' }}><Typography item variant="subtitle2">Morada</Typography></Grid>
+                        <Grid {...tableFirstCell} sx={{ border: 'none' }}><Typography fontWeight={'bold'} variant="subtitle2">Morada</Typography></Grid>
                         {/* <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item variant="subtitle2"color='lightTextSm.main'></Typography>Entrega</Grid> */}
                       </Grid>
                       {/* Postal Code */}

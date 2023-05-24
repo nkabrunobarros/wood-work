@@ -955,7 +955,7 @@ const FurnitureDetails = (props) => {
                 </Grid>
               </Grid>
               <Grid container md={4} sm={6} xs={6} p={4} display={detailOnly && 'none'} >
-                <MySelect disabled={myMachine?.currentlyOn.value} options={machines.filter((mach) => {
+                <MySelect disabled={myMachine?.currentlyOn?.value} options={machines.filter((mach) => {
                   const isExecuting = activeWorkerTasks.find(
                     ele => ele.machine.value === mach.id && ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id
                   );

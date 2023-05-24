@@ -79,6 +79,14 @@ const Head = (props) => {
     },
   ];
 
+  let totalBuilt = 0;
+
+  // eslint-disable-next-line no-return-assign
+  props.furnituresUnbuilt.filter(ele => ele.produced?.value).map((furni) => totalBuilt = totalBuilt + Number(furni.amount.value));
+  console.log(props.furnituresUnbuilt.filter(ele => ele.produced?.value));
+  console.log(order.amount.value);
+  console.log(totalBuilt);
+
   const lowerGrids = [
     {
       title: 'Produção',
@@ -92,8 +100,8 @@ const Head = (props) => {
           value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
         },
         {
-          label: 'Quantidade',
-          value: ''
+          label: '%',
+          value: totalBuilt > 0 ? Number(totalBuilt / order.amount.value * 100).toFixed(0) : '0'
         },
       ]
     },
@@ -107,7 +115,6 @@ const Head = (props) => {
         {
           label: 'Fim',
           value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-
         },
       ]
     },
@@ -120,11 +127,7 @@ const Head = (props) => {
         },
         {
           label: 'Fim',
-          value: order?.packing?.startTime?.value
-        },
-        {
-          label: 'Quantidade',
-          value: order?.packing?.packed?.value
+          value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
         },
       ]
     },
@@ -136,12 +139,12 @@ const Head = (props) => {
           value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
         },
         {
-          label: 'Entrega Acordada',
-          value: order.hasBudget?.object?.dateDeliveryProject?.value && moment(order.hasBudget?.object?.dateDeliveryProject?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
           label: 'Fim',
           value: order?.expedition?.deliveryTime?.value && moment(order?.expedition?.deliveryTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+        },
+        {
+          label: 'Entrega Acordada',
+          value: order.hasBudget?.object?.dateDeliveryProject?.value && moment(order.hasBudget?.object?.dateDeliveryProject?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
         },
       ]
     },
@@ -335,7 +338,7 @@ const Head = (props) => {
             {order.status?.value === 'production' && <Typography variant='sm' className='productionBalloon'>Pendente produção</Typography>}
             {order.status?.value === 'testing' && <Typography variant='sm' className='assemblyBalloon'>Pendente montagem</Typography>}
             {order.status?.value === 'packing' && <Typography variant='sm' className='packingBalloon'>Pendente Embalamento</Typography>}
-            {order.status?.value === 'transport' && <Typography variant='sm' className='expeditionBalloon'>Pendente transporte</Typography>}
+            {order.status?.value === 'transport' && <Typography variant='sm' className='expeditionBalloon'>Pendente Expedição</Typography>}
             {order.status?.value === 'finished' && <Typography variant='sm' className='successBalloon'>Terminado</Typography>}
             {order.status?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
           </Box>
@@ -389,28 +392,12 @@ const Head = (props) => {
 
       <Grid container md={12} p={1}>
         <Grid container style={{ width: 'fit-content' }}>
-          <Grid container md={4} display={'none'}>
-            <Grid md={12} sm={12} xs={12}>
-              <Typography color={'lightTextSm.main'}>Cliente</Typography>
-              <Tooltip title='Ver cliente' >
-                <Typography color={'primary.main'} sx={{ width: 'fit-content' }}>
-                  <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                    {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}
-                  </a>
-                </Typography>
-              </Tooltip>
-            </Grid>
-            <Grid md={12} sm={12} xs={12}>
-              <Typography color={'lightTextSm.main'}>Tipo</Typography>
-              <Typography >{order.orderBy.object?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
-            </Grid>
-          </Grid>
           <Grid container md={8}>
             <Grid container p={1}>
               <Grid container md={12} sm={12} xs={12} >
                 {/* Headers */}
                 <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0.5, borderColor: 'divider' }}>
-                  <Grid {...tableFirstCell} sx={{ border: 'none' }}>Morada</Grid>
+                  <Grid {...tableFirstCell} sx={{ border: 'none' }}><Typography fontWeight={'bold'} variant="subtitle2">Morada</Typography></Grid>
                   {/* <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item color='lightTextSm.main'></Typography>Entrega</Grid> */}
                 </Grid>
                 {/* Postal Code */}

@@ -45,6 +45,7 @@ import ToastSet from '../../utils/ToastSet';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
+import Footer from '../../layout/footer/footer';
 
 const EditBudget = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients, budget } = props;
@@ -52,6 +53,7 @@ const EditBudget = ({ ...props }) => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
+  const [linesErrors, setLinesErrors] = useState({ group: false, subGroup: false, item: false });
   const dispatch = useDispatch();
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
@@ -145,10 +147,19 @@ const EditBudget = ({ ...props }) => {
 
     if (lines.length === 0) {
       toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, group: true });
+
+      return true;
     } else if (lines[0].subGroups.length === 0) {
       toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, subGroup: true });
+
+      return true;
     } else if (lines[0].subGroups[0].items.length === 0) {
       toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, item: true });
+
+      return true;
     }
 
     //  if there are 0 items in the 1st group, return true = errors
@@ -294,6 +305,7 @@ const EditBudget = ({ ...props }) => {
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name.value },
           hasBudget: { value: budget.id, type: 'Property' },
+          group: { value: group.name.value, type: 'Property' },
           type: 'Furniture',
 
         }];
@@ -439,7 +451,9 @@ const EditBudget = ({ ...props }) => {
   }
 
   async function CreateBudgetRows (rows) {
-    const fixed = rows.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
+    const fixed = rows.map((item) => {
+      return { ...item, id: item.id + formatString(budgetData.name.value) };
+    });
 
     try {
       rows.length > 0 && fixed.map(async (ele) => await newFurniture(ele).catch((err) => console.log(err)));
@@ -452,7 +466,7 @@ const EditBudget = ({ ...props }) => {
   return (
     <>
       <Navbar />
-      <Grid component='main'sx={{ padding: '0rem 2rem 0rem 2rem' }} >
+      <Grid component='main'sx={{ padding: '0rem 2rem 4rem 2rem' }} >
         <CssBaseline />
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -513,6 +527,8 @@ const EditBudget = ({ ...props }) => {
                 noDrop
                 lines={lines}
                 setLines={setLines}
+                linesErrors={linesErrors}
+                setLinesErrors={setLinesErrors}
               />
             </Content>
           </Grid>
@@ -528,10 +544,9 @@ const EditBudget = ({ ...props }) => {
               />
             </Content>
           </Grid>
-
         </Grid>
       </Grid >
-
+      <Footer />
     </>
   );
 };

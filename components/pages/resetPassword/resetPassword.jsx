@@ -94,7 +94,7 @@ const ResetPassword = (props) => {
       data[i].error = '';
 
       if (i === 0 && input.value === '') {
-        data[i].error = 'Campo Óbrigatorio';
+        data[i].error = 'Campo Obrigatório';
         hasErrors = true;
       } else if (i === 0 && input.value.length < 6) {
         data[i].error = 'Password tem que ter minimo de 6 caracteres.';

@@ -115,35 +115,12 @@ const Docs = (props) => {
               ))}
               <Box bgcolor='lightGray.secondary'>
                 {renderAccordionFolders(folders, folder.id)}
-
               </Box>
             </AccordionDetails>
           </Accordion>
         );
       });
   }
-
-  // const RefreshFolders = async () => {
-  //   getFolders().then(async (res) => {
-  //     const builtFolders = [];
-
-  //     await getFiles(order.id).then((resFiles) => {
-  //       res.data.results.map((folder) => {
-  //         const folder2 = { ...folder };
-
-  //         folder2.files = [...folder.files].map((file) => {
-  //           const thisFile = resFiles.data.results.find((ele) => ele.id === file);
-
-  //           return thisFile;
-  //         });
-
-  //         builtFolders.push(folder2);
-  //       });
-
-  //       setFolders(builtFolders);
-  //     });
-  //   });
-  // };
 
   return open && <>
     <Notification />
@@ -170,14 +147,9 @@ const Docs = (props) => {
 };
 
 Docs.propTypes = {
-  pageProps: PropTypes.any,
   order: PropTypes.any,
-  styles: PropTypes.object,
   folders: PropTypes.array,
   open: PropTypes.bool,
-  activeFolder: PropTypes.number,
-  onImagesUpload: PropTypes.func,
-
 };
 
 export default Docs;

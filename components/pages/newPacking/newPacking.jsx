@@ -275,8 +275,13 @@ const newPacking = (props) => {
     });
   }
 
-  const CustomList = ({ title, items, selected }) => (
-    <Card >
+  const CustomList = ({ title, items, selected }) => {
+    let total = 0;
+
+    // eslint-disable-next-line no-return-assign
+    items.map((item) => total += item.amount.value);
+
+    return <Card >
       <Grid container md={12} sm={12} xs={12} >
         <Grid container md={4} sm={4} xs={4}> <CardHeader
           sx={{ px: 2, py: 1 }}
@@ -284,7 +289,7 @@ const newPacking = (props) => {
             <></>
           }
           title={<Typography fontWeight={'bold'} variant="subtitle1">{title}</Typography>}
-          subheader={`${items.length} item(s)`}
+          subheader={`${total} item(s)`}
         />
         </Grid>
         <Grid container md={4} sm={4} xs={4} justifyContent={'center'} alignItems={'center'}>
@@ -317,7 +322,7 @@ const newPacking = (props) => {
         component="div"
         role="list"
       >
-        {items.map((value) => {
+        {[...items]?.sort((a, b) => (a.partName?.value > b.partName?.value) ? 1 : -1).map((value) => {
           const labelId = `transfer-list-all-item-${value}-label`;
 
           return (
@@ -342,8 +347,8 @@ const newPacking = (props) => {
           );
         })}
       </List>
-    </Card>
-  );
+    </Card>;
+  };
 
   return <>
     <Navbar />

@@ -74,7 +74,7 @@ const DocsClient = (props) => {
           <Box style={{ flex: 1 }}>
             <Grid container md={12} sm={12} xs={12}>
               <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Documentos {isInternalPage && 'Cliente'}</Typography></Grid>
-              <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Documentos carregados {isInternalPage && 'do cliente'}</Typography></Grid>
+              {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Documentos carregados {isInternalPage && 'do cliente'}</Typography></Grid> */}
             </Grid>
           </Box>
           <Box className='flex'>

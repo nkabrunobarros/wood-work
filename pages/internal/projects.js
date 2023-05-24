@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProjectsScreen from '../../components/pages/projects/projects';
 import routes from '../../navigation/routes';
+import * as assemblysActionsRedux from '../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
 import * as expeditionsActionsRedux from '../../store/actions/expedition';
@@ -19,6 +20,7 @@ const Projects = ({ ...pageProps }) => {
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
+  const getAssemblys = (data) => dispatch(assemblysActionsRedux.assemblys(data));
   const [loaded, setLoaded] = useState(false);
 
   async function fetchData () {
@@ -27,6 +29,7 @@ const Projects = ({ ...pageProps }) => {
     try {
       await getProjects();
       await getExpeditions();
+      await getAssemblys();
       await getBudgets();
       await getClients();
     } catch (err) { errors = true; }
@@ -293,6 +296,7 @@ const Projects = ({ ...pageProps }) => {
       const thisClient = clients.find(ele => ele.id === proj.orderBy.object.replace('urn:ngsi-ld:Owner:', ''));
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
       const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition?.object);
+      const thisAssembly = reduxState.assemblys?.data.find((ele) => ele.id === proj.assembly?.object);
 
       return {
         ...proj,
@@ -308,10 +312,9 @@ const Projects = ({ ...pageProps }) => {
         Produced: proj.produced?.value,
         PrimeiroContacto: thisBudget?.dateRequest?.value,
         ExpeditionTime: thisExpedition?.expeditionTime.value && moment(thisExpedition?.expeditionTime.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
-        InicioProd: proj?.startedProductionue && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
-        TerminoProd: thisExpedition?.expeditionTime.value && moment(thisExpedition?.expeditionTime.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        TerminoProd: thisAssembly?.startTime?.value && moment(thisAssembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         EntregaProj: thisBudget?.dateDeliveryProject?.value,
-
       };
     });
 

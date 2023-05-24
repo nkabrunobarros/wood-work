@@ -24,6 +24,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/InfoCard';
 import Content from '../../content/content';
+import MyAutocomplete from '../../inputs/myAutocomplete/myAutocomplete';
 import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
@@ -286,7 +287,6 @@ const ProjectsScreen = (props) => {
                   getOptionLabel={(option) => option.Nome }
                   getOptionValue={(option) => option.id}
                   onChange={(e, value) => {
-                  // eslint-disable-next-line react/prop-types
                     setClient(value?.id || '');
                   }}
                   renderOption={(props, option) => {
@@ -307,6 +307,13 @@ const ProjectsScreen = (props) => {
                     />
                   )}
                 />
+                {false && <MyAutocomplete
+                  value={client}
+                  options={clients}
+                  optionLabel={'Nome'}
+                  optionValue={'id'}
+                  onChange={(e) => setClient(e || '')}
+                />}
               </Box>
             </Grid>}
             <Grid container item md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>

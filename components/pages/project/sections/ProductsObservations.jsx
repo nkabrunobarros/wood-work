@@ -17,7 +17,7 @@ const ProductsObservations = (props) => {
       }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Observações</Typography></Grid>
-          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Observações do projeto</Typography></Grid>
+          {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Observações do projeto</Typography></Grid> */}
         </Grid>
       </AccordionSummary>
       <AccordionDetails>

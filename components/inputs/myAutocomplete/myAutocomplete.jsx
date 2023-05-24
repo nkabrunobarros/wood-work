@@ -1,17 +1,15 @@
 /* eslint-disable react/prop-types */
 import {
+  Autocomplete,
   Box,
   FormControl,
-  FormHelperText,
-  IconButton,
-  InputAdornment,
   InputLabel,
-  OutlinedInput,
+  TextField,
   Tooltip
 } from '@mui/material';
 import React from 'react';
 
-const MyInput = ({
+const MyAutocomplete = ({
   disabled,
   value,
   label,
@@ -22,30 +20,13 @@ const MyInput = ({
   width,
   halfWidth,
   error,
-  type = 'string',
-  placeholder,
-  adornmentIcon,
-  adornmentOnClick,
-  adornmentPos = 'end',
-  style,
-  iconTooltip,
   name,
   id = `ID-${label}`,
   tooltip,
-  maxLength,
-  rows
+  options,
+  optionLabel,
+  optionValue
 }) => {
-  const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-
-    // If the type is "number" and the input value is less than 0, set it to 0
-    if (type === 'number') {
-      inputValue >= 0 && onChange && onChange(event, inputValue);
-    } else {
-      onChange && onChange(event, inputValue);
-    }
-  };
-
   return (
     <Box sx={{ width: '100%' }}>
       {variant !== 'standard' && (
@@ -68,68 +49,33 @@ const MyInput = ({
             {error}
           </InputLabel>
         )}
-        <OutlinedInput
-          aria-labelledby={id}
-          variant={variant || 'outlined'}
+        <Autocomplete
+          freeSolo
+          variant={variant}
+          error={!!error}
+          label={error}
+          required={required}
           name={name}
-          type={type}
-          multiline={type === 'area'}
-          id={id}
-          error={error}
+          disabled={disabled}
           value={value}
-          onChange={handleInputChange}
-          required
-          label={error || variant ? label : ''}
-          fullWidth={fullWidth}
-          inputProps={{
-            maxLength: maxLength || (type === 'area' ? 2000 : 255),
+          id={id}
+          fullWidth={fullWidth || false}
+          onChange={(e, value) => {
+            onChange(value ? (value[optionValue] || value.id) : '');
           }}
-          sx={{
-            width: width || (halfWidth && '50%'),
-          }}
-          rows={rows || 4}
-          style={style}
-          placeholder={placeholder || ''}
-          endAdornment={
-            adornmentIcon && (
-              <InputAdornment position={adornmentPos}>
-                {iconTooltip
-                  ? (
-                    <Tooltip title={iconTooltip}>
-                      <IconButton
-                        component="label"
-                        aria-label="toggle password visibility"
-                        onClick={adornmentOnClick}
-                        edge="end"
-                      >
-                        {adornmentIcon}
-                      </IconButton>
-                    </Tooltip>
-                  )
-                  : (
-                    <IconButton
-                      component="label"
-                      aria-label="toggle password visibility"
-                      onClick={adornmentOnClick}
-                      edge="end"
-                    >
-                      {adornmentIcon}
-                    </IconButton>
-                  )}
-              </InputAdornment>
-            )
+          sx={{ width: width && width }}
+          style={{ width: halfWidth && '50%' }}
+          getOptionLabel={(option) => option[optionLabel] || option.id }
+          getOptionValue={(option) => option[optionValue]?.value || option.id }
+          options={options}
+          renderInput={(params) =>
+            <TextField {...params} />
           }
-        />
-        {(maxLength || type === 'area') && (
-          <Tooltip title="Tamanho máximo">
-            <FormHelperText sx={{ display: 'flex', justifyContent: 'end' }}>
-              {value?.length} / {maxLength || 2000} caracteres
-            </FormHelperText>
-          </Tooltip>
-        )}
+        >
+        </Autocomplete>
       </FormControl>
     </Box>
   );
 };
 
-export default MyInput;
+export default MyAutocomplete;

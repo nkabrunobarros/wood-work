@@ -10,6 +10,7 @@ import * as budgetsActionsRedux from '../store/actions/budget';
 import * as clientsActionsRedux from '../store/actions/client';
 import * as expeditionsActionsRedux from '../store/actions/expedition';
 import * as projectsActionsRedux from '../store/actions/project';
+import * as assemblysActionsRedux from '../store/actions/assembly';
 
 const Orders = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -19,6 +20,7 @@ const Orders = ({ ...pageProps }) => {
   const getBudgets = (data) => dispatch(budgetsActionsRedux.myBudgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
+  const getAssemblys = (data) => dispatch(assemblysActionsRedux.assemblys(data));
 
   const categories = [
     { label: 'Cozinha', id: 'MC_' },
@@ -36,9 +38,9 @@ const Orders = ({ ...pageProps }) => {
       await getProjects(reduxState.auth.me.id);
       await getClients();
       await getExpeditions();
+      await getAssemblys();
       await getBudgets();
     } catch (err) {
-      console.log(err);
       errors = true;
     }
 
@@ -279,6 +281,7 @@ const Orders = ({ ...pageProps }) => {
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
       const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
+      const thisAssembly = reduxState.assemblys?.data.find((ele) => ele.id === proj.assembly?.object);
 
       return {
         ...proj,
@@ -294,7 +297,7 @@ const Orders = ({ ...pageProps }) => {
         PrimeiroContacto: thisBudget?.dateRequest?.value,
         InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         ExpeditionTime: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
-        TerminoProd: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        TerminoProd: thisAssembly?.startTime?.value && moment(thisAssembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
       };
     }
     );

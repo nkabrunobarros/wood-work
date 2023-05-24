@@ -181,7 +181,7 @@ const EditClient = ({ ...props }) => {
       const data = [...inputFields];
 
       if (input.required && input.value === '') {
-        data[i].error = 'Campo Óbrigatorio';
+        data[i].error = 'Campo Obrigatório';
         hasErrors = true;
         // Case it reaches here, validates specifiq fields and value structure
       } else if ((input.value?.length !== 11 && input.value?.length !== 9) && input.type === 'phone' && input.required) {

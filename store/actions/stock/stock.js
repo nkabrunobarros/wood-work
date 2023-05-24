@@ -4,17 +4,17 @@ import { getApiURL } from '../../network/config';
 import createAction from '../../network/create-action';
 import endpoints from '../../network/endpoints';
 
-export const ASSEMBLYS_REQUEST = 'ASSEMBLYS_REQUEST';
-export const ASSEMBLYS_FAIL = 'ASSEMBLYS_FAIL';
-export const ASSEMBLYS_SUCCESS = 'ASSEMBLYS_SUCCESS';
-export const NEW_ASSEMBLY_REQUEST = 'NEW_ASSEMBLY_REQUEST';
-export const NEW_ASSEMBLY_FAIL = 'NEW_ASSEMBLY_FAIL';
-export const NEW_ASSEMBLY_SUCCESS = 'NEW_ASSEMBLY_SUCCESS';
-export const UPDATE_ASSEMBLY_REQUEST = 'UPDATE_ASSEMBLY_REQUEST';
-export const UPDATE_ASSEMBLY_SUCCESS = 'UPDATE_ASSEMBLY_SUCCESS';
-export const UPDATE_ASSEMBLY_FAIL = 'UPDATE_ASSEMBLY_FAIL';
+export const STOCKS_REQUEST = 'STOCKS_REQUEST';
+export const STOCKS_FAIL = 'STOCKS_FAIL';
+export const STOCKS_SUCCESS = 'STOCKS_SUCCESS';
+export const NEW_STOCK_REQUEST = 'NEW_STOCK_REQUEST';
+export const NEW_STOCK_FAIL = 'NEW_STOCK_FAIL';
+export const NEW_STOCK_SUCCESS = 'NEW_STOCK_SUCCESS';
+export const UPDATE_STOCK_REQUEST = 'UPDATE_STOCK_REQUEST';
+export const UPDATE_STOCK_FAIL = 'UPDATE_STOCK_FAIL';
+export const UPDATE_STOCK_SUCCESS = 'UPDATE_STOCK_SUCCESS';
 
-export const assemblys = (data) => {
+export const stocks = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -23,31 +23,34 @@ export const assemblys = (data) => {
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.ASSEMBLYS),
+      url: getApiURL(endpoints.STOCKS),
       params: {
-        limit: 200,
-        options: 'sysAttrs',
+        limit: 400
       }
     },
-    types: [ASSEMBLYS_REQUEST, ASSEMBLYS_SUCCESS, ASSEMBLYS_FAIL],
+    types: [STOCKS_REQUEST, STOCKS_SUCCESS, STOCKS_FAIL],
   });
 };
 
-export const assembly = (data) => {
+export const projectStocks = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
     meta: null,
+    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.ASSEMBLYS + data),
+      url: getApiURL(endpoints.STOCKS),
+      params: {
+        q: `belongsTo=="${data}"`,
+      }
     },
-    types: [ASSEMBLYS_REQUEST, ASSEMBLYS_SUCCESS, ASSEMBLYS_FAIL],
+    types: [STOCKS_REQUEST, STOCKS_SUCCESS, STOCKS_FAIL],
   });
 };
 
-export const newAssembly = (data) => {
+export const newStock = (data) => {
   const { auth_token: userToken } = parseCookies();
 
   return createAction({
@@ -56,13 +59,13 @@ export const newAssembly = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'POST',
-      url: getApiURL(endpoints.ASSEMBLYS),
+      url: getApiURL(endpoints.STOCKS),
     },
-    types: [NEW_ASSEMBLY_REQUEST, NEW_ASSEMBLY_SUCCESS, NEW_ASSEMBLY_FAIL],
+    types: [NEW_STOCK_REQUEST, NEW_STOCK_SUCCESS, NEW_STOCK_FAIL],
   });
 };
 
-export const updateAssembly = (data) => {
+export const updateStock = (data) => {
   const { auth_token: userToken } = parseCookies();
   const id = data?.id;
 
@@ -74,8 +77,8 @@ export const updateAssembly = (data) => {
       ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
-      url: getApiURL(endpoints.ASSEMBLYS + id),
+      url: getApiURL(endpoints.STOCKS + id),
     },
-    types: [UPDATE_ASSEMBLY_REQUEST, UPDATE_ASSEMBLY_SUCCESS, UPDATE_ASSEMBLY_FAIL],
+    types: [UPDATE_STOCK_REQUEST, UPDATE_STOCK_SUCCESS, UPDATE_STOCK_FAIL],
   });
 };

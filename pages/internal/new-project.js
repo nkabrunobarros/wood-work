@@ -7,9 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AuthData from '../../lib/AuthData';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
-import * as countriesActionsRedux from '../../store/actions/country';
 
-import axios from 'axios';
 export const categories = [
   { label: 'Cozinha', id: 'MC_' },
   { label: 'Quarto', id: 'MQ_' },
@@ -25,18 +23,14 @@ const NewOrder = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
-  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
   useEffect(() => {
     const getData = async () => {
       (!reduxState.auth.me || !reduxState.auth.userPermissions) && AuthData(dispatch);
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       if (!reduxState.budgets.data) await getBudgets();
 
       if (!reduxState.clients.data) await getClients();
-
-      await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

@@ -18,14 +18,12 @@ import Loader from '../../../components/loader/loader';
 import * as assemblysActionsRedux from '../../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
-import * as countriesActionsRedux from '../../../store/actions/country';
 import * as expeditionsActionsRedux from '../../../store/actions/expedition';
 import * as filesActionsRedux from '../../../store/actions/file';
 import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 import * as projectsActionsRedux from '../../../store/actions/project';
 
-import axios from 'axios';
 import { categories } from '../new-project';
 
 const Order = ({ ...pageProps }) => {
@@ -44,7 +42,7 @@ const Order = ({ ...pageProps }) => {
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const [furnitures, setFurnitures] = useState();
-  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
+  const [furnituresUnbuilt, setFurnituresUnbuilt] = useState();
 
   //  Dummy
   const projectParts = [
@@ -82,9 +80,6 @@ const Order = ({ ...pageProps }) => {
       const expedition = project.expedition?.object && (await getExpedition(project.expedition?.object)).data;
       const assembly = project.assembly?.object && (await getAssembly(project.assembly?.object)).data;
       const budget = project.hasBudget.object && (await getBudget(project.hasBudget.object)).data;
-
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
-
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.object === project.hasBudget.object);
       const furnitures2 = furnitures.sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
       const built = [];
@@ -120,13 +115,12 @@ const Order = ({ ...pageProps }) => {
         }
       });
 
+      setFurnituresUnbuilt(furnitures);
       setFurnitures(built);
 
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
 
       getFolders(project.hasBudget.object).then(async (res) => {
-        console.log(res);
-
         const builtFolders = [];
         const resFiles = await getFiles(router.query.Id.replace('Project', 'Budget'));
 
@@ -173,6 +167,7 @@ const Order = ({ ...pageProps }) => {
 
     const props = {
       order: reduxState.projects.displayedProject,
+      furnituresUnbuilt,
       breadcrumbsPath,
       pageProps,
       projectParts,

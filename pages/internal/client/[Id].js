@@ -15,10 +15,8 @@ import routes from '../../../navigation/routes';
 import PropTypes from 'prop-types';
 
 //  Services
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import * as clientsActionsRedux from '../../../store/actions/client';
-import * as countriesActionsRedux from '../../../store/actions/country';
 
 const EditClient = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -26,13 +24,11 @@ const EditClient = ({ ...pageProps }) => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
-  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
   const setDisplayedClient = (data) => dispatch(clientsActionsRedux.setDisplayedClient(data));
 
   useEffect(() => {
     const getData = async () => {
       await getClient(router.query.Id).then((res) => setDisplayedClient(res.data));
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

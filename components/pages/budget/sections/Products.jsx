@@ -88,7 +88,7 @@ const Products2 = (props) => {
       }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produtos</Typography></Grid>
-          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid>
+          {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid> */}
         </Grid>
       </AccordionSummary>
       <AccordionDetails>
@@ -133,7 +133,7 @@ const Products2 = (props) => {
                               return <Grow key={itemIndex}in={true}>
                                 <Grid container>
                                   {itemIndex !== 0 && <Box p={4} sx={{ width: '100%' }} >
-                                    <Divider sx={{ width: '100%' }} />
+                                    <Divider sx={{ width: '100%', backgroundColor: 'primary.main' }} />
                                   </Box>}
                                   <Grid container md={12} sm={12} xs={12}>
                                     <Typography variant='subtitle2'color={'lightTextSm.main'} >{item.furnitureType.value === 'furniture' ? 'Móvel' : 'Acessório'} - </Typography>

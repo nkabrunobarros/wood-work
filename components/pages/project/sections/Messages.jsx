@@ -114,6 +114,7 @@ const Messages = (props) => {
         }
       </Box>
       <Box
+        display={order.status.value === 'finished' && 'none'}
         component='form'
         noValidate
         onSubmit={handleSendMessage}

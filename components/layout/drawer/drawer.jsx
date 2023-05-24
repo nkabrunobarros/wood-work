@@ -119,10 +119,11 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
             })
             .map((item, i) => (
               <Box key={i}>
-                <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }} onClick={() => Router.push(item.url)}>
+                <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }}
+                  onClick={() => { toggleDrawer(); Router.push(item.url); }}>
                   <ActiveLink
                     href={item.url}
-                    handleDrawerToggle={toggleDrawer}
+                    // handleDrawerToggle={toggleDrawer}
                     page={item.title}
                   >
                     {item.icon}

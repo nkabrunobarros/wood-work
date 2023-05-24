@@ -80,6 +80,11 @@ const Workers = ({ ...props }) => {
     }
   }
 
+  function ClearFilters () {
+    setNome('');
+    setEmail('');
+  }
+
   return (
     <>
       <Navbar />
@@ -101,15 +106,15 @@ const Workers = ({ ...props }) => {
                 fullWidth
                 disablePortal
                 options={workers.sort((a, b) =>
-                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                  a.NomeDropdown > b.NomeDropdown ? 1 : a.NomeDropdown < b.NomeDropdown ? -1 : 0
                 )}
-                getOptionLabel={(option) => option.Nome }
+                getOptionLabel={(option) => option.NomeDropdown }
                 getOptionValue={(option) => option.id}
                 onChange={(e, value) => setNome(value?.Nome || '')}
                 renderOption={(props, option) => {
                   return (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.Nome}
+                      {option.NomeDropdown}
                     </Box>
                   );
                 }}
@@ -126,6 +131,9 @@ const Workers = ({ ...props }) => {
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
               <MyInput label="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
+            </Grid>
+            <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
+              <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
             </Grid>
           </Grid>
         </Content>

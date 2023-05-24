@@ -8,10 +8,10 @@ import PropTypes from 'prop-types';
 
 const FloatingButton = ({ isVisible }) => {
   return (
-    <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '10%', right: '5%' }}>
+    <Box className={styles.floatingBtnContainer} style={{ display: !isVisible && 'none', position: 'fixed', bottom: '6%', right: '3%' }}>
       <Fab
         aria-label="like"
-        size={'medium'}
+        size={'small'}
         color={'primary'}
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
       >

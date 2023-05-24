@@ -3,12 +3,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ResetPasswordScreen from '../components/pages/resetPassword/resetPassword';
 
-//  Navigation
-
-//  PropTypes
-
-//  Styling
-
 //  Preloader
 import Loader from '../components/loader/loader';
 import PageNotFound from '../components/pages/404';

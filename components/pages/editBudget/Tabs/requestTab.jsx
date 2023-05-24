@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Grid, Inpu
 import React, { useState } from 'react';
 
 //  PropTypes
-import { Calendar, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import PropTypes from 'prop-types';
 //  Page Component Styles
 import styles from '../../../../styles/NewOrder.module.css';
@@ -18,7 +18,6 @@ import MyInput from '../../../inputs/myInput';
 
 const RequestTab = (props) => {
   const {
-    pageProps,
     budgetData,
     onBudgetChange,
     countries
@@ -29,13 +28,13 @@ const RequestTab = (props) => {
 
   portugal = countries?.find((option) => option.cca2 === 'PT');
 
+  const keys = Object.keys(budgetData);
+  const errors = keys.map((key) => budgetData[key].error);
+
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%' }}>
+    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%', boxShadow: errors.find(ele => ele) && '0px 0px 4px 1px #d32f2f' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography>
-          <Typography id='align' className='headerTitleSm'>
-            <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto          </Typography>
-        </Typography>
+        <Typography variant='title' color={errors.find(ele => ele) && 'error'}>Projeto</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
@@ -68,7 +67,6 @@ const RequestTab = (props) => {
                       error={budgetData.num.error}
                       required={budgetData.num.required}
                       name='num'
-                      paceholder='Escrever numero'
                       value={budgetData.num.value}
                     />
                   </Grid>

@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-const HeaderGrid = ({ grids }) => {
+const HeaderGrid = (props) => {
+  const [grids, setGrids] = useState(props.grids);
+
   const commonProps = {
     sx: {
       alignItems: 'center',

@@ -27,7 +27,24 @@ const Stock = ({ ...props }) => {
   }
 
   const ClearFilters = () => {
-    setSizesFilter(props.filtersSizes);
+    setSizesFilter({
+      Largura: {
+        values: [Math.min(...stocks.map(o => o.width)), Math.max(...stocks.map(o => o.width))],
+        min: Math.min(...stocks.map(o => o.width)),
+        max: Math.max(...stocks.map(o => o.width))
+      },
+      Espessura: {
+        values: [Math.min(...stocks.map(o => o.thickness)), Math.max(...stocks.map(o => o.thickness))],
+        min: Math.min(...stocks.map(o => o.thickness)),
+        max: Math.max(...stocks.map(o => o.thickness))
+      },
+      Comprimento: {
+        values: [Math.min(...stocks.map(o => o.height)), Math.max(...stocks.map(o => o.height))],
+        min: Math.min(...stocks.map(o => o.height)),
+        max: Math.max(...stocks.map(o => o.height))
+      },
+    });
+
     setMaterial('');
   };
 
@@ -60,7 +77,6 @@ const Stock = ({ ...props }) => {
 
   return (
     <>
-
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -73,7 +89,7 @@ const Stock = ({ ...props }) => {
             <Grid container md={3} sm={6} xs={12} p={1}>
               <InputLabel htmlFor='name'>Material</InputLabel>
               <Autocomplete
-                options={stocks.sort((a, b) => a.material - b.material) }
+                options={([...stocks])?.sort((a, b) => a.material - b.material) }
                 fullWidth
                 getOptionLabel={(option) => option.material}
                 onChange={(event, value) => onMaterialChange({ value, event })}

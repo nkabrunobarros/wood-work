@@ -100,7 +100,7 @@ const Production = (props) => {
       }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produção</Typography></Grid>
-          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Detalhes de produção dos produtos</Typography></Grid>
+          {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Detalhes de produção dos produtos</Typography></Grid> */}
         </Grid>
       </AccordionSummary>
       <AccordionDetails>
@@ -113,7 +113,7 @@ const Production = (props) => {
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
             {/* Lines */}
-            {furnitures.map((group, groupIndex) => {
+            {furnitures?.map((group, groupIndex) => {
               return <Grow key={groupIndex} in={true}>
                 <Accordion
                   expanded={expandedGroups.includes(group.id)}
@@ -148,7 +148,7 @@ const Production = (props) => {
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Estado</Typography></Grid>
                                 <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'></Typography></Grid>
                               </Grid>
-                              {subgroup.items.map((item, itemIndex) => {
+                              {subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').map((item, itemIndex) => {
                                 return <Grow key={itemIndex}in={true}>
                                   <Grid container md={12} sm={12} xs={12} sx={{ p: 1 }}>
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.name?.value}</Typography></Grid>
@@ -156,10 +156,14 @@ const Production = (props) => {
                                     <Grid container md={3} sm={3} xs={3}>
                                       {!item.produced?.value ? <Box><Typography variant='sm' className='warningBalloon'>Em produção</Typography></Box> : <Box><Typography variant='sm' className='successBalloon'>Terminado</Typography> </Box>}
                                     </Grid>
-                                    <Grid container md={3} sm={3} xs={3} justifyContent={'end'}><Typography varitant='subtitle1'><PrimaryBtn text='Ver detalhes' icon={<Eye />} onClick={() => {
-                                      setChosenFurniture(item);
-                                      setFurnitureProject(props.order);
-                                    }} /></Typography></Grid>
+                                    <Grid container md={3} sm={3} xs={3} justifyContent={'end'}>
+                                      <Typography varitant='subtitle1'>
+                                        <PrimaryBtn text='Ver detalhes' icon={<Eye />} onClick={() => {
+                                          setChosenFurniture(item);
+                                          setFurnitureProject(props.order);
+                                        }} />
+                                      </Typography>
+                                    </Grid>
                                   </Grid>
                                 </Grow>;
                               })}
