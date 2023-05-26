@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import FloatingButton from '../../components/floatingButton/FloatingButton';
 import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
+import CanDo from '../utils/CanDo';
 
 const noLayoutScreens = [
   `${routes.public.signIn}`,
@@ -31,6 +32,62 @@ const noLayoutScreens = [
   `${routes.private.privacy}`,
   `${routes.private.error}`,
 ];
+
+function findNeededPermission (path) {
+  const pathRoute = path.route.replace('[Id]', '');
+
+  // Check the private routes
+  for (const key in routes.private.internal) {
+    const route = routes.private.internal[key];
+
+    if (route === pathRoute) {
+      if (key.endsWith('s')) {
+        // Plural key, permission required is list_<key>
+        return `list_${key.slice(0, -1)}`;
+      } else if (key.startsWith('edit')) {
+        // Key has "edit" on it, permission required is change_<key without "edit">
+        const singularKey = key.replace('edit', '');
+
+        return `change_${singularKey}`;
+      } else if (key.startsWith('new')) {
+        // Key has "new" on it, permission required is add_<key without "new">
+        const singularKey = key.replace('new', '');
+
+        return `add_${singularKey}`;
+      }
+
+      // Singular key, permission required is view_<key>
+      return `view_${key}`;
+    }
+  }
+
+  for (const key in routes.private) {
+    const route = routes.private[key];
+
+    if (route === pathRoute) {
+      if (key.endsWith('s')) {
+        // Plural key, permission required is list_<key>
+        return `list_${key.slice(0, -1)}`;
+      } else if (key.startsWith('edit')) {
+        // Key has "edit" on it, permission required is change_<key without "edit">
+        const singularKey = key.replace('edit', '');
+
+        return `change_${singularKey}`;
+      } else if (key.startsWith('new')) {
+        // Key has "new" on it, permission required is add_<key without "new">
+        const singularKey = key.replace('new', '');
+
+        return `add_${singularKey}`;
+      }
+
+      // Singular key, permission required is view_<key>
+      return `view_${key}`;
+    }
+  }
+
+  // No matching route found
+  return null;
+}
 
 const Layout = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
@@ -72,8 +129,6 @@ const Layout = ({ children }) => {
         }
         // If the token is valid, do nothing
       } catch (error) {
-        console.log(error);
-
         if (error.response?.status === 403) {
           // Invalid token, delete cookie and redirect to login page
           destroyCookie(null, 'auth_token');
@@ -88,7 +143,14 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, []);
 
-  return loaded && noAccess
+  const neededPermission = findNeededPermission(path);
+  let noAccessPage = !!CanDo(neededPermission?.toLowerCase());
+
+  if (noLayoutScreens.includes(path.route.replace('[Id]', ''))) noAccessPage = true;
+
+  console.log(neededPermission);
+
+  return loaded && (noAccess || !noAccessPage)
     ? <PageNotFound noAccess />
     : loaded && <>
       {children}

@@ -434,7 +434,7 @@ const Head = (props) => {
                 <Grid container {...upperCells}><Typography variant='sm' >Entrega Acordada</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Valor</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Entregue</Typography></Grid>
-                <Grid container {...upperCells}><Typography variant='sm' >Inicio</Typography></Grid>
+                <Grid container {...upperCells}><Typography variant='sm' >Início</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Fim</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Quantidade</Typography></Grid>
                 <Grid container {...upperCells}><Typography variant='sm' >Entrada</Typography></Grid>

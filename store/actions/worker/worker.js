@@ -96,6 +96,24 @@ export const updateWorker = (data) => {
   });
 };
 
+export const updateWorkersProfile = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      ...data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'PUT',
+      url: getApiURL(endpoints.DJANGOWORKERS + id + '/orion_groups/'),
+    },
+    types: [UPDATE_WORKER_REQUEST, UPDATE_WORKER_SUCCESS, UPDATE_WORKER_FAIL],
+  });
+};
+
 export const deleteWorker = (data) => {
   const { auth_token: userToken } = parseCookies();
 

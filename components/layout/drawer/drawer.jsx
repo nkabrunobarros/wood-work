@@ -184,11 +184,11 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                   />
                   <MenuItem sx={{ padding: '0' }} onClick={() => {
                     toggleDrawer();
-                    Router.push(IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`);
+                    Router.push(IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`);
                   }} >
                     <ActiveLink
                       // handleDrawerToggle={toggleDrawer}
-                      href={IsInternal(userPermissions?.description) ? `${routes.private.internal.profile}` : `${routes.private.profile}`}
+                      href={IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`}
                       page={'Conta'}
                     >
                       <User strokeWidth='1' size={20} color='white' />{' '}

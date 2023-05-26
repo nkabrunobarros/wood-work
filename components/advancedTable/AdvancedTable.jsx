@@ -65,6 +65,7 @@ const AdvancedTable = ({
     orderBy: headCells[0].id,
     page: 0,
     rowsPerPage: 10,
+    rows,
     filteredItems: null,
     data: {},
     deleteItemId: '',
@@ -314,6 +315,8 @@ const AdvancedTable = ({
       const filtered = MultiFilterArray(filtered2, filters);
 
       setState({ ...state, filteredItems: filtered });
+    } else {
+      setState({ ...state, filteredItems: state.rows });
     }
   }, [filters, rows, rangeFilters]);
 
@@ -440,7 +443,7 @@ const AdvancedTable = ({
                       tabIndex={-1}
                       key={row.id}
                     >
-                      {state.cellsFilter.map((headCell) => {
+                      {state.cellsFilter.map((headCell, index) => {
                         return headCell.show && <TableCell
                           id={labelId}
                           key={headCell.id}
@@ -514,7 +517,7 @@ const AdvancedTable = ({
                                       } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
                                     }
                                     }
-                                    // color={index2 === 0 && 'primary.main'}
+                                    color={index === -1 && 'primary.main'}
                                     sx={{ cursor: clickRoute && 'pointer' }}
                                   >
                                     {FilterItem(

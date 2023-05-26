@@ -180,15 +180,6 @@ const FurnitureDetails = (props) => {
         ]);
 
         setConsumables(consumables);
-
-        // setState({
-        //   ...state,
-        //   machines: result,
-        //   consumables,
-        //   projectParts: builtParts,
-        //   myMachine: activeLogWorkerTask ? mappedMachines.find((ele) => ele.id === activeLogWorkerTask.machine?.value) : null,
-        //   activeWorkerTasks: logsWorkerTasks.filter((ele) => !ele.finishTime?.value)
-        // });
       } catch (error) {
         console.error(error);
       } finally {
@@ -903,10 +894,10 @@ const FurnitureDetails = (props) => {
           {!detailOnly && <CustomBreadcrumbs path={[
             {
               title: 'Chão de Fabrica',
-              href: `${routes.private.internal.factoryLevel}`,
+              href: `${routes.private.internal.factory}`,
             }, {
               title: chosenFurniture.name.value,
-              href: `${routes.private.internal.factoryLevel}`,
+              href: `${routes.private.internal.factory}`,
             }
           ]} />}
           <Content>
@@ -962,7 +953,7 @@ const FurnitureDetails = (props) => {
 
                   return !isExecuting || isExecuting.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id;
                 })
-                } value={myMachine?.id} label={'Maquina'} optionLabel={'Nome'} onChange={(e) => {
+                } value={myMachine?.id} label={'Máquina'} optionLabel={'Nome'} onChange={(e) => {
                   // setState({ ...state, myMachine: state.machines?.find(ele => ele.id === e.target.value) });
                   setMyMachine(machines.find(ele => ele.id === e.target.value));
                 }} />

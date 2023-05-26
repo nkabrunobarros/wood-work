@@ -3,7 +3,7 @@ import { Box, Checkbox, FormControlLabel, Grid, Tab, Tabs, Tooltip, Typography }
 import { Plus } from 'lucide-react';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import * as permissionActions from '../../../../store/actions/permission';
+import * as permissionActions from '../../../../store/actions/profile';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 import Content from '../../../content/content';
 import Notification from '../../../dialogs/Notification';
@@ -107,7 +107,7 @@ const PagesAccessTab = (props) => {
     <Content>
       <Notification />
       <Grid container md={12} sm={12} xs={12}>
-        <Grid container md={12} sm={12} xs={12} p={1}>
+        <Grid id='pad' container md={12} sm={12} xs={12} p={1}>
           <Typography variant="title" color="primary">
             Acesso de Permissões
           </Typography>
@@ -142,19 +142,21 @@ const PagesAccessTab = (props) => {
                 sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
               >
                 <Grid container md={4} sm={4} xs={4} justifyContent="center" alignItems="center">
-                  Secção
+                  <Typography variant='subtitle1'> Secção</Typography>
                 </Grid>
                 <Grid container md={4} sm={4} xs={4} justifyContent="center" alignItems="center">
-                  Acesso
+                  <Typography variant='subtitle1'> Acesso</Typography>
                 </Grid>
                 <Grid container md={4} sm={4} xs={4} justifyContent="center" alignItems="center">
-                  Detalhes
+                  <Typography variant='subtitle1'> Detalhes</Typography>
                 </Grid>
               </Grid>
               {acessSections.map((section) => (
                 <Grid key={section} container md={12} sm={12} xs={12} p={1} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                   <Grid container md={4} sm={4} xs={4} justifyContent="center" alignItems="center">
-                    {capitalizeFirstLetterOfEachWord(section.replace('access_', '').replace('_', ' '))}
+                    <Typography variant='subtitle2'>
+                      {capitalizeFirstLetterOfEachWord(section.replace('access_', '').replace('_', ' '))}
+                    </Typography>
                   </Grid>
                   <Grid container md={4} sm={4} xs={4} justifyContent="center" alignItems="center">
                     <FormControlLabel
@@ -168,7 +170,6 @@ const PagesAccessTab = (props) => {
                     />
                   </Grid>
                   <Grid container md={4} sm={4} xs={4} alignItems="center">
-                    Obs da secção aqui
                   </Grid>
                 </Grid>
               ))}

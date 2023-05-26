@@ -23,8 +23,7 @@ import EmailValidation from '../../utils/EmailValidation';
 import ToastSet from '../../utils/ToastSet';
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, organizations } = props;
-  //  Dialog
+  const { breadcrumbsPath, organizations, permissions } = props;
   const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState([
@@ -62,11 +61,22 @@ const newWorker = ({ ...props }) => {
       tooltip: '',
       hidden: true
     },
+    {
+      id: 'profile',
+      label: 'Função',
+      value: permissions[0]?.id,
+      options: permissions,
+      optLabel: 'name',
+      error: '',
+      required: true,
+      tooltip: '',
+    },
   ]
   );
 
   const dispatch = useDispatch();
   const newWorker = (data) => dispatch(workersActionsRedux.newWorker(data));
+  const updateWorkerProfile = (data) => dispatch(workersActionsRedux.updateWorkersProfile(data));
 
   function ValidateFields () {
     let hasErrors = false;
@@ -126,11 +136,16 @@ const newWorker = ({ ...props }) => {
     builtWorker['user.password_confirm'] = 'ChangeMe';
     builtWorker.hasOrganization = builtWorker.hasOrganization.replace('urn:ngsi-ld:Organization:', '');
 
+    const profile = builtWorker.profile;
+
+    delete builtWorker.profile;
+
     const qs = require('qs');
     const data = qs.stringify({ ...builtWorker });
 
     await newWorker(data)
-      .then((res) => {
+      .then(async (res) => {
+        await updateWorkerProfile({ id: res.data.id, data: { add_groups: [profile] } });
         ToastSet(loading, 'Utilizador Criado!', 'success');
         setProcessing(false);
         Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id);

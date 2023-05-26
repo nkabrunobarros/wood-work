@@ -119,7 +119,7 @@ const Head = (props) => {
       title: 'Desenho',
       colls: [
         {
-          label: 'Inicio',
+          label: 'Início',
           value: ''
         },
         {
@@ -152,7 +152,7 @@ const Head = (props) => {
       title: 'Montagem',
       colls: [
         {
-          label: 'Inicio',
+          label: 'Início',
           value: ''
         },
         {
@@ -165,7 +165,7 @@ const Head = (props) => {
       title: 'Embalamento',
       colls: [
         {
-          label: 'Inicio',
+          label: 'Início',
           value: ''
         },
         {
@@ -395,7 +395,7 @@ const Head = (props) => {
       );
 
       setAdjudicateModal(false);
-      toast.success('Projeto adjudicado! Passou para produção');
+      toast.success('Projeto adjudicado! Passou para desenho.');
       Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + formatString(budget.name.value));
     } catch (err) {
       console.log(err);
@@ -491,10 +491,10 @@ const Head = (props) => {
               <Box id='align'>
                 <Typography variant='title'>{budget.name.value}</Typography>
                 <Box pl={2} display='flex' alignItems='center'>
-                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Análise Necessidades</Typography>}
+                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Pendente Análise Necessidades</Typography>}
                   {budget.budgetStatus?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
-                  {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Espera adjudicação</Typography>}
-                  {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='waitingBudgetBalloon'>Espera orçamento</Typography>}
+                  {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Pendente Adjudicação</Typography>}
+                  {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='waitingBudgetBalloon'>Pendente Orçamentação</Typography>}
                 </Box>
               </Box>
             </Grid>

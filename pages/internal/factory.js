@@ -71,7 +71,7 @@ const FactoryGround = () => {
     const breadcrumbsPath = [
       {
         title: 'Chão de Fabrica',
-        href: `${routes.private.internal.factoryLevel}`,
+        href: `${routes.private.internal.factorys}`,
       }
     ];
 

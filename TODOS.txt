@@ -1,3 +1,29 @@
+permissoes
+
+MOntagem
+projeto
+sobrantes
+projetossimilares
+expedição
+cliente
+mensagems
+stock
+chaode fábrica
+perfis
+embalamento
+
+
+
+
+
+
+
+
+
+
+
+
+
 [x]: Montagem (assembly)
 
 [ ]: Listagem

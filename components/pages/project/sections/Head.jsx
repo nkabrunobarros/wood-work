@@ -68,7 +68,7 @@ const Head = (props) => {
       title: 'Desenho',
       colls: [
         {
-          label: 'Inicio',
+          label: 'Início',
           value: moment(order.createdAt).format('DD/MM/YYYY')
         },
         {
@@ -109,7 +109,7 @@ const Head = (props) => {
       title: 'Montagem',
       colls: [
         {
-          label: 'Inicio',
+          label: 'Início',
           value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
         },
         {
@@ -122,7 +122,7 @@ const Head = (props) => {
       title: 'Embalamento',
       colls: [
         {
-          label: 'Inicio',
+          label: 'Início',
           value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
         },
         {

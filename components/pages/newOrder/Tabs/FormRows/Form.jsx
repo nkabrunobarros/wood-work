@@ -32,7 +32,7 @@ const Form = (props) => {
 
   return <Grid container>
     {props.index !== 0 && <Box p={4} sx={{ width: '100%' }} ><Divider sx={{ width: '100%', backgroundColor: props.errors.find(ele => ele) ? '#d32f2f' : 'primary.main' }} /></Box>}
-    <Typography variant='subtitle1' pl={1}> {props.field.furnitureType.value === 'furniture' ? 'Móvel' : 'Accessório'}</Typography>
+    <Typography variant='subtitle1' pl={1}> {props.field.furnitureType.value === 'furniture' ? 'Móvel' : 'Acessório'}</Typography>
     <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >

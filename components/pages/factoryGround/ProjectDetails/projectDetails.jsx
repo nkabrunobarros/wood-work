@@ -812,9 +812,9 @@ const ProjectDetails = (props) => {
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
                       <Package />
-                      <Typography variant='subtitle2'>Armazem</Typography></Grid>
+                      <Typography variant='subtitle2'>Armazém</Typography></Grid>
                     <Grid container md={12} sm={12} xs={12} pl={2}>
-                      <Typography variant='subtitle2' color='lightTextSm.main'>Armazem 2b</Typography>
+                      <Typography variant='subtitle2' color='lightTextSm.main'>Armazém 2b</Typography>
                     </Grid>
                   </Grid>
                 </Box>
@@ -824,7 +824,7 @@ const ProjectDetails = (props) => {
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
                       <HardDrive />
-                      <Typography variant='subtitle2'>Maquinas disponiveis</Typography></Grid>
+                      <Typography variant='subtitle2'>Máquinas disponiveis</Typography></Grid>
                     {machines?.filter(ele => ele.currentlyOn?.value === '').map((machine) =>
                       <Grid container key={machine.id} md={4} sm={4} xs={4} >
                         <Typography variant='subtitle2' color='lightTextSm.main'>{machine.name?.value}</Typography>
@@ -838,7 +838,7 @@ const ProjectDetails = (props) => {
                   <Grid {...panelProps} p={1}>
                     <Grid container md={12} sm={12} xs={12} color='primary.main' >
                       <HardDrive />
-                      <Typography variant='subtitle2'>Maquinas em uso</Typography></Grid>
+                      <Typography variant='subtitle2'>Máquinas em uso</Typography></Grid>
                     {machines?.filter(ele => ele.currentlyOn?.value !== '').map((machine) =>
                       <Grid container key={machine.id} md={4} sm={4} xs={4} >
                         <Typography variant='subtitle2' color='lightTextSm.main'>{machine.name?.value || machine.id.replace('urn:ngsi-ld:Machine:', '')}</Typography>

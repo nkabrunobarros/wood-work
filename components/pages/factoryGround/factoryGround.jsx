@@ -1,35 +1,19 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import { Box, Card, CardContent, Grid, Grow, Tooltip, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Calendar } from 'lucide-react';
+import Router from 'next/router';
+import routes from '../../../navigation/routes';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
-import FurnitureDetails from './ProjectDetails/furnitureDetails';
 
 const FactoryGround = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
-  const [chosenFurniture, setChosenFurniture] = useState();
-  const [furnitureProject, setFurnitureProject] = useState();
-
-  function getGreenToRed (percent) {
-    const r = percent < 50 ? 255 : Math.floor(255 - (percent * 2 - 100) * 255 / 100);
-    const g = percent > 50 ? 255 : Math.floor((percent * 2) * 255 / 100);
-
-    return 'rgb(' + r + ',' + g + ',0)';
-  }
 
   return <>
-    {chosenFurniture && <FurnitureDetails
-      {...props}
-      open={chosenFurniture}
-      furnitureProject={furnitureProject}
-      chosenFurniture={chosenFurniture}
-      setChosenProject={setChosenFurniture}
-      onClose={setChosenFurniture}
-    />}
     <Navbar />
 
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
@@ -58,8 +42,7 @@ const FactoryGround = ({ ...props }) => {
                     sx={{ p: 1 }}>
                     <Grow in>
                       <Card sx={{ cursor: 'pointer', width: '100%', p: 2 }} onClick={() => {
-                        setChosenFurniture(furnit);
-                        setFurnitureProject(proj);
+                        Router.push(routes.private.internal.factory + furnit.id);
                       }}>
                         <CardContent>
                           <Grid container md={12} sm={12} xs={12} >
@@ -109,64 +92,6 @@ const FactoryGround = ({ ...props }) => {
                 })}
               </>;
             })}
-          {false && projects?.map((proj) => {
-            return <>
-              <Typography variant="h6">{proj.name.value}</Typography>
-              <Box
-                key={proj.id} sx={{
-                  width: '100%',
-                  overflow: 'auto',
-                  whiteSpace: 'nowrap'
-                }}>
-                <Box sx={{ display: 'inline-block', width: '100%' }} >
-                  {proj.furnitures?.map((furnit) => {
-                    return <Box key={furnit.id} sx={{ width: '33%', display: 'inline-block', p: 1 }}>
-                      <Grow in={true}>
-                        <Card
-                          sx={{ cursor: 'pointer', width: '100%', p: 2 }}
-                        >
-                          <CardContent>
-                            <Grid container md={12} sm={12} xs={12} >
-                              <Grid container md={6} sm={6} xs={6} >
-                                <Tooltip title='Móvel'>
-                                  <Typography variant="h6">
-                                    {furnit.name.value}
-                                  </Typography>
-                                </Tooltip>
-                              </Grid>
-                              <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
-                                <Tooltip title='Projeto'>
-                                  <Typography variant='subtitle1' color='primary'>{proj?.name?.value}</Typography>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                            <Grid container md={12} sm={12} xs={12} >
-                              <Grid container md={6} sm={6} xs={6} >
-                                <Tooltip title='Quantidade'>
-                                  <Typography variant="subtitle1">
-                                  Qtd: {furnit.amount.value}
-                                  </Typography>
-                                </Tooltip>
-                              </Grid>
-                              <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
-                                <Tooltip title='Peças produzidas'>
-                                  <Typography variant='subtitle1' >
-                                  Feito: <a style={{ color: getGreenToRed((proj?.completed?.value * 100) / proj?.amount?.value) }}>{proj?.completed?.value || 0}</a> / {proj?.amount?.value || 0}
-                                  </Typography>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                          </CardContent>
-
-                        </Card>
-                      </Grow>
-                    </Box>;
-                  })}
-                </Box>
-              </Box>
-            </>;
-          }
-          )}
         </Grid>
       </Grid>
     </Grid>

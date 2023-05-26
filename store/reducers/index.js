@@ -17,7 +17,7 @@ import modules from './modules';
 import organizations from './organizations';
 import packages from './packages';
 import parts from './parts';
-import permissions from './permissions';
+import profiles from './profiles';
 import projects from './projects';
 import workers from './workers';
 import stocks from './stocks';
@@ -31,7 +31,7 @@ const appReducer = combineReducers({
   appStates,
   expeditions,
   organizations,
-  permissions,
+  profiles,
   parts,
   emails,
   folders,

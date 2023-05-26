@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "static": "next build && next export",
-    "prod": "./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:1 . && docker tag mofreita:1 registry.nka.pt/nka/mofreita:1 && docker push registry.nka.pt/nka/mofreita:1"
-    "prod1": "./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:1 . && docker tag mofreita:1 registry.nka.pt/nka/mofreita:1 && docker push registry.nka.pt/nka/mofreita:1"
+    "prod": "./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:dev . && docker tag mofreita:dev registry.nka.pt/nka/mofreita:dev && docker push registry.nka.pt/nka/mofreita:dev",
+    "prod1":"./node_modules/.bin/eslint --fix . && yarn lint && docker build -t mofreita:1 . && docker tag mofreita:1 registry.nka.pt/nka/mofreita:1 && docker push registry.nka.pt/nka/mofreita:1"
   },
   "browser": {
     "fs": false,

@@ -1,9 +1,9 @@
-import { Archive, Factory, MessageCircle, Network, PackageCheck, Scan, Table, Users } from 'lucide-react';
+import { Archive, Factory, MessageCircle, Network, PackageCheck, Scan, ShieldAlert, Table, Users } from 'lucide-react';
 import React from 'react';
 import routes from '../../navigation/routes';
+import { Webhook } from '@mui/icons-material';
 
 export const navLinks = [
-
   {
     title: 'Projetos',
     id: 'projectsInternal',
@@ -29,13 +29,6 @@ export const navLinks = [
     allowed_: 'access_messages',
 
   },
-  // {
-  //   title: 'Mensagens',
-  //   id: 'messagesInteral',
-  //   url: routes.private.internal.messages,
-  //   icon: <MessageCircle strokeWidth='1' size={20} />,
-  //   allowed: 'messages',
-  // },
   {
     title: 'Projetos Similares',
     id: 'projectsSimilar',
@@ -44,7 +37,6 @@ export const navLinks = [
     allowed: 'projects',
     allowed_: 'access_projects_similar',
     underline: true,
-
   },
   {
     title: 'Stock',
@@ -55,11 +47,20 @@ export const navLinks = [
     allowed_: 'access_stocks',
   },
   {
+    title: 'Máquinas',
+    id: 'machines',
+    url: routes.private.internal.machines,
+    icon: <Webhook strokeWidth='1' size={20} />,
+    allowed: 'machines',
+    allowed_: 'access_machine',
+    underline: true,
+  },
+  {
     title: 'Chão de Fabrica',
     id: 'fabrica',
-    url: routes.private.internal.factoryLevel,
+    url: routes.private.internal.factorys,
     icon: <Factory strokeWidth='1' size={20} />,
-    allowed: 'factoryLevel',
+    allowed: 'factory',
     allowed_: 'access_factory',
   },
   {
@@ -72,11 +73,11 @@ export const navLinks = [
   },
   {
     title: 'Embalamentos',
-    id: 'packingList',
-    url: routes.private.internal.packingList,
+    id: 'packing',
+    url: routes.private.internal.packages,
     icon: <PackageCheck strokeWidth='1' size={20} />,
-    allowed: 'packingList',
-    allowed_: 'access_assembly',
+    allowed: 'packages',
+    allowed_: 'access_packing',
   },
   {
     title: 'Sobrantes',
@@ -103,11 +104,12 @@ export const navLinks = [
     allowed: 'workers',
     allowed_: 'access_workers',
   },
-  // {
-  //   title: 'Painel de Controlo',
-  //   id: 'dashboards',
-  //   url: routes.private.internal.dashboards,
-  //   icon: <LayoutDashboard strokeWidth='1' size={20} />,
-  //   allowed: 'dashboards',
-  // },
+  {
+    title: 'Perfis',
+    id: 'profiles',
+    url: routes.private.internal.profiles,
+    icon: <ShieldAlert strokeWidth='1' size={20} />,
+    allowed: 'dashboards',
+    allowed_: 'access_profiles',
+  },
 ];

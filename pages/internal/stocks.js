@@ -78,7 +78,7 @@ const Stock = () => {
       },
       {
         id: 'amount',
-        label: 'Disponivel',
+        label: 'Disponível',
         show: true,
       },
       {
@@ -98,7 +98,7 @@ const Stock = () => {
       },
       {
         id: 'warehouse',
-        label: 'Armazem',
+        label: 'Armazém',
         show: true,
       },
       // {

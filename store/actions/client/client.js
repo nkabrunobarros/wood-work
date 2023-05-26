@@ -54,7 +54,7 @@ export const client = (data) => {
       data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.CUSTOMER + data),
+      url: getApiURL(endpoints.CUSTOMER + data.replace('urn:ngsi-ld:Owner:', '')),
     },
     types: [CLIENT_REQUEST, CLIENT_SUCCESS, CLIENT_FAIL],
   });

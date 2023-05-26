@@ -20,5 +20,6 @@ export {
   newWorker,
   setDisplayedWorker,
   updateWorker,
-  deleteWorker
+  deleteWorker,
+  updateWorkersProfile
 } from './worker';

@@ -73,7 +73,7 @@ const Production = (props) => {
     { label: 'Etiqueta' },
     { label: 'Peça' },
     { label: 'Operação' },
-    { label: 'Inicio' },
+    { label: 'Início' },
     { label: 'Previsto' },
     { label: 'Realizado' },
     { label: 'Desvio' },

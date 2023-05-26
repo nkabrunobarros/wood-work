@@ -2,12 +2,12 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/loader/loader';
-import PackingScreen from '../../components/pages/packingList/packingList';
 import AuthData from '../../lib/AuthData';
 import routes from '../../navigation/routes';
 import * as budgetsActionsRedux from '../../store/actions/budget';
 import * as clientsActionsRedux from '../../store/actions/client';
 import * as projectsActionsRedux from '../../store/actions/project';
+import PackagesScreen from '../../components/pages/packingList/packingList';
 
 const Packing = () => {
   const [loaded, setLoaded] = useState(false);
@@ -71,7 +71,7 @@ const Packing = () => {
       projects: projs,
     };
 
-    return <PackingScreen {...props} />;
+    return <PackagesScreen {...props} />;
   }
 
   return <Loader center={true} />;

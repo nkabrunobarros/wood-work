@@ -252,7 +252,7 @@ const RequestTab = (props) => {
                   <Grid container item sm={6} xs={12} p={1}>
                     <Box sx={{ width: '100%' }}>
                       <InputLabel htmlFor={budgetData.addressCountry.id} id={budgetData.addressCountry.id}>
-                          Pais
+                          País
                         {budgetData.addressCountry.required && (
                           <Tooltip title='Obrigatório'>
                             <span style={{ color: 'var(--red)' }}> *</span>

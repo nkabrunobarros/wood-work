@@ -1,0 +1,779 @@
+[
+    {
+        "id": "permissions_g5vWRQBVK7Mmxn4y",
+        "created": "2023-05-04T13:08:47.621670Z",
+        "modified": "2023-05-04T13:08:47.621704Z",
+        "name": "Montagem",
+        "codename": "add_assembly"
+    },
+    {
+        "id": "permissions_mjqZpDeOVDMGnJ4d",
+        "created": "2023-05-04T13:08:47.626020Z",
+        "modified": "2023-05-04T13:08:47.626048Z",
+        "name": "Montagem",
+        "codename": "view_assembly"
+    },
+    {
+        "id": "permissions_KO9723N7DaB8oLw4",
+        "created": "2023-05-04T13:08:47.629738Z",
+        "modified": "2023-05-04T13:08:47.629768Z",
+        "name": "Montagem",
+        "codename": "change_assembly"
+    },
+    {
+        "id": "permissions_PVDgzbMXq5ewrJZp",
+        "created": "2023-05-04T13:08:47.632765Z",
+        "modified": "2023-05-04T13:08:47.632796Z",
+        "name": "Montagem",
+        "codename": "delete_assembly"
+    },
+    {
+        "id": "permissions_LxbGjDeD7ZMaK9PX",
+        "created": "2023-05-04T13:08:47.637113Z",
+        "modified": "2023-05-04T13:08:47.637137Z",
+        "name": "Sobrante",
+        "codename": "add_leftover"
+    },
+    {
+        "id": "permissions_dJpV27NxvKMjn3Dg",
+        "created": "2023-05-04T13:08:47.640364Z",
+        "modified": "2023-05-04T13:08:47.640394Z",
+        "name": "Sobrante",
+        "codename": "view_leftover"
+    },
+    {
+        "id": "permissions_baA721MqWaNJmx0Q",
+        "created": "2023-05-04T13:08:47.643518Z",
+        "modified": "2023-05-04T13:08:47.643549Z",
+        "name": "Sobrante",
+        "codename": "change_leftover"
+    },
+    {
+        "id": "permissions_8An2GQNvAaezp4go",
+        "created": "2023-05-04T13:08:47.651662Z",
+        "modified": "2023-05-04T13:08:47.651698Z",
+        "name": "Sobrante",
+        "codename": "delete_leftover"
+    },
+    {
+        "id": "permissions_ZQX47WMgYpNdajJ6",
+        "created": "2023-05-04T13:08:47.656860Z",
+        "modified": "2023-05-04T13:08:47.656876Z",
+        "name": "add_budget",
+        "codename": "add_budget"
+    },
+    {
+        "id": "permissions_3GJoO1Bmg2eDjAZw",
+        "created": "2023-05-04T13:08:47.662803Z",
+        "modified": "2023-05-04T13:08:47.662828Z",
+        "name": "view_budget",
+        "codename": "view_budget"
+    },
+    {
+        "id": "permissions_9rVQ1ON3WzNmG63k",
+        "created": "2023-05-04T13:08:47.668807Z",
+        "modified": "2023-05-04T13:08:47.668855Z",
+        "name": "change_budget",
+        "codename": "change_budget"
+    },
+    {
+        "id": "permissions_8m37lyBo5qeYQ6Gp",
+        "created": "2023-05-04T13:08:47.674405Z",
+        "modified": "2023-05-04T13:08:47.674447Z",
+        "name": "delete_budget",
+        "codename": "delete_budget"
+    },
+    {
+        "id": "permissions_0PqZXyNYZ1B7W9lb",
+        "created": "2023-05-04T13:08:47.680060Z",
+        "modified": "2023-05-04T13:08:47.680101Z",
+        "name": "add_consumable",
+        "codename": "add_consumable"
+    },
+    {
+        "id": "permissions_gPlnOGNPVwMq7b2E",
+        "created": "2023-05-04T13:08:47.685371Z",
+        "modified": "2023-05-04T13:08:47.685416Z",
+        "name": "view_consumable",
+        "codename": "view_consumable"
+    },
+    {
+        "id": "permissions_LaXPJEMEADMw70KO",
+        "created": "2023-05-04T13:08:47.690584Z",
+        "modified": "2023-05-04T13:08:47.690627Z",
+        "name": "change_consumable",
+        "codename": "change_consumable"
+    },
+    {
+        "id": "permissions_0Y9ZkLBKLEMK2E1g",
+        "created": "2023-05-04T13:08:47.695461Z",
+        "modified": "2023-05-04T13:08:47.695502Z",
+        "name": "delete_consumable",
+        "codename": "delete_consumable"
+    },
+    {
+        "id": "permissions_yr4jQEBzRPBOw37Z",
+        "created": "2023-05-04T13:08:47.700347Z",
+        "modified": "2023-05-04T13:08:47.700390Z",
+        "name": "Expedição",
+        "codename": "add_expedition"
+    },
+    {
+        "id": "permissions_am9gkLB9QWB7bQD4",
+        "created": "2023-05-04T13:08:47.704639Z",
+        "modified": "2023-05-04T13:08:47.704690Z",
+        "name": "Expedição",
+        "codename": "view_expedition"
+    },
+    {
+        "id": "permissions_E4lxPye23gNoJrbn",
+        "created": "2023-05-04T13:08:47.708382Z",
+        "modified": "2023-05-04T13:08:47.708426Z",
+        "name": "Expedição",
+        "codename": "change_expedition"
+    },
+    {
+        "id": "permissions_W79oKrM0m4ebl05g",
+        "created": "2023-05-04T13:08:47.717276Z",
+        "modified": "2023-05-04T13:08:47.717318Z",
+        "name": "Expedição",
+        "codename": "delete_expedition"
+    },
+    {
+        "id": "permissions_DaA0oON5Dvew34xj",
+        "created": "2023-05-04T13:08:47.721260Z",
+        "modified": "2023-05-04T13:08:47.721304Z",
+        "name": "Maquina",
+        "codename": "add_machine"
+    },
+    {
+        "id": "permissions_a7xrm0NLmrBVDLwq",
+        "created": "2023-05-04T13:08:47.726740Z",
+        "modified": "2023-05-04T13:08:47.726780Z",
+        "name": "Maquina",
+        "codename": "view_machine"
+    },
+    {
+        "id": "permissions_2OxJmANk5LM5Dl3o",
+        "created": "2023-05-04T13:08:47.731857Z",
+        "modified": "2023-05-04T13:08:47.731898Z",
+        "name": "Maquina",
+        "codename": "change_machine"
+    },
+    {
+        "id": "permissions_o8jW0ZNZwbBdQp1J",
+        "created": "2023-05-04T13:08:47.734980Z",
+        "modified": "2023-05-04T13:08:47.735010Z",
+        "name": "Maquina",
+        "codename": "delete_machine"
+    },
+    {
+        "id": "permissions_Xw9Jz3BbVzBO4GlZ",
+        "created": "2023-05-04T13:08:47.738039Z",
+        "modified": "2023-05-04T13:08:47.738081Z",
+        "name": "add_organization",
+        "codename": "add_organization"
+    },
+    {
+        "id": "permissions_OjDZoKMJ99B9GQ5A",
+        "created": "2023-05-04T13:08:47.743478Z",
+        "modified": "2023-05-04T13:08:47.743525Z",
+        "name": "view_organization",
+        "codename": "view_organization"
+    },
+    {
+        "id": "permissions_8Y5d0LMQOZNRPXnj",
+        "created": "2023-05-04T13:08:47.749878Z",
+        "modified": "2023-05-04T13:08:47.749920Z",
+        "name": "change_organization",
+        "codename": "change_organization"
+    },
+    {
+        "id": "permissions_pAbaEjM86KNVzKdy",
+        "created": "2023-05-04T13:08:47.754826Z",
+        "modified": "2023-05-04T13:08:47.754889Z",
+        "name": "delete_organization",
+        "codename": "delete_organization"
+    },
+    {
+        "id": "permissions_ox6795edz5BdOrJb",
+        "created": "2023-05-04T13:08:47.759353Z",
+        "modified": "2023-05-04T13:08:47.759362Z",
+        "name": "Cliente",
+        "codename": "add_owner"
+    },
+    {
+        "id": "permissions_3zYLk4N4KAeoJ1mW",
+        "created": "2023-05-04T13:08:47.761732Z",
+        "modified": "2023-05-04T13:08:47.761741Z",
+        "name": "Cliente",
+        "codename": "view_owner"
+    },
+    {
+        "id": "permissions_wXjG6KMa72NAaL07",
+        "created": "2023-05-04T13:08:47.766581Z",
+        "modified": "2023-05-04T13:08:47.766589Z",
+        "name": "Cliente",
+        "codename": "change_owner"
+    },
+    {
+        "id": "permissions_Q8ZPE7NjEvegzXDo",
+        "created": "2023-05-04T13:08:47.772260Z",
+        "modified": "2023-05-04T13:08:47.772287Z",
+        "name": "Cliente",
+        "codename": "delete_owner"
+    },
+    {
+        "id": "permissions_RDX1Y9MwwyMGAmqj",
+        "created": "2023-05-04T13:08:47.779973Z",
+        "modified": "2023-05-04T13:08:47.780017Z",
+        "name": "add_part",
+        "codename": "add_part"
+    },
+    {
+        "id": "permissions_RKkJVPeW4vNE0bwd",
+        "created": "2023-05-04T13:08:47.783555Z",
+        "modified": "2023-05-04T13:08:47.783597Z",
+        "name": "view_part",
+        "codename": "view_part"
+    },
+    {
+        "id": "permissions_E8QODqenjVeKJ0bz",
+        "created": "2023-05-04T13:08:47.787222Z",
+        "modified": "2023-05-04T13:08:47.787266Z",
+        "name": "change_part",
+        "codename": "change_part"
+    },
+    {
+        "id": "permissions_o8jW0ZNZwKBdQp1J",
+        "created": "2023-05-04T13:08:47.791800Z",
+        "modified": "2023-05-04T13:08:47.791838Z",
+        "name": "delete_part",
+        "codename": "delete_part"
+    },
+    {
+        "id": "permissions_Xw9Jz3BbVnBO4GlZ",
+        "created": "2023-05-04T13:08:47.794763Z",
+        "modified": "2023-05-04T13:08:47.794799Z",
+        "name": "Projeto",
+        "codename": "add_project"
+    },
+    {
+        "id": "permissions_OjDZoKMJ98B9GQ5A",
+        "created": "2023-05-04T13:08:47.797996Z",
+        "modified": "2023-05-04T13:08:47.798038Z",
+        "name": "Projeto",
+        "codename": "view_project"
+    },
+    {
+        "id": "permissions_8Y5d0LMQOyNRPXnj",
+        "created": "2023-05-04T13:08:47.801067Z",
+        "modified": "2023-05-04T13:08:47.801102Z",
+        "name": "Projeto",
+        "codename": "change_project"
+    },
+    {
+        "id": "permissions_pAbaEjM86mNVzKdy",
+        "created": "2023-05-04T13:08:47.804296Z",
+        "modified": "2023-05-04T13:08:47.804327Z",
+        "name": "Projeto",
+        "codename": "delete_project"
+    },
+    {
+        "id": "permissions_ox6795edzoBdOrJb",
+        "created": "2023-05-04T13:08:47.807168Z",
+        "modified": "2023-05-04T13:08:47.807197Z",
+        "name": "Utilizador",
+        "codename": "add_worker"
+    },
+    {
+        "id": "permissions_3zYLk4N4KgeoJ1mW",
+        "created": "2023-05-04T13:08:47.812427Z",
+        "modified": "2023-05-04T13:08:47.812460Z",
+        "name": "Utilizador",
+        "codename": "view_worker"
+    },
+    {
+        "id": "permissions_wXjG6KMa7yNAaL07",
+        "created": "2023-05-04T13:08:47.817556Z",
+        "modified": "2023-05-04T13:08:47.817601Z",
+        "name": "Utilizador",
+        "codename": "change_worker"
+    },
+    {
+        "id": "permissions_Q8ZPE7NjEnegzXDo",
+        "created": "2023-05-04T13:08:47.821005Z",
+        "modified": "2023-05-04T13:08:47.821046Z",
+        "name": "Utilizador",
+        "codename": "delete_worker"
+    },
+    {
+        "id": "permissions_RDX1Y9Mww0MGAmqj",
+        "created": "2023-05-04T13:08:47.823853Z",
+        "modified": "2023-05-04T13:08:47.823883Z",
+        "name": "add_workerTask",
+        "codename": "add_workerTask"
+    },
+    {
+        "id": "permissions_RKkJVPeW4gNE0bwd",
+        "created": "2023-05-04T13:08:47.827333Z",
+        "modified": "2023-05-04T13:08:47.827371Z",
+        "name": "view_workerTask",
+        "codename": "view_workerTask"
+    },
+    {
+        "id": "permissions_E8QODqenjAeKJ0bz",
+        "created": "2023-05-04T13:08:47.830725Z",
+        "modified": "2023-05-04T13:08:47.830769Z",
+        "name": "change_workerTask",
+        "codename": "change_workerTask"
+    },
+    {
+        "id": "permissions_1JAyKgMpgOB3O8Xm",
+        "created": "2023-05-04T13:08:47.833880Z",
+        "modified": "2023-05-04T13:08:47.833923Z",
+        "name": "delete_workerTask",
+        "codename": "delete_workerTask"
+    },
+    {
+        "id": "permissions_1OkJDlelr6B8oyYn",
+        "created": "2023-05-04T13:08:47.836678Z",
+        "modified": "2023-05-04T13:08:47.836709Z",
+        "name": "add_machineTask",
+        "codename": "add_machineTask"
+    },
+    {
+        "id": "permissions_WQgp0aB1K6eP4V8d",
+        "created": "2023-05-04T13:08:47.841067Z",
+        "modified": "2023-05-04T13:08:47.841099Z",
+        "name": "view_machineTask",
+        "codename": "view_machineTask"
+    },
+    {
+        "id": "permissions_4gjKGke63oNq7J8v",
+        "created": "2023-05-04T13:08:47.844767Z",
+        "modified": "2023-05-04T13:08:47.844804Z",
+        "name": "change_machineTask",
+        "codename": "change_machineTask"
+    },
+    {
+        "id": "permissions_xa2nOmeAAWeP9lXj",
+        "created": "2023-05-04T13:08:47.851407Z",
+        "modified": "2023-05-04T13:08:47.851443Z",
+        "name": "delete_machineTask",
+        "codename": "delete_machineTask"
+    },
+    {
+        "id": "permissions_DrGdyjNy5bN3PxWa",
+        "created": "2023-05-04T13:08:47.854310Z",
+        "modified": "2023-05-04T13:08:47.854340Z",
+        "name": "add_furniture",
+        "codename": "add_furniture"
+    },
+    {
+        "id": "permissions_j5128DeGKJenqdRP",
+        "created": "2023-05-04T13:08:47.857132Z",
+        "modified": "2023-05-04T13:08:47.857162Z",
+        "name": "view_furniture",
+        "codename": "view_furniture"
+    },
+    {
+        "id": "permissions_OaDKgqerqbM2W1VX",
+        "created": "2023-05-04T13:08:47.862052Z",
+        "modified": "2023-05-04T13:08:47.862061Z",
+        "name": "change_furniture",
+        "codename": "change_furniture"
+    },
+    {
+        "id": "permissions_al7pxdNRxmM1kEgb",
+        "created": "2023-05-04T13:08:47.873167Z",
+        "modified": "2023-05-04T13:08:47.873185Z",
+        "name": "delete_furniture",
+        "codename": "delete_furniture"
+    },
+    {
+        "id": "permissions_g5vWRQBVrnBmxn4y",
+        "created": "2023-05-04T13:08:47.879453Z",
+        "modified": "2023-05-04T13:08:47.879471Z",
+        "name": "add_group",
+        "codename": "add_group"
+    },
+    {
+        "id": "permissions_mjqZpDeO1jBGnJ4d",
+        "created": "2023-05-04T13:08:47.892545Z",
+        "modified": "2023-05-04T13:08:47.892570Z",
+        "name": "view_group",
+        "codename": "view_group"
+    },
+    {
+        "id": "permissions_KO9723N73nN8oLw4",
+        "created": "2023-05-04T13:08:47.895556Z",
+        "modified": "2023-05-04T13:08:47.895581Z",
+        "name": "change_group",
+        "codename": "change_group"
+    },
+    {
+        "id": "permissions_PVDgzbMXapewrJZp",
+        "created": "2023-05-04T13:08:47.903337Z",
+        "modified": "2023-05-04T13:08:47.903390Z",
+        "name": "delete_group",
+        "codename": "delete_group"
+    },
+    {
+        "id": "permissions_LxbGjDeDwyMaK9PX",
+        "created": "2023-05-04T13:08:47.906709Z",
+        "modified": "2023-05-04T13:08:47.906741Z",
+        "name": "add_module",
+        "codename": "add_module"
+    },
+    {
+        "id": "permissions_dJpV27Nx7Eejn3Dg",
+        "created": "2023-05-04T13:08:47.912483Z",
+        "modified": "2023-05-04T13:08:47.912527Z",
+        "name": "view_module",
+        "codename": "view_module"
+    },
+    {
+        "id": "permissions_baA721MqwLNJmx0Q",
+        "created": "2023-05-04T13:08:47.915774Z",
+        "modified": "2023-05-04T13:08:47.915821Z",
+        "name": "change_module",
+        "codename": "change_module"
+    },
+    {
+        "id": "permissions_8An2GQNvwKBzp4go",
+        "created": "2023-05-04T13:08:47.921677Z",
+        "modified": "2023-05-04T13:08:47.921720Z",
+        "name": "delete_module",
+        "codename": "delete_module"
+    },
+    {
+        "id": "permissions_ZQX47WMgkzMdajJ6",
+        "created": "2023-05-05T08:11:01.746310Z",
+        "modified": "2023-05-05T08:11:01.746370Z",
+        "name": "Projeto",
+        "codename": "access_projects"
+    },
+    {
+        "id": "permissions_3GJoO1Bm3WeDjAZw",
+        "created": "2023-05-05T08:11:08.326321Z",
+        "modified": "2023-05-05T08:11:08.326370Z",
+        "name": "Mensagem",
+        "codename": "access_messages"
+    },
+    {
+        "id": "permissions_9rVQ1ON3LABmG63k",
+        "created": "2023-05-05T08:11:14.231751Z",
+        "modified": "2023-05-05T08:11:14.231833Z",
+        "name": "Projeto Similar",
+        "codename": "access_projects_similar"
+    },
+    {
+        "id": "permissions_8m37lyBozwNYQ6Gp",
+        "created": "2023-05-05T08:11:18.466657Z",
+        "modified": "2023-05-05T08:11:18.466718Z",
+        "name": "Stock",
+        "codename": "access_stocks"
+    },
+    {
+        "id": "permissions_0PqZXyNYjZB7W9lb",
+        "created": "2023-05-05T08:11:24.860238Z",
+        "modified": "2023-05-05T08:11:24.860270Z",
+        "name": "Chão de Fábrica",
+        "codename": "access_factory"
+    },
+    {
+        "id": "permissions_gPlnOGNPkKeq7b2E",
+        "created": "2023-05-05T08:11:30.282128Z",
+        "modified": "2023-05-05T08:11:30.282168Z",
+        "name": "Montagem",
+        "codename": "access_assembly"
+    },
+    {
+        "id": "permissions_LaXPJEMEmmMw70KO",
+        "created": "2023-05-05T08:11:35.707758Z",
+        "modified": "2023-05-05T08:11:35.707795Z",
+        "name": "Sobrante",
+        "codename": "access_leftovers"
+    },
+    {
+        "id": "permissions_0Y9ZkLBKOpBK2E1g",
+        "created": "2023-05-05T08:11:40.651724Z",
+        "modified": "2023-05-05T08:11:40.651776Z",
+        "name": "Cliente",
+        "codename": "access_clients"
+    },
+    {
+        "id": "permissions_yr4jQEBzYpNOw37Z",
+        "created": "2023-05-05T08:11:44.827827Z",
+        "modified": "2023-05-05T08:11:44.827861Z",
+        "name": "Utilizador",
+        "codename": "access_workers"
+    },
+    {
+        "id": "permissions_E4lxPye2wbNoJrbn",
+        "created": "2023-05-26T08:52:47.567231Z",
+        "modified": "2023-05-26T08:52:47.567280Z",
+        "name": "Perfil",
+        "codename": "add_permission"
+    },
+    {
+        "id": "permissions_W79oKrM0a9ebl05g",
+        "created": "2023-05-26T08:52:51.529020Z",
+        "modified": "2023-05-26T08:52:51.529066Z",
+        "name": "Perfil",
+        "codename": "change_permission"
+    },
+    {
+        "id": "permissions_DaA0oON53OMw34xj",
+        "created": "2023-05-26T08:52:55.136872Z",
+        "modified": "2023-05-26T08:52:55.136904Z",
+        "name": "Perfil",
+        "codename": "delete_permission"
+    },
+    {
+        "id": "permissions_a7xrm0NLOQeVDLwq",
+        "created": "2023-05-26T08:53:00.147528Z",
+        "modified": "2023-05-26T08:53:00.147559Z",
+        "name": "Perfil",
+        "codename": "view_permission"
+    },
+    {
+        "id": "permissions_2OxJmANkdxB5Dl3o",
+        "created": "2023-05-26T08:53:05.250148Z",
+        "modified": "2023-05-26T08:53:05.250179Z",
+        "name": "Perfil",
+        "codename": "list_permission"
+    },
+    {
+        "id": "permissions_o8jW0ZNZ9KedQp1J",
+        "created": "2023-05-26T09:04:06.594745Z",
+        "modified": "2023-05-26T09:04:06.594787Z",
+        "name": "Perfil",
+        "codename": "access_permissions"
+    },
+    {
+        "id": "permissions_Xw9Jz3BbYnNO4GlZ",
+        "created": "2023-05-26T09:31:27.460589Z",
+        "modified": "2023-05-26T09:31:27.460637Z",
+        "name": "Perfil",
+        "codename": "list_permissions"
+    },
+    {
+        "id": "permissions_OjDZoKMJE8B9GQ5A",
+        "created": "2023-05-26T09:35:10.742016Z",
+        "modified": "2023-05-26T09:35:10.742059Z",
+        "name": "Projeto",
+        "codename": "list_project"
+    },
+    {
+        "id": "permissions_8Y5d0LMQZyeRPXnj",
+        "created": "2023-05-26T09:35:24.603849Z",
+        "modified": "2023-05-26T09:35:24.603884Z",
+        "name": "Projeto Similar",
+        "codename": "list_project_similar"
+    },
+    {
+        "id": "permissions_pAbaEjM8JmNVzKdy",
+        "created": "2023-05-26T09:35:31.699124Z",
+        "modified": "2023-05-26T09:35:31.699182Z",
+        "name": "Stock",
+        "codename": "list_stock"
+    },
+    {
+        "id": "permissions_ox6795edroBdOrJb",
+        "created": "2023-05-26T09:35:58.630747Z",
+        "modified": "2023-05-26T09:35:58.630820Z",
+        "name": "Cliente",
+        "codename": "list_client"
+    },
+    {
+        "id": "permissions_3zYLk4N42gMoJ1mW",
+        "created": "2023-05-26T09:36:10.186993Z",
+        "modified": "2023-05-26T09:36:10.187039Z",
+        "name": "Utilizador",
+        "codename": "list_worker"
+    },
+    {
+        "id": "permissions_wXjG6KMamyMAaL07",
+        "created": "2023-05-26T09:43:11.453836Z",
+        "modified": "2023-05-26T09:43:11.453877Z",
+        "name": "Cliente",
+        "codename": "change_client"
+    },
+    {
+        "id": "permissions_Q8ZPE7NjynegzXDo",
+        "created": "2023-05-26T09:43:15.859750Z",
+        "modified": "2023-05-26T09:43:15.859809Z",
+        "name": "Cliente",
+        "codename": "view_client"
+    },
+    {
+        "id": "permissions_RDX1Y9Mwk0MGAmqj",
+        "created": "2023-05-26T09:43:52.510611Z",
+        "modified": "2023-05-26T09:43:52.510643Z",
+        "name": "Cliente",
+        "codename": "add_client"
+    },
+    {
+        "id": "permissions_RKkJVPeW2gME0bwd",
+        "created": "2023-05-26T09:44:01.368455Z",
+        "modified": "2023-05-26T09:44:01.368489Z",
+        "name": "Cliente",
+        "codename": "delete_client"
+    },
+    {
+        "id": "permissions_E8QODqenEAMKJ0bz",
+        "created": "2023-05-26T09:49:15.292008Z",
+        "modified": "2023-05-26T09:49:15.292057Z",
+        "name": "Projeto Similar",
+        "codename": "view_projectssimilar"
+    },
+    {
+        "id": "permissions_1JAyKgMpjON3O8Xm",
+        "created": "2023-05-26T09:49:21.154730Z",
+        "modified": "2023-05-26T09:49:21.154771Z",
+        "name": "Projeto Similar",
+        "codename": "list_projectssimilar"
+    },
+    {
+        "id": "permissions_1OkJDlel46e8oyYn",
+        "created": "2023-05-26T09:51:03.240512Z",
+        "modified": "2023-05-26T09:51:03.240557Z",
+        "name": "Chão de Fábrica",
+        "codename": "view_factory"
+    },
+    {
+        "id": "permissions_WQgp0aB1m6BP4V8d",
+        "created": "2023-05-26T09:53:17.380259Z",
+        "modified": "2023-05-26T09:53:17.380301Z",
+        "name": "Chão de Fábrica",
+        "codename": "list_factory"
+    },
+    {
+        "id": "permissions_4gjKGke6Zoeq7J8v",
+        "created": "2023-05-26T09:54:47.017982Z",
+        "modified": "2023-05-26T09:54:47.018038Z",
+        "name": "Montagem",
+        "codename": "list_assembly"
+    },
+    {
+        "id": "permissions_xa2nOmeAaWeP9lXj",
+        "created": "2023-05-26T09:56:01.029616Z",
+        "modified": "2023-05-26T09:56:01.029684Z",
+        "name": "Embalamento",
+        "codename": "view_packing"
+    },
+    {
+        "id": "permissions_DrGdyjNy7bM3PxWa",
+        "created": "2023-05-26T09:56:05.293891Z",
+        "modified": "2023-05-26T09:56:05.293935Z",
+        "name": "Embalamento",
+        "codename": "list_packing"
+    },
+    {
+        "id": "permissions_j5128DeGmJBnqdRP",
+        "created": "2023-05-26T09:56:11.864839Z",
+        "modified": "2023-05-26T09:56:11.864875Z",
+        "name": "Embalamento",
+        "codename": "add_packing"
+    },
+    {
+        "id": "permissions_OaDKgqerAbM2W1VX",
+        "created": "2023-05-26T09:57:01.531594Z",
+        "modified": "2023-05-26T09:57:01.531652Z",
+        "name": "Embalamento",
+        "codename": "access_packing"
+    },
+    {
+        "id": "permissions_al7pxdNRbmN1kEgb",
+        "created": "2023-05-26T09:59:03.625841Z",
+        "modified": "2023-05-26T09:59:03.625882Z",
+        "name": "Embalamento",
+        "codename": "add_package"
+    },
+    {
+        "id": "permissions_g5vWRQBVwnMmxn4y",
+        "created": "2023-05-26T09:59:07.821969Z",
+        "modified": "2023-05-26T09:59:07.822012Z",
+        "name": "Embalamento",
+        "codename": "list_package"
+    },
+    {
+        "id": "permissions_mjqZpDeOxjNGnJ4d",
+        "created": "2023-05-26T09:59:12.330554Z",
+        "modified": "2023-05-26T09:59:12.330585Z",
+        "name": "Embalamento",
+        "codename": "view_package"
+    },
+    {
+        "id": "permissions_KO9723N7bne8oLw4",
+        "created": "2023-05-26T10:02:31.830697Z",
+        "modified": "2023-05-26T10:02:31.830738Z",
+        "name": "Sobrante",
+        "codename": "list_leftover"
+    },
+    {
+        "id": "permissions_PVDgzbMXmpewrJZp",
+        "created": "2023-05-26T10:03:05.916988Z",
+        "modified": "2023-05-26T10:03:05.917019Z",
+        "name": "Conta",
+        "codename": "view_account"
+    },
+    {
+        "id": "permissions_LxbGjDeDqyNaK9PX",
+        "created": "2023-05-26T10:04:37.909270Z",
+        "modified": "2023-05-26T10:04:37.909309Z",
+        "name": "view_stock",
+        "codename": "view_stock"
+    },
+    {
+        "id": "permissions_dJpV27NxAEBjn3Dg",
+        "created": "2023-05-26T10:04:42.103893Z",
+        "modified": "2023-05-26T10:04:42.103924Z",
+        "name": "add_stock",
+        "codename": "add_stock"
+    },
+    {
+        "id": "permissions_baA721MqELMJmx0Q",
+        "created": "2023-05-26T10:17:59.036978Z",
+        "modified": "2023-05-26T10:17:59.037012Z",
+        "name": "list_message",
+        "codename": "list_message"
+    },
+    {
+        "id": "permissions_8An2GQNv7KBzp4go",
+        "created": "2023-05-26T11:41:09.574241Z",
+        "modified": "2023-05-26T11:41:09.574283Z",
+        "name": "Perfis",
+        "codename": "list_profile"
+    },
+    {
+        "id": "permissions_ZQX47WMgbzBdajJ6",
+        "created": "2023-05-26T11:41:18.608330Z",
+        "modified": "2023-05-26T11:41:18.608376Z",
+        "name": "Perfis",
+        "codename": "add_profile"
+    },
+    {
+        "id": "permissions_3GJoO1BmzWMDjAZw",
+        "created": "2023-05-26T11:42:09.512077Z",
+        "modified": "2023-05-26T11:42:09.512115Z",
+        "name": "view_account",
+        "codename": "view_account"
+    },
+    {
+        "id": "permissions_9rVQ1ON3oANmG63k",
+        "created": "2023-05-26T11:42:55.280221Z",
+        "modified": "2023-05-26T11:42:55.280264Z",
+        "name": "Perfis",
+        "codename": "change_profile"
+    },
+    {
+        "id": "permissions_8m37lyBo9weYQ6Gp",
+        "created": "2023-05-26T11:44:13.895624Z",
+        "modified": "2023-05-26T11:44:13.895679Z",
+        "name": "Maquinas",
+        "codename": "list_machine"
+    }
+]

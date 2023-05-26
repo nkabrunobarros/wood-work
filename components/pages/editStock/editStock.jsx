@@ -10,11 +10,11 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
 import { Box, Divider, Tooltip } from '@mui/material';
+import Router from 'next/router';
+import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
 import MyInput from '../../inputs/myInput';
 import Navbar from '../../layout/navbar/navbar';
-import Router from 'next/router';
-import routes from '../../../navigation/routes';
 
 const EditStock = ({ ...props }) => {
   const { stock, breadcrumbsPath, pageProps } = props;
@@ -44,8 +44,8 @@ const EditStock = ({ ...props }) => {
               <Tooltip title={`${stock?.qtd} unidade(s)`}>
 
                 {stock?.qtd > 0
-                  ? <a className="successBalloon">Disponivel</a>
-                  : <a className="errorBalloon">Indisponivel</a>}
+                  ? <a className="successBalloon">Disponível</a>
+                  : <a className="errorBalloon">Indisponível</a>}
               </Tooltip>
             </Box>
             <PrimaryBtn text='Guardar'
@@ -62,12 +62,12 @@ const EditStock = ({ ...props }) => {
               </Grid>
               <Grid container md={6} xs={6} p={0.5}>
                 <Grid item xs={12}>
-                  <MyInput onChange={(e) => OnFieldChange(e)} name='qtd' label={'Quantidade disponivel'} value={newStock?.qtd} type='number' />
+                  <MyInput onChange={(e) => OnFieldChange(e)} name='qtd' label={'Quantidade disponível'} value={newStock?.qtd} type='number' />
                 </Grid>
               </Grid>
               <Grid container md={6} xs={6} p={0.5}>
                 <Grid item xs={12}>
-                  <MyInput onChange={(e) => OnFieldChange(e)} name='warehouse' label={'Armazem'} value={newStock?.warehouse} />
+                  <MyInput onChange={(e) => OnFieldChange(e)} name='warehouse' label={'Armazém'} value={newStock?.warehouse} />
                 </Grid>
               </Grid>
               <Grid container md={6} xs={6} p={0.5}>

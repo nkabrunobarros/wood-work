@@ -229,7 +229,7 @@ const Projects = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'InicioProd',
+        id: 'InícioProd',
         numeric: false,
         disablePadding: false,
         label: 'Início Prod.',
@@ -312,7 +312,7 @@ const Projects = ({ ...pageProps }) => {
         Produced: proj.produced?.value,
         PrimeiroContacto: thisBudget?.dateRequest?.value,
         ExpeditionTime: thisExpedition?.expeditionTime.value && moment(thisExpedition?.expeditionTime.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
-        InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        InícioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         TerminoProd: thisAssembly?.startTime?.value && moment(thisAssembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         EntregaProj: thisBudget?.dateDeliveryProject?.value,
       };

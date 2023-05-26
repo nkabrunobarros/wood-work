@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/loader/loader';
 import OrdersScreen from '../components/pages/projects/projects';
 import routes from '../navigation/routes';
+import * as assemblysActionsRedux from '../store/actions/assembly';
 import * as budgetsActionsRedux from '../store/actions/budget';
 import * as clientsActionsRedux from '../store/actions/client';
 import * as expeditionsActionsRedux from '../store/actions/expedition';
 import * as projectsActionsRedux from '../store/actions/project';
-import * as assemblysActionsRedux from '../store/actions/assembly';
 
 const Orders = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
@@ -232,7 +232,7 @@ const Orders = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'InicioProd',
+        id: 'InícioProd',
         numeric: false,
         disablePadding: false,
         label: 'Início Prod.',
@@ -288,14 +288,14 @@ const Orders = ({ ...pageProps }) => {
         Estado: proj?.status?.value,
         Nome: proj?.name?.value?.replace(/_/g, ' '),
         budget: thisBudget,
-        Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
+        Início: moment(proj?.createdAt).format('DD/MM/YYYY'),
         Termino: thisExpedition?.deliveryTime?.value,
         Entregue: thisBudget?.dateDelivery?.value,
         Numero: thisBudget?.num?.value || 212453,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         EntregaProj: thisBudget?.dateDeliveryProject?.value,
         PrimeiroContacto: thisBudget?.dateRequest?.value,
-        InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        InícioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         ExpeditionTime: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         TerminoProd: thisAssembly?.startTime?.value && moment(thisAssembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
       };

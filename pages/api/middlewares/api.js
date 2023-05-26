@@ -37,13 +37,13 @@ const api = () => () => (dispatch) => async (action) => {
       if (error.response?.data?.detail === ('Invalid token header. No credentials provided.' || 'Authentication credentials were not provided.')) {
         destroyCookie(null, 'auth_token');
 
-        return error;
+        throw error;
       }
 
       dispatch(failAction);
     }
 
-    return error;
+    throw error;
   }
 };
 

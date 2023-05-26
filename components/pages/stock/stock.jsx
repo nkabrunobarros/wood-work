@@ -37,8 +37,8 @@ const Stock = ({ ...props }) => {
               <Tooltip title={`${stock?.qtd} unidade(s)`}>
 
                 {stock?.qtd > 0
-                  ? <a className="successBalloon">Disponivel</a>
-                  : <a className="errorBalloon">Indisponivel</a>}
+                  ? <a className="successBalloon">Disponível</a>
+                  : <a className="errorBalloon">Indisponível</a>}
               </Tooltip>
             </Box>
             <Box style={{ display: 'flex' }}>
@@ -59,13 +59,13 @@ const Stock = ({ ...props }) => {
               </Grid>
               <Grid container md={6} xs={6}>
                 <Grid item xs={12}>
-                  <Typography item color='lightTextSm.main'>Quantidade disponivel</Typography>
+                  <Typography item color='lightTextSm.main'>Quantidade disponível</Typography>
                   <Typography item color='lightTextSm.black'>{stock?.qtd}</Typography>
                 </Grid>
               </Grid>
               <Grid container md={6} xs={6}>
                 <Grid item xs={12}>
-                  <Typography item color='lightTextSm.main'>Armazem</Typography>
+                  <Typography item color='lightTextSm.main'>Armazém</Typography>
                   <Typography item color='lightTextSm.black'>{stock?.warehouse}</Typography>
                 </Grid>
               </Grid>

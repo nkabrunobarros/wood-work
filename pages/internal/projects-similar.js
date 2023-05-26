@@ -120,12 +120,12 @@ const OrdersSimilar = () => {
             desvio,
             Desvio: desvio,
             Realizado: done,
-            Número: budget.num.value,
-            Nome: project.name.value,
-            ClienteLabel: client.user.first_name + ' ' + client.user.last_name,
-            Cliente: client.id,
+            Número: budget?.num?.value,
+            Nome: project.name?.value,
+            ClienteLabel: client?.user?.first_name + ' ' + client?.user?.last_name,
+            Cliente: client?.id,
             Previsto: predicted,
-            Quantidade: project.amount.value,
+            Quantidade: project?.amount?.value,
             Fim: expedition?.expeditionTime?.value
               ? moment(expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
               : '',

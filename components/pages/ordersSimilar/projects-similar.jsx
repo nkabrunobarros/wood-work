@@ -170,7 +170,7 @@ const ProjectsSimilarScreen = ({ ...props }) => {
               <Grid {...cellProps}><Typography variant='subtitle2'>Previsto</Typography></Grid>
               <Grid {...cellProps}><Typography variant='subtitle2'>Realizado</Typography></Grid>
               <Grid {...cellProps}><Typography variant='subtitle2'>Qtd. Móveis</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Inicio</Typography> </Grid>
+              <Grid {...cellProps}><Typography variant='subtitle2'>Início</Typography> </Grid>
               <Grid {...cellProps}><Typography variant='subtitle2'>Fim </Typography> </Grid>
               <Grid {...cellProps}><Typography variant='subtitle2'>Desvio</Typography> </Grid>
               <Grid {...cellProps}justifyContent={'end'}><Typography variant='subtitle2'>Móveis</Typography></Grid>
@@ -209,11 +209,11 @@ const ProjectsSimilarScreen = ({ ...props }) => {
                       <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }} >
                         <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
                         <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Prod.</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Prod.</Typography> </Box></Grid>
                         <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Prod.</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Mont.</Typography> </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Mont.</Typography> </Box></Grid>
                         <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Mont.</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Inicio Emb.</Typography>  </Box></Grid>
+                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Emb.</Typography>  </Box></Grid>
                         <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Emb.</Typography>  </Box></Grid>
                         <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor total</Typography> </Box></Grid>
                         <Grid {...cellProps}><Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor por móvel</Typography></Grid>

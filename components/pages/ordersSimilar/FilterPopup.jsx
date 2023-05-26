@@ -107,7 +107,7 @@ const FilterPopUp = ({ open, onClose, clients, setAppliedFilters }) => {
     Previsto: '',
     Realizado: '',
     Quantidade: '',
-    Inicio: '',
+    Início: '',
     Fim: '',
   });
 
@@ -123,7 +123,7 @@ const FilterPopUp = ({ open, onClose, clients, setAppliedFilters }) => {
       Previsto: '',
       Realizado: '',
       Quantidade: '',
-      Inicio: '',
+      Início: '',
       Fim: '',
     });
 
@@ -168,10 +168,10 @@ const FilterPopUp = ({ open, onClose, clients, setAppliedFilters }) => {
                 <DesktopDatePicker
                   label="Início"
                   inputFormat="DD/MM/YYYY"
-                  value={moment(filters.Inicio?.value, 'DD/MM/YYYY')}
+                  value={moment(filters.Início?.value, 'DD/MM/YYYY')}
                   onChange={(newValue) => {
                     onFilterChange({
-                      field: 'Inicio',
+                      field: 'Início',
                       newValue: {
                         value: moment(newValue.$d).format('DD/MM/YYYY'),
                         operator: 'bigger'

@@ -378,7 +378,7 @@ const ProjectsScreen = (props) => {
         {/* Projects */}
         <Content>
           <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
+            <Typography variant='title'>{breadcrumbsPath[0].title}</Typography>
             <PrimaryBtn
               hidden={!(isInternalPage && CanDo('add_project'))}
               text='Adicionar'
