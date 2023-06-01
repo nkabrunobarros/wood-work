@@ -66,7 +66,7 @@ const AdvancedTable = ({
     page: 0,
     rowsPerPage: 10,
     rows,
-    filteredItems: null,
+    filteredItems: rows,
     data: {},
     deleteItemId: '',
     dialogOpen: false,
@@ -82,8 +82,6 @@ const AdvancedTable = ({
   useEffect(() => {
     const getData = async () => {
       const allData = {
-        categories: [],
-        // categories: categories.data.payload.data,
         clients: reduxState.clients?.data
       };
 
@@ -95,7 +93,7 @@ const AdvancedTable = ({
       case routes.private.internal.projects:
 
         break;
-      case routes.private.internal.projectsSimilar:
+      case routes.private.internal.similarProjects:
         setState({ ...state, dialogMessage: 'Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?' });
 
         break;
@@ -377,7 +375,7 @@ const AdvancedTable = ({
                   component='div'
                   sx={{ marginLeft: 'auto' }}
                   rowsPerPageOptions={[5, 10, 25]}
-                  count={state.filteredItems ? state.filteredItems?.length : rows?.length}
+                  count={state.filteredItems ? state.filteredItems?.length : state.filteredItems?.length}
                   rowsPerPage={state.rowsPerPage}
                   page={state.page}
                   onPageChange={handleChangePage}
@@ -504,6 +502,8 @@ const AdvancedTable = ({
                                 : (
                                   <Box
                                     onClick={() => {
+                                      if (!clickRoute) return;
+
                                       //  Verifies if im in a internal page
                                       const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
 

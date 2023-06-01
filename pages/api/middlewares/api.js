@@ -31,7 +31,7 @@ const api = () => () => (dispatch) => async (action) => {
 
     return response;
   } catch (error) {
-    if (error.response.status === 403 || error.response.status === 401) {
+    if (error?.response?.status === 403 || error?.response?.status === 401) {
       const failAction = actionWith({ type: FAIL, meta, payload: error.response || error });
 
       if (error.response?.data?.detail === ('Invalid token header. No credentials provided.' || 'Authentication credentials were not provided.')) {

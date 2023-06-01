@@ -23,7 +23,7 @@ const NewPackaging = ({ ...pageProps }) => {
     const getData = async () => {
       await getProject(router.query.Id).then((res) => setProject(res.data));
       await getParts({ belongsTo: router.query.Id }).then((res) => setParts(res.data));
-      await getModules().then((res) => console.log(res));
+      await getModules();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

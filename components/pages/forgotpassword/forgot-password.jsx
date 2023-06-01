@@ -165,7 +165,7 @@ const ForgotPassword = (props) => {
             </Box>
           </Box>
         </Box>
-        <Footer />
+        <Footer isPublicPage={true}/>
       </Grid>
     </Grid>
   );

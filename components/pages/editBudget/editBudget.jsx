@@ -171,7 +171,6 @@ const EditBudget = ({ ...props }) => {
           Object.entries(item).forEach(([, value]) => {
             if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
               value.error = 'Campo obrigatorio';
-              console.log(value);
               hasErrors = true;
             } else if (typeof value === 'object' && 'error' in value) {
               value.error = '';

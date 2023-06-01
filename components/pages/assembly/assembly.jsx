@@ -11,10 +11,10 @@ import { toast } from 'react-toastify';
 import * as moduleActions from '../../../store/actions/module';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Notification from '../../dialogs/Notification';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
 import ModuleCard from './ModuleCard';
-import Footer from '../../layout/footer/footer';
 
 const Assembly = (props) => {
   const dispatch = useDispatch();
@@ -54,8 +54,7 @@ const Assembly = (props) => {
           amount: { type: 'Property', value: '4' },
         }
       })
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
+        .then(() => {
         })
         .catch((error) => {
           console.log(error);
@@ -68,7 +67,6 @@ const Assembly = (props) => {
     const data = {};
 
     if (!module.startTime?.value) {
-      console.log(module.finishTime?.value);
       data.startTime = { ...module.startTime, value: moment().format('DD/MM/YYYY HH:mm:ss') };
       data.assemblyBy = { ...module.assemblyBy, value: 'urn:ngsi-ld:Worker:' + me.id };
     } else {

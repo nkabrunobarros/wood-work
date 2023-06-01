@@ -1,4 +1,5 @@
-import { Button } from '@mui/material';
+/* eslint-disable react/prop-types */
+import { Box, Button } from '@mui/material';
 import { Undo } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Layer, Stage } from 'react-konva';
@@ -6,23 +7,42 @@ import PolygonAnnotation from './PolygonAnnotation';
 
 const videoSource = 'https://i.etsystatic.com/13326222/r/il/eba19a/2652256044/il_570xN.2652256044_f0qi.jpg';
 
-const Canvas = () => {
+function checkDuplicateCoordinates (coordinates) {
+  const visitedCoordinates = new Set();
+  let hasDuplicates = false;
+
+  for (let i = 0; i < coordinates.length; i++) {
+    const coordinate = coordinates[i];
+    // Convert coordinate to string for Set comparison
+    const coordinateString = JSON.stringify(coordinate);
+
+    if (visitedCoordinates.has(coordinateString)) {
+      hasDuplicates = true;
+
+      break;
+    }
+
+    visitedCoordinates.add(coordinateString);
+  }
+
+  return hasDuplicates;
+}
+
+const Canvas = (props) => {
   const [image, setImage] = useState();
   const imageRef = useRef(null);
   const dataRef = useRef(null);
-  const [points, setPoints] = useState([]);
+  const [points, setPoints] = useState(props.leftover.corners.coordinates) || [];
   const [size, setSize] = useState({});
   const [flattenedPoints, setFlattenedPoints] = useState();
   const [position, setPosition] = useState([0, 0]);
   const [isMouseOverPoint, setMouseOverPoint] = useState(false);
-  const [isPolyComplete, setPolyComplete] = useState(false);
+  const [isPolyComplete, setPolyComplete] = useState(checkDuplicateCoordinates(points));
 
   const videoElement = useMemo(() => {
     const element = new window.Image();
 
-    element.width = 824;
-    element.height = 482;
-    element.src = videoSource;
+    element.src = props.leftover.file || videoSource;
 
     return element;
   }, []); // it may come from redux
@@ -127,46 +147,49 @@ const Canvas = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Stage
-        width={size.width || 480}
-        height={size.height || 360}
-        onMouseMove={handleMouseMove}
-        onMouseDown={handleMouseDown}
+    <>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
       >
-        <Layer>
-          <Image ref={imageRef} image={image} x={0} y={0} width={size.width} height={size.height} />
-          <PolygonAnnotation
-            points={points}
-            flattenedPoints={flattenedPoints}
-            handlePointDragMove={handlePointDragMove}
-            handleGroupDragEnd={handleGroupDragEnd}
-            handleMouseOverStartPoint={handleMouseOverStartPoint}
-            handleMouseOutStartPoint={handleMouseOutStartPoint}
-            isFinished={isPolyComplete}
-          />
-        </Layer>
-      </Stage>
-      <button style={{ marginTop: 20, display: 'none' }} onClick={showCoordinates}>
+        <Stage
+          width={size.width || 480}
+          height={size.height || 360}
+          onMouseMove={handleMouseMove}
+          onMouseDown={handleMouseDown}
+        >
+          <Layer>
+            <Image ref={imageRef} image={image} x={0} y={0} width={size.width} height={size.height} />
+            <PolygonAnnotation
+              points={points}
+              flattenedPoints={flattenedPoints}
+              handlePointDragMove={handlePointDragMove}
+              handleGroupDragEnd={handleGroupDragEnd}
+              handleMouseOverStartPoint={handleMouseOverStartPoint}
+              handleMouseOutStartPoint={handleMouseOutStartPoint}
+              isFinished={isPolyComplete}
+            />
+          </Layer>
+        </Stage>
+        <button style={{ marginTop: 20, display: 'none' }} onClick={showCoordinates}>
         Coordinates
-      </button>
-      <Button onClick={undo}>
+        </button>
+        <Box
+          ref={dataRef}
+          style={{ display: 'none', width: 400, boxShadow: '7px 7px 5px .4em rgba(0,0,0,.1)' }}
+        >
+          <pre>{}</pre>
+        </Box>
+      </Box>
+      <Button onClick={undo} >
         <Undo />
       </Button>
-      <div
-        ref={dataRef}
-        style={{ display: 'none', width: 400, boxShadow: '7px 7px 5px .4em rgba(0,0,0,.1)' }}
-      >
-        <pre>{}</pre>
-      </div>
-    </div>
+    </>
+
   );
 };
 

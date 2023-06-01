@@ -13,20 +13,19 @@ import routes from '../../navigation/routes';
 
 //  Actions
 import * as OrganizationsActionsRedux from '../../store/actions/organization';
-import * as permissionsActionsRedux from '../../store/actions/profile';
+import * as profilesActionsRedux from '../../store/actions/profile';
 
 const NewOrder = () => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getOrganizations = (data) => dispatch(OrganizationsActionsRedux.organizations(data));
-  const getPermissions = (data) => dispatch(permissionsActionsRedux.permissions(data));
+  const getProfiles = (data) => dispatch(profilesActionsRedux.profiles(data));
 
   useEffect(() => {
     const getData = async () => {
       !reduxState.organizations.data && await getOrganizations();
-      // !reduxState.permissions.data && await getPermissions();
-      await getPermissions(); //  All permissions groups
+      await getProfiles(); //  All permissions groups
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -47,9 +46,8 @@ const NewOrder = () => {
     const props = {
       breadcrumbsPath,
       countries: [],
-      profiles: [],
       organizations: reduxState.organizations.data,
-      permissions: reduxState.permissions.data,
+      profiles: reduxState.profiles.data,
     };
 
     return <NewWorkerScreen {...props} />;

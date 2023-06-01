@@ -1,11 +1,14 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { Box, Grid, Grow, IconButton, Popover, Tab, Tabs, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Grid, Grow, IconButton, Popover, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import * as icons from 'lucide-react';
 import { Check, CheckCircle, Play } from 'lucide-react';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import * as consumablesActionsRedux from '../../../store/actions/consumable';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 import * as machineActionsRedux from '../../../store/actions/machine';
 import * as partsActionsRedux from '../../../store/actions/part';
@@ -17,6 +20,8 @@ import Notification from '../../dialogs/Notification';
 import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
+import formatString from '../../utils/FormatString';
 import TabPanel from '../dashboard/TabPanel';
 import { PartStatus } from '../factoryGround/ProjectDetails/furnitureDetails';
 
@@ -38,6 +43,8 @@ const FactoryGroundProject = (props) => {
   const updatePart = (data) => dispatch(partsActionsRedux.updatePart(data));
   const updateProject = (data) => dispatch(projectActionsRedux.updateProject(data));
   const updateFurniture = (data) => dispatch(furnituresActionsRedux.updateFurniture(data));
+  const newPart = (data) => dispatch(partsActionsRedux.newPart(data));
+  const newConsumable = (data) => dispatch(consumablesActionsRedux.newConsumable(data));
 
   useEffect(() => {
     async function loadData () {
@@ -134,6 +141,69 @@ const FactoryGroundProject = (props) => {
     });
   }
 
+  function createParts () {
+    const newParts2 = [
+      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_C_COSTA', id: formatString(furniture.name.value) + '_BAR_C_COSTA' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 1, lenght: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(furniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(furniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+    ];
+
+    const newConsumables = [
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('suporte_prateleira'), name: 'suporte prateleira', amount: 16, tag: 1, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_B_RODAPE_M'), name: 'BAR B RODAPE M', amount: 1, tag: 2, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('pes_plasticos'), name: 'pes plasticos', amount: 4, tag: 3, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('garampas'), name: 'garampas', amount: 2, tag: 4, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('DOBRADIÇA'), name: 'DOBRADIÇA', amount: 4, tag: 5, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('Corrediça_Quadro_CalhaE'), name: 'Corrediça Quadro CalhaE', amount: 2, tag: 6, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('Corrediça_Quadro_CalhaD'), name: 'Corrediça Quadro CalhaD', amount: 2, tag: 7, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('Corrediça V6 CalhaE'), name: 'Corrediça V6 CalhaE', amount: 1, tag: 8, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('Corrediça V6 CalhaD'), name: 'Corrediça V6 CalhaD', amount: 1, tag: 9, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_RODAPE_CURVO'), name: 'BAR E RODAPE CURVO', amount: 1, tag: 10, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_PAINEL_CURVA_ALMOFADA1'), name: 'BAR E PAINEL CURVA ALMOFADA1', amount: 1, tag: 11, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_PAINEL_CURVA_ALMOFADA2'), name: 'BAR E PAINEL CURVA ALMOFADA2', amount: 1, tag: 12, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_PAINEL_CURVA_RIPA_HRZ10_1'), name: 'BAR E PAINEL CURVA RIPA HRZ10 1', amount: 2, tag: 13, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_PAINEL_CURVA_RIPA_HRZ10_2'), name: 'BAR E PAINEL CURVA RIPA HRZ10 2', amount: 2, tag: 14, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_PAINEL_CURVA_RIPA_HRZ6_1'), name: 'BAR E PAINEL CURVA RIPA HRZ6 1', amount: 2, tag: 15, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+      { id: formatString(furniture.name.value) + moment().diff(moment().startOf('day'), 'seconds') + formatString('BAR_E_PAINEL_CURVA_RIPA_HRZ6_2'), name: 'BAR E PAINEL CURVA RIPA HRZ6 2', amount: 2, tag: 16, produced: false, assembled: false, status: 1, belongsTo: project.id, belongsToFurniture: furniture.id, material: 'AG L Biscuit Nude 36W' },
+
+    ];
+
+    const built = newParts2.map((part) => {
+      const a = {};
+
+      Object.keys(part).map((key) => {
+        a[key] = { type: 'Property', value: part[key] };
+      });
+
+      a.id = 'urn:ngsi-ld:Part:' + a.id.value;
+      a.type = 'Part';
+
+      return a;
+    });
+
+    const builtConsumes = newConsumables.map((part) => {
+      const a = {};
+
+      // eslint-disable-next-line array-callback-return
+      Object.keys(part).map((key) => {
+        a[key] = { type: 'Property', value: part[key] };
+      });
+
+      a.id = 'urn:ngsi-ld:Consumable:' + a.id.value;
+      a.type = 'Consumable';
+
+      return a;
+    });
+
+    built.map(async (part) => {
+      await newPart(part);
+    });
+
+    builtConsumes.map(async (consumable) => {
+      await newConsumable(consumable);
+    });
+  }
+
   async function updateAmountProd (part) {
     await updatePart({ id: part.id, data: { complete: true } });
     setFurniture({ ...furniture, completed: Number(furniture.completed?.value) + 1 });
@@ -176,6 +246,8 @@ const FactoryGroundProject = (props) => {
     await updateMachine({ id: props.machine?.value, data: { currentlyOn: '' } });
   }
 
+  const hasAddPermission = CanDo('add_workerTask');
+
   const ActionStatus = (props) => {
     const { part, field, disabled } = props;
     let undisabled = disabled;
@@ -184,7 +256,7 @@ const FactoryGroundProject = (props) => {
       undisabled = false;
     }
 
-    if (!part[field]) return '';
+    if (!part[field]) return;
 
     const cpy = [...parts];
     const thisMachines = machines?.filter(machine => machine?.machineType?.value?.toLowerCase()?.includes(props?.field?.replace('Flag', '')) && machine?.currentlyOn?.value === '');
@@ -335,7 +407,7 @@ const FactoryGroundProject = (props) => {
               toast.success('Iniciado.');
             });
           }
-        }} disabled={undisabled} >
+        }} disabled={!hasAddPermission || undisabled} >
           <Tooltip title={ msg || (thisMachines && !thisMachines[0] ? 'Não há maquinas disponiveis' : 'Iniciar')} >
             <Play />
           </Tooltip>
@@ -595,6 +667,7 @@ const FactoryGroundProject = (props) => {
           </TabPanel>
         </Grid>
       </Content>
+      <Button sx={{ width: 'fit-content', color: 'transparent' }} onClick={() => createParts()}>Create</Button>
     </Grid>
     <Footer/>
   </>;

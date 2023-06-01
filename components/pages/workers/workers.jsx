@@ -1,6 +1,6 @@
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
@@ -24,6 +24,7 @@ import * as workersActionsRedux from '../../../store/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
 import MyInput from '../../inputs/myInput';
+import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
@@ -36,25 +37,20 @@ const Workers = ({ ...props }) => {
     detailRoute,
     newRoute,
     headCellsWorkers,
+    profiles
   } = props;
 
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
   const [workers, setWorkers] = useState(props.workers);
 
   const [filters, setFilters] = useState({
-    Nome: nome,
-    Email: email,
+    Nome: '',
+    Email: '',
+    Profile: ''
   });
 
-  useEffect(() => {
-    setFilters({
-      Nome: nome,
-      Email: email,
-    });
-  }, [nome, email]);
+  console.log(filters);
 
   async function onDelete (props) {
     const loading = toast.loading('');
@@ -81,8 +77,11 @@ const Workers = ({ ...props }) => {
   }
 
   function ClearFilters () {
-    setNome('');
-    setEmail('');
+    setFilters({
+      Nome: '',
+      Email: '',
+      Profile: ''
+    });
   }
 
   return (
@@ -110,7 +109,7 @@ const Workers = ({ ...props }) => {
                 )}
                 getOptionLabel={(option) => option.NomeDropdown }
                 getOptionValue={(option) => option.id}
-                onChange={(e, value) => setNome(value?.Nome || '')}
+                onChange={(e, value) => setFilters({ ...filters, Nome: value?.Nome || '' })}
                 renderOption={(props, option) => {
                   return (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -120,7 +119,7 @@ const Workers = ({ ...props }) => {
                 }}
                 renderInput={(params) => (
                   <TextField
-                    value={nome}
+                    value={filters.Nome}
                     {...params}
                     inputProps={{
                       ...params.inputProps,
@@ -130,7 +129,10 @@ const Workers = ({ ...props }) => {
               />
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
-              <MyInput label="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
+              <MyInput label="Email" onChange={(e) => setFilters({ ...filters, Email: e.target.value })} value={filters.Email} />
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <MySelect label='Função' options={profiles} optionLabel={'name'} onChange={(e) => setFilters({ ...filters, Profile: e.target.value }) }/>
             </Grid>
             <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
               <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
@@ -168,7 +170,6 @@ const Workers = ({ ...props }) => {
           </div>
           <AdvancedTable
             rows={workers}
-            // rows={workers.filter((item) => item.active?.value && item)}
             headCells={headCellsWorkers}
             clickRoute={detailRoute}
             editRoute={editRoute}

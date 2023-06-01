@@ -18,7 +18,7 @@ import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const ProfileScreen = (props) => {
-  const { breadcrumbsPath, pageProps, profile } = props;
+  const { breadcrumbsPath, pageProps, profile, resources } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const deleteProfile = (data) => dispatch(permissionsActionsRedux.deleteProfile(data));
@@ -37,11 +37,10 @@ const ProfileScreen = (props) => {
 
   const headCells = [
     { key: 'key', label: 'Opção' },
-    { key: 'access', label: 'Acesso' },
     { key: 'list', label: 'Listar' },
-    { key: 'view', label: 'Visualizar' },
-    { key: 'add', label: 'Criar' },
-    { key: 'change', label: 'Editar' },
+    { key: 'see', label: 'Visualizar' },
+    { key: 'create', label: 'Criar' },
+    { key: 'update', label: 'Editar' },
     { key: 'delete', label: 'Apagar' },
   ];
 
@@ -99,7 +98,7 @@ const ProfileScreen = (props) => {
               </Grid>;
             })}
           </Grid>
-          {Object.keys(profile?.listPermissions).map((perm, rowIndex) => {
+          {Object.keys(profile?.listPermissions).sort((a, b) => (a > b) ? 1 : -1).map((perm, rowIndex) => {
             return headCells.map((cell, index) => {
               return <Grid key={cell.label} container alignItems='center' p={0} bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
                 md={cellWidth}
@@ -107,7 +106,10 @@ const ProfileScreen = (props) => {
                 xs={cellWidth}>
                 {index === 0
                   ? <Typography pl={2} variant='subtitle2'>{perm}</Typography>
-                  : <Checkbox disabled checked={!!profile.listPermissions[perm][cell.key]} />
+                  : <>
+                    {resources.find(ele => ele.codename === `${cell.key}_${resources.find(ele => ele.name === perm).codename.split('_')[1]}`) &&
+                    <Checkbox disabled checked={!!profile.listPermissions[perm][cell.key]} />}
+                  </>
                 }
               </Grid>;
             });
@@ -115,12 +117,14 @@ const ProfileScreen = (props) => {
         </Grid>
       </Content>
     </Grid>
+
     <Footer />
   </>;
 };
 
 ProfileScreen.propTypes = {
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object).isRequired,
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageProps: PropTypes.any,
   profile: PropTypes.any,
 };

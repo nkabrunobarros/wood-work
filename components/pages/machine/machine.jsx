@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as machinesActionsRedux from '../../../store/actions/machine';
+import AdvancedTable from '../../advancedTable/AdvancedTable';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
@@ -23,7 +24,7 @@ import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const MachineScreen = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, machine } = props;
+  const { breadcrumbsPath, pageProps, machine, machineActivity, headCells } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const deleteMachine = (data) => dispatch(machinesActionsRedux.deleteMachine(data));
@@ -92,11 +93,23 @@ const MachineScreen = ({ ...props }) => {
               </ButtonGroup>
             </Grid>
           </Grid>
-          <Grid id='pad' md={12} sm={12} xs={12} container>
+          <Grid id='pad' container md={12} sm={12} xs={12} >
             <Grid item md={6} sm={6} xs={12} pb={1} pt={1} >
               <Typography item variant="subtitle2"color='lightTextSm.main'>Tipo</Typography>
               <Typography item variant="subtitle2"color='lightTextSm.black' >{machine?.machineType?.value }</Typography>
             </Grid>
+          </Grid>
+
+        </Content>
+        <Content>
+          <Grid container md={12} sm={12} xs={12} >
+            <Grid id='pad' container md={12} sm={12} xs={12} >
+              <Typography variant='title'>Atividade</Typography>
+            </Grid>
+            <AdvancedTable
+              rows={machineActivity}
+              headCells={headCells}
+            />
           </Grid>
         </Content>
       </Grid>
@@ -107,6 +120,8 @@ const MachineScreen = ({ ...props }) => {
 
 MachineScreen.propTypes = {
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object).isRequired,
+  machineActivity: PropTypes.arrayOf(PropTypes.object).isRequired,
+  headCells: PropTypes.arrayOf(PropTypes.object).isRequired,
   machine: PropTypes.object.isRequired,
   pageProps: PropTypes.any,
 };

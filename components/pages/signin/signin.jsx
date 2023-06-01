@@ -16,8 +16,6 @@ import {
 //  Styles
 import styles from '../../../styles/SignIn.module.css';
 
-//  Navigation
-
 //  Dialogs
 import Notification from '../../dialogs/Notification';
 import ToastSet from '../../utils/ToastSet';
@@ -31,7 +29,7 @@ import { XCircle } from 'lucide-react';
 
 //  Utils
 
-import { destroyCookie, setCookie } from 'nookies';
+import { setCookie } from 'nookies';
 //  PropTypes
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
@@ -41,14 +39,13 @@ import routes from '../../../navigation/routes';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 import * as authActionsRedux from '../../../store/actions/auth';
+import RedirectTo from '../../utils/RedirectTo';
 
 const SignIn = (props) => {
   const [visible, setVisible] = useState(true);
 
   const {
     client,
-    loginSuccessRoute,
-    // loginSuccessRouteTerms,
     forgotPasswordRoute
   } = props;
 
@@ -64,7 +61,7 @@ const SignIn = (props) => {
   const [windowWidth, setWindowHeight] = useState();
   const dispatch = useDispatch();
   const loginRedux = (data) => dispatch(authActionsRedux.login(data));
-  const me2 = (data) => dispatch(authActionsRedux.me(data));
+  const getMe = (data) => dispatch(authActionsRedux.me(data));
   const userPermissionsSet = (data) => dispatch(authActionsRedux.userPermissionsSet(data));
 
   if (typeof window !== 'undefined') {
@@ -120,11 +117,8 @@ const SignIn = (props) => {
 
         setCookie(undefined, 'auth_token', res?.data?.access_token);
 
-        await me2(res.data.access_token).then(async (res) => {
-          console.log(res);
-
+        await getMe(res.data.access_token).then(async (res) => {
           const user = res?.data[0] || res?.data;
-          let active;
 
           await userPermissionsSet({
             description: user.role,
@@ -132,25 +126,15 @@ const SignIn = (props) => {
             permissions_orion: user.orion_permissions,
           });
 
-          if (user.type === 'Owner') active = user.active.value;
-          else active = user.is_active;
+          ToastSet(loadingNotification, 'A entrar', 'success');
+          setLoading(false);
 
-          if (!active) {
-            ToastSet(loadingNotification, 'Conta Inativa', 'error');
-            setDialogOpen(true);
-            setLoading(false);
-            destroyCookie(null, 'auth_token');
-          } else {
-            // Success
-            ToastSet(loadingNotification, 'A entrar', 'success');
-            setLoading(false);
+          const a = true;
+          const nextPage = RedirectTo(user);
 
-            const a = false;
-
-            // eslint-disable-next-line no-constant-condition
-            if (user.role === 'CUSTOMER' && user.tos === false && a) router.push('/terms');
-            else router.push(loginSuccessRoute);
-          }
+          // eslint-disable-next-line no-constant-condition
+          if (user.role === 'CUSTOMER' && user.tos === false && a) router.push('/terms');
+          else router.push(nextPage);
         }).catch((err) => console.log(err));
       });
     } catch (err) {

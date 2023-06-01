@@ -1,6 +1,6 @@
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import CustomBreadcrumbs from '../../breadcrumbs';
 
@@ -11,19 +11,26 @@ import { Autocomplete, Box, Grid, InputLabel, Slider, TextField, Typography } fr
 import PropTypes from 'prop-types';
 import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import MyInput from '../../inputs/myInput';
+import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 
 const Stock = ({ ...props }) => {
   const { breadcrumbsPath, headCells, stocks } = props;
+
   //  States
-  const [filters, setFilters] = useState({});
-  const [material, setMaterial] = useState('');
+  const [filters, setFilters] = useState({
+    available: '',
+    material: '',
+    warehouse: ''
+  });
+
   const [sizesFilter, setSizesFilter] = useState(props.filtersSizes);
 
   function onMaterialChange ({ value, event }) {
-    if (typeof value === 'object') setMaterial(value?.material || '');
-    else if (typeof value === 'undefined') setMaterial(event.target.value || '');
+    if (typeof value === 'object') setFilters({ ...filters, material: value?.material || '' });
+    else if (typeof value === 'undefined') setFilters({ ...filters, material: event.target.value || '' });
   }
 
   const ClearFilters = () => {
@@ -45,13 +52,10 @@ const Stock = ({ ...props }) => {
       },
     });
 
-    setMaterial('');
-  };
-
-  const ApplyFilters = () => {
-    // Set Filters
     setFilters({
-      material,
+      available: '',
+      material: '',
+      warehouse: ''
     });
   };
 
@@ -62,14 +66,6 @@ const Stock = ({ ...props }) => {
     sizes[props.e.target.name].values = props.e.target.value;
     setSizesFilter(sizes);
   }
-
-  useEffect(() => {
-    ApplyFilters();
-  }, [sizesFilter, material]);
-
-  useEffect(() => {
-    setMaterial(filters?.material || '');
-  }, [filters]);
 
   function SliderValueLabel (value) {
     return value + ' mm';
@@ -84,9 +80,9 @@ const Stock = ({ ...props }) => {
         <Content>
           <Grid container md={12} id='pad'>
             <Grid container md={12} sm={12} xs={12} >
-              <a className='headerTitleSm'>Filtros</a>
+              <Typography className='headerTitleSm'>Filtros</Typography>
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1}>
               <InputLabel htmlFor='name'>Material</InputLabel>
               <Autocomplete
                 options={([...stocks])?.sort((a, b) => a.material - b.material) }
@@ -102,7 +98,13 @@ const Stock = ({ ...props }) => {
                 )}
               />
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1} >
+              <MySelect label={'Estado'} value={filters.available} options={[{ id: true, label: 'Disponível' }, { id: false, label: 'Indisponivel' }]} onChange={(e) => setFilters({ ...filters, available: e.target.value })} />
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <MyInput label="Armazem" value={filters.warehouse} onChange={(e) => setFilters({ ...filters, warehouse: e.target.value })}/>
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1} pl={2} pr={2}>
               <InputLabel>Comprimento</InputLabel>
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
@@ -130,7 +132,7 @@ const Stock = ({ ...props }) => {
                 />
               </Box>
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1} pl={2} pr={2}>
               <InputLabel>Largura</InputLabel>
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
@@ -158,7 +160,7 @@ const Stock = ({ ...props }) => {
                 />
               </Box>
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1} pl={2} pr={2}>
               <InputLabel>Espessura</InputLabel>
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider

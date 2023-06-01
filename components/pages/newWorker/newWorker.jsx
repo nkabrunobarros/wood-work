@@ -23,7 +23,7 @@ import EmailValidation from '../../utils/EmailValidation';
 import ToastSet from '../../utils/ToastSet';
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, organizations, permissions } = props;
+  const { breadcrumbsPath, organizations, profiles } = props;
   const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState([
@@ -64,8 +64,8 @@ const newWorker = ({ ...props }) => {
     {
       id: 'profile',
       label: 'Função',
-      value: permissions[0]?.id,
-      options: permissions,
+      value: '',
+      options: profiles,
       optLabel: 'name',
       error: '',
       required: true,

@@ -3,9 +3,8 @@
 import { Box, Grid, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Image from 'next/image';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import React from 'react';
-import routes from '../../../navigation/routes';
 import logosFooter from '../../../public/Fundos-Europeus.png';
 import logosFooterDark from '../../../public/Fundos-Europeus_dark_mode.png';
 
@@ -18,7 +17,6 @@ function Copyright (props) {
       sx={{ paddingLeft: '1rem', paddingRight: '1rem', height: '100%', alignItems: 'center', display: 'flex' }}
     >
       <Box>
-
         <Typography variant="title" noWrap sx={{ fontSize: '14px', fontWeight: 'normal' }}>
         Desenvolvido por {' '}
         </Typography>
@@ -32,9 +30,8 @@ function Copyright (props) {
   );
 }
 
-const Footer = () => {
-  const path = useRouter();
-  const isPublicPage = Object.values(routes.public).includes(path.route.replace('[Id]', ''));
+const Footer = (props) => {
+  const isPublicPage = !!props.isPublicPage;
 
   return typeof window !== 'undefined' && (
     <Grid
@@ -52,7 +49,7 @@ const Footer = () => {
         paddingRight: '1rem',
       }}
     >
-      <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ minHeight: '40px', display: 'flex', alignItems: 'center', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null }}>
+      {isPublicPage && <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ minHeight: '40px', display: 'flex', alignItems: 'center', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : null }}>
         {isPublicPage
           ? <Box ><Copyright /></Box>
           : <a
@@ -66,8 +63,15 @@ const Footer = () => {
             />
           </a>
         }
-      </Grid>
-      <Grid container md={isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 12 : 6} sm={12} sx={{ minHeight: '40px', height: 'fit-content', textAlign: 'end', display: 'flex', justifyContent: isPublicPage || Router.asPath === '/terms' || Router.asPath === '/tos' ? 'center' : 'end' }} >
+      </Grid>}
+      <Grid container md={12} sm={12}
+        sx={{
+          minHeight: '40px',
+          height: 'fit-content',
+          textAlign: 'end',
+          display: 'flex',
+          justifyContent: isPublicPage ? 'center' : 'end',
+        }} >
         {isPublicPage
           ? <a
             target='#'

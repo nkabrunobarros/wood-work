@@ -47,7 +47,7 @@ const Order = ({ ...pageProps }) => {
       const budget = (await getBudget(project.hasBudget.object)).data;
       const client = (await getClient(project.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
       const assembly = project.assembly?.object && (await getAssembly(project.assembly?.object)).data;
-      const expedition = project.expedition?.object && (await getExpedition(project.expedition?.object)).data;
+      const expedition = project.expedition?.object && await getExpedition(project.expedition?.object).then((res) => { return res.data; }).catch(() => { return {}; });
       const furnitures = (await getFurnitures()).data.filter(ele => ele.hasBudget?.object === project.hasBudget.object);
       const furnitures2 = furnitures.sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1);
       const built = [];

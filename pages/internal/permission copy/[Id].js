@@ -94,8 +94,6 @@ const Permission = ({ pageProps }) => {
       }
     ];
 
-    console.log(perm[0]);
-
     const props = { breadcrumbsPath, pageProps, resources, permission: perm[0] };
 
     return <PermissionScreen {...props} />;

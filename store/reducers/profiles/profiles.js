@@ -45,12 +45,10 @@ const profiles = createReducer(initialState, (builder) => {
       loading: true,
     }))
     //  POST
-    .addCase(profilesActions.NEW_PROFILE_SUCCESS, (state, action) => ({
+    .addCase(profilesActions.NEW_PROFILE_SUCCESS, (state) => ({
       ...state,
       errors: null,
       loading: false,
-      data: state.data ? state.data.push(action) : state.data,
-      newestProfile: action
     }))
     .addCase(profilesActions.NEW_PROFILE_FAIL, (state, action) => ({
       ...state,

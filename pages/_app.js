@@ -28,6 +28,8 @@ import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
 import MomentJsConfig from '../components/utils/MomentJsConfig';
+import RedirectTo from '../components/utils/RedirectTo';
+
 import AuthData from '../lib/AuthData';
 import * as appStatesActions from '../store/actions/appState';
 import { storeWrapper } from '../store/store';
@@ -92,12 +94,10 @@ const App = ({ Component, pageProps }) => {
         if (moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment() || a) {
           pageProps.theme = selectedTheme;
 
-          if (isPublicPage && !!myCredentials) {
-            if (myCredentials?.me?.role === 'CUSTOMER') {
-              router.push(routes.private.projects);
-            } else {
-              router.push(routes.private.internal.projects);
-            }
+          const nextPage = RedirectTo(myCredentials.me);
+
+          if (myCredentials) {
+            router.push(nextPage);
           }
         } else {
           destroyCookie('auth-token');

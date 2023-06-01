@@ -15,8 +15,6 @@ const PermissionsTab = (props) => {
   const dispatch = useDispatch();
   const testperms = props.testperms;
 
-  console.log(testperms);
-
   const [permissions, setPermissions] = useState(
     [...props.permissions].sort((a, b) =>
       a.name > b.name ? 1 : a.name < b.name ? -1 : 0

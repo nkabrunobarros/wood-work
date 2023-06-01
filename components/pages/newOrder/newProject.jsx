@@ -374,8 +374,8 @@ const NewOrder = ({ ...props }) => {
     const fixed = mergedArray.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
 
     try {
-      fixed.map(async (ele) => await newFurniture(ele));
-      // await newFurniture(fixed).then((result) => console.log(result));
+      // fixed.map(async (ele) => await newFurniture(ele));
+      await newFurniture(fixed)
     } catch (err) {
       console.log(err);
     }

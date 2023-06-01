@@ -17,5 +17,7 @@ export {
   newProfile,
   newResource,
   updateProfile,
-  deleteProfile
+  deleteProfile,
+  deleteResource,
+  updateResource
 } from './profile';

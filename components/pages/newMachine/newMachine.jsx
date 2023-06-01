@@ -150,7 +150,7 @@ const NewMachineScreen = ({ ...props }) => {
         setProcessing(false);
         Router.push(routes.private.internal.machine + res.data.id);
       }).catch((error) => {
-        const errorKeys = Object.keys(error.response.data);
+        const errorKeys = Object.keys(error?.response?.data);
 
         setProcessing(false);
 

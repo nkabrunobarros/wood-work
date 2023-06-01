@@ -14,18 +14,14 @@
 }
 
 .topheader:before {
-  background-image: url(https://1.bp.blogspot.com/-gxsOcYWghHA/Xp_izTh4sFI/AAAAAAAAU8s/y637Fwg99qAuzW9na_NT_uApny8Vce95gCEwYBhgL/s1600/header-footer-gradient-bg.png);
+  background-image: url('../public/header-footer-gradient-bg.png');
 }
 
 .topheader:before {
+  width: 100%;
   content: '';
   height: 4px;
-  background-repeat: repeat-x;
   background-size: contain;
-  position: absolute;
-  top: 1;
-  left: 0;
-  opacity: 0.5;
   z-index: 999;
 }
 
@@ -136,8 +132,8 @@
 }
 
 .error__content {
-  position: absolute;
-  top: 50%;
+  position: relative;
+  top: 25%;
   left: 50%;
   width: 100%;
   -webkit-transform: translate(-50%, -50%);

@@ -9,6 +9,7 @@ import WorkersScreen from '../../components/pages/workers/workers';
 //  Navigation
 import routes from '../../navigation/routes';
 import * as workersActionsRedux from '../../store/actions/worker';
+import * as profilesActionsRedux from '../../store/actions/profile';
 
 //  Proptypes
 
@@ -17,10 +18,12 @@ const Workers = () => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getWorkers = (data) => dispatch(workersActionsRedux.workers(data));
+  const getProfiles = (data) => dispatch(profilesActionsRedux.profiles(data));
 
   useEffect(() => {
     const getData = async () => {
       await getWorkers();
+      await getProfiles();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -47,6 +50,13 @@ const Workers = () => {
         numeric: false,
         disablePadding: true,
         label: 'Email',
+        show: true
+      },
+      {
+        id: 'Profile',
+        numeric: false,
+        disablePadding: true,
+        label: 'Função',
         show: true
       },
       {
@@ -78,6 +88,8 @@ const Workers = () => {
         return worker2;
       }),
       headCellsWorkers,
+      profiles: reduxState.profiles.data,
+
     };
 
     return <WorkersScreen {...props} />;

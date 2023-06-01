@@ -9,9 +9,11 @@ import routes from '../../../navigation/routes';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 
 const FactoryGround = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
+  const hasPermissions = CanDo('see_factory');
 
   return <>
     <Navbar />
@@ -41,9 +43,10 @@ const FactoryGround = ({ ...props }) => {
                     xs={12}
                     sx={{ p: 1 }}>
                     <Grow in>
-                      <Card sx={{ cursor: 'pointer', width: '100%', p: 2 }} onClick={() => {
-                        Router.push(routes.private.internal.factory + furnit.id);
-                      }}>
+                      <Card sx={{ cursor: hasPermissions && 'pointer', width: '100%', p: 2 }}
+                        onClick={() => {
+                          hasPermissions && Router.push(routes.private.internal.factory + furnit.id);
+                        }}>
                         <CardContent>
                           <Grid container md={12} sm={12} xs={12} >
                             <Grid container md={12} sm={12} xs={12} >

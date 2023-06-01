@@ -27,15 +27,26 @@ const NewProfile = ({ pageProps }) => {
     const permissionsMap = {};
 
     for (const resource of resources) {
-      const { codename } = resource;
+      const { codename, name } = resource;
       const [type, action] = codename.split('_');
 
       if (!permissionsMap[action]) {
-        permissionsMap[action] = {};
+        permissionsMap[name] = {};
       }
 
-      permissionsMap[action][type] = false;
+      permissionsMap[name][type] = false;
     }
+
+    const filteredPermissions = {};
+
+    // eslint-disable-next-line array-callback-return
+    Object.keys(permissionsMap).map((perm) => {
+      if (!perm.includes('add_') &&
+        !perm.includes('view_') &&
+        !perm.includes('delete_') &&
+        !perm.includes('change_') &&
+        !perm.includes('see')) filteredPermissions[perm] = { ...permissionsMap[perm] };
+    });
 
     const breadcrumbsPath = [
       {
@@ -48,7 +59,7 @@ const NewProfile = ({ pageProps }) => {
       },
     ];
 
-    const props = { breadcrumbsPath, pageProps, resources, permissionsMap };
+    const props = { breadcrumbsPath, pageProps, resources, permissionsMap: filteredPermissions };
 
     return <NewProfileScreen {...props} />;
   }

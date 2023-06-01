@@ -169,8 +169,6 @@ const NewClient = ({ ...props }) => {
     ]
   );
 
-  console.log(inputFields);
-
   function ValidateFields () {
     let hasErrors = false;
 

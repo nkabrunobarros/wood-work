@@ -30,18 +30,6 @@ const Stock = () => {
       !reduxState.stocks.data ? await getStocks() : setStocks(reduxState.stocks.data);
 
       await getLeftovers().then(() => {
-        // const newArray = [...res.data].map((obj) => {
-        //   const newObj = {};
-
-        //   Object.keys(obj).forEach((key) => {
-        //     if (typeof obj[key].value !== 'undefined' || typeof obj[key].object !== 'undefined') {
-        //       newObj[key] = obj[key].value;
-        //     } else newObj[key] = obj[key];
-        //   });
-
-        //   return newObj;
-        // });
-
         const realStocks = [...reduxState.stocks.data];
 
         setFiltersSizes({
@@ -122,7 +110,9 @@ const Stock = () => {
       breadcrumbsPath,
       detailPage,
       headCells,
-      stocks,
+      stocks: stocks.map((ele) => {
+        return { ...ele, available: ele.amount > 0 };
+      }),
       filtersSizes
     };
 

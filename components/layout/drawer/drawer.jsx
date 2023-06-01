@@ -33,6 +33,7 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 // import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import Router from 'next/router';
 import { destroyCookie } from 'nookies';
+import CanDo from '../../utils/CanDo';
 
 const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const loggedUser = state.auth.me;
@@ -51,6 +52,22 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
       Router.push(userPermissions.type === 'client' ? '/' : '/signin');
     });
   }
+
+  const builtLinks = navLinks
+    .filter(item => {
+      if (!loggedUser) return false;
+
+      if (!userPermissions) return false;
+
+      const canAccess = userPermissions?.permissions_orion.find(
+        ele => ele === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase()
+      );
+
+      const isInternal = IsInternal(userPermissions?.description);
+      const isInternalUrl = Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''));
+
+      return canAccess && isInternal === isInternalUrl;
+    });
 
   return (
     <SwipeableDrawer
@@ -102,21 +119,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
           />
         </Box>
         <Box className='scrollableZone'>
-          {navLinks
-            .filter(item => {
-              if (!loggedUser) return false;
-
-              if (!userPermissions) return false;
-
-              const canAccess = userPermissions?.permissions_orion.find(
-                ele => ele === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase()
-              );
-
-              const isInternal = IsInternal(userPermissions?.description);
-              const isInternalUrl = Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''));
-
-              return canAccess && isInternal === isInternalUrl;
-            })
+          {builtLinks
             .map((item, i) => (
               <Box key={i}>
                 <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }}
@@ -131,7 +134,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                     {item.title}
                   </ActiveLink>
                 </MenuItem>
-                {item.underline && (
+                {builtLinks.length !== i + 1 && item.underline && (
                   <Divider color='white' width='100%' />
                 )}
               </Box>
@@ -174,41 +177,34 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
             </MenuItem>
           </Collapse>
           <Box style={{ position: 'relative', float: 'bottom', width: '100%' }}>
-            {loggedUser
-              ? (
-                <>
-                  <Divider
-                    color='white'
-                    width='100%'
-                    style={{ marginTop: '1rem', marginBottom: '1rem' }}
-                  />
-                  <MenuItem sx={{ padding: '0' }} onClick={() => {
-                    toggleDrawer();
-                    Router.push(IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`);
-                  }} >
-                    <ActiveLink
-                      // handleDrawerToggle={toggleDrawer}
-                      href={IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`}
-                      page={'Conta'}
-                    >
-                      <User strokeWidth='1' size={20} color='white' />{' '}
-                      <div style={{ paddingRight: '.5rem' }} />
-                    Conta
-                    </ActiveLink>
-                  </MenuItem>
-                  <MenuItem sx={{ padding: '0' }} onClick={() => {
-                    onLogout();
-                  }}>
-                    <a
-                      className={styles.navItemContainer}
-                    >
-                      <LogOut strokeWidth='1' size={20} />
-                      <div style={{ paddingRight: '.5rem' }} /> Sair
-                    </a>
-                  </MenuItem>
-                </>
-              )
-              : null}
+            <Divider
+              color='white'
+              width='100%'
+              style={{ marginTop: '1rem', marginBottom: '1rem' }}
+            />
+            {CanDo('see_account') && <MenuItem sx={{ padding: '0' }} onClick={() => {
+              toggleDrawer();
+              Router.push(IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`);
+            }} >
+              <ActiveLink
+                href={IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`}
+                page={'Conta'}
+              >
+                <User strokeWidth='1' size={20} color='white' />{' '}
+                <div style={{ paddingRight: '.5rem' }} />
+                Conta
+              </ActiveLink>
+            </MenuItem>}
+            <MenuItem sx={{ padding: '0' }} onClick={() => {
+              onLogout();
+            }}>
+              <a
+                className={styles.navItemContainer}
+              >
+                <LogOut strokeWidth='1' size={20} />
+                <div style={{ paddingRight: '.5rem' }} /> Sair
+              </a>
+            </MenuItem>
           </Box>
         </Box>
       </Box>

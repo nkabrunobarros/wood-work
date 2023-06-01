@@ -190,8 +190,8 @@ const Clients = ({ ...props }) => {
               a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
             )}
             headCells={headCells}
-            clickRoute={detailRoute}
-            editRoute={editRoute}
+            clickRoute={ CanDo('see_client') && detailRoute}
+            editRoute={ CanDo('update_client') && editRoute}
             filters={filters}
             setFilters={setFilters}
             onDelete={onDelete}

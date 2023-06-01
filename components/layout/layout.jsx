@@ -30,7 +30,6 @@ const noLayoutScreens = [
   `${routes.private.terms}`,
   `${routes.private.tos}`,
   `${routes.private.privacy}`,
-  `${routes.private.error}`,
 ];
 
 function findNeededPermission (path) {
@@ -48,16 +47,16 @@ function findNeededPermission (path) {
         // Key has "edit" on it, permission required is change_<key without "edit">
         const singularKey = key.replace('edit', '');
 
-        return `change_${singularKey}`;
+        return `update_${singularKey}`;
       } else if (key.startsWith('new')) {
         // Key has "new" on it, permission required is add_<key without "new">
         const singularKey = key.replace('new', '');
 
-        return `add_${singularKey}`;
+        return `create_${singularKey}`;
       }
 
       // Singular key, permission required is view_<key>
-      return `view_${key}`;
+      return `see_${key}`;
     }
   }
 
@@ -81,7 +80,7 @@ function findNeededPermission (path) {
       }
 
       // Singular key, permission required is view_<key>
-      return `view_${key}`;
+      return `see_${key}`;
     }
   }
 
@@ -124,6 +123,10 @@ const Layout = ({ children }) => {
       try {
         const meRes = await AuthData(dispatch);
 
+        if (meRes.me.tos === false) {
+          Router.push('/terms');
+        }
+
         if ((isInternalPage && meRes?.me?.role === 'CUSTOMER') || (isClientPage && meRes?.me?.role !== 'CUSTOMER') || meRes?.response?.status === 403) {
           setNoAccess(true);
         }
@@ -144,18 +147,21 @@ const Layout = ({ children }) => {
   }, []);
 
   const neededPermission = findNeededPermission(path);
-  let noAccessPage = !!CanDo(neededPermission?.toLowerCase());
+  let noAccessPage = neededPermission !== 'see_error' ? !!CanDo(neededPermission?.toLowerCase()) : false;
 
   if (noLayoutScreens.includes(path.route.replace('[Id]', ''))) noAccessPage = true;
 
-  console.log(neededPermission);
+  // console.log(neededPermission);
 
-  return loaded && (noAccess || !noAccessPage)
-    ? <PageNotFound noAccess />
-    : loaded && <>
-      {children}
-      <FloatingButton isVisible={isVisible}/>
-    </>;
+  // loaded
+  return loaded && <>
+    {neededPermission !== 'see_error' && (noAccess || !noAccessPage)
+      ? <PageNotFound noAccess={noAccess || !noAccessPage} />
+      : <>
+        {children}
+        <FloatingButton isVisible={isVisible}/>
+      </>}
+  </>;
 
   // return <Loader center={true} />;
 };

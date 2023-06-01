@@ -23,6 +23,7 @@ import Messages from './sections/Messages';
 import Production from './sections/Production';
 import Products from './sections/Products';
 import ProductsObservations from './sections/ProductsObservations';
+import Footer from '../../layout/footer/footer';
 
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
@@ -67,6 +68,7 @@ const Order = ({ ...props }) => {
           <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
         </Content>
       </Grid >
+      <Footer />
     </>
   );
 };

@@ -173,7 +173,6 @@ const PermissionsTab = (props) => {
             </Tabs>
           </Box>
         </Grid>
-        {console.log(permissions)}
         <Grid container md={12} sm={12} xs={12}>
           {permissions.map((perm, i) => (
             <>

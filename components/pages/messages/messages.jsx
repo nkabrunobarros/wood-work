@@ -25,6 +25,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 //  Sections Components
 import { AppBar, Box } from '@mui/material';
 import routes from '../../../navigation/routes';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import Chat from './Chat';
 import ChatToolbar from './ChatToolbar';
@@ -141,6 +142,7 @@ const Messages = (props) => {
           </Grid>
         </Content>
       </Grid>
+      <Footer />
     </>
   );
 };

@@ -28,6 +28,7 @@ import MySelect from '../../../inputs/select';
 import formatString from '../../../utils/FormatString';
 import ToastSet from '../../../utils/ToastSet';
 import HeaderGrid from './components/HeaderGrid';
+import CanDo from '../../../utils/CanDo';
 
 export const EditableCell = ({ active, onDoubleClick, value, type, name, options, onChange, isInternalPage }) => {
   const isCategory = name === 'category';
@@ -380,8 +381,7 @@ const Head = (props) => {
       };
 
       await newProject(built)
-        .then((res) => console.log(res))
-        .catch((res) => console.log(res));
+        .catch((err) => console.log(err));
 
       await updateBudget(
         {
@@ -512,7 +512,7 @@ const Head = (props) => {
                   />
                 }
               />
-              <ActionButton />
+              {CanDo('change_project') && <ActionButton />}
             </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>

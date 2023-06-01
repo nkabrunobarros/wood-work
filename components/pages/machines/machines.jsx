@@ -52,6 +52,7 @@ const MachinesScreen = (props) => {
   return <>
     <Navbar />
     <Notification />
+
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
       <CustomBreadcrumbs path={breadcrumbsPath} />
       <Content>
@@ -82,9 +83,9 @@ const MachinesScreen = (props) => {
         <AdvancedTable
           rows={machines}
           headCells={headCells}
-          onDelete={onDelete}
-          editRoute={routes.private.internal.editMachine}
-          clickRoute={routes.private.internal.machine}
+          onDelete={ CanDo('delete_machine') && onDelete}
+          editRoute={ CanDo('change_machine') && routes.private.internal.editMachine}
+          clickRoute={ CanDo('see_machine') && routes.private.internal.machine}
           filters={filters}
         />
       </Content>

@@ -36,8 +36,6 @@ const Order = () => {
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
 
   useEffect(() => {
-    console.log('aqui');
-
     async function load () {
       const { data: furniture } = await getFurniture(router.query.Id);
       const { data: project } = await getProject({ hasBudget: furniture.hasBudget.object });

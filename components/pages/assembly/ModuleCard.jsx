@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import PrimaryBtn from '../../buttons/primaryBtn';
 
 import { CheckCircle, PlayCircle } from 'lucide-react';
+import CanDo from '../../utils/CanDo';
 import DisplayDateDifference from '../../utils/DisplayDateDifference';
 
 const ModuleCard = ({ module, me, onActionClick }) => {
@@ -78,7 +79,7 @@ const ModuleCard = ({ module, me, onActionClick }) => {
         </Grid>
       </CardContent>
       <CardActions>
-        <Grid container md={12} sm={12} xs={12} >
+        <Grid container md={12} sm={12} xs={12} display={!CanDo('change_module') && 'none'}>
           <Grid container md={12} sm={12} xs={12}>
             <Divider sx={{ width: '100%' }} />
           </Grid>

@@ -38,9 +38,10 @@ import Navbar from '../../layout/navbar/navbar';
 import EmailValidation from '../../utils/EmailValidation';
 
 const EditUser = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps } = props;
+  const { breadcrumbsPath, pageProps, profiles } = props;
   const dispatch = useDispatch();
   const updateWorker = (data) => dispatch(workersActionsRedux.updateWorker(data));
+  const updateWorkerProfile = (data) => dispatch(workersActionsRedux.updateWorkersProfile(data));
 
   const [inputFields, setInputFields] = useState([
     {
@@ -66,6 +67,16 @@ const EditUser = ({ ...props }) => {
       type: 'email',
       required: true,
       disabled: true,
+    },
+    {
+      id: 'profile',
+      label: 'Função',
+      value: '',
+      options: profiles,
+      optLabel: 'name',
+      error: '',
+      required: true,
+      tooltip: '',
     },
   ]
   );
@@ -111,16 +122,21 @@ const EditUser = ({ ...props }) => {
   async function handleUpdate () {
     const loading = toast.loading('');
     const formData = new FormData();
+    let profile = '';
 
     // eslint-disable-next-line array-callback-return
     inputFields.map((field) => {
-      formData.append(field.id, field.value);
+      if (field.id === 'profile') {
+        profile = field.value;
+      } else formData.append(field.id, field.value);
     });
 
     await updateWorker({ data: formData, id: props?.user?.id.replace('urn:ngsi-ld:Worker:', '') })
-      .then(() => {
-        ToastSet(loading, 'Utilizador atualizado!', 'success');
-        Router.push(routes.private.internal.worker + props.user.id);
+      .then(async (res) => {
+        await updateWorkerProfile({ id: res.data.id, data: { add_groups: [profile] } }).then(() => {
+          ToastSet(loading, 'Utilizador atualizado!', 'success');
+          Router.push(routes.private.internal.worker + props.user.id);
+        });
       })
       .catch(() => {
         ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');

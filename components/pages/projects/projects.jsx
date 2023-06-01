@@ -389,10 +389,10 @@ const ProjectsScreen = (props) => {
             rows={items}
             headCells={headCellsProjects}
             filters={filters}
-            clickRoute={detailPage}
-            editRoute={editPage}
+            clickRoute={CanDo('see_project') && detailPage}
+            editRoute={ CanDo('update_project') && editPage}
             setFilters={setFilters}
-            onDelete={onDeleteItem}
+            onDelete={ CanDo('delete_project') && onDeleteItem}
             onReactivation={onReactivationItem}
           />
         </Content>

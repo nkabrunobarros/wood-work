@@ -55,10 +55,10 @@ const OrdersSimilar = () => {
         furnituresResponse,
       ] = await Promise.all([
         getClients(),
-        getExpeditions(),
-        getAssemblys(),
-        getBudgets(),
-        getProjects(),
+        getExpeditions([{ key: 'deliveryTime', value: '', operator: '!=' }]),
+        getAssemblys([{ key: 'finishTime', value: '', operator: '!=' }]),
+        getBudgets({ status: 'adjudicated' }),
+        getProjects({ status: 'finished' }),
         getFurnitures(),
       ]);
 
@@ -145,7 +145,7 @@ const OrdersSimilar = () => {
     const breadcrumbsPath = [
       {
         title: 'Projetos Similares',
-        href: `${routes.private.internal.projectsSimilar}`,
+        href: `${routes.private.internal.similarProjects}`,
       },
     ];
 

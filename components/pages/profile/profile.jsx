@@ -116,10 +116,10 @@ const Profile = ({ ...props }) => {
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Email</Typography>
                   <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.email?.value}</Typography>
                 </Grid>
-                {/* <Grid item xs={6} md={6} sm={6}>
-                    <Typography item variant="subtitle2"color='lightTextSm.main'>Observações </Typography>
-                    <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.obs?.value}</Typography>
-                  </Grid> */}
+                <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
+                  <Typography item variant="subtitle2"color='lightTextSm.main'>Função</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{}</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

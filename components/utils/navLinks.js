@@ -1,7 +1,7 @@
+import { Webhook } from '@mui/icons-material';
 import { Archive, Factory, MessageCircle, Network, PackageCheck, Scan, ShieldAlert, Table, Users } from 'lucide-react';
 import React from 'react';
 import routes from '../../navigation/routes';
-import { Webhook } from '@mui/icons-material';
 
 export const navLinks = [
   {
@@ -10,7 +10,7 @@ export const navLinks = [
     url: routes.private.projects,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
-    allowed_: 'access_projects',
+    allowed_: 'list_project',
   },
   {
     title: 'Projetos',
@@ -18,7 +18,7 @@ export const navLinks = [
     url: routes.private.internal.projects,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
-    allowed_: 'access_projects',
+    allowed_: 'list_project',
   },
   {
     title: 'Mensagens',
@@ -26,33 +26,33 @@ export const navLinks = [
     url: routes.private.messages,
     icon: <MessageCircle strokeWidth='1' size={20} />,
     allowed: 'client',
-    allowed_: 'access_messages',
+    allowed_: 'list_message',
 
   },
   {
     title: 'Projetos Similares',
-    id: 'projectsSimilar',
-    url: routes.private.internal.projectsSimilar,
+    id: 'similarProjects',
+    url: routes.private.internal.similarProjects,
     icon: <Archive strokeWidth='1' size={20} />,
     allowed: 'projects',
-    allowed_: 'access_projects_similar',
+    allowed_: 'list_similarProject',
     underline: true,
   },
   {
-    title: 'Stock',
+    title: 'Stocks',
     id: 'stocks',
     url: routes.private.internal.stocks,
     icon: <Table strokeWidth='1' size={20} />,
     allowed: 'stocks',
-    allowed_: 'access_stocks',
+    allowed_: 'list_stock',
   },
   {
     title: 'Máquinas',
     id: 'machines',
     url: routes.private.internal.machines,
-    icon: <Webhook strokeWidth='1' size={20} />,
+    icon: <Webhook strokeWidth='1' fontSize={'small'} />,
     allowed: 'machines',
-    allowed_: 'access_machine',
+    allowed_: 'list_machine',
     underline: true,
   },
   {
@@ -61,7 +61,7 @@ export const navLinks = [
     url: routes.private.internal.factorys,
     icon: <Factory strokeWidth='1' size={20} />,
     allowed: 'factory',
-    allowed_: 'access_factory',
+    allowed_: 'list_factory',
   },
   {
     title: 'Montagens',
@@ -69,7 +69,7 @@ export const navLinks = [
     url: routes.private.internal.assemblys,
     icon: <Network strokeWidth='1' size={20} />,
     allowed: 'assemblys',
-    allowed_: 'access_assembly',
+    allowed_: 'list_assembly',
   },
   {
     title: 'Embalamentos',
@@ -77,15 +77,15 @@ export const navLinks = [
     url: routes.private.internal.packages,
     icon: <PackageCheck strokeWidth='1' size={20} />,
     allowed: 'packages',
-    allowed_: 'access_packing',
+    allowed_: 'list_package',
   },
   {
     title: 'Sobrantes',
     id: 'leftovers',
-    url: routes.private.internal.leftovers,
+    url: routes.private.internal.newLeftover,
     icon: <Scan strokeWidth='1' size={20} />,
     allowed: 'leftovers',
-    allowed_: 'access_leftovers',
+    allowed_: 'create_leftover',
     underline: true
   },
   {
@@ -94,7 +94,7 @@ export const navLinks = [
     url: routes.private.internal.clients,
     icon: <Users strokeWidth='1' size={20} />,
     allowed: 'clients',
-    allowed_: 'access_clients',
+    allowed_: 'list_owner',
   },
   {
     title: 'Utilizadores',
@@ -102,7 +102,7 @@ export const navLinks = [
     url: routes.private.internal.workers,
     icon: <Users strokeWidth='1' size={20} />,
     allowed: 'workers',
-    allowed_: 'access_workers',
+    allowed_: 'list_worker',
   },
   {
     title: 'Perfis',
@@ -110,6 +110,6 @@ export const navLinks = [
     url: routes.private.internal.profiles,
     icon: <ShieldAlert strokeWidth='1' size={20} />,
     allowed: 'dashboards',
-    allowed_: 'access_profiles',
+    allowed_: 'list_profile',
   },
 ];

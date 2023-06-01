@@ -37,7 +37,7 @@ export const profiles = (data) => {
       url: getApiURL(endpoints.PROFILESLIST),
       params: {
         q: data && GenerateQueryFilters(data),
-
+        limit: 200
       }
     },
     types: [PROFILES_REQUEST, PROFILES_SUCCESS, PROFILES_FAIL],
@@ -94,7 +94,7 @@ export const newResource = (data) => {
   return createAction({
     meta: null,
     request: {
-      data,
+      ...data,
       headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'POST',
       url: getApiURL(endpoints.RESOURCES),
@@ -121,6 +121,24 @@ export const updateProfile = (data) => {
   });
 };
 
+export const updateResource = (data) => {
+  const { auth_token: userToken } = parseCookies();
+  const id = data?.id;
+
+  delete data.id;
+
+  return createAction({
+    meta: null,
+    request: {
+      ...data,
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'PUT',
+      url: getApiURL(endpoints.RESOURCES + id),
+    },
+    types: [UPDATE_PROFILES_REQUEST, UPDATE_PROFILES_SUCCESS, UPDATE_PROFILES_FAIL],
+  });
+};
+
 export const deleteProfile = (data) => {
   const { auth_token: userToken } = parseCookies();
 
@@ -130,6 +148,20 @@ export const deleteProfile = (data) => {
       headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'DELETE',
       url: getApiURL(endpoints.PROFILES + data),
+    },
+    types: [DELETE_PROFILE_REQUEST, DELETE_PROFILE_SUCCESS, DELETE_PROFILE_FAIL],
+  });
+};
+
+export const deleteResource = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.RESOURCES + data),
     },
     types: [DELETE_PROFILE_REQUEST, DELETE_PROFILE_SUCCESS, DELETE_PROFILE_FAIL],
   });

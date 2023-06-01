@@ -15,6 +15,7 @@ import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 
 const Stock = ({ ...props }) => {
   const { stock, breadcrumbsPath, pageProps } = props;
@@ -43,8 +44,8 @@ const Stock = ({ ...props }) => {
             </Box>
             <Box style={{ display: 'flex' }}>
               <ButtonGroup>
-                <PrimaryBtn text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock?.id)} icon={<Edit strokeWidth='1' />} />
-                <PrimaryBtn text='Apagar' icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} light />
+                <PrimaryBtn hidden={!CanDo('change_stock')} text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock?.id)} icon={<Edit strokeWidth='1' />} />
+                <PrimaryBtn hidden={!CanDo('delete_stock')} text='Apagar' icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} light />
               </ButtonGroup>
             </Box>
           </Box>

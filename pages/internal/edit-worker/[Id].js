@@ -12,20 +12,25 @@ import EditWorkerScreen from '../../../components/pages/editWorker/editWorker';
 import routes from '../../../navigation/routes';
 
 //  Services
+import * as OrganizationsActionsRedux from '../../../store/actions/organization';
+import * as profilesActionsRedux from '../../../store/actions/profile';
 import * as workersActionsRedux from '../../../store/actions/worker';
 
 const EditWorker = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const countries = [];
-  const profiles = [];
   const router = useRouter();
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getWorker = (data) => dispatch(workersActionsRedux.worker(data));
+  const getOrganizations = (data) => dispatch(OrganizationsActionsRedux.organizations(data));
+  const getProfiles = (data) => dispatch(profilesActionsRedux.profiles(data));
 
   useEffect(() => {
     const getData = async () => {
+      !reduxState.organizations.data && await getOrganizations();
       await getWorker(router.query.Id);
+      await getProfiles(); //  All permissions groups
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -52,7 +57,9 @@ const EditWorker = ({ ...pageProps }) => {
       user: reduxState.workers.displayedWorker,
       pageProps,
       countries,
-      profiles,
+      organizations: reduxState.organizations.data,
+      profiles: reduxState.profiles.data,
+
     };
 
     return loaded && <EditWorkerScreen {...props} />;

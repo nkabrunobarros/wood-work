@@ -15,6 +15,7 @@ import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
+import CanDo from '../../../utils/CanDo';
 import ToastSet from '../../../utils/ToastSet';
 import HeaderGrid from '../../budget/sections/components/HeaderGrid';
 import FinishProjectModal from '../modal/finishProjectModal';
@@ -83,9 +84,6 @@ const Head = (props) => {
 
   // eslint-disable-next-line no-return-assign
   props.furnituresUnbuilt.filter(ele => ele.produced?.value).map((furni) => totalBuilt = totalBuilt + Number(furni.amount.value));
-  console.log(props.furnituresUnbuilt.filter(ele => ele.produced?.value));
-  console.log(order.amount.value);
-  console.log(totalBuilt);
 
   const lowerGrids = [
     {
@@ -320,13 +318,11 @@ const Head = (props) => {
     />
     <Box style={{ display: 'flex', marginBottom: '1rem' }}>
       <Grid container md={12} sm={12} xs={12}>
-
         <Typography variant="sm" color="lightTextSm.main" display={!isInternalPage && 'none'}>
           {'Cliente '}
           {order.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
-          <Tooltip title='Ver cliente'>
-
-            <a href={routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+          <Tooltip title={CanDo('see_client') ? 'Ver cliente' : ''}>
+            <a href={ CanDo('see_client') && routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
               {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}
             </a>
           </Tooltip>
@@ -345,7 +341,7 @@ const Head = (props) => {
         </Grid>
       </Grid>
 
-      <Box >
+      {CanDo('change_project') && <Box>
         {false && <PrimaryBtn
           text='Gerar Etiquetas'
           hidden={!(internalPOV && order.status.value === 'production')}
@@ -383,13 +379,11 @@ const Head = (props) => {
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
-      </Box>
+      </Box>}
     </Box>
     <Grid container md={12}>
-
       <HeaderGrid grids={ upperGrids }/>
       <HeaderGrid grids={ lowerGrids }/>
-
       <Grid container md={12} p={1}>
         <Grid container style={{ width: 'fit-content' }}>
           <Grid container md={8}>

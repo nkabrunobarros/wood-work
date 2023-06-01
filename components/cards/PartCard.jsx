@@ -31,13 +31,7 @@ const PartCard = (props) => {
 
           </Typography>
         </CardContent>
-        {/* <CardActions>
-                <Button size="small" onClick={() => {
-                    setChosenProject(rowIndex + 1);
-                    console.log(rowIndex);
-                    }}>Escolher</Button>
-                <Button size="small">Finalizar Produção</Button>
-            </CardActions> */}
+
       </Card>
     </Grow>
 
