@@ -272,7 +272,7 @@ const ProjectsScreen = (props) => {
         {/* Filters */}
         <Content>
           <Grid id='pad' md={12} container>
-            <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
+            <Grid container item md={12}><Typography variant='titlexs'>Filtros</Typography></Grid>
             {isInternalPage && <Grid container item md={4} sm={6} xs={12} p={1}>
               <Box sx={{ width: '100%' }}>
                 <InputLabel htmlFor='email'>Cliente</InputLabel>

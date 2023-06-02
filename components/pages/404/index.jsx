@@ -25,7 +25,7 @@ const notFoundPage = (props) => {
             <p className={styles.message__text}>
               {noAccess
                 ? <>Se é suposto ter acesso a esta página, por favor entre em
-                  <Tooltip title='Enviar email'>
+                  <Tooltip title='Escrever email'>
                     <a href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`} className='link'> contacto </a>
                   </Tooltip>
                         com o responsavel

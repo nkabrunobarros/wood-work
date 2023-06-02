@@ -35,7 +35,6 @@ import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
-// import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 
 import * as authActionsRedux from '../../../store/actions/auth';
@@ -115,6 +114,7 @@ const SignIn = (props) => {
           return ToastSet(loadingNotification, 'Algo aconteceu. Por favor tente mais tarde', 'error');
         }
 
+        // setCookie(undefined, 'auth_token_expireAt', res?.data?.expires_in);
         setCookie(undefined, 'auth_token', res?.data?.access_token);
 
         await getMe(res.data.access_token).then(async (res) => {
@@ -170,8 +170,7 @@ const SignIn = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Box
-        style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+      <Box style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
       >
         <a
           target='#'

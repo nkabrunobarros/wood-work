@@ -1,10 +1,11 @@
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import styles from '../../../styles/components/navbar.module.css';
 
+import { MenuItem } from '@mui/material';
 import routes from '../../../navigation/routes';
+import Link from 'next/link';
 export const pageSections = {
   projects: 'Projetos',
   project: 'Projetos',
@@ -45,7 +46,7 @@ export const pageSections = {
   editMachine: 'Máquinas',
 };
 
-function ActiveLink ({ children, url, handleDrawerToggle, page }) {
+function ActiveLink ({ toggleDrawer, item }) {
   const path = useRouter();
 
   const currentSection = Object.entries(pageSections).find(([page]) => {
@@ -57,32 +58,32 @@ function ActiveLink ({ children, url, handleDrawerToggle, page }) {
 
   const style = {
     borderLeft: '5px solid',
-    borderColor: page === currentSection ? 'var(--white)' : 'transparent',
-  };
-
-  const handleClick = (e) => {
-    e.preventDefault();
+    borderColor: item.title === currentSection ? 'var(--white)' : 'transparent',
   };
 
   return (
-    <a
-      key={url}
-      onClick={(e) => {
-        handleDrawerToggle && handleDrawerToggle();
-        handleClick(e);
-      }}
-      className={styles.navItemContainer}
-      style={style}
-    >
-      {children}
-    </a>
+
+    <Link href={item.url}>
+      <MenuItem id={item.id}
+        sx={{ padding: '0', width: '100%', ...style }}
+        className={styles.navItemContainer}
+        onClick={(e) => {
+          e.preventDefault();
+          toggleDrawer();
+          Router.push(item.url);
+        }}>
+        {item.icon}
+        <div style={{ paddingRight: '.5rem' }} />
+        {item.title}
+      </MenuItem>
+    </Link>
+
   );
 }
 
 ActiveLink.propTypes = {
-  children: PropTypes.any,
-  url: PropTypes.string,
-  handleDrawerToggle: PropTypes.func,
+  item: PropTypes.any,
+  toggleDrawer: PropTypes.func,
   page: PropTypes.string,
 };
 

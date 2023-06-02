@@ -11,6 +11,7 @@ import CustomBreadcrumbs from '../../breadcrumbs/breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 import Notification from '../../dialogs/Notification';
+// import MySelect from '../../inputs/select';
 import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
@@ -19,14 +20,19 @@ import ToastSet from '../../utils/ToastSet';
 
 const ProfilesScreen = (props) => {
   const { breadcrumbsPath, headCells } = props;
-  const [newResource, setNewResource] = useState({ name: '', codename: '' });
+  // const [newResource, setNewResource] = useState({ name: '', codename: '' });
   const [profiles, setProfiles] = useState(props.permissions);
-  const [resources, setResources] = useState([...props.resources].sort((a, b) => (a.name > b.name) ? 1 : -1));
+
+  const [filters, setFilters] = useState({
+    id: ''
+  });
+
+  // const [resources, setResources] = useState([...props.resources].sort((a, b) => (a.name > b.name) ? 1 : -1));
   const dispatch = useDispatch();
   const deleteProfile = (data) => dispatch(permissionsActionsRedux.deleteProfile(data));
-  const deleteResource = (data) => dispatch(permissionsActionsRedux.deleteResource(data));
-  const updateResource = (data) => dispatch(permissionsActionsRedux.updateResource(data));
-  const newResourceFunc = (data) => dispatch(permissionsActionsRedux.newResource(data));
+  // const deleteResource = (data) => dispatch(permissionsActionsRedux.deleteResource(data));
+  // const updateResource = (data) => dispatch(permissionsActionsRedux.updateResource(data));
+  // const newResourceFunc = (data) => dispatch(permissionsActionsRedux.newResource(data));
 
   async function onDelete (props) {
     const loading = toast.loading('');
@@ -50,48 +56,52 @@ const ProfilesScreen = (props) => {
     });
   }
 
-  function onResourceChange (props) {
-    const { newValue, field, index } = props;
-    const newArray = [...resources]; // Create a copy of the original array
+  // function onResourceChange (props) {
+  //   const { newValue, field, index } = props;
+  //   const newArray = [...resources]; // Create a copy of the original array
 
-    if (index >= 0 && index < newArray.length) {
-      const updatedItem = { ...newArray[index] }; // Create a copy of the item at the specified index
+  //   if (index >= 0 && index < newArray.length) {
+  //     const updatedItem = { ...newArray[index] }; // Create a copy of the item at the specified index
 
-      updatedItem[field] = newValue; // Update the specified field with the new value
-      newArray[index] = updatedItem; // Replace the item in the new array with the updated item
-    }
+  //     updatedItem[field] = newValue; // Update the specified field with the new value
+  //     newArray[index] = updatedItem; // Replace the item in the new array with the updated item
+  //   }
 
-    setResources(newArray);
-  }
+  //   setResources(newArray);
+  // }
 
-  async function handleResourceUpdate () {
-    resources.map(async (resource) => {
-      await updateResource({ id: resource.id, data: { name: resource.name, codename: resource.codename } }).then(res => console.log(res.data)).catch((err) => console.log(err));
-    });
-  }
+  // async function handleResourceUpdate () {
+  //   resources.map(async (resource) => {
+  //     await updateResource({ id: resource.id, data: { name: resource.name, codename: resource.codename } }).then(res => console.log(res.data)).catch((err) => console.log(err));
+  //   });
+  // }
 
-  async function onResourceDelete (props) {
-    await deleteResource(props).then(res => console.log(res.data)).catch((err) => console.log(err));
-  }
+  // async function onResourceDelete (props) {
+  //   await deleteResource(props).then(res => console.log(res.data)).catch((err) => console.log(err));
+  // }
 
-  async function handleCreate () {
-    resources.map(async (ele) => {
-      if (ele.codename.includes('change_')) {
-        const qs = require('qs');
-        const data = qs.stringify({ name: ele.name, codename: ele.codename.replace('change_', 'update_') });
+  // async function handleCreate () {
+  //   resources.map(async (ele) => {
+  //     if (ele.codename.includes('change_')) {
+  //       const qs = require('qs');
+  //       const data = qs.stringify({ name: ele.name, codename: ele.codename.replace('change_', 'update_') });
 
-        await newResourceFunc({ data }).then(res => console.log(res.data)).catch((err) => console.log(err));
-      }
-    });
-  }
+  //       await newResourceFunc({ data }).then(res => console.log(res.data)).catch((err) => console.log(err));
+  //     }
+  //   });
+  // }
 
-  async function handleNewResource () {
-    const qs = require('qs');
-    const data = qs.stringify({ ...newResource });
+  // async function handleNewResource () {
+  //   const qs = require('qs');
+  //   const data = qs.stringify({ ...newResource });
 
-    await newResourceFunc({ data }).then(res => {
-      console.log(res.data);
-    }).catch((err) => console.log(err));
+  //   await newResourceFunc({ data }).then(res => {
+  //     console.log(res.data);
+  //   }).catch((err) => console.log(err));
+  // }
+
+  function ClearFilters () {
+    setFilters({ id: '' });
   }
 
   return <>
@@ -99,6 +109,20 @@ const ProfilesScreen = (props) => {
     <Notification />
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
       <CustomBreadcrumbs path={breadcrumbsPath} />
+      <Content>
+        <Grid id='pad' container md={12}>
+          <Grid container md={12}>
+            <Typography variant="titlexs">Filtros</Typography>
+          </Grid>
+          <Grid container md={4}>
+            <MyInput value={filters.name} label='Nome' onChange={(e) => setFilters({ ...filters, name: e.target.value })}/>
+            {/* <MySelect value={filters.id} label='Nome' options={profiles.sort((a, b) => (a.name > b.name) ? 1 : -1)} optionLabel='name' onChange={(e) => setFilters({ ...filters, id: e.target.value })} /> */}
+          </Grid>
+          <Grid container md={12} justifyContent={'end'}>
+            <PrimaryBtn light text={'Limpar'} onClick={ClearFilters} />
+          </Grid>
+        </Grid>
+      </Content>
       <Content>
         <Grid id='pad' md={12} container justifyContent={'space-between'}>
           <Typography variant='title'>Perfis</Typography>
@@ -108,13 +132,14 @@ const ProfilesScreen = (props) => {
         <AdvancedTable
           rows={profiles}
           headCells={headCells}
-          onDelete={onDelete}
-          editRoute={routes.private.internal.editProfile}
-          clickRoute={routes.private.internal.profile}
+          filters={filters}
+          onDelete={CanDo('delete_profile') && onDelete}
+          editRoute={CanDo('update_profile') && routes.private.internal.editProfile}
+          clickRoute={CanDo('see_profile') && routes.private.internal.profile}
         />
-        <PrimaryBtn text={'Create'} onClick={() => handleCreate()} />
 
-        {false && <Grid container md={4} sm={12} xs={12} pb={10}>
+        {/* {false && <Grid container md={4} sm={12} xs={12} pb={10}>
+          <PrimaryBtn text={'Create'} onClick={() => handleCreate()} />
           <PrimaryBtn text={'Guardar'} onClick={() => handleNewResource()} />
           <MyInput
             label={'Name'}
@@ -143,7 +168,7 @@ const ProfilesScreen = (props) => {
               </Grid>
             </Grid>;
           })}
-        </Grid>}
+        </Grid>} */}
       </Content>
     </Grid>
     <Footer />

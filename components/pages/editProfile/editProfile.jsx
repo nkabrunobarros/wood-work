@@ -151,6 +151,45 @@ const EditProfileScreen = (props) => {
           resourcesRequired.add('view_stock');
         }
 
+        if (permissions.see) {
+          resourcesRequired.add('view_stock');
+        }
+
+        if (permissions.create) {
+          resourcesRequired.add('add_stock');
+        }
+
+        if (permissions.update) {
+          resourcesRequired.add('change_stock');
+        }
+
+        if (permissions.delete) {
+          resourcesRequired.add('delete_stock');
+        }
+
+        resourcesRequired.forEach(codename => {
+          const resource = resources.find(ele => ele.codename === codename);
+
+          if (resource && !stringValues.includes(resource.id)) {
+            stringValues.push(resource.id);
+          }
+        });
+
+        break;
+      }
+
+      case 'Mensagens': {
+        const resourcesRequired = new Set();
+
+        if (permissions.list) {
+          resourcesRequired.add('view_message');
+          resourcesRequired.add('list_message');
+        }
+
+        if (permissions.create) {
+          resourcesRequired.add('add_message');
+        }
+
         resourcesRequired.forEach(codename => {
           const resource = resources.find(ele => ele.codename === codename);
 
@@ -299,6 +338,8 @@ const EditProfileScreen = (props) => {
         }
 
         if (permissions.create) {
+          resourcesRequired.add('create_owner');
+          resourcesRequired.add('create_client');
           resourcesRequired.add('add_owner');
           resourcesRequired.add('add_client');
           resourcesRequired.add('view_organization');
@@ -306,6 +347,7 @@ const EditProfileScreen = (props) => {
 
         if (permissions.update) {
           resourcesRequired.add('change_owner');
+          resourcesRequired.add('update_client');
           resourcesRequired.add('change_client');
           resourcesRequired.add('view_organization');
         }
@@ -339,13 +381,15 @@ const EditProfileScreen = (props) => {
         }
 
         if (permissions.create) {
+          resourcesRequired.add('create_worker');
           resourcesRequired.add('add_worker');
           resourcesRequired.add('add_owner');
-          resourcesRequired.add('add_client');
           resourcesRequired.add('view_organization');
+          resourcesRequired.add('change_group');
         }
 
         if (permissions.update) {
+          resourcesRequired.add('change_group');
           resourcesRequired.add('change_worker');
           resourcesRequired.add('view_organization');
         }
@@ -353,6 +397,45 @@ const EditProfileScreen = (props) => {
         if (permissions.delete) {
           resourcesRequired.add('delete_owner');
           resourcesRequired.add('delete_client');
+        }
+
+        resourcesRequired.forEach(codename => {
+          const resource = resources.find(ele => ele.codename === codename);
+
+          if (resource && !stringValues.includes(resource.id)) {
+            stringValues.push(resource.id);
+          }
+        });
+
+        break;
+      }
+
+      case 'Perfis' : {
+        const resourcesRequired = new Set();
+
+        if (permissions.list) {
+          resourcesRequired.add('view_group');
+          resourcesRequired.add('view_group');
+        }
+
+        if (permissions.see) {
+          resourcesRequired.add('view_group');
+          resourcesRequired.add('view_owner');
+        }
+
+        if (permissions.create) {
+          resourcesRequired.add('view_group');
+          resourcesRequired.add('change_group');
+          resourcesRequired.add('view_permission');
+        }
+
+        if (permissions.update) {
+          resourcesRequired.add('change_group');
+          resourcesRequired.add('view_group');
+        }
+
+        if (permissions.delete) {
+          resourcesRequired.add('delete_group');
         }
 
         resourcesRequired.forEach(codename => {
@@ -431,7 +514,7 @@ const EditProfileScreen = (props) => {
         </Grid>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={4} sm={6} xs={12} p={1}>
-            <MyInput label='Nome' required value={permissionName.value} error={permissionName.error} onChange={(e) => setPermissionName({ ...permission, value: e.target.value, error: '' })}/>
+            <MyInput disabled={permissionName.value === 'Customers'} label='Nome' required value={permissionName.value} error={permissionName.error} onChange={(e) => setPermissionName({ ...permission, value: e.target.value, error: '' })}/>
           </Grid>
         </Grid>
         <Grid container md={12} sm={12} xs={12}>

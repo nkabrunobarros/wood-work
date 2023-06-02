@@ -328,7 +328,7 @@
         "codename": "view_stock"
     },
     {
-        "name": "Stocks",
+        "name": "add_stock",
         "codename": "add_stock"
     },
     {
@@ -336,11 +336,15 @@
         "codename": "list_message"
     },
     {
-        "name": "add_profile",
+        "name": "Perfis",
+        "codename": "list_profile"
+    },
+    {
+        "name": "Perfis",
         "codename": "add_profile"
     },
     {
-        "name": "change_profile",
+        "name": "Perfis",
         "codename": "change_profile"
     },
     {
@@ -354,14 +358,6 @@
     {
         "name": "Projetos Similares",
         "codename": "list_similarProject"
-    },
-    {
-        "name": "Perfis",
-        "codename": "list_profile"
-    },
-    {
-        "name": "Perfis",
-        "codename": "create_profile"
     },
     {
         "name": "Perfis",
@@ -426,6 +422,10 @@
     {
         "name": "view_furniture",
         "codename": "see_furniture"
+    },
+    {
+        "name": "view_group",
+        "codename": "see_group"
     },
     {
         "name": "view_machineTask",
@@ -498,6 +498,10 @@
     {
         "name": "add_workerTask",
         "codename": "create_workerTask"
+    },
+    {
+        "name": "Perfis",
+        "codename": "create_profile"
     },
     {
         "name": "Recurso",

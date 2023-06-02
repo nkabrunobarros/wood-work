@@ -1,22 +1,12 @@
-/* eslint-disable no-constant-condition */
-/* eslint-disable react/prop-types */
-/* eslint-disable consistent-return */
-// Node modules
 import Router, { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-//  PropTypes
-
-//  Navigation
-import routes from '../../navigation/routes';
-
-//  Custom Components
-// import { navLinks } from '../utils/navLinks';
-
 import { destroyCookie, parseCookies } from 'nookies';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import FloatingButton from '../../components/floatingButton/FloatingButton';
 import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
+import routes from '../../navigation/routes';
 import CanDo from '../utils/CanDo';
 
 const noLayoutScreens = [
@@ -151,8 +141,6 @@ const Layout = ({ children }) => {
 
   if (noLayoutScreens.includes(path.route.replace('[Id]', ''))) noAccessPage = true;
 
-  // console.log(neededPermission);
-
   // loaded
   return loaded && <>
     {neededPermission !== 'see_error' && (noAccess || !noAccessPage)
@@ -164,6 +152,10 @@ const Layout = ({ children }) => {
   </>;
 
   // return <Loader center={true} />;
+};
+
+Layout.propTypes = {
+  children: PropTypes.any
 };
 
 export default Layout;

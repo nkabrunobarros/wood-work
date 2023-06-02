@@ -3,9 +3,15 @@
 import routes from '../../navigation/routes';
 
 function RedirectTo (props) {
+  if (typeof props === 'undefined') return;
+
   const { orion_permissions, role } = props;
 
-  if (role === 'CUSTOMER') return routes.private.projects;
+  if (role === 'CUSTOMER') {
+    if (props.tos === false) return routes.private.terms;
+
+    return routes.private.projects;
+  }
 
   const priorityPages = [
     {
@@ -51,6 +57,10 @@ function RedirectTo (props) {
     {
       perm: 'list_worker',
       page: routes.private.internal.workers
+    },
+    {
+      perm: 'list_profile',
+      page: routes.private.internal.profiles
     },
     {
       perm: 'see_account',

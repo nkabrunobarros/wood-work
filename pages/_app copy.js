@@ -121,8 +121,8 @@ const App = ({ Component, pageProps }) => {
         <meta name="description" content="Wood Work 4.0" />
         <meta name="keywords" content="work, madeira, moveis, barato" />
         <meta name="author" content="Bruno Barros" />
-        <link rel='icon' href='/logo_bw_ww40_inv.png' />
         <title>Wood Work 4.0</title>
+        <link rel='icon' href='/logo_bw_ww40_inv.png' />
       </Head>
       <Layout {...pageProps} toggleTheme={toggleTheme} toggleFontSize={toggleFontSize}>
         <Component {...pageProps} />

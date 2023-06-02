@@ -148,7 +148,7 @@ const newWorker = ({ ...props }) => {
         await updateWorkerProfile({ id: res.data.id, data: { add_groups: [profile] } });
         ToastSet(loading, 'Utilizador Criado!', 'success');
         setProcessing(false);
-        Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id);
+        Router.push(routes.private.internal.worker + res.data.id);
       }).catch((error) => {
         const errorKeys = Object.keys(error.response.data);
 

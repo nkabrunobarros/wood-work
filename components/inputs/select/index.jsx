@@ -26,6 +26,17 @@ const MySelect = ({
 
   if (label === 'Country' || label === 'Code') portugal = options.find((option) => option.cca2 === 'PT');
 
+  const ITEM_HEIGHT = 36;
+  const ITEM_PADDING_TOP = 8;
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+      },
+    },
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
       {variant !== 'standard' && label
@@ -56,7 +67,8 @@ const MySelect = ({
           value={value}
           onChange={onChange}
           sx={{ width: width && width }}
-          style={{ width: halfWidth && '50%' }}
+          style={{ width: halfWidth && '50%', maxHeight: '200px' }}
+          MenuProps={MenuProps}
         >
           <MenuItem value="" disabled>
             Escolha uma opcao

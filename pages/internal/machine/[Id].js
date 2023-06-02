@@ -31,7 +31,7 @@ const Machine = ({ pageProps }) => {
       const { data: logsWorkerTasks } = await getWorkerTasks({ machine: router.query.Id });
 
       setMachineActivity(logsWorkerTasks.map((ele) => {
-        const worker = workers.find(worker => worker.id === ele.executedBy?.object);
+        const worker = workers.results?.find(worker => worker.user.id === ele.executedBy?.object.replace('urn:ngsi-ld:Worker:', ''));
         const spaceIndex = ele.executedOn.object.replace(/_/g, ' ').indexOf(' ');
         let resultString = '';
 
@@ -43,7 +43,7 @@ const Machine = ({ pageProps }) => {
           FinishedAt: ele.finishTime.value,
           UsedIn: resultString.replace(/_/g, ' '),
           Duration: displayDateDifference(ele.startTime.value, ele.finishTime.value),
-          DoneBy: worker && worker?.givenName?.value + ' ' + worker?.familyName?.value,
+          DoneBy: worker && worker.user?.first_name + ' ' + worker.user?.last_name,
         };
       }));
     }

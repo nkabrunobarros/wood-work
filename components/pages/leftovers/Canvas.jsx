@@ -5,13 +5,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Layer, Stage } from 'react-konva';
 import PolygonAnnotation from './PolygonAnnotation';
 
-const videoSource = 'https://i.etsystatic.com/13326222/r/il/eba19a/2652256044/il_570xN.2652256044_f0qi.jpg';
-
 function checkDuplicateCoordinates (coordinates) {
   const visitedCoordinates = new Set();
   let hasDuplicates = false;
 
-  for (let i = 0; i < coordinates.length; i++) {
+  for (let i = 0; i < coordinates?.length; i++) {
     const coordinate = coordinates[i];
     // Convert coordinate to string for Set comparison
     const coordinateString = JSON.stringify(coordinate);
@@ -32,7 +30,7 @@ const Canvas = (props) => {
   const [image, setImage] = useState();
   const imageRef = useRef(null);
   const dataRef = useRef(null);
-  const [points, setPoints] = useState(props.leftover.corners.coordinates) || [];
+  const [points, setPoints] = useState(props?.leftover?.corners?.coordinates) || [];
   const [size, setSize] = useState({});
   const [flattenedPoints, setFlattenedPoints] = useState();
   const [position, setPosition] = useState([0, 0]);
@@ -42,7 +40,7 @@ const Canvas = (props) => {
   const videoElement = useMemo(() => {
     const element = new window.Image();
 
-    element.src = props.leftover.file || videoSource;
+    element.src = props?.leftover?.file;
 
     return element;
   }, []); // it may come from redux
@@ -63,7 +61,7 @@ const Canvas = (props) => {
     return () => {
       videoElement.removeEventListener('load', onload);
     };
-  }, [videoElement]);
+  }, [videoElement, props.leftover]);
 
   const getMousePos = (stage) => {
     return [stage.getPointerPosition().x, stage.getPointerPosition().y];
@@ -111,21 +109,21 @@ const Canvas = (props) => {
 
     if (pos[1] < 0) pos[1] = 0;
 
-    if (pos[0] > stage.width()) pos[0] = stage.width();
+    if (pos[0] > stage?.width()) pos[0] = stage?.width();
 
-    if (pos[1] > stage.height()) pos[1] = stage.height();
+    if (pos[1] > stage?.height()) pos[1] = stage?.height();
 
     setPoints([...points.slice(0, index), pos, ...points.slice(index + 1)]);
   };
 
   useEffect(() => {
     setFlattenedPoints(
-      points.concat(isPolyComplete ? [] : position).reduce((a, b) => a.concat(b), [])
+      points?.concat(isPolyComplete ? [] : position).reduce((a, b) => a.concat(b), [])
     );
   }, [points]);
 
   const undo = () => {
-    setPoints(points.slice(0, -1));
+    setPoints(points?.slice(0, -1));
     setPolyComplete(false);
   };
 
@@ -157,8 +155,8 @@ const Canvas = (props) => {
         }}
       >
         <Stage
-          width={size.width || 480}
-          height={size.height || 360}
+          width={size.width}
+          height={size.height}
           onMouseMove={handleMouseMove}
           onMouseDown={handleMouseDown}
         >

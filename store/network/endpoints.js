@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 const endpoints = {
   LOGIN: 'auth/token',
   ME: 'accounts/worker/me/',
@@ -7,7 +6,7 @@ const endpoints = {
   PROJECTS: 'project/',
   FURNITURES: 'furniture/',
   BUDGETS: 'budget/',
-  WORKERS: 'worker/',
+  WORKERS: 'accounts/worker/',
   EXPEDITIONS: 'expedition/',
   CLIENTS: 'owner/',
   ADDCLIENT: 'accounts/signup/',
@@ -15,8 +14,8 @@ const endpoints = {
   DJANGOWORKERS: 'accounts/worker/',
   PROFILESLIST: 'perms/group/expanded/',
   PROFILES: 'perms/group/',
-  PARTS: 'part/',
   RESOURCES: 'perms/permission/',
+  PARTS: 'part/',
   RESETPASSWORD1: 'accounts/reset-password.',
   RESETPASSWORD: 'accounts/reset-password/',
   EMAILSERVICE: 'email/service/',

@@ -30,7 +30,7 @@ const ResetPassword = () => {
       params: token,
     };
 
-    return token.token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
+    return token.token || token.activationToken ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
   }
 
   return <Loader center={true} />;

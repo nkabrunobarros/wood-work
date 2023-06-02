@@ -8,16 +8,20 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 //  PropTypes
 import { Autocomplete, Box, Grid, InputLabel, Slider, TextField, Typography } from '@mui/material';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import MyInput from '../../inputs/myInput';
 import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
+import ToastSet from '../../utils/ToastSet';
 
 const Stock = ({ ...props }) => {
-  const { breadcrumbsPath, headCells, stocks } = props;
+  const { breadcrumbsPath, headCells } = props;
 
   //  States
   const [filters, setFilters] = useState({
@@ -26,6 +30,7 @@ const Stock = ({ ...props }) => {
     warehouse: ''
   });
 
+  const [stocks, setStocks] = useState(props.stocks);
   const [sizesFilter, setSizesFilter] = useState(props.filtersSizes);
 
   function onMaterialChange ({ value, event }) {
@@ -69,6 +74,23 @@ const Stock = ({ ...props }) => {
 
   function SliderValueLabel (value) {
     return value + ' mm';
+  }
+
+  async function onDelete (props) {
+    const loading = toast.loading('');
+
+    ToastSet(loading, 'Cliente Removido!', 'error');
+
+    const old = [...stocks];
+    const index = old.findIndex((item) => item.id === props);
+
+    if (index !== -1) {
+      const updatedItems = [...old];
+
+      updatedItems.splice(index, 1);
+      setStocks(updatedItems);
+      ToastSet(loading, 'Stock Removido.', 'success');
+    }
   }
 
   return (
@@ -197,20 +219,27 @@ const Stock = ({ ...props }) => {
           <Box
             id='pad'
             className='flex'
-            style={{ display: 'flex', alignItems: 'center' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
           >
             <Box>
               <Typography variant='title'>{breadcrumbsPath[0].title}</Typography>
             </Box>
+            <PrimaryBtn
+              hidden={!CanDo('add_stock')}
+              text='Adicionar'
+              onClick={() => Router.push(routes.private.internal.newStock)}
+            />
           </Box>
           <AdvancedTable
             rows={stocks}
             headCells={headCells}
-            clickRoute={routes.private.internal.stock}
+            clickRoute={CanDo('see_stock') && routes.private.internal.stock}
+            editRoute={CanDo('update_stock') && routes.private.internal.editStock}
             filters={filters}
             setFilters={setFilters}
             rangeFilters={sizesFilter}
             setRangeFilters={setSizesFilter}
+            onDelete={CanDo('delete_stock') && onDelete}
           />
         </Content>
       </Grid>

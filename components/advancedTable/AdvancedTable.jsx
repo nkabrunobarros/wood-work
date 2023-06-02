@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 //  Material Ui
 import {
   Box, ButtonGroup, Chip, Grid,
-  IconButton, Paper,
+  IconButton, MenuItem, Pagination, Paper,
   Popover,
   Skeleton,
   Switch,
@@ -24,7 +24,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel, Tooltip
+  TableSortLabel, TextField, Tooltip, Typography
 } from '@mui/material';
 
 //  Icons
@@ -74,7 +74,8 @@ const AdvancedTable = ({
     dialogMessage: '',
     anchorEl: null,
     cellsFilter: headCells,
-    loaded: false,
+    loaded: true,
+    rowsPerPageOptions: [1, 10, 25]
   });
 
   const reduxState = useSelector((state) => state);
@@ -223,12 +224,18 @@ const AdvancedTable = ({
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
-                sx={{ width: '100%', height: '100%', color: 'white' }}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  color: 'white !important',
+                  '& .MuiTableSortLabel-icon': {
+                    color: 'white !important',
+                  },
+                }}
               >
                 {state.loaded
                   ? <>
                     {headCell.label}
-                    {orderBy === headCell.id ? <Box component='span'></Box> : null}
                   </>
                   : <Skeleton animation="wave" width='100%' />
                 }
@@ -318,6 +325,10 @@ const AdvancedTable = ({
     }
   }, [filters, rows, rangeFilters]);
 
+  useEffect(() => {
+    setState({ ...state, page: 0 });
+  }, [state.rowsPerPage]);
+
   function onFilterRemove (filterName) {
     const filtersToWork = { ...filters };
 
@@ -331,6 +342,50 @@ const AdvancedTable = ({
     rangeFiltersToWork[filterName].values = [rangeFiltersToWork[filterName].min, rangeFiltersToWork[filterName].max];
     setRangeFilters(rangeFiltersToWork);
   }
+
+  const CustomTablePagination = () => {
+    return <Box sx={{ width: '100%' }} display="flex" alignItems="center" justifyContent="end" p={1}>
+      <Typography variant="subtitle2" pr={1}>
+    Mostrar
+      </Typography>
+      <TextField
+        value={state.rowsPerPage}
+        variant="standard"
+        select
+        InputProps={{ disableUnderline: true }}
+        onChange={(e) => setState({ ...state, rowsPerPage: e.target.value })}
+      >
+        {state.rowsPerPageOptions.map((row) => (
+          <MenuItem key={row} value={row}>
+            <Typography variant='sm'>{row}</Typography>
+          </MenuItem>
+        ))}
+      </TextField>
+      <Typography variant="subtitle2" pl={1} pr={1}>
+        {
+          state.page === 0
+            ? `1 - ${Math.min(state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+            : `${state.page * state.rowsPerPage + 1} - ${Math.min((state.page + 1) * state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+        }      </Typography>
+      {!noPagination && (
+        <Pagination
+          siblingCount={1}
+          boundaryCount={0}
+          pl={1}
+          variant="outlined"
+          count={Math.ceil(state.filteredItems.length / state.rowsPerPage)}
+          rowsPerPage={state.rowsPerPage}
+          page={state.page + 1 || 1}
+          showLastButton
+          showFirstButton
+          onChange={(e, p) => setState({ ...state, page: p - 1 })}
+          color="primary"
+          sx={{ border: '0px solid', borderColor: 'lightGray.edges', pb: 0.2, pt: 0.2, borderRadius: '20px' }}
+
+        />
+      )}
+    </Box>;
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -369,12 +424,14 @@ const AdvancedTable = ({
             ? null
             : state.loaded
               ? <>
-                <TablePagination
+                <CustomTablePagination />
+
+                {false && <TablePagination
                   showFirstButton
                   showLastButton
                   component='div'
                   sx={{ marginLeft: 'auto' }}
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={state.rowsPerPageOptions}
                   count={state.filteredItems ? state.filteredItems?.length : state.filteredItems?.length}
                   rowsPerPage={state.rowsPerPage}
                   page={state.page}
@@ -384,7 +441,7 @@ const AdvancedTable = ({
                   labelDisplayedRows={({ count, from, to }) => {
                     return `${from} - ${to} de ${count}`;
                   }}
-                />
+                />}
                 <Box>
                   <Tooltip title='Filtrar colunas'>
                     <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setState({ ...state, anchorEl: e.currentTarget })}>

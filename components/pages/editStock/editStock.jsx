@@ -4,12 +4,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
-import { PackagePlus, Save } from 'lucide-react';
+import { PackagePlus, Save, X } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
-import { Box, Divider, Tooltip } from '@mui/material';
+import { Box, ButtonGroup, Divider, Tooltip } from '@mui/material';
 import Router from 'next/router';
 import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
@@ -48,9 +48,30 @@ const EditStock = ({ ...props }) => {
                   : <a className="errorBalloon">Indisponível</a>}
               </Tooltip>
             </Box>
-            <PrimaryBtn text='Guardar'
-              onClick={() => Router.push(routes.private.internal.stock + stock.id)}
-              icon={<Save strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} />
+
+            <ButtonGroup>
+              <PrimaryBtn
+                text='Guardar'
+                icon={
+                  <Save
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />
+                }
+                onClick={() => Router.push(routes.private.internal.stock + stock.id)}
+              />
+              <PrimaryBtn
+                text='Cancelar'
+                icon={
+                  <X
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+                    size={pageProps?.globalVars?.iconSize}
+                  />
+                }
+                light
+                onClick={() => Router.back()}
+              />
+            </ButtonGroup>
           </Box>
           <Grid container id='pad' className='flex'>
             {/* Product Info panels */}

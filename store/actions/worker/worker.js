@@ -64,7 +64,7 @@ export const newWorker = (data) => {
       data,
       headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'POST',
-      url: getApiURL(endpoints.DJANGOWORKERS),
+      url: getApiURL(endpoints.WORKERS),
     },
     types: [ADD_WORKER_REQUEST, ADD_WORKER_SUCCESS, ADD_WORKER_FAIL],
   });
@@ -90,7 +90,7 @@ export const updateWorker = (data) => {
       ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PATCH',
-      url: getApiURL(endpoints.DJANGOWORKERS + id),
+      url: getApiURL(endpoints.WORKERS + id),
     },
     types: [UPDATE_WORKER_REQUEST, UPDATE_WORKER_SUCCESS, UPDATE_WORKER_FAIL],
   });
@@ -108,7 +108,7 @@ export const updateWorkersProfile = (data) => {
       ...data,
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'PUT',
-      url: getApiURL(endpoints.DJANGOWORKERS + id + '/orion_groups/'),
+      url: getApiURL(endpoints.WORKERS + id + '/orion_groups/'),
     },
     types: [UPDATE_WORKER_REQUEST, UPDATE_WORKER_SUCCESS, UPDATE_WORKER_FAIL],
   });
@@ -122,7 +122,7 @@ export const deleteWorker = (data) => {
     request: {
       headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'DELETE',
-      url: getApiURL(endpoints.DJANGOWORKERS + data),
+      url: getApiURL(endpoints.WORKERS + data),
     },
     types: [DELETE_WORKER_REQUEST, DELETE_WORKER_SUCCESS, DELETE_WORKER_FAIL],
   });

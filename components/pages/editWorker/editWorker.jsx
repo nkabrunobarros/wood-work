@@ -18,7 +18,7 @@ import { Save, User, X } from 'lucide-react';
 
 //  Material UI
 import {
-  Box
+  Box, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -47,7 +47,7 @@ const EditUser = ({ ...props }) => {
     {
       id: 'user.first_name',
       label: 'Primeiro Nome',
-      value: props.user.givenName.value,
+      value: props.user.user.first_name,
       error: '',
       required: true,
       tooltip: ''
@@ -55,14 +55,14 @@ const EditUser = ({ ...props }) => {
     {
       id: 'user.last_name',
       label: 'Último Nome',
-      value: props.user.familyName.value,
+      value: props.user.user.last_name,
       error: '',
       tooltip: ''
     },
     {
       id: 'user.email',
       label: 'Email',
-      value: props.user.email.value,
+      value: props.user.user.email,
       error: '',
       type: 'email',
       required: true,
@@ -71,8 +71,8 @@ const EditUser = ({ ...props }) => {
     {
       id: 'profile',
       label: 'Função',
-      value: '',
-      options: profiles,
+      value: props.user.user.orion_groups[0]?.id,
+      options: profiles.sort((a, b) => (a.name > b.name) ? 1 : -1),
       optLabel: 'name',
       error: '',
       required: true,
@@ -168,7 +168,7 @@ const EditUser = ({ ...props }) => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <Box id='align' style={{ flex: 1 }}>
-              <a className='headerTitleXl'>{breadcrumbsPath[1].title} </a>
+              <Typography variant='title'>{breadcrumbsPath[1].title} </Typography>
             </Box>
             <Box style={{ display: 'flex' }}>
               <PrimaryBtn

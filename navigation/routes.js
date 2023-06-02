@@ -12,6 +12,7 @@ const routes = {
       stocks: '/internal/stocks',
       stock: '/internal/stock/',
       editStock: '/internal/edit-stock/',
+      newStock: '/internal/new-stock',
       similarProjects: '/internal/projects-similar',
       projects: '/internal/projects',
       project: '/internal/project/',

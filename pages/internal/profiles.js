@@ -10,16 +10,16 @@ import * as permissionsActionsRedux from '../../store/actions/profile';
 const Profiles = () => {
   const [loaded, setLoaded] = useState(false);
   const [permissions, setPermissions] = useState(false);
-  const [resources, setResources] = useState();
+  // const [resources, setResources] = useState();
   const dispatch = useDispatch();
   const getPermissions = (data) => dispatch(permissionsActionsRedux.profiles(data));
-  const getResources = (data) => dispatch(permissionsActionsRedux.resources(data));
+  // const getResources = (data) => dispatch(permissionsActionsRedux.resources(data));
 
   useEffect(() => {
     const getData = async () => {
       const { data: permissionsData } = await getPermissions(); //  All permissions groups
 
-      await getResources().then((res) => setResources(res.data));
+      // await getResources().then((res) => setResources(res.data));
 
       setPermissions(permissionsData.results.map((perm) => {
         return { ...perm, Nome: perm.name };
@@ -55,7 +55,7 @@ const Profiles = () => {
       breadcrumbsPath,
       permissions,
       headCells,
-      resources
+      // resources
     };
 
     return <DashboardScreen {...props} />;

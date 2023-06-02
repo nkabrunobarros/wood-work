@@ -105,20 +105,20 @@ const Profile = ({ ...props }) => {
                   </Grid> */}
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Primeiro Nome</Typography>
-                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.givenName?.value}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.first_name}</Typography>
                 </Grid>
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Último Nome</Typography>
-                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.familyName?.value}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.last_name}</Typography>
                 </Grid>
 
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Email</Typography>
-                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.email?.value}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.email}</Typography>
                 </Grid>
                 <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
-                  <Typography item variant="subtitle2"color='lightTextSm.main'>Função</Typography>
-                  <Typography item variant="subtitle2"color='lightTextSm.black' >{}</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.main'>Perfil</Typography>
+                  <Typography item variant="subtitle2"color='lightTextSm.black' >{user.user.orion_groups[0]?.name}</Typography>
                 </Grid>
               </Grid>
             </Grid>

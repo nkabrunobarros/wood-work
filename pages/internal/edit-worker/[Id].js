@@ -43,7 +43,7 @@ const EditWorker = ({ ...pageProps }) => {
         href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${reduxState.workers.displayedWorker.givenName.value + ' ' + reduxState.workers.displayedWorker.familyName.value}`,
+        title: `${reduxState.workers.displayedWorker.user.first_name + ' ' + reduxState.workers.displayedWorker.user.last_name}`,
         href: `${routes.private.internal.worker}${reduxState.workers.displayedWorker.id}`,
       },
       {
@@ -58,11 +58,10 @@ const EditWorker = ({ ...pageProps }) => {
       pageProps,
       countries,
       organizations: reduxState.organizations.data,
-      profiles: reduxState.profiles.data,
-
+      profiles: [...reduxState.profiles.data]?.sort((a, b) => (a.name > b.name) ? 1 : -1),
     };
 
-    return loaded && <EditWorkerScreen {...props} />;
+    return <EditWorkerScreen {...props} />;
   }
 
   return <Loader center={true} />;

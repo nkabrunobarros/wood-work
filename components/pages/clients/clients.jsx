@@ -179,7 +179,7 @@ const Clients = ({ ...props }) => {
               <Box>
                 <PrimaryBtn
                   text='Adicionar'
-                  hidden={!CanDo('add_owner')}
+                  hidden={!CanDo('create_client')}
                   onClick={() => Router.push(`${newRoute}`)}
                 />
               </Box>

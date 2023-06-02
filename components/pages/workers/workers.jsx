@@ -47,10 +47,8 @@ const Workers = ({ ...props }) => {
   const [filters, setFilters] = useState({
     Nome: '',
     Email: '',
-    Profile: ''
+    ProfileId: ''
   });
-
-  console.log(filters);
 
   async function onDelete (props) {
     const loading = toast.loading('');
@@ -80,7 +78,7 @@ const Workers = ({ ...props }) => {
     setFilters({
       Nome: '',
       Email: '',
-      Profile: ''
+      ProfileId: ''
     });
   }
 
@@ -132,7 +130,7 @@ const Workers = ({ ...props }) => {
               <MyInput label="Email" onChange={(e) => setFilters({ ...filters, Email: e.target.value })} value={filters.Email} />
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
-              <MySelect label='Função' options={profiles} optionLabel={'name'} onChange={(e) => setFilters({ ...filters, Profile: e.target.value }) }/>
+              <MySelect value={filters.ProfileId} label='Perfil' options={profiles} optionLabel={'name'} onChange={(e) => setFilters({ ...filters, ProfileId: e.target.value }) }/>
             </Grid>
             <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
               <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
@@ -141,15 +139,15 @@ const Workers = ({ ...props }) => {
         </Content>
 
         <Content>
-          <div
+          <Box
             id='pad'
             className='flex'
             style={{ display: 'flex', alignItems: 'center' }}
           >
-            <div>
-              <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-            </div>
-            <div
+            <Box>
+              <Typography variant='title'>{breadcrumbsPath[0].title} </Typography>
+            </Box>
+            <Box
               style={{
                 marginLeft: 'auto',
                 display: 'flex',
@@ -159,15 +157,15 @@ const Workers = ({ ...props }) => {
                 fontSize: 'small',
               }}
             >
-              <div>
+              <Box>
                 <PrimaryBtn
-                  hidden={!CanDo('add_worker')}
+                  hidden={!CanDo('create_worker')}
                   text='Adicionar'
                   onClick={() => Router.push(`${newRoute}`)}
                 />
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
           <AdvancedTable
             rows={workers}
             headCells={headCellsWorkers}

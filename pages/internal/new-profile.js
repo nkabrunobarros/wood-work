@@ -59,6 +59,9 @@ const NewProfile = ({ pageProps }) => {
       },
     ];
 
+    console.log(filteredPermissions);
+    filteredPermissions.Conta.see = resources.find(ele => ele.codename === 'see_account').id;
+
     const props = { breadcrumbsPath, pageProps, resources, permissionsMap: filteredPermissions };
 
     return <NewProfileScreen {...props} />;

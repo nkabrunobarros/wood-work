@@ -56,7 +56,7 @@ const Workers = () => {
         id: 'Profile',
         numeric: false,
         disablePadding: true,
-        label: 'Função',
+        label: 'Perfil',
         show: true
       },
       {
@@ -80,15 +80,17 @@ const Workers = () => {
       workers: reduxState.workers?.data.map((worker) => {
         const worker2 = { ...worker };
 
-        worker2.Nome = worker.givenName?.value + ' ' + worker.familyName?.value;
-        worker2.NomeDropdown = worker.givenName?.value + ' ' + worker.familyName?.value + ' - ' + worker.email?.value;
-        worker2.Email = worker.email?.value;
-        worker2.Perfil = worker.functionPerformed?.value;
+        worker2.Nome = worker.user.first_name + ' ' + worker.user.last_name;
+        worker2.NomeDropdown = worker.user.first_name + ' ' + worker.user.last_name + ' - ' + worker.user.email;
+        worker2.Email = worker.user.email;
+        worker2.Perfil = worker.user.orion_groups[0]?.name;
+        worker2.Profile = worker.user.orion_groups[0]?.name;
+        worker2.ProfileId = worker.user.orion_groups[0]?.id;
 
         return worker2;
       }),
       headCellsWorkers,
-      profiles: reduxState.profiles.data,
+      profiles: [...reduxState.profiles.data]?.sort((a, b) => (a.name > b.name) ? 1 : -1),
 
     };
 

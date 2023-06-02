@@ -8,21 +8,21 @@
   flex-direction: column;
 }
 .sidePanel {
-  background-image: url('../public/Log_In.jpg');
+  background-image: url('../public/Log_In2.webp');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 .sidePanelForgot {
   /* background-image: url('../public/Recuperar_Password.jpg'); */
-  background-image: url('../public/Log_In.jpg');
+  background-image: url('../public/Log_In2.webp');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 .logoImg {
   background-position: center;
-  background-image: url('../public/logo_bw_ww40_inv.png');
+  background-image: url('../public/logo_bw_ww40_inv.webp');
   background-repeat: no-repeat;
   background-size: auto;
   margin:0px;

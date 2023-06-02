@@ -47,7 +47,7 @@ const NewOrder = () => {
       breadcrumbsPath,
       countries: [],
       organizations: reduxState.organizations.data,
-      profiles: reduxState.profiles.data,
+      profiles: [...reduxState.profiles.data]?.sort((a, b) => (a.name > b.name) ? 1 : -1),
     };
 
     return <NewWorkerScreen {...props} />;

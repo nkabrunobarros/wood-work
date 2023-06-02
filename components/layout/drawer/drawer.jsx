@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
 //  Nodes
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React from 'react';
 import IsInternal from '../../utils/IsInternal';
 
 //  Material UI
 import {
   Box,
-  Collapse,
   Divider,
-  IconButton, MenuItem, SwipeableDrawer
+  IconButton,
+  MenuItem, SwipeableDrawer
 } from '@mui/material';
 
 //  Services
 import { navLinks } from '../../utils/navLinks';
 
 //  Icons
-import { ChevronDown, ChevronUp, LogOut, Moon, Settings, User, X } from 'lucide-react';
+import { LogOut, User, X } from 'lucide-react';
 
 //  Navigation
 import routes from '../../../navigation/routes';
@@ -38,18 +38,16 @@ import CanDo from '../../utils/CanDo';
 const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const loggedUser = state.auth.me;
   const userPermissions = state.auth.userPermissions;
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [ecraOpen, setEcraOpen] = useState(false);
 
   async function destroySessionCookie () {
     destroyCookie(null, 'auth_token');
   }
 
-  function onLogout () {
-    destroySessionCookie().then(() => {
+  async function onLogout () {
+    await destroySessionCookie().then(() => {
       toggleDrawer();
       logout();
-      Router.push(userPermissions.type === 'client' ? '/' : '/signin');
+      Router.push(userPermissions?.type === 'client' ? '/' : '/signin');
     });
   }
 
@@ -88,20 +86,13 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100%',
-          maxWidth: '250px'
+          maxWidth: '250px',
+          minWidth: '250px'
         }}
       >
         {/* Sidebar Items List here */}
-        <Box
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <IconButton
-            style={{ color: 'var(--white)', position: 'absolute', right: '0%' }}
-            onClick={() => toggleDrawer()}>
+        <Box style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }} >
+          <IconButton style={{ color: 'white', position: 'absolute', right: '0%' }} onClick={() => toggleDrawer()}>
             <X />
           </IconButton>
           <Box style={{ margin: '1rem' }}>
@@ -122,79 +113,31 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
           {builtLinks
             .map((item, i) => (
               <Box key={i}>
-                <MenuItem id={item.id} sx={{ padding: '0', width: '100%' }}
-                  onClick={() => { toggleDrawer(); Router.push(item.url); }}>
-                  <ActiveLink
-                    href={item.url}
-                    // handleDrawerToggle={toggleDrawer}
-                    page={item.title}
-                  >
-                    {item.icon}
-                    <div style={{ paddingRight: '.5rem' }} />
-                    {item.title}
-                  </ActiveLink>
-                </MenuItem>
-                {builtLinks.length !== i + 1 && item.underline && (
-                  <Divider color='white' width='100%' />
-                )}
+                <ActiveLink
+                  toggleDrawer={toggleDrawer}
+                  item={item}
+                />
+                {builtLinks.length !== i + 1 && item.underline && <Divider
+                  color='white'
+                  width='100%'
+                  style={{ marginTop: '.5rem', marginBottom: '.5rem' }}
+                />}
               </Box>
             ))}
-          {/* Definições */}
-          <MenuItem sx={{ padding: '0', display: 'none' }}>
-            <Box
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '16px',
-                borderLeft: '5px solid transparent',
-              }}
-              className={styles.navItemContainer}
-              onClick={() => setSettingsOpen(!settingsOpen)}>
-              <Box id='align'>
-                <Settings strokeWidth='1' size={20} color='white' />
-                <span style={{ paddingLeft: '.5rem', cursor: 'pointer' }}>
-                  Definições
-                </span>
-
-              </Box>
-              {settingsOpen ? <ChevronUp strokeWidth='1' size={20} /> : <ChevronDown strokeWidth='1' size={20} />}
-
-            </Box>
-          </MenuItem>
-          <Collapse in={settingsOpen} sx={{ backgroundColor: localStorage.getItem('theme') === 'light' ? 'primary.light' : '#121212' }}>
-            <MenuItem sx={{ padding: '0' }}>
-              <a className={styles.navItemContainer} onClick={() => setEcraOpen(!ecraOpen)}>
-                <Box id='align'>
-                  <Moon color={'white'} size={16} />
-                  <span style={{ paddingLeft: '.5rem', cursor: 'pointer' }}>
-                    Ecrã e acessibilidade
-                  </span>
-                  {ecraOpen ? <ChevronUp strokeWidth='1' size={20} /> : <ChevronDown strokeWidth='1' size={20} />}
-                </Box>
-              </a>
-            </MenuItem>
-          </Collapse>
           <Box style={{ position: 'relative', float: 'bottom', width: '100%' }}>
             <Divider
               color='white'
               width='100%'
               style={{ marginTop: '1rem', marginBottom: '1rem' }}
             />
-            {CanDo('see_account') && <MenuItem sx={{ padding: '0' }} onClick={() => {
-              toggleDrawer();
-              Router.push(IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`);
-            }} >
-              <ActiveLink
-                href={IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`}
-                page={'Conta'}
-              >
-                <User strokeWidth='1' size={20} color='white' />{' '}
-                <div style={{ paddingRight: '.5rem' }} />
-                Conta
-              </ActiveLink>
-            </MenuItem>}
+            {CanDo('see_account') && <ActiveLink
+              toggleDrawer={toggleDrawer}
+              item={{
+                icon: <User strokeWidth='1' size={20} color='white' />,
+                title: 'Conta',
+                url: IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`
+              } }
+            />}
             <MenuItem sx={{ padding: '0' }} onClick={() => {
               onLogout();
             }}>

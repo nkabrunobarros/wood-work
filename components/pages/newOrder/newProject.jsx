@@ -33,13 +33,13 @@ import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import routes from '../../../navigation/routes';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
 import formatString from '../../utils/FormatString';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
-import Footer from '../../layout/footer/footer';
 
 const NewOrder = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients } = props;
@@ -375,7 +375,7 @@ const NewOrder = ({ ...props }) => {
 
     try {
       // fixed.map(async (ele) => await newFurniture(ele));
-      await newFurniture(fixed)
+      await newFurniture(fixed);
     } catch (err) {
       console.log(err);
     }

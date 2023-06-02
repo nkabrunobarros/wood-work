@@ -63,7 +63,7 @@ const ProfileScreen = (props) => {
           <ButtonGroup>
             <PrimaryBtn
               text='Editar'
-              hidden={!CanDo('change_profile')}
+              hidden={!CanDo('update_profile')}
               icon={
                 <Edit
                   strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}

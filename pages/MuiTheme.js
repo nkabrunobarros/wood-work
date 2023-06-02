@@ -10,6 +10,7 @@ function MuiTheme ({ ...props }) {
     md: 14,
     xl: 18,
     xxl: 22,
+    titlexs: 24,
     title: 28,
     titlexxl: 32,
   };
@@ -60,6 +61,7 @@ function MuiTheme ({ ...props }) {
       xl: { fontSize: sizes.xl },
       xxl: { fontSize: sizes.xxl },
       title: { fontSize: sizes.title, fontWeight: 'bold' },
+      titlexs: { fontSize: sizes.titlexs, fontWeight: 'bold' },
       titlexxl: { fontSize: sizes.titlexxl, fontWeight: 'bold' },
     },
     TextareaAutosize: {

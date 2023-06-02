@@ -17,9 +17,11 @@ import companyLogo from '../../../public/Logotipo_Vetorizado.png';
 import styles from '../../../styles/SignIn.module.css';
 import Notification from '../../dialogs/Notification';
 // import FormGenerator from '../../formGenerator';
+import { X } from 'lucide-react';
 import Router from 'next/router';
 import { useDispatch } from 'react-redux';
 import routes from '../../../navigation/routes';
+import * as authActionsRedux from '../../../store/actions/auth';
 import * as emailActionsRedux from '../../../store/actions/email';
 import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
@@ -30,10 +32,12 @@ const ResetPassword = (props) => {
   const [submiting, setSubmiting] = useState(false);
   const [visible, setVisible] = useState(false);
   const [windowWidth, setWindowHeight] = useState();
-  const [activatingUser, setActivatingUser] = useState(!!props.params.activationToken);
+  const activatingUser = !!props.params.activationToken;
+  const [errorActivatingUser, setErrorActivatingUser] = useState(false);
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
   const updatePassword = (data) => dispatch(emailActionsRedux.updatePassword(data));
+  const activateAccount = (data) => dispatch(authActionsRedux.activateUser(data));
 
   if (typeof window !== 'undefined') {
     useEffect(() => {
@@ -45,19 +49,26 @@ const ResetPassword = (props) => {
     setWindowHeight(window.innerWidth);
   };
 
-  function ActivateUser () {
-    setTimeout(() => {
-      setSuccess(true);
-    }, '1000');
+  async function ActivateUser () {
+    console.log('aqui');
 
-    setTimeout(() => {
-      setActivatingUser(false);
-    }, '3000');
+    await activateAccount(props.params.activationToken).then((res) => {
+      if (res.data === 'Token has no effect.') {
+        setTimeout(() => {
+          setErrorActivatingUser(true);
+        }, '1000');
+      } else {
+        setSuccess(true);
+        Router.push(routes.public.signInInternal);
+      }
+    }).catch((err) => console.log(err));
   }
 
   useEffect(() => {
     props.params.activationToken && ActivateUser();
+  }, [activatingUser]);
 
+  useEffect(() => {
     return () => window.removeEventListener('resize', listenToResize);
   }, []);
 
@@ -200,10 +211,10 @@ const ResetPassword = (props) => {
           ? <Box display={'flex'} justifyContent='center' alignItems='center' sx={{ height: '100%' }}>
             <Box sx={{ width: '100%' }}>
               <Box sx={{ width: '100%', textAlign: 'center' }}>
-                <Typography variant='title'>A ativar a conta!</Typography>
+                <Typography variant='title'>{!errorActivatingUser ? 'A ativar a conta!' : 'Link inválido.' }</Typography>
               </Box>
               <Box sx={{ width: '100%', textAlign: 'center' }}>
-                {success ? <Check sx={{ fontSize: '120px' }} color='success' /> : <CircularProgress size={120} color='primary'/>}
+                {success ? <Check sx={{ fontSize: '120px' }} color='success' /> : !errorActivatingUser ? <CircularProgress size={120} color='primary'/> : <Box sx={{ color: 'red' }}><X size={120}/> </Box>}
 
               </Box>
 

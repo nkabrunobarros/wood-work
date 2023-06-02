@@ -89,17 +89,18 @@ const Stock = () => {
         label: 'Armazém',
         show: true,
       },
-      // {
-      //   id: 'actions',
-      //   numeric: true,
-      //   label: 'Ações',
-      // },
+      {
+        id: 'actions',
+        numeric: true,
+        label: 'Ações',
+        show: true,
+      },
     ];
 
     //  Breadcrumbs path feed
     const breadcrumbsPath = [
       {
-        title: 'Stock',
+        title: 'Stocks',
         href: `${routes.private.internal.stocks}`,
       },
     ];

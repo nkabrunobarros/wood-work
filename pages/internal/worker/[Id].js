@@ -37,7 +37,7 @@ const User = ({ ...pageProps }) => {
         href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${reduxState.workers.displayedWorker.givenName.value + ' ' + reduxState.workers.displayedWorker.familyName.value}`,
+        title: `${reduxState.workers.displayedWorker.user.first_name + ' ' + reduxState.workers.displayedWorker.user.last_name}`,
         href: `${routes.private.internal.worker}`,
       },
     ];
