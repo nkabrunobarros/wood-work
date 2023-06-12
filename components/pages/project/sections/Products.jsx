@@ -85,7 +85,7 @@ const Products2 = (props) => {
       return found;
     });
 
-    return found[0] && order.status.value !== 'drawing' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
+    return [...found].find(ele => ele) && order.status.value !== 'drawing' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
   }
 
   return <>

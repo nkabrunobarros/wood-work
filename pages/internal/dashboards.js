@@ -12,7 +12,7 @@ const DashBoards = ({ ...pageProps }) => {
   const [testperms, setTestperms] = useState();
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
-  const getPermissions = (data) => dispatch(permissionsActionsRedux.permissions(data));
+  const getPermissions = (data) => dispatch(permissionsActionsRedux.profiles(data));
   const getResources = (data) => dispatch(permissionsActionsRedux.resources(data));
 
   function addListPermissions (profiles, resources) {

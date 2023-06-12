@@ -7,6 +7,7 @@ import FloatingButton from '../../components/floatingButton/FloatingButton';
 import PageNotFound from '../../components/pages/404';
 import AuthData from '../../lib/AuthData';
 import routes from '../../navigation/routes';
+// import '../../pages/i18n';
 import CanDo from '../utils/CanDo';
 
 const noLayoutScreens = [

@@ -160,9 +160,11 @@ const NewProfileScreen = (props) => {
                 {index === 0
                   ? <Typography pl={2} variant='subtitle2'>{perm}</Typography>
                   : <>
-                    {resources.find(ele => ele.codename === `${cell.key}_${resources.find(ele => ele.name === perm).codename.split('_')[1]}`) && <Checkbox
-                      checked={!!permission.listPermissions[perm][cell.key]}
-                      onChange={(e) => handleCheckboxClick({ newValue: e.target.checked, perm, type: cell.key })} />}
+                    {resources.find(ele => ele.codename === `${cell.key}_${resources.find(ele => ele.name === perm).codename.split('_')[1]}`) &&
+                      <Checkbox
+                        checked={!!permission.listPermissions[perm][cell.key]}
+                        onChange={(e) => handleCheckboxClick({ newValue: e.target.checked, perm, type: cell.key })} />
+                    }
                   </>
                 }
               </Grid>;

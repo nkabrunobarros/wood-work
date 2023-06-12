@@ -23,7 +23,7 @@ const PermissionsTab = (props) => {
   const [value, setValue] = useState(0);
   const [newPermName, setNewPermName] = useState({ value: '', error: '' });
   const [newResourceName, setNewResourceName] = useState({ value: '', error: '' });
-  const newPermission = (data) => dispatch(permissionActions.newPermission(data));
+  const newPermission = (data) => dispatch(permissionActions.newProfile(data));
   const newResource = (data) => dispatch(permissionActions.newResource(data));
   const resources = JSON.parse(JSON.stringify(props.resources));
 

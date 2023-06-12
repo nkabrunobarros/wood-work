@@ -49,7 +49,6 @@ const ProjectsScreen = (props) => {
   } = props;
 
   const router = useRouter();
-  //  States
   const [number, setNumber] = useState(router.query.order || '');
   const [client, setClient] = useState('');
   const [telephone, setTelephone] = useState('');

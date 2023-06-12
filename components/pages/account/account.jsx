@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import { Map, User } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
 //  Proptypes
@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import Navbar from '../../layout/navbar/navbar';
 //  Styles
+import { QRCodeCanvas } from 'qrcode.react';
 import styles from '../../../styles/NewOrder.module.css';
 import Footer from '../../layout/footer/footer';
 
@@ -28,15 +29,6 @@ const Account = ({ ...props }) => {
     p: 0.5
   };
 
-  // const tableLastCell = {
-  //   container: true,
-  //   sx: { borderRight: '1px solid ', borderColor: 'divider' },
-  //   md: 5,
-  //   sm: 5,
-  //   xs: 5,
-  //   p: 0.5
-  // };
-
   const tablemiddleCell = {
     container: true,
     md: 8,
@@ -46,8 +38,49 @@ const Account = ({ ...props }) => {
     sx: { borderRight: '1px solid ', borderColor: 'divider' }
   };
 
+  const downloadQRCode = (e) => {
+    e.preventDefault();
+    setUrl('');
+  };
+
+  const qrCodeEncoder = (e) => {
+    setUrl(e.target.value);
+  };
+
+  const [url, setUrl] = useState('');
+
+  const qrcode = (
+    <QRCodeCanvas
+      id="qrCode"
+      value={url}
+      size={300}
+      bgColor={'blue'}
+      level={'H'}
+    />
+  );
+
   return (
     <>
+      <Box display='none'>
+        <div className="qrcode__container">
+          <div>{qrcode}</div>
+          <div className="input__group">
+            <form onSubmit={downloadQRCode}>
+              <label>Enter URL</label>
+              <textarea
+                type="text"
+                value={url}
+                onChange={qrCodeEncoder}
+                placeholder="https://hackernoon.com"
+              />
+              <button type="submit" disabled={!url}>
+            Download QR code
+              </button>
+            </form>
+          </div>
+        </div>
+      </Box>
+
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -65,7 +98,6 @@ const Account = ({ ...props }) => {
                     size={pageProps?.globalVars?.iconSize}
                   />
                   <Box pl={1}>Dados Gerais</Box>
-
                   </Typography>
                 </Grid>
                 <Grid container item>

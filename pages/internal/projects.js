@@ -27,10 +27,10 @@ const Projects = ({ ...pageProps }) => {
     let errors = false;
 
     try {
+      await getBudgets();
       await getProjects();
       await getExpeditions();
       await getAssemblys();
-      await getBudgets();
       await getClients();
     } catch (err) { errors = true; }
 

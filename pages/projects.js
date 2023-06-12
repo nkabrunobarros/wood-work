@@ -1,6 +1,5 @@
 import { Layers, LayoutTemplate, Network, PackageCheck, PackagePlus, Truck } from 'lucide-react';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/loader/loader';
@@ -21,15 +20,6 @@ const Orders = ({ ...pageProps }) => {
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
   const getAssemblys = (data) => dispatch(assemblysActionsRedux.assemblys(data));
-
-  const categories = [
-    { label: 'Cozinha', id: 'MC_' },
-    { label: 'Quarto', id: 'MQ_' },
-    { label: 'Banheiro', id: 'MB_' },
-    { label: 'Garagem', id: 'MG_' },
-    { label: 'Varanda', id: 'MV_' },
-    { label: 'Sala de estar', id: 'MS_' }
-  ];
 
   async function fetchData () {
     let errors = false;
@@ -269,7 +259,6 @@ const Orders = ({ ...pageProps }) => {
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
         PrimeiroContacto: bud?.dateRequest?.value,
         Entregue: bud?.dateDelivery?.value,
-        Categoria: categories.find(c => c.id === bud.category?.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
         Numero: bud?.num?.value,
         EntregaProj: bud?.dateDeliveryProject?.value,
@@ -327,8 +316,6 @@ const Orders = ({ ...pageProps }) => {
 };
 
 Orders.propTypes = {
-  categories: PropTypes.array.isRequired,
-  counts: PropTypes.object.isRequired,
 };
 
 export default Orders;

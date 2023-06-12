@@ -25,7 +25,7 @@ const PagesAccessTab = (props) => {
 
   const [value, setValue] = useState(0);
   const [newPermName, setNewPermName] = useState({ value: '', error: '' });
-  const createPermission = (data) => dispatch(permissionActions.createPermission(data));
+  const createPermission = (data) => dispatch(permissionActions.newProfile(data));
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -4,8 +4,9 @@ import React from 'react';
 import styles from '../../../styles/components/navbar.module.css';
 
 import { MenuItem } from '@mui/material';
-import routes from '../../../navigation/routes';
 import Link from 'next/link';
+// import { useTranslation } from 'react-i18next';
+import routes from '../../../navigation/routes';
 export const pageSections = {
   projects: 'Projetos',
   project: 'Projetos',
@@ -48,6 +49,7 @@ export const pageSections = {
 
 function ActiveLink ({ toggleDrawer, item }) {
   const path = useRouter();
+  // const { t, i18n } = useTranslation();
 
   const currentSection = Object.entries(pageSections).find(([page]) => {
     const regex = new RegExp(`^${routes.private.internal[page]}(\\[.+\\])?$`);
@@ -75,6 +77,7 @@ function ActiveLink ({ toggleDrawer, item }) {
         {item.icon}
         <div style={{ paddingRight: '.5rem' }} />
         {item.title}
+        {/* {t(item.t)} */}
       </MenuItem>
     </Link>
 

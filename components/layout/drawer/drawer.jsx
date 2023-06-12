@@ -35,9 +35,12 @@ import Router from 'next/router';
 import { destroyCookie } from 'nookies';
 import CanDo from '../../utils/CanDo';
 
+// import { useTranslation } from 'react-i18next';
+
 const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   const loggedUser = state.auth.me;
   const userPermissions = state.auth.userPermissions;
+  // const { t, i18n } = useTranslation();
 
   async function destroySessionCookie () {
     destroyCookie(null, 'auth_token');
@@ -109,7 +112,7 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
             style={{ marginTop: '1rem', marginBottom: '1rem' }}
           />
         </Box>
-        <Box className='scrollableZone'>
+        <Box className='scrollableZone' >
           {builtLinks
             .map((item, i) => (
               <Box key={i}>
@@ -124,31 +127,32 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
                 />}
               </Box>
             ))}
-          <Box style={{ position: 'relative', float: 'bottom', width: '100%' }}>
-            <Divider
-              color='white'
-              width='100%'
-              style={{ marginTop: '1rem', marginBottom: '1rem' }}
-            />
-            {CanDo('see_account') && <ActiveLink
-              toggleDrawer={toggleDrawer}
-              item={{
-                icon: <User strokeWidth='1' size={20} color='white' />,
-                title: 'Conta',
-                url: IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`
-              } }
-            />}
-            <MenuItem sx={{ padding: '0' }} onClick={() => {
-              onLogout();
-            }}>
-              <a
-                className={styles.navItemContainer}
-              >
-                <LogOut strokeWidth='1' size={20} />
-                <div style={{ paddingRight: '.5rem' }} /> Sair
-              </a>
-            </MenuItem>
-          </Box>
+        </Box>
+        <Box style={{ position: 'relative', bottom: 0, float: 'bottom', width: '100%' }}>
+          <Divider
+            color='white'
+            width='100%'
+            style={{ marginTop: '1rem', marginBottom: '1rem' }}
+          />
+          {CanDo('see_account') && <ActiveLink
+            toggleDrawer={toggleDrawer}
+            item={{
+              t: 'Account',
+              icon: <User strokeWidth='1' size={20} color='white' />,
+              title: 'Conta',
+              url: IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`
+            } }
+          />}
+          <MenuItem sx={{ padding: '0' }} onClick={() => {
+            onLogout();
+          }}>
+            <a className={styles.navItemContainer} >
+              <LogOut strokeWidth='1' size={20} />
+              <div style={{ paddingRight: '.5rem' }} />
+              {/* {t('Logout')} */}
+              Sair
+            </a>
+          </MenuItem>
         </Box>
       </Box>
     </SwipeableDrawer>

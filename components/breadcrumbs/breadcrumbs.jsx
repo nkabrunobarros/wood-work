@@ -42,6 +42,7 @@ const CustomBreadcrumbs = ({ path }) => {
             // onClick={() => Router.push(crumb.href)}
             href={crumb.href}
             className={styles.breadcrumb}
+            // locale="pt"
           >
             <Typography variant='subtitle1' color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>
           </Link>

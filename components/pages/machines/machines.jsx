@@ -19,9 +19,10 @@ import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const MachinesScreen = (props) => {
-  const { breadcrumbsPath, machines, headCells, machinesTypes } = props;
+  const { breadcrumbsPath, headCells, machinesTypes } = props;
   const dispatch = useDispatch();
   const deleteMachine = (data) => dispatch(machinesActionsRedux.deleteMachine(data));
+  const [machines, setMachines] = useState(props.machines);
 
   const [filters, setFilters] = useState({
     Nome: '',
@@ -35,6 +36,17 @@ const MachinesScreen = (props) => {
     await deleteMachine(props).then(() => {
       ToastSet(loading, 'Máquina Apagada.', 'success');
       Router.push(routes.private.internal.machines);
+
+      const old = [...machines];
+      const index = old.findIndex((item) => item.id === props);
+
+      if (index !== -1) {
+        const updatedItems = [...old];
+
+        updatedItems.splice(index, 1);
+        setMachines(updatedItems);
+        ToastSet(loading, 'Projeto apagado.', 'success');
+      }
     }).catch((err) => {
       ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
       console.log(err);

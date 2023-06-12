@@ -19,7 +19,7 @@ const Machines = () => {
       const { data: machinesData } = await getMachines();
 
       const mappedMachines = machinesData.map((mach) => {
-        return { ...mach, Nome: mach.name.value, Tipo: mach.machineType.value, Occupied: !!mach.currentlyOn.value };
+        return { ...mach, Nome: mach.name?.value, Tipo: mach.machineType?.value, Occupied: !!mach.currentlyOn?.value };
       });
 
       const types = mappedMachines.reduce((acc, machine) => {

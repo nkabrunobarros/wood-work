@@ -205,7 +205,7 @@ const AdvancedTable = ({
         <TableRow sx={{ backgroundColor: 'primary.main' }} >
           {state.cellsFilter.map((headCell) => {
             return headCell.show && <TableCell
-              key={headCell.id}
+              key={headCell.label}
               colSpan={headCell.span}
               align={headCell.numeric ? 'right' : 'left'}
               padding={headCell.disablePadding ? 'none' : 'normal'}

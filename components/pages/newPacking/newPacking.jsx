@@ -1,7 +1,8 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable no-constant-condition */
 /* eslint-disable react/prop-types */
 import { Box, Button, ButtonGroup, Grid, Grow, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -9,6 +10,8 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import html2canvas from 'html2canvas';
+import { QRCodeCanvas } from 'qrcode.react';
 import { toast } from 'react-toastify';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
@@ -16,9 +19,11 @@ import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
+import { useSelector } from 'react-redux';
 
 const newPacking = (props) => {
   const { breadcrumbsPath } = props;
+  const reduxState = useSelector((state) => state);
 
   const [parts, setParts] = useState(props.parts || [
     {
@@ -152,17 +157,43 @@ const newPacking = (props) => {
     }
   };
 
+  console.log(props.project);
+
+  useEffect(() => {
+    const client = props.project.client.user
+    const address = props.project.budget.deliveryAddress.value
+    let newUrl = `
+Cliente: ${client.first_name} ${client.last_name}
+Projeto: Teste Embalamento
+Morada: ${address.streetAddress} ${address.postalCode} ${address.addressLocality} ${address.addressRegion} ${reduxState?.countries?.data?.find(ele => ele.cca2 === address.addressCountry).name.common}
+Peso Embalagem: ${ItemsWeight()}
+
+Conteudo:
+`;
+
+    selected.map((item) => {
+      newUrl += `${item.amount.value} ${item.type} ${item.partName.value}
+`;
+    });
+
+    setUrl(newUrl);
+  }, [selected]);
+
   function handlenewPacking () {
     const loading = toast.loading('');
 
-    fetch('http://193.136.195.25/media/mofreitas/clientes/bruno.barros@nka.pt/Completo/briefing/VF%20do%20Cliente/VF__Placard_chambre_damis.pdf')
+    downloadQRCode();
+    setSelected([]);
+    ToastSet(loading, 'Adicionado!', 'success');
+
+    false && fetch('http://193.136.195.25/media/mofreitas/clientes/bruno.barros@nka.pt/Completo/briefing/VF%20do%20Cliente/VF__Placard_chambre_damis.pdf')
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
 
         a.href = url;
-        a.download = 'QrCode.pdf'; // Change this to the desired file name if needed
+        a.download = 'QrCode.png'; // Change this to the desired file name if needed
         document.body.appendChild(a);
 
         setTimeout(() => {
@@ -350,7 +381,36 @@ const newPacking = (props) => {
     </Card>;
   };
 
+  const qrCodeRef = useRef(null);
+  const [url, setUrl] = useState('');
+
+  const qrcode = (
+    <QRCodeCanvas
+      id="qrCode"
+      value={url}
+      size={300}
+      // level={'H'}
+    />
+  );
+
+  const downloadQRCode = (event) => {
+    event?.preventDefault();
+
+    html2canvas(qrCodeRef.current).then((canvas) => {
+      const link = document.createElement('a');
+
+      link.download = 'qrcode.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  };
+
   return <>
+    <Box display='all' sx={{ position: 'absolute', right: '100%' }}>
+      <div className="qrcode__container">
+        <div ref={qrCodeRef} style={{ width: 'fit-content', height: 'fit-content' }}>{qrcode}</div>
+      </div>
+    </Box>
     <Navbar />
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
       <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -370,7 +430,6 @@ const newPacking = (props) => {
       </Grid>
     </Grid>
     <Footer/>
-
   </>;
 };
 

@@ -17,6 +17,7 @@ const PackingList = ({ ...props }) => {
   const hasPermissions = CanDo('add_package');
 
   return <>
+
     <Navbar />
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
       <CustomBreadcrumbs path={breadcrumbsPath} />
