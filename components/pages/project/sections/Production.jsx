@@ -142,23 +142,24 @@ const Production = (props) => {
                           <AccordionDetails sx={{ p: 0 }}>
                             {/* Linhas de moveis/furniture */}
                             <Grid container md={12} sm={12} xs={12}>
-                              <Grid container md={12} sm={12} xs={12} color='white' sx={{ background: theme?.palette.primary.main, p: 1 }}>
-                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Móvel</Typography></Grid>
-                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Quantidade Pedida</Typography></Grid>
-                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>Estado</Typography></Grid>
-                                <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'></Typography></Grid>
+
+                              <Grid container md={12} sm={12} xs={12} color='white' sx={{ backgroundColor: '#F9F9F9', bp: 1, borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }}>
+                                <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
+                                <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade Pedida</Typography> </Box></Grid>
+                                <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Estado</Typography> </Box></Grid>
+                                <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Detalhes</Typography> </Box></Grid>
                               </Grid>
                               {subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').map((item, itemIndex) => {
                                 return <Grow key={itemIndex}in={true}>
                                   <Grid container md={12} sm={12} xs={12} sx={{ p: 1 }}>
                                     <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.name?.value}</Typography></Grid>
-                                    <Grid container md={3} sm={3} xs={3}><Typography varitant='subtitle1'>{item.amount?.value}</Typography></Grid>
-                                    <Grid container md={3} sm={3} xs={3}>
+                                    <Grid container md={3} sm={3} xs={3} sx={{ justifyContent: 'center', display: 'flex' }}><Typography varitant='subtitle1'>{item.amount?.value}</Typography></Grid>
+                                    <Grid container md={3} sm={3} xs={3} sx={{ justifyContent: 'center', display: 'flex' }}>
                                       {!item.produced?.value ? <Box><Typography variant='sm' className='warningBalloon'>Em produção</Typography></Box> : <Box><Typography variant='sm' className='successBalloon'>Terminado</Typography> </Box>}
                                     </Grid>
-                                    <Grid container md={3} sm={3} xs={3} justifyContent={'end'}>
+                                    <Grid container md={3} sm={3} xs={3} justifyContent={'center'}>
                                       <Typography varitant='subtitle1'>
-                                        <PrimaryBtn text='Ver detalhes' icon={<Eye />} onClick={() => {
+                                        <PrimaryBtn text='Ver' icon={<Eye />} onClick={() => {
                                           setChosenFurniture(item);
                                           setFurnitureProject(props.order);
                                         }} />

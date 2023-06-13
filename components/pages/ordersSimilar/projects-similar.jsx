@@ -11,7 +11,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Chip,
   IconButton,
   Tooltip, Typography
 } from '@mui/material';
@@ -39,13 +38,23 @@ const ProjectsSimilarScreen = ({ ...props }) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const cellProps = {
+  const cellPropsLabel = {
     sm: 12 / 10,
     md: 12 / 10,
     xs: 12 / 10,
     container: true,
     alignItems: 'center',
     p: 2,
+  };
+
+  const cellProps = {
+    sm: 12 / 10,
+    md: 12 / 10,
+    xs: 12 / 10,
+    container: true,
+    alignItems: 'center',
+    pl: 2,
+    pr: 2,
   };
 
   const toggleValueInArray = (value, array) => {
@@ -159,83 +168,82 @@ const ProjectsSimilarScreen = ({ ...props }) => {
               </Box>
             </Box>
           </Box>
-          <Grid container md={12} sm={12} xs={12}>
-            {false && Object.keys(appliedFilters || {}).map((key) => {
-              return appliedFilters[key] !== '' && <Chip key={key} label={key} onDelete={() => setAppliedFilters({ ...appliedFilters, [key]: '' })}/>;
-            })}
-            <Grid container md={12} sm={12} xs={12} bgcolor={'primary.main'} color='white'>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Cliente</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Nome</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Num</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Previsto</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Realizado</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Qtd. Móveis</Typography></Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Início</Typography> </Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Fim </Typography> </Grid>
-              <Grid {...cellProps}><Typography variant='subtitle2'>Desvio</Typography> </Grid>
-              <Grid {...cellProps}justifyContent={'end'}><Typography variant='subtitle2'>Móveis</Typography></Grid>
-            </Grid>
-            {filteredArray
-              .map((proj, index) => {
-                return <>
-                  <Accordion
-                    expanded={expandedGroups.includes(proj.id)}
-                    onChange={() => handlePanelChange(proj.id)}
-                    sx={{ width: '100%' }}>
-                    <AccordionSummary sx={{ padding: 0, height: '20px' }} aria-controls="panel1d-content" id="panel1d-header"
-                      bgcolor={index % 2 !== 0 && 'lightGray.edges'}
-                    >
-                      <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.ClienteLabel}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Nome}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Número}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Previsto}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Realizado}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Quantidade}</Typography></Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.begin.value}</Typography> </Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Fim}</Typography> </Grid>
-                        <Grid {...cellProps}><Typography variant='subtitle2' className={proj.Desvio.includes('-') ? 'errorBalloon' : 'successBalloon'}> {proj.desvio}</Typography></Grid>
-                        <Grid {...cellProps} onClick={() => {}} justifyContent={'end'} sx={{ cursor: 'pointer' }}>
-                          <Tooltip title={expandedGroups.includes(proj.id) ? 'Fechar Móveis' : 'Mostrar Móveis'}>
-                            <IconButton> {expandedGroups.includes(proj.id) ? <ChevronUp /> : <ChevronDown /> } </IconButton>
-                          </Tooltip>
+          <Grid container md={12} sm={12} xs={12} sx={{ padding: 0, overflow: 'scroll', pb: 0 }}>
+            <Grid container md={12} sm={12} xs={12} sx={{ minWidth: '1024px', height: 'fit-content' }}>
+              <Grid container md={12} sm={12} xs={12} bgcolor={'primary.main'} color='white'>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Cliente</Typography></Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Nome</Typography></Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Num</Typography></Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Previsto</Typography></Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Realizado</Typography></Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Qtd. Móveis</Typography></Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Início</Typography> </Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Fim </Typography> </Grid>
+                <Grid {...cellPropsLabel}><Typography variant='subtitle2'>Desvio</Typography> </Grid>
+                <Grid {...cellPropsLabel}justifyContent={'end'}><Typography variant='subtitle2'>Móveis</Typography></Grid>
+              </Grid>
+              {filteredArray
+                .map((proj, index) => {
+                  return <>
+                    <Accordion
+                      expanded={expandedGroups.includes(proj.id)}
+                      onChange={() => handlePanelChange(proj.id)}
+                      sx={{ width: '100%' }}>
+                      <AccordionSummary sx={{ padding: 0 }} aria-controls="panel1d-content" id="panel1d-header"
+                        bgcolor={index % 2 !== 0 && 'lightGray.edges'}
+                      >
+                        <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.ClienteLabel}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Nome}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Número}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Previsto}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Realizado}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Quantidade}</Typography></Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.begin.value}</Typography> </Grid>
+                          <Grid {...cellProps}><Typography variant='subtitle2'> {proj.Fim}</Typography> </Grid>
+                          <Grid {...cellProps}><Typography variant='sm' className={proj.Desvio.includes('-') ? 'errorBalloon' : 'successBalloon'}> {proj.desvio}</Typography></Grid>
+                          <Grid {...cellProps} onClick={() => {}} justifyContent={'end'} sx={{ cursor: 'pointer' }}>
+                            <Tooltip title={expandedGroups.includes(proj.id) ? 'Fechar Móveis' : 'Mostrar Móveis'}>
+                              <IconButton> {expandedGroups.includes(proj.id) ? <ChevronUp /> : <ChevronDown /> } </IconButton>
+                            </Tooltip>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Box sx={{ width: '100%' }}>
-                        {/* <Divider sx={{ marginTop: '1rem', marginBottom: '1rem', borderBottomWidth: 2 }} /> */}
-                      </Box>
-                      <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }} >
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Prod.</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Prod.</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Mont.</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Mont.</Typography> </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Emb.</Typography>  </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Emb.</Typography>  </Box></Grid>
-                        <Grid {...cellProps} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor total</Typography> </Box></Grid>
-                        <Grid {...cellProps}><Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor por móvel</Typography></Grid>
-                      </Grid>
-                      {proj.furnitures?.map((furni, index) => {
-                        return <Grid key={furni.id} container md={12} sm={12} xs={12} bgcolor={index % 2 !== 0 && 'lightGray.edges'}>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.name.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.amount.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.beginProd?.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.endProd?.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.beginAssembly?.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.endAssembly?.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.beginPackaging?.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.endPackaging?.value}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.price?.value || '0€'}</Typography></Grid>
-                          <Grid {...cellProps}><Typography variant='sm'>{furni.price?.value ? Number(parseInt(furni?.price?.value) / furni?.amount?.value).toFixed(2) + '€' : '0€'} </Typography></Grid>
-                        </Grid>;
-                      })}
-                    </AccordionDetails>
-                  </Accordion>
-                </>;
-              })}
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box sx={{ width: '100%' }}>
+                          {/* <Divider sx={{ marginTop: '1rem', marginBottom: '1rem', borderBottomWidth: 2 }} /> */}
+                        </Box>
+                        <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }} >
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Prod.</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Prod.</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Mont.</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Mont.</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Início Emb.</Typography>  </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Fim Emb.</Typography>  </Box></Grid>
+                          <Grid {...cellPropsLabel} ><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor total</Typography> </Box></Grid>
+                          <Grid {...cellPropsLabel}><Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Valor por móvel</Typography></Grid>
+                        </Grid>
+                        {proj.furnitures?.map((furni, index) => {
+                          return <Grid key={furni.id} container md={12} sm={12} xs={12} bgcolor={index % 2 !== 0 && 'lightGray.edges'}>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.name.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.amount.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginProd?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endProd?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginAssembly?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endAssembly?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginPackaging?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endPackaging?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.price?.value || '0€'}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.price?.value ? Number(parseInt(furni?.price?.value) / furni?.amount?.value).toFixed(2) + '€' : '0€'} </Typography></Grid>
+                          </Grid>;
+                        })}
+                      </AccordionDetails>
+                    </Accordion>
+                  </>;
+                })}
+            </Grid>
           </Grid>
         </Content>
       </Grid>

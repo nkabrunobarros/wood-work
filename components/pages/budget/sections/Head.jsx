@@ -25,10 +25,10 @@ import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
 import MySelect from '../../../inputs/select';
+import CanDo from '../../../utils/CanDo';
 import formatString from '../../../utils/FormatString';
 import ToastSet from '../../../utils/ToastSet';
 import HeaderGrid from './components/HeaderGrid';
-import CanDo from '../../../utils/CanDo';
 
 export const EditableCell = ({ active, onDoubleClick, value, type, name, options, onChange, isInternalPage }) => {
   const isCategory = name === 'category';
@@ -144,7 +144,7 @@ const Head = (props) => {
           value: ''
         },
         {
-          label: 'Quantidade',
+          label: '%',
           value: ''
         },
       ]

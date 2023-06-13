@@ -94,25 +94,37 @@ const Docs = (props) => {
                 </Grid>
               </Grid>
             </AccordionSummary>
-            <AccordionDetails sx={{ padding: 0, backgroundColor: '#F4F4F4', borderRadius: '8px' }} >
-              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography> : null}
-              {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file) => (
-                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem' }} key={file?.id} alignItems={'center'} p={1}>
-                  <Grid container md={9} sm={9} xs={9} sx={{ }} >
-                    <FileText
-                      strokeWidth='1'
-                      style={{ marginRight: '1rem' }}
-                    />
-                    <Tooltip title='Clique para descarregar este ficheiro.'>
-                      <Typography sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
-                    </Tooltip>
-                  </Grid>
-                  <Grid container md={3} sm={3} xs={3} sx={{ }} >
-                    <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:MM')} </Typography>
-                  </Grid>
-
+            <AccordionDetails sx={{ padding: 0, borderRadius: '8px', backgroundColor: 'white' }} >
+              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined
+                ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography>
+                : null}
+              {folder.files.length > 0 && <>
+                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem', borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }}>
+                  <Grid container md={9} sm={9} xs={9} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Nome</Typography> </Box></Grid>
+                  <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Data</Typography> </Box></Grid>
                 </Grid>
-              ))}
+                <Grid container sx={{ }}>
+
+                  {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file, rowIndex) => (
+                    <Grid container md={12} sm={12} xs={12} sx={{ pl: '3rem' }} bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'} key={file?.id} alignItems={'center'} p={1}>
+                      <Grid container md={9} sm={9} xs={9} sx={{ }} >
+                        <FileText
+                          strokeWidth='1'
+                          style={{ marginRight: '1rem' }}
+                        />
+                        <Tooltip title='Clique para descarregar este ficheiro.'>
+                          <Typography variant='subtitle2' sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
+                        </Tooltip>
+                      </Grid>
+                      <Grid container md={3} sm={3} xs={3} sx={{ justifyContent: 'center' }} >
+                        <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:mm')} </Typography>
+                      </Grid>
+
+                    </Grid>
+                  ))}
+                </Grid>
+
+              </>}
               <Box bgcolor='lightGray.secondary'>
                 {renderAccordionFolders(folders, folder.id)}
               </Box>
@@ -128,7 +140,6 @@ const Docs = (props) => {
       <AccordionSummary sx={{ paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Documentos</Typography></Grid>
-          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de pastas e ficheiros</Typography></Grid>
         </Grid>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: 0 }}>

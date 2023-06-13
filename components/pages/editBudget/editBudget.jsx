@@ -38,6 +38,7 @@ import { useDispatch } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ConvertString from '../../utils/ConvertString';
@@ -45,7 +46,6 @@ import ToastSet from '../../utils/ToastSet';
 import ObservationsTab from './Tabs/observationsTab';
 import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
-import Footer from '../../layout/footer/footer';
 
 const EditBudget = ({ ...props }) => {
   const { breadcrumbsPath, pageProps, clients, budget } = props;
@@ -290,7 +290,7 @@ const EditBudget = ({ ...props }) => {
         id: group.id,
         furnitureType: { type: 'Property', value: 'group' },
         name: { type: 'Property', value: group.name.value },
-        hasBudget: { value: budget.id, type: 'Property' },
+        hasBudget: { object: budget.id, type: 'Relationship' },
         type: 'Furniture'
       }];
 
@@ -303,7 +303,7 @@ const EditBudget = ({ ...props }) => {
           id: subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name.value },
-          hasBudget: { value: budget.id, type: 'Property' },
+          hasBudget: { object: budget.id, type: 'Relationship' },
           group: { value: group.name.value, type: 'Property' },
           type: 'Furniture',
 
@@ -325,7 +325,7 @@ const EditBudget = ({ ...props }) => {
           valuesOnly.type = 'Furniture';
           valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
           valuesOnly.group = { value: group.name.value, type: 'Property' };
-          valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+          valuesOnly.hasBudget = { object: budget.id, type: 'Relationship' };
           valuesOnly.produced = { value: false, type: 'Property' };
           valuesOnly.assembled = { value: false, type: 'Property' };
 
@@ -343,7 +343,7 @@ const EditBudget = ({ ...props }) => {
         id: group.id,
         furnitureType: { type: 'Property', value: 'group' },
         name: { type: 'Property', value: group.name.value },
-        hasBudget: { value: budget.id, type: 'Property' },
+        hasBudget: { object: budget.id, type: 'Relationship' },
         type: 'Furniture'
       }];
 
@@ -356,7 +356,8 @@ const EditBudget = ({ ...props }) => {
           id: subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name.value },
-          hasBudget: { value: budget.id, type: 'Property' },
+          hasBudget: { object: budget.id, type: 'Relationship' },
+
           type: 'Furniture'
         }];
 
@@ -376,7 +377,7 @@ const EditBudget = ({ ...props }) => {
           valuesOnly.type = 'Furniture';
           valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
           valuesOnly.group = { value: group.name.value, type: 'Property' };
-          valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+          valuesOnly.hasBudget = { object: budget.id, type: 'Relationship' };
 
           return valuesOnly;
         });
@@ -455,8 +456,7 @@ const EditBudget = ({ ...props }) => {
     });
 
     try {
-      rows.length > 0 && fixed.map(async (ele) => await newFurniture(ele).catch((err) => console.log(err)));
-      // rows.length > 0 && await newFurniture(fixed).catch((err) => console.log(err));
+      rows.length > 0 && await newFurniture(fixed).catch((err) => console.log(err));
     } catch (err) {
       console.log(err);
     }

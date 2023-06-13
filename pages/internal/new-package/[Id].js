@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Loader from '../../../components/loader/loader';
-import NewPackagingScreen from '../../../components/pages/newPacking/newPacking';
+import NewPackagingScreen from '../../../components/pages/newPackage/newPackage';
 import routes from '../../../navigation/routes';
 // import * as modulesActionsRedux from '../../../store/actions/module';
 import * as budgetActionsRedux from '../../../store/actions/budget';
@@ -21,8 +21,8 @@ const NewPackaging = ({ ...pageProps }) => {
   // const reduxState = useSelector((state) => state);
   // const getModules = (data) => dispatch(modulesActionsRedux.modules(data));
   const getProject = (data) => dispatch(projectsActionsRedux.project(data));
-  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getParts = (data) => dispatch(partsActionsRedux.parts(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
   const getBudget = (data) => dispatch(budgetActionsRedux.budget(data));
 
   useEffect(() => {
@@ -47,10 +47,10 @@ const NewPackaging = ({ ...pageProps }) => {
         href: `${routes.private.internal.packages}`,
       },
       {
+        // title: `${project.name?.value}`,
+        // href: `${routes.private.internal.package}`,
         title: `${project.name?.value}`,
-        href: `${routes.private.internal.package}`,
-        // title: `Embalamentos Projeto ${project.name?.value}`,
-        // href: `${routes.private.internal.projectPackages}${project.id}`,
+        href: `${routes.private.internal.package}${project.id}`,
       },
       {
         title: 'Novo embalamento',

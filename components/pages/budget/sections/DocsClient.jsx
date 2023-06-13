@@ -96,27 +96,28 @@ const DocsClient = (props) => {
         <TableContainer component={Paper}>
           <Table aria-label='collapsible table'>
             <TableHead aria-label='sticky table'>
-              <Grid container p={2} bgcolor='lightgray.main'>
-                <Grid container md={6} sm={6} xs={6}>Nome</Grid>
-                <Grid container md={6} sm={6} xs={6} justifyContent='center'>Data</Grid>
+              <Grid bgcolor='lightgray.main' container md={12} sm={12} xs={12} color='white' sx={{ bp: 1, borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider', backgroundColor: '#F9F9F9' }}>
+                <Grid container md={6} sm={6} xs={6} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Nome</Typography> </Box></Grid>
+                <Grid container md={6} sm={6} xs={6} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Data</Typography> </Box></Grid>
               </Grid>
             </TableHead>
             <TableBody >
               <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
                 <Grid container >
-                  {userFiles?.sort((a, b) => a.file_name - b.file_name).map(file => <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                    <Grid container md={6} sm={6} xs={6} alignItems='center'>
-                      <Box color='primary.main' alignItems='center'>
-                        <FileText strokeWidth='1' style={{ marginRight: '1rem' }} />
-                      </Box>
-                      <Tooltip title='Clique para descarregar este ficheiro.'>
-                        <Typography variant="subtitle2" sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
-                      </Tooltip>
-                    </Grid>
-                    <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>
-                      <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:MM')} </Typography>
-                    </Grid>
-                  </Grid>)}
+                  {userFiles?.sort((a, b) => moment(b.created).diff(moment(a.created))).map(file =>
+                    <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Grid container md={6} sm={6} xs={6} alignItems='center'>
+                        <Box color='primary.main' alignItems='center'>
+                          <FileText strokeWidth='1' style={{ marginRight: '1rem' }} />
+                        </Box>
+                        <Tooltip title='Clique para descarregar este ficheiro.'>
+                          <Typography variant="subtitle2" sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
+                        </Tooltip>
+                      </Grid>
+                      <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>
+                        <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:mm')} </Typography>
+                      </Grid>
+                    </Grid>)}
                 </Grid>
               </Box>
             </TableBody>

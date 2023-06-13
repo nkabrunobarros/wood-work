@@ -105,7 +105,6 @@ const Layout = ({ children }) => {
 
     const verifyToken = async () => {
       if (!authToken) {
-        // Token not found, redirect to login page
         !noLayoutScreens.includes(path.route.replace('[Id]', '')) && Router.push(isInternalPage ? '/signin' : isClientPage && '/');
 
         return;
@@ -118,9 +117,12 @@ const Layout = ({ children }) => {
           Router.push('/terms');
         }
 
-        if ((isInternalPage && meRes?.me?.role === 'CUSTOMER') || (isClientPage && meRes?.me?.role !== 'CUSTOMER') || meRes?.response?.status === 403) {
-          setNoAccess(true);
-        }
+        setNoAccess(
+          (isInternalPage && meRes?.me?.role === 'CUSTOMER') ||
+          (isClientPage && meRes?.me?.role !== 'CUSTOMER') ||
+          meRes?.response?.status === 403
+
+        );
         // If the token is valid, do nothing
       } catch (error) {
         if (error.response?.status === 403) {
@@ -135,24 +137,21 @@ const Layout = ({ children }) => {
     Promise.all([verifyToken()]).then(() => setLoaded(true));
 
     return () => window.removeEventListener('scroll', listenToScroll);
-  }, []);
+  }, [path]);
 
   const neededPermission = findNeededPermission(path);
-  let noAccessPage = neededPermission !== 'see_error' ? !!CanDo(neededPermission?.toLowerCase()) : false;
+  let hasNeededPermission = !!CanDo(neededPermission?.toLowerCase());
 
-  if (noLayoutScreens.includes(path.route.replace('[Id]', ''))) noAccessPage = true;
+  if (noLayoutScreens.includes(path.route.replace('[Id]', ''))) hasNeededPermission = true;
 
-  // loaded
   return loaded && <>
-    {neededPermission !== 'see_error' && (noAccess || !noAccessPage)
-      ? <PageNotFound noAccess={noAccess || !noAccessPage} />
+    {!hasNeededPermission || noAccess
+      ? <PageNotFound noAccess={noAccess || !hasNeededPermission} />
       : <>
         {children}
         <FloatingButton isVisible={isVisible}/>
       </>}
   </>;
-
-  // return <Loader center={true} />;
 };
 
 Layout.propTypes = {

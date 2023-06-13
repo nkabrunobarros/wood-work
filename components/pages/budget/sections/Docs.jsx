@@ -1,6 +1,6 @@
 //  PropTypes
 import { ArrowDropDown, ArrowRight } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableContainer, Tooltip, Typography } from '@mui/material';
 import { ChevronDown, FileText } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -84,25 +84,37 @@ const Docs = (props) => {
                 </Grid>
               </Grid>
             </AccordionSummary>
-            <AccordionDetails sx={{ padding: 0, backgroundColor: '#F4F4F4', borderRadius: '8px' }} >
-              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography> : null}
-              {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file) => (
-                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem' }} key={file?.id} alignItems={'center'} p={1}>
-                  <Grid container md={9} sm={9} xs={9} sx={{ }} >
-                    <FileText
-                      strokeWidth='1'
-                      style={{ marginRight: '1rem' }}
-                    />
-                    <Tooltip title='Clique para descarregar este ficheiro.'>
-                      <Typography sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
-                    </Tooltip>
-                  </Grid>
-                  <Grid container md={3} sm={3} xs={3} sx={{ }} >
-                    <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:MM')} </Typography>
-                  </Grid>
-
+            <AccordionDetails sx={{ padding: 0, borderRadius: '8px', backgroundColor: 'white' }} >
+              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined
+                ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography>
+                : null}
+              {folder.files.length > 0 && <>
+                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem', borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }}>
+                  <Grid container md={9} sm={9} xs={9} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Nome</Typography> </Box></Grid>
+                  <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Data</Typography> </Box></Grid>
                 </Grid>
-              ))}
+                <Grid container sx={{ }}>
+
+                  {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file, rowIndex) => (
+                    <Grid container md={12} sm={12} xs={12} sx={{ pl: '3rem' }} bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'} key={file?.id} alignItems={'center'} p={1}>
+                      <Grid container md={9} sm={9} xs={9} sx={{ }} >
+                        <FileText
+                          strokeWidth='1'
+                          style={{ marginRight: '1rem' }}
+                        />
+                        <Tooltip title='Clique para descarregar este ficheiro.'>
+                          <Typography variant='subtitle2' sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
+                        </Tooltip>
+                      </Grid>
+                      <Grid container md={3} sm={3} xs={3} sx={{ justifyContent: 'center' }} >
+                        <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:mm')} </Typography>
+                      </Grid>
+
+                    </Grid>
+                  ))}
+                </Grid>
+
+              </>}
               <Box bgcolor='lightGray.secondary'>
                 {renderAccordionFolders(folders, folder.id)}
               </Box>
@@ -121,16 +133,9 @@ const Docs = (props) => {
       <AccordionDetails sx={{ padding: 0 }}>
         <TableContainer component={Paper}>
           <Table aria-label='collapsible table'>
-            <TableHead aria-label='sticky table'>
-              <Grid container p={2} bgcolor='lightgray.main'>
-                <Grid container md={6} sm={6} xs={6}>Nome</Grid>
-                <Grid container md={6} sm={6} xs={6} justifyContent='center'>Data</Grid>
-              </Grid>
-            </TableHead>
             <TableBody >
               <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
                 {renderAccordionFolders(folders)}
-
               </Box>
             </TableBody>
           </Table>
@@ -148,7 +153,6 @@ Docs.propTypes = {
   open: PropTypes.bool,
   activeFolder: PropTypes.number,
   onImagesUpload: PropTypes.func,
-
 };
 
 export default Docs;

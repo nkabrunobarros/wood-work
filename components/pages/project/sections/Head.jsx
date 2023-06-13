@@ -340,7 +340,6 @@ const Head = (props) => {
           </Box>
         </Grid>
       </Grid>
-
       {CanDo('change_project') && <Box>
         {false && <PrimaryBtn
           text='Gerar Etiquetas'
@@ -354,7 +353,7 @@ const Head = (props) => {
         <PrimaryBtn
           text='Passar a montagem'
           onClick={() => handleChangeToAssembly() }
-          hidden={!(internalPOV && order.status.value === 'production')}
+          hidden={!(internalPOV && order.status.value === 'production' && lowerGrids[0].colls[2].value === 100)}
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
