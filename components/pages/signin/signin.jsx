@@ -129,11 +129,10 @@ const SignIn = (props) => {
           ToastSet(loadingNotification, 'A entrar', 'success');
           setLoading(false);
 
-          const a = true;
           const nextPage = RedirectTo(user);
 
           // eslint-disable-next-line no-constant-condition
-          if (user.role === 'CUSTOMER' && user.tos === false && a) router.push('/terms');
+          if (user.role === 'CUSTOMER' && user.tos === false) router.push('/terms');
           else router.push(nextPage);
         }).catch((err) => console.log(err));
       });

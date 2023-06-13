@@ -37,4 +37,4 @@ docker run -d -p 127.0.0.1:3000:3000 mofreita:dev
 yarn lint
 docker build -t mofreita:1 .
 docker tag mofreita:dev registry.nka.pt/nka/mofreita:dev
-docker push registry.nka.pt/nka/mofreita:dev
+docker push registry.nka.pt/nka/mofreita:1

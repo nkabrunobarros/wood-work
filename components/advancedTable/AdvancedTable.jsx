@@ -364,7 +364,7 @@ const AdvancedTable = ({
       <Typography variant="subtitle2" pl={1} pr={1}>
         {
           state.page === 0
-            ? `1 - ${Math.min(state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+            ? `${state.filteredItems.length > 0 ? '1' : '0'} - ${Math.min(state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
             : `${state.page * state.rowsPerPage + 1} - ${Math.min((state.page + 1) * state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
         }      </Typography>
       {!noPagination && (

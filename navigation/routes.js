@@ -40,7 +40,7 @@ const routes = {
       newMachine: '/internal/new-machine',
       editMachine: '/internal/edit-machine/',
     },
-    //  Pages shared
+    //  Clients Pages
     terms: '/terms',
     privacy: '/privacy',
     tos: '/tos',

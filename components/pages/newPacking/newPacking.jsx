@@ -12,6 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import html2canvas from 'html2canvas';
 import { QRCodeCanvas } from 'qrcode.react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
@@ -19,7 +20,6 @@ import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
-import { useSelector } from 'react-redux';
 
 const newPacking = (props) => {
   const { breadcrumbsPath } = props;
@@ -157,14 +157,12 @@ const newPacking = (props) => {
     }
   };
 
-  console.log(props.project);
-
   useEffect(() => {
-    const client = props.project.client.user
-    const address = props.project.budget.deliveryAddress.value
+    const client = props.project.client.user;
+    const address = props.project.budget.deliveryAddress.value;
     let newUrl = `
 Cliente: ${client.first_name} ${client.last_name}
-Projeto: Teste Embalamento
+Projeto: ${props.project.name.value}
 Morada: ${address.streetAddress} ${address.postalCode} ${address.addressLocality} ${address.addressRegion} ${reduxState?.countries?.data?.find(ele => ele.cca2 === address.addressCountry).name.common}
 Peso Embalagem: ${ItemsWeight()}
 
