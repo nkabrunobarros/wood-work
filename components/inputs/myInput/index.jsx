@@ -3,6 +3,7 @@ import {
   Box,
   FormControl,
   FormHelperText,
+  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -44,6 +45,16 @@ const MyInput = ({
     } else { onChange && onChange(event, inputValue); }
   };
 
+  function onUpDownClick (e, action) {
+    if (e.target.value === '') {
+      action === 'up' ? e.target.value = 1 : e.target.value = 0;
+    } else {
+      action === 'up' ? e.target.value++ : (e.target.value !== 0 && e.target.value--);
+    }
+
+    e.target.value >= 0 && onChange && onChange(e);
+  }
+
   return <Box sx={{ width: '100%' }}>
     {variant !== 'standard' && (
       <Tooltip title={tooltip || ''}>
@@ -83,7 +94,14 @@ const MyInput = ({
         rows={rows || 4}
         style={style}
         placeholder={placeholder || ''}
-        endAdornment={adornmentIcon && (
+        endAdornment={ (<>
+          {type === 'number' && <InputAdornment position={'end'}>
+            <Grid container md={12} justifyContent={'end'}>
+              <Grid container md={6} p={1}><IconButton name={name} action2='down' value={value} onClick={(e) => onUpDownClick(e, 'down')} sx={{ display: 'flex', alignItems: 'center', color: 'divider', height: '30px', width: '30px', border: '0.5px solid', borderColor: 'divider', fontSize: '22px' }} >-</IconButton></Grid>
+              <Grid container md={6} p={1}><IconButton name={name} action2='up' value={value} onClick={(e) => onUpDownClick(e, 'up')} sx={{ display: 'flex', alignItems: 'center', color: 'divider', height: '30px', width: '30px', border: '0.5px solid', borderColor: 'divider' }} >+</IconButton> </Grid>
+            </Grid>
+          </InputAdornment>}
+          {adornmentIcon &&
           <InputAdornment position={adornmentPos}>
             {iconTooltip
               ? (
@@ -108,7 +126,9 @@ const MyInput = ({
                   {adornmentIcon}
                 </IconButton>
               )}
-          </InputAdornment>
+          </InputAdornment>}
+
+        </>
         )}
       />
       {(maxLength || type === 'area') && <Tooltip title='Tamanho máximo'>

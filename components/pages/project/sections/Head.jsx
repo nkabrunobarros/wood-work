@@ -323,7 +323,7 @@ const Head = (props) => {
           {order.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
           <Tooltip title={CanDo('see_client') ? 'Ver cliente' : ''}>
             <a href={ CanDo('see_client') && routes.private.internal.client + order.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-              {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}
+              <Typography variant='sm' color={CanDo('see_client') && 'primary.main'}> {`${order.orderBy?.object?.user?.first_name} ${order.orderBy?.object?.user?.last_name}`}</Typography>
             </a>
           </Tooltip>
         </Typography>

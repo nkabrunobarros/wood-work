@@ -51,7 +51,7 @@ const HeaderGrid = (props) => {
     const headCellsValues = grid.colls.map(item => item.value);
 
     return (
-      <Grid key={grid.title} container md={12 / collCount * headCellsLabels.length} pt={2}>
+      <Grid key={grid.title} container md={12 / collCount * headCellsLabels.length} pt={2} sx={{ pl: 0.5, pr: 0.5 }}>
         <Grid item md={12}>
           <Grid container {...upperCells}>
             <Typography variant='subtitle1' fontWeight='bold'>

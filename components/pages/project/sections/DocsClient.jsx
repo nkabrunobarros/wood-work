@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 //  PropTypes
-import { Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
-import { FilePlus, FileText } from 'lucide-react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
+import { ChevronDown, FilePlus, FileText } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
@@ -13,7 +13,8 @@ import PrimaryBtn from '../../../buttons/primaryBtn';
 import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
-  const { pageProps, styles, isInternalPage } = props;
+  const { pageProps, isInternalPage } = props;
+  const [sectionExpanded, setSectionExpanded] = useState(true);
   const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.name === 'VF do Cliente')?.files);
   // const [newFiles, setNewFiles] = useState();
   const dispatch = useDispatch();
@@ -70,19 +71,23 @@ const DocsClient = (props) => {
 
   return <>
     <Notification />
-    <Box className={styles.docsMain}>
-      <Box className={styles.tableContainer}>
-        <Box id='pad' style={{ display: 'flex' }}>
-          <Box style={{ flex: 1 }}>
-            <Grid container md={12} sm={12} xs={12}>
-              <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Documentos {isInternalPage && 'Cliente'}</Typography></Grid>
-              {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Documentos carregados {isInternalPage && 'do cliente'}</Typography></Grid> */}
-            </Grid>
-          </Box>
-          <Box className='flex'>
-            <Box>
+    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
+      <AccordionSummary sx={{
+        background: 'lightGray.main',
+        paddingLeft: '24px',
+        borderBottom: '1px solid',
+        borderColor: 'divider'
+      }}
+      bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+        <Grid container md={12} sm={12} xs={12} alignItems={'center'}>
+          <Grid container md={8} sm={8} xs={12}>
+            <Typography variant='title'>Documentos {isInternalPage && 'Cliente'}</Typography>
+          </Grid>
+          <Grid container md={4} sm={4} xs={12} justifyContent={'end'}>
+            <Box pr={2}>
               <PrimaryBtn
                 text='Carregar'
+                onClick={(e) => e.stopPropagation()}
                 icon={
                   <FilePlus
                     strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
@@ -93,9 +98,11 @@ const DocsClient = (props) => {
                 <input {...getInputProps()} hidden multiple onChange={(e) => onDrop(e.target.files) } />
               </PrimaryBtn>
             </Box>
-          </Box>
-        </Box>
-        <TableContainer component={Paper}>
+          </Grid>
+        </Grid>
+      </AccordionSummary>
+      <AccordionDetails sx={{ padding: 0 }}>
+        <TableContainer>
           <Table aria-label='collapsible table'>
             <TableHead aria-label='sticky table'>
               <Grid bgcolor='lightgray.main' container md={12} sm={12} xs={12} color='white' sx={{ bp: 1, borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider', backgroundColor: '#F9F9F9' }}>
@@ -125,8 +132,8 @@ const DocsClient = (props) => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
-    </Box>
+      </AccordionDetails>
+    </Accordion>
   </>;
 };
 

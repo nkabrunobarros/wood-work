@@ -100,7 +100,6 @@ const Production = (props) => {
       }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produção</Typography></Grid>
-          {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Detalhes de produção dos produtos</Typography></Grid> */}
         </Grid>
       </AccordionSummary>
       <AccordionDetails>
@@ -142,7 +141,6 @@ const Production = (props) => {
                           <AccordionDetails sx={{ p: 0 }}>
                             {/* Linhas de moveis/furniture */}
                             <Grid container md={12} sm={12} xs={12}>
-
                               <Grid container md={12} sm={12} xs={12} color='white' sx={{ backgroundColor: '#F9F9F9', bp: 1, borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }}>
                                 <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Móvel</Typography> </Box></Grid>
                                 <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Quantidade Pedida</Typography> </Box></Grid>

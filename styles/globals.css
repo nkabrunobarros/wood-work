@@ -56,6 +56,17 @@ body {
 
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 #appMainContainer {
   padding: 0rem 2rem 4rem 2rem;
   overflow: hidden;

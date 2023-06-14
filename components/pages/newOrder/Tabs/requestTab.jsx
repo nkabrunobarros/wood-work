@@ -116,6 +116,7 @@ const RequestTab = (props) => {
                     <MyInput
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Número'
+                      type='number'
                       error={budgetData.num.error}
                       required={budgetData.num.required }
                       name='num'

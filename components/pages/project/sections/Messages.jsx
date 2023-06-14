@@ -1,27 +1,27 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, OutlinedInput, Typography } from '@mui/material';
-import { MessageSquare, Send } from 'lucide-react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, OutlinedInput, Typography } from '@mui/material';
+import { ChevronDown, Send } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as messagesActionsRedux from '../../../../store/actions/message';
-import PrimaryBtn from '../../../buttons/primaryBtn';
 import Loader from '../../../loader/loader';
 import scrollToBottom from '../../../utils/ScrollToBottom';
 import { Message } from '../../messages/Message';
 
 const Messages = (props) => {
-  const { pageProps, order } = props;
+  const { order } = props;
   const [loaded, setLoaded] = useState(false);
   const [messages, setMessages] = useState();
+  const [sectionExpanded, setSectionExpanded] = useState(true);
   const dispatch = useDispatch();
-  const getMessages = (data) => dispatch(messagesActionsRedux.conversationMessages(data));
   const [newMessageText, setNewMessageText] = useState('');
+  const [windowWidth, setWindowHeight] = useState();
+  const getMessages = (data) => dispatch(messagesActionsRedux.conversationMessages(data));
   const newMessage = (data) => dispatch(messagesActionsRedux.newMessage(data));
   const reduxState = useSelector((state) => state);
   const loggedUser = reduxState.auth.me;
-  const [windowWidth, setWindowHeight] = useState();
 
   useEffect(() => {
     function loadMessages () {
@@ -79,70 +79,61 @@ const Messages = (props) => {
 
   // eslint-disable-next-line no-constant-condition
   return <>
-    <Box
-      id='pad'
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
+    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
+      <AccordionSummary sx={{
+        background: 'lightGray.main',
+        paddingLeft: '24px',
         borderBottom: '1px solid',
         borderColor: 'divider'
       }}
-    >
-      <Box>
-        <Typography variant='title'>Mensagens</Typography>
-      </Box>
-      <Box style={{ marginLeft: 'auto' }}>
-        <PrimaryBtn
-          hidden
-          icon={
-            <MessageSquare
-              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-              size={pageProps?.globalVars?.iconSize}
-            />
-          }
-          text={'Criar Nova'}
-        />
-      </Box>
-    </Box>
-    <Box>
-      <Box id='messagesContainer' sx={{ padding: '2rem', maxHeight: '400px', overflowY: 'scroll' }}>
-        {loaded
-          ? messages?.sort((a, b) => moment(a.created).diff(moment(b.created))).map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)
-          : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Loader noPos />
+      bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Mensagens</Typography></Grid>
+        </Grid>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Box>
+          <Box id='messagesContainer' sx={{ padding: '2rem', maxHeight: '400px', overflowY: 'scroll' }}>
+            {loaded
+              ? messages?.sort((a, b) => moment(a.created).diff(moment(b.created))).map((conv, i) => <Message key={i} msg={conv} index={i} {...props}/>)
+              : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Loader noPos />
+              </Box>
+            }
           </Box>
-        }
-      </Box>
-      <Box
-        display={order.status.value === 'finished' && 'none'}
-        component='form'
-        noValidate
-        onSubmit={handleSendMessage}
-        sx={{ width: '100%', paddingLeft: windowWidth > 900 && '2rem', paddingRight: windowWidth > 900 && '2rem', paddingBottom: '1rem' }}>
-        <OutlinedInput
-          required
-          fullWidth
-          placeholder='Aa'
-          value={newMessageText}
-          inputProps={{
-            maxLength: 255,
-          }}
-          onChange={(e) => setNewMessageText(e.target.value)}
-          sx={{
-            maxHeight: '40px',
-            padding: '0.2rem',
-            fontSize: '13px',
-            lineHeight: '18px',
-            borderRadius: '16px',
-            color: '#999999',
-            width: '100%'
-          }}
-          endAdornment={ <Button position='end' type='submit'>
-            <Send size={20}/>
-          </Button>}
-        />
-      </Box>
-    </Box>
+          <Box
+            display={order.status.value === 'finished' && 'none'}
+            component='form'
+            noValidate
+            onSubmit={handleSendMessage}
+            sx={{ width: '100%', paddingLeft: windowWidth > 900 && '2rem', paddingRight: windowWidth > 900 && '2rem', paddingBottom: '1rem' }}>
+            <OutlinedInput
+              required
+              fullWidth
+              placeholder='Aa'
+              value={newMessageText}
+              inputProps={{
+                maxLength: 255,
+              }}
+              onChange={(e) => setNewMessageText(e.target.value)}
+              sx={{
+                maxHeight: '40px',
+                padding: '0.2rem',
+                fontSize: '13px',
+                lineHeight: '18px',
+                borderRadius: '16px',
+                color: '#999999',
+                width: '100%'
+              }}
+              endAdornment={ <Button position='end' type='submit'>
+                <Send size={20}/>
+              </Button>}
+            />
+          </Box>
+        </Box>
+      </AccordionDetails>
+    </Accordion>
+
   </>;
 };
 

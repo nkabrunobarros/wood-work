@@ -481,9 +481,8 @@ const Head = (props) => {
                   {'Cliente '}
                   {budget.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
                   <Tooltip title='Ver cliente'>
-
                     <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                      {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}
+                      <Typography variant='sm' color={CanDo('see_client') && 'primary.main'}> {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}</Typography>
                     </a>
                   </Tooltip>
                 </Typography>
