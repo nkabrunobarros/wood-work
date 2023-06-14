@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../navigation/routes';
 
+import Head from 'next/head';
 import styles from '../../styles/components/navbar.module.css';
 
 const CustomBreadcrumbs = ({ path }) => {
@@ -19,6 +20,12 @@ const CustomBreadcrumbs = ({ path }) => {
 
   const output = Object.keys(path)?.sort((a, b) => b - a);
   const arrayLenght = parseInt(output[0]);
+  let title = path.map((ele, index) => {
+    return (index !== 0 ? '/' : '') + ele.title;
+  });
+
+  title = title + ' | WoodWork 4.0';
+  console.log(title);
 
   return (
     <Box
@@ -30,6 +37,10 @@ const CustomBreadcrumbs = ({ path }) => {
         boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.1)',
       }}
     >
+      <Head>
+        <title>{title?.replace(/,/g, '')}</title>
+
+      </Head>
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
         <IconButton onClick={() => Router.push(isInternalPage ? routes.private.internal.projects : routes.private.projects)}>
           <Tooltip title={'Ir para Projetos'}>

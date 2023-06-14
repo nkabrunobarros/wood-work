@@ -23,7 +23,7 @@ const Projects = ({ ...pageProps }) => {
   const getAssemblys = (data) => dispatch(assemblysActionsRedux.assemblys(data));
   const [loaded, setLoaded] = useState(false);
 
-  async function fetchData() {
+  async function fetchData () {
     let errors = false;
 
     try {
@@ -38,7 +38,7 @@ const Projects = ({ ...pageProps }) => {
   }
 
   useEffect(() => {
-    async function loadData() {
+    async function loadData () {
       setLoaded(await fetchData());
     }
 
@@ -59,47 +59,47 @@ const Projects = ({ ...pageProps }) => {
 
     reduxState.budgets?.data?.forEach((bud) => {
       switch (bud.budgetStatus?.value) {
-        case 'needs analysis':
-          counts.waitingAdjudication++;
+      case 'needs analysis':
+        counts.waitingAdjudication++;
 
-          break;
-        case 'waiting budget':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting budget':
+        counts.waitingAdjudication++;
 
-          break;
-        case 'waiting adjudication':
-          counts.waitingAdjudication++;
+        break;
+      case 'waiting adjudication':
+        counts.waitingAdjudication++;
 
-          break;
+        break;
       }
     });
 
     reduxState.projects?.data?.forEach((proj) => {
       switch (proj.status?.value) {
-        case 'drawing':
-          counts.drawing++;
+      case 'drawing':
+        counts.drawing++;
 
-          break;
-        case 'production':
-          counts.production++;
+        break;
+      case 'production':
+        counts.production++;
 
-          break;
-        case 'transport':
-          counts.expedition++;
+        break;
+      case 'transport':
+        counts.expedition++;
 
-          break;
-        case 'testing':
-          counts.testing++;
+        break;
+      case 'testing':
+        counts.testing++;
 
-          break;
-        case 'packing':
-          counts.packing++;
+        break;
+      case 'packing':
+        counts.packing++;
 
-          break;
-        case 'finished':
-          counts.concluded++;
+        break;
+      case 'finished':
+        counts.concluded++;
 
-          break;
+        break;
       }
     });
 
