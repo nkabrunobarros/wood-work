@@ -8,7 +8,6 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 //  PropTypes
 import { Autocomplete, Box, Grid, InputLabel, Slider, TextField, Typography } from '@mui/material';
-import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
@@ -227,7 +226,7 @@ const Stock = ({ ...props }) => {
             <PrimaryBtn
               hidden={!CanDo('add_stock')}
               text='Adicionar'
-              onClick={() => Router.push(routes.private.internal.newStock)}
+              href={routes.private.internal.newStock}
             />
           </Box>
           <AdvancedTable

@@ -16,7 +16,6 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -161,7 +160,7 @@ const Workers = ({ ...props }) => {
                 <PrimaryBtn
                   hidden={!CanDo('create_worker')}
                   text='Adicionar'
-                  onClick={() => Router.push(`${newRoute}`)}
+                  href={newRoute}
                 />
               </Box>
             </Box>

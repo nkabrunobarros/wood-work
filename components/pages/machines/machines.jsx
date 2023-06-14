@@ -89,8 +89,10 @@ const MachinesScreen = (props) => {
       <Content>
         <Grid id='pad' md={12} container justifyContent={'space-between'}>
           <Typography variant='title'>Máquinas</Typography>
-          <PrimaryBtn text={'Adicionar'} hidden={!CanDo('add_machine')}
-            onClick={() => Router.push(routes.private.internal.newMachine)} />
+          <PrimaryBtn text={'Adicionar'}
+            hidden={!CanDo('add_machine')}
+            href={routes.private.internal.newMachine}
+          />
         </Grid>
         <AdvancedTable
           rows={machines}

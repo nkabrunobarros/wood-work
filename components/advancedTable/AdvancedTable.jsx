@@ -43,6 +43,7 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 
 const AdvancedTable = ({
@@ -75,7 +76,7 @@ const AdvancedTable = ({
     anchorEl: null,
     cellsFilter: headCells,
     loaded: true,
-    rowsPerPageOptions: [1, 10, 25]
+    rowsPerPageOptions: [10, 25, 50]
   });
 
   const reduxState = useSelector((state) => state);
@@ -491,6 +492,24 @@ const AdvancedTable = ({
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
+                  function clickPath () {
+                    if (!clickRoute) return;
+
+                    //  Verifies if im in a internal page
+                    const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
+
+                    //  Verifies if im in a internal page AND in a projects section
+                    if (isInternalPage && Router.route.includes('projects')) {
+                      return (`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
+                    //  Verifies if im NOT in a internal page AND in a projects section
+                    } else if (!isInternalPage && Router.route.includes('projects')) {
+                      return (`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
+                    //  if its not on a projects section, just use the click route
+                    }
+
+                    return (`${clickRoute}${row[actionId || 'id']}`);
+                  }
+
                   return (
                     <TableRow
                       hover
@@ -521,17 +540,19 @@ const AdvancedTable = ({
                                           {editRoute && !(Router.route.includes('projects') && row.type === 'Project') &&
                                             <Tooltip title={'Editar'}>
                                               <Box style={{ color: 'red' }}>
-                                                <IconButton
-                                                  onClick={() => {
-                                                    if (Router.route.includes('projects') && row.type === 'Project') return;
+                                                <Link href={`${editRoute}${row.id}`}>
+                                                  <IconButton
+                                                    onClick={() => {
+                                                      if (Router.route.includes('projects') && row.type === 'Project') return;
 
-                                                    editRoute && Router.push(`${editRoute}${row.id}`);
-                                                  }}>
-                                                  <EditOutlined
-                                                    fontSize="small"
-                                                    color={'primary'}
-                                                  />
-                                                </IconButton>
+                                                      editRoute && Router.push(`${editRoute}${row.id}`);
+                                                    }}>
+                                                    <EditOutlined
+                                                      fontSize="small"
+                                                      color={'primary'}
+                                                    />
+                                                  </IconButton>
+                                                </Link>
                                               </Box>
                                             </Tooltip>
                                           }
@@ -557,32 +578,68 @@ const AdvancedTable = ({
                                   </ButtonGroup>
                                 )
                                 : (
-                                  <Box
-                                    onClick={() => {
-                                      if (!clickRoute) return;
+                                  <>
+                                    {clickPath()
+                                      ? <Link href={clickPath()}>
+                                        <Box
+                                          onClick={() => {
+                                            if (!clickRoute) return;
 
-                                      //  Verifies if im in a internal page
-                                      const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
+                                            //  Verifies if im in a internal page
+                                            const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
 
-                                      //  Verifies if im in a internal page AND in a projects section
-                                      if (isInternalPage && Router.route.includes('projects')) {
-                                        Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
-                                        //  Verifies if im NOT in a internal page AND in a projects section
-                                      } else if (!isInternalPage && Router.route.includes('projects')) {
-                                        Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
-                                        //  if its not on a projects section, just use the click route
-                                      } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
+                                            //  Verifies if im in a internal page AND in a projects section
+                                            if (isInternalPage && Router.route.includes('projects')) {
+                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
+                                              //  Verifies if im NOT in a internal page AND in a projects section
+                                            } else if (!isInternalPage && Router.route.includes('projects')) {
+                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
+                                              //  if its not on a projects section, just use the click route
+                                            } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
+                                          }
+                                          }
+                                          color={index === -1 && 'primary.main'}
+                                          sx={{ cursor: clickRoute && 'pointer' }}
+                                        >
+                                          {FilterItem(
+                                            state.data,
+                                            row,
+                                            headCell.id
+                                          )}
+                                        </Box>
+                                      </Link>
+                                      : <>
+                                        <Box
+                                          onClick={() => {
+                                            if (!clickRoute) return;
+
+                                            //  Verifies if im in a internal page
+                                            const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
+
+                                            //  Verifies if im in a internal page AND in a projects section
+                                            if (isInternalPage && Router.route.includes('projects')) {
+                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
+                                              //  Verifies if im NOT in a internal page AND in a projects section
+                                            } else if (!isInternalPage && Router.route.includes('projects')) {
+                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
+                                              //  if its not on a projects section, just use the click route
+                                            } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
+                                          }
+                                          }
+                                          color={index === -1 && 'primary.main'}
+                                          sx={{ cursor: clickRoute && 'pointer' }}
+                                        >
+                                          {FilterItem(
+                                            state.data,
+                                            row,
+                                            headCell.id
+                                          )}
+                                        </Box>
+                                      </>
                                     }
-                                    }
-                                    color={index === -1 && 'primary.main'}
-                                    sx={{ cursor: clickRoute && 'pointer' }}
-                                  >
-                                    {FilterItem(
-                                      state.data,
-                                      row,
-                                      headCell.id
-                                    )}
-                                  </Box>
+
+                                  </>
+
                                 )}
                             </>
                             : <Skeleton animation="wave" width='100%' />}

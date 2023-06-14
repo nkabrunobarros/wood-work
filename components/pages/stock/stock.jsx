@@ -64,7 +64,7 @@ const Stock = ({ ...props }) => {
             </Box>
             <Box style={{ display: 'flex' }}>
               <ButtonGroup>
-                <PrimaryBtn hidden={!CanDo('change_stock')} text='Editar' onClick={() => Router.push(routes.private.internal.editStock + stock?.id)} icon={<Edit strokeWidth='1' />} />
+                <PrimaryBtn hidden={!CanDo('change_stock')} text='Editar' href={routes.private.internal.editStock + stock?.id} icon={<Edit strokeWidth='1' />} />
                 <PrimaryBtn hidden={!CanDo('delete_stock')} text='Apagar' onClick={() => setDialogOpen(true)} icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} light />
               </ButtonGroup>
             </Box>

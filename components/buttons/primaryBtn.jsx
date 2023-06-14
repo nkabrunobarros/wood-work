@@ -4,8 +4,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Box, Button, Grow, Tooltip, Typography } from '@mui/material';
+import Link from 'next/link';
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps, color }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps, color, href }) => {
   const style = {
     color: light ? 'palette.primary.main' : 'var(--white)',
     pointerEvents: disabled ? 'none' : 'all',
@@ -14,17 +15,46 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
     maxHeight: '30px',
   };
 
+  const mouseDownHandler = (event) => {
+    event.preventDefault();
+
+    if (event.button === 1) {
+      // do something on middle mouse button click
+      console.log('weel');
+    }
+  };
+
   return !hidden && (
-    <Grow in={true}>
-      <Tooltip title={title || ''}>
-        <Button {...otherProps} color={color} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
-          {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
-          <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
-          {/* Children is for file Inputs */}
-          {children}
-        </Button>
-      </Tooltip>
-    </Grow>
+    <>
+      {href
+        ? <>
+          <Link href={href}>
+            <Grow in={true}>
+              <Tooltip title={title || ''}>
+                <Button {...otherProps} color={color} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} component='label' sx={sx}>
+                  {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
+                  <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
+                  {/* Children is for file Inputs */}
+                  {children}
+                </Button>
+              </Tooltip>
+            </Grow>
+          </Link>
+        </>
+        : <Grow in={true}>
+          <Tooltip title={title || ''}>
+            <Button {...otherProps} onMouseDown={mouseDownHandler} color={color} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
+              {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
+              <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
+              {/* Children is for file Inputs */}
+              {children}
+            </Button>
+          </Tooltip>
+        </Grow>
+
+      }
+    </>
+
   );
 };
 
@@ -36,6 +66,7 @@ PrimaryBtn.propTypes = {
   fullWidth: PropTypes.bool,
   hidden: PropTypes.bool,
   color: PropTypes.string,
+  href: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.any,
   disabled: PropTypes.bool,

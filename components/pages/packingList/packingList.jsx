@@ -11,6 +11,7 @@ import PrimaryBtn from '../../buttons/primaryBtn';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
+import Link from 'next/link';
 
 const PackingList = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
@@ -44,42 +45,81 @@ const PackingList = ({ ...props }) => {
                   xs={12}
                   sx={{ p: 1 }}>
                   <Grow in>
-                    <Card sx={{ cursor: hasPermissions && 'pointer', width: '100%', p: 2 }} >
-                      <CardContent onClick={() => {
-                        hasPermissions && Router.push(routes.private.internal.newPackage + proj.id);
-                        // Router.push(routes.private.internal.projectPackages + proj.id);
-                      }}>
-                        <Grid container md={12} sm={12} xs={12} >
-                          <Grid container md={6} sm={6} xs={6} >
-                            <Tooltip title='Projeto'>
-                              <Typography fontWeight={'bold'} variant="h5">
-                                {proj.name.value}
-                              </Typography>
-                            </Tooltip>
-                          </Grid>
-                          <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
-                            <Tooltip title='Número'>
-                              <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Número: </a>{proj?.budget.num?.value}</Typography>
-                            </Tooltip>
-                          </Grid>
-                          <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                            <Tooltip title='Cliente'>
-                              <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
-                            </Tooltip>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      {false && <CardActions >
-                        <ButtonGroup fullWidth >
-                          <PrimaryBtn sx={{ minHeight: '50px' }} icon={<List />} text='Embalamentos' onClick={() => {
-                            Router.push(routes.private.internal.projectPackages + proj.id);
-                          }}/>
-                          <PrimaryBtn sx={{ minHeight: '50px' }} icon={<Plus />} text='Novo' color='success' onClick={() => {
-                            Router.push(routes.private.internal.newPackage + proj.id);
-                          }}/>
-                        </ButtonGroup>
-                      </CardActions>}
-                    </Card>
+                    <Box>
+                      {hasPermissions
+                        ? <Link href={routes.private.internal.newPackage + proj.id} >
+                          <Card sx={{ cursor: 'pointer', width: '100%', p: 2 }} >
+                            <CardContent onClick={() => {
+                              hasPermissions && Router.push(routes.private.internal.newPackage + proj.id);
+                            // Router.push(routes.private.internal.projectPackages + proj.id);
+                            }}>
+                              <Grid container md={12} sm={12} xs={12} >
+                                <Grid container md={6} sm={6} xs={6} >
+                                  <Tooltip title='Projeto'>
+                                    <Typography fontWeight={'bold'} variant="h5">
+                                      {proj.name.value}
+                                    </Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
+                                  <Tooltip title='Número'>
+                                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Número: </a>{proj?.budget.num?.value}</Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                  <Tooltip title='Cliente'>
+                                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
+                                  </Tooltip>
+                                </Grid>
+                              </Grid>
+                            </CardContent>
+                            {false && <CardActions >
+                              <ButtonGroup fullWidth >
+                                <PrimaryBtn sx={{ minHeight: '50px' }} icon={<List />} text='Embalamentos' onClick={() => {
+                                  Router.push(routes.private.internal.projectPackages + proj.id);
+                                }}/>
+                                <PrimaryBtn sx={{ minHeight: '50px' }} icon={<Plus />} text='Novo' color='success' onClick={() => {
+                                  Router.push(routes.private.internal.newPackage + proj.id);
+                                }}/>
+                              </ButtonGroup>
+                            </CardActions>}
+                          </Card>
+                        </Link>
+                        : <Card sx={{ width: '100%', p: 2 }} >
+                          <CardContent>
+                            <Grid container md={12} sm={12} xs={12} >
+                              <Grid container md={6} sm={6} xs={6} >
+                                <Tooltip title='Projeto'>
+                                  <Typography fontWeight={'bold'} variant="h5">
+                                    {proj.name.value}
+                                  </Typography>
+                                </Tooltip>
+                              </Grid>
+                              <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
+                                <Tooltip title='Número'>
+                                  <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Número: </a>{proj?.budget.num?.value}</Typography>
+                                </Tooltip>
+                              </Grid>
+                              <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                <Tooltip title='Cliente'>
+                                  <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
+                                </Tooltip>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                          {false && <CardActions >
+                            <ButtonGroup fullWidth >
+                              <PrimaryBtn sx={{ minHeight: '50px' }} icon={<List />} text='Embalamentos' onClick={() => {
+                                Router.push(routes.private.internal.projectPackages + proj.id);
+                              }}/>
+                              <PrimaryBtn sx={{ minHeight: '50px' }} icon={<Plus />} text='Novo' color='success' onClick={() => {
+                                Router.push(routes.private.internal.newPackage + proj.id);
+                              }}/>
+                            </ButtonGroup>
+                          </CardActions>}
+                        </Card> }
+                    </Box>
+
                   </Grow>
                 </Grid>
               </>;

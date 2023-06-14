@@ -76,7 +76,7 @@ const MachineScreen = ({ ...props }) => {
                       size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
-                  onClick={() => Router.push(routes.private.internal.editMachine + machine.id)}
+                  href={routes.private.internal.editMachine + machine.id}
                 />
                 <PrimaryBtn
                   text='Apagar'

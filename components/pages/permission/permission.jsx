@@ -51,7 +51,7 @@ const ProfileScreen = (props) => {
       open={dialogOpen}
       handleClose={() => setDialogOpen(false)}
       onConfirm={() => onDelete()}
-      message={'Está prestes a apagar uma permissão o que é irreversivel, tem certeza que quer continuar?'}
+      message={'Está prestes a apagar um perfil o que é irreversivel, tem certeza que quer continuar?'}
     />
     <Navbar />
     <Notification />
@@ -70,7 +70,7 @@ const ProfileScreen = (props) => {
                   size={pageProps?.globalVars?.iconSize || 20}
                 />
               }
-              onClick={() => Router.push(routes.private.internal.editProfile + profile.id)}
+              href={routes.private.internal.editProfile + profile.id}
             />
             <PrimaryBtn
               light

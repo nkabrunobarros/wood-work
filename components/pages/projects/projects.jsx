@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -381,7 +381,7 @@ const ProjectsScreen = (props) => {
             <PrimaryBtn
               hidden={!(isInternalPage && CanDo('add_project'))}
               text='Adicionar'
-              onClick={() => Router.push(routes.private.internal.newProject)}
+              href={routes.private.internal.newProject}
             />
           </Box>
           <AdvancedTable

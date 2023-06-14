@@ -106,7 +106,7 @@ const EditClient = ({ ...props }) => {
                       size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
-                  onClick={() => Router.push(`${editRoute}${client?.id}`)}
+                  href={`${editRoute}${client?.id}`}
                 />
                 <PrimaryBtn
                   text='Apagar'

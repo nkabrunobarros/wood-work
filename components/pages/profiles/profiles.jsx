@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Grid, Typography } from '@mui/material';
-import Router from 'next/router';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -766,7 +765,7 @@ const ProfilesScreen = (props) => {
         <Grid id='pad' md={12} container justifyContent={'space-between'}>
           <Typography variant='title'>Perfis</Typography>
           <PrimaryBtn text={'Adicionar'} hidden={!CanDo('add_profile')}
-            onClick={() => Router.push(routes.private.internal.newProfile)} />
+            href={routes.private.internal.newProfile} />
         </Grid>
         <AdvancedTable
           rows={profiles}
