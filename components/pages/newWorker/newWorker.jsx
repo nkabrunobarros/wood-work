@@ -65,7 +65,7 @@ const newWorker = ({ ...props }) => {
       id: 'profile',
       label: 'Função',
       value: '',
-      options: profiles,
+      options: profiles.filter((profile) => profile.name !== 'Customers'),
       optLabel: 'name',
       error: '',
       required: true,
@@ -73,6 +73,12 @@ const newWorker = ({ ...props }) => {
     },
   ]
   );
+
+  console.log(profiles.map((profile) => {
+    if (profile.name === 'Customers') return { ...profile, disabled: true };
+
+    return { ...profile };
+  }));
 
   const dispatch = useDispatch();
   const newWorker = (data) => dispatch(workersActionsRedux.newWorker(data));

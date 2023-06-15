@@ -457,11 +457,6 @@ const Head = (props) => {
         />
       </Box>}
       <ButtonGroup>
-        { order.status.value !== 'canceled' && <PrimaryBtn text={'Editar'} color='primary'
-          href={routes.private.internal.editBudget + order.hasBudget.id}
-          hidden={!canEditProject}
-          icon={ <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />}
-        />}
         {order.status.value !== 'canceled' && <PrimaryBtn text='Cancelar' color={'warning'} variant='outlined' hidden={!canEditProject || order.status.value === 'canceled'}
           icon={ <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
           onClick={CancelProject}

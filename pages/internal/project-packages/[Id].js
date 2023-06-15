@@ -44,11 +44,11 @@ const NewPackaging = ({ ...pageProps }) => {
     const breadcrumbsPath = [
       {
         title: 'Embalamentos',
-        href: `${routes.private.internal.packingList}`,
+        href: `${routes.private.internal.packages}`,
       },
       {
         title: `${project?.name?.value}`,
-        href: `${routes.private.internal.packingList}`,
+        href: `${routes.private.internal.package}`,
       },
     ];
 
