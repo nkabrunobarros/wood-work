@@ -6,17 +6,16 @@ import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import Notification from '../../../../dialogs/Notification';
 import CurrencyInput from '../../../../inputs/CurrencyInput';
 import MyInput from '../../../../inputs/myInput';
-import MySelect from '../../../../inputs/select';
 
 const DeliverBudgetModal = (props) => {
-  const { open, onConfirm, handleClose, budget, categories } = props;
+  const { open, onConfirm, handleClose, budget } = props;
   const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: moment(budget.dateAgreedDelivery?.value, 'DD/MM/YYYY'), error: '' });
   const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: moment(budget.dateDeliveryProject?.value, 'DD/MM/YYYY'), error: '' });
-  const [category, setCategory] = useState({ value: budget.category?.value, error: '' });
   const [price, setPrice] = useState({ value: budget.price?.value, error: '' });
-  const [amount, setAmount] = useState({ value: budget.amount?.value, error: '' });
   const [obs, setObs] = useState({ value: budget.obs?.value, error: '' });
 
   function validateData () {
@@ -27,7 +26,7 @@ const DeliverBudgetModal = (props) => {
       errors = true;
     }
 
-    if (!dateDeliveryProject.value) {
+    if (!dateDeliveryProject.value || !dateDeliveryProject.value) {
       setDateDeliveryProject({ ...dateDeliveryProject, error: 'Campo Obrigatório' });
       errors = true;
     }
@@ -37,90 +36,91 @@ const DeliverBudgetModal = (props) => {
       errors = true;
     }
 
-    !errors && onConfirm({
-      price,
-      dateAgreedDelivery,
-      dateDeliveryProject
-    });
+    !errors
+      ? onConfirm({
+        price,
+        dateAgreedDelivery,
+        dateDeliveryProject
+      })
+      : toast.error('Erros no formulário');
   }
 
-  return <Dialog
-    open={open}
-    onClose={handleClose}
-    aria-labelledby='alert-dialog-title'
-    aria-describedby='alert-dialog-description'
-  >
-    <DialogTitle color="link.main" id='alert-dialog-title' >
+  return <>
+    <Notification />
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby='alert-dialog-title'
+      aria-describedby='alert-dialog-description'
+    >
+      <DialogTitle color="link.main" id='alert-dialog-title' >
      Entrega do Orçamento
-    </DialogTitle>
-    <Divider />
-    <DialogContent>
-      <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-        <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
-      </Box>
+      </DialogTitle>
+      <Divider />
+      <DialogContent>
+        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
+        </Box>
 
-      <DialogContentText id='alert-dialog-description'>
-        <Typography variant='md'>
+        <DialogContentText id='alert-dialog-description'>
+          <Typography variant='md'>
            Para finalizar a entrega do orçamento, por favor preencha a seguinte informação.
-        </Typography>
-      </DialogContentText>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid container md={12} sm={12} xs={12}>
-          <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do projeto'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
-          {false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput required value={amount.value} error={amount.error} label={'Quantidade'} type='number' onChange={(e) => { setAmount({ value: e.target.value, error: '' }); }} disabled={budget.amount?.value}/></Grid>
-          }
-          {false && <Grid container md={6} sm={6} xs={6} p={1}><MySelect value={category.value} error={category.error} options={categories} label='Categoria' onChange={(e) => { setCategory({ value: e.target.value, error: '' }); }} disabled={budget.category?.value}/></Grid>
-          }
-          <Grid container md={6} sm={6} xs={6} p={1}>
-            <Box sx={{ width: '100%' }}>
-              <InputLabel>
+          </Typography>
+        </DialogContentText>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Grid container md={12} sm={12} xs={12}>
+            <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do projeto'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
+            <Grid container md={6} sm={6} xs={6} p={1}>
+              <Box sx={{ width: '100%' }}>
+                <InputLabel>
             Entrega do orçamento
+                  <Tooltip title='Obrigatório' >
+                    <span style={{ color: 'var(--red)' }}> *</span>
+                  </Tooltip>
+
+                </InputLabel>
+                <DesktopDatePicker
+                  sx={{ width: '100%' }}
+                  inputFormat={'DD/MM/YYYY'}
+
+                  value={dateAgreedDelivery.value}
+                  onChange={(e, newValue) => setDateAgreedDelivery({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
+                  renderInput={(params) =>
+                    <TextField fullWidth sx={{ width: '100%' }} {...params} error={dateAgreedDelivery.error} inputProps={{ sx: { color: dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
+                />
+
+              </Box>
+            </Grid>
+            <Grid container md={6} sm={6} xs={6} p={1}>
+              <InputLabel>
+              Entrega do projeto
                 <Tooltip title='Obrigatório' >
                   <span style={{ color: 'var(--red)' }}> *</span>
                 </Tooltip>
-
               </InputLabel>
               <DesktopDatePicker
-                sx={{ width: '100%' }}
                 inputFormat={'DD/MM/YYYY'}
-
-                value={dateAgreedDelivery.value}
-                onChange={(e, newValue) => setDateAgreedDelivery({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
+                value={dateDeliveryProject.value}
+                onChange={(e, newValue) => setDateDeliveryProject({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
+                // onChange={(newValue) => onBudgetChange(newValue)}
                 renderInput={(params) =>
-                  <TextField fullWidth sx={{ width: '100%' }} {...params} error={dateAgreedDelivery.error} inputProps={{ sx: { color: dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
+                  <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
               />
-
-            </Box>
+            </Grid>
+            { false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>}
           </Grid>
-          <Grid container md={6} sm={6} xs={6} p={1}>
-            <InputLabel>
-              Entrega do projeto
-              <Tooltip title='Obrigatório' >
-                <span style={{ color: 'var(--red)' }}> *</span>
-              </Tooltip>
-            </InputLabel>
-            <DesktopDatePicker
-              inputFormat={'DD/MM/YYYY'}
-              value={dateDeliveryProject.value}
-              onChange={(e, newValue) => setDateDeliveryProject({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
-              // onChange={(newValue) => onBudgetChange(newValue)}
-              renderInput={(params) =>
-                <TextField fullWidth {...params} error={dateDeliveryProject.error} inputProps={{ sx: { color: dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
-            />
-          </Grid>
-          { false && <Grid container md={6} sm={6} xs={6} p={1}><MyInput value={obs.value} error={obs.error} label={'Observações'} type='area' onChange={(e) => { setObs({ value: e.target.value, error: '' }); }} /></Grid>}
-        </Grid>
 
-      </LocalizationProvider>
+        </LocalizationProvider>
 
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={validateData} autoFocus>
-        <Typography color="link.main" >Confirmar</Typography>
-      </Button>
-      <Button onClick={handleClose} sx={{ color: 'var(--gray)' }}> Cancelar</Button>
-    </DialogActions>
-  </Dialog>;
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={validateData} autoFocus>
+          <Typography color="link.main" >Confirmar</Typography>
+        </Button>
+        <Button onClick={handleClose} sx={{ color: 'var(--gray)' }}> Cancelar</Button>
+      </DialogActions>
+    </Dialog>
+  </>;
 };
 
 DeliverBudgetModal.propTypes = {

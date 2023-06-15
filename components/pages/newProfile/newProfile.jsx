@@ -17,7 +17,7 @@ import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
 
 const NewProfileScreen = (props) => {
-  const { breadcrumbsPath, pageProps, resources } = props;
+  const { breadcrumbsPath, pageProps, resources, profiles } = props;
 
   const [permission, setPermission] = useState({
     name: { value: '', required: true, error: '' },
@@ -42,7 +42,16 @@ const NewProfileScreen = (props) => {
   async function handleSave () {
     if (!permission.name.value) {
       setPermission({ ...permission, name: { ...permission.name, error: 'Campo Obrigatório.' } });
-      toast.error('Preencha todos os campos obrigatórios.');
+      toast.error('Erros no formulário.');
+
+      return;
+    }
+
+    debugger;
+
+    if (profiles.find(ele => ele.name === permission.name.value)) {
+      setPermission({ ...permission, name: { ...permission.name, error: 'Já existe um perfil com este nome.' } });
+      toast.error('Erros no formulário.');
 
       return;
     }
@@ -180,6 +189,7 @@ const NewProfileScreen = (props) => {
 NewProfileScreen.propTypes = {
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object).isRequired,
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
+  profiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageProps: PropTypes.any,
   permission: PropTypes.any,
   permissionsMap: PropTypes.any,

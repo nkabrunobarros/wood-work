@@ -61,7 +61,7 @@ export const navLinks = [
     underline: true,
   },
   {
-    title: 'Chão de Fabrica',
+    title: 'Chão de Fábrica',
     t: 'FactoryGround',
     id: 'fabrica',
     url: routes.private.internal.factorys,

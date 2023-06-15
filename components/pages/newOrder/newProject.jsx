@@ -42,7 +42,7 @@ import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, clients } = props;
+  const { breadcrumbsPath, pageProps, clients, budgets } = props;
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
@@ -110,6 +110,8 @@ const NewOrder = ({ ...props }) => {
       data.addressLocality = { ...data.addressLocality, error: '', value: client?.address?.addressLocality };
       data.addressRegion = { ...data.addressRegion, error: '', value: client?.address?.addressRegion };
       data.addressCountry = { ...data.addressCountry, error: '', value: client?.address?.addressCountry };
+
+      if (data.name.error === 'Este cliente, já tem 1 projeto com este nome') data.name.error = '';
     }
 
     data[props.name].value = props.value;
@@ -179,6 +181,11 @@ const NewOrder = ({ ...props }) => {
         hasErrors = true;
       }
     });
+
+    if (budgets.find((ele) => ele.orderBy.object === ('urn:ngsi-ld:Owner:' + budgetData.client.value) && ele.name.value === budgetData.name.value)) {
+      data.name.error = 'Este cliente, já tem 1 projeto com este nome';
+      hasErrors = true;
+    }
 
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
@@ -293,7 +300,7 @@ const NewOrder = ({ ...props }) => {
   async function CreateFurnitures (budgetId) {
     const items = lines.map(group => {
       const items = [{
-        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id,
+        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id + budgetData.client.value.split('_')[1],
         furnitureType: { type: 'Property', value: 'group' },
         name: { type: 'Property', value: group.name },
         hasBudget: { object: budgetId, type: 'Relationship' },
@@ -306,7 +313,7 @@ const NewOrder = ({ ...props }) => {
         //  Aqui tenho cada subgrupo com os items dentro
 
         const items = [{
-          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id,
+          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + budgetData.client.value.split('_')[1],
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name },
           hasBudget: { object: budgetId, type: 'Relationship' },
@@ -327,7 +334,7 @@ const NewOrder = ({ ...props }) => {
             };
           });
 
-          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value);
+          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value) + budgetData.client.value.split('_')[1];
           valuesOnly.type = 'Furniture';
           valuesOnly.subGroup = { value: subgroup.name, type: 'Property' };
           valuesOnly.group = { value: group.name, type: 'Property' };
@@ -423,7 +430,6 @@ const NewOrder = ({ ...props }) => {
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 onClientChange={onBudgetChange}
-
               />
             </Content>
           </Grid>

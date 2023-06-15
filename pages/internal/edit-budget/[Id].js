@@ -223,7 +223,7 @@ const EditProject = ({ ...pageProps }) => {
       countries: [...reduxState?.countries?.data || []],
       furnitures,
       furnitures2,
-      budget
+      budget,
     };
 
     return <EditProjectScreen {...props} />;

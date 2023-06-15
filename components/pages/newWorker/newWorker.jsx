@@ -108,7 +108,7 @@ const newWorker = ({ ...props }) => {
     setInputFields(data);
 
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return true;
     }

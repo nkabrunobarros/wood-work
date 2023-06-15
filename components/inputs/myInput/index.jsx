@@ -97,8 +97,8 @@ const MyInput = ({
         endAdornment={ (<>
           {type === 'number' && <InputAdornment position={'end'}>
             <Grid container md={12} justifyContent={'end'}>
-              <Grid container md={6} p={1}><IconButton name={name} action2='down' value={value} onClick={(e) => onUpDownClick(e, 'down')} sx={{ display: 'flex', alignItems: 'center', color: 'divider', height: '30px', width: '30px', border: '0.5px solid', borderColor: 'divider', fontSize: '22px' }} >-</IconButton></Grid>
-              <Grid container md={6} p={1}><IconButton name={name} action2='up' value={value} onClick={(e) => onUpDownClick(e, 'up')} sx={{ display: 'flex', alignItems: 'center', color: 'divider', height: '30px', width: '30px', border: '0.5px solid', borderColor: 'divider' }} >+</IconButton> </Grid>
+              <Grid container md={6}sm={6}xs={6} p={1}><IconButton name={name} action2='down' value={value} onClick={(e) => onUpDownClick(e, 'down')} sx={{ display: 'flex', alignItems: 'center', color: 'divider', height: '30px', width: '30px', border: '0.5px solid', borderColor: 'divider', fontSize: '22px' }} >-</IconButton></Grid>
+              <Grid container md={6}sm={6}xs={6} p={1}><IconButton name={name} action2='up' value={value} onClick={(e) => onUpDownClick(e, 'up')} sx={{ display: 'flex', alignItems: 'center', color: 'divider', height: '30px', width: '30px', border: '0.5px solid', borderColor: 'divider' }} >+</IconButton> </Grid>
             </Grid>
           </InputAdornment>}
           {adornmentIcon &&

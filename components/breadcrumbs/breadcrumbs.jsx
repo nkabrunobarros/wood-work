@@ -19,13 +19,8 @@ const CustomBreadcrumbs = ({ path }) => {
   };
 
   const output = Object.keys(path)?.sort((a, b) => b - a);
-  const arrayLenght = parseInt(output[0]);
-  let title = path.map((ele, index) => {
-    return (index !== 0 ? '/' : '') + ele.title;
-  });
-
-  title = title + ' | WoodWork 4.0';
-  console.log(title);
+  const arraylength = parseInt(output[0]);
+  const title = path[path.length - 1].title + ' | WoodWork 4.0';
 
   return (
     <Box
@@ -55,7 +50,7 @@ const CustomBreadcrumbs = ({ path }) => {
             className={styles.breadcrumb}
             // locale="pt"
           >
-            <Typography variant='subtitle1' color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>
+            <Typography variant='subtitle1' color='link.main' sx={i < arraylength && { ...style }}> {crumb.title}</Typography>
           </Link>
         ))}
       </Breadcrumbs>

@@ -37,7 +37,7 @@ const EditProfileScreen = (props) => {
   async function handleSave () {
     if (!permissionName.value) {
       setPermissionName({ ...permissionName, error: 'Campo obrigatório' });
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return;
     }
@@ -221,6 +221,7 @@ const EditProfileScreen = (props) => {
 
         if (permissions.create) {
           resourcesRequired.add('view_organization');
+          resourcesRequired.add('view_machine');
           resourcesRequired.add('add_machine');
         }
 

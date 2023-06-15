@@ -48,7 +48,7 @@ import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
 
 const EditBudget = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, clients, budget } = props;
+  const { breadcrumbsPath, pageProps, clients, budget, budgets } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -135,6 +135,8 @@ const EditBudget = ({ ...props }) => {
       data.addressLocality.value = client?.address?.addressLocality;
       data.addressRegion.value = client?.address?.addressRegion;
       data.addressCountry.value = client?.address?.addressCountry;
+
+      if (data.name.error === 'Este cliente, já tem 1 projeto com este nome') data.name.error = '';
     }
 
     data[props.name].value = props.value;
@@ -181,7 +183,7 @@ const EditBudget = ({ ...props }) => {
     });
 
     setLines(obj);
-    hasErrors && toast.error('Preencha todos os campos.');
+    hasErrors && toast.error('Erros no formulário');
 
     return hasErrors;
   }
@@ -207,8 +209,13 @@ const EditBudget = ({ ...props }) => {
       }
     });
 
+    if (budgets.find((ele) => ele.orderBy.object === ('urn:ngsi-ld:Owner:' + budgetData.client.value) && ele.name.value === budgetData.name.value) && budgetData.name.value !== budget.name.value) {
+      data.name.error = 'Este cliente, já tem 1 projeto com este nome';
+      hasErrors = true;
+    }
+
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
       setBudgetData(data);
 
       return !hasErrors;

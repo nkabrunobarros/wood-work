@@ -34,119 +34,121 @@ const Head = (props) => {
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateExpedition = (data) => dispatch(expeditionsActionsRedux.updateExpedition(data));
   const reduxState = useSelector((state) => state);
-
-  const upperGrids = [
-    {
-      title: 'Orçamento',
-      colls: [
-        {
-          label: 'Número',
-          value: order.hasBudget?.object?.num?.value
-        },
-        {
-          label: 'Data',
-          value: order.hasBudget?.object?.dateRequest?.value
-        },
-        {
-          label: 'Revisto a',
-          value: moment(order.hasBudget?.object?.createdAt).format('DD/MM/YYYY')
-        },
-        {
-          label: 'Entrega Acordada',
-          value: order.hasBudget?.object?.dateAgreedDelivery?.value
-        },
-        {
-          label: 'Valor',
-          value: order.hasBudget?.object?.price?.value
-        },
-        {
-          label: 'Entregue',
-          value: order.hasBudget?.object?.dateDelivery?.value
-        },
-      ]
-    },
-    {
-      title: 'Desenho',
-      colls: [
-        {
-          label: 'Início',
-          value: moment(order.createdAt).format('DD/MM/YYYY')
-        },
-        {
-          label: 'Fim',
-          value: order.startedProduction?.value && moment(order.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-      ]
-    },
-  ];
-
   let totalBuilt = 0;
 
   // eslint-disable-next-line no-return-assign
   props.furnituresUnbuilt.filter(ele => ele.produced?.value).map((furni) => totalBuilt = totalBuilt + Number(furni.amount.value));
 
-  const lowerGrids = [
-    {
-      title: 'Produção',
-      colls: [
-        {
-          label: 'Início',
-          value: order?.startedProduction?.value && moment(order?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
-          label: 'Fim',
-          value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
-          label: '%',
-          value: totalBuilt > 0 ? Number(totalBuilt / order.amount.value * 100).toFixed(0) : '0'
-        },
-      ]
-    },
-    {
-      title: 'Montagem',
-      colls: [
-        {
-          label: 'Início',
-          value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
-          label: 'Fim',
-          value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-      ]
-    },
-    {
-      title: 'Embalamento',
-      colls: [
-        {
-          label: 'Início',
-          value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
-          label: 'Fim',
-          value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-      ]
-    },
-    {
-      title: 'Expedição',
-      colls: [
-        {
-          label: 'Início',
-          value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
-          label: 'Fim',
-          value: order?.expedition?.deliveryTime?.value && moment(order?.expedition?.deliveryTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-        {
-          label: 'Entrega Acordada',
-          value: order.hasBudget?.object?.dateDeliveryProject?.value && moment(order.hasBudget?.object?.dateDeliveryProject?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
-        },
-      ]
-    },
-  ];
+  const [grids, setGrids] = useState({
+    upperGrids: [
+      {
+        title: 'Orçamento',
+        colls: [
+          {
+            label: 'Número',
+            value: order.hasBudget?.object?.num?.value
+          },
+          {
+            label: 'Data',
+            value: order.hasBudget?.object?.dateRequest?.value
+          },
+          {
+            label: 'Revisto a',
+            value: moment(order.hasBudget?.object?.createdAt).format('DD/MM/YYYY')
+          },
+          {
+            label: 'Entrega Acordada',
+            value: order.hasBudget?.object?.dateAgreedDelivery?.value
+          },
+          {
+            label: 'Valor',
+            value: order.hasBudget?.object?.price?.value
+          },
+          {
+            label: 'Entregue',
+            value: order.hasBudget?.object?.dateDelivery?.value
+          },
+        ]
+      },
+      {
+        title: 'Desenho',
+        colls: [
+          {
+            label: 'Início',
+            value: moment(order.createdAt).format('DD/MM/YYYY')
+          },
+          {
+            label: 'Fim',
+            value: order.startedProduction?.value && moment(order.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+        ]
+      },
+    ],
+    lowerGrids: [
+      {
+        title: 'Produção',
+        colls: [
+          {
+            label: 'Início',
+            value: order?.startedProduction?.value && moment(order?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+          {
+            label: 'Fim',
+            value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+          {
+            label: '%',
+            value: totalBuilt > 0 ? Number(totalBuilt / order.amount.value * 100).toFixed(0) : '0'
+          },
+        ]
+      },
+      {
+        title: 'Montagem',
+        colls: [
+          {
+            label: 'Início',
+            value: order?.assembly?.startTime?.value && moment(order?.assembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+          {
+            label: 'Fim',
+            value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+        ]
+      },
+      {
+        title: 'Embalamento',
+        colls: [
+          {
+            label: 'Início',
+            value: order?.assembly?.finishTime?.value && moment(order?.assembly?.finishTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+          {
+            label: 'Fim',
+            value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+        ]
+      },
+      {
+        title: 'Expedição',
+        colls: [
+          {
+            label: 'Início',
+            value: order?.expedition?.expeditionTime?.value && moment(order?.expedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+          {
+            label: 'Fim',
+            value: order?.expedition?.deliveryTime?.value && moment(order?.expedition?.deliveryTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+          {
+            label: 'Entrega Acordada',
+            value: order.hasBudget?.object?.dateDeliveryProject?.value && moment(order.hasBudget?.object?.dateDeliveryProject?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY')
+          },
+        ]
+      },
+    ]
+  });
+
+  console.log(grids);
 
   async function handleChangeToProd (props) {
     setChangeToProdModal(false);
@@ -205,6 +207,11 @@ const Head = (props) => {
         startedProduction: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') },
       }
     }).then(() => {
+      const cpyProdGrid = JSON.parse(JSON.stringify({ ...grids }));
+
+      cpyProdGrid.lowerGrids[0].colls[0].value = moment().format('DD/MM/YYYY');
+      setGrids({ ...grids, ...cpyProdGrid });
+
       setOrder({
         ...order,
         status: { ...order.status, value: 'production' },
@@ -222,6 +229,12 @@ const Head = (props) => {
         status: { type: 'Property', value: 'testing' },
       }
     }).then(async () => {
+      const cpyProdGrid = JSON.parse(JSON.stringify({ ...grids }));
+
+      cpyProdGrid.lowerGrids[0].colls[1].value = moment().format('DD/MM/YYYY');
+      cpyProdGrid.lowerGrids[1].colls[0].value = moment().format('DD/MM/YYYY');
+      setGrids({ ...grids, ...cpyProdGrid });
+
       setOrder({
         ...order,
         status: { ...order.status, value: 'testing' },
@@ -242,6 +255,12 @@ const Head = (props) => {
     }).then(async () => {
       await updateAssembly({ id: order.assembly.id, data: { finishTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
 
+      const cpyProdGrid = JSON.parse(JSON.stringify({ ...grids }));
+
+      cpyProdGrid.lowerGrids[1].colls[1].value = moment().format('DD/MM/YYYY');
+      cpyProdGrid.lowerGrids[2].colls[0].value = moment().format('DD/MM/YYYY');
+      setGrids({ ...grids, ...cpyProdGrid });
+
       setOrder({
         ...order,
         status: { ...order.status, value: 'packing' },
@@ -259,6 +278,12 @@ const Head = (props) => {
       }
     }).then(async () => {
       await updateExpedition({ id: order.expedition.id, data: { expeditionTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
+
+      const cpyProdGrid = JSON.parse(JSON.stringify({ ...grids }));
+
+      cpyProdGrid.lowerGrids[2].colls[1].value = moment().format('DD/MM/YYYY');
+      cpyProdGrid.lowerGrids[3].colls[0].value = moment().format('DD/MM/YYYY');
+      setGrids({ ...grids, ...cpyProdGrid });
 
       setOrder({
         ...order,
@@ -278,6 +303,11 @@ const Head = (props) => {
       }
     }).then(async () => {
       await updateExpedition({ id: order.expedition.id, data: { deliveryTime: { type: 'Property', value: moment().format('DD/MM/YYYY HH:mm:ss') } } });
+
+      const cpyProdGrid = JSON.parse(JSON.stringify({ ...grids }));
+
+      cpyProdGrid.lowerGrids[3].colls[1].value = moment().format('DD/MM/YYYY');
+      setGrids({ ...grids, ...cpyProdGrid });
 
       setOrder({
         ...order,
@@ -353,7 +383,7 @@ const Head = (props) => {
         <PrimaryBtn
           text='Passar a montagem'
           onClick={() => handleChangeToAssembly() }
-          hidden={!(internalPOV && order.status.value === 'production' && lowerGrids[0].colls[2].value === 100)}
+          hidden={!(internalPOV && order.status.value === 'production' && grids.lowerGrids[0].colls[2].value === '100')}
           icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
           sx={{ marginLeft: 1 }}
         />
@@ -381,8 +411,8 @@ const Head = (props) => {
       </Box>}
     </Box>
     <Grid container md={12}>
-      <HeaderGrid grids={ upperGrids }/>
-      <HeaderGrid grids={ lowerGrids }/>
+      <HeaderGrid grids={ grids.upperGrids }/>
+      <HeaderGrid grids={ grids.lowerGrids }/>
       <Grid container md={12} p={1}>
         <Grid container style={{ width: 'fit-content' }}>
           <Grid container md={8}>

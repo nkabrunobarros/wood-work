@@ -143,9 +143,9 @@ const FactoryGroundProject = (props) => {
 
   function createParts () {
     const newParts2 = [
-      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_C_COSTA', id: formatString(furniture.name.value) + '_BAR_C_COSTA' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 1, lenght: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(furniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(furniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_C_COSTA', id: formatString(furniture.name.value) + '_BAR_C_COSTA' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 1, length: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(furniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 1, length: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: project.id, belongsToFurniture: furniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(furniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3' + moment().diff(moment().startOf('day'), 'seconds'), material: 'HDF 6', amount: 2, length: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
     ];
 
     const newConsumables = [
@@ -562,7 +562,7 @@ const FactoryGroundProject = (props) => {
           </Tabs>
           <TabPanel value={tab} index={0}>
             <Grow in={true}>
-              <Box sx={{ lenght: '100%', overflowX: 'scroll' }}>
+              <Box sx={{ length: '100%', overflowX: 'scroll' }}>
                 <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
                   {/* Headers */}
                   <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
@@ -594,7 +594,7 @@ const FactoryGroundProject = (props) => {
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, '') } </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                            <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                            <Grid {...cellProps} > <Typography variant='sm'>{ part.length } mm </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
@@ -632,7 +632,7 @@ const FactoryGroundProject = (props) => {
           </TabPanel>
           <TabPanel value={tab} index={1}>
             <Grow in={true}>
-              <Box sx={{ lenght: '100%', overflowX: 'scroll' }}>
+              <Box sx={{ length: '100%', overflowX: 'scroll' }}>
                 <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
                   {/* Headers */}
                   <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>

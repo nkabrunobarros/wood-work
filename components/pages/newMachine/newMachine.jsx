@@ -25,7 +25,7 @@ import formatString from '../../utils/FormatString';
 import ToastSet from '../../utils/ToastSet';
 
 const NewMachineScreen = ({ ...props }) => {
-  const { breadcrumbsPath, organizations, pageProps } = props;
+  const { breadcrumbsPath, organizations, pageProps, machines } = props;
   const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState([
@@ -98,18 +98,13 @@ const NewMachineScreen = ({ ...props }) => {
       if (input.required && input.value === '') {
         input.error = 'Campo Obrigatório';
         hasErrors = true;
-      } else if (
-        input.required &&
-        input.id === 'email' &&
-        !EmailValidation(input.value)
-      ) {
+      } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
         input.error = 'Email mal estruturado';
         hasErrors = true;
-      } else if (
-        input?.value?.length < 9 &&
-        input.type === 'phone' &&
-        input.required
-      ) {
+      } else if (input.required && input.id === 'name' && machines.find(ele => ele.name.value === input.value)) {
+        input.error = 'Já utilizado';
+        hasErrors = true;
+      } else if (input?.value?.length < 9 && input.type === 'phone' && input.required) {
         input.error = 'Número mal estruturado';
         hasErrors = true;
       } else {
@@ -120,7 +115,7 @@ const NewMachineScreen = ({ ...props }) => {
     setInputFields(data);
 
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return true;
     }
@@ -248,6 +243,7 @@ const NewMachineScreen = ({ ...props }) => {
 NewMachineScreen.propTypes = {
   breadcrumbsPath: PropTypes.arrayOf(PropTypes.object).isRequired,
   organizations: PropTypes.arrayOf(PropTypes.object).isRequired,
+  machines: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageProps: PropTypes.any,
 };
 

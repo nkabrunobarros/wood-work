@@ -199,7 +199,7 @@ const Head = (props) => {
   ];
 
   async function InitiateBudgeting () {
-    const loading = toast.loading();
+    const loading = toast.loading('');
 
     const data = {
       budgetStatus: { type: 'Property', value: 'waiting budget' },
@@ -207,8 +207,7 @@ const Head = (props) => {
 
     await updateBudget({ id: budget.id, data })
       .then(() => {
-        setInitiateBudgeting(false);
-        ToastSet(loading, 'Projeto alterado!', 'success');
+        ToastSet(loading, 'Projeto iniciou Orçamentação!', 'success');
 
         setOld({
           ...budget,
@@ -219,6 +218,8 @@ const Head = (props) => {
           ...budget,
           budgetStatus: { type: 'Property', value: 'waiting budget' },
         });
+
+        setInitiateBudgeting(false);
       })
       .catch(() => {
         setInitiateBudgeting(false);

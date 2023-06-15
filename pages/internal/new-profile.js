@@ -11,13 +11,16 @@ import * as profileActionsRedux from '../../store/actions/profile';
 
 const NewProfile = ({ pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [resources, setResources] = useState(false);
+  const [resources, setResources] = useState();
+  const [profiles, setProfiels] = useState();
   const dispatch = useDispatch();
   const getResources = (data) => dispatch(profileActionsRedux.resources(data));
+  const getProfiles = (data) => dispatch(profileActionsRedux.profiles(data));
 
   useEffect(() => {
-    async function load () {
+    async function load() {
       await getResources().then((res) => setResources(res.data)); //  All permissions resources
+      await getProfiles().then((res) => setProfiels(res.data.results)); //  All permissions resources
     }
 
     load().then(() => setLoaded(true));
@@ -59,10 +62,9 @@ const NewProfile = ({ pageProps }) => {
       },
     ];
 
-    console.log(filteredPermissions);
     filteredPermissions.Conta.see = resources.find(ele => ele.codename === 'see_account').id;
 
-    const props = { breadcrumbsPath, pageProps, resources, permissionsMap: filteredPermissions };
+    const props = { breadcrumbsPath, pageProps, resources, permissionsMap: filteredPermissions, profiles };
 
     return <NewProfileScreen {...props} />;
   }

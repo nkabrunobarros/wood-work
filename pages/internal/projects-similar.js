@@ -103,6 +103,7 @@ const OrdersSimilar = () => {
 
           return {
             ...project,
+            Início: moment(project.createdAt).format('DD/MM/YYYY'),
             begin: { value: moment(project.createdAt).format('DD/MM/YYYY') },
             end: {
               value: expedition?.expeditionTime?.value

@@ -12,11 +12,11 @@ import Content from '../../content/content';
 import { Box, ButtonGroup, Typography } from '@mui/material';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
+import routes from '../../../navigation/routes';
 import Notification from '../../dialogs/Notification';
 import FormGenerator from '../../formGenerator';
 import Navbar from '../../layout/navbar/navbar';
 import ToastSet from '../../utils/ToastSet';
-import routes from '../../../navigation/routes';
 
 const NewStock = ({ ...props }) => {
   const { breadcrumbsPath, pageProps } = props;
@@ -105,7 +105,7 @@ const NewStock = ({ ...props }) => {
     });
 
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return true;
     }

@@ -55,7 +55,7 @@ const ForgotPassword = (props) => {
 
     data.append('email', email);
 
-    if (!email) return toast.error('Prencher formulario');
+    if (!email) return toast.error('Prencher formulário');
 
     await sendResetEmail(data).then(() => {
       setEmail('');

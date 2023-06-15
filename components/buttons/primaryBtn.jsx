@@ -15,46 +15,32 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
     maxHeight: '30px',
   };
 
-  const mouseDownHandler = (event) => {
-    event.preventDefault();
-
-    if (event.button === 1) {
-      // do something on middle mouse button click
-      console.log('weel');
-    }
-  };
-
   return !hidden && (
     <>
-      {href
-        ? <>
-          <Link href={href}>
-            <Grow in={true}>
-              <Tooltip title={title || ''}>
-                <Button {...otherProps} color={color} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} component='label' sx={sx}>
-                  {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
-                  <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
-                  {/* Children is for file Inputs */}
-                  {children}
-                </Button>
-              </Tooltip>
-            </Grow>
-          </Link>
-        </>
-        : <Grow in={true}>
-          <Tooltip title={title || ''}>
-            <Button {...otherProps} onMouseDown={mouseDownHandler} color={color} className={breathing && 'breathingBackgroundWarning'} id={id} fullWidth={fullWidth} variant={!light && 'contained'} type={type} style={style} onClick={onClick} component='label' sx={sx}>
-              {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
-              <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
-              {/* Children is for file Inputs */}
-              {children}
-            </Button>
-          </Tooltip>
-        </Grow>
-
-      }
+      <Grow in={true}>
+        <Tooltip title={title || ''}>
+          <Button
+            {...otherProps}
+            color={color}
+            className={breathing && 'breathingBackgroundWarning'}
+            id={id}
+            fullWidth={fullWidth}
+            variant={!light && 'contained'}
+            type={type}
+            style={style}
+            onClick={onClick}
+            component={href ? Link : 'label'}
+            sx={sx}
+            href={href}
+          >
+            {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
+            <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
+            {/* Children is for file Inputs */}
+            {children}
+          </Button>
+        </Tooltip>
+      </Grow>
     </>
-
   );
 };
 
