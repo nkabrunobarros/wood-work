@@ -25,7 +25,7 @@ export const buildFoldersStructure = async (array, files) => {
   return builtFolders;
 };
 
-export const buildFurnturesStructure = (array) => {
+export const buildFurnituresStructure = (array) => {
   const built = [];
   let currentGroup = null;
   let currentSubGroup = null;
@@ -80,19 +80,17 @@ const Budget = ({ ...pageProps }) => {
     const getData = async () => {
       const budgetData = await getBudget(router.query.Id);
 
-      const [furnituresData, clientData, foldersData] = await Promise.all([
+      const [furnituresData, clientData, foldersData, filesData] = await Promise.all([
         getFurnitures({ hasBudget: budgetData.data.id }),
         getClient(budgetData.data.orderBy.object.replace('urn:ngsi-ld:Owner:', '')),
-        getFolders({ budget: budgetData.data.id })
+        getFolders({ budget: budgetData.data.id }),
+        getFiles(router.query.Id)
       ]);
 
       setBudget({ ...budgetData.data, orderBy: { ...budgetData.data.orderBy, object: clientData.data } });
-      setFurnitures(buildFurnturesStructure([...furnituresData.data].sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1)));
+      setFurnitures(buildFurnituresStructure([...furnituresData.data].sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1)));
       setDisplayingBudget(budget);
-
-      const resFiles = await getFiles(router.query.Id);
-
-      setFolders(await buildFoldersStructure([...foldersData.data.results], [...resFiles.data.results]));
+      setFolders(await buildFoldersStructure([...foldersData.data.results], [...filesData.data.results]));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

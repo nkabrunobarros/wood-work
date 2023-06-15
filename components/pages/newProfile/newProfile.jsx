@@ -47,8 +47,6 @@ const NewProfileScreen = (props) => {
       return;
     }
 
-    debugger;
-
     if (profiles.find(ele => ele.name === permission.name.value)) {
       setPermission({ ...permission, name: { ...permission.name, error: 'Já existe um perfil com este nome.' } });
       toast.error('Erros no formulário.');

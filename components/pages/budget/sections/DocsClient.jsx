@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-//  PropTypes
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
 import { ChevronDown, FilePlus, FileText } from 'lucide-react';
 import moment from 'moment';
@@ -8,17 +7,20 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { buildFoldersStructure } from '../../../../pages/internal/budget/[Id]';
 import * as filesActionsRedux from '../../../../store/actions/file';
+import * as foldersActionsRedux from '../../../../store/actions/folder';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 import Notification from '../../../dialogs/Notification';
 
 const DocsClient = (props) => {
-  const { pageProps, isInternalPage } = props;
+  const { pageProps, isInternalPage, budget } = props;
   const [userFiles, setUserFiles] = useState(props.folders.find(ele => ele.name === 'VF do Cliente')?.files);
   const dispatch = useDispatch();
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
-  const getFile = (data) => dispatch(filesActionsRedux.file(data));
   const [sectionExpanded, setSectionExpanded] = useState(true);
+  const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
 
   const onDrop = useCallback((acceptedFiles) => {
     handleFilesUpload(acceptedFiles);
@@ -34,11 +36,15 @@ const DocsClient = (props) => {
     [...newFiles].map((file, i) => data.append(`file${i !== 0 ? i + 1 : ''}`, file));
 
     try {
-      await uploadFiles(data).then(async (res) => {
-        await getFile(res.data.id).then((res) => {
-          setUserFiles([...userFiles, res.data]);
-        });
+      await uploadFiles(data).then(async () => {
+        const [foldersData, filesData] = await Promise.all([
+          getFolders({ budget: budget.id }),
+          getFiles(budget.id)
+        ]);
 
+        const builtFolders = await buildFoldersStructure([...foldersData.data.results], [...filesData.data.results]);
+
+        setUserFiles(builtFolders.find(ele => ele.name === 'VF do Cliente')?.files);
         toast.success('Ficheiros carregados.');
       });
     } catch (error) {

@@ -18,7 +18,7 @@ const NewProfile = ({ pageProps }) => {
   const getProfiles = (data) => dispatch(profileActionsRedux.profiles(data));
 
   useEffect(() => {
-    async function load() {
+    async function load () {
       await getResources().then((res) => setResources(res.data)); //  All permissions resources
       await getProfiles().then((res) => setProfiels(res.data.results)); //  All permissions resources
     }

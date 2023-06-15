@@ -274,9 +274,10 @@ const NewOrder = ({ ...props }) => {
     };
 
     await newBudget(data).then(async () => {
-      CreateFurnitures(data.id);
-      toast.success('Projeto Criado!');
-      Router.push(routes.private.internal.budget + data.id);
+      CreateFurnitures(data.id).then(() => {
+        toast.success('Projeto Criado!');
+        Router.push(routes.private.internal.budget + data.id);
+      });
     }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
 
     // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
