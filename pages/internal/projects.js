@@ -120,7 +120,7 @@ const Projects = ({ ...pageProps }) => {
         icon: (
           <Layers
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#225EE8',
@@ -133,7 +133,7 @@ const Projects = ({ ...pageProps }) => {
         icon: (
           <PenTool
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#602778',
@@ -146,7 +146,7 @@ const Projects = ({ ...pageProps }) => {
         icon: (
           <PackagePlus
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#02B0FA',
@@ -159,7 +159,7 @@ const Projects = ({ ...pageProps }) => {
         icon: (
           <Network
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#2C9200',
@@ -172,7 +172,7 @@ const Projects = ({ ...pageProps }) => {
         icon: (
           <PackageCheck
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#DF9100',
@@ -185,7 +185,7 @@ const Projects = ({ ...pageProps }) => {
         icon: (
           <Truck
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#BB3D03',

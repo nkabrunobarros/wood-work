@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { Close, DeleteOutline, EditOutlined, PowerSettingsNew } from '@mui/icons-material';
 
 import { Box, ButtonGroup, IconButton, Tooltip } from '@mui/material';
+import { Edit2, Power, Trash, X } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -25,8 +25,8 @@ const DisplayActionButtons = ({
         <Tooltip title={'Editar'}>
           <Box style={{ color: 'red' }} display={isCancelled && 'none'}>
             <Link href={`${editRoute}${row.id}`}>
-              <IconButton onClick={() => !Router.route.includes('projects') && !row.type === 'Project' && editRoute && Router.push(`${editRoute}${row.id}`) } >
-                <EditOutlined fontSize="small" color={'primary'} />
+              <IconButton color='primary' onClick={() => !Router.route.includes('projects') && !row.type === 'Project' && editRoute && Router.push(`${editRoute}${row.id}`) } >
+                <Edit2 size={20} strokeWidth={1.5} />
               </IconButton>
             </Link>
           </Box>
@@ -34,22 +34,22 @@ const DisplayActionButtons = ({
       )}
       {!!onReactivation && isCancelled && (
         <Tooltip title={'Reabrir'}>
-          <IconButton onClick={() => onReactivationClick(row)} size="small">
-            <PowerSettingsNew color={'warning'} fontSize="small" />
+          <IconButton color={'warning'} onClick={() => onReactivationClick(row)} size="small">
+            <Power size={20} strokeWidth={1.5} />
           </IconButton>
         </Tooltip>
       )}
       {!!onCancel && !isCancelled && !isFinished && (
         <Tooltip title={'Cancelar'}>
-          <IconButton onClick={() => onCancel(row)} size="small">
-            <Close color={'warning'} fontSize="small" />
+          <IconButton color={'warning'} onClick={() => onCancel(row)} size="small">
+            <X size={20} strokeWidth={1.5} />
           </IconButton>
         </Tooltip>
       )}
       {!!onDelete && (
-        <Tooltip title={'Remover'} >
-          <IconButton onClick={() => onDeleteClick(row)} size="small">
-            <DeleteOutline color={'error'} fontSize="small" />
+        <Tooltip title={'Apagar'} >
+          <IconButton color={'error'} onClick={() => onDeleteClick(row)} size="small">
+            <Trash size={20} strokeWidth={1.5} />
           </IconButton>
         </Tooltip>
       )}

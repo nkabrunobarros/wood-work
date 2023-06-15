@@ -297,8 +297,8 @@ const EditClient = ({ ...props }) => {
                   text='Guardar'
                   icon={
                     <Save
-                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   onClick={ValidateFields}
@@ -307,8 +307,8 @@ const EditClient = ({ ...props }) => {
                   text='Cancelar'
                   icon={
                     <X
-                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   light
@@ -323,8 +323,8 @@ const EditClient = ({ ...props }) => {
               <Grid item xs={12} md={6} sx={{ paddingRight: '.5rem' }}>
                 <Typography id='align' item className='lightTextSm'>
                   <User
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
               Dados Gerais
                 </Typography>
@@ -340,8 +340,8 @@ const EditClient = ({ ...props }) => {
               <Grid container item sx={{ paddingRight: '.5rem', display: 'none' }}>
                 <Typography id='align' className='lightTextSm'>
                   <Edit2
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                   Dados de Faturação
                 </Typography>

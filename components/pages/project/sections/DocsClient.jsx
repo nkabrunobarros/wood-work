@@ -98,8 +98,8 @@ const DocsClient = (props) => {
                 onClick={(e) => e.stopPropagation()}
                 icon={
                   <FilePlus
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
               >

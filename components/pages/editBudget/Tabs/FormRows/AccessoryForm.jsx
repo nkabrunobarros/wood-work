@@ -36,7 +36,7 @@ const AccessoryForm = (props) => {
     <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >
-          <Trash color='red' size={20} strokeWidth={1} />
+          <Trash color='red' size={20} strokeWidth={1.5} />
         </IconButton>
       </Tooltip>
     </Box>

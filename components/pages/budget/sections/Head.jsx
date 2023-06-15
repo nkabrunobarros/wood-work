@@ -1,9 +1,9 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { Box, Grid, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, ButtonGroup, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 //  PropTypes
-import { CheckCircleOutline } from '@mui/icons-material';
+import { CheckCircleOutline, Close } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import routes from '../../../../navigation/routes';
 import PrimaryBtn from '../../../buttons/primaryBtn';
@@ -11,7 +11,7 @@ import AdjudicateBudgetModal from './modals/AdjudicateBudgetModal';
 import DeliverBudgetModal from './modals/DeliverBudgetModal';
 
 //  Actions
-import { Save } from 'lucide-react';
+import { Edit2, Power, Trash } from 'lucide-react';
 import moment from 'moment';
 import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -75,12 +75,13 @@ EditableCell.propTypes = {
 const Head = (props) => {
   const { isInternalPage, pageProps } = props;
   const [deliverModal, setDeliverModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [initiateBudgeting, setInitiateBudgeting] = useState(false);
   const [adjudicateModal, setAdjudicateModal] = useState(false);
-  const [old, setOld] = useState(JSON.parse(JSON.stringify({ ...props.budget })));
   const [budget, setBudget] = useState({ ...props.budget });
   const dispatch = useDispatch();
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
+  const deleteBudget = (data) => dispatch(budgetsActionsRedux.deleteBudget(data));
   const newExpedition = (data) => dispatch(expeditionsActionsRedux.newExpedition(data));
   const newProject = (data) => dispatch(projectsActionsRedux.newProject(data));
   const newAssembly = (data) => dispatch(assemblysActionsRedux.newAssembly(data));
@@ -209,11 +210,6 @@ const Head = (props) => {
       .then(() => {
         ToastSet(loading, 'Projeto iniciou Orçamentação!', 'success');
 
-        setOld({
-          ...budget,
-          budgetStatus: { type: 'Property', value: 'waiting budget' },
-        });
-
         setBudget({
           ...budget,
           budgetStatus: { type: 'Property', value: 'waiting budget' },
@@ -223,44 +219,6 @@ const Head = (props) => {
       })
       .catch(() => {
         setInitiateBudgeting(false);
-        ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
-      });
-  }
-
-  //  Updates Budget
-  async function handleUpdate () {
-    const loading = toast.loading();
-
-    const data = {
-      price: { type: 'Property', value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
-      amount: { type: 'Property', value: budget.amount.value },
-      dateAgreedDelivery: { type: 'Property', value: budget.dateAgreedDelivery.value },
-      dateRequest: { type: 'Property', value: budget.dateRequest.value },
-    };
-
-    await updateBudget({ id: budget.id, data })
-      .then(() => {
-        ToastSet(loading, 'Projeto alterado!', 'success');
-
-        setOld({
-          ...budget,
-          price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
-          amount: { ...budget.amount, value: budget.amount.value },
-          category: { ...budget.category, value: budget.category.value },
-          dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
-          dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
-        });
-
-        setBudget({
-          ...budget,
-          price: { ...budget.price, value: budget.price.value.replace(/ /g, '').replace(/€/g, '') },
-          amount: { ...budget.amount, value: budget.amount.value },
-          category: { ...budget.category, value: budget.category.value },
-          dateAgreedDelivery: { ...budget.dateAgreedDelivery, value: budget.dateAgreedDelivery.value },
-          dateRequest: { ...budget.dateRequest, value: budget.dateRequest.value },
-        });
-      })
-      .catch(() => {
         ToastSet(loading, 'Projeto não alterado. Se o problema persistir, contacte a gerencia.', 'error');
       });
   }
@@ -288,15 +246,6 @@ const Head = (props) => {
 
     await updateBudget({ data, id: budget.id }).then(() => {
       setBudget({
-        ...budget,
-        price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
-        budgetStatus: { value: 'waiting adjudication', type: 'Property' },
-        dateDelivery: { value: moment().format('DD/MM/YYYY'), type: 'Property' },
-        dateAgreedDelivery: { value: moment(dateAgreedDelivery.value).format('DD/MM/YYYY'), type: 'Property' },
-        dateDeliveryProject: { value: moment(dateDeliveryProject.value).format('DD/MM/YYYY'), type: 'Property' },
-      });
-
-      setOld({
         ...budget,
         price: { value: String(price?.value)?.replace(/ /g, '').replace(/€/g, ''), type: 'Property' },
         budgetStatus: { value: 'waiting adjudication', type: 'Property' },
@@ -336,10 +285,10 @@ const Head = (props) => {
           type: 'Property',
           value: 0
         },
-        orderBy: {
+        belongsTo: {
           type: 'Relationship',
-          object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id
-        }
+          object: 'urn:ngsi-ld:Project:' + formatString(budget.name.value)
+        },
       });
 
       await newAssembly({
@@ -361,10 +310,6 @@ const Head = (props) => {
           type: 'Relationship',
           object: 'urn:ngsi-ld:Project:' + formatString(budget.name.value)
         },
-        orderBy: {
-          type: 'Relationship',
-          object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id
-        }
       });
 
       const built = {
@@ -432,8 +377,8 @@ const Head = (props) => {
       onClick={() => setInitiateBudgeting(true) }
       icon={
         <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-          size={pageProps?.globalVars?.iconSize}
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+          size={pageProps?.globalVars?.iconSize || 20}
         />
       }
     />;
@@ -442,8 +387,8 @@ const Head = (props) => {
       onClick={() => setDeliverModal(!deliverModal) }
       icon={
         <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-          size={pageProps?.globalVars?.iconSize}
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+          size={pageProps?.globalVars?.iconSize || 20}
         />
       }
     />;
@@ -452,13 +397,51 @@ const Head = (props) => {
       onClick={() => setAdjudicateModal(!adjudicateModal)}
       icon={
         <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-          size={pageProps?.globalVars?.iconSize}
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+          size={pageProps?.globalVars?.iconSize || 20}
         />
       }
     />;
     }
   };
+
+  async function onDelete () {
+    const loading = toast.loading('');
+    // eslint-disable-next-line react/prop-types
+
+    await deleteBudget(budget.id)
+      .then(() => {
+        ToastSet(loading, 'Projeto removido', 'success');
+        Router.push(routes.private.internal.projects);
+      }).catch(() => {
+        ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+      });
+  }
+
+  async function CancelProject () {
+    const loading = toast.loading('');
+    const data = { budgetStatus: 'canceled' };
+
+    try {
+      await updateBudget({ id: budget.id, data }).then(() => {
+        ToastSet(loading, 'Projeto cancelado.', 'success');
+
+        setBudget({
+          ...budget,
+          budgetStatus: { type: 'Property', value: 'canceled' },
+        });
+      });
+    } catch (err) { ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error'); }
+  }
+
+  function ReopenProject () {
+    setBudget({
+      ...budget,
+      budgetStatus: { type: 'Property', value: 'needs analysis' },
+    });
+  }
+
+  const canEditProject = CanDo('update_project');
 
   return (
     <>
@@ -471,6 +454,12 @@ const Head = (props) => {
         onConfirm={() => InitiateBudgeting()}
         icon='Check'
         message={'Está prestes a iniciar orçamentação. Quer continuar?'}
+      />
+      <ConfirmDialog
+        open={deleteModal}
+        handleClose={() => setDeleteModal(false)}
+        onConfirm={() => onDelete()}
+        message={'Está prestes a apagar um projeto, o que é irreversível, tem certeza que quer continuar?'}
       />
       <Box id='pad'>
         <Box container >
@@ -498,20 +487,30 @@ const Head = (props) => {
               </Box>
             </Grid>
             <Grid container md={6} sm={6} xs={6} justifyContent='end' alignItems={'center'}>
-              <PrimaryBtn
-                breathing
-                hidden={!(JSON.stringify(old) !== JSON.stringify(budget) && isInternalPage)}
-                text={'Guardar alterações'}
-                onClick={handleUpdate}
-                sx={{ mr: 1 }}
-                icon={
-                  <Save
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
-                  />
-                }
-              />
-              {CanDo('change_project') && <ActionButton />}
+              <Box pr={2}>
+                {CanDo('change_project') && <ActionButton />}
+
+              </Box>
+
+              <ButtonGroup>
+                { budget.budgetStatus.value !== 'canceled' && <PrimaryBtn text={'Editar'} color='primary'
+                  href={routes.private.internal.editBudget + budget.id}
+                  hidden={!canEditProject}
+                  icon={ <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />}
+                />}
+                {budget.budgetStatus.value !== 'canceled' && <PrimaryBtn text='Cancelar' color={'warning'} variant='outlined' hidden={!canEditProject || budget.budgetStatus.value === 'canceled'}
+                  icon={ <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
+                  onClick={CancelProject}
+                />}
+                {budget.budgetStatus.value === 'canceled' && <PrimaryBtn text='Reativar' color={'warning'} hidden={!canEditProject}
+                  icon={ <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
+                  onClick={ReopenProject}
+                />}
+                <PrimaryBtn text='Apagar' color={'error'} variant='outlined' hidden={!CanDo('delete_owner')}
+                  onClick={() => setDeleteModal(true)}
+                  icon={ <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} /> }
+                />
+              </ButtonGroup>
             </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>

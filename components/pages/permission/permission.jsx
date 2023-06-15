@@ -51,7 +51,7 @@ const ProfileScreen = (props) => {
       open={dialogOpen}
       handleClose={() => setDialogOpen(false)}
       onConfirm={() => onDelete()}
-      message={'Está prestes a apagar um perfil o que é irreversivel, tem certeza que quer continuar?'}
+      message={'Está prestes a apagar um perfil o que é irreversível, tem certeza que quer continuar?'}
     />
     <Navbar />
     <Notification />
@@ -66,7 +66,7 @@ const ProfileScreen = (props) => {
               hidden={!CanDo('update_profile')}
               icon={
                 <Edit
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                   size={pageProps?.globalVars?.iconSize || 20}
                 />
               }
@@ -75,11 +75,12 @@ const ProfileScreen = (props) => {
             <PrimaryBtn
               light
               text='Apagar'
+              color='error'
               hidden={!CanDo('delete_profile')}
               onClick={() => setDialogOpen(true)}
               icon={
                 <Trash
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                   size={pageProps?.globalVars?.iconSize || 20}
                 />
               }

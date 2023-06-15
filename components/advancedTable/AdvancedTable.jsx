@@ -98,18 +98,18 @@ const AdvancedTable = ({
 
         break;
       case routes.private.internal.similarProjects:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?' });
+        setState({ ...state, dialogMessage: 'Está prestes a apagar um projeto o que é irreversível, tem certeza que quer continuar?' });
 
         break;
       case routes.private.internal.stocks:
 
         break;
       case routes.private.internal.clients:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?' });
+        setState({ ...state, dialogMessage: 'Está prestes a apagar um cliente o que é irreversível, tem certeza que quer continuar?' });
 
         break;
       case routes.private.internal.workers:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?' });
+        setState({ ...state, dialogMessage: 'Está prestes a apagar um utilizador o que é irreversível, tem certeza que quer continuar?' });
 
         break;
       }

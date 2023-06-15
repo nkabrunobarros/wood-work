@@ -66,7 +66,7 @@ const DeliverBudgetModal = (props) => {
       <Divider />
       <DialogContent>
         <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color={iconColor}>
-          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
+          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1.5} />
         </Box>
 
         <DialogContentText id='alert-dialog-description'>

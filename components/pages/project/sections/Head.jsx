@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { Forward, Tag } from 'lucide-react';
+import { Edit2, Forward, Power, Tag, Trash } from 'lucide-react';
 import React, { useState } from 'react';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 
 //  PropTypes
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import { Box, ButtonGroup, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../../navigation/routes';
@@ -26,6 +27,7 @@ const Head = (props) => {
   const [changeToAssemblyModal, setChangeToAssemblyModal] = useState(false);
   const [changeToTransportModal, setChangeToTransportModal] = useState(false);
   const [changeToFinishedModal, setChangeToFinishedModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [finishModal, setFinishModal] = useState(finishProject === '1');
   const path = useRouter();
   const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
@@ -33,6 +35,7 @@ const Head = (props) => {
   const updateAssembly = (data) => dispatch(assemblyActionsRedux.updateAssembly(data));
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateExpedition = (data) => dispatch(expeditionsActionsRedux.updateExpedition(data));
+  const deleteProject = (data) => dispatch(projectsActionsRedux.deleteProject(data));
   const reduxState = useSelector((state) => state);
   let totalBuilt = 0;
 
@@ -319,8 +322,52 @@ const Head = (props) => {
     });
   }
 
+  async function onDelete () {
+    const loading = toast.loading('');
+    // eslint-disable-next-line react/prop-types
+
+    await deleteProject(order.hasBudget.id)
+      .then(() => {
+        ToastSet(loading, 'Projeto removido', 'success');
+        Router.push(routes.private.internal.projects);
+      }).catch(() => {
+        ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
+      });
+  }
+
+  const canEditProject = CanDo('update_project');
+
+  async function CancelProject () {
+    const loading = toast.loading('');
+    const data = { status: 'canceled' };
+
+    try {
+      await updateProject({ id: order.id, data }).then(() => {
+        ToastSet(loading, 'Projeto cancelado.', 'success');
+
+        setOrder({
+          ...order,
+          status: { type: 'Property', value: 'canceled' },
+        });
+      });
+    } catch (err) { ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error'); }
+  }
+
+  function ReopenProject () {
+    setOrder({
+      ...order,
+      status: { type: 'Property', value: 'drawing' },
+    });
+  }
+
   return <Box id='pad'>
     <Notification />
+    <ConfirmDialog
+      open={deleteModal}
+      handleClose={() => setDeleteModal(false)}
+      onConfirm={() => onDelete()}
+      message={'Está prestes a apagar um projeto, o que é irreversível, tem certeza que quer continuar?'}
+    />
     <FinishProjectModal open={changeToFinishedModal} handleClose={() => setChangeToFinishedModal(false)} onConfirm={(e) => onProjectScanned(e)} />
     <ConfirmDialog
       open={changeToProdModal}
@@ -370,45 +417,64 @@ const Head = (props) => {
           </Box>
         </Grid>
       </Grid>
-      {CanDo('change_project') && <Box>
+      {canEditProject && <Box>
         {false && <PrimaryBtn
           text='Gerar Etiquetas'
           hidden={!(internalPOV && order.status.value === 'production')}
-          icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />}
+          icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> } />}
         <PrimaryBtn
           text='Passar a produção'
           onClick={() => handleChangeToProduction() }
           hidden={!(internalPOV && order.status.value === 'drawing')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> } />
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> } />
         <PrimaryBtn
           text='Passar a montagem'
           onClick={() => handleChangeToAssembly() }
           hidden={!(internalPOV && order.status.value === 'production' && grids.lowerGrids[0].colls[2].value === '100')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
           text='Passar a embalamento'
           onClick={() => handleChangeToPacking() }
           hidden={!(internalPOV && order.status.value === 'testing')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
           text='Passar a expedição'
           onClick={() => handleChangeToTransport() }
           hidden={!(internalPOV && order.status.value === 'packing')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
           sx={{ marginLeft: 1 }}
         />
         <PrimaryBtn
           text='Terminar projeto'
           onClick={() => handleChangeToFinished() }
           hidden={!(internalPOV && order.status.value === 'transport')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} /> }
+          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
           sx={{ marginLeft: 1 }}
         />
       </Box>}
+      <ButtonGroup>
+        { order.status.value !== 'canceled' && <PrimaryBtn text={'Editar'} color='primary'
+          href={routes.private.internal.editBudget + order.hasBudget.id}
+          hidden={!canEditProject}
+          icon={ <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />}
+        />}
+        {order.status.value !== 'canceled' && <PrimaryBtn text='Cancelar' color={'warning'} variant='outlined' hidden={!canEditProject || order.status.value === 'canceled'}
+          icon={ <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
+          onClick={CancelProject}
+        />}
+        {order.status.value === 'canceled' && <PrimaryBtn text='Reativar' color={'warning'} hidden={!canEditProject}
+          icon={ <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
+          onClick={ReopenProject}
+        />}
+        <PrimaryBtn text='Apagar' color={'error'} variant='outlined' hidden={!CanDo('delete_owner')}
+          onClick={() => setDeleteModal(true)}
+          icon={ <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} /> }
+        />
+      </ButtonGroup>
     </Box>
     <Grid container md={12}>
       <HeaderGrid grids={ grids.upperGrids }/>

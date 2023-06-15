@@ -4,7 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
-import { Edit, PackagePlus, Trash } from 'lucide-react';
+import { Edit2, PackagePlus, Trash } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
@@ -40,7 +40,7 @@ const Stock = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onDelete()}
-        message={'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'}
+        message={'Está prestes a apagar um cliente o que é irreversível, tem certeza que quer continuar?'}
       />
       <Navbar />
       <Notification />
@@ -64,8 +64,8 @@ const Stock = ({ ...props }) => {
             </Box>
             <Box style={{ display: 'flex' }}>
               <ButtonGroup>
-                <PrimaryBtn hidden={!CanDo('change_stock')} text='Editar' href={routes.private.internal.editStock + stock?.id} icon={<Edit strokeWidth='1' />} />
-                <PrimaryBtn hidden={!CanDo('delete_stock')} text='Apagar' onClick={() => setDialogOpen(true)} icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} light />
+                <PrimaryBtn hidden={!CanDo('change_stock')} text='Editar' href={routes.private.internal.editStock + stock?.id} icon={<Edit2 strokeWidth='1' />} />
+                <PrimaryBtn hidden={!CanDo('delete_stock')} text='Apagar' color={'error'} onClick={() => setDialogOpen(true)} icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} />} light />
               </ButtonGroup>
             </Box>
           </Box>

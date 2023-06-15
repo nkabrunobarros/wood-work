@@ -175,8 +175,8 @@ const EditUser = ({ ...props }) => {
                 text='Guardar'
                 icon={
                   <Save
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
                 onClick={ValidateFields}
@@ -185,8 +185,8 @@ const EditUser = ({ ...props }) => {
                 text='Cancelar'
                 icon={
                   <X
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
                 light
@@ -196,8 +196,8 @@ const EditUser = ({ ...props }) => {
           </Box>
           <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
             <User
-              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-              size={pageProps?.globalVars?.iconSize} />
+              strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+              size={pageProps?.globalVars?.iconSize || 20} />
             <span>Dados de Utilizador</span>
           </a>
           <Grid id='pad' container md={12} sm={12} xs={12}>

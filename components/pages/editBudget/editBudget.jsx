@@ -497,11 +497,11 @@ const EditBudget = ({ ...props }) => {
                 <PrimaryBtn
                   onClick={() => ValidateData()}
                   text={'Guardar'}
-                  icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+                  icon={ <Save size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />}
                 />
                 <PrimaryBtn
                   text='Cancelar'
-                  icon={<X size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+                  icon={<X size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />}
                   light
                   onClick={() => Router.back()}
                 />

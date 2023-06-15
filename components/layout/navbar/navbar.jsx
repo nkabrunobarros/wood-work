@@ -46,7 +46,7 @@ const Navbar = ({ ...pageProps }) => {
                   onClick={() => toggleDrawer()}
                 >
                   <Menu
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                     style={{ color: 'var(--white)' }}
                   />
                 </IconButton>

@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import { Edit, Trash } from 'lucide-react';
+import { Edit2, Trash } from 'lucide-react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -47,7 +47,7 @@ const MachineScreen = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onDelete()}
-        message={'Está prestes a apagar uma máquina o que é irreversivel, tem certeza que quer continuar?'}
+        message={'Está prestes a apagar uma máquina o que é irreversível, tem certeza que quer continuar?'}
       />
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
@@ -71,8 +71,8 @@ const MachineScreen = ({ ...props }) => {
                   text='Editar'
                   hidden={!CanDo('change_machine')}
                   icon={
-                    <Edit
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                    <Edit2
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                       size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
@@ -81,10 +81,11 @@ const MachineScreen = ({ ...props }) => {
                 <PrimaryBtn
                   text='Apagar'
                   hidden={!CanDo('delete_machine')}
+                  color={'error'}
                   onClick={() => setDialogOpen(true)}
                   icon={
                     <Trash
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                       size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }

@@ -94,8 +94,8 @@ const Account = ({ ...props }) => {
               <Grid container spacing={3} >
                 <Grid container item>
                   <Typography id='align' item color='lightTextSm.main'><User
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                   <Box pl={1}>Dados Gerais</Box>
                   </Typography>
@@ -135,8 +135,8 @@ const Account = ({ ...props }) => {
                   <Grid container item xs={12}>
                     <Typography id='align' variant='subtitle1' color='lightTextSm.main'>
                       <Map
-                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                        size={pageProps?.globalVars?.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                        size={pageProps?.globalVars?.iconSize || 20}
                       />
 
                       <Box pl={1}>Morada</Box>

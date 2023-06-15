@@ -3,16 +3,19 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Box, Button, Grow, Tooltip, Typography } from '@mui/material';
+import { Button, Grow, Tooltip, Typography } from '@mui/material';
 import Link from 'next/link';
 
-const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps, color, href }) => {
+const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps, color, href, variant }) => {
   const style = {
-    color: light ? 'palette.primary.main' : 'var(--white)',
+    color: light ? (color ? (color + '.main') : 'black') : (color || 'var(--white)'),
     pointerEvents: disabled ? 'none' : 'all',
-    opacity: disabled ? '0.5' : '1',
     border: noBorder && 'none',
+    borderColor: light ? (color ? (color + '.main') : 'lightGray.edges') : 'inherit',
+    borderRadius: '4px',
     maxHeight: '30px',
+    backgroundColor: light && 'transparent',
+    overflow: 'hidden',
   };
 
   return !hidden && (
@@ -22,24 +25,32 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
           <Button
             {...otherProps}
             color={color}
+            disabled={disabled}
             className={breathing && 'breathingBackgroundWarning'}
             id={id}
             fullWidth={fullWidth}
-            variant={!light && 'contained'}
+            variant={light ? 'outlined' : (variant || 'contained')}
             type={type}
-            style={style}
             onClick={onClick}
-            component={href ? Link : 'label'}
-            sx={sx}
+            component={'label'}
+            sx={{
+              ...style,
+              ...sx,
+            }}
             href={href}
+            startIcon={icon}
           >
-            {icon && <Box className='fullCenter' pr={1}>{icon}</Box>}
-            <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">{text}</Typography>
-            {/* Children is for file Inputs */}
+            {href && <Button component={Link} href={href} sx={{ background: 'transparent', position: 'absolute', width: '100%', height: '100%' }}></Button>}
+            <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">
+              {text}
+            </Typography>
+            {/* Children are for file Inputs */}
             {children}
+
           </Button>
         </Tooltip>
       </Grow>
+
     </>
   );
 };
@@ -60,6 +71,7 @@ PrimaryBtn.propTypes = {
   type: PropTypes.string,
   title: PropTypes.string,
   id: PropTypes.string,
+  variant: PropTypes.string,
   sx: PropTypes.object,
   otherProps: PropTypes.object,
 };

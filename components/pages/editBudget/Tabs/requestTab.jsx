@@ -13,7 +13,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import Image from 'next/image';
-import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 
 const RequestTab = (props) => {
@@ -43,7 +42,7 @@ const RequestTab = (props) => {
               {/* <Grid container item sm={12} xs={12} >
                 <Grid container md={12}>
                   <Typography id='align' className='headerTitleSm'>
-                    <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto
+                    <Calendar size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} /> Projeto
                   </Typography>
                 </Grid>
               </Grid> */}
@@ -283,7 +282,7 @@ const RequestTab = (props) => {
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
                     <MyInput
-                    type='currency'
+                      type='currency'
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Valor'
                       error={budgetData.price.error}

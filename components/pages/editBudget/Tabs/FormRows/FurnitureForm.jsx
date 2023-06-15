@@ -3,8 +3,8 @@
 import { Box, Divider, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 
-import FormGenerator from '../../../../formGenerator';
 import { Trash } from 'lucide-react';
+import FormGenerator from '../../../../formGenerator';
 
 const FurnitureForm = (props) => {
   function onChange (index, e) {
@@ -32,7 +32,7 @@ const FurnitureForm = (props) => {
     <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >
-          <Trash color='red' size={20} strokeWidth={1} />
+          <Trash color='red' size={20} strokeWidth={1.5} />
         </IconButton>
       </Tooltip>
     </Box>

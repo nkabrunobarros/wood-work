@@ -303,7 +303,7 @@ const ProductLinesTab = (props) => {
                           <Box pr={2}>
                             <Tooltip title='Remover este grupo'>
                               <IconButton onClick={() => removeThisGroup(groupIndex)} >
-                                <Trash color='red' size={20} strokeWidth={1} />
+                                <Trash color='red' size={20} strokeWidth={1.5} />
                               </IconButton>
                             </Tooltip>
                           </Box>
@@ -326,7 +326,7 @@ const ProductLinesTab = (props) => {
                                   <Box pr={2}>
                                     <Tooltip title='Remover este subgrupo'>
                                       <IconButton onClick={() => removeThisSubGroup(groupIndex, subGroupIndex)} >
-                                        <Trash color='red' size={20} strokeWidth={1} />
+                                        <Trash color='red' size={20} strokeWidth={1.5} />
                                       </IconButton>
                                     </Tooltip>
                                   </Box>

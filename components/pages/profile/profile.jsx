@@ -3,10 +3,10 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, ButtonGroup, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
-  Edit,
+  Edit2,
   Trash,
   User
 } from 'lucide-react';
@@ -47,7 +47,7 @@ const Profile = ({ ...props }) => {
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
           onConfirm={() => DeleteUser()}
-          message='Está prestes a remover este utilizador, tem certeza que quer continuar?'
+          message='Está prestes a apagar um utilizador,o que é irreversível. tem certeza que quer continuar?'
           icon='AlertOctagon'
         />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -60,30 +60,30 @@ const Profile = ({ ...props }) => {
               ? null
               : (
                 <Box className='flex'>
-                  <Box>
+                  <ButtonGroup>
                     <PrimaryBtn text='Editar'
                       hidden={!CanDo('change_worker')}
                       onClick={() => Router.push(`${routes.private.internal.editWorker}${user?.id}`)}
                       icon={
-                        <Edit
-                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                          size={pageProps?.globalVars?.iconSize}
+                        <Edit2
+                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                          size={pageProps?.globalVars?.iconSize || 20}
                         />
                       } />
-                  </Box>
-                  <Box>
+
                     <PrimaryBtn
                       hidden={!CanDo('delete_worker')}
                       onClick={() => setDialogOpen(true)}
                       text='Apagar'
                       icon={
                         <Trash
-                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                          size={pageProps?.globalVars?.iconSize} />
+                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                          size={pageProps?.globalVars?.iconSize || 20} />
                       }
                       light
+                      color='error'
                     />
-                  </Box>
+                  </ButtonGroup>
                 </Box>
               )}
           </Box>
@@ -91,8 +91,8 @@ const Profile = ({ ...props }) => {
             <Grid container spacing={3} >
               <Grid container item>
                 <Typography id='align' item color='lightTextSm.main'><User
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                  size={pageProps?.globalVars?.iconSize || 20}
                 />
                 <Box pl={1}>Dados Gerais</Box>
 

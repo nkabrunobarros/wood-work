@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
-import { Edit, Map, Trash, User } from 'lucide-react';
+import { Edit2, Map, Trash, User } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
@@ -85,7 +85,7 @@ const EditClient = ({ ...props }) => {
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onDelete()}
-        message={'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'}
+        message={'Está prestes a apagar um cliente o que é irreversível, tem certeza que quer continuar?'}
       />
       <Navbar />
       <Notification />
@@ -101,8 +101,8 @@ const EditClient = ({ ...props }) => {
                   text='Editar'
                   hidden={!CanDo('change_owner')}
                   icon={
-                    <Edit
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                    <Edit2
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                       size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
@@ -110,11 +110,12 @@ const EditClient = ({ ...props }) => {
                 />
                 <PrimaryBtn
                   text='Apagar'
+                  color='error'
                   hidden={!CanDo('delete_owner')}
                   onClick={() => setDialogOpen(true)}
                   icon={
                     <Trash
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                       size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
@@ -129,8 +130,8 @@ const EditClient = ({ ...props }) => {
                 <Grid container item>
                   <Typography id='align' item color='lightTextSm.main'>
                     <User
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                     <Box pl={1}>Dados Gerais</Box>
                   </Typography>
@@ -166,8 +167,8 @@ const EditClient = ({ ...props }) => {
                   <Grid container item xs={12}>
                     <Typography id='align' variant="subtitle1" color='lightTextSm.main'>
                       <Map
-                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                        size={pageProps?.globalVars?.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                        size={pageProps?.globalVars?.iconSize || 20}
                       />
                       <Box pl={1}>Morada</Box>
                     </Typography>

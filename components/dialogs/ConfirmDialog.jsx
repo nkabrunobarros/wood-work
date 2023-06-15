@@ -27,7 +27,7 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, iconType,
       <Divider />
       <DialogContent>
         <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color={iconColor} >
-          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
+          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1.5} />
         </Box>
         <DialogContentText id='alert-dialog-description' variant='body1'>
           {message || 'A ação que está a fazer é irreversível. Tem certeza que quer continuar?'}

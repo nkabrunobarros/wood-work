@@ -58,7 +58,7 @@ const RequestTab = (props) => {
                     }}>
                       <Tooltip title='Novo Cliente'>
                         <IconButton href={routes.private.internal.newClient} target='#'>
-                          <UserPlus size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />
+                          <UserPlus size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />
                         </IconButton>
                       </Tooltip>
                     </Box>

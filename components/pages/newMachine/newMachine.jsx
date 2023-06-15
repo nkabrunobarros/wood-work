@@ -210,13 +210,13 @@ const NewMachineScreen = ({ ...props }) => {
             <Box style={{ display: 'flex' }}>
               <PrimaryBtn
                 text='Guardar'
-                icon={<Save strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                icon={<Save strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                   size={pageProps?.globalVars?.iconSize || 20} />}
                 onClick={ValidateFields}
               />
               <PrimaryBtn
                 text='Cancelar'
-                icon={<X strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
+                icon={<X strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                   size={pageProps?.globalVars?.iconSize || 20} />}
                 light
                 onClick={() => Router.back()}

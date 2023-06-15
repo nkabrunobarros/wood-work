@@ -101,8 +101,8 @@ const Production = (props) => {
                 onClick={() => setProductionDetailModal(!productionDetailModal)}
                 icon={
                   <Eye
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
                 text='Ver detalhes'

@@ -336,8 +336,8 @@ const Head = (props) => {
       onClick={() => setInitiateBudgeting(true) }
       icon={
         <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-          size={pageProps?.globalVars?.iconSize}
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+          size={pageProps?.globalVars?.iconSize || 20}
         />
       }
     />;
@@ -346,8 +346,8 @@ const Head = (props) => {
       onClick={() => setDeliverModal(!deliverModal) }
       icon={
         <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-          size={pageProps?.globalVars?.iconSize}
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+          size={pageProps?.globalVars?.iconSize || 20}
         />
       }
     />;
@@ -356,8 +356,8 @@ const Head = (props) => {
       onClick={() => setAdjudicateModal(!adjudicateModal)}
       icon={
         <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-          size={pageProps?.globalVars?.iconSize}
+          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+          size={pageProps?.globalVars?.iconSize || 20}
         />
       }
     />;
@@ -411,8 +411,8 @@ const Head = (props) => {
                 onClick={handleUpdate}
                 icon={
                   <Save
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
                 sx={{ mr: 1 }}

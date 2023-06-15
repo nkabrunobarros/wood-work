@@ -109,7 +109,7 @@ const Row = (props) => {
         <Divider />
         <DialogContent>
           <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <XCircle size={80} strokeWidth={1} />
+            <XCircle size={80} strokeWidth={1.5} />
           </Box>
           <DialogContentText id='alert-dialog-description'>
                Está prestes a carregar {uploadedFiles && Object.keys(uploadedFiles).length} para a pasta {row.name}
@@ -150,8 +150,8 @@ const Row = (props) => {
             <Tooltip title='Edit'>
               <IconButton>
                 <Edit
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                  size={pageProps?.globalVars?.iconSize || 20}
                   className='link'
                 />
               </IconButton>
@@ -159,8 +159,8 @@ const Row = (props) => {
             <Tooltip title='Delete'>
               <IconButton>
                 <Trash
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                  size={pageProps?.globalVars?.iconSize || 20}
                   className='link'
                 />
               </IconButton>
@@ -200,8 +200,8 @@ const Row = (props) => {
                           <IconButton>
                             <Edit
                               className='link'
-                              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                              size={pageProps?.globalVars?.iconSize}
+                              strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                              size={pageProps?.globalVars?.iconSize || 20}
                             />
                           </IconButton>
                         </Tooltip>
@@ -209,8 +209,8 @@ const Row = (props) => {
                           <IconButton>
                             <Trash
                               className='link'
-                              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                              size={pageProps?.globalVars?.iconSize}
+                              strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                              size={pageProps?.globalVars?.iconSize || 20}
                             />
                           </IconButton>
                         </Tooltip>

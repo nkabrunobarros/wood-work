@@ -174,8 +174,8 @@ const UploadImagesModal = ({ open, onClose, orderId, folders, client, ...pagePro
               onClose(false);
             }}>
               <X
-                strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                size={pageProps?.globalVars?.iconSize}
+                strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                size={pageProps?.globalVars?.iconSize || 20}
               />
             </IconButton>
           </Box>

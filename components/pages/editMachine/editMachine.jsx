@@ -1,6 +1,6 @@
 //  Nodes
 import {
-  Box
+  Box, ButtonGroup, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -166,28 +166,30 @@ const EditMachineScreen = ({ ...props }) => {
         {processing && <Loader center={true} backdrop />}
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
-          <div
+          <Box
             id='pad'
             className='flex'
             style={{ display: 'flex', alignItems: 'center' }}
           >
-            <div id='align' style={{ flex: 1 }}>
-              <a className='headerTitleXl'>{breadcrumbsPath[1].title}</a>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <PrimaryBtn
-                text='Guardar'
-                icon={<Save strokeWidth='1' />}
-                onClick={ValidateFields}
-              />
-              <PrimaryBtn
-                text='Cancelar'
-                icon={<X strokeWidth='1' />}
-                light
-                onClick={() => Router.back()}
-              />
-            </div>
-          </div>
+            <Box id='align' style={{ flex: 1 }}>
+              <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
+            </Box>
+            <Box >
+              <ButtonGroup>
+                <PrimaryBtn
+                  text='Guardar'
+                  icon={<Save strokeWidth='1' />}
+                  onClick={ValidateFields}
+                />
+                <PrimaryBtn
+                  text='Cancelar'
+                  icon={<X strokeWidth='1' />}
+                  light
+                  onClick={() => Router.back()}
+                />
+              </ButtonGroup>
+            </Box>
+          </Box>
           <Box>
             {/* Input Fields Generator */}
             <Grid container p={'12px'}>

@@ -39,7 +39,7 @@ const CustomBreadcrumbs = ({ path }) => {
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
         <IconButton onClick={() => Router.push(isInternalPage ? routes.private.internal.projects : routes.private.projects)}>
           <Tooltip title={'Ir para Projetos'}>
-            <Home strokeWidth={1} size={18} />
+            <Home strokeWidth={1.5} size={18} />
           </Tooltip>
         </IconButton>
         {path.map((crumb, i) => (

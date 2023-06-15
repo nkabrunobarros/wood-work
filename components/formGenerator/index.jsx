@@ -319,10 +319,10 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               <>
                 {postalCodeInfo
                   ? <Tooltip title='Detalhes Código Postal' >
-                    <Verified color="var(--green)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
+                    <Verified color="var(--green)" strokeWidth={1.5} onClick={(event) => setAnchorEl(event.currentTarget)} />
                   </Tooltip>
                   : <Tooltip title='Validar' >
-                    <HelpCircle color="var(--primary)" strokeWidth={1} onClick={() => ValidatePostalCode({ index, value: field.value })} />
+                    <HelpCircle color="var(--primary)" strokeWidth={1.5} onClick={() => ValidatePostalCode({ index, value: field.value })} />
                   </Tooltip>
                 }
               </>
