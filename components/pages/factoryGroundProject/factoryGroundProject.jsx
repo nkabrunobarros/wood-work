@@ -48,15 +48,11 @@ const FactoryGroundProject = (props) => {
 
   useEffect(() => {
     async function loadData () {
-      const activeLogWorkerTask = logsWorkerTasks.find((ele) => ele.executedBy?.object === `urn:ngsi-ld:Worker:${me.id}` && !ele.finishTime?.value);
-      const actives = logsWorkerTasks.filter((ele) => !ele.finishTime?.value);
-      const unsusedMachines = props.machines?.filter((mach) => !actives.find(task => task.machine.value === mach.id));
-      const myMachinehere = activeLogWorkerTask && props.machines.find((ele) => ele.id === activeLogWorkerTask?.machine?.value);
+      const activeLogWorkerTask = logsWorkerTasks.find(ele => ele.executedBy?.object === `urn:ngsi-ld:Worker:${me.id}` && !ele.finishTime?.value);
+      const unusedMachines = props.machines?.filter(mach => !logsWorkerTasks.some(task => task.machine?.value === mach.id && !task.finishTime?.value));
 
-      debugger;
-
-      setMachines(myMachinehere ? [...unsusedMachines, myMachinehere] : unsusedMachines);
-      setMyMachine(activeLogWorkerTask ? machines.find((ele) => ele.id === activeLogWorkerTask.machine?.value) : null);
+      setMachines(activeLogWorkerTask ? [...unusedMachines, props.machines.find(ele => ele.id === activeLogWorkerTask.machine?.value)] : unusedMachines);
+      setMyMachine(activeLogWorkerTask ? machines.find(ele => ele.id === activeLogWorkerTask.machine?.value) : null);
     }
 
     loadData().then(() => setFullyLoaded(true));

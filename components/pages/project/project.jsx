@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import routes from '../../../navigation/routes';
 import Notification from '../../dialogs/Notification';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import Docs from './sections/Docs';
 import DocsClient from './sections/DocsClient';
@@ -23,7 +24,6 @@ import Messages from './sections/Messages';
 import Production from './sections/Production';
 import Products from './sections/Products';
 import ProductsObservations from './sections/ProductsObservations';
-import Footer from '../../layout/footer/footer';
 
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
@@ -53,7 +53,7 @@ const Order = ({ ...props }) => {
         </Content>
         {/* Production per furniture section */}
         <Content>
-          <Production {...props} open={isInternalPage && order.status.value !== 'drawing'} />
+          <Production {...props} open={isInternalPage && order.status.value !== 'drawing' && order.startedProduction?.value} />
         </Content>
         {/* Docs */}
         <Content>

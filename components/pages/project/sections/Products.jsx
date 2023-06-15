@@ -85,7 +85,7 @@ const Products2 = (props) => {
       return found;
     });
 
-    return [...found].find(ele => ele) && order.status.value !== 'drawing' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
+    return [...found].find(ele => ele) && order.status.value !== 'drawing' && order.status.value !== 'canceled' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
   }
 
   return <>
@@ -135,7 +135,7 @@ const Products2 = (props) => {
                           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                             <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                             <Typography variant='subtitle1' > {subgroup.name.value}</Typography>
-                            {order.status.value !== 'drawing' && <Box >
+                            {order.status.value !== 'drawing' && order.status.value !== 'canceled' && <Box >
                               { subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').find(ele => ele.produced?.value === false) && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>}
                             </Box>}
                           </AccordionSummary>
@@ -150,7 +150,7 @@ const Products2 = (props) => {
                                   <Typography variant='subtitle1' > {item.furnitureType.value === 'furniture' ? 'Móvel' : 'Acessório'} </Typography>
                                   <Grid container md={12} sm={12} xs={12}>
                                     <Typography variant='subtitle2' fontWeight={'bold'}>{item.amount?.value} {item.name?.value} {item?.description?.value && ','} {item?.description?.value}</Typography>
-                                    {!item.produced?.value && order.status.value !== 'drawing' && item.furnitureType.value === 'furniture' && <Box className="fullCenter" >
+                                    {!item.produced?.value && order.status.value !== 'drawing' && order.status.value !== 'canceled' && item.furnitureType.value === 'furniture' && <Box className="fullCenter" >
                                       <Tooltip title='Em Produção'><Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip></Tooltip>
                                     </Box>}
                                   </Grid>

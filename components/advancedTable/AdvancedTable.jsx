@@ -49,7 +49,6 @@ import EnhancedTableHead from './components/EnhancedTableHead';
 const AdvancedTable = ({
   rows,
   headCells,
-  headCellsUpper,
   clickRoute,
   actionId,
   noPagination,
