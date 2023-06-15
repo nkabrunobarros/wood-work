@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
+
 import {
   Box,
   FormControl,
@@ -11,6 +13,25 @@ import {
   Tooltip
 } from '@mui/material';
 import React from 'react';
+import { NumericFormat } from 'react-number-format';
+export const NumberFormatCustom = React.forwardRef(function NumberFormatCustom (props, ref) {
+  const { ...other } = props;
+
+  return <NumericFormat
+    {...other}
+    getInputRef={ref}
+    // style={{ textAlign: 'start' }}
+    suffix={process.env.NEXT_PUBLIC_COUNTRY_SUFFIX || '€'}
+    decimalScale={process.env.NEXT_PUBLIC_DECIMALS_SCALE }
+    decimalSeparator={process.env.NEXT_PUBLIC_DECIMALS_SEPARATOR}
+    thousandSeparator={process.env.NEXT_PUBLIC_THOUSANDS_SEPARATOR || ' '}
+  />;
+});
+
+NumberFormatCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 const MyInput = ({
   disabled,
@@ -94,6 +115,7 @@ const MyInput = ({
         rows={rows || 4}
         style={style}
         placeholder={placeholder || ''}
+        inputComponent={type === 'currency' && NumberFormatCustom}
         endAdornment={ (<>
           {type === 'number' && <InputAdornment position={'end'}>
             <Grid container md={12} justifyContent={'end'}>

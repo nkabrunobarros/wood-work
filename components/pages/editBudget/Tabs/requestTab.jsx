@@ -282,14 +282,14 @@ const RequestTab = (props) => {
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
-                    <CurrencyInput
+                    <MyInput
+                    type='currency'
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Valor'
                       error={budgetData.price.error}
                       required={budgetData.price.required}
                       disabled={true}
                       name='price'
-                      paceholder='Valor total do projeto'
                       value={budgetData.price.value}
                     />
                   </Grid>

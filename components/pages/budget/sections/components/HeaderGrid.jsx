@@ -11,6 +11,7 @@ const HeaderGrid = (props) => {
       borderColor: 'divider',
       padding: '.5rem',
       textAlign: 'center',
+      height: 'fit-content'
     },
   };
 
@@ -45,20 +46,18 @@ const HeaderGrid = (props) => {
   }, []);
 
   return props.grids.map((grid) => {
-    return (<Grid key={grid.title} container md={12 / collCount * grid.colls.length} pt={2} sx={{ pl: 0.5, pr: 0.5 }}>
-      <Grid item md={12}>
-        <Grid container {...upperCells}>
-          <Typography variant='subtitle1' fontWeight='bold'>
-            {grid.title}
-          </Typography>
-        </Grid>
+    return (<Grid key={grid.title} container md={12 / collCount * grid.colls.length} pt={2} sx={{ pl: 0.5, pr: 0.5, height: '100%' }}>
+      <Grid item md={12} {...upperCells} style={{}}>
+        <Typography variant='subtitle1' fontWeight='bold'>
+          {grid.title}
+        </Typography>
       </Grid>
       {windowWidth > 600
         ? (
           <>
-            <Grid container md={12}>
+            <Grid container md={12} sm={12} xs={12} sx={{ }}>
               {grid.colls.map((headCell) => (
-                <Grid key={headCell.label} {...upperCells} md={12 / grid.colls.length} sm={12 / grid.colls.length} xs={12}>
+                <Grid key={headCell.label} {...upperCells} md={12 / grid.colls.length} sm={12 / grid.colls.length} xs={12} style={{ height: '100%' }}>
                   <Typography variant='sm'>{headCell.label}</Typography>
                 </Grid>
               ))}

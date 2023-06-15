@@ -93,6 +93,7 @@ const DocsClient = (props) => {
           <Grid container md={4} sm={4} xs={12} justifyContent={'end'}>
             <Box pr={2}>
               <PrimaryBtn
+                hidden={order.status.value === 'canceled' || order.status.value === 'finished'}
                 text='Carregar'
                 onClick={(e) => e.stopPropagation()}
                 icon={

@@ -62,7 +62,7 @@ const ProjectsScreen = (props) => {
   const States = [
     {
       subheader: true,
-      label: '--- Orçamento'
+      label: '--- Orçamentação'
     },
     {
       id: 'needs analysis',
@@ -83,7 +83,7 @@ const ProjectsScreen = (props) => {
     },
     {
       subheader: true,
-      label: '--- Projeto'
+      label: '--- Execução'
     },
     {
       id: 'drawing',
@@ -145,20 +145,6 @@ const ProjectsScreen = (props) => {
     setTelephone(filters.telemovel || '');
   }, [filters]);
 
-  function TabPanel ({ children, value, index }) {
-    return (
-      <Box hidden={value !== index}>
-        {value === index && <Box>{children}</Box>}
-      </Box>
-    );
-  }
-
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };
-
   async function onReactivationItem (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
@@ -196,6 +182,43 @@ const ProjectsScreen = (props) => {
       setItems(updatedItems);
       ToastSet(loading, `${isProject ? 'Projeto' : 'Projeto'} reaberto.`, 'success');
     }
+  }
+
+  async function onCancelProject (props) {
+    const loading = toast.loading('');
+    const isProject = props.type === 'Project';
+    const update = isProject ? updateProject : updateBudget;
+
+    const data = {
+    };
+
+    isProject
+      ? data.status = { type: 'Property', value: 'canceled' }
+      : data.budgetStatus = { type: 'Property', value: 'canceled' };
+
+    try {
+      true && await update({ id: props.id, data }).then(() => {
+        const old = [...items];
+        const index = old.findIndex((item) => item.id === props.id);
+
+        if (index !== -1) {
+          const updatedItem = {
+            ...items[index], // Copy the existing item
+            ...data,
+            Estado: 'canceled'
+          };
+
+          const updatedItems = [
+            ...items.slice(0, index), // Copy the items before the updated item
+            updatedItem, // Add the updated item
+            ...items.slice(index + 1) // Copy the items after the updated item
+          ];
+
+          setItems(updatedItems);
+          ToastSet(loading, 'Projeto Cancelado.', 'success');
+        }
+      });
+    } catch (err) { console.log(err); }
   }
 
   async function onDeleteItem (props) {
@@ -388,8 +411,9 @@ const ProjectsScreen = (props) => {
             rows={items}
             headCells={headCellsProjects}
             filters={filters}
+            onCancel={onCancelProject}
             clickRoute={CanDo('see_project') && detailPage}
-            editRoute={ CanDo('update_project') && editPage}
+            editRoute={CanDo('update_project') && editPage}
             setFilters={setFilters}
             onDelete={ CanDo('delete_project') && onDeleteItem}
             onReactivation={onReactivationItem}

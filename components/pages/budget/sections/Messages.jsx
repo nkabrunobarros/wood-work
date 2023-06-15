@@ -101,6 +101,7 @@ const Messages = (props) => {
             }
           </Box>
           <Box
+            display={budget.budgetStatus.value === 'canceled' && 'none'}
             component='form'
             noValidate
             onSubmit={handleSendMessage}

@@ -5,7 +5,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, Grow,
 import React, { useState } from 'react';
 
 //  PropTypes
-import { ChevronDown, Plus, X } from 'lucide-react';
+import { ChevronDown, Plus, Trash } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import MyInput from '../../../inputs/myInput';
@@ -303,7 +303,7 @@ const ProductLinesTab = (props) => {
                           <Box pr={2}>
                             <Tooltip title='Remover este grupo'>
                               <IconButton onClick={() => removeThisGroup(groupIndex)} >
-                                <X color='red' />
+                                <Trash color='red' size={20} strokeWidth={1} />
                               </IconButton>
                             </Tooltip>
                           </Box>
@@ -326,7 +326,7 @@ const ProductLinesTab = (props) => {
                                   <Box pr={2}>
                                     <Tooltip title='Remover este subgrupo'>
                                       <IconButton onClick={() => removeThisSubGroup(groupIndex, subGroupIndex)} >
-                                        <X color='red' />
+                                        <Trash color='red' size={20} strokeWidth={1} />
                                       </IconButton>
                                     </Tooltip>
                                   </Box>

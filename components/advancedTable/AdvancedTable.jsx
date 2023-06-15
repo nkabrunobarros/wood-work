@@ -12,7 +12,8 @@ import PropTypes from 'prop-types';
 
 //  Material Ui
 import {
-  Box, ButtonGroup, Chip, Grid,
+  Box,
+  Chip, Grid,
   IconButton, MenuItem, Pagination, Paper,
   Popover,
   Skeleton,
@@ -28,7 +29,6 @@ import {
 } from '@mui/material';
 
 //  Icons
-import { DeleteOutline, EditOutlined, PowerSettingsNew } from '@mui/icons-material';
 import { Filter } from 'lucide-react';
 
 //  Utlis
@@ -45,6 +45,7 @@ import routes from '../../navigation/routes';
 //  Utils
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
+import DisplayActionButtons from './components/DisplayActionButtons';
 
 const AdvancedTable = ({
   rows,
@@ -59,7 +60,8 @@ const AdvancedTable = ({
   rangeFilters,
   setRangeFilters,
   onDelete,
-  onReactivation
+  onReactivation,
+  onCancel
 }) => {
   const [state, setState] = useState({
     order: 'asc',
@@ -517,7 +519,7 @@ const AdvancedTable = ({
                       tabIndex={-1}
                       key={row.id}
                     >
-                      {state.cellsFilter.map((headCell, index) => {
+                      {state.cellsFilter.map((headCell) => {
                         return headCell.show && <TableCell
                           id={labelId}
                           key={headCell.id}
@@ -532,114 +534,33 @@ const AdvancedTable = ({
                         >
                           {state.loaded
                             ? <>
-                              {headCell.id === 'actions' || headCell.id === 'actionsConf'
+                              {headCell.id === 'actions'
                                 ? (
-                                  <ButtonGroup color='link.main'>
-                                    {headCell.id !== 'actionsConf' &&
-                                        <>
-                                          {editRoute && !(Router.route.includes('projects') && row.type === 'Project') &&
-                                            <Tooltip title={'Editar'}>
-                                              <Box style={{ color: 'red' }}>
-                                                <Link href={`${editRoute}${row.id}`}>
-                                                  <IconButton
-                                                    onClick={() => {
-                                                      if (Router.route.includes('projects') && row.type === 'Project') return;
-
-                                                      editRoute && Router.push(`${editRoute}${row.id}`);
-                                                    }}>
-                                                    <EditOutlined
-                                                      fontSize="small"
-                                                      color={'primary'}
-                                                    />
-                                                  </IconButton>
-                                                </Link>
-                                              </Box>
-                                            </Tooltip>
-                                          }
-                                        </>
-                                    }
-                                    {!!onReactivation && row?.status?.value === 'canceled' && <Tooltip title={'Reabrir'}>
-                                      <IconButton onClick={() => onReactivationClick(row)} size='small' >
-                                        <PowerSettingsNew
-                                          color={ 'warning'}
-
-                                          fontSize="sm"
-                                        />
-                                      </IconButton>
-                                    </Tooltip>}
-                                    {!!onDelete && <Tooltip title={row?.status?.value !== 'canceled' ? 'Remover' : 'Apagar do sistema'}>
-                                      <IconButton onClick={() => onDeleteClick(row)} size='small' >
-                                        <DeleteOutline
-                                          color={ row?.status?.value !== 'canceled' ? 'primary' : 'error'}
-                                          fontSize="small"
-                                        />
-                                      </IconButton>
-                                    </Tooltip>}
-                                  </ButtonGroup>
+                                  <DisplayActionButtons
+                                    headCell={headCell}
+                                    editRoute={editRoute}
+                                    Router={Router}
+                                    row={row}
+                                    onReactivation={onReactivation}
+                                    onReactivationClick={onReactivationClick}
+                                    onCancel={onCancel}
+                                    onDelete={onDelete}
+                                    onDeleteClick={onDeleteClick}
+                                  />
                                 )
                                 : (
                                   <>
                                     {clickPath()
                                       ? <Link href={clickPath()}>
-                                        <Box
-                                          onClick={() => {
-                                            if (!clickRoute) return;
-
-                                            //  Verifies if im in a internal page
-                                            const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
-
-                                            //  Verifies if im in a internal page AND in a projects section
-                                            if (isInternalPage && Router.route.includes('projects')) {
-                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
-                                              //  Verifies if im NOT in a internal page AND in a projects section
-                                            } else if (!isInternalPage && Router.route.includes('projects')) {
-                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
-                                              //  if its not on a projects section, just use the click route
-                                            } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
-                                          }
-                                          }
-                                          color={index === -1 && 'primary.main'}
-                                          sx={{ cursor: clickRoute && 'pointer' }}
-                                        >
-                                          {FilterItem(
-                                            state.data,
-                                            row,
-                                            headCell.id
-                                          )}
-                                        </Box>
+                                        <Box sx={{ cursor: 'pointer' }} >{FilterItem(state.data, row, headCell.id)}</Box>
                                       </Link>
                                       : <>
-                                        <Box
-                                          onClick={() => {
-                                            if (!clickRoute) return;
-
-                                            //  Verifies if im in a internal page
-                                            const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
-
-                                            //  Verifies if im in a internal page AND in a projects section
-                                            if (isInternalPage && Router.route.includes('projects')) {
-                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
-                                              //  Verifies if im NOT in a internal page AND in a projects section
-                                            } else if (!isInternalPage && Router.route.includes('projects')) {
-                                              Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
-                                              //  if its not on a projects section, just use the click route
-                                            } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
-                                          }
-                                          }
-                                          color={index === -1 && 'primary.main'}
-                                          sx={{ cursor: clickRoute && 'pointer' }}
-                                        >
-                                          {FilterItem(
-                                            state.data,
-                                            row,
-                                            headCell.id
-                                          )}
+                                        <Box>
+                                          {FilterItem(state.data, row, headCell.id)}
                                         </Box>
                                       </>
                                     }
-
                                   </>
-
                                 )}
                             </>
                             : <Skeleton animation="wave" width='100%' />}

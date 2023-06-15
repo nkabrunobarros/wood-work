@@ -7,7 +7,7 @@ import React from 'react';
 //  Page Component Styles
 
 //  Actions
-import { X } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import FormGenerator from '../../../../formGenerator';
 // import CurrencyInput from '../../../inputs/CurrencyInput';
 
@@ -36,7 +36,7 @@ const Form = (props) => {
     <Box sx={{ marginLeft: 'auto', alignSelf: 'center', display: props.lines[props.lineIndex]?.items?.length === 1 && 'none' }}>
       <Tooltip title='Remover esta linha'>
         <IconButton onClick={() => removeThisRow()} >
-          <X color='red' />
+          <Trash color='red' size={20} strokeWidth={1} />
         </IconButton>
       </Tooltip>
     </Box>

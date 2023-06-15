@@ -8,15 +8,22 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import Notification from '../../../../dialogs/Notification';
-import CurrencyInput from '../../../../inputs/CurrencyInput';
 import MyInput from '../../../../inputs/myInput';
 
 const DeliverBudgetModal = (props) => {
   const { open, onConfirm, handleClose, budget } = props;
   const [dateAgreedDelivery, setDateAgreedDelivery] = useState({ value: moment(budget.dateAgreedDelivery?.value, 'DD/MM/YYYY'), error: '' });
-  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: moment(budget.dateDeliveryProject?.value, 'DD/MM/YYYY'), error: '' });
+  const [dateDeliveryProject, setDateDeliveryProject] = useState({ value: budget.dateDeliveryProject?.value ? moment(budget.dateDeliveryProject?.value, 'DD/MM/YYYY') : budget.dateDeliveryProject?.value, error: '' });
   const [price, setPrice] = useState({ value: budget.price?.value, error: '' });
   const [obs, setObs] = useState({ value: budget.obs?.value, error: '' });
+
+  const colors = {
+    error: 'error.main',
+    success: 'success.main',
+    default: 'primary.main',
+  };
+
+  const iconColor = colors.default;
 
   function validateData () {
     let errors = false;
@@ -58,7 +65,7 @@ const DeliverBudgetModal = (props) => {
       </DialogTitle>
       <Divider />
       <DialogContent>
-        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color={iconColor}>
           <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
         </Box>
 
@@ -69,7 +76,7 @@ const DeliverBudgetModal = (props) => {
         </DialogContentText>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Grid container md={12} sm={12} xs={12}>
-            <Grid container md={6} sm={6} xs={6} p={1}><CurrencyInput required value={price.value} error={price.error} label={'Valor total do projeto'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
+            <Grid container md={6} sm={6} xs={6} p={1}><MyInput type='currency' required value={price.value} error={price.error} label={'Valor total do projeto'} onChange={(e) => { setPrice({ value: e.target.value, error: '' }); }} /></Grid>
             <Grid container md={6} sm={6} xs={6} p={1}>
               <Box sx={{ width: '100%' }}>
                 <InputLabel>

@@ -471,7 +471,6 @@ const Head = (props) => {
         onConfirm={() => InitiateBudgeting()}
         icon='Check'
         message={'Está prestes a iniciar orçamentação. Quer continuar?'}
-        iconType='success'
       />
       <Box id='pad'>
         <Box container >
@@ -491,8 +490,8 @@ const Head = (props) => {
               <Box id='align'>
                 <Typography variant='title'>{budget.name.value}</Typography>
                 <Box pl={2} display='flex' alignItems='center'>
-                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Pendente Análise Necessidades</Typography>}
                   {budget.budgetStatus?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
+                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Pendente Análise Necessidades</Typography>}
                   {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Pendente Adjudicação</Typography>}
                   {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='waitingBudgetBalloon'>Pendente Orçamentação</Typography>}
                 </Box>

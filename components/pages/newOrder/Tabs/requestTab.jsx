@@ -14,7 +14,6 @@ import dayjs from 'dayjs';
 import moment from 'moment';
 import Image from 'next/image';
 import routes from '../../../../navigation/routes';
-import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 
 const RequestTab = (props) => {
@@ -320,14 +319,11 @@ const RequestTab = (props) => {
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
-                    <CurrencyInput
-                      disabled
-                      onChange={(e) => onBudgetChange(e.target)}
+                    <MyInput
                       label='Valor'
-                      error={budgetData.price.error}
-                      required={budgetData.price.required}
                       name='price'
-                      value={budgetData.price.value}
+                      onChange={(e) => onBudgetChange(e.target)}
+                      {...budgetData.price}
                     />
                   </Grid>
                 </Grid>

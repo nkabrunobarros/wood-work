@@ -91,6 +91,7 @@ const DocsClient = (props) => {
             <Box pr={2}>
               <PrimaryBtn
                 text='Carregar'
+                hidden={budget.budgetStatus.value === 'canceled'}
                 onClick={(e) => e.stopPropagation()}
                 icon={
                   <FilePlus
