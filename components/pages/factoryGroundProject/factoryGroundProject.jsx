@@ -49,7 +49,13 @@ const FactoryGroundProject = (props) => {
   useEffect(() => {
     async function loadData () {
       const activeLogWorkerTask = logsWorkerTasks.find((ele) => ele.executedBy?.object === `urn:ngsi-ld:Worker:${me.id}` && !ele.finishTime?.value);
+      const actives = logsWorkerTasks.filter((ele) => !ele.finishTime?.value);
+      const unsusedMachines = props.machines?.filter((mach) => !actives.find(task => task.machine.value === mach.id));
+      const myMachinehere = activeLogWorkerTask && props.machines.find((ele) => ele.id === activeLogWorkerTask?.machine?.value);
 
+      debugger;
+
+      setMachines(myMachinehere ? [...unsusedMachines, myMachinehere] : unsusedMachines);
       setMyMachine(activeLogWorkerTask ? machines.find((ele) => ele.id === activeLogWorkerTask.machine?.value) : null);
     }
 
@@ -545,7 +551,7 @@ const FactoryGroundProject = (props) => {
           <Grid container md={4} sm={6} xs={6} p={4} >
             <MySelect disabled={myMachine?.currentlyOn?.value} options={machines?.filter((mach) => {
               const isExecuting = activeWorkerTasks.find(
-                ele => ele.machine.value === mach.id && ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id
+                ele => ele.machine.value === mach?.id && ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id
               );
 
               return !isExecuting || isExecuting.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id;
@@ -640,7 +646,7 @@ const FactoryGroundProject = (props) => {
                     <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Material </Typography></Box></Grid>
                     <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
                     <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
-                    <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> <Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box>  </Typography></Box></Grid>
+                    {/* <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> <Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box>  </Typography></Box></Grid> */}
 
                   </Grid>
                   <Grid container md={12} sm={12} xs={12}>
@@ -656,7 +662,7 @@ const FactoryGroundProject = (props) => {
                             <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.material.value } </Typography></Grid>
                             <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.amount.value } </Typography></Grid>
                             <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.tag.value } </Typography></Grid>
-                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <PartStatus part={consumable} /></Grid>
+                            {/* <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <PartStatus part={consumable} /></Grid> */}
                           </Grid>
                         );
                       })}

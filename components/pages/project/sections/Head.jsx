@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Edit2, Forward, Power, Tag, Trash } from 'lucide-react';
+import { Forward, Power, Tag, Trash } from 'lucide-react';
 import React, { useState } from 'react';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 

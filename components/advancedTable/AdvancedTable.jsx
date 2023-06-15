@@ -8,7 +8,6 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 //  Material Ui
 import {
@@ -22,10 +21,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel, TextField, Tooltip, Typography
+  TextField, Tooltip, Typography
 } from '@mui/material';
 
 //  Icons
@@ -46,6 +44,7 @@ import routes from '../../navigation/routes';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import DisplayActionButtons from './components/DisplayActionButtons';
+import EnhancedTableHead from './components/EnhancedTableHead';
 
 const AdvancedTable = ({
   rows,
@@ -156,109 +155,6 @@ const AdvancedTable = ({
       })),
     }));
   }
-
-  function EnhancedTableHead (props) {
-    const { order, orderBy, onRequestSort } = props;
-
-    const createSortHandler = (property) => (event) => {
-      onRequestSort(event, property);
-    };
-
-    return (
-      <TableHead>
-        {headCellsUpper
-          ? (
-            <>
-              {headCellsUpper.map((headCell) => (
-                <TableCell
-                  colSpan={headCell.span}
-                  key={headCell.id}
-                  align={headCell.numeric ? 'right' : 'left'}
-                  padding={headCell.disablePadding ? 'none' : 'normal'}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                  color={'palette.background.default'}
-                  sx={{
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    borderRight: headCell.borderRight
-                      ? '1px solid var(--grayEdges)'
-                      : null,
-                    borderLeft: headCell.borderLeft
-                      ? '1px solid var(--grayEdges)'
-                      : null,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {state.loaded
-                      ? <>
-                        {headCell.label}
-                        {orderBy === headCell.id ? <Box component='span'></Box> : null}
-                      </>
-                      : <Skeleton animation="wave" width='100%' />
-                    }
-                  </div>
-                </TableCell>
-              )
-              )}
-            </>
-          )
-          : null
-        }
-
-        <TableRow sx={{ backgroundColor: 'primary.main' }} >
-          {state.cellsFilter.map((headCell) => {
-            return headCell.show && <TableCell
-              key={headCell.label}
-              colSpan={headCell.span}
-              align={headCell.numeric ? 'right' : 'left'}
-              padding={headCell.disablePadding ? 'none' : 'normal'}
-              sortDirection={orderBy === headCell.id ? order : false}
-              width={headCell.width && `${headCell.width}%`}
-              sx={{
-                borderRight: headCell.borderRight
-                  ? '1px solid var(--grayEdges)'
-                  : null,
-                borderLeft: headCell.borderLeft
-                  ? '1px solid var(--grayEdges)'
-                  : null,
-              }}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={createSortHandler(headCell.id)}
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  color: 'white !important',
-                  '& .MuiTableSortLabel-icon': {
-                    color: 'white !important',
-                  },
-                }}
-              >
-                {state.loaded
-                  ? <>
-                    {headCell.label}
-                  </>
-                  : <Skeleton animation="wave" width='100%' />
-                }
-              </TableSortLabel>
-            </TableCell>;
-          }
-          )}
-        </TableRow>
-      </TableHead >
-    );
-  }
-
-  EnhancedTableHead.propTypes = {
-    numSelected: PropTypes.number,
-    onRequestSort: PropTypes.func,
-    order: PropTypes.oneOf(['asc', 'desc']),
-    orderBy: PropTypes.string,
-    rowCount: PropTypes.number,
-    headCellsUpper: PropTypes.array,
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = state.orderBy === property && state.order === 'asc';
@@ -487,6 +383,7 @@ const AdvancedTable = ({
               orderBy={state.orderBy}
               onRequestSort={handleRequestSort}
               rowCount={state.filteredItems?.length}
+              state={state}
             />
             {state.filteredItems && <TableBody>
               {(stableSort(state.filteredItems, getComparator(state.order, state.orderBy)))
@@ -520,6 +417,8 @@ const AdvancedTable = ({
                       key={row.id}
                     >
                       {state.cellsFilter.map((headCell) => {
+                        const href = clickPath();
+
                         return headCell.show && <TableCell
                           id={labelId}
                           key={headCell.id}
@@ -527,9 +426,14 @@ const AdvancedTable = ({
                           padding={
                             headCell.disablePadding ? 'none' : 'normal'
                           }
+                          href={href}
+                          component={href && headCell.id !== 'actions' && Link}
                           sx={{
                             borderRight: headCell.borderRight && '1px solid var(--grayEdges)',
-                            borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
+                            borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)',
+                            padding: headCell.id !== 'actions' && 2,
+                            paddingLeft: 1,
+                            paddingRight: 1,
                           }}
                         >
                           {state.loaded
@@ -548,20 +452,7 @@ const AdvancedTable = ({
                                     onDeleteClick={onDeleteClick}
                                   />
                                 )
-                                : (
-                                  <>
-                                    {clickPath()
-                                      ? <Link href={clickPath()}>
-                                        <Box sx={{ cursor: 'pointer' }} >{FilterItem(state.data, row, headCell.id)}</Box>
-                                      </Link>
-                                      : <>
-                                        <Box>
-                                          {FilterItem(state.data, row, headCell.id)}
-                                        </Box>
-                                      </>
-                                    }
-                                  </>
-                                )}
+                                : FilterItem(state.data, row, headCell.id)}
                             </>
                             : <Skeleton animation="wave" width='100%' />}
                         </TableCell>;
@@ -569,11 +460,6 @@ const AdvancedTable = ({
                     </TableRow>
                   );
                 })}
-              {(state.page > 0 ? Math.max(0, (1 + state.page) * state.rowsPerPage - state.filteredItems?.length) : 0) > 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>}
 
           </Table>

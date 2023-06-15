@@ -38,6 +38,7 @@ const ProjectsScreen = (props) => {
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const deleteBudget = (data) => dispatch(budgetsActionsRedux.deleteBudget(data));
+  const theme = useSelector((state) => state.appStates.theme);
 
   const {
     breadcrumbsPath,
@@ -245,8 +246,6 @@ const ProjectsScreen = (props) => {
       }
     }
   }
-
-  const theme = useSelector((state) => state.appStates.theme);
 
   function getStyles (name, personName, theme) {
     return {

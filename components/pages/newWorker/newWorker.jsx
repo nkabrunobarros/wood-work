@@ -74,12 +74,6 @@ const newWorker = ({ ...props }) => {
   ]
   );
 
-  console.log(profiles.map((profile) => {
-    if (profile.name === 'Customers') return { ...profile, disabled: true };
-
-    return { ...profile };
-  }));
-
   const dispatch = useDispatch();
   const newWorker = (data) => dispatch(workersActionsRedux.newWorker(data));
   const updateWorkerProfile = (data) => dispatch(workersActionsRedux.updateWorkersProfile(data));

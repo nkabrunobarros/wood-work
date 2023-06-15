@@ -306,7 +306,6 @@ const Projects = ({ ...pageProps }) => {
         hasBudget: { ...proj.hasBudget, ...(budgets.find((ele) => ele.id === proj.hasBudget?.object)) },
         Cliente: proj.orderBy.object,
         ClienteLabel: (thisClient?.user?.first_name || '') + ' ' + (thisClient?.user?.last_name || ''),
-        Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         Numero: thisBudget?.num?.value || 212453,
         Categoria: categories.find(c => c.id === thisBudget?.category?.value)?.label,
         Produced: proj.produced?.value,
