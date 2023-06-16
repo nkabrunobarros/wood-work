@@ -14,4 +14,5 @@ export {
   newFile,
   batchFiles,
   downloadFile,
+  deleteFile
 } from './file';

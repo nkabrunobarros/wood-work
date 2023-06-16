@@ -1,14 +1,13 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { Forward, Power, Tag, Trash } from 'lucide-react';
+import { Power, Trash } from 'lucide-react';
 import React, { useState } from 'react';
-import PrimaryBtn from '../../../buttons/primaryBtn';
 
 //  PropTypes
 import { CheckCircleOutline, Close } from '@mui/icons-material';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
-import { Router, useRouter } from 'next/router';
+import { Router } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../../navigation/routes';
@@ -31,8 +30,6 @@ const Head = (props) => {
   const [changeToFinishedModal, setChangeToFinishedModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [finishModal, setFinishModal] = useState(finishProject === '1');
-  const path = useRouter();
-  const internalPOV = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
   const dispatch = useDispatch();
   const updateAssembly = (data) => dispatch(assemblyActionsRedux.updateAssembly(data));
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
@@ -152,8 +149,6 @@ const Head = (props) => {
       },
     ]
   });
-
-  console.log(grids);
 
   async function handleChangeToProd (props) {
     setChangeToProdModal(false);
@@ -472,45 +467,6 @@ const Head = (props) => {
           </Box>
         </Grid>
       </Grid>
-      {canEditProject && <Box>
-        {false && <PrimaryBtn
-          text='Gerar Etiquetas'
-          hidden={!(internalPOV && order.status.value === 'production')}
-          icon={ <Tag strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> } />}
-        <PrimaryBtn
-          text='Passar a produção'
-          onClick={() => handleChangeToProduction() }
-          hidden={!(internalPOV && order.status.value === 'drawing')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> } />
-        <PrimaryBtn
-          text='Passar a montagem'
-          onClick={() => handleChangeToAssembly() }
-          hidden={!(internalPOV && order.status.value === 'production' && grids.lowerGrids[0].colls[2].value === '100')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
-          sx={{ marginLeft: 1 }}
-        />
-        <PrimaryBtn
-          text='Passar a embalamento'
-          onClick={() => handleChangeToPacking() }
-          hidden={!(internalPOV && order.status.value === 'testing')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
-          sx={{ marginLeft: 1 }}
-        />
-        <PrimaryBtn
-          text='Passar a expedição'
-          onClick={() => handleChangeToTransport() }
-          hidden={!(internalPOV && order.status.value === 'packing')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
-          sx={{ marginLeft: 1 }}
-        />
-        <PrimaryBtn
-          text='Terminar projeto'
-          onClick={() => handleChangeToFinished() }
-          hidden={!(internalPOV && order.status.value === 'transport')}
-          icon={ <Forward strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} /> }
-          sx={{ marginLeft: 1 }}
-        />
-      </Box>}
       <Buttons
         buttons={[
           {

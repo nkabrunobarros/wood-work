@@ -45,7 +45,7 @@ export const Message = (props) => {
 
 Message.propTypes = {
   msg: PropTypes.any,
-  isInternalPage: PropTypes.boolean,
+  isInternalPage: PropTypes.bool,
   theme: PropTypes.string,
   index: PropTypes.number,
   conversation: PropTypes.object,

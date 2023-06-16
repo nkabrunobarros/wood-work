@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
-import { ChevronDown, FilePlus, FileText } from 'lucide-react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, IconButton, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
+import { ChevronDown, FilePlus, FileText, Trash } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
@@ -11,7 +11,10 @@ import { buildFoldersStructure } from '../../../../pages/internal/budget/[Id]';
 import * as filesActionsRedux from '../../../../store/actions/file';
 import * as foldersActionsRedux from '../../../../store/actions/folder';
 import PrimaryBtn from '../../../buttons/primaryBtn';
+import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
+import CanDo from '../../../utils/CanDo';
+import ToastSet from '../../../utils/ToastSet';
 
 const DocsClient = (props) => {
   const { pageProps, isInternalPage, budget } = props;
@@ -20,7 +23,10 @@ const DocsClient = (props) => {
   const uploadFiles = (data) => dispatch(filesActionsRedux.batchFiles(data));
   const [sectionExpanded, setSectionExpanded] = useState(true);
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
+  const deleteFile = (data) => dispatch(filesActionsRedux.deleteFile(data));
   const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState();
 
   const onDrop = useCallback((acceptedFiles) => {
     handleFilesUpload(acceptedFiles);
@@ -73,8 +79,40 @@ const DocsClient = (props) => {
       });
   }
 
+  async function onDelete () {
+    const loading = toast.loading('');
+
+    setDialogOpen(false);
+
+    try {
+      await deleteFile(itemToDelete).then(() => {
+        const old = [...userFiles];
+        const index = old.findIndex((item) => item.id === itemToDelete);
+
+        if (index !== -1) {
+          const updatedItems = [...old];
+
+          updatedItems.splice(index, 1);
+          setUserFiles(updatedItems);
+        }
+
+        ToastSet(loading, 'Ficheiro removido!', 'success');
+      });
+    } catch (err) {
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde ', 'error');
+    }
+  }
+
+  const canDownloadFile = CanDo('see_file');
+
   return <>
     <Notification />
+    <ConfirmDialog
+      open={dialogOpen}
+      handleClose={() => setDialogOpen(false)}
+      onConfirm={() => onDelete()}
+      message={'Está prestes a apagar um ficheiro, o que é irreversível, tem certeza que quer continuar?'}
+    />
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{
         background: 'lightGray.main',
@@ -111,8 +149,9 @@ const DocsClient = (props) => {
           <Table aria-label='collapsible table'>
             <TableHead aria-label='sticky table'>
               <Grid bgcolor='lightgray.main' container md={12} sm={12} xs={12} color='white' sx={{ bp: 1, borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider', backgroundColor: '#F9F9F9' }}>
-                <Grid container md={6} sm={6} xs={6} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Nome</Typography> </Box></Grid>
-                <Grid container md={6} sm={6} xs={6} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Data</Typography> </Box></Grid>
+                <Grid container md={5.5} sm={5.5} xs={5.5} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Nome</Typography> </Box></Grid>
+                <Grid container md={5.5} sm={5.5} xs={5.5} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Data</Typography> </Box></Grid>
+                <Grid container md={1} sm={1} xs={1} sx={{ alignItems: 'center', p: 2 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Ações</Typography> </Box></Grid>
               </Grid>
             </TableHead>
             <TableBody >
@@ -120,16 +159,26 @@ const DocsClient = (props) => {
                 <Grid container >
                   {userFiles?.sort((a, b) => moment(b.created).diff(moment(a.created))).map(file =>
                     <Grid key={file.file_name} container p={2} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                      <Grid container md={6} sm={6} xs={6} alignItems='center'>
+                      <Grid container md={5.5} sm={5.5} xs={5.5} alignItems='center'>
                         <Box color='primary.main' alignItems='center'>
                           <FileText strokeWidth='1' style={{ marginRight: '1rem' }} />
                         </Box>
                         <Tooltip title='Clique para descarregar este ficheiro.'>
-                          <Typography variant="subtitle2" sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
+                          <Typography variant="subtitle2" sx={{ cursor: 'pointer', pointerEvents: !canDownloadFile && 'none' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
                         </Tooltip>
                       </Grid>
-                      <Grid container md={6} sm={6} xs={6} alignItems='center' justifyContent={'center'}>
+                      <Grid container md={5.5} sm={5.5} xs={5.5} alignItems='center' justifyContent={'center'}>
                         <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:mm')} </Typography>
+                      </Grid>
+                      <Grid container md={1} sm={1} xs={1} alignItems='center' justifyContent={'end'}>
+                        <Tooltip title={'Apagar'} >
+                          <IconButton color={'error'} onClick={() => {
+                            setItemToDelete(file.id);
+                            setDialogOpen(true);
+                          }} size="small">
+                            <Trash size={20} strokeWidth={1.5} />
+                          </IconButton>
+                        </Tooltip>
                       </Grid>
                     </Grid>)}
                 </Grid>

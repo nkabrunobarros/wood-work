@@ -255,6 +255,28 @@ function buildPermissionsString ({ permission, resources }) {
       break;
     }
 
+    case 'Ficheiros': {
+      const resourcesRequired = new Set();
+
+      if (permissions.list) {
+        resourcesRequired.add('view_file');
+      }
+
+      if (permissions.create) {
+        resourcesRequired.add('add_file');
+      }
+
+      resourcesRequired.forEach(codename => {
+        const resource = resources.find(ele => ele.codename === codename);
+
+        if (resource && !stringValues.includes(resource.id)) {
+          stringValues.push(resource.id);
+        }
+      });
+
+      break;
+    }
+
     case 'Embalamentos': {
       const resourcesRequired = new Set();
 

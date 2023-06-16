@@ -11,7 +11,7 @@ import scrollToBottom from '../../../utils/ScrollToBottom';
 import { Message } from '../../messages/Message';
 
 const Messages = (props) => {
-  const { order } = props;
+  const { order, open } = props;
   const [loaded, setLoaded] = useState(false);
   const [messages, setMessages] = useState();
   const [sectionExpanded, setSectionExpanded] = useState(true);
@@ -78,7 +78,7 @@ const Messages = (props) => {
   }, [messages]);
 
   // eslint-disable-next-line no-constant-condition
-  return <>
+  return open && <>
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
       <AccordionSummary sx={{
         background: 'lightGray.main',

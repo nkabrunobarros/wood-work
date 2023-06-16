@@ -132,6 +132,7 @@ const Order = ({ ...pageProps }) => {
           builtFolders.push(folder2);
         });
 
+        console.log(builtFolders);
         setFolders(builtFolders);
       });
 

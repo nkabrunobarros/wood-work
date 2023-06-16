@@ -3,20 +3,18 @@
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import routes from '../../../navigation/routes';
 import stylesMessage from '../../../styles/Messages.module.css';
 import styles from '../../../styles/Order.module.css';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Content from '../../content/content';
-
-//  PropTypes
-import PropTypes from 'prop-types';
-
-import { useRouter } from 'next/router';
-import routes from '../../../navigation/routes';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
 import Docs from './sections/Docs';
 import DocsClient from './sections/DocsClient';
 import Head from './sections/Head';
@@ -28,7 +26,6 @@ import ProductsObservations from './sections/ProductsObservations';
 const Order = ({ ...props }) => {
   const { breadcrumbsPath } = props;
   const [order, setOrder] = useState(props.order);
-  const [refresh, setRefresh] = useState(new Date());
   const path = useRouter();
   const isInternalPage = Object.values(routes.private.internal).includes(path.route.replace('[Id]', ''));
 
@@ -40,32 +37,32 @@ const Order = ({ ...props }) => {
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         {/* Page Header */}
-        <Content id={refresh}>
+        <Content >
           <Head {...props} order={order} setOrder={setOrder} isInternalPage={isInternalPage} />
         </Content>
         {/* Products */}
         <Content>
-          <Products open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
+          <Products open={isInternalPage} styles={styles} {...props} />
         </Content>
         {/* Products */}
         <Content>
           <ProductsObservations open={isInternalPage} styles={styles} {...props} />
         </Content>
-        {/* Production per furniture section */}
+        {/* Production per furniture */}
         <Content>
           <Production {...props} open={isInternalPage && order.status.value !== 'drawing' && order.startedProduction?.value} />
         </Content>
         {/* Docs */}
         <Content>
-          <Docs open={isInternalPage} styles={styles} onNewFolder={setRefresh} {...props} />
+          <Docs open={isInternalPage && CanDo('list_file')} styles={styles} {...props} />
         </Content>
         {/* Messages */}
         <Content>
-          <Messages stylesMessage={stylesMessage} {...props} />
+          <Messages open={CanDo('list_message')} stylesMessage={stylesMessage} {...props} />
         </Content>
         {/* Docs Client */}
-        <Content id={refresh}>
-          <DocsClient styles={styles} {...props} isInternalPage={isInternalPage} />
+        <Content >
+          <DocsClient open={CanDo('list_file')} styles={styles} {...props} isInternalPage={isInternalPage} />
         </Content>
       </Grid >
       <Footer />
