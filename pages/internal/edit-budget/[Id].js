@@ -203,7 +203,7 @@ const EditProject = ({ ...pageProps }) => {
         href: `${routes.private.internal.budget}${budget.id}`,
       },
       {
-        title: 'Editar',
+        title: 'Editar projeto',
         href: `${routes.private.internal.budget}`,
       },
     ];

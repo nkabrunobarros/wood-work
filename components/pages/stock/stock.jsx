@@ -6,14 +6,14 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Edit2, PackagePlus, Trash } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
-import { Box, ButtonGroup, Divider, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
+import Buttons from '../../buttons/Buttons';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
@@ -22,7 +22,7 @@ import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const Stock = ({ ...props }) => {
-  const { stock, breadcrumbsPath, pageProps } = props;
+  const { stock, breadcrumbsPath } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
 
   function onDelete () {
@@ -33,6 +33,9 @@ const Stock = ({ ...props }) => {
     ToastSet(loading, 'Stock apagado.', 'success');
     Router.push(routes.private.internal.stocks);
   }
+
+  const canEditStock = CanDo('update_stock');
+  const canDeleteStock = CanDo('delete_stock');
 
   return (
     <>
@@ -48,26 +51,42 @@ const Stock = ({ ...props }) => {
         <CssBaseline />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
-          <Box
-            id='pad'
-            className='flex'
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <Box id='align' style={{ flex: 1 }}>
-              <a className='headerTitleXl'>{stock?.material}</a>
-              <Box className='spacer' />
-              <Tooltip title={`${stock?.qtd} unidade(s)`}>
-                {stock?.qtd > 0
-                  ? <a className="successBalloon">Disponível</a>
-                  : <a className="errorBalloon">Indisponível</a>}
-              </Tooltip>
-            </Box>
-            <Box style={{ display: 'flex' }}>
-              <ButtonGroup>
-                <PrimaryBtn hidden={!CanDo('change_stock')} text='Editar' href={routes.private.internal.editStock + stock?.id} icon={<Edit2 strokeWidth='1' />} />
-                <PrimaryBtn hidden={!CanDo('delete_stock')} text='Apagar' color={'error'} onClick={() => setDialogOpen(true)} icon={<Trash strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} size={pageProps?.globalVars?.iconSize || 20} />} light />
-              </ButtonGroup>
-            </Box>
+          <Box id='pad'>
+            <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
+              <Grid container md={6} sm={6} xs={11}>
+                <Grid container alignItems={'center'}>
+                  <Typography variant='title'>{stock?.material}</Typography>
+                  <Box pl={2} >
+                    {stock?.qtd > 0
+                      ? <a className="successBalloon">Disponível</a>
+                      : <a className="errorBalloon">Indisponível</a>}
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid container md={6} sm={6} xs={1} justifyContent='end' >
+                <Box>
+                  <Buttons buttons={[
+                    {
+                      text: 'Editar',
+                      hidden: !canEditStock,
+                      href: routes.private.internal.editStock + stock?.id,
+                      icon: <Edit2 strokeWidth='1' size={20} />,
+                      color: 'primary'
+                    },
+                    {
+                      text: 'Apagar',
+                      hidden: !canDeleteStock,
+                      icon: <Trash strokeWidth='1' size={20} />,
+                      onClick: () => setDialogOpen(true),
+                      color: 'error',
+                      light: true
+                    },
+                  ]} />
+                </Box>
+
+              </Grid>
+            </Grid>
+
           </Box>
           <Grid container id='pad' className='flex'>
             {/* Product Info panels */}

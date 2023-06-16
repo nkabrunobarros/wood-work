@@ -67,6 +67,17 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
     padding: '.5rem',
   }));
 
+  const ITEM_HEIGHT = 36;
+  const ITEM_PADDING_TOP = 8;
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+      },
+    },
+  };
+
   return loaded && <>
     <Popover
       id={anchorEl ? 'simple-popover' : undefined}
@@ -164,7 +175,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
             md={ perRow ? (12 / perRow) : 3}
             sm={ perRow !== 1 ? 6 : 12}
             xs={ perRow !== 1 ? 12 : 12}
-            container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+            container sx={{ paddingMySelectLeft: '.5rem', paddingRight: '.5rem' }}>
             <CurrencyInput
               name={field.id}
               label={field.label}
@@ -244,6 +255,8 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
                       onChange={(e) => onFormChange(index, e)}
                       sx={{ width: field.width && field.width }}
                       style={{ width: '100%' }}
+                      MenuProps={MenuProps}
+
                     >
                       <MenuItem value="" disabled>
             Escolha uma opcao

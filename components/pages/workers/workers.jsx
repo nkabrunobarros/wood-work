@@ -92,7 +92,10 @@ const Workers = ({ ...props }) => {
         <Content>
           <Grid id='pad' container md={12} sm={12} xs={12}>
             <Grid container md={12} sm={12} xs={12}>
-              <Typography variant='title'>Filtros</Typography>
+              <Typography variant='titlexs'>Filtros</Typography>
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <MyInput label="Email" onChange={(e) => setFilters({ ...filters, Email: e.target.value })} value={filters.Email} />
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
               <InputLabel htmlFor='email'>Utilizador</InputLabel>
@@ -122,11 +125,9 @@ const Workers = ({ ...props }) => {
                       ...params.inputProps,
                     }}
                   />
+
                 )}
               />
-            </Grid>
-            <Grid container md={4} sm={6} xs={12} p={1}>
-              <MyInput label="Email" onChange={(e) => setFilters({ ...filters, Email: e.target.value })} value={filters.Email} />
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
               <MySelect value={filters.ProfileId} label='Perfil' options={profiles} optionLabel={'name'} onChange={(e) => setFilters({ ...filters, ProfileId: e.target.value }) }/>

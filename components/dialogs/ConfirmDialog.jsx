@@ -1,7 +1,9 @@
 import { QuestionMark } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Typography } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Paper, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef } from 'react';
+import Draggable from 'react-draggable';
+import PrimaryBtn from '../buttons/primaryBtn';
 
 const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, iconType, confirmText, cancelText, inputs }) => {
   const colors = {
@@ -11,38 +13,54 @@ const ConfirmDialog = ({ open, handleClose, onConfirm, message, title, iconType,
   };
 
   const iconColor = colors[iconType || 'default'];
+  const ref = useRef(null);
+  const isMobile = ref.current && ref.current?.offsetWidth < 500;
+
+  function PaperComponent (props) {
+    return (
+      <Draggable
+        handle="#draggable-dialog-title"
+        cancel={'[class*="MuiDialogContent-root"]'}
+      >
+        <Paper {...props} />
+      </Draggable>
+    );
+  }
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby='alert-dialog-title'
-      aria-describedby='alert-dialog-description'
-    >
-      <DialogTitle id='alert-dialog-title'>
-        <Typography variant='h6' color='primary'>
-          {title || 'Confirmar Ação'}
-        </Typography>
-      </DialogTitle>
-      <Divider />
-      <DialogContent>
-        <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color={iconColor} >
-          <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1.5} />
-        </Box>
-        <DialogContentText id='alert-dialog-description' variant='body1'>
-          {message || 'A ação que está a fazer é irreversível. Tem certeza que quer continuar?'}
-        </DialogContentText>
-        {inputs}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onConfirm} autoFocus>
-          <Typography color='primary'>{confirmText || 'Confirmar'}</Typography>
-        </Button>
-        <Button onClick={handleClose}>
-          <Typography color='textSecondary'>{cancelText || 'Cancelar'}</Typography>
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Box ref={ref} sx={{ width: '100%', position: 'absolute' }}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+        fullScreen={isMobile}
+        PaperComponent={PaperComponent}
+      >
+        <DialogTitle id="draggable-dialog-title" sx={{ cursor: 'move', backgroundColor: isMobile && 'default.sides', color: isMobile && 'white' }}>
+          <Typography variant='h6' color={!isMobile && 'primary'}>
+            {title || 'Confirmar Ação'}
+          </Typography>
+        </DialogTitle>
+        <Divider />
+        <DialogContent sx={{ display: 'flex', alignItems: 'center' }} >
+          <Box sx={{ minHeight: isMobile && '450px' }}>
+            <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color={iconColor} >
+              <QuestionMark sx={{ fontSize: isMobile ? '150px' : '80px' }}strokeWidth={1.5} />
+            </Box>
+            <DialogContentText id='alert-dialog-description' variant='body1' sx={{ position: 'sticky', marginTop: isMobile && '30%' }}>
+              {message || 'A ação que está a fazer é irreversível. Tem certeza que quer continuar?'}
+            </DialogContentText>
+            {inputs}
+
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <PrimaryBtn text={confirmText || 'Sim'} onClick={onConfirm} color={'primary'} />
+          <PrimaryBtn text={cancelText || 'Não'} onClick={handleClose} light />
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

@@ -28,6 +28,7 @@
   margin:0px;
   height: 100%;
   width: 100%;
+  z-index: 99999;
 }
 .formContainer {
   height: 100vh;

@@ -38,23 +38,20 @@ const Clients = ({ ...pageProps }) => {
   if (loaded) {
     const headCells = [
       {
-        id: 'Nome',
+        id: 'Email',
         numeric: false,
-        disablePadding: false,
-        label: 'Nome',
+        label: 'Email',
         show: true,
       },
       {
-        id: 'Email',
+        id: 'Nome',
         numeric: false,
-        disablePadding: true,
-        label: 'Email',
+        label: 'Nome',
         show: true,
       },
       {
         id: 'actions',
         numeric: true,
-        disablePadding: false,
         label: 'Ações',
         show: true,
       },

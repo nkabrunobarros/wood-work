@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 //  Mui
 import {
-  Box, ButtonGroup, Grid, Typography
+  ButtonGroup, Grid, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -289,9 +289,9 @@ const EditClient = ({ ...props }) => {
         />
         {processing && <Loader center={true} backdrop />}
         <Content>
-          <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-            <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title} - {client.isCompany ? 'Empresarial' : 'Particular'} </Typography>
-            <Box sx={{ marginLeft: 'auto' }}>
+          <Grid container md={12} sm={12} xs={12} sx={{ p: '24px', alignItems: 'center' }}>
+            <Typography variant='title'>{client?.user?.first_name + ' ' + client?.user?.last_name} - {client.isCompany ? 'Empresarial' : 'Particular'} </Typography>
+            <Grid container justifyContent={{ md: 'end', sm: 'end', xs: 'center' }} sx={{ marginLeft: 'auto' }} >
               <ButtonGroup>
                 <PrimaryBtn
                   text='Guardar'
@@ -315,8 +315,8 @@ const EditClient = ({ ...props }) => {
                   onClick={() => Router.back()}
                 />
               </ButtonGroup>
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
           <Grid container sx={{ padding: '24px' }}>
             <Grid item md={12} sm={12} xs={12} >
 

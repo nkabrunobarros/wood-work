@@ -13,14 +13,15 @@ import {
   Autocomplete,
   Box,
   InputLabel,
-  OutlinedInput,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as clientsActionsRedux from '../../../store/actions/client';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
@@ -96,64 +97,46 @@ const Clients = ({ ...props }) => {
         <CustomBreadcrumbs path={breadcrumbsPath} />
         {/* Filters */}
         <Content>
-          <Box id='pad'>
-            <a className='headerTitleSm'>Filtros</a>
-            <Box className='filters'>
-              <Box className='filterContainer'>
-                <InputLabel htmlFor='email'>Cliente</InputLabel>
-                <Autocomplete
-                  name="client"
-                  id="client"
-                  fullWidth
-                  disablePortal
-                  options={clients.sort((a, b) => (a.NomeDropdown > b.NomeDropdown ? 1 : a.NomeDropdown < b.NomeDropdown ? -1 : 0))}
-                  getOptionLabel={(option) => option.NomeDropdown}
-                  getOptionValue={(option) => option.id}
-                  onChange={(e, value) => setNome(value?.Nome || '')}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.NomeDropdown}
-                    </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      inputProps={{
-                        ...params.inputProps,
-                        autoComplete: 'new-password', // disable autocomplete and autofill
-                      }}
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                    />
-                  )}
-                />
-              </Box>
-              <Box className='filterContainer'>
-                <InputLabel htmlFor='email'>Email</InputLabel>
-                <OutlinedInput
-                  fullWidth
-                  id='email'
-                  name='email'
-                  autoComplete='email'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Box>
-              <Box className={'filterContainer'}>
-
-              </Box>
-
-            </Box>
-            <Box
-              style={{
-                width: 'fit-content',
-                marginLeft: 'auto',
-                paddingTop: '1rem',
-              }}
-            >
+          <Grid id='pad' container md={12} sm={12} xs={12}>
+            <Grid container md={12} sm={12} xs={12}>
+              <Typography variant='titlexs'>Filtros</Typography>
+            </Grid>
+            <Grid container md={4} sm={4} xs={12} p={1}>
+              <InputLabel htmlFor='email'>Cliente</InputLabel>
+              <Autocomplete
+                name="client"
+                id="client"
+                fullWidth
+                disablePortal
+                options={clients.sort((a, b) => (a.NomeDropdown > b.NomeDropdown ? 1 : a.NomeDropdown < b.NomeDropdown ? -1 : 0))}
+                getOptionLabel={(option) => option.NomeDropdown}
+                getOptionValue={(option) => option.id}
+                onChange={(e, value) => setNome(value?.Nome || '')}
+                renderOption={(props, option) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    {option.NomeDropdown}
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid container md={4} sm={4} xs={12} p={1}>
+              <MyInput label='Email' value={email} onChange={(e) => setEmail(e.target.value)}/>
+            </Grid>
+            <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
               <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
         </Content>
 
         <Content>

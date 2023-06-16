@@ -242,46 +242,59 @@ const AdvancedTable = ({
   }
 
   const CustomTablePagination = () => {
-    return <Box sx={{ width: '100%' }} display="flex" alignItems="center" justifyContent="end" p={1}>
-      <Typography variant="subtitle2" pr={1}>
-    Mostrar
-      </Typography>
-      <TextField
-        value={state.rowsPerPage}
-        variant="standard"
-        select
-        InputProps={{ disableUnderline: true }}
-        onChange={(e) => setState({ ...state, rowsPerPage: e.target.value })}
-      >
-        {state.rowsPerPageOptions.map((row) => (
-          <MenuItem key={row} value={row}>
-            <Typography variant='sm'>{row}</Typography>
-          </MenuItem>
-        ))}
-      </TextField>
-      <Typography variant="subtitle2" pl={1} pr={1}>
-        {
-          state.page === 0
-            ? `${state.filteredItems.length > 0 ? '1' : '0'} - ${Math.min(state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
-            : `${state.page * state.rowsPerPage + 1} - ${Math.min((state.page + 1) * state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
-        }      </Typography>
-      {!noPagination && (
-        <Pagination
-          siblingCount={1}
-          boundaryCount={0}
-          pl={1}
-          variant="outlined"
-          count={Math.ceil(state.filteredItems.length / state.rowsPerPage)}
-          rowsPerPage={state.rowsPerPage}
-          page={state.page + 1 || 1}
-          showLastButton
-          showFirstButton
-          onChange={(e, p) => setState({ ...state, page: p - 1 })}
-          color="primary"
-          sx={{ border: '0px solid', borderColor: 'lightGray.edges', pb: 0.2, pt: 0.2, borderRadius: '20px' }}
+    return <Box display="flex" alignItems="center" justifyContent="end" sx={{ width: '100%' }} >
+      <Box display="flex" alignItems="center" justifyContent="end" p={1}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={4} sm={4} xs={12}
+            alignItems={'center'}
+            justifyContent={{ md: 'start', sm: 'start', xs: 'center' }}
+          >
+            <Box display={'flex'} justifyContent={{ md: 'start', sm: 'start', xs: 'center' }} sx={{ alignItems: 'center', minWidth: '200px' }}>
+              <Typography variant="subtitle2" pr={1}>Mostrar </Typography>
+              <TextField
+                value={state.rowsPerPage}
+                variant="standard"
+                select
+                InputProps={{ disableUnderline: true }}
+                onChange={(e) => setState({ ...state, rowsPerPage: e.target.value })}
+              >
+                {state.rowsPerPageOptions.map((row) => (
+                  <MenuItem key={row} value={row}>
+                    <Typography variant='sm'>{row}</Typography>
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Typography variant="subtitle2" pl={1} pr={1}>
+                {
+                  state.page === 0
+                    ? `${state.filteredItems.length > 0 ? '1' : '0'} - ${Math.min(state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+                    : `${state.page * state.rowsPerPage + 1} - ${Math.min((state.page + 1) * state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+                }
+              </Typography>
+            </Box>
 
-        />
-      )}
+          </Grid>
+          <Grid container md={8} sm={8} xs={12} alignItems={'center'} justifyContent={{ md: 'end', sm: 'end', xs: 'center' }}>
+            {!noPagination && (
+              <Pagination
+                siblingCount={1}
+                boundaryCount={0}
+                pl={1}
+                variant="outlined"
+                count={Math.ceil(state.filteredItems.length / state.rowsPerPage)}
+                rowsPerPage={state.rowsPerPage}
+                page={state.page + 1 || 1}
+                showLastButton
+                showFirstButton
+                onChange={(e, p) => setState({ ...state, page: p - 1 })}
+                color="primary"
+                sx={{ border: '0px solid', borderColor: 'lightGray.edges', pb: 0.2, pt: 0.2, borderRadius: '20px' }}
+
+              />
+            )}
+          </Grid>
+        </Grid>
+      </Box>
     </Box>;
   };
 
@@ -340,9 +353,9 @@ const AdvancedTable = ({
                     return `${from} - ${to} de ${count}`;
                   }}
                 />}
-                <Box>
+                <Box display='flex' justifyContent={{ md: 'start', sm: 'start', xs: 'center' }}>
                   <Tooltip title='Filtrar colunas'>
-                    <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setState({ ...state, anchorEl: e.currentTarget })}>
+                    <IconButton onClick={(e) => setState({ ...state, anchorEl: e.currentTarget })}>
                       <Filter size={20} strokeWidth={1.5} />
                     </IconButton>
                   </Tooltip>
@@ -431,8 +444,8 @@ const AdvancedTable = ({
                             borderRight: headCell.borderRight && '1px solid var(--grayEdges)',
                             borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)',
                             padding: headCell.id !== 'actions' && 2,
-                            paddingLeft: 1,
-                            paddingRight: 1,
+                            paddingLeft: !headCell.disablePadding && 1,
+                            paddingRight: !headCell.disablePadding && 1,
                           }}
                         >
                           {state.loaded

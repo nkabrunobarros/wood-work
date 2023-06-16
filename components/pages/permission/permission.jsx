@@ -1,5 +1,5 @@
-import { ButtonGroup, Checkbox, Grid, Typography } from '@mui/material';
-import { Edit, Trash } from 'lucide-react';
+import { Box, Checkbox, Grid, Typography } from '@mui/material';
+import { Edit2, Trash } from 'lucide-react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as permissionsActionsRedux from '../../../store/actions/profile';
 import CustomBreadcrumbs from '../../breadcrumbs/breadcrumbs';
-import PrimaryBtn from '../../buttons/primaryBtn';
+import Buttons from '../../buttons/Buttons';
 import Content from '../../content/content';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
@@ -18,7 +18,7 @@ import CanDo from '../../utils/CanDo';
 import ToastSet from '../../utils/ToastSet';
 
 const ProfileScreen = (props) => {
-  const { breadcrumbsPath, pageProps, profile, resources } = props;
+  const { breadcrumbsPath, profile, resources } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const deleteProfile = (data) => dispatch(permissionsActionsRedux.deleteProfile(data));
@@ -45,6 +45,8 @@ const ProfileScreen = (props) => {
   ];
 
   const cellWidth = 12 / (Object.keys(headCells).length);
+  const canEditProfile = CanDo('update_profile');
+  const canDeleteProfile = CanDo('delete_profile');
 
   return <>
     <ConfirmDialog
@@ -60,61 +62,60 @@ const ProfileScreen = (props) => {
       <Content>
         <Grid container id='pad' md={12} justifyContent={'space-between'} >
           <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
-          <ButtonGroup>
-            <PrimaryBtn
-              text='Editar'
-              hidden={!CanDo('update_profile')}
-              icon={
-                <Edit
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
-                  size={pageProps?.globalVars?.iconSize || 20}
-                />
-              }
-              href={routes.private.internal.editProfile + profile.id}
-            />
-            <PrimaryBtn
-              light
-              text='Apagar'
-              color='error'
-              hidden={!CanDo('delete_profile')}
-              onClick={() => setDialogOpen(true)}
-              icon={
-                <Trash
-                  strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
-                  size={pageProps?.globalVars?.iconSize || 20}
-                />
-              }
-            />
-          </ButtonGroup>
+          <Box>
+            <Buttons buttons={[
+              {
+                text: 'Editar',
+                hidden: !canEditProfile,
+                href: routes.private.internal.editProfile + profile.id,
+                icon: <Edit2 strokeWidth='1' size={20} />,
+                color: 'primary'
+              },
+              {
+                text: 'Apagar',
+                hidden: !canDeleteProfile,
+                icon: <Trash strokeWidth='1' size={20} />,
+                onClick: () => setDialogOpen(true),
+                color: 'error',
+                light: true
+              },
+            ]} />
+          </Box>
         </Grid>
-        <Grid container md={12} sm={12} xs={12}>
-          {/* Header */}
-          <Grid container md={12} sm={12} xs={12} bgcolor={'primary.main'} color='white'>
-            {headCells.map((cell) => {
-              return <Grid key={cell.label} container alignItems='center' p={2}
-                md={cellWidth}
-                sm={cellWidth}
-                xs={cellWidth}>
-                {cell.label}
-              </Grid>;
-            })}
-          </Grid>
-          {Object.keys(profile?.listPermissions).sort((a, b) => (a > b) ? 1 : -1).map((perm, rowIndex) => {
-            return headCells.map((cell, index) => {
-              return <Grid key={cell.label} container alignItems='center' p={0} bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
-                md={cellWidth}
-                sm={cellWidth}
-                xs={cellWidth}>
-                {index === 0
-                  ? <Typography pl={2} variant='subtitle2'>{perm}</Typography>
-                  : <>
-                    {resources.find(ele => ele.codename === `${cell.key}_${resources.find(ele => ele.name === perm).codename.split('_')[1]}`) &&
+        <Grid container md={12} sm={12} xs={12} sx={{ padding: 0, overflow: 'scroll', pb: 0 }}>
+
+          <Grid container md={12} sm={12} xs={12} sx={{ minWidth: '1024px', height: 'fit-content' }}>
+
+            <Grid container md={12} sm={12} xs={12}>
+              {/* Header */}
+              <Grid container md={12} sm={12} xs={12} bgcolor={'primary.main'} color='white'>
+                {headCells.map((cell) => {
+                  return <Grid key={cell.label} container alignItems='center' p={2}
+                    md={cellWidth}
+                    sm={cellWidth}
+                    xs={cellWidth}>
+                    {cell.label}
+                  </Grid>;
+                })}
+              </Grid>
+              {Object.keys(profile?.listPermissions).sort((a, b) => (a > b) ? 1 : -1).map((perm, rowIndex) => {
+                return headCells.map((cell, index) => {
+                  return <Grid key={cell.label} container alignItems='center' p={0} bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
+                    md={cellWidth}
+                    sm={cellWidth}
+                    xs={cellWidth}>
+                    {index === 0
+                      ? <Typography pl={2} variant='subtitle2'>{perm}</Typography>
+                      : <>
+                        {resources.find(ele => ele.codename === `${cell.key}_${resources.find(ele => ele.name === perm).codename.split('_')[1]}`) &&
                     <Checkbox disabled checked={!!profile.listPermissions[perm][cell.key]} />}
-                  </>
-                }
-              </Grid>;
-            });
-          })}
+                      </>
+                    }
+                  </Grid>;
+                });
+              })}
+            </Grid>
+          </Grid>
         </Grid>
       </Content>
     </Grid>

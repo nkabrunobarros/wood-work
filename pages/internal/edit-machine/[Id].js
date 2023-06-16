@@ -40,7 +40,7 @@ const EditProfile = ({ pageProps }) => {
         href: `${routes.private.internal.machine}${machine.id}`,
       },
       {
-        title: 'Editar',
+        title: 'Editar máquina',
         href: `${routes.private.internal.editMachine}`,
       },
     ];

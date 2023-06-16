@@ -8,8 +8,8 @@ import WorkersScreen from '../../components/pages/workers/workers';
 
 //  Navigation
 import routes from '../../navigation/routes';
-import * as workersActionsRedux from '../../store/actions/worker';
 import * as profilesActionsRedux from '../../store/actions/profile';
+import * as workersActionsRedux from '../../store/actions/worker';
 
 //  Proptypes
 
@@ -39,23 +39,20 @@ const Workers = () => {
 
     const headCellsWorkers = [
       {
-        id: 'Nome',
+        id: 'Email',
         numeric: false,
-        disablePadding: false,
-        label: 'Nome',
+        label: 'Email',
         show: true
       },
       {
-        id: 'Email',
+        id: 'Nome',
         numeric: false,
-        disablePadding: true,
-        label: 'Email',
+        label: 'Nome',
         show: true
       },
       {
         id: 'Profile',
         numeric: false,
-        disablePadding: true,
         label: 'Perfil',
         show: true
       },

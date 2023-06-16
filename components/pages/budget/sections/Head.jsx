@@ -1,12 +1,11 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { Box, ButtonGroup, Grid, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 //  PropTypes
 import { CheckCircleOutline, Close } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import routes from '../../../../navigation/routes';
-import PrimaryBtn from '../../../buttons/primaryBtn';
 import AdjudicateBudgetModal from './modals/AdjudicateBudgetModal';
 import DeliverBudgetModal from './modals/DeliverBudgetModal';
 
@@ -21,6 +20,7 @@ import * as assemblysActionsRedux from '../../../../store/actions/assembly';
 import * as budgetsActionsRedux from '../../../../store/actions/budget';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
+import Buttons from '../../../buttons/Buttons';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import CurrencyInput from '../../../inputs/CurrencyInput';
@@ -368,40 +368,76 @@ const Head = (props) => {
     p: 0.5
   };
 
-  const ActionButton = () => {
-    if (!isInternalPage) return;
+  const canChangeProject = CanDo('change_project');
+
+  // const ActionButton = () => {
+  //   if (!isInternalPage || !canChangeProject) return;
+
+  //   switch (budget?.budgetStatus?.value) {
+  //   case 'needs analysis': return <PrimaryBtn
+  //     text={'Iniciar Orçamentação'}
+  //     onClick={() => setInitiateBudgeting(true) }
+  //     icon={
+  //       <CheckCircleOutline
+  //         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+  //         size={pageProps?.globalVars?.iconSize || 20}
+  //       />
+  //     }
+  //   />;
+  //   case 'waiting budget': return <PrimaryBtn
+  //     text={'Entregar Orçamento' }
+  //     onClick={() => setDeliverModal(!deliverModal) }
+  //     icon={
+  //       <CheckCircleOutline
+  //         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+  //         size={pageProps?.globalVars?.iconSize || 20}
+  //       />
+  //     }
+  //   />;
+  //   case 'waiting adjudication' : return <PrimaryBtn
+  //     text={'Adjudicar projeto'}
+  //     onClick={() => setAdjudicateModal(!adjudicateModal)}
+  //     icon={
+  //       <CheckCircleOutline
+  //         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+  //         size={pageProps?.globalVars?.iconSize || 20}
+  //       />
+  //     }
+  //   />;
+  //   }
+  // };
+
+  const ActionButtonMobile = () => {
+    if (!isInternalPage && !canChangeProject) return;
 
     switch (budget?.budgetStatus?.value) {
-    case 'needs analysis': return <PrimaryBtn
-      text={'Iniciar Orçamentação'}
-      onClick={() => setInitiateBudgeting(true) }
-      icon={
-        <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
-          size={pageProps?.globalVars?.iconSize || 20}
-        />
-      }
-    />;
-    case 'waiting budget': return <PrimaryBtn
-      text={'Entregar Orçamento' }
-      onClick={() => setDeliverModal(!deliverModal) }
-      icon={
-        <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
-          size={pageProps?.globalVars?.iconSize || 20}
-        />
-      }
-    />;
-    case 'waiting adjudication' : return <PrimaryBtn
-      text={'Adjudicar projeto'}
-      onClick={() => setAdjudicateModal(!adjudicateModal)}
-      icon={
-        <CheckCircleOutline
-          strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
-          size={pageProps?.globalVars?.iconSize || 20}
-        />
-      }
-    />;
+    case 'needs analysis': return {
+      text: 'Iniciar Orçamentação',
+      onClick: () => setInitiateBudgeting(true),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    case 'waiting budget': return {
+      text: 'Entregar Orçamento',
+      onClick: () => setDeliverModal(true),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    case 'waiting adjudication': return {
+      text: 'Adjudicar projeto',
+      onClick: () => setAdjudicateModal(true),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
     }
   };
 
@@ -442,6 +478,7 @@ const Head = (props) => {
   }
 
   const canEditProject = CanDo('update_project');
+  const canDeleteProject = CanDo('delete_project');
 
   return (
     <>
@@ -462,118 +499,128 @@ const Head = (props) => {
         message={'Está prestes a apagar um projeto, o que é irreversível, tem certeza que quer continuar?'}
       />
       <Box id='pad'>
-        <Box container >
-          <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
-            <Grid container md={6} sm={6} xs={6}>
-              <Grid container md={12} sm={12} xs={12} display={!isInternalPage && 'none'}>
-                <Typography variant="sm" color="lightTextSm.main" >
-                  {'Cliente '}
-                  {budget.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
-                  <Tooltip title='Ver cliente'>
-                    <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                      <Typography variant='sm' color={CanDo('see_client') && 'primary.main'}> {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}</Typography>
-                    </a>
-                  </Tooltip>
-                </Typography>
-              </Grid>
-              <Box id='align'>
-                <Typography variant='title'>{budget.name.value}</Typography>
-                <Box pl={2} display='flex' alignItems='center'>
-                  {budget.budgetStatus?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
-                  {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Pendente Análise Necessidades</Typography>}
-                  {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Pendente Adjudicação</Typography>}
-                  {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='waitingBudgetBalloon'>Pendente Orçamentação</Typography>}
-                </Box>
-              </Box>
+        <Grid container md={12} sm={12} xs={12} sx={{ marginBottom: '1rem' }}>
+          <Grid container md={6} sm={6} xs={11}>
+            <Grid container md={12} sm={12} xs={12} display={!isInternalPage && 'none'}>
+              <Typography variant="sm" color="lightTextSm.main" >
+                {'Cliente '}
+                {budget.orderBy.object?.isCompany ? 'Empresarial: ' : 'Particular: '}
+                <Tooltip title='Ver cliente'>
+                  <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                    <Typography variant='sm' color={CanDo('see_client') && 'primary.main'}> {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}</Typography>
+                  </a>
+                </Tooltip>
+              </Typography>
             </Grid>
-            <Grid container md={6} sm={6} xs={6} justifyContent='end' alignItems={'center'}>
-              <Box pr={2}>
-                {CanDo('change_project') && <ActionButton />}
-
+            <Grid container alignItems={'center'}>
+              <Typography variant='title'>{budget.name.value}</Typography>
+              <Box pl={2} >
+                {budget.budgetStatus?.value === 'canceled' && <Typography variant='sm' className='errorBalloon'>Cancelado</Typography>}
+                {budget.budgetStatus?.value === 'needs analysis' && <Typography variant='sm' className="analisysBalloon">Pendente Análise Necessidades</Typography>}
+                {budget.budgetStatus?.value === 'waiting adjudication' && <Typography variant='sm' className='infoBalloon'>Pendente Adjudicação</Typography>}
+                {budget.budgetStatus?.value === 'waiting budget' && <Typography variant='sm' className='waitingBudgetBalloon'>Pendente Orçamentação</Typography>}
               </Box>
-
-              <ButtonGroup>
-                { budget.budgetStatus.value !== 'canceled' && <PrimaryBtn text={'Editar'} color='primary'
-                  href={routes.private.internal.editBudget + budget.id}
-                  hidden={!canEditProject}
-                  icon={ <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />}
-                />}
-                {budget.budgetStatus.value !== 'canceled' && <PrimaryBtn text='Cancelar' color={'warning'} variant='outlined' hidden={!canEditProject || budget.budgetStatus.value === 'canceled'}
-                  icon={ <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
-                  onClick={CancelProject}
-                />}
-                {budget.budgetStatus.value === 'canceled' && <PrimaryBtn text='Reativar' color={'warning'} hidden={!canEditProject}
-                  icon={ <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
-                  onClick={ReopenProject}
-                />}
-                <PrimaryBtn text='Apagar' color={'error'} variant='outlined' hidden={!CanDo('delete_owner')}
-                  onClick={() => setDeleteModal(true)}
-                  icon={ <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} /> }
-                />
-              </ButtonGroup>
             </Grid>
           </Grid>
-          <Grid container md={12} sm={12} xs={12}>
-            <HeaderGrid grids={ upperGrids }/>
-            <HeaderGrid grids={ lowerGrids }/>
-            <Grid container md={12} p={1}>
-              <Grid container style={{ width: 'fit-content' }}>
-                <Grid container md={4} display={'none'}>
-                  <Grid md={12} sm={12} xs={12}>
-                    <Typography color={'lightTextSm.main'}>Cliente</Typography>
-                    <Tooltip title='Ver cliente'>
-                      <Typography color={'primary.main'}>
-                        <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
-                          {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}
-                        </a>
-                      </Typography>
-                    </Tooltip>
-                  </Grid>
-                  <Grid md={12} sm={12} xs={12}>
-                    <Typography color={'lightTextSm.main'}>Tipo</Typography>
-                    <Typography >{budget.orderBy.object?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
-                  </Grid>
+          <Grid container md={6} sm={6} xs={1} justifyContent='end' alignItems={'center'}>
+            <Buttons buttons={[
+              {
+                text: 'Editar',
+                color: 'primary',
+                href: routes.private.internal.editBudget + budget.id,
+                hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject),
+                icon: <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />
+              },
+              {
+                text: 'Cancelar',
+                color: 'warning',
+                hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject),
+                variant: 'outlined',
+                icon: <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+                onClick: CancelProject
+              },
+              {
+                text: 'Reativar',
+                color: 'warning',
+                hidden: !(budget.budgetStatus.value === 'canceled' && canEditProject),
+                icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+                onClick: ReopenProject
+              },
+              {
+                text: 'Apagar',
+                color: 'error',
+                variant: 'outlined',
+                hidden: !(canDeleteProject),
+                icon: <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+                onClick: () => setDeleteModal(true)
+              },
+              {
+                ...ActionButtonMobile(),
+                divider: true
+              }
+            ]} />
+          </Grid>
+        </Grid>
+        <Grid container md={12} sm={12} xs={12}>
+          <HeaderGrid grids={ upperGrids }/>
+          <HeaderGrid grids={ lowerGrids }/>
+          <Grid container md={12} p={1}>
+            <Grid container style={{ width: 'fit-content' }}>
+              <Grid container md={4} display={'none'}>
+                <Grid md={12} sm={12} xs={12}>
+                  <Typography color={'lightTextSm.main'}>Cliente</Typography>
+                  <Tooltip title='Ver cliente'>
+                    <Typography color={'primary.main'}>
+                      <a href={routes.private.internal.client + budget.orderBy?.object?.id} target="_blank" rel="noreferrer" >
+                        {`${budget.orderBy?.object?.user?.first_name} ${budget.orderBy?.object?.user?.last_name}`}
+                      </a>
+                    </Typography>
+                  </Tooltip>
                 </Grid>
-                <Grid container md={8}>
-                  <Grid container p={1}>
-                    <Grid container md={12} sm={12} xs={12} >
-                      {/* Headers */}
-                      <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0, borderColor: 'divider' }}>
-                        <Grid {...tableFirstCell} sx={{ border: 'none' }}><Typography fontWeight={'bold'} variant="subtitle2">Morada</Typography></Grid>
-                        {/* <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item variant="subtitle2"color='lightTextSm.main'></Typography>Entrega</Grid> */}
-                      </Grid>
-                      {/* Postal Code */}
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Código Postal</Typography></Grid>
-                        <Grid {...tableLastCell}><Typography item variant="subtitle2" color='lightTextSm.black'>{budget.deliveryAddress?.value?.postalCode}</Typography></Grid>
-                      </Grid>
-                      {/* Street */}
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Rua</Typography></Grid>
-                        <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{budget.deliveryAddress?.value?.streetAddress}</Typography></Grid>
-                      </Grid>
-                      {/* addressLocality */}
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Localidade</Typography></Grid>
-                        <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressLocality}</Typography></Grid>
-                      </Grid>
-                      {/* addressRegion */}
-                      <Grid container md={12} sm={12} xs={12}>
-                        <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Região</Typography></Grid>
-                        <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressRegion}</Typography></Grid>
-                      </Grid>
-                      {/* addressCountry */}
-                      <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-                        <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>País</Typography></Grid>
-                        <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{reduxState?.countries?.data?.find(ele => ele.cca2 === budget.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
-                      </Grid>
+                <Grid md={12} sm={12} xs={12}>
+                  <Typography color={'lightTextSm.main'}>Tipo</Typography>
+                  <Typography >{budget.orderBy.object?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
+                </Grid>
+              </Grid>
+              <Grid container md={8}>
+                <Grid container p={1}>
+                  <Grid container md={12} sm={12} xs={12} >
+                    {/* Headers */}
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', p: 0, borderColor: 'divider' }}>
+                      <Grid {...tableFirstCell} sx={{ border: 'none' }}><Typography fontWeight={'bold'} variant="subtitle2">Morada</Typography></Grid>
+                      {/* <Grid {...tableLastCell} sx={{ border: 'none' }} ><Typography item variant="subtitle2"color='lightTextSm.main'></Typography>Entrega</Grid> */}
+                    </Grid>
+                    {/* Postal Code */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Código Postal</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item variant="subtitle2" color='lightTextSm.black'>{budget.deliveryAddress?.value?.postalCode}</Typography></Grid>
+                    </Grid>
+                    {/* Street */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Rua</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{budget.deliveryAddress?.value?.streetAddress}</Typography></Grid>
+                    </Grid>
+                    {/* addressLocality */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Localidade</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressLocality}</Typography></Grid>
+                    </Grid>
+                    {/* addressRegion */}
+                    <Grid container md={12} sm={12} xs={12}>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>Região</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{budget.deliveryAddress?.value?.addressRegion}</Typography></Grid>
+                    </Grid>
+                    {/* addressCountry */}
+                    <Grid container md={12} sm={12} xs={12} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                      <Grid {...tableFirstCell}><Typography item variant="subtitle2"color='lightTextSm.black'>País</Typography></Grid>
+                      <Grid {...tableLastCell}><Typography item variant="subtitle2"color='lightTextSm.black'>{reduxState?.countries?.data?.find(ele => ele.cca2 === budget.deliveryAddress?.value?.addressCountry)?.name?.common}</Typography></Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Box>
+        </Grid>
       </Box>
     </>
 

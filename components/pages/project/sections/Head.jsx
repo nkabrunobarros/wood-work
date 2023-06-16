@@ -1,11 +1,12 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import { Forward, Power, Tag, Trash } from 'lucide-react';
 import React, { useState } from 'react';
 import PrimaryBtn from '../../../buttons/primaryBtn';
 
 //  PropTypes
-import { Close } from '@mui/icons-material';
-import { Box, ButtonGroup, Grid, Tooltip, Typography } from '@mui/material';
+import { CheckCircleOutline, Close } from '@mui/icons-material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import { Router, useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +15,7 @@ import routes from '../../../../navigation/routes';
 import * as assemblyActionsRedux from '../../../../store/actions/assembly';
 import * as expeditionsActionsRedux from '../../../../store/actions/expedition';
 import * as projectsActionsRedux from '../../../../store/actions/project';
+import Buttons from '../../../buttons/Buttons';
 import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
 import CanDo from '../../../utils/CanDo';
@@ -336,6 +338,7 @@ const Head = (props) => {
   }
 
   const canEditProject = CanDo('update_project');
+  const canDeleteProject = CanDo('delete_project');
 
   async function CancelProject () {
     const loading = toast.loading('');
@@ -359,6 +362,58 @@ const Head = (props) => {
       status: { type: 'Property', value: 'drawing' },
     });
   }
+
+  const ActionButtonMobile = () => {
+    if (!isInternalPage && !canEditProject) return;
+
+    switch (order?.status?.value) {
+    case 'drawing': return {
+      text: 'Passar a produção',
+      onClick: () => handleChangeToProduction(),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    case 'production': return {
+      text: 'Passar a montagem',
+      onClick: () => handleChangeToAssembly(),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    case 'testing': return {
+      text: 'Passar a embalamento',
+      onClick: () => handleChangeToPacking(),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    case 'packing': return {
+      text: 'Passar a expedição',
+      onClick: () => handleChangeToTransport(),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    case 'transport': return {
+      text: 'Terminar',
+      onClick: () => handleChangeToFinished(),
+      icon: <CheckCircleOutline
+        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+        size={pageProps?.globalVars?.iconSize || 20}
+      />,
+      color: 'primary'
+    };
+    }
+  };
 
   return <Box id='pad'>
     <Notification />
@@ -456,20 +511,38 @@ const Head = (props) => {
           sx={{ marginLeft: 1 }}
         />
       </Box>}
-      <ButtonGroup>
-        {order.status.value !== 'canceled' && <PrimaryBtn text='Cancelar' color={'warning'} variant='outlined' hidden={!canEditProject || order.status.value === 'canceled'}
-          icon={ <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
-          onClick={CancelProject}
-        />}
-        {order.status.value === 'canceled' && <PrimaryBtn text='Reativar' color={'warning'} hidden={!canEditProject}
-          icon={ <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/> }
-          onClick={ReopenProject}
-        />}
-        <PrimaryBtn text='Apagar' color={'error'} variant='outlined' hidden={!CanDo('delete_owner')}
-          onClick={() => setDeleteModal(true)}
-          icon={ <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} /> }
-        />
-      </ButtonGroup>
+      <Buttons
+        buttons={[
+          {
+            text: 'Cancelar',
+            color: 'warning',
+            hidden: !(order.status.value !== 'canceled' && canEditProject),
+            variant: 'outlined',
+            icon: <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+            onClick: CancelProject
+          },
+          {
+            text: 'Reativar',
+            color: 'warning',
+            hidden: !(order.status.value === 'canceled' && canEditProject),
+            icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+            onClick: ReopenProject
+          },
+          {
+            text: 'Apagar',
+            color: 'error',
+            variant: 'outlined',
+            hidden: !(canDeleteProject),
+            icon: <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+            onClick: () => setDeleteModal(true)
+          },
+          {
+            ...ActionButtonMobile(),
+            divider: true
+          }
+        ]}
+      />
+
     </Box>
     <Grid container md={12}>
       <HeaderGrid grids={ grids.upperGrids }/>

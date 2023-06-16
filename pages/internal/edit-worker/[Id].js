@@ -43,11 +43,12 @@ const EditWorker = ({ ...pageProps }) => {
         href: `${routes.private.internal.workers}`,
       },
       {
-        title: `${reduxState.workers.displayedWorker.user.first_name + ' ' + reduxState.workers.displayedWorker.user.last_name}`,
+        title: reduxState.workers.displayedWorker.user.email,
+        // title: `${reduxState.workers.displayedWorker.user.first_name + ' ' + reduxState.workers.displayedWorker.user.last_name}`,
         href: `${routes.private.internal.worker}${reduxState.workers.displayedWorker.id}`,
       },
       {
-        title: 'Editar Utilizador',
+        title: 'Editar utilizador',
         href: `${routes.private.internal.editWorker}`,
       },
     ];

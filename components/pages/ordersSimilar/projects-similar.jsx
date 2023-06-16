@@ -33,6 +33,7 @@ const ProjectsSimilarScreen = ({ ...props }) => {
   // Filters States
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedFilters, setAppliedFilters] = useState();
+  const [fullScreenFilters, setFullScreenFilters] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -136,7 +137,7 @@ const ProjectsSimilarScreen = ({ ...props }) => {
 
   return (
     <>
-      <FilterPopUp setAppliedFilters={setAppliedFilters} open={anchorEl} onClose={() => setAnchorEl(null)} {...props} />
+      <FilterPopUp fullScreen={fullScreenFilters} setAppliedFilters={setAppliedFilters} open={anchorEl} onClose={() => setAnchorEl(null)} {...props} />
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -161,8 +162,13 @@ const ProjectsSimilarScreen = ({ ...props }) => {
             >
             </Box>
             <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Box style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-                <IconButton onClick={handleClick}>
+              <Box display={{ lg: 'flex', md: 'flex', sm: 'none', xs: 'none' }} style={{ marginLeft: 'auto', alignItems: 'center' }}>
+                <IconButton onClick={(e) => { setFullScreenFilters(false); handleClick(e); }}>
+                  <Filter />
+                </IconButton>
+              </Box>
+              <Box display={{ lg: 'none', md: 'none', sm: 'flex', xs: 'flex' }} style={{ marginLeft: 'auto', alignItems: 'center' }}>
+                <IconButton onClick={(e) => { setFullScreenFilters(true); handleClick(e); }}>
                   <Filter />
                 </IconButton>
               </Box>

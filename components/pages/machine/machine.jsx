@@ -1,6 +1,7 @@
 //  Nodes
 import {
-  Box, ButtonGroup, Typography
+  Box,
+  Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -14,7 +15,7 @@ import routes from '../../../navigation/routes';
 import * as machinesActionsRedux from '../../../store/actions/machine';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import PrimaryBtn from '../../buttons/primaryBtn';
+import Buttons from '../../buttons/Buttons';
 import Content from '../../content/content';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
@@ -41,6 +42,9 @@ const MachineScreen = ({ ...props }) => {
     });
   }
 
+  const canChangeMachine = CanDo('update_machine');
+  const canDeleteMachine = CanDo('delete_machine');
+
   return (
     <>
       <ConfirmDialog
@@ -66,32 +70,29 @@ const MachineScreen = ({ ...props }) => {
                   </Box>
                 </Box>
               </Box>
-              <ButtonGroup>
-                <PrimaryBtn
-                  text='Editar'
-                  hidden={!CanDo('change_machine')}
-                  icon={
-                    <Edit2
+              <Buttons
+                buttons={[
+                  {
+                    text: 'Editar',
+                    icon: <Edit2
                       strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
                       size={pageProps?.globalVars?.iconSize || 20}
-                    />
-                  }
-                  href={routes.private.internal.editMachine + machine.id}
-                />
-                <PrimaryBtn
-                  text='Apagar'
-                  hidden={!CanDo('delete_machine')}
-                  color={'error'}
-                  onClick={() => setDialogOpen(true)}
-                  icon={
-                    <Trash
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
-                      size={pageProps?.globalVars?.iconSize || 20}
-                    />
-                  }
-                  light
-                />
-              </ButtonGroup>
+                    />,
+                    color: 'primary',
+                    href: routes.private.internal.editMachine + machine.id,
+                    hidden: !canChangeMachine
+
+                  },
+                  {
+                    text: 'Apagar',
+                    icon: <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20}/>,
+                    color: 'error',
+                    onClick: () => setDialogOpen(true),
+                    hidden: !canDeleteMachine,
+                    light: true,
+                  },
+                ]}
+              />
             </Grid>
           </Grid>
           <Grid id='pad' container md={12} sm={12} xs={12} >
@@ -100,7 +101,6 @@ const MachineScreen = ({ ...props }) => {
               <Typography item variant="subtitle2"color='lightTextSm.black' >{machine?.machineType?.value }</Typography>
             </Grid>
           </Grid>
-
         </Content>
         <Content>
           <Grid container md={12} sm={12} xs={12} >

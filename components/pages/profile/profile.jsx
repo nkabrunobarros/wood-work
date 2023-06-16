@@ -3,7 +3,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
-import { Box, ButtonGroup, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
   Edit2,
@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import routes from '../../../navigation/routes';
 import * as workersActionsRedux from '../../../store/actions/worker';
 import CustomBreadcrumbs from '../../breadcrumbs';
-import PrimaryBtn from '../../buttons/primaryBtn';
+import Buttons from '../../buttons/Buttons';
 import Content from '../../content/content';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Footer from '../../layout/footer/footer';
@@ -38,6 +38,9 @@ const Profile = ({ ...props }) => {
     } catch (err) { console.log(err); }
   }
 
+  const canEditWorker = CanDo('update_worker');
+  const canDeleteWorker = CanDo('delete_worker');
+
   return (
     <>
       <Navbar />
@@ -47,43 +50,38 @@ const Profile = ({ ...props }) => {
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
           onConfirm={() => DeleteUser()}
-          message='Está prestes a apagar um utilizador,o que é irreversível. tem certeza que quer continuar?'
+          message='Está prestes a apagar um utilizador, o que é irreversível. tem certeza que quer continuar?'
           icon='AlertOctagon'
         />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
           <Box id='pad' style={{ display: 'flex' }}>
             <Box style={{ flex: 1 }}>
-              <Typography variant='title'>{breadcrumbsPath[1].title}</Typography>
+              <Typography variant='title'>{user.user.first_name + ' ' + user.user.last_name}</Typography>
             </Box>
             {router.pathname === `${routes.private.profile}[Id]`
               ? null
               : (
                 <Box className='flex'>
-                  <ButtonGroup>
-                    <PrimaryBtn text='Editar'
-                      hidden={!CanDo('change_worker')}
-                      onClick={() => Router.push(`${routes.private.internal.editWorker}${user?.id}`)}
-                      icon={
-                        <Edit2
-                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
-                          size={pageProps?.globalVars?.iconSize || 20}
-                        />
-                      } />
-
-                    <PrimaryBtn
-                      hidden={!CanDo('delete_worker')}
-                      onClick={() => setDialogOpen(true)}
-                      text='Apagar'
-                      icon={
-                        <Trash
-                          strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
-                          size={pageProps?.globalVars?.iconSize || 20} />
-                      }
-                      light
-                      color='error'
-                    />
-                  </ButtonGroup>
+                  <Box>
+                    <Buttons buttons={[
+                      {
+                        text: 'Editar',
+                        hidden: !canEditWorker,
+                        href: routes.private.internal.editWorker + user?.id,
+                        icon: <Edit2 strokeWidth='1' size={20} />,
+                        color: 'primary'
+                      },
+                      {
+                        text: 'Apagar',
+                        hidden: !canDeleteWorker,
+                        icon: <Trash strokeWidth='1' size={20} />,
+                        onClick: () => setDialogOpen(true),
+                        color: 'error',
+                        light: true
+                      },
+                    ]} />
+                  </Box>
                 </Box>
               )}
           </Box>
@@ -103,20 +101,19 @@ const Profile = ({ ...props }) => {
                     <Typography item variant="subtitle2"color='lightTextSm.main'>Nome Utilizador</Typography>
                     <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.user?.username}</Typography>
                   </Grid> */}
-                <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                <Grid item md={6} sm={6} xs={6} pb={1} pt={1}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Primeiro Nome</Typography>
                   <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.first_name}</Typography>
                 </Grid>
-                <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                <Grid item md={6} sm={6} xs={6} pb={1} pt={1}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Último Nome</Typography>
                   <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.last_name}</Typography>
                 </Grid>
-
-                <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
+                <Grid item md={6} sm={6} xs={6} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Email</Typography>
                   <Typography item variant="subtitle2"color='lightTextSm.black' >{user?.user?.email}</Typography>
                 </Grid>
-                <Grid item md={6} sm={6} xs={12} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
+                <Grid item md={6} sm={6} xs={6} pb={1} pt={1} sx={{ overflow: 'hidden' }}>
                   <Typography item variant="subtitle2"color='lightTextSm.main'>Perfil</Typography>
                   <Typography item variant="subtitle2"color='lightTextSm.black' >{user.user.orion_groups[0]?.name}</Typography>
                 </Grid>
