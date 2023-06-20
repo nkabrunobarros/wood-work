@@ -22,7 +22,7 @@ const ProductsObservations = (props) => {
       <AccordionDetails>
         <Grid id='pad' container>
           <Grid container md={12} sm={12} xs={12} p={1} sx={{ whiteSpace: 'pre-wrap' }}>
-            <Typography variant='subtitle2'>{props.budget.obs?.value}</Typography>
+            <Typography variant='subtitle2'>{props.budget.obs?.value || props.budget.observation?.value} </Typography>
           </Grid>
         </Grid>
       </AccordionDetails>

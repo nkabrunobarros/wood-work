@@ -123,7 +123,7 @@ export const budgetFiles = (data) => {
     },
     types: [FILES_REQUEST, FILES_SUCCESS, FILES_FAIL],
   });
-}
+};
 
 export const deleteFile = (data) => {
   const { auth_token: userToken } = parseCookies();

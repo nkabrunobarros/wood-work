@@ -48,8 +48,10 @@ function buildPermissionsString ({ permission, resources }) {
         resourcesRequired.add('change_project');
         resourcesRequired.add('update_budget');
         resourcesRequired.add('change_furniture');
+        resourcesRequired.add('add_furniture');
         //
         resourcesRequired.add('change_consumable');
+        resourcesRequired.add('delete_furniture');
       }
 
       if (permissions.create) {
@@ -415,6 +417,24 @@ function buildPermissionsString ({ permission, resources }) {
 
       if (permissions.delete) {
         resourcesRequired.add('delete_group');
+      }
+
+      resourcesRequired.forEach(codename => {
+        const resource = resources.find(ele => ele.codename === codename);
+
+        if (resource && !stringValues.includes(resource.id)) {
+          stringValues.push(resource.id);
+        }
+      });
+
+      break;
+    }
+
+    case 'Conta': {
+      const resourcesRequired = new Set();
+
+      if (permissions.see) {
+        resourcesRequired.add('view_owner');
       }
 
       resourcesRequired.forEach(codename => {

@@ -1,15 +1,14 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable react/prop-types */
 //  Nodes
-import Router, { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
 
 //  Mui
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  Box,
-  Button,
-  Checkbox,
-  CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid,
+  Box, Button, Checkbox, CircularProgress, CssBaseline, Dialog,
+  DialogActions,
+  DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid, Paper,
   Typography
 } from '@mui/material';
 
@@ -18,7 +17,6 @@ import styles from '../../../styles/SignIn.module.css';
 
 //  Dialogs
 import Notification from '../../dialogs/Notification';
-import ToastSet from '../../utils/ToastSet';
 
 //  Custom components
 import MyInput from '../../inputs/myInput';
@@ -29,18 +27,72 @@ import { XCircle } from 'lucide-react';
 
 //  Utils
 
-import { setCookie } from 'nookies';
 //  PropTypes
 import Image from 'next/image';
+import { Router, useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import companyLogo from '../../../public/Logotipo_Vetorizado.png';
+
+//  Mui
+
+//  Styles
+
+//  Dialogs
+import ToastSet from '../../utils/ToastSet';
+
+//  Custom components
+
+//  Lucide icons
+
+//  Utils
+
+import { setCookie } from 'nookies';
+//  PropTypes
+import { toast } from 'react-toastify';
 
 import * as authActionsRedux from '../../../store/actions/auth';
 import RedirectTo from '../../utils/RedirectTo';
 
-const SignIn = (props) => {
+const SignInPage = (props) => {
+  const rootStyles = {
+    minHeight: '100vh',
+    flexDirection: 'row-reverse',
+  };
+
+  const imageContainerStyles = {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundImage: 'url(your_bg_image.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  };
+
+  const formContainerStyles = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    border: 'none',
+    padding: 'none'
+  };
+
+  const formStyles = {
+    padding: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    '& .MuiTextField-root': {
+      marginBottom: '16px',
+    },
+  };
+
+  const footerStyles = {
+    marginTop: 'auto',
+    textAlign: 'center',
+    width: '100%'
+  };
+
   const [visible, setVisible] = useState(true);
 
   const {
@@ -145,139 +197,74 @@ const SignIn = (props) => {
   };
 
   return (
-    <Grid container component='main' sx={{ height: '100vh' }}>
-      <CssBaseline />
-      <Notification />
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}>
-        <DialogTitle id='alert-dialog-title' sx={{ color: 'var(--primary)' }}>
-          Conta Bloqueada
-        </DialogTitle>
-        <Divider />
-        <DialogContent>
-          <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <XCircle size={80} color='var(--red)' />
-          </Box>
-          <DialogContentText id='alert-dialog-description'>
-            Esta conta está bloqueada. Se não é suposto, por favor entre em  <a className='link' href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`}>contacto</a> com o responsavel.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
-            Entendido
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Box style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
-      >
-        <a
-          target='#'
-          href='http://mofreita.com/'
-        >
-          <Image
-            width={windowWidth > 600 ? 80 : 50}
-            alt='Company Logo'
-            src={companyLogo}
-            placeholder='blur'
-          />
-        </a>
-      </Box>
-      <Grid container md={12} sm={12} xs={12} >
-        <Grid container xl={8} lg={6} md={6} sm={12} xs={12} display={{ xl: 'flex', lg: 'flex', md: 'flex', sm: 'none', xs: 'none' }} className={styles.sidePanel} >
-          <div className={styles.logoImg}>
-            <Box
-              sx={{
-                display: 'flex',
-                height: '100%',
-              }}
-            >
-            </Box>
-          </div>
+    <>
+      {false && <Grid container sx={rootStyles}>
+        <Grid container xl={8} lg={6} md={6} sm={12} xs={12} display={{ xl: 'flex', lg: 'flex', md: 'flex', sm: 'none', xs: 'none' }}>
+          {/* Background Image */}
         </Grid>
-        <Grid container xl={4} lg={6} md={6} sm={12} xs={12} >
-          <Box
-            sx={{
-              my: '20%',
-              mx: '15%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'start',
-              width: '100%'
-            }}
-          >
+        <Grid item xl={4} lg={6} md={6} sm={12} xs={12}sx={{ ...formContainerStyles }} component={Paper}
+          // sx={{ padding: 0 }}
+        >
+          <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', border: '2px solid red' }}>
+            <Box>
+              <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
+                {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
+              </Typography>
 
-            <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
-              {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
-            </Typography>
-
-            <Typography component='h1' variant='h2'>
+              <Typography component='h1' variant='h2'>
             Login
-            </Typography>
-            <Box
-              component='form'
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1, width: '100%' }}
-            >
-              {/* <MyInput
-              id='email'
-              label='Endereço de Email'
-              onChange={(e) => {
-                if (emailErrors) setEmailErrors('');
+              </Typography>
+              <Box
+                component='form'
+                noValidate
+                onSubmit={handleSubmit}
+                sx={{ mt: 1, width: '100%' }}
+              >
+                <MyInput
+                  id='email'
+                  label='Endereço de email'
+                  onChange={(e) => {
+                    if (usernameErrors) setUsernameErrors('');
 
-                setEmail(e.target.value);
-              }
-              }
-              value={email}
-              error={emailErrors}
-              name='email'
-            /> */}
-              <MyInput
-                id='email'
-                label='Endereço de email'
-                onChange={(e) => {
-                  if (usernameErrors) setUsernameErrors('');
+                    setUsername(e.target.value);
+                  }
+                  }
+                  value={username}
+                  error={usernameErrors}
+                  name='email'
+                  type='email'
+                />
+                <MyInput
+                  id='password'
+                  label='Senha'
+                  onChange={(e) => { setSenhaErrors(''); setPassword(e.target.value); }}
+                  value={password}
+                  error={senhaErrors}
+                  name='password'
+                  type={visible ? 'password' : 'text'}
+                  iconTooltip={visible && 'Mostrar Senha'}
+                  adornmentOnClick={() => setVisible(!visible)}
+                  adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />} />
+                <Grid container style={{ alignItems: 'center' }}>
+                  <Grid item xs>
+                    <Typography variant="sm" color="link.main">
 
-                  setUsername(e.target.value);
-                }
-                }
-                value={username}
-                error={usernameErrors}
-                name='email'
-                type='email'
-              />
-              <MyInput
-                id='password'
-                label='Senha'
-                onChange={(e) => { setSenhaErrors(''); setPassword(e.target.value); }}
-                value={password}
-                error={senhaErrors}
-                name='password'
-                type={visible ? 'password' : 'text'}
-                iconTooltip={visible && 'Mostrar Senha'}
-                adornmentOnClick={() => setVisible(!visible)}
-                adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />} />
-              <Grid container style={{ alignItems: 'center' }}>
-                <Grid item xs>
-                  <Typography variant="sm" color="link.main">
-
-                    <a
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => Router.push(forgotPasswordRoute)}
-                    >Esqueceu-se da sua senha?</a>
-                  </Typography>
+                      <a
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => Router.push(forgotPasswordRoute)}
+                      >Esqueceu-se da sua senha?</a>
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox name='remember' value={true} color='primary' />
+                      }
+                      label='Lembrar utilizador'
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Checkbox name='remember' value={true} color='primary' />
-                    }
-                    label='Lembrar utilizador'
-                  />
-                </Grid>
-              </Grid>
-              {client &&
+                {client &&
             <Box display='flex'>
               <a
                 target='#'
@@ -289,31 +276,185 @@ const SignIn = (props) => {
                 onClick={() => Router.push(routes.private.privacy)}
               >  <Typography sx={{ cursor: 'pointer' }} color={'primary'}>Política de Privacidade</Typography> </a>
             </Box>
-              }
-              <Button
-                id='submit'
-                onClick={(e) => handleSubmit(e)}
-                type='submit'
-                fullWidth
-                variant='contained'
-                disabled={loading}
-                sx={{ mt: 3, mb: 2 }}
-              >
-                {loading
-                  ? (
-                    <CircularProgress size={25} sx={{ color: 'white' }} />
-                  )
-                  : (
-                    'Entrar'
-                  )}
-              </Button>
+                }
+                <Button
+                  id='submit'
+                  onClick={(e) => handleSubmit(e)}
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  disabled={loading}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  {loading
+                    ? (
+                      <CircularProgress size={25} sx={{ color: 'white' }} />
+                    )
+                    : (
+                      'Entrar'
+                    )}
+                </Button>
+              </Box>
             </Box>
           </Box>
-          <Footer isPublicPage={true}/>
+
+          <Box sx={footerStyles}>
+            <Typography variant="caption">
+              &copy; {new Date().getFullYear()} Your Website Name
+            </Typography>
+          </Box>
         </Grid>
-      </Grid>
-    </Grid>
+      </Grid>}
+      {true && <Grid container component='main' sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Notification />
+        <Dialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}>
+          <DialogTitle id='alert-dialog-title' sx={{ color: 'var(--primary)' }}>
+          Conta Bloqueada
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <XCircle size={80} color='var(--red)' />
+            </Box>
+            <DialogContentText id='alert-dialog-description'>
+            Esta conta está bloqueada. Se não é suposto, por favor entre em  <a className='link' href={`mailto:${process.env.NEXT_PUBLIC_REPORT_EMAIL}`}>contacto</a> com o responsavel.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDialogOpen(false)}>
+            Entendido
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Box style={{ width: windowWidth > 600 ? '80px' : '50px', position: 'absolute', right: '25px', top: '25px' }}
+        >
+          <a
+            target='#'
+            href='http://mofreita.com/'
+          >
+            <Image
+              width={windowWidth > 600 ? 80 : 50}
+              alt='Company Logo'
+              src={companyLogo}
+              placeholder='blur'
+            />
+          </a>
+        </Box>
+        <Grid container md={12} sm={12} xs={12} >
+          <Grid container xl={8} lg={6} md={6} sm={6} xs={12} display={{ xl: 'flex', lg: 'flex', md: 'flex', sm: 'flex', xs: 'none' }} className={styles.sidePanel} >
+            <div className={styles.logoImg}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  height: '100%',
+                }}
+              >
+              </Box>
+            </div>
+          </Grid>
+          <Grid container xl={4} lg={6} md={6} sm={6} xs={12} component={Paper}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+              <Box sx={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ width: '100%' }}>
+                  <Box
+                    component='form'
+                    noValidate
+                    onSubmit={handleSubmit}
+                    sx={formStyles}>
+                    <Typography variant='md' color={'primary'} sx={{ fontWeight: 600 }}>
+                      {client ? 'Portal Cliente WW4.0' : 'Portal Interno WW4.0'}
+                    </Typography>
+                    <Typography component='h1' variant='h2'> Login  </Typography>
+                    <MyInput
+                      id='email'
+                      label='Endereço de email'
+                      onChange={(e) => {
+                        if (usernameErrors) setUsernameErrors('');
+
+                        setUsername(e.target.value);
+                      }
+                      }
+                      value={username}
+                      error={usernameErrors}
+                      name='email'
+                      type='email'
+                    />
+                    <MyInput
+                      id='password'
+                      label='Senha'
+                      onChange={(e) => { setSenhaErrors(''); setPassword(e.target.value); }}
+                      value={password}
+                      error={senhaErrors}
+                      name='password'
+                      type={visible ? 'password' : 'text'}
+                      iconTooltip={visible && 'Mostrar Senha'}
+                      adornmentOnClick={() => setVisible(!visible)}
+                      adornmentIcon={visible ? <Visibility color={'primary'} /> : <VisibilityOff />} />
+                    <Grid container style={{ alignItems: 'center' }}>
+                      <Grid item xs>
+                        <Typography variant="sm" color="link.main">
+
+                          <a
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => Router.push(forgotPasswordRoute)}
+                          >Esqueceu-se da sua senha?</a>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <FormControlLabel
+                          control={
+                            <Checkbox name='remember' value={true} color='primary' />
+                          }
+                          label='Lembrar utilizador'
+                        />
+                      </Grid>
+                    </Grid>
+                    {client &&
+                    <Box display='flex'>
+                      <a
+                        target='#'
+                        onClick={() => Router.push(routes.private.tos)}
+                      > <Typography sx={{ cursor: 'pointer' }} color={'primary'}>Termos e Condições</Typography>  </a>
+                      <Typography pr={1}pl={1}> | </Typography>
+                      <a
+                        target='#'
+                        onClick={() => Router.push(routes.private.privacy)}
+                      >  <Typography sx={{ cursor: 'pointer' }} color={'primary'}>Política de Privacidade</Typography> </a>
+                    </Box>
+                    }
+                    <Button
+                      id='submit'
+                      onClick={(e) => handleSubmit(e)}
+                      type='submit'
+                      fullWidth
+                      variant='contained'
+                      disabled={loading}
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      {loading
+                        ? (
+                          <CircularProgress size={25} sx={{ color: 'white' }} />
+                        )
+                        : (
+                          'Entrar'
+                        )}
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+              <Box sx={footerStyles}>
+                <Footer isPublicPage={true}/>
+              </Box>
+            </Box>
+            {false && <Footer isPublicPage={true}/>}
+          </Grid>
+        </Grid>
+      </Grid>}
+    </>
   );
 };
 
-export default SignIn;
+export default SignInPage;

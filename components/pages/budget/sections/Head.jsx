@@ -408,7 +408,7 @@ const Head = (props) => {
   // };
 
   const ActionButtonMobile = () => {
-    if (!isInternalPage && !canChangeProject) return;
+    if (!isInternalPage || !canChangeProject) return;
 
     switch (budget?.budgetStatus?.value) {
     case 'needs analysis': return {
@@ -528,13 +528,13 @@ const Head = (props) => {
                 text: 'Editar',
                 color: 'primary',
                 href: routes.private.internal.editBudget + budget.id,
-                hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject),
+                hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject) || !isInternalPage,
                 icon: <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />
               },
               {
                 text: 'Cancelar',
                 color: 'warning',
-                hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject),
+                hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject) || !isInternalPage,
                 variant: 'outlined',
                 icon: <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
                 onClick: CancelProject
@@ -542,7 +542,7 @@ const Head = (props) => {
               {
                 text: 'Reativar',
                 color: 'warning',
-                hidden: !(budget.budgetStatus.value === 'canceled' && canEditProject),
+                hidden: !(budget.budgetStatus.value === 'canceled' && canEditProject) || !isInternalPage,
                 icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
                 onClick: ReopenProject
               },
@@ -550,7 +550,7 @@ const Head = (props) => {
                 text: 'Apagar',
                 color: 'error',
                 variant: 'outlined',
-                hidden: !(canDeleteProject),
+                hidden: !(canDeleteProject) || !isInternalPage,
                 icon: <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
                 onClick: () => setDeleteModal(true)
               },

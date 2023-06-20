@@ -98,7 +98,7 @@ const MyInput = ({
         variant={variant || 'outlined' }
         name={name}
         type={type}
-        multiline={type === 'area'}
+        multiline={type === 'area' ? true : undefined}
         id={id}
         error={error}
         value={value}
@@ -115,7 +115,7 @@ const MyInput = ({
         rows={rows || 4}
         style={style}
         placeholder={placeholder || ''}
-        inputComponent={type === 'currency' && NumberFormatCustom}
+        inputComponent={type === 'currency' ? NumberFormatCustom : undefined}
         endAdornment={ (<>
           {type === 'number' && <InputAdornment position={'end'}>
             <Grid container md={12} justifyContent={'end'}>

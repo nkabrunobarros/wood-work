@@ -39,12 +39,16 @@ const Buttons = (props) => {
   return <>
     {windowWidth > 800
       ? <ButtonGroup>
-        {buttons.map((btn, index) => <PrimaryBtn key={index} {...btn} />)}
+        {buttons.map((btn, index) => {
+          return btn?.text && <>
+            <PrimaryBtn key={index} {...btn} />
+          </>;
+        })}
       </ButtonGroup>
       : <>
-        <IconButton onClick={handleClick}>
+        {buttons.find(ele => ele.text && !ele.hidden) && <IconButton onClick={handleClick}>
           <MoreVertical />
-        </IconButton>
+        </IconButton>}
         <Menu
           anchorEl={anchorEl}
           open={open}

@@ -359,7 +359,7 @@ const Head = (props) => {
   }
 
   const ActionButtonMobile = () => {
-    if (!isInternalPage && !canEditProject) return;
+    if (!isInternalPage || !canEditProject) return;
 
     switch (order?.status?.value) {
     case 'drawing': return {
@@ -472,7 +472,7 @@ const Head = (props) => {
           {
             text: 'Cancelar',
             color: 'warning',
-            hidden: !(order.status.value !== 'canceled' && canEditProject),
+            hidden: !(order.status.value !== 'canceled' && canEditProject) || !isInternalPage,
             variant: 'outlined',
             icon: <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
             onClick: CancelProject
@@ -480,7 +480,7 @@ const Head = (props) => {
           {
             text: 'Reativar',
             color: 'warning',
-            hidden: !(order.status.value === 'canceled' && canEditProject),
+            hidden: !(order.status.value === 'canceled' && canEditProject) || !isInternalPage,
             icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
             onClick: ReopenProject
           },
@@ -488,13 +488,12 @@ const Head = (props) => {
             text: 'Apagar',
             color: 'error',
             variant: 'outlined',
-            hidden: !(canDeleteProject),
+            hidden: !(canDeleteProject) || !isInternalPage,
             icon: <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
             onClick: () => setDeleteModal(true)
           },
           {
             ...ActionButtonMobile(),
-            divider: true
           }
         ]}
       />

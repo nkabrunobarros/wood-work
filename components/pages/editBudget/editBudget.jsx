@@ -95,7 +95,7 @@ const EditBudget = ({ ...props }) => {
     lines.map((group) => {
       group.subGroups?.map((subgroup) => {
         subgroup.items.map(item => {
-          totalPrice += Number((item?.price?.value || '0€')?.replace(/ /g, '').replace(/€/g, ''));
+          totalPrice += Number((String(item?.price?.value) || '0€')?.replace(/ /g, '').replace(/€/g, ''));
           totalAmount += Number(item?.amount?.value);
         });
       });

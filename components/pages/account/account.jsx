@@ -20,6 +20,8 @@ const Account = ({ ...props }) => {
   const { user, breadcrumbsPath, owner, pageProps } = props;
   const reduxState = useSelector((state) => state);
 
+  console.log(owner);
+
   const tableFirstCell = {
     container: true,
     sx: { borderLeft: '1px solid', borderRight: '1px solid', borderColor: 'divider' },
