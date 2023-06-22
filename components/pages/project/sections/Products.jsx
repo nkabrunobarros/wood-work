@@ -104,10 +104,16 @@ const Products2 = (props) => {
       <AccordionDetails>
         <Grid container>
           <Grid container md={12} sm={12} xs={12} justifyContent={'end'} sx={{ }}>
-            <ButtonGroup>
-              <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
-              <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
-            </ButtonGroup>
+            <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
+              <ButtonGroup sx={{ display: { md: 'flex', sm: 'flex', xs: 'none' } }} >
+                <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
+                <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
+              </ButtonGroup>
+              <ButtonGroup sx={{ display: { md: 'none', sm: 'none', xs: 'flex' }, width: '100%' }} >
+                <PrimaryBtn fullWidth onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
+                <PrimaryBtn fullWidth onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
+              </ButtonGroup>
+            </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
             {/* Lines */}
@@ -124,7 +130,11 @@ const Products2 = (props) => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box display='flex' justifyContent={'end'}>
-                      <ButtonGroup>
+                      <ButtonGroup sx={{ display: { md: 'flex', sm: 'flex', xs: 'none' } }} >
+                        <PrimaryBtn onClick={() => expandAllSubgroups(groupIndex)} light icon={<UnfoldMoreOutlined />} text={'Abrir subgrupos'} />
+                        <PrimaryBtn onClick={() => collapseAllSubgroups(groupIndex)} light icon={<UnfoldLessOutlined />} text={'Fechar subgrupos'} />
+                      </ButtonGroup>
+                      <ButtonGroup orientation='vertical' sx={{ display: { md: 'none', sm: 'none', xs: 'flex' }, width: '100%' }} >
                         <PrimaryBtn onClick={() => expandAllSubgroups(groupIndex)} light icon={<UnfoldMoreOutlined />} text={'Abrir subgrupos'} />
                         <PrimaryBtn onClick={() => collapseAllSubgroups(groupIndex)} light icon={<UnfoldLessOutlined />} text={'Fechar subgrupos'} />
                       </ButtonGroup>

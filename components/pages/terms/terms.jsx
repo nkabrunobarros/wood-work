@@ -268,7 +268,6 @@ Em caso de incumprimento, a Mofreita, reserva-se no direito de eliminar a conta 
                 Aceitar
                 </Button>
                 <Button
-                  type='submit'
                   fullWidth
                   onClick={() => {
                     Router.push('/');

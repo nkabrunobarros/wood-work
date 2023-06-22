@@ -244,11 +244,11 @@ const EditBudget = ({ ...props }) => {
 
   function formatString (str) {
     // Replace all spaces with underscores
-    str = str.replace(/ /g, '_');
+    str = str?.replace(/ /g, '_');
     // Replace accented characters
-    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    str = str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     // Replace all non-alphanumeric characters except for underscores
-    str = str.replace(/[^a-zA-Z0-9_]/g, '');
+    str = str?.replace(/[^a-zA-Z0-9_]/g, '');
 
     return str;
   }
@@ -296,7 +296,7 @@ const EditBudget = ({ ...props }) => {
       const items = [{
         id: group.id,
         furnitureType: { type: 'Property', value: 'group' },
-        name: { type: 'Property', value: group.name.value },
+        name: { type: 'Property', value: formatString(group.name.value).replace(/_/g, ' ') },
         hasBudget: { object: budget.id, type: 'Relationship' },
         type: 'Furniture'
       }];
@@ -309,7 +309,7 @@ const EditBudget = ({ ...props }) => {
         const items = [{
           id: subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
-          name: { type: 'Property', value: subgroup.name.value },
+          name: { type: 'Property', value: formatString(subgroup.name.value).replace(/_/g, ' ') },
           hasBudget: { object: budget.id, type: 'Relationship' },
           group: { value: group.name.value, type: 'Property' },
           type: 'Furniture',
@@ -330,6 +330,7 @@ const EditBudget = ({ ...props }) => {
 
           valuesOnly.id = item.id;
           valuesOnly.type = 'Furniture';
+          valuesOnly.name = { ...valuesOnly.name, value: formatString(valuesOnly.name.value).replace(/_/g, ' ') };
           valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
           valuesOnly.group = { value: group.name.value, type: 'Property' };
           valuesOnly.hasBudget = { object: budget.id, type: 'Relationship' };

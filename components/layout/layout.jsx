@@ -113,8 +113,8 @@ const Layout = ({ children }) => {
       try {
         const meRes = await AuthData(dispatch);
 
-        if (meRes.me.tos === false) {
-          Router.push('/terms');
+        if (meRes?.me?.tos === false && path.route !== routes.private.terms) {
+          Router.push(routes.private.terms);
         }
 
         setNoAccess(
@@ -125,6 +125,8 @@ const Layout = ({ children }) => {
         );
         // If the token is valid, do nothing
       } catch (error) {
+        console.log(error);
+
         if (error.response?.status === 403) {
           // Invalid token, delete cookie and redirect to login page
           destroyCookie(null, 'auth_token');

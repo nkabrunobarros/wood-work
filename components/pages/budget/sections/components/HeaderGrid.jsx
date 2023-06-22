@@ -78,7 +78,7 @@ const HeaderGrid = (props) => {
                 <Grid {...commonProps} md={6} sm={6} xs={6} sx={{ ...commonProps.sx, justifyContent: 'start', backgroundColor: '#F9F9F9' }}>
                   {item.label}
                 </Grid>
-                <Grid {...commonProps} md={6} sm={6} xs={6} sx={{ ...commonProps.sx, backgroundColor: 'white' }}>
+                <Grid {...commonProps} md={6} sm={6} xs={6} sx={{ ...commonProps.sx, backgroundColor: 'white', height: '100%' }}>
                   <Typography variant='sm'>{item.value || '\u00A0'}</Typography>
                 </Grid>
               </Grid>

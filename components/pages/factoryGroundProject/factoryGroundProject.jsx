@@ -266,8 +266,8 @@ const FactoryGroundProject = (props) => {
     const actions = {
       isNest: part.nestingFlag,
       isCnc: part.cncFlag,
-      isOrla: part.orla2 || part.orla3 || part.orla4 || part.orla5,
-      isFuroFace: part.f2 || part.f3 || part.f4 || part.f5,
+      isOrla: part.orla || part.orla2 || part.orla3 || part.orla4 || part.orla5,
+      isFuroFace: part.f || part.f2 || part.f3 || part.f4 || part.f5,
       isTupia: part.tupia,
     };
 
@@ -593,7 +593,7 @@ const FactoryGroundProject = (props) => {
                             key={rowIndex}
                             bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
                           >
-                            <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, '') } </Typography></Grid>
+                            <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, ' ') } </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
                             <Grid {...cellProps} > <Typography variant='sm'>{ part.length } mm </Typography></Grid>
@@ -619,11 +619,11 @@ const FactoryGroundProject = (props) => {
                               <ActionStatus {...props} part={part} index={rowIndex} disabled={isActive({ part, field: 'tupia' })} field={'tupia'}/>
                             </Grid>
                             <Grid {...cellProps} >
-                              <Tooltip title={part.obs}>
-                                <Typography variant='sm'>{ part.obs && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.obs })}><icons.FileText /></IconButton> } </Typography>
+                              <Tooltip title={part.observation}>
+                                <Typography variant='sm'>{ part.observation && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.observation })}><icons.FileText /></IconButton> } </Typography>
                               </Tooltip>
                             </Grid>
-                            <Grid {...cellProps} > <PartStatus part={part} /></Grid>
+                            <Grid {...cellProps} ><PartStatus part={part} /></Grid>
                           </Grid>
                         );
                       })}
@@ -646,6 +646,7 @@ const FactoryGroundProject = (props) => {
 
                   </Grid>
                   <Grid container md={12} sm={12} xs={12}>
+                    {console.log(consumables)}
                     {consumables
                       .map((consumable, rowIndex) => {
                         return (
@@ -654,10 +655,10 @@ const FactoryGroundProject = (props) => {
                             key={rowIndex}
                             bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
                           >
-                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.name.value.replace(/_/g, '') } </Typography></Grid>
-                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.material.value } </Typography></Grid>
-                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.amount.value } </Typography></Grid>
-                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.tag.value } </Typography></Grid>
+                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable?.name?.value?.replace(/_/g, ' ') } </Typography></Grid>
+                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable?.material?.value } </Typography></Grid>
+                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable?.amount?.value } </Typography></Grid>
+                            <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable?.tag?.value } </Typography></Grid>
                             {/* <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <PartStatus part={consumable} /></Grid> */}
                           </Grid>
                         );

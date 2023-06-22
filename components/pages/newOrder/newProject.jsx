@@ -203,7 +203,7 @@ const NewOrder = ({ ...props }) => {
     setProcessing(true);
 
     const data = {
-      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, // ${moment().diff(moment().startOf('day'), 'seconds')}
+      id: `urn:ngsi-ld:Budget:${budgetData?.client?.value}_${formatString(budgetData.name.value)}`, // ${moment().diff(moment().startOf('day'), 'seconds')}
       type: 'Budget',
       name: {
         type: 'Property',
@@ -301,9 +301,9 @@ const NewOrder = ({ ...props }) => {
   async function CreateFurnitures (budgetId) {
     const items = lines.map(group => {
       const items = [{
-        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id + budgetData.client.value.split('_')[1],
+        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id + budgetData.client.value,
         furnitureType: { type: 'Property', value: 'group' },
-        name: { type: 'Property', value: group.name },
+        name: { type: 'Property', value: formatString(group.name).replace(/_/g, ' ') },
         hasBudget: { object: budgetId, type: 'Relationship' },
         type: 'Furniture'
       }];
@@ -314,9 +314,9 @@ const NewOrder = ({ ...props }) => {
         //  Aqui tenho cada subgrupo com os items dentro
 
         const items = [{
-          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + budgetData.client.value.split('_')[1],
+          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + budgetData.client.value,
           furnitureType: { type: 'Property', value: 'subGroup' },
-          name: { type: 'Property', value: subgroup.name },
+          name: { type: 'Property', value: formatString(subgroup.name).replace(/_/g, ' ') },
           hasBudget: { object: budgetId, type: 'Relationship' },
           type: 'Furniture',
           group: { value: group.name, type: 'Property' }
@@ -335,8 +335,9 @@ const NewOrder = ({ ...props }) => {
             };
           });
 
-          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value) + budgetData.client.value.split('_')[1];
+          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value) + budgetData.client.value;
           valuesOnly.type = 'Furniture';
+          valuesOnly.name = { ...valuesOnly.name, value: formatString(valuesOnly.name.value).replace(/_/g, ' ') };
           valuesOnly.subGroup = { value: subgroup.name, type: 'Property' };
           valuesOnly.group = { value: group.name, type: 'Property' };
           valuesOnly.hasBudget = { object: budgetId, type: 'Relationship' };

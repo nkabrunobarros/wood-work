@@ -34,10 +34,12 @@ export const PartStatus = ({ part }) => {
   const actions = {
     isNest: part.nestingFlag,
     isCnc: part.cncFlag,
-    isOrla: part.orla2 || part.orla3 || part.orla4 || part.orla5,
-    isFuroFace: part.f2 === false || part.f3 === false || part.f4 === false || part.f5 === false,
+    isOrla: part.orla || part.orla2 || part.orla3 || part.orla4 || part.orla5,
+    isFuroFace: part.f || part.f2 || part.f3 || part.f4 || part.f5,
     isTupia: part.tupia,
   };
+
+  console.log(part);
 
   let complete = true;
 
@@ -812,7 +814,7 @@ const FurnitureDetails = (props) => {
                     <Grid {...cellProps} >
                       <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'tupia'}/>
                     </Grid>
-                    <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.observation } </Typography></Grid>
                     <Grid {...cellProps} > <PartStatus part={part} /></Grid>
                   </Grid>
                 );
@@ -1022,8 +1024,8 @@ const FurnitureDetails = (props) => {
                                   <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={isActive({ part, field: 'tupia' })} field={'tupia'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <Tooltip title={part.obs}>
-                                    <Typography variant='sm'>{ part.obs && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.obs })}><icons.FileText /></IconButton> } </Typography>
+                                  <Tooltip title={part.observation}>
+                                    <Typography variant='sm'>{ part.observation && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.observation })}><icons.FileText /></IconButton> } </Typography>
                                   </Tooltip>
                                 </Grid>
                                 <Grid {...cellProps} > <PartStatus part={part} /></Grid>
@@ -1041,11 +1043,11 @@ const FurnitureDetails = (props) => {
                     <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Nome </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Material </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> <Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box>  </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Nome </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Material </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
+                        {/* <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> <Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box>  </Typography></Box></Grid> */}
 
                       </Grid>
                       <Grid container md={12} sm={12} xs={12}>
@@ -1057,11 +1059,11 @@ const FurnitureDetails = (props) => {
                                 key={rowIndex}
                                 bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
                               >
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.name.value.replace(/_/g, '') } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.material.value } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.amount.value } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.tag.value } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <PartStatus part={consumable} /></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.name?.value?.replace(/_/g, ' ') } </Typography></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.material?.value } </Typography></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.amount?.value } </Typography></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.tag?.value } </Typography></Grid>
+                                {/* <Grid {...cellProps} md={3} sm={3} xs={3} ><PartStatus part={consumable} /></Grid> */}
                               </Grid>
                             );
                           })}

@@ -79,7 +79,7 @@ const EditClient = ({ ...props }) => {
 
   };
 
-  const canEditClient = CanDo('update_owner');
+  const canEditClient = CanDo('update_client');
   const canDeleteClient = CanDo('delete_owner');
 
   return (

@@ -271,7 +271,7 @@ const Head = (props) => {
     //  5 -> Send email project was adjudicated
     try {
       await newExpedition({
-        id: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value),
+        id: 'urn:ngsi-ld:Expedition:' + budget.orderBy.object.id + '_' + formatString(budget.name.value),
         type: 'Expedition',
         expeditionTime: {
           type: 'Property',
@@ -287,12 +287,12 @@ const Head = (props) => {
         },
         belongsTo: {
           type: 'Relationship',
-          object: 'urn:ngsi-ld:Project:' + formatString(budget.name.value)
+          object: 'urn:ngsi-ld:Project:' + budget.orderBy.object.id + '_' + formatString(budget.name.value)
         },
       });
 
       await newAssembly({
-        id: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value),
+        id: 'urn:ngsi-ld:Assembly:' + budget.orderBy.object.id + '_' + formatString(budget.name.value),
         type: 'Assembly',
         startTime: {
           type: 'Property',
@@ -308,12 +308,12 @@ const Head = (props) => {
         },
         belongsTo: {
           type: 'Relationship',
-          object: 'urn:ngsi-ld:Project:' + formatString(budget.name.value)
+          object: 'urn:ngsi-ld:Project:' + budget.orderBy.object.id + '_' + formatString(budget.name.value)
         },
       });
 
       const built = {
-        id: 'urn:ngsi-ld:Project:' + formatString(budget.name.value),
+        id: 'urn:ngsi-ld:Project:' + budget.orderBy.object.id + '_' + formatString(budget.name.value),
         type: 'Project',
         orderBy: { type: 'Relationship', object: 'urn:ngsi-ld:Owner:' + budget.orderBy?.object.id },
         name: { type: 'Property', value: budget.name.value },
@@ -321,8 +321,8 @@ const Head = (props) => {
         hasBudget: { type: 'Relationship', object: budget.id },
         produced: { type: 'Property', value: '0' },
         amount: { type: 'Property', value: String(budget.amount.value).replace(/ /g, '').replace(/€/g, '') },
-        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + formatString(budget.name.value) },
-        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + formatString(budget.name.value) },
+        expedition: { type: 'Relationship', object: 'urn:ngsi-ld:Expedition:' + budget.orderBy.object.id + '_' + formatString(budget.name.value) },
+        assembly: { type: 'Relationship', object: 'urn:ngsi-ld:Assembly:' + budget.orderBy.object.id + '_' + formatString(budget.name.value) },
         startedProduction: { type: 'Property', value: '' },
       };
 
