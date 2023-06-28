@@ -28,6 +28,8 @@ import moment from 'moment';
 import { destroyCookie, parseCookies } from 'nookies';
 import { useDispatch, useSelector } from 'react-redux';
 import MomentJsConfig from '../components/utils/MomentJsConfig';
+import RedirectTo from '../components/utils/RedirectTo';
+
 import AuthData from '../lib/AuthData';
 import * as appStatesActions from '../store/actions/appState';
 import { storeWrapper } from '../store/store';
@@ -92,12 +94,11 @@ const App = ({ Component, pageProps }) => {
         if (moment(new Date(0).setUTCSeconds(decodedToken?.exp)) > moment() || a) {
           pageProps.theme = selectedTheme;
 
-          if (isPublicPage && !!myCredentials) {
-            if (myCredentials?.me?.role === 'CUSTOMER') {
-              router.push(routes.private.projects);
-            } else {
-              router.push(routes.private.internal.projects);
-            }
+          const nextPage = RedirectTo(myCredentials?.me);
+
+          if (myCredentials) {
+            console.log(nextPage);
+            isPublicPage && router.push(nextPage);
           }
         } else {
           destroyCookie('auth-token');
@@ -120,8 +121,8 @@ const App = ({ Component, pageProps }) => {
         <meta name="description" content="Wood Work 4.0" />
         <meta name="keywords" content="work, madeira, moveis, barato" />
         <meta name="author" content="Bruno Barros" />
-        <title>Wood Work 4.0</title>
         <link rel='icon' href='/logo_bw_ww40_inv.png' />
+        <title>Wood Work 4.0</title>
       </Head>
       <Layout {...pageProps} toggleTheme={toggleTheme} toggleFontSize={toggleFontSize}>
         <Component {...pageProps} />

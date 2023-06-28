@@ -100,8 +100,8 @@ export const activateUser = (data) => {
     meta: null,
     request: {
       headers: {},
-      method: 'POST',
-      url: getApiURL(endpoints.ACTIVATE + data),
+      method: 'GET',
+      url: getApiURL(endpoints.ACTIVATE + data + '.'),
     },
     types: [ACTIVATION_REQUEST, ACTIVATION_SUCCESS, ACTIVATION_FAIL],
   });

@@ -8,12 +8,12 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 //  PropTypes
-import PropTypes from 'prop-types';
 
 //  Material Ui
 import {
-  Box, ButtonGroup, Chip, Grid,
-  IconButton, Paper,
+  Box,
+  Chip, Grid,
+  IconButton, MenuItem, Pagination, Paper,
   Popover,
   Skeleton,
   Switch,
@@ -21,14 +21,12 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel, Tooltip
+  TextField, Tooltip, Typography
 } from '@mui/material';
 
 //  Icons
-import { DeleteOutline, EditOutlined, PowerSettingsNew } from '@mui/icons-material';
 import { Filter } from 'lucide-react';
 
 //  Utlis
@@ -43,12 +41,14 @@ import Notification from '../dialogs/Notification';
 import routes from '../../navigation/routes';
 
 //  Utils
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
+import DisplayActionButtons from './components/DisplayActionButtons';
+import EnhancedTableHead from './components/EnhancedTableHead';
 
 const AdvancedTable = ({
   rows,
   headCells,
-  headCellsUpper,
   clickRoute,
   actionId,
   noPagination,
@@ -58,14 +58,16 @@ const AdvancedTable = ({
   rangeFilters,
   setRangeFilters,
   onDelete,
-  onReactivation
+  onReactivation,
+  onCancel
 }) => {
   const [state, setState] = useState({
     order: 'asc',
     orderBy: headCells[0].id,
     page: 0,
     rowsPerPage: 10,
-    filteredItems: null,
+    rows,
+    filteredItems: rows,
     data: {},
     deleteItemId: '',
     dialogOpen: false,
@@ -74,6 +76,7 @@ const AdvancedTable = ({
     anchorEl: null,
     cellsFilter: headCells,
     loaded: true,
+    rowsPerPageOptions: [10, 25, 50]
   });
 
   const reduxState = useSelector((state) => state);
@@ -81,8 +84,6 @@ const AdvancedTable = ({
   useEffect(() => {
     const getData = async () => {
       const allData = {
-        categories: [],
-        // categories: categories.data.payload.data,
         clients: reduxState.clients?.data
       };
 
@@ -94,19 +95,19 @@ const AdvancedTable = ({
       case routes.private.internal.projects:
 
         break;
-      case routes.private.internal.projectsSimilar:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um projeto o que é irreversivel, tem certeza que quer continuar?' });
+      case routes.private.internal.similarProjects:
+        setState({ ...state, dialogMessage: 'Está prestes a apagar um projeto o que é irreversível, tem certeza que quer continuar?' });
 
         break;
       case routes.private.internal.stocks:
 
         break;
       case routes.private.internal.clients:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?' });
+        setState({ ...state, dialogMessage: 'Está prestes a apagar um cliente o que é irreversível, tem certeza que quer continuar?' });
 
         break;
       case routes.private.internal.workers:
-        setState({ ...state, dialogMessage: 'Está prestes a apagar um utilizador o que é irreversivel, tem certeza que quer continuar?' });
+        setState({ ...state, dialogMessage: 'Está prestes a apagar um utilizador o que é irreversível, tem certeza que quer continuar?' });
 
         break;
       }
@@ -153,103 +154,6 @@ const AdvancedTable = ({
       })),
     }));
   }
-
-  function EnhancedTableHead (props) {
-    const { order, orderBy, onRequestSort } = props;
-
-    const createSortHandler = (property) => (event) => {
-      onRequestSort(event, property);
-    };
-
-    return (
-      <TableHead>
-        {headCellsUpper
-          ? (
-            <>
-              {headCellsUpper.map((headCell) => (
-                <TableCell
-                  colSpan={headCell.span}
-                  key={headCell.id}
-                  align={headCell.numeric ? 'right' : 'left'}
-                  padding={headCell.disablePadding ? 'none' : 'normal'}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                  color={'palette.background.default'}
-                  sx={{
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    borderRight: headCell.borderRight
-                      ? '1px solid var(--grayEdges)'
-                      : null,
-                    borderLeft: headCell.borderLeft
-                      ? '1px solid var(--grayEdges)'
-                      : null,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {state.loaded
-                      ? <>
-                        {headCell.label}
-                        {orderBy === headCell.id ? <Box component='span'></Box> : null}
-                      </>
-                      : <Skeleton animation="wave" width='100%' />
-                    }
-                  </div>
-                </TableCell>
-              )
-              )}
-            </>
-          )
-          : null
-        }
-
-        <TableRow sx={{ backgroundColor: 'primary.main' }} >
-          {state.cellsFilter.map((headCell) => {
-            return headCell.show && <TableCell
-              key={headCell.id}
-              colSpan={headCell.span}
-              align={headCell.numeric ? 'right' : 'left'}
-              padding={headCell.disablePadding ? 'none' : 'normal'}
-              sortDirection={orderBy === headCell.id ? order : false}
-              width={headCell.width && `${headCell.width}%`}
-              sx={{
-                borderRight: headCell.borderRight
-                  ? '1px solid var(--grayEdges)'
-                  : null,
-                borderLeft: headCell.borderLeft
-                  ? '1px solid var(--grayEdges)'
-                  : null,
-              }}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={createSortHandler(headCell.id)}
-                sx={{ width: '100%', height: '100%', color: 'white' }}
-              >
-                {state.loaded
-                  ? <>
-                    {headCell.label}
-                    {orderBy === headCell.id ? <Box component='span'></Box> : null}
-                  </>
-                  : <Skeleton animation="wave" width='100%' />
-                }
-              </TableSortLabel>
-            </TableCell>;
-          }
-          )}
-        </TableRow>
-      </TableHead >
-    );
-  }
-
-  EnhancedTableHead.propTypes = {
-    numSelected: PropTypes.number,
-    onRequestSort: PropTypes.func,
-    order: PropTypes.oneOf(['asc', 'desc']),
-    orderBy: PropTypes.string,
-    rowCount: PropTypes.number,
-    headCellsUpper: PropTypes.array,
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = state.orderBy === property && state.order === 'asc';
@@ -313,10 +217,15 @@ const AdvancedTable = ({
       const filtered2 = rangeFilters ? filterByProperties(rows, rangeFilters) : rows;
       const filtered = MultiFilterArray(filtered2, filters);
 
-      console.log(filters);
       setState({ ...state, filteredItems: filtered });
+    } else {
+      setState({ ...state, filteredItems: state.rows });
     }
   }, [filters, rows, rangeFilters]);
+
+  useEffect(() => {
+    setState({ ...state, page: 0 });
+  }, [state.rowsPerPage]);
 
   function onFilterRemove (filterName) {
     const filtersToWork = { ...filters };
@@ -331,6 +240,63 @@ const AdvancedTable = ({
     rangeFiltersToWork[filterName].values = [rangeFiltersToWork[filterName].min, rangeFiltersToWork[filterName].max];
     setRangeFilters(rangeFiltersToWork);
   }
+
+  const CustomTablePagination = () => {
+    return <Box display="flex" alignItems="center" justifyContent="end" sx={{ width: '100%' }} >
+      <Box display="flex" alignItems="center" justifyContent="end" p={1}>
+        <Grid container md={12} sm={12} xs={12}>
+          <Grid container md={4} sm={4} xs={12}
+            alignItems={'center'}
+            justifyContent={{ md: 'start', sm: 'start', xs: 'center' }}
+          >
+            <Box display={'flex'} justifyContent={{ md: 'start', sm: 'start', xs: 'center' }} sx={{ alignItems: 'center', minWidth: '200px' }}>
+              <Typography variant="subtitle2" pr={1}>Mostrar </Typography>
+              <TextField
+                value={state.rowsPerPage}
+                variant="standard"
+                select
+                InputProps={{ disableUnderline: true }}
+                onChange={(e) => setState({ ...state, rowsPerPage: e.target.value })}
+              >
+                {state.rowsPerPageOptions.map((row) => (
+                  <MenuItem key={row} value={row}>
+                    <Typography variant='sm'>{row}</Typography>
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Typography variant="subtitle2" pl={1} pr={1}>
+                {
+                  state.page === 0
+                    ? `${state.filteredItems.length > 0 ? '1' : '0'} - ${Math.min(state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+                    : `${state.page * state.rowsPerPage + 1} - ${Math.min((state.page + 1) * state.rowsPerPage, state.filteredItems.length)} de ${state.filteredItems.length}`
+                }
+              </Typography>
+            </Box>
+
+          </Grid>
+          <Grid container md={8} sm={8} xs={12} alignItems={'center'} justifyContent={{ md: 'end', sm: 'end', xs: 'center' }}>
+            {!noPagination && (
+              <Pagination
+                siblingCount={1}
+                boundaryCount={0}
+                pl={1}
+                variant="outlined"
+                count={Math.ceil(state.filteredItems.length / state.rowsPerPage)}
+                rowsPerPage={state.rowsPerPage}
+                page={state.page + 1 || 1}
+                showLastButton
+                showFirstButton
+                onChange={(e, p) => setState({ ...state, page: p - 1 })}
+                color="primary"
+                sx={{ border: '0px solid', borderColor: 'lightGray.edges', pb: 0.2, pt: 0.2, borderRadius: '20px' }}
+
+              />
+            )}
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>;
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -369,13 +335,15 @@ const AdvancedTable = ({
             ? null
             : state.loaded
               ? <>
-                <TablePagination
+                <CustomTablePagination />
+
+                {false && <TablePagination
                   showFirstButton
                   showLastButton
                   component='div'
                   sx={{ marginLeft: 'auto' }}
-                  rowsPerPageOptions={[5, 10, 25]}
-                  count={state.filteredItems ? state.filteredItems?.length : rows?.length}
+                  rowsPerPageOptions={state.rowsPerPageOptions}
+                  count={state.filteredItems ? state.filteredItems?.length : state.filteredItems?.length}
                   rowsPerPage={state.rowsPerPage}
                   page={state.page}
                   onPageChange={handleChangePage}
@@ -384,10 +352,10 @@ const AdvancedTable = ({
                   labelDisplayedRows={({ count, from, to }) => {
                     return `${from} - ${to} de ${count}`;
                   }}
-                />
-                <Box>
+                />}
+                <Box display='flex' justifyContent={{ md: 'start', sm: 'start', xs: 'center' }}>
                   <Tooltip title='Filtrar colunas'>
-                    <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => setState({ ...state, anchorEl: e.currentTarget })}>
+                    <IconButton onClick={(e) => setState({ ...state, anchorEl: e.currentTarget })}>
                       <Filter size={20} strokeWidth={1.5} />
                     </IconButton>
                   </Tooltip>
@@ -427,12 +395,31 @@ const AdvancedTable = ({
               orderBy={state.orderBy}
               onRequestSort={handleRequestSort}
               rowCount={state.filteredItems?.length}
+              state={state}
             />
             {state.filteredItems && <TableBody>
               {(stableSort(state.filteredItems, getComparator(state.order, state.orderBy)))
                 .slice(state.page * state.rowsPerPage, state.page * state.rowsPerPage + state.rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
+
+                  function clickPath () {
+                    if (!clickRoute) return;
+
+                    //  Verifies if im in a internal page
+                    const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
+
+                    //  Verifies if im in a internal page AND in a projects section
+                    if (isInternalPage && Router.route.includes('projects')) {
+                      return (`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
+                    //  Verifies if im NOT in a internal page AND in a projects section
+                    } else if (!isInternalPage && Router.route.includes('projects')) {
+                      return (`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
+                    //  if its not on a projects section, just use the click route
+                    }
+
+                    return (`${clickRoute}${row[actionId || 'id']}`);
+                  }
 
                   return (
                     <TableRow
@@ -441,7 +428,9 @@ const AdvancedTable = ({
                       tabIndex={-1}
                       key={row.id}
                     >
-                      {state.cellsFilter.map((headCell, index2) => {
+                      {state.cellsFilter.map((headCell) => {
+                        const href = clickPath();
+
                         return headCell.show && <TableCell
                           id={labelId}
                           key={headCell.id}
@@ -449,82 +438,33 @@ const AdvancedTable = ({
                           padding={
                             headCell.disablePadding ? 'none' : 'normal'
                           }
+                          href={href}
+                          component={href && headCell.id !== 'actions' && Link}
                           sx={{
                             borderRight: headCell.borderRight && '1px solid var(--grayEdges)',
-                            borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)'
+                            borderLeft: headCell.borderLeft && '1px solid var(--grayEdges)',
+                            padding: headCell.id !== 'actions' && 2,
+                            paddingLeft: !headCell.disablePadding && 1,
+                            paddingRight: !headCell.disablePadding && 1,
                           }}
                         >
                           {state.loaded
                             ? <>
-                              {headCell.id === 'actions' || headCell.id === 'actionsConf'
+                              {headCell.id === 'actions'
                                 ? (
-                                  <ButtonGroup color='link.main'>
-                                    {headCell.id !== 'actionsConf' &&
-                                        <>
-                                          {editRoute && !(Router.route.includes('projects') && row.type === 'Project') &&
-                                            <Tooltip title={'Editar'}>
-                                              <Box style={{ color: 'red' }}>
-                                                <IconButton
-                                                  onClick={() => {
-                                                    if (Router.route.includes('projects') && row.type === 'Project') return;
-
-                                                    editRoute && Router.push(`${editRoute}${row.id}`);
-                                                  }}>
-                                                  <EditOutlined
-                                                    fontSize="small"
-                                                    color={'primary'}
-                                                  />
-                                                </IconButton>
-                                              </Box>
-                                            </Tooltip>
-                                          }
-                                        </>
-                                    }
-                                    {!!onReactivation && row?.status?.value === 'canceled' && <Tooltip title={'Reabrir'}>
-                                      <IconButton onClick={() => onReactivationClick(row)} size='small' >
-                                        <PowerSettingsNew
-                                          color={ 'warning'}
-
-                                          fontSize="sm"
-                                        />
-                                      </IconButton>
-                                    </Tooltip>}
-                                    {!!onDelete && <Tooltip title={row?.status?.value !== 'canceled' ? 'Remover' : 'Apagar do sistema'}>
-                                      <IconButton onClick={() => onDeleteClick(row)} size='small' >
-                                        <DeleteOutline
-                                          color={ row?.status?.value !== 'canceled' ? 'primary' : 'error'}
-                                          fontSize="small"
-                                        />
-                                      </IconButton>
-                                    </Tooltip>}
-                                  </ButtonGroup>
+                                  <DisplayActionButtons
+                                    headCell={headCell}
+                                    editRoute={editRoute}
+                                    Router={Router}
+                                    row={row}
+                                    onReactivation={onReactivation}
+                                    onReactivationClick={onReactivationClick}
+                                    onCancel={onCancel}
+                                    onDelete={onDelete}
+                                    onDeleteClick={onDeleteClick}
+                                  />
                                 )
-                                : (
-                                  <Box
-                                    onClick={() => {
-                                      //  Verifies if im in a internal page
-                                      const isInternalPage = Object.values(routes.private.internal).includes(Router.route.replace('[Id]', ''));
-
-                                      //  Verifies if im in a internal page AND in a projects section
-                                      if (isInternalPage && Router.route.includes('projects')) {
-                                        Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.internal.budget : routes.private.internal.project}${row[actionId || 'id']}`);
-                                        //  Verifies if im NOT in a internal page AND in a projects section
-                                      } else if (!isInternalPage && Router.route.includes('projects')) {
-                                        Router.push(`${row.id.includes('urn:ngsi-ld:Budget:') ? routes.private.budget : routes.private.project}${row[actionId || 'id']}`);
-                                        //  if its not on a projects section, just use the click route
-                                      } else Router.push(`${clickRoute}${row[actionId || 'id']}`);
-                                    }
-                                    }
-                                    color={index2 === 0 && 'primary.main'}
-                                    sx={{ cursor: clickRoute && 'pointer' }}
-                                  >
-                                    {FilterItem(
-                                      state.data,
-                                      row,
-                                      headCell.id
-                                    )}
-                                  </Box>
-                                )}
+                                : FilterItem(state.data, row, headCell.id)}
                             </>
                             : <Skeleton animation="wave" width='100%' />}
                         </TableCell>;
@@ -532,11 +472,6 @@ const AdvancedTable = ({
                     </TableRow>
                   );
                 })}
-              {(state.page > 0 ? Math.max(0, (1 + state.page) * state.rowsPerPage - state.filteredItems?.length) : 0) > 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>}
 
           </Table>

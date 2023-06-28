@@ -17,7 +17,7 @@ const workers = createReducer(initialState, (builder) => {
       ...state,
       errors: null,
       loading: false,
-      data: action.payload.data,
+      data: action.payload.data.results,
     }))
     .addCase(workersActions.WORKERS_FAIL, (state, action) => ({
       ...state,

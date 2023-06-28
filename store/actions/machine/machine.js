@@ -8,9 +8,15 @@ import endpoints from '../../network/endpoints';
 export const MACHINES_REQUEST = 'MACHINES_REQUEST';
 export const MACHINES_FAIL = 'MACHINES_FAIL';
 export const MACHINES_SUCCESS = 'MACHINES_SUCCESS';
+
+export const DELETE_MACHINE_REQUEST = 'DELETE_MACHINE_REQUEST';
+export const DELETE_MACHINE_FAIL = 'DELETE_MACHINE_FAIL';
+export const DELETE_MACHINE_SUCCESS = 'DELETE_MACHINE_SUCCESS';
+
 export const NEW_MACHINE_REQUEST = 'NEW_MACHINE_REQUEST';
 export const NEW_MACHINE_FAIL = 'NEW_MACHINE_FAIL';
 export const NEW_MACHINE_SUCCESS = 'NEW_MACHINE_SUCCESS';
+
 export const UPDATE_MACHINE_REQUEST = 'UPDATE_MACHINE_REQUEST';
 export const UPDATE_MACHINE_FAIL = 'UPDATE_MACHINE_FAIL';
 export const UPDATE_MACHINE_SUCCESS = 'UPDATE_MACHINE_SUCCESS';
@@ -38,11 +44,10 @@ export const machine = (data) => {
 
   return createAction({
     meta: null,
-    data,
     request: {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
-      url: getApiURL(endpoints.MACHINES),
+      url: getApiURL(endpoints.MACHINES + data),
     },
     types: [MACHINES_REQUEST, MACHINES_SUCCESS, MACHINES_FAIL],
   });
@@ -81,5 +86,19 @@ export const updateMachine = (data) => {
       }
     },
     types: [UPDATE_MACHINE_REQUEST, UPDATE_MACHINE_SUCCESS, UPDATE_MACHINE_FAIL],
+  });
+};
+
+export const deleteMachine = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.MACHINES + data),
+    },
+    types: [DELETE_MACHINE_REQUEST, DELETE_MACHINE_SUCCESS, DELETE_MACHINE_FAIL],
   });
 };

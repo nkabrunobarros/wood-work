@@ -37,7 +37,7 @@ const LeftOversDialog = ({ open, handleClose, onConfirm, sizes, setSizes }) => {
       <Divider />
       <DialogContent>
         <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <icons.Check size={80} strokeWidth={1} color='green' />
+          <icons.Check size={80} strokeWidth={1.5} color='green' />
         </Box>
         <DialogContentText id='alert-dialog-description'>
           {!manually ? ' Estes tamanhos estão corretos?' : 'Preencha os dados em mm' }

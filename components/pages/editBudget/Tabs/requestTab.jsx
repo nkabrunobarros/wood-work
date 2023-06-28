@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Grid, Inpu
 import React, { useState } from 'react';
 
 //  PropTypes
-import { Calendar, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import PropTypes from 'prop-types';
 //  Page Component Styles
 import styles from '../../../../styles/NewOrder.module.css';
@@ -13,12 +13,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import Image from 'next/image';
-import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 
 const RequestTab = (props) => {
   const {
-    pageProps,
     budgetData,
     onBudgetChange,
     countries
@@ -29,13 +27,13 @@ const RequestTab = (props) => {
 
   portugal = countries?.find((option) => option.cca2 === 'PT');
 
+  const keys = Object.keys(budgetData);
+  const errors = keys.map((key) => budgetData[key].error);
+
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%' }}>
+    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%', boxShadow: errors.find(ele => ele) && '0px 0px 4px 1px #d32f2f' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography>
-          <Typography id='align' className='headerTitleSm'>
-            <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto          </Typography>
-        </Typography>
+        <Typography variant='title' color={errors.find(ele => ele) && 'error'}>Projeto</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
@@ -44,7 +42,7 @@ const RequestTab = (props) => {
               {/* <Grid container item sm={12} xs={12} >
                 <Grid container md={12}>
                   <Typography id='align' className='headerTitleSm'>
-                    <Calendar size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} /> Projeto
+                    <Calendar size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} /> Projeto
                   </Typography>
                 </Grid>
               </Grid> */}
@@ -68,7 +66,6 @@ const RequestTab = (props) => {
                       error={budgetData.num.error}
                       required={budgetData.num.required}
                       name='num'
-                      paceholder='Escrever numero'
                       value={budgetData.num.value}
                     />
                   </Grid>
@@ -209,7 +206,7 @@ const RequestTab = (props) => {
                   <Grid container item sm={6} xs={12} p={1}>
                     <Box sx={{ width: '100%' }}>
                       <InputLabel htmlFor={budgetData.addressCountry.id} id={budgetData.addressCountry.id}>
-                          Pais
+                          País
                         {budgetData.addressCountry.required && (
                           <Tooltip title='Obrigatório'>
                             <span style={{ color: 'var(--red)' }}> *</span>
@@ -274,7 +271,7 @@ const RequestTab = (props) => {
 
                     </Box>
                     {/* <MyInput
-                  label='Pais'
+                  label='País'
                   required={budgetData.addressCountry?.required}
                   error={budgetData.addressCountry.error}
                   name='addressCountry'
@@ -284,14 +281,14 @@ const RequestTab = (props) => {
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
-                    <CurrencyInput
+                    <MyInput
+                      type='currency'
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Valor'
                       error={budgetData.price.error}
                       required={budgetData.price.required}
                       disabled={true}
                       name='price'
-                      paceholder='Valor total do projeto'
                       value={budgetData.price.value}
                     />
                   </Grid>

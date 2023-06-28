@@ -6,6 +6,7 @@ import { Send } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import * as messagesActionsRedux from '../../../store/actions/message';
+import CanDo from '../../utils/CanDo';
 
 const NewMsgInput = (props) => {
   const { windowWidth, styles, setLoadMessage } = props;
@@ -42,13 +43,15 @@ const NewMsgInput = (props) => {
     }).catch((err) => console.log(err));
   };
 
+  const hasSendPerms = CanDo('add_message');
+
   return (
     <Box
       component='form'
       noValidate
       onSubmit={handleSendMessage}
       sx={{ width: '100%', marginLeft: windowWidth > 900 && '2rem', marginRight: windowWidth > 900 && '2rem' }}>
-      <OutlinedInput
+      {hasSendPerms && <OutlinedInput
         required
         fullWidth
         placeholder='Aa'
@@ -59,7 +62,7 @@ const NewMsgInput = (props) => {
         endAdornment={ <Button position='end' type='submit'>
           <Send size={20}/>
         </Button>}
-      />
+      />}
     </Box>
   );
 };

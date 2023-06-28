@@ -26,7 +26,6 @@ export const parts = (data) => {
       params: {
         limit: 400,
         q: GenerateQueryFilters(data),
-
       }
     },
     types: [PARTS_REQUEST, PARTS_SUCCESS, PARTS_FAIL],

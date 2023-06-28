@@ -22,16 +22,16 @@ const ChatToolbar = (props) => {
             <Tooltip title="Ajuda">
               <IconButton>
                 <HelpCircle
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                  size={pageProps?.globalVars?.iconSize || 20}
                 />
               </IconButton>
             </Tooltip>
             <Tooltip title="Atualizar">
               <IconButton>
                 <RefreshCw
-                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                  size={pageProps?.globalVars?.iconSize}/>
+                  strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                  size={pageProps?.globalVars?.iconSize || 20}/>
               </IconButton>
             </Tooltip>
           </ButtonGroup>

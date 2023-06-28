@@ -39,7 +39,8 @@ const EditClient = ({ ...pageProps }) => {
         href: `${routes.private.internal.clients}`,
       },
       {
-        title: `${reduxState.clients.displayedClient?.user?.first_name + ' ' + reduxState.clients.displayedClient?.user?.last_name}`,
+        title: `${reduxState.clients.displayedClient?.user?.email}`,
+        // title: `${reduxState.clients.displayedClient?.user?.first_name + ' ' + reduxState.clients.displayedClient?.user?.last_name}`,
         href: `${routes.private.internal.client}${reduxState.clients.displayedClient.id}`,
       },
       {

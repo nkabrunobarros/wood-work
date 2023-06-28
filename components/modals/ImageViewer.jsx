@@ -64,7 +64,7 @@ const ImageViewer = ({ images, open, handleClose }) => {
 
 ImageViewer.propTypes = {
   images: PropTypes.any,
-  open: PropTypes.boolean,
+  open: PropTypes.bool,
   handleClose: PropTypes.any
 };
 

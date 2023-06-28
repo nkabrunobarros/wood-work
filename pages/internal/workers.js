@@ -8,6 +8,7 @@ import WorkersScreen from '../../components/pages/workers/workers';
 
 //  Navigation
 import routes from '../../navigation/routes';
+import * as profilesActionsRedux from '../../store/actions/profile';
 import * as workersActionsRedux from '../../store/actions/worker';
 
 //  Proptypes
@@ -17,11 +18,12 @@ const Workers = () => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
   const getWorkers = (data) => dispatch(workersActionsRedux.workers(data));
+  const getProfiles = (data) => dispatch(profilesActionsRedux.profiles(data));
 
   useEffect(() => {
     const getData = async () => {
       await getWorkers();
-      // !reduxState.permissions.data && await getPermissions();
+      await getProfiles();
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -35,54 +37,25 @@ const Workers = () => {
       },
     ];
 
-    const headCells = [
-      {
-        id: 'nome',
-        numeric: false,
-        disablePadding: false,
-        label: 'Nome',
-      },
-      {
-        id: 'email',
-        numeric: false,
-        disablePadding: true,
-        label: 'Email',
-      },
-      {
-        id: 'functionPerformed.object.description',
-        numeric: true,
-        disablePadding: false,
-        label: 'Perfil',
-      },
-      {
-        id: 'actions',
-        numeric: true,
-        disablePadding: false,
-        label: 'Ações',
-      },
-    ];
-
     const headCellsWorkers = [
+      {
+        id: 'Email',
+        numeric: false,
+        label: 'Email',
+        show: true
+      },
       {
         id: 'Nome',
         numeric: false,
-        disablePadding: false,
         label: 'Nome',
         show: true
       },
       {
-        id: 'email.value',
+        id: 'Profile',
         numeric: false,
-        disablePadding: true,
-        label: 'Email',
+        label: 'Perfil',
         show: true
       },
-      // {
-      //   id: 'functionPerformed.value',
-      //   numeric: true,
-      //   disablePadding: false,
-      //   label: 'Função',
-      // },
       {
         id: 'actions',
         numeric: true,
@@ -100,18 +73,22 @@ const Workers = () => {
       breadcrumbsPath,
       editRoute,
       detailRoute,
-      headCells,
       newRoute,
       workers: reduxState.workers?.data.map((worker) => {
         const worker2 = { ...worker };
 
-        worker2.Nome = worker.givenName?.value + ' ' + worker.familyName?.value;
-        worker2.Email = worker.email?.value;
-        worker2.Perfil = worker.functionPerformed?.value;
+        worker2.Nome = worker.user.first_name + ' ' + worker.user.last_name;
+        worker2.NomeDropdown = worker.user.first_name + ' ' + worker.user.last_name + ' - ' + worker.user.email;
+        worker2.Email = worker.user.email;
+        worker2.Perfil = worker.user.orion_groups[0]?.name;
+        worker2.Profile = worker.user.orion_groups[0]?.name;
+        worker2.ProfileId = worker.user.orion_groups[0]?.id;
 
         return worker2;
       }),
       headCellsWorkers,
+      profiles: [...reduxState.profiles.data]?.sort((a, b) => (a.name > b.name) ? 1 : -1),
+
     };
 
     return <WorkersScreen {...props} />;

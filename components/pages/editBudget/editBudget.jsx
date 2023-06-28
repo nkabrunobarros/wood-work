@@ -37,7 +37,10 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
+import * as projectsActionsRedux from '../../../store/actions/project';
 
+import routes from '../../../navigation/routes';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
 import ConvertString from '../../utils/ConvertString';
@@ -47,12 +50,14 @@ import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
 
 const EditBudget = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, clients, budget } = props;
+  const { breadcrumbsPath, pageProps, clients, budget, budgets } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
+  const [linesErrors, setLinesErrors] = useState({ group: false, subGroup: false, item: false });
   const dispatch = useDispatch();
+  const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
   const updateFurniture = (data) => dispatch(furnituresActionsRedux.updateFurniture(data));
@@ -93,7 +98,7 @@ const EditBudget = ({ ...props }) => {
     lines.map((group) => {
       group.subGroups?.map((subgroup) => {
         subgroup.items.map(item => {
-          totalPrice += Number((item?.price?.value || '0€')?.replace(/ /g, '').replace(/€/g, ''));
+          totalPrice += Number((String(item?.price?.value) || '0€')?.replace(/ /g, '').replace(/€/g, ''));
           totalAmount += Number(item?.amount?.value);
         });
       });
@@ -133,6 +138,8 @@ const EditBudget = ({ ...props }) => {
       data.addressLocality.value = client?.address?.addressLocality;
       data.addressRegion.value = client?.address?.addressRegion;
       data.addressCountry.value = client?.address?.addressCountry;
+
+      if (data.name.error === 'Este cliente, já tem 1 projeto com este nome') data.name.error = '';
     }
 
     data[props.name].value = props.value;
@@ -145,10 +152,19 @@ const EditBudget = ({ ...props }) => {
 
     if (lines.length === 0) {
       toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, group: true });
+
+      return true;
     } else if (lines[0].subGroups.length === 0) {
       toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, subGroup: true });
+
+      return true;
     } else if (lines[0].subGroups[0].items.length === 0) {
       toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, item: true });
+
+      return true;
     }
 
     //  if there are 0 items in the 1st group, return true = errors
@@ -160,7 +176,6 @@ const EditBudget = ({ ...props }) => {
           Object.entries(item).forEach(([, value]) => {
             if (typeof value === 'object' && 'error' in value && (value.value === '' || value.value === '0') && value.required) {
               value.error = 'Campo obrigatorio';
-              console.log(value);
               hasErrors = true;
             } else if (typeof value === 'object' && 'error' in value) {
               value.error = '';
@@ -171,7 +186,7 @@ const EditBudget = ({ ...props }) => {
     });
 
     setLines(obj);
-    hasErrors && toast.error('Preencha todos os campos.');
+    hasErrors && toast.error('Erros no formulário');
 
     return hasErrors;
   }
@@ -197,8 +212,13 @@ const EditBudget = ({ ...props }) => {
       }
     });
 
+    if (budgets.find((ele) => ele.orderBy.object === ('urn:ngsi-ld:Owner:' + budgetData.client.value) && ele.name.value === budgetData.name.value) && budgetData.name.value !== budget.name.value) {
+      data.name.error = 'Este cliente, já tem 1 projeto com este nome';
+      hasErrors = true;
+    }
+
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
       setBudgetData(data);
 
       return !hasErrors;
@@ -227,11 +247,11 @@ const EditBudget = ({ ...props }) => {
 
   function formatString (str) {
     // Replace all spaces with underscores
-    str = str.replace(/ /g, '_');
+    str = str?.replace(/ /g, '_');
     // Replace accented characters
-    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    str = str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     // Replace all non-alphanumeric characters except for underscores
-    str = str.replace(/[^a-zA-Z0-9_]/g, '');
+    str = str?.replace(/[^a-zA-Z0-9_]/g, '');
 
     return str;
   }
@@ -279,8 +299,8 @@ const EditBudget = ({ ...props }) => {
       const items = [{
         id: group.id,
         furnitureType: { type: 'Property', value: 'group' },
-        name: { type: 'Property', value: group.name.value },
-        hasBudget: { value: budget.id, type: 'Property' },
+        name: { type: 'Property', value: formatString(group.name.value).replace(/_/g, ' ') },
+        hasBudget: { object: budget.id, type: 'Relationship' },
         type: 'Furniture'
       }];
 
@@ -292,8 +312,9 @@ const EditBudget = ({ ...props }) => {
         const items = [{
           id: subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
-          name: { type: 'Property', value: subgroup.name.value },
-          hasBudget: { value: budget.id, type: 'Property' },
+          name: { type: 'Property', value: formatString(subgroup.name.value).replace(/_/g, ' ') },
+          hasBudget: { object: budget.id, type: 'Relationship' },
+          group: { value: group.name.value, type: 'Property' },
           type: 'Furniture',
 
         }];
@@ -312,9 +333,10 @@ const EditBudget = ({ ...props }) => {
 
           valuesOnly.id = item.id;
           valuesOnly.type = 'Furniture';
+          valuesOnly.name = { ...valuesOnly.name, value: formatString(valuesOnly.name.value).replace(/_/g, ' ') };
           valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
           valuesOnly.group = { value: group.name.value, type: 'Property' };
-          valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+          valuesOnly.hasBudget = { object: budget.id, type: 'Relationship' };
           valuesOnly.produced = { value: false, type: 'Property' };
           valuesOnly.assembled = { value: false, type: 'Property' };
 
@@ -332,7 +354,7 @@ const EditBudget = ({ ...props }) => {
         id: group.id,
         furnitureType: { type: 'Property', value: 'group' },
         name: { type: 'Property', value: group.name.value },
-        hasBudget: { value: budget.id, type: 'Property' },
+        hasBudget: { object: budget.id, type: 'Relationship' },
         type: 'Furniture'
       }];
 
@@ -345,7 +367,8 @@ const EditBudget = ({ ...props }) => {
           id: subgroup.id,
           furnitureType: { type: 'Property', value: 'subGroup' },
           name: { type: 'Property', value: subgroup.name.value },
-          hasBudget: { value: budget.id, type: 'Property' },
+          hasBudget: { object: budget.id, type: 'Relationship' },
+
           type: 'Furniture'
         }];
 
@@ -365,7 +388,7 @@ const EditBudget = ({ ...props }) => {
           valuesOnly.type = 'Furniture';
           valuesOnly.subGroup = { value: subgroup.name.value, type: 'Property' };
           valuesOnly.group = { value: group.name.value, type: 'Property' };
-          valuesOnly.hasBudget = { value: budget.id, type: 'Property' };
+          valuesOnly.hasBudget = { object: budget.id, type: 'Relationship' };
 
           return valuesOnly;
         });
@@ -413,7 +436,11 @@ const EditBudget = ({ ...props }) => {
     toCreate && await CreateBudgetRows(toCreate);
     await UpdateRows(toUpdate);
     ToastSet(loading, 'Projeto atualizado.', 'success');
-    Router.push(breadcrumbsPath[1].href);
+
+    if (budget.budgetStatus.value === 'adjudicated' && budgetData.name.value !== budget.name.value) await updateProject({ id: budget.id.replace(/Budget/g, 'Project'), data: { name: { type: 'Property', value: budgetData.name.value } } });
+
+    if (budget.budgetStatus.value === 'adjudicated') Router.push(routes.private.internal.project + budget.id.replace(/Budget/g, 'Project'));
+    else Router.push(breadcrumbsPath[1].href);
   }
 
   async function DeleteRows (rows) {
@@ -439,11 +466,12 @@ const EditBudget = ({ ...props }) => {
   }
 
   async function CreateBudgetRows (rows) {
-    const fixed = rows.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
+    const fixed = rows.map((item) => {
+      return { ...item, id: item.id + formatString(budgetData.name.value) };
+    });
 
     try {
-      rows.length > 0 && fixed.map(async (ele) => await newFurniture(ele).catch((err) => console.log(err)));
-      // rows.length > 0 && await newFurniture(fixed).catch((err) => console.log(err));
+      rows.length > 0 && await newFurniture(fixed).catch((err) => console.log(err));
     } catch (err) {
       console.log(err);
     }
@@ -452,7 +480,7 @@ const EditBudget = ({ ...props }) => {
   return (
     <>
       <Navbar />
-      <Grid component='main'sx={{ padding: '0rem 2rem 0rem 2rem' }} >
+      <Grid component='main'sx={{ padding: '0rem 2rem 4rem 2rem' }} >
         <CssBaseline />
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -477,11 +505,11 @@ const EditBudget = ({ ...props }) => {
                 <PrimaryBtn
                   onClick={() => ValidateData()}
                   text={'Guardar'}
-                  icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+                  icon={ <Save size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />}
                 />
                 <PrimaryBtn
                   text='Cancelar'
-                  icon={<X size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+                  icon={<X size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />}
                   light
                   onClick={() => Router.back()}
                 />
@@ -513,6 +541,8 @@ const EditBudget = ({ ...props }) => {
                 noDrop
                 lines={lines}
                 setLines={setLines}
+                linesErrors={linesErrors}
+                setLinesErrors={setLinesErrors}
               />
             </Content>
           </Grid>
@@ -528,10 +558,9 @@ const EditBudget = ({ ...props }) => {
               />
             </Content>
           </Grid>
-
         </Grid>
       </Grid >
-
+      <Footer />
     </>
   );
 };

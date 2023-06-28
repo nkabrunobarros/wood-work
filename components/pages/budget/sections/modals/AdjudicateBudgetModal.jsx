@@ -18,8 +18,8 @@ const AdjudicateBudgetModal = (props) => {
     </DialogTitle>
     <Divider />
     <DialogContent>
-      <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-        <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1} />
+      <Box mb={1} sx={{ display: 'flex', justifyContent: 'center' }} color='primary.main'>
+        <QuestionMark sx={{ fontSize: '80px' }} fontSize={'80px'} strokeWidth={1.5} />
       </Box>
 
       <DialogContentText id='alert-dialog-description'>

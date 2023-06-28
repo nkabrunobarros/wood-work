@@ -23,8 +23,7 @@ import EmailValidation from '../../utils/EmailValidation';
 import ToastSet from '../../utils/ToastSet';
 
 const newWorker = ({ ...props }) => {
-  const { breadcrumbsPath, organizations } = props;
-  //  Dialog
+  const { breadcrumbsPath, organizations, profiles } = props;
   const [processing, setProcessing] = useState(false);
 
   const [inputFields, setInputFields] = useState([
@@ -62,11 +61,22 @@ const newWorker = ({ ...props }) => {
       tooltip: '',
       hidden: true
     },
+    {
+      id: 'profile',
+      label: 'Função',
+      value: '',
+      options: profiles.filter((profile) => profile.name !== 'Customers'),
+      optLabel: 'name',
+      error: '',
+      required: true,
+      tooltip: '',
+    },
   ]
   );
 
   const dispatch = useDispatch();
   const newWorker = (data) => dispatch(workersActionsRedux.newWorker(data));
+  const updateWorkerProfile = (data) => dispatch(workersActionsRedux.updateWorkersProfile(data));
 
   function ValidateFields () {
     let hasErrors = false;
@@ -98,7 +108,7 @@ const newWorker = ({ ...props }) => {
     setInputFields(data);
 
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return true;
     }
@@ -126,14 +136,19 @@ const newWorker = ({ ...props }) => {
     builtWorker['user.password_confirm'] = 'ChangeMe';
     builtWorker.hasOrganization = builtWorker.hasOrganization.replace('urn:ngsi-ld:Organization:', '');
 
+    const profile = builtWorker.profile;
+
+    delete builtWorker.profile;
+
     const qs = require('qs');
     const data = qs.stringify({ ...builtWorker });
 
     await newWorker(data)
-      .then((res) => {
+      .then(async (res) => {
+        await updateWorkerProfile({ id: res.data.id, data: { add_groups: [profile] } });
         ToastSet(loading, 'Utilizador Criado!', 'success');
         setProcessing(false);
-        Router.push(routes.private.internal.worker + 'urn:ngsi-ld:Worker:' + res.data.id);
+        Router.push(routes.private.internal.worker + res.data.id);
       }).catch((error) => {
         const errorKeys = Object.keys(error.response.data);
 

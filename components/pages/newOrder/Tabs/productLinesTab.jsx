@@ -5,7 +5,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, Grow,
 import React, { useState } from 'react';
 
 //  PropTypes
-import { ChevronDown, Plus, X } from 'lucide-react';
+import { ChevronDown, Plus, Trash } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import MyInput from '../../../inputs/myInput';
@@ -13,7 +13,10 @@ import Form from './FormRows/Form';
 
 const ProductLinesTab = (props) => {
   const {
-    lines, setLines,
+    lines,
+    setLines,
+    linesErrors,
+    setLinesErrors,
   } = props;
 
   const [expandedGroups, setExpandedGroups] = useState([]);
@@ -41,6 +44,8 @@ const ProductLinesTab = (props) => {
 
   //  Add subGroup
   function addSubGroup (groupIndex, subGroupIndex) {
+    if (linesErrors.subGroup) setLinesErrors({ ...linesErrors, subGroup: false });
+
     setLines(prevLines => {
       const newSubGroup = {
         id: `subgroup${groupIndex}${subGroupIndex + 1 || prevLines[groupIndex].subGroups.length}`,
@@ -72,6 +77,8 @@ const ProductLinesTab = (props) => {
 
   //  Add group
   function addGroup (props) {
+    if (linesErrors.group) setLinesErrors({ ...linesErrors, group: false });
+
     const newGroup = {
       id: 'group' + (lines.length + 1),
       furnitureType: 'group',
@@ -131,6 +138,8 @@ const ProductLinesTab = (props) => {
   function addNewLineProduct (groupIndex, subGroupIndex) {
     const prevLines = [...lines];
 
+    if (linesErrors.item) setLinesErrors({ ...linesErrors, item: false });
+
     prevLines[groupIndex].subGroups[subGroupIndex] = {
       ...prevLines[groupIndex].subGroups[subGroupIndex],
       items: [
@@ -155,6 +164,8 @@ const ProductLinesTab = (props) => {
   //  Add accessory type row to group
   function addNewLineAccessory (groupIndex, subGroupIndex) {
     const prevLines = [...lines];
+
+    if (linesErrors.item) setLinesErrors({ ...linesErrors, item: false });
 
     prevLines[groupIndex].subGroups[subGroupIndex] = {
       ...prevLines[groupIndex].subGroups[subGroupIndex],
@@ -268,17 +279,16 @@ const ProductLinesTab = (props) => {
   };
 
   return (
-    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
+    <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%', boxShadow: linesErrors.group && '0px 0px 4px 1px #d32f2f' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography id='align' className='headerTitleSm'>
-          Produtos
-        </Typography>
+        <Typography id='align' variant='title' color={linesErrors.group && 'error'}>Produtos</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Grid container p={'16px'} bgcolor={'lightGray.main'} sx={{
-          border: '1px solid var(--grayEdges)',
-          borderRadius: '4px'
-        }}>
+        <Grid container p={'16px'} bgcolor={'lightGray.main'}
+          sx={{
+            border: '1px solid var(--grayEdges)',
+            borderRadius: '4px'
+          }}>
           {/* <Button onClick={() => CreateFurnitures()}>testBuild</Button> */}
           <Grid container sx={{ height: 'fit-content' }}>
             <Grid container md={12} sm={12} xs={12}>
@@ -286,14 +296,14 @@ const ProductLinesTab = (props) => {
               {lines.map((group, groupIndex) => {
                 return <>
                   <Grow key={group.id} in={true}>
-                    <Accordion expanded={expandedGroups.includes(group.id)} onChange={() => handlePanelChange(group.id)} sx={{ width: '100%' }}>
+                    <Accordion expanded={expandedGroups.includes(group.id)} onChange={() => handlePanelChange(group.id)} sx={{ width: '100%', boxShadow: linesErrors.subGroup && '0px 0px 4px 1px #d32f2f' }} >
                       <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ borderBottom: expandedGroups.includes(group.id) && '1px solid', borderColor: expandedGroups.includes(group.id) && 'divider' }}>
                         <Grid container justifyContent={'space-between'} alignItems={'center'}>
-                          <Typography variant='subtitle1' fontWeight={'semibold'} >{group.name}</Typography>
+                          <Typography variant='subtitle1' fontWeight={'semibold'} color={linesErrors.subGroup && 'error'} >{group.name}</Typography>
                           <Box pr={2}>
                             <Tooltip title='Remover este grupo'>
                               <IconButton onClick={() => removeThisGroup(groupIndex)} >
-                                <X color='red' />
+                                <Trash color='red' size={20} strokeWidth={1.5} />
                               </IconButton>
                             </Tooltip>
                           </Box>
@@ -309,14 +319,14 @@ const ProductLinesTab = (props) => {
                           const isGroupValid = group.name !== '' && subgroup.items.length > 0 && isSubgroupValid;
 
                           return <Grow in key={subgroup.id}>
-                            <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%' }}>
+                            <Accordion expanded={expandedGroups.includes(subgroup.id)} onChange={() => handlePanelChange(subgroup.id)} sx={{ width: '100%', boxShadow: linesErrors.item && '0px 0px 4px 1px #d32f2f' }}>
                               <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                                 <Grid container justifyContent={'space-between'} alignItems={'center'}>
-                                  <Typography variant='subtitle1' >{subgroup.name}</Typography>
+                                  <Typography variant='subtitle1' color={linesErrors.item && 'error'} >{subgroup.name}</Typography>
                                   <Box pr={2}>
                                     <Tooltip title='Remover este subgrupo'>
                                       <IconButton onClick={() => removeThisSubGroup(groupIndex, subGroupIndex)} >
-                                        <X color='red' />
+                                        <Trash color='red' size={20} strokeWidth={1.5} />
                                       </IconButton>
                                     </Tooltip>
                                   </Box>
@@ -328,9 +338,12 @@ const ProductLinesTab = (props) => {
                                 </Grid>
                                 {/* Linhas de moveis/furniture */}
                                 {subgroup.items.map((row, itemIndex) => {
+                                  const keys = Object.keys(row);
+                                  const errors = keys.map((key) => row[key].error);
+
                                   return <Grow key={itemIndex}in={true}>
-                                    <Box>
-                                      <Form field={row} groupIndex={groupIndex} subGroupIndex={subGroupIndex} itemIndex={itemIndex} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />
+                                    <Box sx={{ borderRadius: '8px', boxShadow: errors.find(ele => ele) && '0px 0px 4px 3px #d32f2f' }} pb={errors.find(ele => ele) && 4} mt={errors.find(ele => ele) && 4} >
+                                      <Form errors={errors} field={row} groupIndex={groupIndex} subGroupIndex={subGroupIndex} itemIndex={itemIndex} lines={lines} onChange={onRowFieldChange} onRemove={removeRow} />
                                     </Box>
                                   </Grow>;
                                 })}

@@ -3,13 +3,12 @@ import Router from 'next/router';
 import React, { useState } from 'react';
 
 //  Material UI
-import { Box, ButtonGroup, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 
 //  Custom Components
 import CustomBreadcrumbs from '../../breadcrumbs';
-import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
 //  PropTypes
@@ -19,11 +18,12 @@ import PropTypes from 'prop-types';
 import styles from '../../../styles/NewOrder.module.css';
 
 //  Icons
-import { Edit, Map, Trash, User } from 'lucide-react';
+import { Edit2, Map, Trash, User } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import * as ClientsActionsRedux from '../../../store/actions/client';
+import Buttons from '../../buttons/Buttons';
 import ConfirmDialog from '../../dialogs/ConfirmDialog';
 import Notification from '../../dialogs/Notification';
 import Footer from '../../layout/footer/footer';
@@ -79,13 +79,16 @@ const EditClient = ({ ...props }) => {
 
   };
 
+  const canEditClient = CanDo('update_client');
+  const canDeleteClient = CanDo('delete_owner');
+
   return (
     <>
       <ConfirmDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => onDelete()}
-        message={'Está prestes a apagar um cliente o que é irreversivel, tem certeza que quer continuar?'}
+        message={'Está prestes a apagar um cliente o que é irreversível, tem certeza que quer continuar?'}
       />
       <Navbar />
       <Notification />
@@ -93,34 +96,28 @@ const EditClient = ({ ...props }) => {
         <CssBaseline />
         <CustomBreadcrumbs path={breadcrumbsPath} />
         <Content>
-          <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
+          <Box fullWidth sx={{ p: '24px', display: 'flex' }}>
             <Typography variant='title'> {client?.user?.first_name + ' ' + client?.user?.last_name} - {client?.isCompany ? 'Empresarial' : 'Particular'} </Typography>
             <Box sx={{ marginLeft: 'auto' }}>
-              <ButtonGroup>
-                <PrimaryBtn
-                  text='Editar'
-                  hidden={!CanDo('change_owner')}
-                  icon={
-                    <Edit
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
-                      size={pageProps?.globalVars?.iconSize || 20}
-                    />
-                  }
-                  onClick={() => Router.push(`${editRoute}${client?.id}`)}
-                />
-                <PrimaryBtn
-                  text='Apagar'
-                  hidden={!CanDo('delete_owner')}
-                  onClick={() => setDialogOpen(true)}
-                  icon={
-                    <Trash
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1}
-                      size={pageProps?.globalVars?.iconSize || 20}
-                    />
-                  }
-                  light
-                />
-              </ButtonGroup>
+              <Box>
+                <Buttons buttons={[
+                  {
+                    text: 'Editar',
+                    hidden: !canEditClient,
+                    href: editRoute + client?.id,
+                    icon: <Edit2 strokeWidth='1' size={20} />,
+                    color: 'primary'
+                  },
+                  {
+                    text: 'Apagar',
+                    hidden: !canDeleteClient,
+                    icon: <Trash strokeWidth='1' size={20} />,
+                    onClick: () => setDialogOpen(true),
+                    color: 'error',
+                    light: true
+                  },
+                ]} />
+              </Box>
             </Box>
           </Box>
           <Grid id='clientPanel' container sx={{ padding: '24px' }}>
@@ -129,8 +126,8 @@ const EditClient = ({ ...props }) => {
                 <Grid container item>
                   <Typography id='align' item color='lightTextSm.main'>
                     <User
-                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                     <Box pl={1}>Dados Gerais</Box>
                   </Typography>
@@ -140,11 +137,11 @@ const EditClient = ({ ...props }) => {
                     <Typography item variant="subtitle2"color='lightTextSm.main'>Nome Utilizador</Typography>
                     <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.user?.username}</Typography>
                   </Grid> */}
-                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                  <Grid item md={6} sm={6} xs={6} pb={1} pt={1}>
                     <Typography item variant="subtitle2"color='lightTextSm.main'>Primeiro Nome</Typography>
                     <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.user?.first_name}</Typography>
                   </Grid>
-                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1}>
+                  <Grid item md={6} sm={6} xs={6} pb={1} pt={1}>
                     <Typography item variant="subtitle2"color='lightTextSm.main'>Último Nome</Typography>
                     <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.user?.last_name}</Typography>
                   </Grid>
@@ -153,10 +150,7 @@ const EditClient = ({ ...props }) => {
                     <Typography item variant="subtitle2"color='lightTextSm.main'>Email</Typography>
                     <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.user?.email}</Typography>
                   </Grid>
-                  <Grid item md={6} sm={6} xs={12} pb={1} pt={1} display='none'>
-                    <Typography item variant="subtitle2"color='lightTextSm.main'>Tipo cliente </Typography>
-                    <Typography item variant="subtitle2"color='lightTextSm.black' >{client?.isCompany ? 'Empresarial' : 'Particular'}</Typography>
-                  </Grid>
+
                 </Grid>
               </Grid>
             </Grid>
@@ -166,8 +160,8 @@ const EditClient = ({ ...props }) => {
                   <Grid container item xs={12}>
                     <Typography id='align' variant="subtitle1" color='lightTextSm.main'>
                       <Map
-                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                        size={pageProps?.globalVars?.iconSize}
+                        strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                        size={pageProps?.globalVars?.iconSize || 20}
                       />
                       <Box pl={1}>Morada</Box>
                     </Typography>

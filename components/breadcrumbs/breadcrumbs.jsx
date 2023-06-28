@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import routes from '../../navigation/routes';
 
+import Head from 'next/head';
 import styles from '../../styles/components/navbar.module.css';
 
 const CustomBreadcrumbs = ({ path }) => {
@@ -18,7 +19,8 @@ const CustomBreadcrumbs = ({ path }) => {
   };
 
   const output = Object.keys(path)?.sort((a, b) => b - a);
-  const arrayLenght = parseInt(output[0]);
+  const arraylength = parseInt(output[0]);
+  const title = path[path.length - 1].title + ' | WoodWork 4.0';
 
   return (
     <Box
@@ -30,10 +32,14 @@ const CustomBreadcrumbs = ({ path }) => {
         boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.1)',
       }}
     >
+      <Head>
+        <title>{title?.replace(/,/g, '')}</title>
+
+      </Head>
       <Breadcrumbs id='align' aria-label='breadcrumb' separator={<ChevronRight />}>
         <IconButton onClick={() => Router.push(isInternalPage ? routes.private.internal.projects : routes.private.projects)}>
           <Tooltip title={'Ir para Projetos'}>
-            <Home strokeWidth={1} size={18} />
+            <Home strokeWidth={1.5} size={18} />
           </Tooltip>
         </IconButton>
         {path.map((crumb, i) => (
@@ -42,8 +48,9 @@ const CustomBreadcrumbs = ({ path }) => {
             // onClick={() => Router.push(crumb.href)}
             href={crumb.href}
             className={styles.breadcrumb}
+            // locale="pt"
           >
-            <Typography variant='subtitle1' color='link.main' sx={i < arrayLenght && { ...style }}> {crumb.title}</Typography>
+            <Typography variant='subtitle1' color='link.main' sx={i < arraylength && { ...style }}> {crumb.title}</Typography>
           </Link>
         ))}
       </Breadcrumbs>

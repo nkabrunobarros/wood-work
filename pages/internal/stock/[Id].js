@@ -9,34 +9,25 @@ import Loader from '../../../components/loader/loader';
 import StockScreen from '../../../components/pages/stock/stock';
 
 //  Navigation
+import { useSelector } from 'react-redux';
 import routes from '../../../navigation/routes';
-import { dummyStocks } from '../stocks';
 
 //  Utils
-
 const Stock = () => {
   const [loaded, setLoaded] = useState(false);
-  // const [categories, setCategories] = useState();
-  // const [orders, setOrders] = useState();
   const [stock, setStock] = useState();
   const router = useRouter();
+  const reduxState = useSelector((state) => state);
 
   useEffect(() => {
     const getData = async () => {
-      // await StocksActions.stock({ id: router.query.Id }).then((response) => setStock(response.data.payload));
-      // await CategoriesActions.categories().then((response) => setCategories(response.data.payload.data));
-      // await OrdersActions.ordersProduction().then((response) => setOrders(response.data.payload.data));
-      setStock(dummyStocks.find(ele => ele.id === router.query.Id));
+      setStock(reduxState.stocks.data.find(ele => ele.id === router.query.Id));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
   }, []);
 
   if (loaded) {
-    // const data = {
-    //   categories,
-    // };
-
     const breadcrumbsPath = [
       {
         title: 'Stocks',
@@ -48,12 +39,9 @@ const Stock = () => {
       },
     ];
 
-    // stock.ordersCount = Object.keys(orders.filter(ele => ele.product.id === router.query.Id)).length;
-
     const props = {
       breadcrumbsPath,
-      stock,
-      // data,
+      stock: reduxState.stocks.data.find(ele => ele.id === router.query.Id),
     };
 
     return <StockScreen {...props} />;

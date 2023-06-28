@@ -169,8 +169,6 @@ const NewClient = ({ ...props }) => {
     ]
   );
 
-  console.log(inputFields);
-
   function ValidateFields () {
     let hasErrors = false;
 
@@ -179,11 +177,11 @@ const NewClient = ({ ...props }) => {
 
       if (input.type === 'password') {
         if (!generatePassword && input.value === '') {
-          data[i].error = 'Campo Óbrigatorio';
+          data[i].error = 'Campo Obrigatório';
           hasErrors = true;
         }
       } else if (input.required && input.value === '') {
-        data[i].error = 'Campo Óbrigatorio';
+        data[i].error = 'Campo Obrigatório';
         hasErrors = true;
         // Case it reaches here, validates specifiq fields and value structure
       } else if (input.required && input.id === 'email' && !EmailValidation(input.value)) {
@@ -198,7 +196,7 @@ const NewClient = ({ ...props }) => {
     });
 
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return true;
     }
@@ -234,10 +232,15 @@ const NewClient = ({ ...props }) => {
 
     const data = qs.stringify({ ...builtClient2 });
 
+    // eslint-disable-next-line consistent-return
     await newClient(data).then((res) => {
+      if (res?.response?.status === 400) return onError(res, loading);
+
       ToastSet(loading, 'Cliente Criado!', 'success');
       Router.push(routes.private.internal.client + res.data.id);
-    }).catch((err) => { onError(err, loading); });
+    }).catch((err) => {
+      onError(err, loading);
+    });
 
     setDialogOpen(false);
   }
@@ -255,6 +258,8 @@ const NewClient = ({ ...props }) => {
             return { ...field, error: 'Já existe um utilizador com este Nome de Utilizador.' };
           case 'User with this email address already exists.':
             return { ...field, error: 'Já existe um utilizador com este Email.' };
+          case 'Enter a valid email address.':
+            return { ...field, error: 'Email inválido' };
           case 'This field is required.':
             return { ...field, error: 'Campo Obrigatório.' };
           case 'Ensure this field has no more than 15 characters.':
@@ -327,8 +332,8 @@ const NewClient = ({ ...props }) => {
                   text='Guardar'
                   icon={
                     <Save
-                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   onClick={ValidateFields}
@@ -337,8 +342,8 @@ const NewClient = ({ ...props }) => {
                   text='Cancelar'
                   icon={
                     <X
-                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   light

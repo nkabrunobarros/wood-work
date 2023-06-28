@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 //  Mui
 import {
-  Box, ButtonGroup, Grid, Typography
+  ButtonGroup, Grid, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -181,7 +181,7 @@ const EditClient = ({ ...props }) => {
       const data = [...inputFields];
 
       if (input.required && input.value === '') {
-        data[i].error = 'Campo Óbrigatorio';
+        data[i].error = 'Campo Obrigatório';
         hasErrors = true;
         // Case it reaches here, validates specifiq fields and value structure
       } else if ((input.value?.length !== 11 && input.value?.length !== 9) && input.type === 'phone' && input.required) {
@@ -289,16 +289,16 @@ const EditClient = ({ ...props }) => {
         />
         {processing && <Loader center={true} backdrop />}
         <Content>
-          <Box fullWidth sx={{ p: '24px', display: 'flex', alignItems: 'center' }}>
-            <Typography item className='headerTitleXl'>{breadcrumbsPath[1].title} - {client.isCompany ? 'Empresarial' : 'Particular'} </Typography>
-            <Box sx={{ marginLeft: 'auto' }}>
+          <Grid container md={12} sm={12} xs={12} sx={{ p: '24px', alignItems: 'center' }}>
+            <Typography variant='title'>{client?.user?.first_name + ' ' + client?.user?.last_name} - {client.isCompany ? 'Empresarial' : 'Particular'} </Typography>
+            <Grid container justifyContent={{ md: 'end', sm: 'end', xs: 'center' }} sx={{ marginLeft: 'auto' }} >
               <ButtonGroup>
                 <PrimaryBtn
                   text='Guardar'
                   icon={
                     <Save
-                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   onClick={ValidateFields}
@@ -307,24 +307,24 @@ const EditClient = ({ ...props }) => {
                   text='Cancelar'
                   icon={
                     <X
-                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                      size={pageProps?.globalVars?.iconSize}
+                      strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                      size={pageProps?.globalVars?.iconSize || 20}
                     />
                   }
                   light
                   onClick={() => Router.back()}
                 />
               </ButtonGroup>
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
           <Grid container sx={{ padding: '24px' }}>
             <Grid item md={12} sm={12} xs={12} >
 
               <Grid item xs={12} md={6} sx={{ paddingRight: '.5rem' }}>
                 <Typography id='align' item className='lightTextSm'>
                   <User
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
               Dados Gerais
                 </Typography>
@@ -340,8 +340,8 @@ const EditClient = ({ ...props }) => {
               <Grid container item sx={{ paddingRight: '.5rem', display: 'none' }}>
                 <Typography id='align' className='lightTextSm'>
                   <Edit2
-                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                   Dados de Faturação
                 </Typography>

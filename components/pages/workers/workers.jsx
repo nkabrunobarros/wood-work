@@ -1,6 +1,6 @@
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import CustomBreadcrumbs from '../../breadcrumbs';
@@ -16,7 +16,6 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -24,6 +23,7 @@ import * as workersActionsRedux from '../../../store/actions/worker';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
 import Notification from '../../dialogs/Notification';
 import MyInput from '../../inputs/myInput';
+import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
@@ -36,25 +36,18 @@ const Workers = ({ ...props }) => {
     detailRoute,
     newRoute,
     headCellsWorkers,
+    profiles
   } = props;
 
   const dispatch = useDispatch();
   const deleteWorker = (data) => dispatch(workersActionsRedux.deleteWorker(data));
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
   const [workers, setWorkers] = useState(props.workers);
 
   const [filters, setFilters] = useState({
-    Nome: nome,
-    Email: email,
+    Nome: '',
+    Email: '',
+    ProfileId: ''
   });
-
-  useEffect(() => {
-    setFilters({
-      Nome: nome,
-      Email: email,
-    });
-  }, [nome, email]);
 
   async function onDelete (props) {
     const loading = toast.loading('');
@@ -80,6 +73,14 @@ const Workers = ({ ...props }) => {
     }
   }
 
+  function ClearFilters () {
+    setFilters({
+      Nome: '',
+      Email: '',
+      ProfileId: ''
+    });
+  }
+
   return (
     <>
       <Navbar />
@@ -91,7 +92,10 @@ const Workers = ({ ...props }) => {
         <Content>
           <Grid id='pad' container md={12} sm={12} xs={12}>
             <Grid container md={12} sm={12} xs={12}>
-              <Typography variant='title'>Filtros</Typography>
+              <Typography variant='titlexs'>Filtros</Typography>
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <MyInput label="Email" onChange={(e) => setFilters({ ...filters, Email: e.target.value })} value={filters.Email} />
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
               <InputLabel htmlFor='email'>Utilizador</InputLabel>
@@ -101,45 +105,49 @@ const Workers = ({ ...props }) => {
                 fullWidth
                 disablePortal
                 options={workers.sort((a, b) =>
-                  a.Nome > b.Nome ? 1 : a.Nome < b.Nome ? -1 : 0
+                  a.NomeDropdown > b.NomeDropdown ? 1 : a.NomeDropdown < b.NomeDropdown ? -1 : 0
                 )}
-                getOptionLabel={(option) => option.Nome }
+                getOptionLabel={(option) => option.NomeDropdown }
                 getOptionValue={(option) => option.id}
-                onChange={(e, value) => setNome(value?.Nome || '')}
+                onChange={(e, value) => setFilters({ ...filters, Nome: value?.Nome || '' })}
                 renderOption={(props, option) => {
                   return (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      {option.Nome}
+                      {option.NomeDropdown}
                     </Box>
                   );
                 }}
                 renderInput={(params) => (
                   <TextField
-                    value={nome}
+                    value={filters.Nome}
                     {...params}
                     inputProps={{
                       ...params.inputProps,
                     }}
                   />
+
                 )}
               />
             </Grid>
             <Grid container md={4} sm={6} xs={12} p={1}>
-              <MyInput label="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
+              <MySelect value={filters.ProfileId} label='Perfil' options={profiles} optionLabel={'name'} onChange={(e) => setFilters({ ...filters, ProfileId: e.target.value }) }/>
+            </Grid>
+            <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
+              <PrimaryBtn text='Limpar' light onClick={ClearFilters} />
             </Grid>
           </Grid>
         </Content>
 
         <Content>
-          <div
+          <Box
             id='pad'
             className='flex'
             style={{ display: 'flex', alignItems: 'center' }}
           >
-            <div>
-              <a className='headerTitleXl'>{breadcrumbsPath[0].title}</a>
-            </div>
-            <div
+            <Box>
+              <Typography variant='title'>{breadcrumbsPath[0].title} </Typography>
+            </Box>
+            <Box
               style={{
                 marginLeft: 'auto',
                 display: 'flex',
@@ -149,18 +157,17 @@ const Workers = ({ ...props }) => {
                 fontSize: 'small',
               }}
             >
-              <div>
+              <Box>
                 <PrimaryBtn
-                  hidden={!CanDo('add_worker')}
+                  hidden={!CanDo('create_worker')}
                   text='Adicionar'
-                  onClick={() => Router.push(`${newRoute}`)}
+                  href={newRoute}
                 />
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
           <AdvancedTable
             rows={workers}
-            // rows={workers.filter((item) => item.active?.value && item)}
             headCells={headCellsWorkers}
             clickRoute={detailRoute}
             editRoute={editRoute}

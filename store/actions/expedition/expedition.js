@@ -27,6 +27,9 @@ export const expeditions = (data) => {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.EXPEDITIONS),
+      params: {
+        limit: 200
+      }
     },
     types: [EXPEDITIONS_REQUEST, EXPEDITIONS_SUCCESS, EXPEDITIONS_FAIL],
   });

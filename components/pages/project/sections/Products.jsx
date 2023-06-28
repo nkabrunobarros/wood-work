@@ -80,15 +80,13 @@ const Products2 = (props) => {
 
   function isReady (group) {
     const found = group.subgroups.map((subgroup) => {
-      const found = subgroup.items.find(ele => ele.produced?.value === false);
+      const found = subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').find(ele => ele.produced?.value === false);
 
       return found;
     });
 
-    return found[0] && order.status.value !== 'drawing' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
+    return [...found].find(ele => ele) && order.status.value !== 'drawing' && order.status.value !== 'canceled' && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>;
   }
-
-  console.log(furnitures);
 
   return <>
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }}>
@@ -100,16 +98,22 @@ const Products2 = (props) => {
       }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Grid container md={12} sm={12} xs={12}>
           <Grid container md={12} sm={12} xs={12}><Typography variant='title'>Produtos</Typography></Grid>
-          <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid>
+          {/* <Grid container md={12} sm={12} xs={12}><Typography variant='subtitle2'>Lista de produtos do projeto</Typography></Grid> */}
         </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
           <Grid container md={12} sm={12} xs={12} justifyContent={'end'} sx={{ }}>
-            <ButtonGroup>
-              <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
-              <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
-            </ButtonGroup>
+            <Grid container md={12} sm={12} xs={12} justifyContent={'end'}>
+              <ButtonGroup sx={{ display: { md: 'flex', sm: 'flex', xs: 'none' } }} >
+                <PrimaryBtn onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
+                <PrimaryBtn onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
+              </ButtonGroup>
+              <ButtonGroup sx={{ display: { md: 'none', sm: 'none', xs: 'flex' }, width: '100%' }} >
+                <PrimaryBtn fullWidth onClick={() => expandAll()} light icon={<UnfoldMoreOutlined />} text={'Abrir tudo'} />
+                <PrimaryBtn fullWidth onClick={() => collapseAll()} light icon={<UnfoldLessOutlined />} text={'Fechar tudo'} />
+              </ButtonGroup>
+            </Grid>
           </Grid>
           <Grid container md={12} sm={12} xs={12}>
             {/* Lines */}
@@ -126,7 +130,11 @@ const Products2 = (props) => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box display='flex' justifyContent={'end'}>
-                      <ButtonGroup>
+                      <ButtonGroup sx={{ display: { md: 'flex', sm: 'flex', xs: 'none' } }} >
+                        <PrimaryBtn onClick={() => expandAllSubgroups(groupIndex)} light icon={<UnfoldMoreOutlined />} text={'Abrir subgrupos'} />
+                        <PrimaryBtn onClick={() => collapseAllSubgroups(groupIndex)} light icon={<UnfoldLessOutlined />} text={'Fechar subgrupos'} />
+                      </ButtonGroup>
+                      <ButtonGroup orientation='vertical' sx={{ display: { md: 'none', sm: 'none', xs: 'flex' }, width: '100%' }} >
                         <PrimaryBtn onClick={() => expandAllSubgroups(groupIndex)} light icon={<UnfoldMoreOutlined />} text={'Abrir subgrupos'} />
                         <PrimaryBtn onClick={() => collapseAllSubgroups(groupIndex)} light icon={<UnfoldLessOutlined />} text={'Fechar subgrupos'} />
                       </ButtonGroup>
@@ -137,8 +145,8 @@ const Products2 = (props) => {
                           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />} sx={{ background: theme?.palette.lightGray.edges, borderBottom: expandedGroups.includes(subgroup.id) && '0px solid', borderColor: expandedGroups.includes(subgroup.id) && 'divider' }}>
                             <Typography variant='subtitle1' color={'lightTextSm.main'}>Subgrupo - </Typography>
                             <Typography variant='subtitle1' > {subgroup.name.value}</Typography>
-                            {order.status.value !== 'drawing' && <Box >
-                              { subgroup.items.find(ele => ele.produced?.value === false) && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>}
+                            {order.status.value !== 'drawing' && order.status.value !== 'canceled' && <Box >
+                              { subgroup.items.filter((ele) => ele.furnitureType.value === 'furniture').find(ele => ele.produced?.value === false) && <Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip>}
                             </Box>}
                           </AccordionSummary>
                           <AccordionDetails>
@@ -147,12 +155,12 @@ const Products2 = (props) => {
                               return <Grow key={itemIndex}in={true}>
                                 <Grid container>
                                   {itemIndex !== 0 && <Box p={4} sx={{ width: '100%' }} >
-                                    <Divider sx={{ width: '100%' }} />
+                                    <Divider sx={{ width: '100%', backgroundColor: 'primary.main' }} />
                                   </Box>}
                                   <Typography variant='subtitle1' > {item.furnitureType.value === 'furniture' ? 'Móvel' : 'Acessório'} </Typography>
                                   <Grid container md={12} sm={12} xs={12}>
                                     <Typography variant='subtitle2' fontWeight={'bold'}>{item.amount?.value} {item.name?.value} {item?.description?.value && ','} {item?.description?.value}</Typography>
-                                    {!item.produced?.value && order.status.value !== 'drawing' && <Box className="fullCenter" >
+                                    {!item.produced?.value && order.status.value !== 'drawing' && order.status.value !== 'canceled' && item.furnitureType.value === 'furniture' && <Box className="fullCenter" >
                                       <Tooltip title='Em Produção'><Tooltip title='Em Produção'><Box sx={{ color: 'primary.main', marginLeft: '1rem' }}><HardHat /></Box></Tooltip></Tooltip>
                                     </Box>}
                                   </Grid>

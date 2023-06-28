@@ -11,9 +11,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 //  Icons
 import { Save, X } from 'lucide-react';
 
-//  Actions
-//  Page Component Styles
-
 //  Breadcrumbs Component
 import CustomBreadcrumbs from '../../breadcrumbs';
 
@@ -36,6 +33,7 @@ import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 import routes from '../../../navigation/routes';
+import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import CanDo from '../../utils/CanDo';
 import formatString from '../../utils/FormatString';
@@ -44,11 +42,12 @@ import ProductLinesTab from './Tabs/productLinesTab';
 import RequestTab from './Tabs/requestTab';
 
 const NewOrder = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps, clients } = props;
+  const { breadcrumbsPath, pageProps, clients, budgets } = props;
   const [successOpen, setSuccessOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState();
   const [lines, setLines] = useState([]);
+  const [linesErrors, setLinesErrors] = useState({ group: false, subGroup: false, item: false });
   const dispatch = useDispatch();
   const newBudget = (data) => dispatch(budgetsActionsRedux.newBudget(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
@@ -77,7 +76,7 @@ const NewOrder = ({ ...props }) => {
     num: { value: '', error: '', required: true },
     name: { value: '', error: '', required: true },
     obs: { value: '', type: 'area' },
-    price: { value: '', error: '' },
+    price: { value: '', error: '', type: 'currency', disabled: true },
     client: { value: '', error: '', required: true },
     dateRequest: { value: moment(moment(), 'DD/MM/YYYY'), error: '', required: true, type: 'date' },
     dateDelivery: { value: '', error: '', required: false, type: 'date' },
@@ -106,11 +105,13 @@ const NewOrder = ({ ...props }) => {
     if (props.name === 'client') {
       const client = clients.find(ele => ele.id === props.value);
 
-      data.postalCode = { error: '', value: client?.address?.postalCode };
-      data.streetAddress = { error: '', value: client?.address?.streetAddress || '' };
-      data.addressLocality = { error: '', value: client?.address?.addressLocality };
-      data.addressRegion = { error: '', value: client?.address?.addressRegion };
-      data.addressCountry = { error: '', value: client?.address?.addressCountry };
+      data.postalCode = { ...data.postalCode, error: '', value: client?.address?.postalCode };
+      data.streetAddress = { ...data.streetAddress, error: '', value: client?.address?.streetAddress };
+      data.addressLocality = { ...data.addressLocality, error: '', value: client?.address?.addressLocality };
+      data.addressRegion = { ...data.addressRegion, error: '', value: client?.address?.addressRegion };
+      data.addressCountry = { ...data.addressCountry, error: '', value: client?.address?.addressCountry };
+
+      if (data.name.error === 'Este cliente, já tem 1 projeto com este nome') data.name.error = '';
     }
 
     data[props.name].value = props.value;
@@ -123,10 +124,19 @@ const NewOrder = ({ ...props }) => {
 
     if (lines.length === 0) {
       toast.error('Tem que ter pelo menos 1 grupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, group: true });
+
+      return true;
     } else if (lines[0].subGroups.length === 0) {
       toast.error('Tem que ter pelo menos 1 subgrupo.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, subGroup: true });
+
+      return true;
     } else if (lines[0].subGroups[0].items.length === 0) {
       toast.error('Tem que ter pelo menos 1 móvel ou acessório.'); hasErrors = true;
+      setLinesErrors({ ...linesErrors, item: true });
+
+      return true;
     }
 
     //  if there are 0 items in the 1st group, return true = errors
@@ -172,6 +182,11 @@ const NewOrder = ({ ...props }) => {
       }
     });
 
+    if (budgets.find((ele) => ele.orderBy.object === ('urn:ngsi-ld:Owner:' + budgetData.client.value) && ele.name.value === budgetData.name.value)) {
+      data.name.error = 'Este cliente, já tem 1 projeto com este nome';
+      hasErrors = true;
+    }
+
     if (hasErrors) {
       toast.error('Prencha todos os campos.');
       setBudgetData(data);
@@ -188,7 +203,7 @@ const NewOrder = ({ ...props }) => {
     setProcessing(true);
 
     const data = {
-      id: `urn:ngsi-ld:Budget:${formatString(budgetData.name.value)}`, // ${moment().diff(moment().startOf('day'), 'seconds')}
+      id: `urn:ngsi-ld:Budget:${budgetData?.client?.value}_${formatString(budgetData.name.value)}`, // ${moment().diff(moment().startOf('day'), 'seconds')}
       type: 'Budget',
       name: {
         type: 'Property',
@@ -259,9 +274,10 @@ const NewOrder = ({ ...props }) => {
     };
 
     await newBudget(data).then(async () => {
-      CreateFurnitures(data.id);
-      toast.success('Projeto Criado!');
-      Router.push(routes.private.internal.budget + data.id);
+      CreateFurnitures(data.id).then(() => {
+        toast.success('Projeto Criado!');
+        Router.push(routes.private.internal.budget + data.id);
+      });
     }).catch(() => toast.error('Algo aconteceu. Por favor tente mais tarde!'));
 
     // await BudgetActions.saveBudget(built).then(() => toast.success('Criado.')).catch(() => toast.error('Algo aconteceu'));
@@ -285,9 +301,9 @@ const NewOrder = ({ ...props }) => {
   async function CreateFurnitures (budgetId) {
     const items = lines.map(group => {
       const items = [{
-        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id,
+        id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + group.id + budgetData.client.value,
         furnitureType: { type: 'Property', value: 'group' },
-        name: { type: 'Property', value: group.name },
+        name: { type: 'Property', value: formatString(group.name).replace(/_/g, ' ') },
         hasBudget: { object: budgetId, type: 'Relationship' },
         type: 'Furniture'
       }];
@@ -298,9 +314,9 @@ const NewOrder = ({ ...props }) => {
         //  Aqui tenho cada subgrupo com os items dentro
 
         const items = [{
-          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id,
+          id: 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + budgetData.client.value,
           furnitureType: { type: 'Property', value: 'subGroup' },
-          name: { type: 'Property', value: subgroup.name },
+          name: { type: 'Property', value: formatString(subgroup.name).replace(/_/g, ' ') },
           hasBudget: { object: budgetId, type: 'Relationship' },
           type: 'Furniture',
           group: { value: group.name, type: 'Property' }
@@ -319,8 +335,9 @@ const NewOrder = ({ ...props }) => {
             };
           });
 
-          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value);
+          valuesOnly.id = 'urn:ngsi-ld:Furniture:' + formatString(budgetData.name.value) + '_' + group.id + '_' + subgroup.id + '_' + formatString(item.name.value) + budgetData.client.value;
           valuesOnly.type = 'Furniture';
+          valuesOnly.name = { ...valuesOnly.name, value: formatString(valuesOnly.name.value).replace(/_/g, ' ') };
           valuesOnly.subGroup = { value: subgroup.name, type: 'Property' };
           valuesOnly.group = { value: group.name, type: 'Property' };
           valuesOnly.hasBudget = { object: budgetId, type: 'Relationship' };
@@ -366,8 +383,8 @@ const NewOrder = ({ ...props }) => {
     const fixed = mergedArray.map((item) => { return { ...item, id: item.id + formatString(budgetData.name.value) }; });
 
     try {
-      fixed.map(async (ele) => await newFurniture(ele));
-      // await newFurniture(fixed).then((result) => console.log(result));
+      // fixed.map(async (ele) => await newFurniture(ele));
+      await newFurniture(fixed);
     } catch (err) {
       console.log(err);
     }
@@ -376,7 +393,7 @@ const NewOrder = ({ ...props }) => {
   return (
     <>
       <Navbar />
-      <Grid component='main'sx={{ padding: '0rem 2rem 0rem 2rem' }} >
+      <Grid component='main'sx={{ padding: '0rem 2rem 4rem 2rem' }} >
         <CssBaseline />
         <Notification />
         <CustomBreadcrumbs path={breadcrumbsPath} />
@@ -395,11 +412,11 @@ const NewOrder = ({ ...props }) => {
                   onClick={() => ValidateData()}
                   hidden={!isInternalPage && !CanDo('add_project')}
                   text={'Guardar'}
-                  icon={ <Save size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+                  icon={ <Save size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />}
                 />
                 <PrimaryBtn
                   text='Cancelar'
-                  icon={<X size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />}
+                  icon={<X size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />}
                   light
                   onClick={() => Router.back()}
                 />
@@ -415,7 +432,6 @@ const NewOrder = ({ ...props }) => {
                 budgetData={budgetData}
                 onBudgetChange={onBudgetChange}
                 onClientChange={onBudgetChange}
-
               />
             </Content>
           </Grid>
@@ -428,7 +444,8 @@ const NewOrder = ({ ...props }) => {
                 noDrop
                 lines={lines}
                 setLines={setLines}
-
+                linesErrors={linesErrors}
+                setLinesErrors={setLinesErrors}
               />
             </Content>
           </Grid>
@@ -446,7 +463,7 @@ const NewOrder = ({ ...props }) => {
           </Grid>
         </Grid>
       </Grid >
-
+      <Footer />
     </>
   );
 };

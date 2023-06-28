@@ -18,7 +18,7 @@ import { Save, User, X } from 'lucide-react';
 
 //  Material UI
 import {
-  Box
+  Box, Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -38,15 +38,16 @@ import Navbar from '../../layout/navbar/navbar';
 import EmailValidation from '../../utils/EmailValidation';
 
 const EditUser = ({ ...props }) => {
-  const { breadcrumbsPath, pageProps } = props;
+  const { breadcrumbsPath, pageProps, profiles } = props;
   const dispatch = useDispatch();
   const updateWorker = (data) => dispatch(workersActionsRedux.updateWorker(data));
+  const updateWorkerProfile = (data) => dispatch(workersActionsRedux.updateWorkersProfile(data));
 
   const [inputFields, setInputFields] = useState([
     {
       id: 'user.first_name',
       label: 'Primeiro Nome',
-      value: props.user.givenName.value,
+      value: props.user.user.first_name,
       error: '',
       required: true,
       tooltip: ''
@@ -54,18 +55,28 @@ const EditUser = ({ ...props }) => {
     {
       id: 'user.last_name',
       label: 'Último Nome',
-      value: props.user.familyName.value,
+      value: props.user.user.last_name,
       error: '',
       tooltip: ''
     },
     {
       id: 'user.email',
       label: 'Email',
-      value: props.user.email.value,
+      value: props.user.user.email,
       error: '',
       type: 'email',
       required: true,
       disabled: true,
+    },
+    {
+      id: 'profile',
+      label: 'Função',
+      value: props.user.user.orion_groups[0]?.id,
+      options: profiles.sort((a, b) => (a.name > b.name) ? 1 : -1),
+      optLabel: 'name',
+      error: '',
+      required: true,
+      tooltip: '',
     },
   ]
   );
@@ -100,7 +111,7 @@ const EditUser = ({ ...props }) => {
     setInputFields(data);
 
     if (hasErrors) {
-      toast.error('Preencha todos os campos.');
+      toast.error('Erros no formulário');
 
       return true;
     }
@@ -111,16 +122,21 @@ const EditUser = ({ ...props }) => {
   async function handleUpdate () {
     const loading = toast.loading('');
     const formData = new FormData();
+    let profile = '';
 
     // eslint-disable-next-line array-callback-return
     inputFields.map((field) => {
-      formData.append(field.id, field.value);
+      if (field.id === 'profile') {
+        profile = field.value;
+      } else formData.append(field.id, field.value);
     });
 
     await updateWorker({ data: formData, id: props?.user?.id.replace('urn:ngsi-ld:Worker:', '') })
-      .then(() => {
-        ToastSet(loading, 'Utilizador atualizado!', 'success');
-        Router.push(routes.private.internal.worker + props.user.id);
+      .then(async (res) => {
+        await updateWorkerProfile({ id: res.data.id, data: { add_groups: [profile] } }).then(() => {
+          ToastSet(loading, 'Utilizador atualizado!', 'success');
+          Router.push(routes.private.internal.worker + props.user.id);
+        });
       })
       .catch(() => {
         ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde.', 'error');
@@ -152,15 +168,15 @@ const EditUser = ({ ...props }) => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <Box id='align' style={{ flex: 1 }}>
-              <a className='headerTitleXl'>{breadcrumbsPath[1].title} </a>
+              <Typography variant='title'>{breadcrumbsPath[1].title} </Typography>
             </Box>
             <Box style={{ display: 'flex' }}>
               <PrimaryBtn
                 text='Guardar'
                 icon={
                   <Save
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
                 onClick={ValidateFields}
@@ -169,8 +185,8 @@ const EditUser = ({ ...props }) => {
                 text='Cancelar'
                 icon={
                   <X
-                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-                    size={pageProps?.globalVars?.iconSize}
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
                   />
                 }
                 light
@@ -180,8 +196,8 @@ const EditUser = ({ ...props }) => {
           </Box>
           <a id='align' className='lightTextSm' style={{ paddingLeft: '24px' }}>
             <User
-              strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
-              size={pageProps?.globalVars?.iconSize} />
+              strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+              size={pageProps?.globalVars?.iconSize || 20} />
             <span>Dados de Utilizador</span>
           </a>
           <Grid id='pad' container md={12} sm={12} xs={12}>

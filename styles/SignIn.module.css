@@ -2,33 +2,46 @@
 
   display: flex;
 }
+
 .container {
   padding: 0 2rem;
   flex: 1;
   flex-direction: column;
 }
+
+.footerImg {
+  background-image: url('../public/Fundos-Europeus.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+
+}
+
 .sidePanel {
-  background-image: url('../public/Log_In.jpg');
+  background-image: url('../public/Log_In2.webp');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
+
 .sidePanelForgot {
   /* background-image: url('../public/Recuperar_Password.jpg'); */
-  background-image: url('../public/Log_In.jpg');
+  background-image: url('../public/Log_In2.webp');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
+
 .logoImg {
   background-position: center;
-  background-image: url('../public/logo_bw_ww40_inv.png');
+  background-image: url('../public/logo_bw_ww40_inv.webp');
   background-repeat: no-repeat;
   background-size: auto;
-  margin:0px;
+  margin: 0px;
   height: 100%;
   width: 100%;
+  z-index: 99999;
 }
+
 .formContainer {
   height: 100vh;
   flex: 1;
@@ -142,9 +155,11 @@
     width: 100%;
     flex-direction: column;
   }
+
   .logo {
     display: none
   }
+
   .logoImg {
     display: none
   }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 //  Nodes
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -10,16 +11,17 @@ import EditStockScreen from '../../../components/pages/editStock/editStock';
 
 //  Navigation
 import routes from '../../../navigation/routes';
-import { dummyStocks } from '../stocks';
+import { useSelector } from 'react-redux';
 
 const EditStock = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
   const [stock, setStock] = useState();
   const router = useRouter();
+  const reduxState = useSelector((state) => state);
 
   useEffect(() => {
     const getData = async () => {
-      setStock(dummyStocks.find(ele => ele.id === router.query.Id));
+      setStock(reduxState.stocks.data.find(ele => ele.id === router.query.Id));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -32,7 +34,7 @@ const EditStock = ({ ...pageProps }) => {
         href: `${routes.private.internal.stocks}`,
       },
       {
-        title: `${stock.material}`,
+        title: `${reduxState.stocks.data.find(ele => ele.id === router.query.Id)?.material}`,
         href: `${routes.private.internal.stock}${router.query.Id}`,
       },
       {
@@ -43,7 +45,7 @@ const EditStock = ({ ...pageProps }) => {
 
     const props = {
       breadcrumbsPath,
-      stock,
+      stock: reduxState.stocks.data.find(ele => ele.id === router.query.Id),
       pageProps
     };
 

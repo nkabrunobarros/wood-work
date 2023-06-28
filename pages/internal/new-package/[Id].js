@@ -1,29 +1,40 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Loader from '../../../components/loader/loader';
-import NewPackagingScreen from '../../../components/pages/newPacking/newPacking';
+import NewPackagingScreen from '../../../components/pages/newPackage/newPackage';
 import routes from '../../../navigation/routes';
-import * as modulesActionsRedux from '../../../store/actions/module';
-import * as parsActionsRedux from '../../../store/actions/part';
+// import * as modulesActionsRedux from '../../../store/actions/module';
+import * as budgetActionsRedux from '../../../store/actions/budget';
+import * as clientsActionsRedux from '../../../store/actions/client';
+import * as partsActionsRedux from '../../../store/actions/part';
 import * as projectsActionsRedux from '../../../store/actions/project';
 
 const NewPackaging = ({ ...pageProps }) => {
   const [loaded, setLoaded] = useState(false);
-  const [project, setProject] = useState(false);
-  const [parts, setParts] = useState(false);
+  const [project, setProject] = useState();
+  const [budget, setBudget] = useState();
+  const [client, setClient] = useState();
+  const [parts, setParts] = useState();
   const router = useRouter();
   const dispatch = useDispatch();
-  const reduxState = useSelector((state) => state);
-  const getModules = (data) => dispatch(modulesActionsRedux.modules(data));
+  // const reduxState = useSelector((state) => state);
+  // const getModules = (data) => dispatch(modulesActionsRedux.modules(data));
   const getProject = (data) => dispatch(projectsActionsRedux.project(data));
-  const getParts = (data) => dispatch(parsActionsRedux.parts(data));
+  const getParts = (data) => dispatch(partsActionsRedux.parts(data));
+  const getClient = (data) => dispatch(clientsActionsRedux.client(data));
+  const getBudget = (data) => dispatch(budgetActionsRedux.budget(data));
 
   useEffect(() => {
     const getData = async () => {
-      await getProject(router.query.Id).then((res) => setProject(res.data));
-      await getParts({ belongsTo: router.query.Id }).then((res) => setParts(res.data));
-      await getModules().then((res) => console.log(res));
+      await getProject(router.query.Id).then(async (res) => {
+        setProject(res.data);
+        await getBudget(res.data.hasBudget.object).then((res) => setBudget(res.data));
+        await getClient(res.data.orderBy.object).then((res) => setClient(res.data));
+      }).catch(() => setProject({}));
+
+      await getParts({ belongsTo: router.query.Id }).then((res) => setParts(res.data)).catch(() => setParts([]));
+      // await getModules().then((res) => console.log(res));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -33,24 +44,26 @@ const NewPackaging = ({ ...pageProps }) => {
     const breadcrumbsPath = [
       {
         title: 'Embalamentos',
-        href: `${routes.private.internal.packingList}`,
+        href: `${routes.private.internal.packages}`,
       },
       {
-        title: `Embalamentos Projeto ${project.name?.value}`,
-        href: `${routes.private.internal.packingList}`,
+        // title: `${project.name?.value}`,
+        // href: `${routes.private.internal.package}`,
+        title: `${project.name?.value}`,
+        href: `${routes.private.internal.package}${project.id}`,
       },
       {
         title: 'Novo embalamento',
-        href: `${routes.private.internal.NewPackaging}`,
+        href: `${routes.private.internal.newPackage}`,
       },
     ];
 
     const props = {
       breadcrumbsPath,
       pageProps,
-      modules: reduxState.modules.data,
+      // modules: reduxState.modules.data,
       parts,
-      project
+      project: { ...project, budget, client }
     };
 
     return <NewPackagingScreen {...props} />;

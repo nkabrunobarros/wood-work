@@ -14,7 +14,6 @@ import dayjs from 'dayjs';
 import moment from 'moment';
 import Image from 'next/image';
 import routes from '../../../../navigation/routes';
-import CurrencyInput from '../../../inputs/CurrencyInput';
 import MyInput from '../../../inputs/myInput';
 
 const RequestTab = (props) => {
@@ -32,10 +31,13 @@ const RequestTab = (props) => {
 
   portugal = countries?.find((option) => option.cca2 === 'PT');
 
+  const keys = Object.keys(budgetData);
+  const errors = keys.map((key) => budgetData[key].error);
+
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%' }}>
+    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)} sx={{ width: '100%', boxShadow: errors.find(ele => ele) && '0px 0px 4px 1px #d32f2f' }}>
       <AccordionSummary sx={{ background: 'lightGray.main' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
-        <Typography id='align' className='headerTitleSm'>
+        <Typography id='align' variant='title' color={errors.find(ele => ele) && 'error'}>
           Projeto
         </Typography>
       </AccordionSummary>
@@ -56,7 +58,7 @@ const RequestTab = (props) => {
                     }}>
                       <Tooltip title='Novo Cliente'>
                         <IconButton href={routes.private.internal.newClient} target='#'>
-                          <UserPlus size={pageProps?.globalVars?.iconSize} strokeWidth={pageProps?.globalVars?.iconStrokeWidth} />
+                          <UserPlus size={pageProps?.globalVars?.iconSize || 20} strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1} />
                         </IconButton>
                       </Tooltip>
                     </Box>
@@ -104,20 +106,19 @@ const RequestTab = (props) => {
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Nome'
                       error={budgetData.name.error}
-                      required={budgetData.name.required}
+                      required={budgetData.name.required }
                       name='name'
-                      paceholder='Escrever nome'
                       value={budgetData.name.value}
                     />
                   </Grid>
                   <Grid container md={4} sm={4} xs={12} p={1}>
                     <MyInput
                       onChange={(e) => onBudgetChange(e.target)}
-                      label='Numero'
+                      label='Número'
+                      type='number'
                       error={budgetData.num.error}
-                      required={budgetData.num.required}
+                      required={budgetData.num.required }
                       name='num'
-                      paceholder='Escrever numero'
                       value={budgetData.num.value}
                     />
                   </Grid>
@@ -137,10 +138,8 @@ const RequestTab = (props) => {
                       maxDate={dayjs().endOf('day')}
                       value={budgetData.dateRequest.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateRequest' })}
-                      // onChange={(newValue) => onBudgetChange(newValue)}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateRequest.error} inputProps={{ sx: { color: budgetData.dateRequest.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateRequest.error || 'DD/MM/YYYY' }}/>}
-
+                        <TextField fullWidth {...params} error={budgetData.dateRequest.error} inputProps={{ sx: { color: budgetData.dateRequest.error && 'var(--red)' }, ...params.inputProps, placeholder: budgetData.dateRequest.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   {/* Date agreed delivery */}
@@ -158,26 +157,7 @@ const RequestTab = (props) => {
                       value={budgetData.dateAgreedDelivery.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateAgreedDelivery' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
-                    />
-                  </Grid>
-                  {/* Date budget Delivery */}
-                  <Grid container item sm={6} xs={12} p={1}>
-                    <InputLabel >
-                      Entrega do orçamento
-                      {budgetData.dateDelivery.required && <Tooltip title='Obrigatório' >
-                        <span style={{ color: 'var(--red)' }}> *</span>
-                      </Tooltip>}
-
-                    </InputLabel>
-                    <DesktopDatePicker
-                      inputFormat={'DD/MM/YYYY'}
-                      value={budgetData.dateDelivery.value}
-                      minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
-
-                      onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDelivery' })}
-                      renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDelivery.error || 'DD/MM/YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateAgreedDelivery.error} inputProps={{ sx: { color: budgetData.dateAgreedDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: budgetData.dateAgreedDelivery.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   {/* Date agree delivery Project */}
@@ -195,7 +175,26 @@ const RequestTab = (props) => {
                       value={budgetData.dateDeliveryProject.value}
                       onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDeliveryProject' })}
                       renderInput={(params) =>
-                        <TextField fullWidth {...params} error={budgetData.dateDeliveryProject.error} inputProps={{ sx: { color: budgetData.dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, paceholder: budgetData.dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
+                        <TextField fullWidth {...params} error={budgetData.dateDeliveryProject.error} inputProps={{ sx: { color: budgetData.dateDeliveryProject.error && 'var(--red)' }, ...params.inputProps, placeholder: budgetData.dateDeliveryProject.error || 'DD/MM/YYYY' }}/>}
+                    />
+                  </Grid>
+                  {/* Date budget Delivery */}
+                  <Grid container item sm={6} xs={12} p={1}>
+                    <InputLabel >
+                      Entrega do orçamento
+                      {budgetData.dateDelivery.required && <Tooltip title='Obrigatório' >
+                        <span style={{ color: 'var(--red)' }}> *</span>
+                      </Tooltip>}
+                    </InputLabel>
+                    <DesktopDatePicker
+                      inputFormat={'DD/MM/YYYY'}
+                      disabled
+                      value={budgetData.dateDelivery.value}
+                      minDate={dayjs(budgetData.dateRequest.value).endOf('day')}
+
+                      onChange={(e, newValue) => onBudgetChange({ value: JSON.stringify(e?.$d) === 'null' ? newValue : e?.$d, name: 'dateDelivery' })}
+                      renderInput={(params) =>
+                        <TextField fullWidth {...params} error={budgetData.dateDelivery.error} inputProps={{ sx: { color: budgetData.dateDelivery.error && 'var(--red)' }, ...params.inputProps, placeholder: budgetData.dateDelivery.error || 'DD/MM/YYYY' }}/>}
                     />
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
@@ -205,9 +204,8 @@ const RequestTab = (props) => {
                       onChange={(e) => onBudgetChange(e.target)}
                       label='Rua'
                       error={budgetData.streetAddress.error}
-                      required={budgetData.streetAddress.required}
+                      required={budgetData.streetAddress.required }
                       name='streetAddress'
-                      paceholder='Escrever rua'
                       value={budgetData.streetAddress.value}
                       maxLength={50}
 
@@ -217,10 +215,9 @@ const RequestTab = (props) => {
                   <Grid container item sm={3} xs={12} p={1} >
                     <MyInput
                       label='Código Postal'
-                      required={budgetData.postalCode.required}
+                      required={budgetData.postalCode.required }
                       error={budgetData.postalCode.error}
                       name='postalCode'
-                      paceholder='Escrever Código Postal'
                       value={budgetData.postalCode.value}
                       onChange={(e) => onBudgetChange(e.target)}
                       maxLength={15}
@@ -230,8 +227,7 @@ const RequestTab = (props) => {
                   <Grid container item sm={3} xs={12} p={1} >
                     <MyInput
                       label='Localidade'
-                      paceholder='Escrever Localidade'
-                      required={budgetData.addressLocality.required}
+                      required={budgetData.addressLocality.required }
                       error={budgetData.addressLocality.error}
                       name='addressLocality'
                       value={budgetData.addressLocality.value}
@@ -244,7 +240,6 @@ const RequestTab = (props) => {
                   <Grid container item sm={6} xs={12} p={1}>
                     <MyInput
                       label='Região'
-                      paceholder='Escrever Região'
                       required={budgetData.addressRegion?.required}
                       error={budgetData.addressRegion.error}
                       name='addressRegion'
@@ -257,7 +252,7 @@ const RequestTab = (props) => {
                   <Grid container item sm={6} xs={12} p={1}>
                     <Box sx={{ width: '100%' }}>
                       <InputLabel htmlFor={budgetData.addressCountry.id} id={budgetData.addressCountry.id}>
-                          Pais
+                          País
                         {budgetData.addressCountry.required && (
                           <Tooltip title='Obrigatório'>
                             <span style={{ color: 'var(--red)' }}> *</span>
@@ -271,7 +266,7 @@ const RequestTab = (props) => {
                         placeholder={budgetData.addressCountry.error}
                         label={budgetData.addressCountry.error}
                         error={!!budgetData.addressCountry.error}
-                        required={budgetData.addressCountry.required}
+                        required={budgetData.addressCountry.required }
                         select
                         id={budgetData.addressCountry.id}
                         fullWidth={budgetData.addressCountry.fullWidth || false}
@@ -281,7 +276,7 @@ const RequestTab = (props) => {
                         style={{ width: '100%' }}
                       >
                         <MenuItem value="" disabled>
-            Escolha uma opcao
+                          Escolha uma opcao
                         </MenuItem>
                         {portugal && portugal.cca2 === 'PT'
                           ? (
@@ -324,15 +319,11 @@ const RequestTab = (props) => {
                   </Grid>
                   <Divider fullWidth sx={{ width: '100%', marginTop: 1, marginBottom: 1 }} />
                   <Grid container item sm={12} xs={12} p={1} >
-                    <CurrencyInput
-                      disabled
-                      onChange={(e) => onBudgetChange(e.target)}
+                    <MyInput
                       label='Valor'
-                      error={budgetData.price.error}
-                      required={budgetData.price.required}
                       name='price'
-                      paceholder='Valor total do projeto'
-                      value={budgetData.price.value}
+                      onChange={(e) => onBudgetChange(e.target)}
+                      {...budgetData.price}
                     />
                   </Grid>
                 </Grid>

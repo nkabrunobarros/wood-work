@@ -11,4 +11,5 @@ export {
   login,
   logout,
   me,
+  activateUser,
 } from './auth';

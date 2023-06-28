@@ -9,14 +9,12 @@ import Loader from '../../../components/loader/loader';
 import EditProjectScreen from '../../../components/pages/editBudget/editBudget';
 
 //  Navigation
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthData from '../../../lib/AuthData';
 import routes from '../../../navigation/routes';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
-import * as countriesActionsRedux from '../../../store/actions/country';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
 
 export const categories = [
@@ -35,7 +33,6 @@ const EditProject = ({ ...pageProps }) => {
   const getBudgets = (data) => dispatch(budgetsActionsRedux.budgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getClient = (data) => dispatch(clientsActionsRedux.client(data));
-  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
   const getBudget = (data) => dispatch(budgetsActionsRedux.budget(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
   const setDisplayingBudget = (data) => dispatch(budgetsActionsRedux.setDisplayingBudget(data));
@@ -51,8 +48,6 @@ const EditProject = ({ ...pageProps }) => {
       if (!reduxState.budgets.data) await getBudgets();
 
       if (!reduxState.clients.data) await getClients();
-
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
 
       const budget = (await getBudget(router.query.Id)).data;
       const client = (await getClient(budget.orderBy.object.replace('urn:ngsi-ld:Owner:', ''))).data;
@@ -117,9 +112,10 @@ const EditProject = ({ ...pageProps }) => {
               ...item,
               furnitureType: { ...item.furnitureType, value: 'accessory', displayOrder: 99, error: '', hidden: true },
               name: { ...item.name, id: 'name', error: '', required: true, label: 'Nome', displayOrder: 0 },
-              amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 1 },
-              obs: { ...item.obs, id: 'obs', error: '', label: 'Observações', type: 'area', displayOrder: 2 },
-              price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 3 },
+              description: { ...item.description, id: 'description', error: '', label: 'Descrição', type: 'area', displayOrder: 1 },
+              amount: { ...item.amount, id: 'amount', error: '', required: true, label: 'Quantidade', type: 'number', displayOrder: 2 },
+              obs: { ...item.obs, id: 'obs', error: '', label: 'Observações', type: 'area', displayOrder: 3 },
+              price: { ...item.price, id: 'price', error: '', label: 'Valor', type: 'currency', displayOrder: 4 },
 
               hasBudget: { ...item.hasBudget, hidden: true, displayOrder: 993, error: '' },
               group: { ...item.group, hidden: true, displayOrder: 9921, error: '' },
@@ -204,10 +200,12 @@ const EditProject = ({ ...pageProps }) => {
       },
       {
         title: `${budget.name.value}`,
-        href: `${routes.private.internal.budget}${budget.id}`,
+        href: budget.budgetStatus.value === 'adjudicated'
+          ? routes.private.internal.project + budget.id.replace(/Budget/g, 'Project')
+          : routes.private.internal.budget + budget.id,
       },
       {
-        title: 'Editar',
+        title: 'Editar projeto',
         href: `${routes.private.internal.budget}`,
       },
     ];
@@ -227,7 +225,7 @@ const EditProject = ({ ...pageProps }) => {
       countries: [...reduxState?.countries?.data || []],
       furnitures,
       furnitures2,
-      budget
+      budget,
     };
 
     return <EditProjectScreen {...props} />;

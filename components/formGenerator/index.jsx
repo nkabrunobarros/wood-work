@@ -6,7 +6,6 @@ import MyInput from '../inputs/myInput';
 import PhoneInput from '../inputs/phoneInput/PhoneInput';
 import MySelect from '../inputs/select';
 //  Proptypes
-import axios from 'axios';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -49,7 +48,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   // const placeholderDefault = 'Escrever';
   const optData = props.optionalData || {};
   const reduxState = useSelector((state) => state);
-  const [countries, setCountries] = useState(reduxState.countries.data);
+  const countries = reduxState.countries.data;
 
   const {
     postalCodeInfo,
@@ -59,7 +58,6 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   useEffect(() => {
     const getData = async () => {
       // try { } catch (error) { }
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then(async (res) => await setCountries(res.data));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));
@@ -68,6 +66,17 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
   const Item = styled(Paper)(() => ({
     padding: '.5rem',
   }));
+
+  const ITEM_HEIGHT = 36;
+  const ITEM_PADDING_TOP = 8;
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+      },
+    },
+  };
 
   return loaded && <>
     <Popover
@@ -166,7 +175,7 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
             md={ perRow ? (12 / perRow) : 3}
             sm={ perRow !== 1 ? 6 : 12}
             xs={ perRow !== 1 ? 12 : 12}
-            container sx={{ paddingLeft: '.5rem', paddingRight: '.5rem' }}>
+            container sx={{ paddingMySelectLeft: '.5rem', paddingRight: '.5rem' }}>
             <CurrencyInput
               name={field.id}
               label={field.label}
@@ -246,6 +255,8 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
                       onChange={(e) => onFormChange(index, e)}
                       sx={{ width: field.width && field.width }}
                       style={{ width: '100%' }}
+                      MenuProps={MenuProps}
+
                     >
                       <MenuItem value="" disabled>
             Escolha uma opcao
@@ -321,10 +332,10 @@ const FormGenerator = ({ fields, onFormChange, perRow, ...props }) => {
               <>
                 {postalCodeInfo
                   ? <Tooltip title='Detalhes Código Postal' >
-                    <Verified color="var(--green)" strokeWidth={1} onClick={(event) => setAnchorEl(event.currentTarget)} />
+                    <Verified color="var(--green)" strokeWidth={1.5} onClick={(event) => setAnchorEl(event.currentTarget)} />
                   </Tooltip>
                   : <Tooltip title='Validar' >
-                    <HelpCircle color="var(--primary)" strokeWidth={1} onClick={() => ValidatePostalCode({ index, value: field.value })} />
+                    <HelpCircle color="var(--primary)" strokeWidth={1.5} onClick={() => ValidatePostalCode({ index, value: field.value })} />
                   </Tooltip>
                 }
               </>

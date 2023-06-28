@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // Node modules
-import { Box, FormControl, IconButton, InputAdornment, InputLabel, TextField, Tooltip } from '@mui/material';
+import { Box, FormControl, InputLabel, OutlinedInput, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { NumericFormat } from 'react-number-format';
@@ -38,56 +38,58 @@ const CurrencyInput = ({
   name,
   id,
   style,
-  adornmentIcon,
-  adornmentOnClick,
-  adornmentPos,
-  iconTooltip,
+  tooltip,
+  type,
   placeholder,
 }) => {
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+
+    // If the type is "number" and the input value is less than 0, set it to 0
+    if (type === 'number') {
+      inputValue >= 0 && onChange && onChange(event, inputValue);
+    } else { onChange && onChange(event, inputValue); }
+  };
+
   return (
     <>
       <Box sx={{ width: '100%' }}>
         {variant !== 'standard' && (
-          <InputLabel htmlFor={label}>
-            {label}
-            {required &&
-            <Tooltip title='Obrigatório' >
-              <span style={{ color: 'var(--red)' }}> *</span>
-            </Tooltip>
-            }
-          </InputLabel>
+          <Tooltip title={tooltip || ''}>
+            <InputLabel htmlFor={id} id={id}>
+              {label}
+              {required
+                ? (
+                  <Tooltip title='Obrigatório'>
+                    <span style={{ color: 'var(--red)' }}> *</span>
+                  </Tooltip>
+                )
+                : null}
+            </InputLabel>
+          </Tooltip>
         )}
         <FormControl fullWidth disabled={disabled}>
-          {!!error && <InputLabel error={!!error} id="demo-simple-select-label">{error}</InputLabel>}
-          <TextField
-            placeholder={placeholder}
-            disabled={disabled}
-            id={id}
-            variant={variant || 'outlined'}
-            error={error}
-            label={error}
-            value={value}
-            fullWidth={fullWidth}
-            sx={{ width: width || (halfWidth && '50%') }}
-            onChange={onChange}
-            style={style}
+          {!!error && <InputLabel error={!!error} id={id}>{error}</InputLabel>}
+          <OutlinedInput
+            aria-labelledby={id}
+            variant={variant || 'outlined' }
             name={name}
-            InputProps={{
-              inputComponent: NumberFormatCustom,
+            type={type}
+            multiline={type === 'area'}
+            id={id}
+            error={error}
+            value={value}
+            onChange={handleInputChange}
+            required
+            label={error || (variant ? label : '')}
+            fullWidth={fullWidth}
+            sx={{
+              width: width || (halfWidth && '50%'),
             }}
-            endAdornment={!!adornmentIcon &&
-            <InputAdornment position={adornmentPos || 'end'}>
-              <Tooltip title={iconTooltip || ''}>
-                <IconButton component='label'
-                  onClick={adornmentOnClick || null}
-                  edge="end">
-                  {adornmentIcon}
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-            }
+            style={style}
+            inputComponent= {NumberFormatCustom}
+            placeholder={placeholder || ''}
           />
-
         </FormControl>
       </Box>
 

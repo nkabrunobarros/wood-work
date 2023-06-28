@@ -1,15 +1,13 @@
 /* eslint-disable array-callback-return */
 //  Page Component
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Loader from '../../../components/loader/loader';
 import BudgetScreen from '../../../components/pages/budget/budget';
 import routes from '../../../navigation/routes';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as clientsActionsRedux from '../../../store/actions/client';
-import * as countriesActionsRedux from '../../../store/actions/country';
 import * as filesActionsRedux from '../../../store/actions/file';
 import * as foldersActionsRedux from '../../../store/actions/folder';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
@@ -27,7 +25,7 @@ export const buildFoldersStructure = async (array, files) => {
   return builtFolders;
 };
 
-export const buildFurnturesStructure = (array) => {
+export const buildFurnituresStructure = (array) => {
   const built = [];
   let currentGroup = null;
   let currentSubGroup = null;
@@ -66,7 +64,6 @@ export const buildFurnturesStructure = (array) => {
 
 const Budget = ({ ...pageProps }) => {
   const dispatch = useDispatch();
-  const reduxState = useSelector((state) => state);
   const router = useRouter();
   const [budget, setBudget] = useState();
   const [loaded, setLoaded] = useState(false);
@@ -78,27 +75,22 @@ const Budget = ({ ...pageProps }) => {
   const getFiles = (data) => dispatch(filesActionsRedux.budgetFiles(data));
   const getFolders = (data) => dispatch(foldersActionsRedux.folders(data));
   const getFurnitures = (data) => dispatch(furnituresActionsRedux.furnitures(data));
-  const setCountries = (data) => dispatch(countriesActionsRedux.setCountries(data));
 
   useEffect(() => {
     const getData = async () => {
-      !reduxState.countries.data && await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
-
       const budgetData = await getBudget(router.query.Id);
 
-      const [furnituresData, clientData, foldersData] = await Promise.all([
+      const [furnituresData, clientData, foldersData, filesData] = await Promise.all([
         getFurnitures({ hasBudget: budgetData.data.id }),
         getClient(budgetData.data.orderBy.object.replace('urn:ngsi-ld:Owner:', '')),
-        getFolders({ budget: budgetData.data.id })
+        getFolders({ budget: budgetData.data.id }),
+        getFiles(router.query.Id)
       ]);
 
       setBudget({ ...budgetData.data, orderBy: { ...budgetData.data.orderBy, object: clientData.data } });
-      setFurnitures(buildFurnturesStructure([...furnituresData.data].sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1)));
+      setFurnitures(buildFurnituresStructure([...furnituresData.data].sort((a, b) => (a.lineNumber?.value > b.lineNumber?.value) ? 1 : -1)));
       setDisplayingBudget(budget);
-
-      const resFiles = await getFiles(router.query.Id);
-
-      setFolders(await buildFoldersStructure([...foldersData.data.results], [...resFiles.data.results]));
+      setFolders(await buildFoldersStructure([...foldersData.data.results], [...filesData.data.results]));
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

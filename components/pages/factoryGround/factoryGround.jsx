@@ -1,35 +1,21 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import { Box, Card, CardContent, Grid, Grow, Tooltip, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Calendar } from 'lucide-react';
+import Link from 'next/link';
+import routes from '../../../navigation/routes';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
-import FurnitureDetails from './ProjectDetails/furnitureDetails';
+import CanDo from '../../utils/CanDo';
 
 const FactoryGround = ({ ...props }) => {
   const { breadcrumbsPath, projects } = props;
-  const [chosenFurniture, setChosenFurniture] = useState();
-  const [furnitureProject, setFurnitureProject] = useState();
-
-  function getGreenToRed (percent) {
-    const r = percent < 50 ? 255 : Math.floor(255 - (percent * 2 - 100) * 255 / 100);
-    const g = percent > 50 ? 255 : Math.floor((percent * 2) * 255 / 100);
-
-    return 'rgb(' + r + ',' + g + ',0)';
-  }
+  const hasPermissions = CanDo('see_factory');
 
   return <>
-    {chosenFurniture && <FurnitureDetails
-      {...props}
-      open={chosenFurniture}
-      furnitureProject={furnitureProject}
-      chosenFurniture={chosenFurniture}
-      setChosenProject={setChosenFurniture}
-      onClose={setChosenFurniture}
-    />}
     <Navbar />
 
     <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
@@ -57,116 +43,100 @@ const FactoryGround = ({ ...props }) => {
                     xs={12}
                     sx={{ p: 1 }}>
                     <Grow in>
-                      <Card sx={{ cursor: 'pointer', width: '100%', p: 2 }} onClick={() => {
-                        setChosenFurniture(furnit);
-                        setFurnitureProject(proj);
-                      }}>
-                        <CardContent>
-                          <Grid container md={12} sm={12} xs={12} >
-                            <Grid container md={12} sm={12} xs={12} >
-                              <Tooltip title='Movel'>
-                                <Typography fontWeight={'bold'} variant="h5">
-                                  {furnit.name.value}
-                                </Typography>
-                              </Tooltip>
-                            </Grid>
-
-                            <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                              <Tooltip title='Cliente'>
-                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
-                              </Tooltip>
-                            </Grid>
-                            <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
-                              <Tooltip title='Projeto'>
-                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{proj?.name?.value}</Typography>
-                              </Tooltip>
-                            </Grid>
-                            <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                              <Tooltip title='Grupo'>
-                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Grupo: </a>{furnit?.group?.value}</Typography>
-                              </Tooltip>
-                            </Grid>
-                            <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
-                              <Tooltip title='Subgrupo'>
-                                <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Subgrupo: </a>{furnit?.subGroup?.value || 'cozinha'}</Typography>
-                              </Tooltip>
-                            </Grid>
-                            <Grid container md={6} sm={6} xs={6} pb={0.5} >
-                              <Tooltip title='Quantidade Pedida'>
-                                <Typography variant="subtitle1" color='primary'>
+                      <Box>
+                        {hasPermissions
+                          ? <Link href={routes.private.internal.factory + furnit.id}>
+                            <Card sx={{ cursor: 'pointer', width: '100%', p: 2 }} >
+                              <CardContent>
+                                <Grid container md={12} sm={12} xs={12} >
+                                  <Grid container md={12} sm={12} xs={12} >
+                                    <Tooltip title='Movel'>
+                                      <Typography fontWeight={'bold'} variant="h5">
+                                        {furnit.name.value}
+                                      </Typography>
+                                    </Tooltip>
+                                  </Grid>
+                                  <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                    <Tooltip title='Cliente'>
+                                      <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
+                                    </Tooltip>
+                                  </Grid>
+                                  <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                                    <Tooltip title='Projeto'>
+                                      <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{proj?.name?.value}</Typography>
+                                    </Tooltip>
+                                  </Grid>
+                                  <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                    <Tooltip title='Grupo'>
+                                      <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Grupo: </a>{furnit?.group?.value}</Typography>
+                                    </Tooltip>
+                                  </Grid>
+                                  <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                                    <Tooltip title='Subgrupo'>
+                                      <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Subgrupo: </a>{furnit?.subGroup?.value || 'cozinha'}</Typography>
+                                    </Tooltip>
+                                  </Grid>
+                                  <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                    <Tooltip title='Quantidade Pedida'>
+                                      <Typography variant="subtitle1" color='primary'>
                                 Quantidade: {furnit.amount.value}
-                                </Typography>
-                              </Tooltip>
-                            </Grid>
-                            <Grid container md={6} sm={6} xs={6} justifyContent={'end'}>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-
-                      </Card>
+                                      </Typography>
+                                    </Tooltip>
+                                  </Grid>
+                                  <Grid container md={6} sm={6} xs={6} justifyContent={'end'}>
+                                  </Grid>
+                                </Grid>
+                              </CardContent>
+                            </Card>
+                          </Link>
+                          : <Card sx={{ width: '100%', p: 2 }} >
+                            <CardContent>
+                              <Grid container md={12} sm={12} xs={12} >
+                                <Grid container md={12} sm={12} xs={12} >
+                                  <Tooltip title='Movel'>
+                                    <Typography fontWeight={'bold'} variant="h5">
+                                      {furnit.name.value}
+                                    </Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                  <Tooltip title='Cliente'>
+                                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Cliente: </a>{proj?.client.user?.first_name} {proj?.client.user?.last_name}</Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                                  <Tooltip title='Projeto'>
+                                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Projeto: </a>{proj?.name?.value}</Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                  <Tooltip title='Grupo'>
+                                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Grupo: </a>{furnit?.group?.value}</Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} pb={0.5} justifyContent={'end'}>
+                                  <Tooltip title='Subgrupo'>
+                                    <Typography variant='subtitle1' ><a style={{ fontWeight: 'bold' }}>Subgrupo: </a>{furnit?.subGroup?.value || 'cozinha'}</Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} pb={0.5} >
+                                  <Tooltip title='Quantidade Pedida'>
+                                    <Typography variant="subtitle1" color='primary'>
+                            Quantidade: {furnit.amount.value}
+                                    </Typography>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid container md={6} sm={6} xs={6} justifyContent={'end'}>
+                                </Grid>
+                              </Grid>
+                            </CardContent>
+                          </Card>}
+                      </Box>
                     </Grow>
                   </Grid>;
                 })}
               </>;
             })}
-          {false && projects?.map((proj) => {
-            return <>
-              <Typography variant="h6">{proj.name.value}</Typography>
-              <Box
-                key={proj.id} sx={{
-                  width: '100%',
-                  overflow: 'auto',
-                  whiteSpace: 'nowrap'
-                }}>
-                <Box sx={{ display: 'inline-block', width: '100%' }} >
-                  {proj.furnitures?.map((furnit) => {
-                    return <Box key={furnit.id} sx={{ width: '33%', display: 'inline-block', p: 1 }}>
-                      <Grow in={true}>
-                        <Card
-                          sx={{ cursor: 'pointer', width: '100%', p: 2 }}
-                        >
-                          <CardContent>
-                            <Grid container md={12} sm={12} xs={12} >
-                              <Grid container md={6} sm={6} xs={6} >
-                                <Tooltip title='Móvel'>
-                                  <Typography variant="h6">
-                                    {furnit.name.value}
-                                  </Typography>
-                                </Tooltip>
-                              </Grid>
-                              <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
-                                <Tooltip title='Projeto'>
-                                  <Typography variant='subtitle1' color='primary'>{proj?.name?.value}</Typography>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                            <Grid container md={12} sm={12} xs={12} >
-                              <Grid container md={6} sm={6} xs={6} >
-                                <Tooltip title='Quantidade'>
-                                  <Typography variant="subtitle1">
-                                  Qtd: {furnit.amount.value}
-                                  </Typography>
-                                </Tooltip>
-                              </Grid>
-                              <Grid container md={6} sm={6} xs={6} justifyContent={'end'} >
-                                <Tooltip title='Peças produzidas'>
-                                  <Typography variant='subtitle1' >
-                                  Feito: <a style={{ color: getGreenToRed((proj?.completed?.value * 100) / proj?.amount?.value) }}>{proj?.completed?.value || 0}</a> / {proj?.amount?.value || 0}
-                                  </Typography>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                          </CardContent>
-
-                        </Card>
-                      </Grow>
-                    </Box>;
-                  })}
-                </Box>
-              </Box>
-            </>;
-          }
-          )}
         </Grid>
       </Grid>
     </Grid>

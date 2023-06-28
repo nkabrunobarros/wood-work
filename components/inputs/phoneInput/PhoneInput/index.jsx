@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 // Node modules
 import { Box, FormControl, InputAdornment, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
+import { useSelector } from 'react-redux';
 
 export const NumberFormatCustom = React.forwardRef(function NumberFormatCustom (props, ref) {
   const { ...other } = props;
@@ -39,12 +39,12 @@ const PhoneInput = ({
   placeholder,
   tooltip,
 }) => {
-  const [countries, setCountries] = useState();
+  const reduxState = useSelector((state) => state);
+  const countries = reduxState.countries.data;
   const [selected, setSelected] = useState('PT');
 
   useEffect(() => {
     const test = async () => {
-      await axios.get('https://restcountries.com/v3.1/all').then((res) => setCountries(res.data));
     };
 
     test();

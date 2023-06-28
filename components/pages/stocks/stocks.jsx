@@ -1,6 +1,6 @@
 //  Nodes
 import CssBaseline from '@mui/material/CssBaseline';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import CustomBreadcrumbs from '../../breadcrumbs';
 
@@ -9,32 +9,57 @@ import Content from '../../content/content';
 //  PropTypes
 import { Autocomplete, Box, Grid, InputLabel, Slider, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import routes from '../../../navigation/routes';
 import AdvancedTable from '../../advancedTable/AdvancedTable';
+import MyInput from '../../inputs/myInput';
+import MySelect from '../../inputs/select';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
+import CanDo from '../../utils/CanDo';
+import ToastSet from '../../utils/ToastSet';
 
 const Stock = ({ ...props }) => {
-  const { breadcrumbsPath, headCells, stocks } = props;
+  const { breadcrumbsPath, headCells } = props;
+
   //  States
-  const [filters, setFilters] = useState({});
-  const [material, setMaterial] = useState('');
+  const [filters, setFilters] = useState({
+    available: '',
+    material: '',
+    warehouse: ''
+  });
+
+  const [stocks, setStocks] = useState(props.stocks);
   const [sizesFilter, setSizesFilter] = useState(props.filtersSizes);
 
   function onMaterialChange ({ value, event }) {
-    if (typeof value === 'object') setMaterial(value?.material || '');
-    else if (typeof value === 'undefined') setMaterial(event.target.value || '');
+    if (typeof value === 'object') setFilters({ ...filters, material: value?.material || '' });
+    else if (typeof value === 'undefined') setFilters({ ...filters, material: event.target.value || '' });
   }
 
   const ClearFilters = () => {
-    setSizesFilter(props.filtersSizes);
-    setMaterial('');
-  };
+    setSizesFilter({
+      Largura: {
+        values: [Math.min(...stocks.map(o => o.width)), Math.max(...stocks.map(o => o.width))],
+        min: Math.min(...stocks.map(o => o.width)),
+        max: Math.max(...stocks.map(o => o.width))
+      },
+      Espessura: {
+        values: [Math.min(...stocks.map(o => o.thickness)), Math.max(...stocks.map(o => o.thickness))],
+        min: Math.min(...stocks.map(o => o.thickness)),
+        max: Math.max(...stocks.map(o => o.thickness))
+      },
+      Comprimento: {
+        values: [Math.min(...stocks.map(o => o.height)), Math.max(...stocks.map(o => o.height))],
+        min: Math.min(...stocks.map(o => o.height)),
+        max: Math.max(...stocks.map(o => o.height))
+      },
+    });
 
-  const ApplyFilters = () => {
-    // Set Filters
     setFilters({
-      material,
+      available: '',
+      material: '',
+      warehouse: ''
     });
   };
 
@@ -46,21 +71,29 @@ const Stock = ({ ...props }) => {
     setSizesFilter(sizes);
   }
 
-  useEffect(() => {
-    ApplyFilters();
-  }, [sizesFilter, material]);
-
-  useEffect(() => {
-    setMaterial(filters?.material || '');
-  }, [filters]);
-
   function SliderValueLabel (value) {
     return value + ' mm';
   }
 
+  async function onDelete (props) {
+    const loading = toast.loading('');
+
+    ToastSet(loading, 'Cliente Removido!', 'error');
+
+    const old = [...stocks];
+    const index = old.findIndex((item) => item.id === props);
+
+    if (index !== -1) {
+      const updatedItems = [...old];
+
+      updatedItems.splice(index, 1);
+      setStocks(updatedItems);
+      ToastSet(loading, 'Stock Removido.', 'success');
+    }
+  }
+
   return (
     <>
-
       <Navbar />
       <Grid component='main' sx={{ padding: '0rem 2rem 4rem 2rem' }}>
         <CssBaseline />
@@ -68,12 +101,12 @@ const Stock = ({ ...props }) => {
         <Content>
           <Grid container md={12} id='pad'>
             <Grid container md={12} sm={12} xs={12} >
-              <a className='headerTitleSm'>Filtros</a>
+              <Typography className='headerTitleSm'>Filtros</Typography>
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1}>
               <InputLabel htmlFor='name'>Material</InputLabel>
               <Autocomplete
-                options={stocks.sort((a, b) => a.material - b.material) }
+                options={([...stocks])?.sort((a, b) => a.material - b.material) }
                 fullWidth
                 getOptionLabel={(option) => option.material}
                 onChange={(event, value) => onMaterialChange({ value, event })}
@@ -86,7 +119,13 @@ const Stock = ({ ...props }) => {
                 )}
               />
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1} >
+              <MySelect label={'Estado'} value={filters.available} options={[{ id: true, label: 'Disponível' }, { id: false, label: 'Indisponivel' }]} onChange={(e) => setFilters({ ...filters, available: e.target.value })} />
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1}>
+              <MyInput label="Armazem" value={filters.warehouse} onChange={(e) => setFilters({ ...filters, warehouse: e.target.value })}/>
+            </Grid>
+            <Grid container md={4} sm={6} xs={12} p={1} pl={2} pr={2}>
               <InputLabel>Comprimento</InputLabel>
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
@@ -114,7 +153,7 @@ const Stock = ({ ...props }) => {
                 />
               </Box>
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1} pl={2} pr={2}>
               <InputLabel>Largura</InputLabel>
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
@@ -142,7 +181,7 @@ const Stock = ({ ...props }) => {
                 />
               </Box>
             </Grid>
-            <Grid container md={3} sm={6} xs={12} p={1}>
+            <Grid container md={4} sm={6} xs={12} p={1} pl={2} pr={2}>
               <InputLabel>Espessura</InputLabel>
               <Box sx={{ width: '100%', display: 'flex' }} justifyContent='center'>
                 <Slider
@@ -179,20 +218,27 @@ const Stock = ({ ...props }) => {
           <Box
             id='pad'
             className='flex'
-            style={{ display: 'flex', alignItems: 'center' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
           >
             <Box>
               <Typography variant='title'>{breadcrumbsPath[0].title}</Typography>
             </Box>
+            <PrimaryBtn
+              hidden={!CanDo('add_stock')}
+              text='Adicionar'
+              href={routes.private.internal.newStock}
+            />
           </Box>
           <AdvancedTable
             rows={stocks}
             headCells={headCells}
-            clickRoute={routes.private.internal.stock}
+            clickRoute={CanDo('see_stock') && routes.private.internal.stock}
+            editRoute={CanDo('update_stock') && routes.private.internal.editStock}
             filters={filters}
             setFilters={setFilters}
             rangeFilters={sizesFilter}
             setRangeFilters={setSizesFilter}
+            onDelete={CanDo('delete_stock') && onDelete}
           />
         </Content>
       </Grid>

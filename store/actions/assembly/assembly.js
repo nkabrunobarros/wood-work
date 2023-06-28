@@ -24,6 +24,10 @@ export const assemblys = (data) => {
       headers: { 'content-type': 'application/json', Authorization: userToken ? `Bearer ${userToken}` : '' },
       method: 'GET',
       url: getApiURL(endpoints.ASSEMBLYS),
+      params: {
+        limit: 200,
+        options: 'sysAttrs',
+      }
     },
     types: [ASSEMBLYS_REQUEST, ASSEMBLYS_SUCCESS, ASSEMBLYS_FAIL],
   });

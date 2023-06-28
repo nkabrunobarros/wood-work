@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +24,7 @@ import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import InfoCard from '../../cards/InfoCard';
 import Content from '../../content/content';
+import MyAutocomplete from '../../inputs/myAutocomplete/myAutocomplete';
 import MyInput from '../../inputs/myInput';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
@@ -37,6 +38,7 @@ const ProjectsScreen = (props) => {
   const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const deleteBudget = (data) => dispatch(budgetsActionsRedux.deleteBudget(data));
+  const theme = useSelector((state) => state.appStates.theme);
 
   const {
     breadcrumbsPath,
@@ -48,7 +50,6 @@ const ProjectsScreen = (props) => {
   } = props;
 
   const router = useRouter();
-  //  States
   const [number, setNumber] = useState(router.query.order || '');
   const [client, setClient] = useState('');
   const [telephone, setTelephone] = useState('');
@@ -62,7 +63,7 @@ const ProjectsScreen = (props) => {
   const States = [
     {
       subheader: true,
-      label: '--- Orçamento'
+      label: '--- Orçamentação'
     },
     {
       id: 'needs analysis',
@@ -83,7 +84,7 @@ const ProjectsScreen = (props) => {
     },
     {
       subheader: true,
-      label: '--- Projeto'
+      label: '--- Execução'
     },
     {
       id: 'drawing',
@@ -145,20 +146,6 @@ const ProjectsScreen = (props) => {
     setTelephone(filters.telemovel || '');
   }, [filters]);
 
-  function TabPanel ({ children, value, index }) {
-    return (
-      <Box hidden={value !== index}>
-        {value === index && <Box>{children}</Box>}
-      </Box>
-    );
-  }
-
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };
-
   async function onReactivationItem (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
@@ -198,6 +185,43 @@ const ProjectsScreen = (props) => {
     }
   }
 
+  async function onCancelProject (props) {
+    const loading = toast.loading('');
+    const isProject = props.type === 'Project';
+    const update = isProject ? updateProject : updateBudget;
+
+    const data = {
+    };
+
+    isProject
+      ? data.status = { type: 'Property', value: 'canceled' }
+      : data.budgetStatus = { type: 'Property', value: 'canceled' };
+
+    try {
+      true && await update({ id: props.id, data }).then(() => {
+        const old = [...items];
+        const index = old.findIndex((item) => item.id === props.id);
+
+        if (index !== -1) {
+          const updatedItem = {
+            ...items[index], // Copy the existing item
+            ...data,
+            Estado: 'canceled'
+          };
+
+          const updatedItems = [
+            ...items.slice(0, index), // Copy the items before the updated item
+            updatedItem, // Add the updated item
+            ...items.slice(index + 1) // Copy the items after the updated item
+          ];
+
+          setItems(updatedItems);
+          ToastSet(loading, 'Projeto Cancelado.', 'success');
+        }
+      });
+    } catch (err) { console.log(err); }
+  }
+
   async function onDeleteItem (props) {
     const loading = toast.loading('');
     // eslint-disable-next-line react/prop-types
@@ -222,8 +246,6 @@ const ProjectsScreen = (props) => {
       }
     }
   }
-
-  const theme = useSelector((state) => state.appStates.theme);
 
   function getStyles (name, personName, theme) {
     return {
@@ -271,7 +293,7 @@ const ProjectsScreen = (props) => {
         {/* Filters */}
         <Content>
           <Grid id='pad' md={12} container>
-            <Grid container item md={12}><a className='headerTitleSm'>Filtros</a></Grid>
+            <Grid container item md={12}><Typography variant='titlexs'>Filtros</Typography></Grid>
             {isInternalPage && <Grid container item md={4} sm={6} xs={12} p={1}>
               <Box sx={{ width: '100%' }}>
                 <InputLabel htmlFor='email'>Cliente</InputLabel>
@@ -286,7 +308,6 @@ const ProjectsScreen = (props) => {
                   getOptionLabel={(option) => option.Nome }
                   getOptionValue={(option) => option.id}
                   onChange={(e, value) => {
-                  // eslint-disable-next-line react/prop-types
                     setClient(value?.id || '');
                   }}
                   renderOption={(props, option) => {
@@ -307,6 +328,13 @@ const ProjectsScreen = (props) => {
                     />
                   )}
                 />
+                {false && <MyAutocomplete
+                  value={client}
+                  options={clients}
+                  optionLabel={'Nome'}
+                  optionValue={'id'}
+                  onChange={(e) => setClient(e || '')}
+                />}
               </Box>
             </Grid>}
             <Grid container item md={isInternalPage ? 4 : 3} sm={6} xs={12} p={1}>
@@ -371,21 +399,22 @@ const ProjectsScreen = (props) => {
         {/* Projects */}
         <Content>
           <Box id='pad' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant='titlexxl'>{breadcrumbsPath[0].title}</Typography>
+            <Typography variant='title'>{breadcrumbsPath[0].title}</Typography>
             <PrimaryBtn
               hidden={!(isInternalPage && CanDo('add_project'))}
               text='Adicionar'
-              onClick={() => Router.push(routes.private.internal.newProject)}
+              href={routes.private.internal.newProject}
             />
           </Box>
           <AdvancedTable
             rows={items}
             headCells={headCellsProjects}
             filters={filters}
-            clickRoute={detailPage}
-            editRoute={editPage}
+            onCancel={onCancelProject}
+            clickRoute={CanDo('see_project') && detailPage}
+            editRoute={CanDo('update_project') && editPage}
             setFilters={setFilters}
-            onDelete={onDeleteItem}
+            onDelete={ CanDo('delete_project') && onDeleteItem}
             onReactivation={onReactivationItem}
           />
         </Content>

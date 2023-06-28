@@ -4,19 +4,21 @@ import CssBaseline from '@mui/material/CssBaseline';
 import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
-import { PackagePlus, Save } from 'lucide-react';
+import { PackagePlus, Save, X } from 'lucide-react';
 import CustomBreadcrumbs from '../../breadcrumbs';
 import PrimaryBtn from '../../buttons/primaryBtn';
 import Content from '../../content/content';
 
-import { Box, Divider, Tooltip } from '@mui/material';
+import { Box, ButtonGroup, Divider, Tooltip } from '@mui/material';
+import Router from 'next/router';
+import routes from '../../../navigation/routes';
 import styles from '../../../styles/StockDetail.module.css';
 import MyInput from '../../inputs/myInput';
 import Navbar from '../../layout/navbar/navbar';
 
 const EditStock = ({ ...props }) => {
   const { stock, breadcrumbsPath, pageProps } = props;
-  const [newStock, setNewStock] = useState(stock);
+  const [newStock, setNewStock] = useState(props.stock);
 
   function OnFieldChange (props) {
     setNewStock({ ...newStock, [props.target.name]: props.target.value });
@@ -37,16 +39,39 @@ const EditStock = ({ ...props }) => {
             justifyContent='space-between'
           >
             <Box id='align'>
-              <a className='headerTitleXl'>{stock.material}</a>
+              <a className='headerTitleXl'>{stock?.material}</a>
               <Box className='spacer' />
               <Tooltip title={`${stock?.qtd} unidade(s)`}>
 
                 {stock?.qtd > 0
-                  ? <a className="successBalloon">Disponivel</a>
-                  : <a className="errorBalloon">Indisponivel</a>}
+                  ? <a className="successBalloon">Disponível</a>
+                  : <a className="errorBalloon">Indisponível</a>}
               </Tooltip>
             </Box>
-            <PrimaryBtn text='Guardar' icon={<Save strokeWidth={pageProps?.globalVars?.iconStrokeWidth} size={pageProps?.globalVars?.iconSize} />} />
+
+            <ButtonGroup>
+              <PrimaryBtn
+                text='Guardar'
+                icon={
+                  <Save
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
+                  />
+                }
+                onClick={() => Router.push(routes.private.internal.stock + stock.id)}
+              />
+              <PrimaryBtn
+                text='Cancelar'
+                icon={
+                  <X
+                    strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
+                    size={pageProps?.globalVars?.iconSize || 20}
+                  />
+                }
+                light
+                onClick={() => Router.back()}
+              />
+            </ButtonGroup>
           </Box>
           <Grid container id='pad' className='flex'>
             {/* Product Info panels */}
@@ -58,12 +83,12 @@ const EditStock = ({ ...props }) => {
               </Grid>
               <Grid container md={6} xs={6} p={0.5}>
                 <Grid item xs={12}>
-                  <MyInput onChange={(e) => OnFieldChange(e)} name='qtd' label={'Quantidade disponivel'} value={newStock?.qtd} type='number' />
+                  <MyInput onChange={(e) => OnFieldChange(e)} name='qtd' label={'Quantidade disponível'} value={newStock?.qtd} type='number' />
                 </Grid>
               </Grid>
               <Grid container md={6} xs={6} p={0.5}>
                 <Grid item xs={12}>
-                  <MyInput onChange={(e) => OnFieldChange(e)} name='warehouse' label={'Armazem'} value={newStock?.warehouse} />
+                  <MyInput onChange={(e) => OnFieldChange(e)} name='warehouse' label={'Armazém'} value={newStock?.warehouse} />
                 </Grid>
               </Grid>
               <Grid container md={6} xs={6} p={0.5}>

@@ -22,7 +22,7 @@ const Assembly = ({ ...pageProps }) => {
 
   useEffect(() => {
     const getData = async () => {
-      await getModules({ finishTime: '' }).then((res) => console.log(res));
+      await getModules({ finishTime: '' });
     };
 
     Promise.all([getData()]).then(() => setLoaded(true));

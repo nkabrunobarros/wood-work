@@ -1,11 +1,11 @@
-import { Layers, LayoutTemplate, Network, PackageCheck, PackagePlus, Truck } from 'lucide-react';
+import { Layers, Network, PackageCheck, PackagePlus, PenTool, Truck } from 'lucide-react';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/loader/loader';
 import OrdersScreen from '../components/pages/projects/projects';
 import routes from '../navigation/routes';
+import * as assemblysActionsRedux from '../store/actions/assembly';
 import * as budgetsActionsRedux from '../store/actions/budget';
 import * as clientsActionsRedux from '../store/actions/client';
 import * as expeditionsActionsRedux from '../store/actions/expedition';
@@ -19,15 +19,7 @@ const Orders = ({ ...pageProps }) => {
   const getBudgets = (data) => dispatch(budgetsActionsRedux.myBudgets(data));
   const getClients = (data) => dispatch(clientsActionsRedux.clients(data));
   const getExpeditions = (data) => dispatch(expeditionsActionsRedux.expeditions(data));
-
-  const categories = [
-    { label: 'Cozinha', id: 'MC_' },
-    { label: 'Quarto', id: 'MQ_' },
-    { label: 'Banheiro', id: 'MB_' },
-    { label: 'Garagem', id: 'MG_' },
-    { label: 'Varanda', id: 'MV_' },
-    { label: 'Sala de estar', id: 'MS_' }
-  ];
+  const getAssemblys = (data) => dispatch(assemblysActionsRedux.assemblys(data));
 
   async function fetchData () {
     let errors = false;
@@ -36,9 +28,9 @@ const Orders = ({ ...pageProps }) => {
       await getProjects(reduxState.auth.me.id);
       await getClients();
       await getExpeditions();
+      await getAssemblys();
       await getBudgets();
     } catch (err) {
-      console.log(err);
       errors = true;
     }
 
@@ -128,7 +120,7 @@ const Orders = ({ ...pageProps }) => {
         icon: (
           <Layers
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#225EE8',
@@ -139,9 +131,9 @@ const Orders = ({ ...pageProps }) => {
         title: 'Pendente Desenho',
         amount: counts.drawing,
         icon: (
-          <LayoutTemplate
+          <PenTool
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#602778',
@@ -154,7 +146,7 @@ const Orders = ({ ...pageProps }) => {
         icon: (
           <PackagePlus
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#02B0FA',
@@ -167,7 +159,7 @@ const Orders = ({ ...pageProps }) => {
         icon: (
           <Network
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#2C9200',
@@ -180,7 +172,7 @@ const Orders = ({ ...pageProps }) => {
         icon: (
           <PackageCheck
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#DF9100',
@@ -193,7 +185,7 @@ const Orders = ({ ...pageProps }) => {
         icon: (
           <Truck
             size={'60%'}
-            strokeWidth={pageProps?.globalVars?.iconStrokeWidth}
+            strokeWidth={pageProps?.globalVars?.iconStrokeWidth || 1}
           />
         ),
         color: '#BB3D03',
@@ -230,7 +222,7 @@ const Orders = ({ ...pageProps }) => {
         show: true,
       },
       {
-        id: 'InicioProd',
+        id: 'InícioProd',
         numeric: false,
         disablePadding: false,
         label: 'Início Prod.',
@@ -267,7 +259,6 @@ const Orders = ({ ...pageProps }) => {
         Created: moment(bud?.createdAt).format('DD/MM/YYYY'),
         PrimeiroContacto: bud?.dateRequest?.value,
         Entregue: bud?.dateDelivery?.value,
-        Categoria: categories.find(c => c.id === bud.category?.value)?.label,
         Referência: `${bud?.name?.value.replace(/_/g, ' ')} ECL 2023/000100`,
         Numero: bud?.num?.value,
         EntregaProj: bud?.dateDeliveryProject?.value,
@@ -279,22 +270,23 @@ const Orders = ({ ...pageProps }) => {
     const projects = [...reduxState.projects?.data ?? []].map((proj) => {
       const thisBudget = reduxState.budgets?.data.find((ele) => ele.id === proj.hasBudget?.object);
       const thisExpedition = reduxState.expeditions?.data.find((ele) => ele.id === proj.expedition.object);
+      const thisAssembly = reduxState.assemblys?.data.find((ele) => ele.id === proj.assembly?.object);
 
       return {
         ...proj,
         Estado: proj?.status?.value,
         Nome: proj?.name?.value?.replace(/_/g, ' '),
         budget: thisBudget,
-        Inicio: moment(proj?.createdAt).format('DD/MM/YYYY'),
+        Início: moment(proj?.createdAt).format('DD/MM/YYYY'),
         Termino: thisExpedition?.deliveryTime?.value,
         Entregue: thisBudget?.dateDelivery?.value,
         Numero: thisBudget?.num?.value || 212453,
         Referência: `${proj?.id.replace('urn:ngsi-ld:Project:', '').replace(/_/g, ' ')} ECL 2023/000100`,
         EntregaProj: thisBudget?.dateDeliveryProject?.value,
         PrimeiroContacto: thisBudget?.dateRequest?.value,
-        InicioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        InícioProd: proj?.startedProduction?.value && moment(proj?.startedProduction?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
         ExpeditionTime: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
-        TerminoProd: thisExpedition?.expeditionTime?.value && moment(thisExpedition?.expeditionTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
+        TerminoProd: thisAssembly?.startTime?.value && moment(thisAssembly?.startTime?.value, 'DD/MM/YYYY hh:mm:ss').format('DD/MM/YYYY'),
       };
     }
     );
@@ -324,8 +316,6 @@ const Orders = ({ ...pageProps }) => {
 };
 
 Orders.propTypes = {
-  categories: PropTypes.array.isRequired,
-  counts: PropTypes.object.isRequired,
 };
 
 export default Orders;

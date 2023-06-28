@@ -1,30 +1,25 @@
 //  Nodes
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ResetPasswordScreen from '../components/pages/resetPassword/resetPassword';
-
-//  Navigation
-
-//  PropTypes
-
-//  Styling
 
 //  Preloader
 import Loader from '../components/loader/loader';
 import PageNotFound from '../components/pages/404';
 
 const ResetPassword = () => {
-  const router = useRouter();
   const [token, setToken] = useState();
-  const [clientType, setClientType] = useState();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     function checkToken () {
-      //  TODO: validar o token recebido se existe na BD
-      // TODO: apenas se existir, é que se dá o state do token
-      setToken(router.query?.token);
-      setClientType(router.query?.type);
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const token = urlParams.get('token');
+      const uidb64 = urlParams.get('uidb64');
+      const profile = urlParams.get('profile');
+      const activationToken = urlParams.get('activationToken');
+
+      setToken({ uidb64, token, profile, activationToken });
     }
 
     Promise.all([checkToken()]).then(() => setLoaded(true));
@@ -32,11 +27,10 @@ const ResetPassword = () => {
 
   if (loaded) {
     const props = {
-      token,
-      clientType
+      params: token,
     };
 
-    return token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
+    return token.token ? <ResetPasswordScreen {...props} /> : <PageNotFound />;
   }
 
   return <Loader center={true} />;

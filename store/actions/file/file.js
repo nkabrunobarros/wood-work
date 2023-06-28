@@ -20,6 +20,10 @@ export const NEW_FILE_REQUEST = 'NEW_FILE_REQUEST';
 export const NEW_FILE_FAIL = 'NEW_FILE_FAIL';
 export const NEW_FILE_SUCCESS = 'NEW_FILE_SUCCESS';
 
+export const DELETE_FILE_REQUEST = 'DELETE_FILE_REQUEST';
+export const DELETE_FILE_FAIL = 'DELETE_FILE_FAIL';
+export const DELETE_FILE_SUCCESS = 'DELETE_FILE_SUCCESS';
+
 export const UPDATE_FILE_REQUEST = 'UPDATE_FILE_REQUEST';
 export const UPDATE_FILE_FAIL = 'UPDATE_FILE_FAIL';
 export const UPDATE_FILE_SUCCESS = 'UPDATE_FILE_SUCCESS';
@@ -36,6 +40,7 @@ export const files = (data) => {
       url: getApiURL(endpoints.FILES),
       params: {
         options: 'sysAttrs',
+        limit: 600
       }
     },
     types: [FILES_REQUEST, FILES_SUCCESS, FILES_FAIL],
@@ -113,8 +118,23 @@ export const budgetFiles = (data) => {
       url: getApiURL(endpoints.FILES),
       params: {
         options: 'sysAttrs',
+        limit: 600
       }
     },
     types: [FILES_REQUEST, FILES_SUCCESS, FILES_FAIL],
+  });
+};
+
+export const deleteFile = (data) => {
+  const { auth_token: userToken } = parseCookies();
+
+  return createAction({
+    meta: null,
+    request: {
+      headers: { 'content-type': 'application/x-www-form-urlencoded', Authorization: userToken ? `Bearer ${userToken}` : '' },
+      method: 'DELETE',
+      url: getApiURL(endpoints.FILES + data),
+    },
+    types: [DELETE_FILE_REQUEST, DELETE_FILE_SUCCESS, DELETE_FILE_FAIL],
   });
 };

@@ -1,44 +1,55 @@
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import styles from '../../../styles/components/navbar.module.css';
 
+import { MenuItem } from '@mui/material';
+import Link from 'next/link';
+// import { useTranslation } from 'react-i18next';
 import routes from '../../../navigation/routes';
+export const pageSections = {
+  projects: 'Projetos',
+  project: 'Projetos',
+  budget: 'Projetos',
+  newProject: 'Projetos',
+  editProject: 'Projetos',
+  editBudget: 'Projetos',
+  similarProjects: 'Projetos Similares',
+  stocks: 'Stocks',
+  stock: 'Stocks',
+  editStock: 'Stocks',
+  clients: 'Clientes',
+  client: 'Clientes',
+  editClient: 'Clientes',
+  newClient: 'Clientes',
+  workers: 'Utilizadores',
+  worker: 'Utilizadores',
+  editWorker: 'Utilizadores',
+  newWorker: 'Utilizadores',
+  leftovers: 'Sobrantes',
+  newLeftover: 'Sobrantes',
+  factorys: 'Chão de Fábrica',
+  factory: 'Chão de Fábrica',
+  packages: 'Embalamentos',
+  newPackage: 'Embalamentos',
+  package: 'Embalamentos',
+  projectPackages: 'Embalamentos',
+  assemblys: 'Montagens',
+  account: 'Conta',
+  messages: 'Mensagens',
+  newProfile: 'Perfis',
+  editProfile: 'Perfis',
+  profiles: 'Perfis',
+  profile: 'Perfis',
+  machines: 'Máquinas',
+  machine: 'Máquinas',
+  newMachine: 'Máquinas',
+  editMachine: 'Máquinas',
+};
 
-function ActiveLink ({ children, url, handleDrawerToggle, page }) {
+function ActiveLink ({ toggleDrawer, item }) {
   const path = useRouter();
-
-  const pageSections = {
-    projects: 'Projetos',
-    projectsSimilar: 'Projetos Similares',
-    project: 'Projetos',
-    budget: 'Projetos',
-    newProject: 'Projetos',
-    editProject: 'Projetos',
-    editBudget: 'Projetos',
-    orders: 'Projetos',
-    stocks: 'Stock',
-    stock: 'Stock',
-    editStock: 'Stock',
-    clients: 'Clientes',
-    client: 'Clientes',
-    editClient: 'Clientes',
-    newClient: 'Clientes',
-    workers: 'Utilizadores',
-    worker: 'Utilizadores',
-    editWorker: 'Utilizadores',
-    newWorker: 'Utilizadores',
-    leftovers: 'Sobrantes',
-    factoryLevel: 'Chão de Fabrica',
-    packingList: 'Embalamentos',
-    newPackage: 'Embalamentos',
-    packing: 'Embalamentos',
-    assemblys: 'Montagens',
-    profile: 'Conta',
-    messages: 'Mensagens',
-    dashboards: 'Painel de Controlo',
-  };
+  // const { t, i18n } = useTranslation();
 
   const currentSection = Object.entries(pageSections).find(([page]) => {
     const regex = new RegExp(`^${routes.private.internal[page]}(\\[.+\\])?$`);
@@ -49,32 +60,33 @@ function ActiveLink ({ children, url, handleDrawerToggle, page }) {
 
   const style = {
     borderLeft: '5px solid',
-    borderColor: page === currentSection ? 'var(--white)' : 'transparent',
+    borderColor: item.title === currentSection ? 'var(--white)' : 'transparent',
   };
 
-  const handleClick = (e) => {
-    e.preventDefault();
-  };
+  return !item.hidden && (
 
-  return (
-    <a
-      key={url}
-      onClick={(e) => {
-        handleDrawerToggle && handleDrawerToggle();
-        handleClick(e);
-      }}
-      className={styles.navItemContainer}
-      style={style}
-    >
-      {children}
-    </a>
+    <Link href={item.url}>
+      <MenuItem id={item.id}
+        sx={{ padding: '0', width: '100%', ...style }}
+        className={styles.navItemContainer}
+        onClick={(e) => {
+          e.preventDefault();
+          toggleDrawer();
+          Router.push(item.url);
+        }}>
+        {item.icon}
+        <div style={{ paddingRight: '.5rem' }} />
+        {item.title}
+        {/* {t(item.t)} */}
+      </MenuItem>
+    </Link>
+
   );
 }
 
 ActiveLink.propTypes = {
-  children: PropTypes.any,
-  url: PropTypes.string,
-  handleDrawerToggle: PropTypes.func,
+  item: PropTypes.any,
+  toggleDrawer: PropTypes.func,
   page: PropTypes.string,
 };
 

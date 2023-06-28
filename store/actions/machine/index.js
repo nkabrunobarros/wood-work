@@ -12,4 +12,5 @@ export {
   newMachine,
   machine,
   updateMachine,
+  deleteMachine,
 } from './machine';

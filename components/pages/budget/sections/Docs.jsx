@@ -1,16 +1,28 @@
 //  PropTypes
 import { ArrowDropDown, ArrowRight } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, Paper, Table, TableBody, TableContainer, TableHead, Tooltip, Typography } from '@mui/material';
-import { ChevronDown, FileText } from 'lucide-react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, IconButton, Paper, Table, TableBody, TableContainer, Tooltip, Typography } from '@mui/material';
+import { ChevronDown, FileText, Trash } from 'lucide-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import * as filesActionsRedux from '../../../../store/actions/file';
+import ConfirmDialog from '../../../dialogs/ConfirmDialog';
 import Notification from '../../../dialogs/Notification';
+import CanDo from '../../../utils/CanDo';
+import ToastSet from '../../../utils/ToastSet';
 
 const Docs = (props) => {
+  const { open } = props;
   const [sectionExpanded, setSectionExpanded] = useState(true);
-  const folders = props.folders;
   const [expandedGroups, setExpandedGroups] = useState([]);
+  const [folders, setFolders] = useState(props.folders);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState();
+  const dispatch = useDispatch();
+  const deleteFile = (data) => dispatch(filesActionsRedux.deleteFile(data));
+  const canDownloadFile = CanDo('see_file');
 
   const toggleValueInArray = (value, array) => {
     const index = array.indexOf(value);
@@ -30,9 +42,29 @@ const Docs = (props) => {
 
   const handlePanelChange = handleChange(expandedGroups, setExpandedGroups);
 
-  const {
-    open,
-  } = props;
+  async function onDelete () {
+    const loading = toast.loading('');
+
+    setDialogOpen(false);
+
+    try {
+      await deleteFile(itemToDelete).then(() => {
+        const updatedFolders = [...folders];
+
+        updatedFolders.map((folder) => {
+          folder.files = folder.files.filter((file) => file.id !== itemToDelete);
+
+          return { ...folder };
+        });
+
+        setFolders(updatedFolders);
+        ToastSet(loading, 'Ficheiro removido!', 'success');
+      });
+    } catch (err) {
+      console.log(err);
+      ToastSet(loading, 'Algo aconteceu. Por favor tente mais tarde ', 'error');
+    }
+  }
 
   async function handleFileClick (file) {
     fetch(file.file)
@@ -84,25 +116,47 @@ const Docs = (props) => {
                 </Grid>
               </Grid>
             </AccordionSummary>
-            <AccordionDetails sx={{ padding: 0, backgroundColor: '#F4F4F4', borderRadius: '8px' }} >
-              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography> : null}
-              {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file) => (
-                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem' }} key={file?.id} alignItems={'center'} p={1}>
-                  <Grid container md={9} sm={9} xs={9} sx={{ }} >
-                    <FileText
-                      strokeWidth='1'
-                      style={{ marginRight: '1rem' }}
-                    />
-                    <Tooltip title='Clique para descarregar este ficheiro.'>
-                      <Typography sx={{ cursor: 'pointer' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
-                    </Tooltip>
-                  </Grid>
-                  <Grid container md={3} sm={3} xs={3} sx={{ }} >
-                    <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:MM')} </Typography>
-                  </Grid>
-
+            <AccordionDetails sx={{ padding: 0, borderRadius: '8px', backgroundColor: 'white' }} >
+              {folder.files.length === 0 && folders.find(fold => fold.parent === folder.id) === undefined
+                ? <Typography variant='subtitle2' sx={{ paddingLeft: '3rem' }}>Vazia</Typography>
+                : null}
+              {folder.files.length > 0 && <>
+                <Grid container md={12} sm={12} xs={12} sx={{ paddingLeft: '3rem', borderBottom: '1px solid', borderTop: '1px solid', borderColor: 'divider' }}>
+                  <Grid container md={8} sm={8} xs={8} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '1px solid', borderColor: 'divider', width: '100%', alignItems: 'center' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Nome</Typography> </Box></Grid>
+                  <Grid container md={3} sm={3} xs={3} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Data</Typography> </Box></Grid>
+                  <Grid container md={1} sm={1} xs={1} sx={{ alignItems: 'center', p: 1 }}><Box sx={{ borderRight: '0px solid', borderColor: 'divider', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}> <Typography color='primary' fontWeight={'bold'} variant='subtitle2'>Ações</Typography> </Box></Grid>
                 </Grid>
-              ))}
+                <Grid container sx={{ }}>
+
+                  {folder.files.filter(file => typeof file !== 'undefined').sort((a, b) => a.file_name - b.file_name).map((file, rowIndex) => (
+                    <Grid container md={12} sm={12} xs={12} sx={{ pl: '3rem' }} bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'} key={file?.id} alignItems={'center'} p={1}>
+                      <Grid container md={8} sm={8} xs={8} sx={{ }} >
+                        <FileText
+                          strokeWidth='1'
+                          style={{ marginRight: '1rem' }}
+                        />
+                        <Tooltip title='Clique para descarregar este ficheiro.'>
+                          <Typography variant='subtitle2' sx={{ cursor: 'pointer', pointerEvents: !canDownloadFile && 'none' }} onClick={() => handleFileClick(file)}>{file?.file_name + file?.file_type}</Typography>
+                        </Tooltip>
+                      </Grid>
+                      <Grid container md={3} sm={3} xs={3} sx={{ justifyContent: 'center' }} >
+                        <Typography variant="subtitle2">{moment(file.created).format('DD/MM/YYYY HH:mm')} </Typography>
+                      </Grid>
+                      <Grid container md={1} sm={1} xs={1} alignItems='center' justifyContent={'end'}>
+                        <Tooltip title={'Apagar'} >
+                          <IconButton color={'error'} onClick={() => {
+                            setItemToDelete(file.id);
+                            setDialogOpen(true);
+                          }} size="small">
+                            <Trash size={20} strokeWidth={1.5} />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+
+              </>}
               <Box bgcolor='lightGray.secondary'>
                 {renderAccordionFolders(folders, folder.id)}
               </Box>
@@ -114,6 +168,12 @@ const Docs = (props) => {
 
   return open && <>
     <Notification />
+    <ConfirmDialog
+      open={dialogOpen}
+      handleClose={() => setDialogOpen(false)}
+      onConfirm={() => onDelete()}
+      message={'Está prestes a apagar um ficheiro, o que é irreversível, tem certeza que quer continuar?'}
+    />
     <Accordion expanded={sectionExpanded} onChange={() => setSectionExpanded(!sectionExpanded)} sx={{ width: '100%' }} >
       <AccordionSummary sx={{ background: 'lightGray.main', paddingLeft: '24px' }} bgcolor={'lightGray.main'} aria-controls="panel1d-content" id="panel1d-header" expandIcon={<ChevronDown />}>
         <Typography variant='title'>Documentos</Typography>
@@ -121,16 +181,9 @@ const Docs = (props) => {
       <AccordionDetails sx={{ padding: 0 }}>
         <TableContainer component={Paper}>
           <Table aria-label='collapsible table'>
-            <TableHead aria-label='sticky table'>
-              <Grid container p={2} bgcolor='lightgray.main'>
-                <Grid container md={6} sm={6} xs={6}>Nome</Grid>
-                <Grid container md={6} sm={6} xs={6} justifyContent='center'>Data</Grid>
-              </Grid>
-            </TableHead>
             <TableBody >
               <Box sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
                 {renderAccordionFolders(folders)}
-
               </Box>
             </TableBody>
           </Table>
@@ -148,7 +201,6 @@ Docs.propTypes = {
   open: PropTypes.bool,
   activeFolder: PropTypes.number,
   onImagesUpload: PropTypes.func,
-
 };
 
 export default Docs;

@@ -34,10 +34,12 @@ export const PartStatus = ({ part }) => {
   const actions = {
     isNest: part.nestingFlag,
     isCnc: part.cncFlag,
-    isOrla: part.orla2 || part.orla3 || part.orla4 || part.orla5,
-    isFuroFace: part.f2 === false || part.f3 === false || part.f4 === false || part.f5 === false,
+    isOrla: part.orla || part.orla2 || part.orla3 || part.orla4 || part.orla5,
+    isFuroFace: part.f || part.f2 || part.f3 || part.f4 || part.f5,
     isTupia: part.tupia,
   };
+
+  console.log(part);
 
   let complete = true;
 
@@ -180,15 +182,6 @@ const FurnitureDetails = (props) => {
         ]);
 
         setConsumables(consumables);
-
-        // setState({
-        //   ...state,
-        //   machines: result,
-        //   consumables,
-        //   projectParts: builtParts,
-        //   myMachine: activeLogWorkerTask ? mappedMachines.find((ele) => ele.id === activeLogWorkerTask.machine?.value) : null,
-        //   activeWorkerTasks: logsWorkerTasks.filter((ele) => !ele.finishTime?.value)
-        // });
       } catch (error) {
         console.error(error);
       } finally {
@@ -203,62 +196,62 @@ const FurnitureDetails = (props) => {
 
   function createParts () {
     const newParts2 = [
-      // { obs: 'Esta tabua tem que ser cortada assim', complete: false, belongsTo: chosenFurniture.id, partName: 'BAR_B_COSTA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA1', material: 'HDF 3', amount: 1, lenght: '1471', width: '1000', thickness: '3', tag: 1, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_COSTA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA2', material: 'HDF 3', amount: 1, lenght: '1476', width: '1000', thickness: '3', tag: 2, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_COSTA', material: 'HDF 6', amount: 1, lenght: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', material: 'HDF 6', amount: 1, lenght: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', material: 'HDF 6', amount: 2, lenght: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_VRT6', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', material: 'HDF 6', amount: 4, lenght: '830', width: '80', thickness: '6', tag: 6, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: 'Esta peça é para colar com a seguinte', complete: false, belongsTo: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', material: 'HDF 6', amount: 1, lenght: '830', width: '200', thickness: '6', tag: 7, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: 'Colar esta peça com a anterior', complete: false, belongsTo: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS1', material: 'HDF 10', amount: 1, lenght: '2150', width: '100', thickness: '10', tag: 8, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS2', material: 'HDF 10', amount: 1, lenght: '2181', width: '100', thickness: '10', tag: 9, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 10, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FUNDO', material: 'HDF 10', amount: 1, lenght: '469', width: '258', thickness: '10', tag: 11, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', material: 'HDF 10 CNC', amount: 1, lenght: '2621', width: '1106', thickness: '10', tag: 12, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', material: 'HDF 10 CNC', amount: 1, lenght: '2590', width: '1106', thickness: '10', tag: 13, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', material: 'HDF 10 CNC', amount: 1, lenght: '1069', width: '306', thickness: '10', tag: 14, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', material: 'HDF 10', amount: 2, lenght: '793', width: '50', thickness: '10', tag: 15, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_VRT10', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT10', material: 'HDF 10', amount: 4, lenght: '950', width: '50', thickness: '10', tag: 16, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_RODAPE_INT_CURVO_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_RODAPE_INT_CURVO_RASGOS', material: 'HDF 10', amount: 1, lenght: '2630', width: '150', thickness: '10', tag: 17, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_LAT_DIR', material: 'HDF 13 CNC', amount: 1, lenght: '244', width: '19,5', thickness: '13', tag: 18, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_LAT_ESQ', material: 'HDF 13 CNC', amount: 1, lenght: '244', width: '19,5', thickness: '13', tag: 19, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_COSTA', material: 'HDF 16 CNC', amount: 1, lenght: '457', width: '105,5', thickness: '16', tag: 20, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_LAT_DIR', material: 'HDF 16 CNC', amount: 1, lenght: '256', width: '128,5', thickness: '16', tag: 21, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_LAT_ESQ', material: 'HDF 16 CNC', amount: 1, lenght: '256', width: '128,5', thickness: '16', tag: 22, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_COSTA', material: 'HDF 16 CNC', amount: 1, lenght: '457', width: '105,5', thickness: '16', tag: 23, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_LAT_DIR', material: 'HDF 16 CNC', amount: 1, lenght: '256', width: '128,5', thickness: '16', tag: 24, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_LAT_ESQ', material: 'HDF 16 CNC', amount: 1, lenght: '256', width: '128,5', thickness: '16', tag: 25, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_COSTA', material: 'HDF 16 CNC', amount: 1, lenght: '1006', width: '76', thickness: '16', tag: 26, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_FUNDO', material: 'HDF 16 CNC', amount: 1, lenght: '1004,5', width: '244', thickness: '16', tag: 27, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_CIMO', id: formatString(chosenFurniture.name.value) + '_BAR_B_CIMO', material: 'HDF 19 CNC', amount: 1, lenght: '1035', width: '613', thickness: '19', tag: 28, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_DIVISORIA', id: formatString(chosenFurniture.name.value) + '_BAR_B_DIVISORIA', material: 'HDF 19 CNC', amount: 1, lenght: '968', width: '291', thickness: '19', tag: 29, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_B_FUNDO', material: 'HDF 19 CNC', amount: 1, lenght: '1035', width: '613', thickness: '19', tag: 30, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_B_LAT_DIR', material: 'HDF 19 CNC', amount: 1, lenght: '968', width: '272', thickness: '19', tag: 31, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_B_LAT_ESQ', material: 'HDF 19 CNC', amount: 1, lenght: '968', width: '291', thickness: '19', tag: 32, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_PRATELEIRA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_PRATELEIRA1', material: 'HDF 19 CNC', amount: 1, lenght: '592', width: '533', thickness: '19', tag: 33, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_PRATELEIRA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_PRATELEIRA2', material: 'HDF 19 CNC', amount: 1, lenght: '466', width: '286', thickness: '19', tag: 34, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_REM_ESQ_M', id: formatString(chosenFurniture.name.value) + '_BAR_B_REM_ESQ_M', material: 'HDF 19', amount: 1, lenght: '1100', width: '70', thickness: '19', tag: 35, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_MOLDE1', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_MOLDE1', material: 'HDF 19', amount: 1, lenght: '424,5', width: '166', thickness: '19', tag: 36, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_MOLDE2', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_MOLDE2', material: 'HDF 19', amount: 1, lenght: '424,5', width: '283', thickness: '19', tag: 37, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_SEPARADOR', id: formatString(chosenFurniture.name.value) + '_BAR_B_SEPARADOR', material: 'HDF 19 CNC', amount: 1, lenght: '594', width: '535', thickness: '19', tag: 38, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_SEPARADOR2', id: formatString(chosenFurniture.name.value) + '_BAR_B_SEPARADOR2', material: 'HDF 19 CNC', amount: 1, lenght: '468', width: '289', thickness: '19', tag: 39, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_CIMA', id: formatString(chosenFurniture.name.value) + '_BAR_C_CIMA', material: 'HDF 19 CNC', amount: 1, lenght: '1056,5', width: '272', thickness: '19', tag: 40, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_DIVISORIA', id: formatString(chosenFurniture.name.value) + '_BAR_C_DIVISORIA', material: 'HDF 19 CNC', amount: 1, lenght: '720', width: '272', thickness: '19', tag: 41, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_FUNDO', material: 'HDF 19 CNC', amount: 1, lenght: '1056,5', width: '272', thickness: '19', tag: 42, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_LAT_DIR', material: 'HDF 19 CNC', amount: 1, lenght: '968', width: '272', thickness: '19', tag: 43, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_LAT_ESQ', material: 'HDF 19 CNC', amount: 1, lenght: '968', width: '272', thickness: '19', tag: 44, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRATELEIRA', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRATELEIRA', material: 'HDF 19 CNC', amount: 1, lenght: '501', width: '267', thickness: '19', tag: 45, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRATELEIRA2', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRATELEIRA2', material: 'HDF 19 CNC', amount: 1, lenght: '501', width: '267', thickness: '19', tag: 46, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_SEPARADOR', id: formatString(chosenFurniture.name.value) + '_BAR_C_SEPARADOR', material: 'HDF 19 CNC', amount: 1, lenght: '1018,5', width: '272', thickness: '19', tag: 47, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_MOLDE_EXT', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_MOLDE_EXT', material: 'HDF 19', amount: 4, lenght: '1302,5', width: '535,5', thickness: '19', tag: 48, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_REM_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_E_REM_DIR', material: 'HDF 19 CNC', amount: 1, lenght: '1106', width: '300', thickness: '19', tag: 49, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_RODAPE_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_RODAPE_RASGOS', material: 'HDF 19', amount: 1, lenght: '2680', width: '150', thickness: '19', tag: 50, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_RODAPE2', id: formatString(chosenFurniture.name.value) + '_BAR_E_RODAPE2', material: 'HDF 19', amount: 1, lenght: '343', width: '150', thickness: '19', tag: 51, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_FRENTE', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FRENTE', material: 'HDF 22 CNC', amount: 1, lenght: '529', width: '185', thickness: '22', tag: 52, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_FRENTE', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FRENTE', material: 'HDF 22 CNC', amount: 1, lenght: '528,2', width: '185', thickness: '22', tag: 53, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PORTA_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_PORTA_DIR', material: 'HDF 22 CNC', amount: 1, lenght: '556', width: '528', thickness: '22', tag: 54, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PORTA_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_PORTA_ESQ', material: 'HDF 22 CNC', amount: 1, lenght: '556', width: '529', thickness: '22', tag: 55, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
-      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_FRENTE', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_FRENTE', material: 'HDF 22 CNC', amount: 1, lenght: '1053,5', width: '73', thickness: '22', tag: 56, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: 'Esta tabua tem que ser cortada assim', complete: false, belongsTo: chosenFurniture.id, partName: 'BAR_B_COSTA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA1', material: 'HDF 3', amount: 1, length: '1471', width: '1000', thickness: '3', tag: 1, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_COSTA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_COSTA2', material: 'HDF 3', amount: 1, length: '1476', width: '1000', thickness: '3', tag: 2, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_COSTA', material: 'HDF 6', amount: 1, length: '1050,5', width: '1000', thickness: '6', tag: 3, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_1_2_APROC', material: 'HDF 6', amount: 1, length: '880', width: '450', thickness: '6', tag: 4, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ6_3', material: 'HDF 6', amount: 2, length: '613', width: '80', thickness: '6', tag: 5, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_VRT6', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6', material: 'HDF 6', amount: 4, length: '830', width: '80', thickness: '6', tag: 6, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: 'Esta peça é para colar com a seguinte', complete: false, belongsTo: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT6_2_3_APROC', material: 'HDF 6', amount: 1, length: '830', width: '200', thickness: '6', tag: 7, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: 'Colar esta peça com a anterior', complete: false, belongsTo: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS1', material: 'HDF 10', amount: 1, length: '2150', width: '100', thickness: '10', tag: 8, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_RASGOS2', material: 'HDF 10', amount: 1, length: '2181', width: '100', thickness: '10', tag: 9, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FUNDO', material: 'HDF 10', amount: 1, length: '469', width: '258', thickness: '10', tag: 10, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FUNDO', material: 'HDF 10', amount: 1, length: '469', width: '258', thickness: '10', tag: 11, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA_RASGOS2', material: 'HDF 10 CNC', amount: 1, length: '2621', width: '1106', thickness: '10', tag: 12, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_ALMOFADA1_RASGOS', material: 'HDF 10 CNC', amount: 1, length: '2590', width: '1106', thickness: '10', tag: 13, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_1_2_APROC', material: 'HDF 10 CNC', amount: 1, length: '1069', width: '306', thickness: '10', tag: 14, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_HRZ10_3', material: 'HDF 10', amount: 2, length: '793', width: '50', thickness: '10', tag: 15, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_RIPA_VRT10', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_RIPA_VRT10', material: 'HDF 10', amount: 4, length: '950', width: '50', thickness: '10', tag: 16, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_RODAPE_INT_CURVO_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_RODAPE_INT_CURVO_RASGOS', material: 'HDF 10', amount: 1, length: '2630', width: '150', thickness: '10', tag: 17, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_LAT_DIR', material: 'HDF 13 CNC', amount: 1, length: '244', width: '19,5', thickness: '13', tag: 18, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_LAT_ESQ', material: 'HDF 13 CNC', amount: 1, length: '244', width: '19,5', thickness: '13', tag: 19, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_COSTA', material: 'HDF 16 CNC', amount: 1, length: '457', width: '105,5', thickness: '16', tag: 20, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_LAT_DIR', material: 'HDF 16 CNC', amount: 1, length: '256', width: '128,5', thickness: '16', tag: 21, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_LAT_ESQ', material: 'HDF 16 CNC', amount: 1, length: '256', width: '128,5', thickness: '16', tag: 22, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_COSTA', material: 'HDF 16 CNC', amount: 1, length: '457', width: '105,5', thickness: '16', tag: 23, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_LAT_DIR', material: 'HDF 16 CNC', amount: 1, length: '256', width: '128,5', thickness: '16', tag: 24, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_LAT_ESQ', material: 'HDF 16 CNC', amount: 1, length: '256', width: '128,5', thickness: '16', tag: 25, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_COSTA', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_COSTA', material: 'HDF 16 CNC', amount: 1, length: '1006', width: '76', thickness: '16', tag: 26, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_FUNDO', material: 'HDF 16 CNC', amount: 1, length: '1004,5', width: '244', thickness: '16', tag: 27, nestingFlag: false, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_CIMO', id: formatString(chosenFurniture.name.value) + '_BAR_B_CIMO', material: 'HDF 19 CNC', amount: 1, length: '1035', width: '613', thickness: '19', tag: 28, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_DIVISORIA', id: formatString(chosenFurniture.name.value) + '_BAR_B_DIVISORIA', material: 'HDF 19 CNC', amount: 1, length: '968', width: '291', thickness: '19', tag: 29, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_B_FUNDO', material: 'HDF 19 CNC', amount: 1, length: '1035', width: '613', thickness: '19', tag: 30, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_B_LAT_DIR', material: 'HDF 19 CNC', amount: 1, length: '968', width: '272', thickness: '19', tag: 31, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_B_LAT_ESQ', material: 'HDF 19 CNC', amount: 1, length: '968', width: '291', thickness: '19', tag: 32, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_PRATELEIRA1', id: formatString(chosenFurniture.name.value) + '_BAR_B_PRATELEIRA1', material: 'HDF 19 CNC', amount: 1, length: '592', width: '533', thickness: '19', tag: 33, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_PRATELEIRA2', id: formatString(chosenFurniture.name.value) + '_BAR_B_PRATELEIRA2', material: 'HDF 19 CNC', amount: 1, length: '466', width: '286', thickness: '19', tag: 34, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_REM_ESQ_M', id: formatString(chosenFurniture.name.value) + '_BAR_B_REM_ESQ_M', material: 'HDF 19', amount: 1, length: '1100', width: '70', thickness: '19', tag: 35, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_MOLDE1', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_MOLDE1', material: 'HDF 19', amount: 1, length: '424,5', width: '166', thickness: '19', tag: 36, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_RODAPE_M_MOLDE2', id: formatString(chosenFurniture.name.value) + '_BAR_B_RODAPE_M_MOLDE2', material: 'HDF 19', amount: 1, length: '424,5', width: '283', thickness: '19', tag: 37, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_SEPARADOR', id: formatString(chosenFurniture.name.value) + '_BAR_B_SEPARADOR', material: 'HDF 19 CNC', amount: 1, length: '594', width: '535', thickness: '19', tag: 38, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_B_SEPARADOR2', id: formatString(chosenFurniture.name.value) + '_BAR_B_SEPARADOR2', material: 'HDF 19 CNC', amount: 1, length: '468', width: '289', thickness: '19', tag: 39, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_CIMA', id: formatString(chosenFurniture.name.value) + '_BAR_C_CIMA', material: 'HDF 19 CNC', amount: 1, length: '1056,5', width: '272', thickness: '19', tag: 40, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_DIVISORIA', id: formatString(chosenFurniture.name.value) + '_BAR_C_DIVISORIA', material: 'HDF 19 CNC', amount: 1, length: '720', width: '272', thickness: '19', tag: 41, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_FUNDO', id: formatString(chosenFurniture.name.value) + '_BAR_C_FUNDO', material: 'HDF 19 CNC', amount: 1, length: '1056,5', width: '272', thickness: '19', tag: 42, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_LAT_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_LAT_DIR', material: 'HDF 19 CNC', amount: 1, length: '968', width: '272', thickness: '19', tag: 43, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_LAT_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_LAT_ESQ', material: 'HDF 19 CNC', amount: 1, length: '968', width: '272', thickness: '19', tag: 44, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRATELEIRA', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRATELEIRA', material: 'HDF 19 CNC', amount: 1, length: '501', width: '267', thickness: '19', tag: 45, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRATELEIRA2', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRATELEIRA2', material: 'HDF 19 CNC', amount: 1, length: '501', width: '267', thickness: '19', tag: 46, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_SEPARADOR', id: formatString(chosenFurniture.name.value) + '_BAR_C_SEPARADOR', material: 'HDF 19 CNC', amount: 1, length: '1018,5', width: '272', thickness: '19', tag: 47, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_PAINEL_CURVA_MOLDE_EXT', id: formatString(chosenFurniture.name.value) + '_BAR_E_PAINEL_CURVA_MOLDE_EXT', material: 'HDF 19', amount: 4, length: '1302,5', width: '535,5', thickness: '19', tag: 48, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_REM_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_E_REM_DIR', material: 'HDF 19 CNC', amount: 1, length: '1106', width: '300', thickness: '19', tag: 49, nestingFlag: true, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_RODAPE_RASGOS', id: formatString(chosenFurniture.name.value) + '_BAR_E_RODAPE_RASGOS', material: 'HDF 19', amount: 1, length: '2680', width: '150', thickness: '19', tag: 50, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_E_RODAPE2', id: formatString(chosenFurniture.name.value) + '_BAR_E_RODAPE2', material: 'HDF 19', amount: 1, length: '343', width: '150', thickness: '19', tag: 51, nestingFlag: false, cncFlag: false, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA_FRENTE', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA_FRENTE', material: 'HDF 22 CNC', amount: 1, length: '529', width: '185', thickness: '22', tag: 52, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_GAVETA2_FRENTE', id: formatString(chosenFurniture.name.value) + '_BAR_C_GAVETA2_FRENTE', material: 'HDF 22 CNC', amount: 1, length: '528,2', width: '185', thickness: '22', tag: 53, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PORTA_DIR', id: formatString(chosenFurniture.name.value) + '_BAR_C_PORTA_DIR', material: 'HDF 22 CNC', amount: 1, length: '556', width: '528', thickness: '22', tag: 54, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PORTA_ESQ', id: formatString(chosenFurniture.name.value) + '_BAR_C_PORTA_ESQ', material: 'HDF 22 CNC', amount: 1, length: '556', width: '529', thickness: '22', tag: 55, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
+      // { obs: '', complete: false, belongsTo: furnitureProject.id, belongsToFurniture: chosenFurniture.id, partName: 'BAR_C_PRAT_CORRER_FRENTE', id: formatString(chosenFurniture.name.value) + '_BAR_C_PRAT_CORRER_FRENTE', material: 'HDF 22 CNC', amount: 1, length: '1053,5', width: '73', thickness: '22', tag: 56, nestingFlag: true, cncFlag: true, orla2: true, f2: false },
     ];
 
     const newConsumables = [
@@ -801,7 +794,7 @@ const FurnitureDetails = (props) => {
                     <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, '') } </Typography></Grid>
                     <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
                     <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                    <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.length } mm </Typography></Grid>
                     <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
                     <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
                     <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
@@ -821,7 +814,7 @@ const FurnitureDetails = (props) => {
                     <Grid {...cellProps} >
                       <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} field={'tupia'}/>
                     </Grid>
-                    <Grid {...cellProps} > <Typography variant='sm'>{ part.obs } </Typography></Grid>
+                    <Grid {...cellProps} > <Typography variant='sm'>{ part.observation } </Typography></Grid>
                     <Grid {...cellProps} > <PartStatus part={part} /></Grid>
                   </Grid>
                 );
@@ -848,7 +841,7 @@ const FurnitureDetails = (props) => {
                 src={companyLogo}
                 alt={'company Logo'}
                 width={50}
-                lenght={50}
+                length={50}
                 placeholder='blur'
               />
               <IconButton
@@ -889,7 +882,7 @@ const FurnitureDetails = (props) => {
                 src={woodWorkyLogo}
                 alt={'App Logo'}
                 width={50}
-                lenght={50}
+                length={50}
                 placeholder='blur'
                 loading='lazy'
               />
@@ -903,10 +896,10 @@ const FurnitureDetails = (props) => {
           {!detailOnly && <CustomBreadcrumbs path={[
             {
               title: 'Chão de Fabrica',
-              href: `${routes.private.internal.factoryLevel}`,
+              href: `${routes.private.internal.factory}`,
             }, {
               title: chosenFurniture.name.value,
-              href: `${routes.private.internal.factoryLevel}`,
+              href: `${routes.private.internal.factory}`,
             }
           ]} />}
           <Content>
@@ -955,14 +948,14 @@ const FurnitureDetails = (props) => {
                 </Grid>
               </Grid>
               <Grid container md={4} sm={6} xs={6} p={4} display={detailOnly && 'none'} >
-                <MySelect disabled={myMachine?.currentlyOn.value} options={machines.filter((mach) => {
+                <MySelect disabled={myMachine?.currentlyOn?.value} options={machines.filter((mach) => {
                   const isExecuting = activeWorkerTasks.find(
                     ele => ele.machine.value === mach.id && ele.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id
                   );
 
                   return !isExecuting || isExecuting.executedBy?.object === 'urn:ngsi-ld:Worker:' + me.id;
                 })
-                } value={myMachine?.id} label={'Maquina'} optionLabel={'Nome'} onChange={(e) => {
+                } value={myMachine?.id} label={'Máquina'} optionLabel={'Nome'} onChange={(e) => {
                   // setState({ ...state, myMachine: state.machines?.find(ele => ele.id === e.target.value) });
                   setMyMachine(machines.find(ele => ele.id === e.target.value));
                 }} />
@@ -975,7 +968,7 @@ const FurnitureDetails = (props) => {
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Grow in={true}>
-                  <Box sx={{ lenght: '100%', overflowX: 'scroll' }}>
+                  <Box sx={{ length: '100%', overflowX: 'scroll' }}>
                     <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
@@ -1008,7 +1001,7 @@ const FurnitureDetails = (props) => {
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.partName?.replace(/_/g, '') } </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.material } </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.amount } </Typography></Grid>
-                                <Grid {...cellProps} > <Typography variant='sm'>{ part.lenght } mm </Typography></Grid>
+                                <Grid {...cellProps} > <Typography variant='sm'>{ part.length } mm </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.width } mm </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.thickness } mm </Typography></Grid>
                                 <Grid {...cellProps} > <Typography variant='sm'>{ part.weight } </Typography></Grid>
@@ -1031,8 +1024,8 @@ const FurnitureDetails = (props) => {
                                   <ActionStatus {...props} part={part} index={rowIndex} detailOnly={detailOnly} disabled={isActive({ part, field: 'tupia' })} field={'tupia'}/>
                                 </Grid>
                                 <Grid {...cellProps} >
-                                  <Tooltip title={part.obs}>
-                                    <Typography variant='sm'>{ part.obs && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.obs })}><icons.FileText /></IconButton> } </Typography>
+                                  <Tooltip title={part.observation}>
+                                    <Typography variant='sm'>{ part.observation && <IconButton onClick={(event) => setOpenPopover({ target: event.currentTarget, msg: part.observation })}><icons.FileText /></IconButton> } </Typography>
                                   </Tooltip>
                                 </Grid>
                                 <Grid {...cellProps} > <PartStatus part={part} /></Grid>
@@ -1046,15 +1039,15 @@ const FurnitureDetails = (props) => {
               </TabPanel>
               <TabPanel value={value} index={1}>
                 <Grow in={true}>
-                  <Box sx={{ lenght: '100%', overflowX: 'scroll' }}>
+                  <Box sx={{ length: '100%', overflowX: 'scroll' }}>
                     <Grid container sx={{ minWidth: '1024px', overflowX: 'scroll' }}>
                       {/* Headers */}
                       <Grid container md={12} sm={12} xs={12} bgcolor={'#F9F9F9'}>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Nome </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Material </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
-                        <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> <Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box>  </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Nome </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Material </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Qtd.  </Typography></Box></Grid>
+                        <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> Etiqueta  </Typography></Box></Grid>
+                        {/* <Grid {...cellProps} md={3} sm={3} xs={3} ><Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm"> <Box className='fullCenter'sx={{ width: '100%' }}><Typography variant="sm">  <Check /> </Typography></Box>  </Typography></Box></Grid> */}
 
                       </Grid>
                       <Grid container md={12} sm={12} xs={12}>
@@ -1066,11 +1059,11 @@ const FurnitureDetails = (props) => {
                                 key={rowIndex}
                                 bgcolor={rowIndex % 2 !== 0 && 'lightGray.edges'}
                               >
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.name.value.replace(/_/g, '') } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.material.value } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.amount.value } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <Typography variant='sm'>{ consumable.tag.value } </Typography></Grid>
-                                <Grid {...cellProps} md={2.4} sm={2.4} xs={2.4} > <PartStatus part={consumable} /></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.name?.value?.replace(/_/g, ' ') } </Typography></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.material?.value } </Typography></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.amount?.value } </Typography></Grid>
+                                <Grid {...cellProps} md={3} sm={3} xs={3} > <Typography variant='sm'>{ consumable?.tag?.value } </Typography></Grid>
+                                {/* <Grid {...cellProps} md={3} sm={3} xs={3} ><PartStatus part={consumable} /></Grid> */}
                               </Grid>
                             );
                           })}

@@ -25,6 +25,8 @@ const PolygonAnnotation = (props) => {
   const vertexRadius = 6;
   const [stage, setStage] = useState();
 
+  console.log(stage);
+
   const handleGroupMouseOver = (e) => {
     if (!isFinished) return;
 
@@ -39,8 +41,8 @@ const PolygonAnnotation = (props) => {
   // const [minMaxX, setMinMaxX] = useState([0, 0]); // min and max in x axis
   // const [minMaxY, setMinMaxY] = useState([0, 0]); // min and max in y axis
 
-  const minMaxX = [0, 0];
-  const minMaxY = [0, 0];
+  // const minMaxX = [0, 0];
+  // const minMaxY = [0, 0];
 
   const handleGroupDragStart = () => {
     const arrX = points.map((p) => p[0]);
@@ -52,21 +54,21 @@ const PolygonAnnotation = (props) => {
     // setMinMaxY(minMax(arrY));
   };
 
-  const groupDragBound = (pos) => {
-    let { x, y } = pos;
-    const sw = stage.width();
-    const sh = stage.height();
+  // const groupDragBound = (pos) => {
+  //   let { x, y } = pos;
+  //   const sw = stage?.width();
+  //   const sh = stage?.height();
 
-    if (minMaxY[0] + y < 0) y = -1 * minMaxY[0];
+  //   if (minMaxY[0] + y < 0) y = -1 * minMaxY[0];
 
-    if (minMaxX[0] + x < 0) x = -1 * minMaxX[0];
+  //   if (minMaxX[0] + x < 0) x = -1 * minMaxX[0];
 
-    if (minMaxY[1] + y > sh) y = sh - minMaxY[1];
+  //   if (minMaxY[1] + y > sh) y = sh - minMaxY[1];
 
-    if (minMaxX[1] + x > sw) x = sw - minMaxX[1];
+  //   if (minMaxX[1] + x > sw) x = sw - minMaxX[1];
 
-    return { x, y };
-  };
+  //   return { x, y };
+  // };
 
   return (
     <Group
@@ -74,7 +76,7 @@ const PolygonAnnotation = (props) => {
       draggable={isFinished}
       onDragStart={handleGroupDragStart}
       onDragEnd={handleGroupDragEnd}
-      dragBoundFunc={groupDragBound}
+      // dragBoundFunc={groupDragBound}
       onMouseOver={handleGroupMouseOver}
       onMouseOut={handleGroupMouseOut}
     >
@@ -86,7 +88,7 @@ const PolygonAnnotation = (props) => {
         fill={reduxState.appStates.theme?.palette.primary.lightest}
       />
       {
-        points.map((point, index) => {
+        points?.map((point, index) => {
           const x = point[0] - vertexRadius / 2;
           const y = point[1] - vertexRadius / 2;
 
