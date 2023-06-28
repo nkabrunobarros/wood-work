@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import PrimaryBtn from './primaryBtn';
 
 const Buttons = (props) => {
-  const { buttons } = props;
+  const { buttons, sx } = props;
   const [windowWidth, setWindowHeight] = useState();
 
   if (typeof window !== 'undefined') {
@@ -38,10 +38,10 @@ const Buttons = (props) => {
 
   return <>
     {windowWidth > 800
-      ? <ButtonGroup>
+      ? <ButtonGroup sx={{ boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)', height: 'fit-content', border: '1px solid', borderColor: 'divider', ...sx }}>
         {buttons.map((btn, index) => {
           return btn?.text && <>
-            <PrimaryBtn key={index} {...btn} />
+            <PrimaryBtn key={index} {...btn} variant={btn.variant || 'outlined'} sx={{ ...btn.sx, borderColor: 'transparent' }} />
           </>;
         })}
       </ButtonGroup>
@@ -108,7 +108,8 @@ const Buttons = (props) => {
 };
 
 Buttons.propTypes = {
-  buttons: PropTypes.arrayOf(PropTypes.object)
+  buttons: PropTypes.arrayOf(PropTypes.object),
+  sx: PropTypes.object
 };
 
 export default Buttons;

@@ -54,7 +54,8 @@ const NewMachineScreen = ({ ...props }) => {
       error: '',
       required: true,
       tooltip: '',
-      hidden: true
+      hidden: true,
+      object: true
     },
     {
       id: 'startTime',
@@ -134,7 +135,8 @@ const NewMachineScreen = ({ ...props }) => {
 
     // eslint-disable-next-line array-callback-return
     inputFields.map((ele) => {
-      builtMachine[ele.id] = { type: 'Property', value: ele.value };
+      if (ele.object) builtMachine[ele.id] = { type: 'Relationship', object: ele.value };
+      else builtMachine[ele.id] = { type: 'Property', value: ele.value };
     });
 
     builtMachine.id = 'urn:ngsi-ld:Machine:' + formatString(builtMachine.name.value);

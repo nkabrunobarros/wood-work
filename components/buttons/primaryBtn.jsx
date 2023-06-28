@@ -3,7 +3,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Button, Grow, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Grow, Tooltip, Typography } from '@mui/material';
 import Link from 'next/link';
 
 const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, title, hidden, fullWidth, type, id, sx, breathing, otherProps, color, href, variant }) => {
@@ -40,7 +40,15 @@ const PrimaryBtn = ({ text, icon, light, onClick, disabled, noBorder, children, 
             href={href}
             startIcon={icon}
           >
-            {href && <Button component={Link} href={href} sx={{ background: 'transparent', position: 'absolute', width: '100%', height: '100%' }}></Button>}
+            {href && <Box component={Link} href={href}
+              sx={{
+                ...style,
+                ...sx,
+                background: 'transparent',
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+              }}></Box>}
             <Typography sx={{ whiteSpace: 'nowrap' }} variant="sm">
               {text}
             </Typography>

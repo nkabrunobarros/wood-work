@@ -7,24 +7,18 @@ import React from 'react';
 import logosFooter from '../../../public/Fundos-Europeus.png';
 
 // Pages without layout (sidebar + navbar + footer)
-function Copyright (props) {
-  return (
-    <Box
-      color='text.secondary'
-      {...props}
-      sx={{ paddingLeft: '1rem', paddingRight: '1rem', height: '100%', alignItems: 'center', display: 'flex' }}
-    >
-      <Box>
-        <Typography variant="subheading" noWrap sx={{ fontSize: '14px', fontWeight: 'normal' }}>
-        Desenvolvido por {' '}
-        </Typography>
-        <Tooltip title='Visite New Knowledge Advice'>
-          <Typography variant="subheading" color='link.main' noWrap sx={{ cursor: 'pointer', fontSize: '14px', fontWeight: 'normal' }}>
-            <a href='https://nka.pt/' target='#' >NKA - New Knowledge Advice, Lda.</a>
-          </Typography>
-        </Tooltip>
+function Copyright () {
+  return (<>
+
+    <Typography variant='sm' >
+      <Box component={'a'}>Desenvolvido por {' '}</Box>
+      <Box component={'a'} color='primary.main' sx={{ cursor: 'pointer' }}><Tooltip title='Visite New Knowledge Advice'>
+        <a href='https://nka.pt/' target='#' >NKA - New Knowledge Advice, Lda.</a>
+      </Tooltip>
       </Box>
-    </Box>
+    </Typography>
+  </>
+
   );
 }
 
@@ -32,7 +26,7 @@ const Footer = (props) => {
   const isPublicPage = !!props.isPublicPage;
 
   function Confinanced () {
-    return <a
+    return <Box component='a'
       target='#'
       href={'http://mofreita.com/wp-content/uploads/2022/08/72593_ww4.0_modelo_pag_web_0_norte2020_v2.pdf'} style={{ display: !isPublicPage && 'none' }}>
       <Image
@@ -41,7 +35,7 @@ const Footer = (props) => {
         priority
         src={ logosFooter }
       />
-    </a>;
+    </Box>;
   }
 
   const width = 12;

@@ -18,21 +18,22 @@ const DisplayActionButtons = ({
   const status = row.status?.value || row.budgetStatus?.value;
   const isCancelled = status === 'canceled';
   const isFinished = status === 'finished';
+  const editPath = editRoute + (Router.route.includes('projects') ? row.id.replace(/Project/g, 'Budget') : row.id);
 
   return (
     <ButtonGroup>
-      {editRoute && !(Router.route.includes('projects') && row.type === 'Project') && (
+      {editRoute && (
         <Tooltip title={'Editar'}>
           <Box style={{ color: 'red' }} display={isCancelled && 'none'}>
-            <Link href={`${editRoute}${row.id}`}>
-              <IconButton color='primary' onClick={() => !Router.route.includes('projects') && !row.type === 'Project' && editRoute && Router.push(`${editRoute}${row.id}`) } >
+            <Link href={editPath}>
+              <IconButton color='primary' onClick={() => Router.push(editPath) } >
                 <Edit2 size={20} strokeWidth={1.5} />
               </IconButton>
             </Link>
           </Box>
         </Tooltip>
       )}
-      {!!onReactivation && isCancelled && (
+      {!!onReactivation && false && isCancelled && (
         <Tooltip title={'Reabrir'}>
           <IconButton color={'warning'} onClick={() => onReactivationClick(row)} size="small">
             <Power size={20} strokeWidth={1.5} />
@@ -40,7 +41,7 @@ const DisplayActionButtons = ({
         </Tooltip>
       )}
       {!!onCancel && !isCancelled && !isFinished && (
-        <Tooltip title={'Cancelar'}>
+        <Tooltip title={'Cancelar projeto'}>
           <IconButton color={'warning'} onClick={() => onCancel(row)} size="small">
             <X size={20} strokeWidth={1.5} />
           </IconButton>

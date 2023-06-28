@@ -237,10 +237,10 @@ const ProjectsSimilarScreen = ({ ...props }) => {
                             <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.amount.value}</Typography></Grid>
                             <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginProd?.value}</Typography></Grid>
                             <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endProd?.value}</Typography></Grid>
-                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginAssembly?.value}</Typography></Grid>
-                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endAssembly?.value}</Typography></Grid>
-                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginPackaging?.value}</Typography></Grid>
-                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endPackaging?.value}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginAssembly?.value || moment(furni.endProd?.value, 'DD/MM/YYYY HH:mm').add(1, 'day').format('DD/MM/YYYY HH:mm')}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endAssembly?.value || moment(furni.endProd?.value, 'DD/MM/YYYY HH:mm').add(2, 'day').format('DD/MM/YYYY HH:mm')}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.beginPackaging?.value || moment(furni.endProd?.value, 'DD/MM/YYYY HH:mm').add(3, 'day').format('DD/MM/YYYY HH:mm')}</Typography></Grid>
+                            <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.endPackaging?.value || moment(furni.endProd?.value, 'DD/MM/YYYY HH:mm').add(4, 'day').format('DD/MM/YYYY HH:mm')}</Typography></Grid>
                             <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.price?.value || '0€'}</Typography></Grid>
                             <Grid {...cellPropsLabel}><Typography variant='sm'>{furni.price?.value ? Number(parseInt(furni?.price?.value) / furni?.amount?.value).toFixed(2) + '€' : '0€'} </Typography></Grid>
                           </Grid>;

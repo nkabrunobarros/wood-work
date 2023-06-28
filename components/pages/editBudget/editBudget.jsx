@@ -37,7 +37,9 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import * as budgetsActionsRedux from '../../../store/actions/budget';
 import * as furnituresActionsRedux from '../../../store/actions/furniture';
+import * as projectsActionsRedux from '../../../store/actions/project';
 
+import routes from '../../../navigation/routes';
 import Footer from '../../layout/footer/footer';
 import Navbar from '../../layout/navbar/navbar';
 import ConvertFilesToObj from '../../utils/ConvertFilesToObj';
@@ -55,6 +57,7 @@ const EditBudget = ({ ...props }) => {
   const [uploadedFiles, setUploadedFiles] = useState();
   const [linesErrors, setLinesErrors] = useState({ group: false, subGroup: false, item: false });
   const dispatch = useDispatch();
+  const updateProject = (data) => dispatch(projectsActionsRedux.updateProject(data));
   const updateBudget = (data) => dispatch(budgetsActionsRedux.updateBudget(data));
   const newFurniture = (data) => dispatch(furnituresActionsRedux.newFurniture(data));
   const updateFurniture = (data) => dispatch(furnituresActionsRedux.updateFurniture(data));
@@ -433,7 +436,11 @@ const EditBudget = ({ ...props }) => {
     toCreate && await CreateBudgetRows(toCreate);
     await UpdateRows(toUpdate);
     ToastSet(loading, 'Projeto atualizado.', 'success');
-    Router.push(breadcrumbsPath[1].href);
+
+    if (budget.budgetStatus.value === 'adjudicated' && budgetData.name.value !== budget.name.value) await updateProject({ id: budget.id.replace(/Budget/g, 'Project'), data: { name: { type: 'Property', value: budgetData.name.value } } });
+
+    if (budget.budgetStatus.value === 'adjudicated') Router.push(routes.private.internal.project + budget.id.replace(/Budget/g, 'Project'));
+    else Router.push(breadcrumbsPath[1].href);
   }
 
   async function DeleteRows (rows) {

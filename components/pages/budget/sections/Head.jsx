@@ -342,7 +342,7 @@ const Head = (props) => {
 
       setAdjudicateModal(false);
       toast.success('Projeto adjudicado! Passou para desenho.');
-      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + formatString(budget.name.value));
+      Router.push(routes.private.internal.project + 'urn:ngsi-ld:Project:' + budget.orderBy.object.id + '_' + formatString(budget.name.value));
     } catch (err) {
       console.log(err);
       setAdjudicateModal(false);
@@ -532,7 +532,7 @@ const Head = (props) => {
                 icon: <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />
               },
               {
-                text: 'Cancelar',
+                text: 'Cancelar projeto',
                 color: 'warning',
                 hidden: !(budget.budgetStatus.value !== 'canceled' && canEditProject) || !isInternalPage,
                 variant: 'outlined',
@@ -542,7 +542,7 @@ const Head = (props) => {
               {
                 text: 'Reativar',
                 color: 'warning',
-                hidden: !(budget.budgetStatus.value === 'canceled' && canEditProject) || !isInternalPage,
+                hidden: !(budget.budgetStatus.value === 'canceled' && canEditProject) || !isInternalPage || true,
                 icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
                 onClick: ReopenProject
               },
@@ -556,7 +556,8 @@ const Head = (props) => {
               },
               {
                 ...ActionButtonMobile(),
-                divider: true
+                divider: true,
+                variant: 'outlined'
               }
             ]} />
           </Grid>

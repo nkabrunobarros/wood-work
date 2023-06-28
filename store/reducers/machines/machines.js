@@ -26,12 +26,12 @@ const budgets = createReducer(initialState, (builder) => {
       loading: true,
     }))
     //  POST
-    .addCase(machinesActions.NEW_MACHINE_SUCCESS, (state, action) => ({
-      ...state,
-      errors: null,
-      loading: false,
-      data: state.data ? state.data.push(action.data) : state.data,
-    }))
+    // .addCase(machinesActions.NEW_MACHINE_SUCCESS, (state, action) => ({
+    //   ...state,
+    //   errors: null,
+    //   loading: false,
+    //   data: state.data ? state.data.push(action.data) : state.data,
+    // }))
     .addCase(machinesActions.NEW_MACHINE_FAIL, (state, action) => ({
       ...state,
       errors: state.errors ? [...state.errors, action.payload] : [action.payload],

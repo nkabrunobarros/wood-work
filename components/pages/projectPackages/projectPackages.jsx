@@ -205,7 +205,7 @@ Conteudo:
                         </Tooltip>
                       </Grid>
                       <Grid {...cellPropsRow} onClick={() => {}} sx={{ cursor: 'pointer' }} justifyContent={'center'}>
-                        <Tooltip title={expandedGroups.includes(pack?.id) ? 'Fechar Móveis' : 'Mostrar Móveis'}>
+                        <Tooltip title={expandedGroups.includes(pack?.id) ? 'Fechar Conteúdo' : 'Mostrar Conteúdo'}>
                           <IconButton> {expandedGroups.includes(pack?.id) ? <ChevronUp /> : <ChevronDown /> } </IconButton>
                         </Tooltip>
                       </Grid>

@@ -55,31 +55,20 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
   }
 
   const builtLinks = navLinks
-    .map((group) => ({
-      ...group,
-      pages: group.pages.filter((item) => {
-        if (!loggedUser) return false;
+    .filter(item => {
+      if (!loggedUser) return false;
 
-        if (!userPermissions) return false;
+      if (!userPermissions) return false;
 
-        const canAccess = userPermissions?.permissions_orion.find(
-          (ele) =>
-            ele === item.allowed_ ||
-          item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase()
-        );
+      const canAccess = userPermissions?.permissions_orion.find(
+        ele => ele === item.allowed_ || item.allowed_.toLowerCase() === userPermissions?.description.toLowerCase()
+      );
 
-        const isInternal = IsInternal(userPermissions?.description);
+      const isInternal = IsInternal(userPermissions?.description);
+      const isInternalUrl = Object.values(routes.private.internal).includes(item.url.replace('[Id]', ''));
 
-        const isInternalUrl = Object.values(routes.private.internal).includes(
-          item.url.replace('[Id]', '')
-        );
-
-        return canAccess && isInternal === isInternalUrl;
-      }),
-    }))
-    .filter((group) => group.pages.length > 0);
-
-  console.log(builtLinks);
+      return canAccess && isInternal === isInternalUrl;
+    });
 
   return (
     <SwipeableDrawer
@@ -100,7 +89,8 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100%',
-          width: '250px',
+          maxWidth: '250px',
+          minWidth: '250px'
         }}
       >
         {/* Sidebar Items List here */}
@@ -124,23 +114,21 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
         </Box>
         <Box className='scrollableZone' >
           {builtLinks
-            .map((group, indexGrp) => {
-              return <>
-                {group.pages.map((item, i) => (
-                  <Box key={i}>
-                    <ActiveLink
-                      toggleDrawer={toggleDrawer}
-                      item={item}
-                    />
-                  </Box>
-                ))}
-                {group.underline && group.pages.length > 0 && indexGrp + 1 !== builtLinks.length && <Divider
+            .map((item, i) => (
+              <Box key={i}>
+                <ActiveLink
+                  toggleDrawer={toggleDrawer}
+                  item={item}
+                />
+                {builtLinks.length !== i + 1 && item.underline && <Divider
                   color='white'
                   width='100%'
                   style={{ marginTop: '.5rem', marginBottom: '.5rem' }}
                 />}
-              </>;
-            })}
+              </Box>
+            ))}
+        </Box>
+        <Box style={{ position: 'relative', bottom: 0, float: 'bottom', width: '100%' }}>
           <Divider
             color='white'
             width='100%'
@@ -155,22 +143,16 @@ const DrawerMobile = ({ logout, toggleDrawer, state }) => {
               url: IsInternal(userPermissions?.description) ? `${routes.private.internal.account}` : `${routes.private.account}`
             } }
           />}
-          <MenuItem
-            className={styles.navItemContainer}
-            sx={{
-              padding: '0',
-              width: '100%',
-              borderLeft: '5px solid',
-              borderColor: 'transparent',
-            }}
-            onClick={() => onLogout()}>
-            <LogOut strokeWidth='1' size={20} />
-            <div style={{ paddingRight: '.5rem' }} />
-            Sair
+          <MenuItem sx={{ padding: '0' }} onClick={() => {
+            onLogout();
+          }}>
+            <a className={styles.navItemContainer} >
+              <LogOut strokeWidth='1' size={20} />
+              <div style={{ paddingRight: '.5rem' }} />
+              {/* {t('Logout')} */}
+              Sair
+            </a>
           </MenuItem>
-        </Box>
-        <Box style={{ position: 'relative', bottom: 0, float: 'bottom', width: '100%' }}>
-
         </Box>
       </Box>
     </SwipeableDrawer>

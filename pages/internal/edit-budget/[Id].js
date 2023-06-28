@@ -200,7 +200,9 @@ const EditProject = ({ ...pageProps }) => {
       },
       {
         title: `${budget.name.value}`,
-        href: `${routes.private.internal.budget}${budget.id}`,
+        href: budget.budgetStatus.value === 'adjudicated'
+          ? routes.private.internal.project + budget.id.replace(/Budget/g, 'Project')
+          : routes.private.internal.budget + budget.id,
       },
       {
         title: 'Editar projeto',

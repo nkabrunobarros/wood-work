@@ -63,7 +63,7 @@ function ActiveLink ({ toggleDrawer, item }) {
     borderColor: item.title === currentSection ? 'var(--white)' : 'transparent',
   };
 
-  return (
+  return !item.hidden && (
 
     <Link href={item.url}>
       <MenuItem id={item.id}

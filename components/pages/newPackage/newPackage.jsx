@@ -337,7 +337,6 @@ Conteudo:
             }
           </Box>
         </Grid>
-
       </Grid>
 
       <Divider />
@@ -362,7 +361,7 @@ Conteudo:
               onClick={handleTransfer(value)}
             >
 
-              <ListItemText id={labelId} primary={`${value.partName?.value}`} secondary={`Quantidade: ${value.amount.value}`} />
+              <ListItemText id={labelId} primary={`${value.partName?.value.replace(/_/g, ' ')}`} secondary={`Quantidade: ${value.amount.value}`} />
               {selected &&
               <Box>
                 <ButtonGroup>

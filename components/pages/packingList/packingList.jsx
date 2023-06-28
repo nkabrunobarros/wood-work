@@ -40,7 +40,7 @@ const PackingList = ({ ...props }) => {
                 </Grid>}
                 <Grid
                   container
-                  md={4}
+                  md={6}
                   sm={12}
                   xs={12}
                   sx={{ p: 1 }}>

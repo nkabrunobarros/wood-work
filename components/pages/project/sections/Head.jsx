@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import { Power, Trash } from 'lucide-react';
+import { Edit2, Power, Trash } from 'lucide-react';
 import React, { useState } from 'react';
 
 //  PropTypes
@@ -40,6 +40,7 @@ const Head = (props) => {
 
   // eslint-disable-next-line no-return-assign
   props.furnituresUnbuilt.filter(ele => ele.produced?.value).map((furni) => totalBuilt = totalBuilt + Number(furni.amount.value));
+  console.log(order.amount.value);
 
   const [grids, setGrids] = useState({
     upperGrids: [
@@ -100,7 +101,7 @@ const Head = (props) => {
           },
           {
             label: '%',
-            value: totalBuilt > 0 ? Number(totalBuilt / order.amount.value * 100).toFixed(0) : '0'
+            value: totalBuilt > 0 ? Number(totalBuilt / (Number(order.amount.value) !== 0 ? order.amount.value : 1) * 100).toFixed(0) : '0'
           },
         ]
       },
@@ -374,6 +375,7 @@ const Head = (props) => {
     case 'production': return {
       text: 'Passar a montagem',
       onClick: () => handleChangeToAssembly(),
+      hidden: grids.lowerGrids[0].colls[2].value !== '100',
       icon: <CheckCircleOutline
         strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5}
         size={pageProps?.globalVars?.iconSize || 20}
@@ -470,30 +472,39 @@ const Head = (props) => {
       <Buttons
         buttons={[
           {
-            text: 'Cancelar',
-            color: 'warning',
+            text: 'Editar',
+            color: 'primary',
             hidden: !(order.status.value !== 'canceled' && canEditProject) || !isInternalPage,
-            variant: 'outlined',
-            icon: <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
-            onClick: CancelProject
-          },
-          {
-            text: 'Reativar',
-            color: 'warning',
-            hidden: !(order.status.value === 'canceled' && canEditProject) || !isInternalPage,
-            icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
-            onClick: ReopenProject
+            icon: <Edit2 strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+            href: routes.private.internal.editBudget + order.hasBudget.object.id,
+            sx: { borderColor: 'transparent' }
           },
           {
             text: 'Apagar',
             color: 'error',
-            variant: 'outlined',
             hidden: !(canDeleteProject) || !isInternalPage,
             icon: <Trash strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
-            onClick: () => setDeleteModal(true)
+            onClick: () => setDeleteModal(true),
+          },
+          {
+            text: 'Cancelar projeto',
+            color: 'warning',
+            hidden: !(order.status.value !== 'canceled' && canEditProject) || !isInternalPage,
+            icon: <Close strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+            onClick: CancelProject,
+            sx: { borderColor: 'transparent' }
+          },
+          {
+            text: 'Reativar',
+            color: 'warning',
+            hidden: !(order.status.value === 'canceled' && canEditProject) || !isInternalPage || true,
+            icon: <Power strokeWidth={pageProps?.globalVars?.iconSmStrokeWidth || 1.5} size={pageProps?.globalVars?.iconSize || 20} />,
+            onClick: ReopenProject
           },
           {
             ...ActionButtonMobile(),
+            divider: true,
+            sx: { borderColor: 'transparent' }
           }
         ]}
       />
