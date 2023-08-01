@@ -1,3 +1,0 @@
-[ ] Como cliente, está a dar 500 ao fazer get Expedição com ID http://193.136.195.25/ww4/api/v1/expedition/urn:ngsi-ld:Expedition:Teste_Expedicao/
-[ ] Como cliente, está a dar vazio [] ao fazer get Expedição http://193.136.195.25/ww4/api/v1/expedition/?limit=200
-[ ] Ao eliminar um ficheros via endpoint, remove todos os ficheiros que pertenciam aquela pasta
